@@ -1,9 +1,9 @@
-# anything
+# Ignore All
 /*
 
-# whitelisted things here
+# Except:
 
-# folders
+# Sources
 !/src
 
 # github
@@ -11,8 +11,10 @@
 !/README
 
 # gradle
-!/*.gradle
-!/gradle*
+!/build.gradle
+!/settings.gradle
+!/gradle.properties
+!/gradlew*
 
 # checkstyle
 !/checkstyle*.xml

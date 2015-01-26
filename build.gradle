@@ -12,26 +12,16 @@ buildscript {
     }
 }
 
-// Apply plugin
 apply plugin: 'java'
 //apply plugin: 'checkstyle'
 apply plugin: 'maven'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'sublimeText'
 apply plugin: 'com.github.johnrengelman.shadow'
 
+apply plugin: 'sublimeText'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 group = 'nova'
-archivesBaseName = 'novacore'
-
-sourceSets {
-    main {
-        java {
-            srcDir 'src'
-        }
-    }
-}
 
 /*checkstyle {
     configFile = file('checkstyle.xml')
@@ -97,7 +87,6 @@ shadowJar {
 }
 
 artifacts {
-    archives jar
     archives shadowJar
     archives sourceJar
 }
