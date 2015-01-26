@@ -1,7 +1,8 @@
-package asie.api.core;
+package nova.core.core;
+
+import com.google.common.collect.HashBiMap;
 
 import java.util.ArrayList;
-import com.google.common.collect.HashBiMap;
 
 public class Registry<T extends Named> {
 	private final ArrayList<T> ids = new ArrayList<T>();

@@ -1,4 +1,4 @@
-package asie.api.core;
+package nova.core.core;
 
 public class Position {
 	private final long x, y, z;

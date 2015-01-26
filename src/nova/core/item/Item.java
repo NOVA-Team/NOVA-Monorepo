@@ -1,6 +1,6 @@
-package asie.api.item;
+package nova.core.item;
 
-import asie.api.core.Named;
+import nova.core.core.Named;
 
 public abstract class Item implements Named {
 }

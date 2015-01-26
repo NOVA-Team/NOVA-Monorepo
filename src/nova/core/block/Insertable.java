@@ -1,6 +1,6 @@
-package asie.api.block;
+package nova.core.block;
 
-import asie.api.core.Direction;
+import nova.core.core.Direction;
 
 /**
  * Implement this interface on BlockLogics which allow insertion of

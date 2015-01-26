@@ -1,4 +1,4 @@
-package asie.api.world;
+package nova.core.world;
 
 public abstract class World {
 }

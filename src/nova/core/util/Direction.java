@@ -1,4 +1,4 @@
-package asie.api.core;
+package nova.core.core;
 
 public enum Direction {
 	DOWN,

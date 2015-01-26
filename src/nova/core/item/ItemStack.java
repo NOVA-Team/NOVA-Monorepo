@@ -1,4 +1,4 @@
-package asie.api.item;
+package nova.core.item;
 
 public class ItemStack {
 }

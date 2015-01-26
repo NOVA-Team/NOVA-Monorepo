@@ -1,11 +1,11 @@
-package asie.api.block;
+package nova.core.block;
 
-import asie.api.core.Direction;
+import nova.core.core.Direction;
 
 public interface Connectable {
+	Connectable.Type canConnect(Class type, Direction side);
+
 	 public enum Type {
 		 DEFAULT, FORCE, DENY;
 	 }
-
-	 Connectable.Type canConnect(Class type, Direction side);
 }

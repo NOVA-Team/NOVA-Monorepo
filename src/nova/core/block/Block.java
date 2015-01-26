@@ -1,6 +1,6 @@
-package asie.api.block;
+package nova.core.block;
 
-import asie.api.core.Named;
+import nova.core.core.Named;
 
 public abstract class Block implements Named {
 }
