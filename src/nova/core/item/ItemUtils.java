@@ -24,6 +24,6 @@ public class ItemUtils {
 	}
 
 	public static Registry<Item> getItemRegistry() {
-		return (Registry<Item>) Game.instance.getRegistry(Item.class);
+		return Game.instance.getRegistry(Item.class);
 	}
 }

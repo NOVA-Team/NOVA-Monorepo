@@ -15,6 +15,6 @@ public class BlockUtils {
 	}
 
 	public static Registry<Block> getBlockRegistry() {
-		return (Registry<Block>) Game.instance.getRegistry(Block.class);
+		return Game.instance.getRegistry(Block.class);
 	}
 }
