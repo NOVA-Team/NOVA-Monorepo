@@ -49,6 +49,10 @@ repositories {
 dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'org.msgpack:msgpack-core:0.7.0-p4'
+
+    testCompile "junit:junit:4.12"
+    testCompile 'org.assertj:assertj-core:1.+'
+
     //checkstyle 'com.puppycrawl.tools:checkstyle:6.2'
 }
 
@@ -100,4 +104,16 @@ sublimeText {
     generateSublimeJavaClasspath = true
     generateSublimeJavaSrcpath = true
     addGradleCompile = true
+}
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+
+    testLogging.showStandardStreams = true
+
+    beforeTest { descriptor ->
+        logger.lifecycle("Running " + descriptor)
+    }
 }
