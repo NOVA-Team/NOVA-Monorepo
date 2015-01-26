@@ -8,12 +8,12 @@ import java.util.Map;
 
 public class Game {
 	public static Game instance;
-	private Map<Class, Registry> registryMap = new HashMap<Class, Registry>();
+	private Map<Class<? extends Named>, Registry> registryMap = new HashMap<>();
 
-	public Registry<? extends Named> getRegistry(Class<? extends Named> c) {
-		if (!registryMap.containsKey(c)) {
-			registryMap.put(c, new Registry());
+	public <T extends Named> Registry<T> getRegistry(Class<T> type) {
+		if (!registryMap.containsKey(type)) {
+			registryMap.put(type, new Registry<T>());
 		}
-		return registryMap.get(c);
+		return registryMap.get(type);
 	}
 }
