@@ -41,6 +41,7 @@ sourceSets {
 compileJava {
     sourceCompatibility = '1.8'
     options.encoding = 'UTF-8'
+    options.fork = true
 }
 
 repositories {
@@ -57,6 +58,37 @@ task sourceJar(type: Jar) {
     from sourceSets.main.java
     from sourceSets.main.resources
     classifier = "sources"
+}
+
+javadoc {
+    include 'nova/core/**'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from 'build/docs/javadoc'
+    classifier 'javadoc'
+}
+
+task writeNewPom << {
+    pom {
+        project {
+            //TODO:
+
+            /*licenses {
+                license {
+                    name ''
+                    url ''
+                    distribution ''
+                }
+            }*/
+        }
+    }.writeTo("$buildDir/libs/pom.xml")
+}
+
+shadowJar {
+	manifest {
+		attributes("Implementation-Title": "NovaCore", "Implementation-Version": version)
+	}
 }
 
 artifacts {
