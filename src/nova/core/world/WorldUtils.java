@@ -6,6 +6,6 @@ import nova.core.util.Registry;
 
 public class WorldUtils {
 	public static Registry<World> getWorldRegistry() {
-		return (Registry<World>) Game.instance.getRegistry(World.class);
+		return Game.instance.getRegistry(World.class);
 	}
 }
