@@ -1,10 +1,14 @@
 buildscript {
     repositories {
+        maven {
+            url 'http://dl.bintray.com/phildopus/maven'
+        }
         mavenCentral()
         jcenter()
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+        classpath 'us.phildop:gradle-sublimetext-plugin:0.5.1'
     }
 }
 
@@ -14,6 +18,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+apply plugin: 'sublimeText'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 
@@ -95,4 +100,12 @@ artifacts {
     archives jar
     archives shadowJar
     archives sourceJar
+}
+
+sublimeText {
+    defaultFileExcludePatterns = ['.project', '.classpath', '.pydevproject']
+    defaultFolderExcludePatterns = ['.gradle', 'bin', 'build', '.settings']
+    generateSublimeJavaClasspath = true
+    generateSublimeJavaSrcpath = true
+    addGradleCompile = true
 }
