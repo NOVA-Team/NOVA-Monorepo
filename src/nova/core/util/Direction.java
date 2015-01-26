@@ -9,12 +9,14 @@ public enum Direction {
 	EAST(1, 0, 0),
 	UNKNOWN(0, 0, 0);
 
-	public final int offsetX, offsetY, offsetZ;
+	public final int x, y, z;
+	private final Vector3i vector;
 
 	Direction(int ox, int oy, int oz) {
-		offsetX = ox;
-		offsetY = oy;
-		offsetZ = oz;
+		x = ox;
+		y = oy;
+		z = oz;
+		vector = new Vector3i(x, y, z);
 	}
 
 	public static final Direction[] DIRECTIONS = new Direction[] {
@@ -33,5 +35,9 @@ public enum Direction {
 		} else {
 			return DIRECTIONS[this.ordinal() ^ 1];
 		}
+	}
+
+	public Vector3i toVector() {
+		return vector;
 	}
 }

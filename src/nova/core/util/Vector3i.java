@@ -15,6 +15,31 @@ public class Vector3i implements Comparable
 		this.z = z;
 	}
 
+	public Vector3i add(Vector3i other)
+	{
+		return new Vector3i(x + other.x, y + other.y, z + other.z);
+	}
+
+	public Vector3i add(int other)
+	{
+		return new Vector3i(x + other, y + other, z + other);
+	}
+
+	public Vector3i subtract(Vector3i other)
+	{
+		return new Vector3i(x - other.x, y - other.y, z - other.z);
+	}
+
+	public Vector3i subtract(int other)
+	{
+		return new Vector3i(x - other, y - other, z - other);
+	}
+
+	public Vector3i inverse()
+	{
+		return new Vector3i(-x, -y, -z);
+	}
+
 	@Override
 	public int hashCode()
 	{
@@ -38,5 +63,9 @@ public class Vector3i implements Comparable
 				return 1;
 		}
 		return 0;
+	}
+
+	public Vector3d toDouble() {
+		return new Vector3d(x, y, z);
 	}
 }

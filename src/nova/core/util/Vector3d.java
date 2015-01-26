@@ -21,6 +21,11 @@ public class Vector3d implements Comparable
 		return new Vector3d(x + other.x, y + other.y, z + other.z);
 	}
 
+	public Vector3d add(Vector3i other)
+	{
+		return new Vector3d(x + other.x, y + other.y, z + other.z);
+	}
+
 	public Vector3d add(double other)
 	{
 		return new Vector3d(x + other, y + other, z + other);
@@ -28,7 +33,12 @@ public class Vector3d implements Comparable
 
 	public Vector3d subtract(Vector3d other)
 	{
-		return add(other.inverse());
+		return new Vector3d(x - other.x, y - other.y, z - other.z);
+	}
+
+	public Vector3d subtract(Vector3i other)
+	{
+		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
 
 	public Vector3d subtract(double other)
@@ -54,19 +64,6 @@ public class Vector3d implements Comparable
 	public Vector3d divide(double other)
 	{
 		return multiply(1 / other);
-	}
-
-	/**
-	 * Moves the vector in the specified direction by the specified step.
-	 */
-	public Vector3d add(Direction direction, double step)
-	{
-		return new Vector3d(x + (direction.offsetX * step), y + (direction.offsetY * step), z + (direction.offsetZ * step));
-	}
-
-	public Vector3d add(Direction direction)
-	{
-		return move(direction, 1);
 	}
 
 	/**
@@ -138,7 +135,7 @@ public class Vector3d implements Comparable
 		return new Vector3d(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
 	}
 
-	public Vector3d perpdenciular()
+	public Vector3d perpendicular()
 	{
 		if (z == 0)
 			return zCross();
