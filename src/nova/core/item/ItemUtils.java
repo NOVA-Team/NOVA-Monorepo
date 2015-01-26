@@ -20,8 +20,7 @@ public class ItemUtils {
 	}
 
 	public static Optional<Item> getItem(String name) {
-		Registry<Item> r = getItemRegistry();
-		return r.contains(name) ? Optional.of(r.get(name)) : Optional.empty();
+		return Optional.ofNullable(getItemRegistry().get(name));
 	}
 
 	public static Registry<Item> getItemRegistry() {

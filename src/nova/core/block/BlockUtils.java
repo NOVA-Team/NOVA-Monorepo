@@ -11,8 +11,7 @@ public class BlockUtils {
 	}
 
 	public static Optional<Block> getBlock(String name) {
-		Registry<Block> r = getBlockRegistry();
-		return r.contains(name) ? Optional.of(r.get(name)) : Optional.empty();
+		return Optional.ofNullable(getBlockRegistry().get(name));
 	}
 
 	public static Registry<Block> getBlockRegistry() {
