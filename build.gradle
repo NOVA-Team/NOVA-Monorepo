@@ -1,0 +1,66 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+    }
+}
+
+// Apply plugin
+apply plugin: 'java'
+//apply plugin: 'checkstyle'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+
+group = 'nova'
+archivesBaseName = 'novacore'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+/*checkstyle {
+    configFile = file('checkstyle.xml')
+    configProperties = [
+        "name": project.name,
+        "organization": project.organization,
+        "year": project.inceptionYear,
+        "suppressions": file('checkstyle-suppressions.xml')
+    ]
+}*/
+
+compileJava {
+    sourceCompatibility = '1.8'
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.guava:guava:18.0'
+    compile 'org.msgpack:msgpack-core:0.7.0-p4'
+    //checkstyle 'com.puppycrawl.tools:checkstyle:6.2'
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.java
+    from sourceSets.main.resources
+    classifier = "sources"
+}
+
+artifacts {
+    archives jar
+    archives shadowJar
+    archives sourceJar
+}
