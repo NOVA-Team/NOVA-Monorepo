@@ -1,6 +1,6 @@
 package nova.core.block;
 
-import nova.core.core.Direction;
+import nova.core.util.Direction;
 
 public interface Connectable {
 	Connectable.Type canConnect(Class type, Direction side);

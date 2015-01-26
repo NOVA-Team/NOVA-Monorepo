@@ -29,7 +29,7 @@ public class ItemStack {
 		}
 	}
 
-	public void add(int size) {
+	public void addStackSize(int size) {
 		setStackSize(getStackSize() + size);
 	}
 }

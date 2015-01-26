@@ -1,4 +1,4 @@
-package nova.core.core;
+package nova.core.util;
 
 public abstract class Logic {
 	private boolean wasValidated;

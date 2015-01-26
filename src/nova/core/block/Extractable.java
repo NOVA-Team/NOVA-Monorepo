@@ -1,6 +1,6 @@
 package nova.core.block;
 
-import nova.core.core.Direction;
+import nova.core.util.Direction;
 
 /**
  * Implement this interface on BlockLogics which allow extraction of

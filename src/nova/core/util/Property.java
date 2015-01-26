@@ -1,4 +1,4 @@
-package nova.core.core;
+package nova.core.util;
 
 import java.util.List;
 

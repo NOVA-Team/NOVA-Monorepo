@@ -1,4 +1,4 @@
-package nova.core.transform;
+package nova.core.util;
 
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
@@ -54,6 +54,19 @@ public class Vector3d implements Comparable
 	public Vector3d divide(double other)
 	{
 		return multiply(1 / other);
+	}
+
+	/**
+	 * Moves the vector in the specified direction by the specified step.
+	 */
+	public Vector3d add(Direction direction, double step)
+	{
+		return new Vector3d(x + (direction.offsetX * step), y + (direction.offsetY * step), z + (direction.offsetZ * step));
+	}
+
+	public Vector3d add(Direction direction)
+	{
+		return move(direction, 1);
 	}
 
 	/**
