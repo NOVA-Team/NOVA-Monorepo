@@ -5,13 +5,13 @@ import com.google.common.collect.HashBiMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Registry<T extends Named> implements Iterable<T> {
+public class Registry<T extends Identifiable> implements Iterable<T> {
 	private final ArrayList<T> objects = new ArrayList<T>();
 	private final HashBiMap<String, T> names = HashBiMap.create();
 
 	public void register(T object) {
 		objects.add(object);
-		names.put(object.getName(), object);
+		names.put(object.getID(), object);
 	}
 
 	public boolean contains(String name) {

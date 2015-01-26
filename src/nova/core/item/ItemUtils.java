@@ -12,11 +12,11 @@ public class ItemUtils {
 	}
 
 	public static Item getItemFromBlock(Block block) {
-		return getItemRegistry().get(block.getName());
+		return getItemRegistry().get(block.getID());
 	}
 
 	public static Block getBlockFromItem(Item item) {
-		return BlockUtils.getBlockRegistry().get(item.getName());
+		return BlockUtils.getBlockRegistry().get(item.getID());
 	}
 
 	public static Optional<Item> getItem(String name) {

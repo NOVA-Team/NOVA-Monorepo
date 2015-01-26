@@ -56,6 +56,6 @@ public class ItemStack implements Cloneable {
 
 	@Override
 	public int hashCode() {
-		return 31 * stackSize + item.getName().hashCode();
+		return 31 * stackSize + item.getID().hashCode();
 	}
 }
