@@ -1,9 +1,8 @@
 package nova.core.depmodules;
 
-import nova.core.item.ItemManager;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
+import nova.core.item.ItemManager;
 
 class ItemModule extends AbstractModule {
 

@@ -1,13 +1,12 @@
 package nova.core.game;
 
-import java.util.Optional;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import nova.core.block.BlockManager;
 import nova.core.item.ItemManager;
 import nova.core.world.WorldManager;
+
+import java.util.Optional;
 
 @Singleton
 public class Game {

@@ -19,8 +19,8 @@ class InventoryIterator implements Iterator<ItemStack> {
 	}
 
 	private void findNext() {
-		while (i < inv.getSize()) {
-			Optional<ItemStack> o = inv.getStack(i++);
+		while (i < inv.size()) {
+			Optional<ItemStack> o = inv.get(i++);
 			if (o.isPresent()) {
 				next = o.get();
 			}

@@ -9,6 +9,6 @@ public interface InventoryPlayer extends Inventory {
 	int getHeldSlot();
 
 	default Optional<ItemStack> getHeldItem() {
-		return getStack(getHeldSlot());
+		return get(getHeldSlot());
 	}
 }

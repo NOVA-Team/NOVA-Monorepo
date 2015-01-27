@@ -14,25 +14,25 @@ public class InventoryView implements Inventory {
 	}
 
 	@Override
-	public Optional<ItemStack> getStack(int slot) {
+	public Optional<ItemStack> get(int slot) {
 		if (slot < 0 || slot >= slots.length) {
 			return null;
 		} else {
-			return parent.getStack(slots[slot]);
+			return parent.get(slots[slot]);
 		}
 	}
 
 	@Override
-	public boolean setStack(int slot, ItemStack stack) {
+	public boolean set(int slot, ItemStack stack) {
 		if (slot < 0 || slot >= slots.length) {
 			return false;
 		} else {
-			return parent.setStack(slots[slot], stack);
+			return parent.set(slots[slot], stack);
 		}
 	}
 
 	@Override
-	public int getSize() {
+	public int size() {
 		return slots.length;
 	}
 

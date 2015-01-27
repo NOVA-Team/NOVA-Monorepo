@@ -3,6 +3,7 @@ package nova.core.block;
 import nova.core.game.Game;
 import nova.core.item.ItemStack;
 import nova.core.util.Identifiable;
+import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3i;
 
 import java.util.ArrayList;
@@ -21,6 +22,10 @@ public abstract class Block implements Identifiable {
 		ArrayList<ItemStack> list = new ArrayList<>();
 		list.add(new ItemStack(Game.instance.get().itemManager.getItemFromBlock(this))); // -100 style points.
 		return list;
+	}
+
+	public Cuboid getBoundingBox() {
+		return new Cuboid(position, position.add(1));
 	}
 
 	public BlockAccess getBlockAccess() {

@@ -26,11 +26,13 @@ public class InventorySimple implements Inventory {
 		changed = false;
 	}
 
-	public int getSize() {
+	@Override
+	public int size() {
 		return stacks.length;
 	}
 
-	public Optional<ItemStack> getStack(int slot) {
+	@Override
+	public Optional<ItemStack> get(int slot) {
 		if (slot < 0 || slot >= stacks.length) {
 			return Optional.empty();
 		} else {
@@ -38,7 +40,8 @@ public class InventorySimple implements Inventory {
 		}
 	}
 
-	public boolean setStack(int slot, ItemStack stack) {
+	@Override
+	public boolean set(int slot, ItemStack stack) {
 		if (slot < 0 || slot >= stacks.length) {
 			return false;
 		} else {

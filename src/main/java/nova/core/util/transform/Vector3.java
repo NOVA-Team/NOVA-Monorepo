@@ -5,16 +5,23 @@ package nova.core.util.transform;
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
-public abstract class Vector3<O extends Vector3<O>> extends AbstractVector2<Vector3<O>, O> implements Comparable {
-
+public abstract class Vector3<O extends Vector3<O>> extends Vector<Vector3<O>, O> implements Comparable {
 	/**
 	 * Integer coordinate values
 	 */
+	public abstract int xi();
+
+	public abstract int yi();
+
 	public abstract int zi();
 
 	/**
 	 * Double coordinate values
 	 */
+	public abstract double xd();
+
+	public abstract double yd();
+
 	public abstract double zd();
 
 	@Override

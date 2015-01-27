@@ -5,7 +5,7 @@ import nova.core.block.BlockManager;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
-class BlockModule extends AbstractModule{
+class BlockModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

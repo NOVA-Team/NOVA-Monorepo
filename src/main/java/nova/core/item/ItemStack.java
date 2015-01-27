@@ -41,6 +41,12 @@ public class ItemStack implements Cloneable {
 		return cloned;
 	}
 
+	public ItemStack withAmount(int amount) {
+		ItemStack cloned = clone();
+		cloned.setStackSize(amount);
+		return cloned;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o == null || !(o instanceof ItemStack)) {

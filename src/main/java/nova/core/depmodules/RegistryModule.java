@@ -1,10 +1,9 @@
 package nova.core.depmodules;
 
+import com.google.inject.AbstractModule;
 import nova.core.util.Registry;
 
-import com.google.inject.AbstractModule;
-
-class RegistryModule extends AbstractModule{
+class RegistryModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
