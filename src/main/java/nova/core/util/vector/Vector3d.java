@@ -5,9 +5,14 @@ package nova.core.util.vector;
  *
  * @author Calclavia
  */
-public class Vector3d extends Vector3 implements Comparable
+public class Vector3d extends Vector3<Vector3d>
 {
 	public final double x, y, z;
+
+	public Vector3d()
+	{
+		this(0, 0, 0);
+	}
 
 	public Vector3d(double x, double y, double z)
 	{
@@ -17,14 +22,9 @@ public class Vector3d extends Vector3 implements Comparable
 	}
 
 	@Override
-	public Vector3d add(Vector3d other)
+	public Vector3d add(Vector3 other)
 	{
-		return new Vector3d(x + other.x, y + other.y, z + other.z);
-	}
-
-	public Vector3d add(Vector3i other)
-	{
-		return new Vector3d(x + other.x, y + other.y, z + other.z);
+		return new Vector3d(x + other.xd(), y + other.yd(), z + other.zd());
 	}
 
 	@Override
@@ -33,15 +33,10 @@ public class Vector3d extends Vector3 implements Comparable
 		return new Vector3d(x + other, y + other, z + other);
 	}
 
-	public Vector3d subtract(Vector3i other)
-	{
-		return new Vector3d(x - other.x, y - other.y, z - other.z);
-	}
-
 	@Override
-	public Vector3d multiply(Vector3d other)
+	public Vector3d multiply(Vector3 other)
 	{
-		return new Vector3d(x * other.x, y * other.y, z * other.z);
+		return new Vector3d(x * other.xd(), y * other.yd(), z * other.zd());
 	}
 
 	@Override
@@ -50,22 +45,10 @@ public class Vector3d extends Vector3 implements Comparable
 		return new Vector3d(x * other, y * other, z * other);
 	}
 
-	/**
-	 * Gets the reciprocal of this vector.
-	 * Any value of zero will cause a division by zero error.
-	 */
+	@Override
 	public Vector3d reciprocal()
 	{
 		return new Vector3d(1 / x, 1 / y, 1 / z);
-	}
-
-	/**
-	 * Returns the dot product between this vector and the other.
-	 */
-	@Override
-	public double dot(Vector3d other)
-	{
-		return x * other.x + y * other.y + z * other.z;
 	}
 
 	/**
@@ -110,27 +93,6 @@ public class Vector3d extends Vector3 implements Comparable
 	}
 
 	@Override
-	public int compareTo(Object o)
-	{
-		if (o instanceof Vector3d)
-		{
-			Vector3d other = (Vector3d) o;
-
-			if (x < other.x || y < other.y || z < other.z)
-				return -1;
-
-			if (x > other.x || y > other.y || z > other.z)
-				return 1;
-		}
-		return 0;
-	}
-
-	public Vector3i toInt()
-	{
-		return new Vector3i((int) x, (int) y, (int) z);
-	}
-
-	@Override
 	public int xi()
 	{
 		return (int) x;
@@ -157,12 +119,17 @@ public class Vector3d extends Vector3 implements Comparable
 	@Override
 	public double yd()
 	{
-		return 0;
+		return y;
 	}
 
 	@Override
 	public double zd()
 	{
-		return 0;
+		return z;
+	}
+
+	public Vector3i toInt()
+	{
+		return new Vector3i(xi(), yi(), zi());
 	}
 }

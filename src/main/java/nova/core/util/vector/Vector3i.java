@@ -3,9 +3,14 @@ package nova.core.util.vector;
 /**
  * An integer implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
  */
-public class Vector3i extends Vector3 implements Comparable
+public class Vector3i extends Vector3<Vector3i>
 {
 	public final int x, y, z;
+
+	public Vector3i()
+	{
+		this(0, 0, 0);
+	}
 
 	public Vector3i(int x, int y, int z)
 	{
@@ -15,9 +20,9 @@ public class Vector3i extends Vector3 implements Comparable
 	}
 
 	@Override
-	public Vector3i add(Vector3i other)
+	public Vector3i add(Vector3 other)
 	{
-		return new Vector3i(x + other.x, y + other.y, z + other.z);
+		return new Vector3i(x + other.xi(), y + other.yi(), z + other.zi());
 	}
 
 	@Override
@@ -27,9 +32,9 @@ public class Vector3i extends Vector3 implements Comparable
 	}
 
 	@Override
-	public Vector3i multiply(Vector3i other)
+	public Vector3i multiply(Vector3 other)
 	{
-		return new Vector3i(x * other.x, y * other.y, z * other.z);
+		return new Vector3i(x * other.xi(), y * other.yi(), z * other.zi());
 	}
 
 	@Override
@@ -44,10 +49,33 @@ public class Vector3i extends Vector3 implements Comparable
 		return new Vector3i(1 / x, 1 / y, 1 / z);
 	}
 
-	@Override
-	public double dot(Vector3i other)
+	/**
+	 * Returns the cross product between this vector and the other.
+	 * Calculated by finding the determinant of a 3x3 matrix.
+	 *
+	 * @return A vector representing the normal, perpendicular to these two vectors
+	 */
+	public Vector3d cross(Vector3d other)
 	{
-		return x * other.x + y * other.y + z * other.z;
+		return new Vector3d(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
+	}
+
+	public Vector3d perpendicular()
+	{
+		if (z == 0)
+			return zCross();
+
+		return xCross();
+	}
+
+	public Vector3d xCross()
+	{
+		return new Vector3d(0, z, -y);
+	}
+
+	public Vector3d zCross()
+	{
+		return new Vector3d(-y, x, 0);
 	}
 
 	@Override
@@ -60,23 +88,43 @@ public class Vector3i extends Vector3 implements Comparable
 	}
 
 	@Override
-	public int compareTo(Object o)
+	public int xi()
 	{
-		if (o instanceof Vector3i)
-		{
-			Vector3i other = (Vector3i) o;
+		return x;
+	}
 
-			if (x < other.x || y < other.y || z < other.z)
-				return -1;
+	@Override
+	public int yi()
+	{
+		return y;
+	}
 
-			if (x > other.x || y > other.y || z > other.z)
-				return 1;
-		}
-		return 0;
+	@Override
+	public int zi()
+	{
+		return z;
+	}
+
+	@Override
+	public double xd()
+	{
+		return x;
+	}
+
+	@Override
+	public double yd()
+	{
+		return y;
+	}
+
+	@Override
+	public double zd()
+	{
+		return z;
 	}
 
 	public Vector3d toDouble()
 	{
-		return new Vector3d(x, y, z);
+		return new Vector3d(xd(), yd(), zd());
 	}
 }
