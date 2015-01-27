@@ -1,29 +1,28 @@
 package nova.core.depmodules;
 
+import com.google.inject.Module;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.google.inject.Module;
-
 public class All {
 	private static Set<Supplier<Module>> coreModules = new HashSet<>();
-	
-	public static Set<Module> getAllCoreModules(){
-		return coreModules.stream().map(Supplier<Module>::get).collect(Collectors.toSet());
+
+	public static Set<Module> getAllCoreModules() {
+		return coreModules.stream().map(Supplier::get).collect(Collectors.toSet());
 	}
-	
-	private static void add(Supplier<Module> module){
+
+	private static void add(Supplier<Module> module) {
 		coreModules.add(module);
 	}
-	
-	static{
+
+	static {
 		add(BlockModule::new);
 		add(ItemModule::new);
 		add(UtilModule::new);
 		add(WorldModule::new);
 	}
-	
+
 }

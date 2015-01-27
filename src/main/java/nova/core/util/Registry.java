@@ -1,7 +1,6 @@
 package nova.core.util;
 
 import com.google.common.collect.HashBiMap;
-import com.google.inject.Inject;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -14,10 +13,9 @@ import java.util.stream.Stream;
  */
 public class Registry<T extends Identifiable> implements Iterable<T> {
 	private final HashBiMap<String, T> objects = HashBiMap.create();
-	
-	@Inject
-	private Registry(){
-		
+
+	public Registry() {
+
 	}
 
 	/**

@@ -1,11 +1,10 @@
 package nova.core.depmodules;
 
+import com.google.inject.AbstractModule;
 import nova.core.util.Dictionary;
 import nova.core.util.Registry;
 
-import com.google.inject.AbstractModule;
-
-class UtilModule extends AbstractModule{
+class UtilModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(Dictionary.class);
