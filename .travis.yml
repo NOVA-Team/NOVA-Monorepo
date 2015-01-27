@@ -10,3 +10,5 @@ cache:
 before_install: chmod +x gradlew
 install: ./gradlew assemble
 script: ./gradlew check
+
+after: rm ~/.gradle/cache/modules-2/modules-2.lock
