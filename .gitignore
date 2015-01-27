@@ -5,6 +5,7 @@
 
 # Sources
 !/src
+!/guidelines
 
 # github
 !/.gitignore

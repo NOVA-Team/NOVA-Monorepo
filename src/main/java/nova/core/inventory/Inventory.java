@@ -7,8 +7,11 @@ import java.util.Optional;
 
 public interface Inventory extends Iterable<ItemStack> {
 	Optional<ItemStack> getStack(int slot);
+
 	boolean setStack(int slot, ItemStack stack);
+
 	int getSize();
+
 	void markChanged();
 
 	default int addStack(ItemStack stack) {

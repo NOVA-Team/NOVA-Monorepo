@@ -12,7 +12,7 @@ public enum Direction {
 	UNKNOWN(0, 0, 0);
 
 	public static final Direction[] DIRECTIONS = new Direction[] {
-			DOWN, UP, NORTH, SOUTH, WEST, EAST
+		DOWN, UP, NORTH, SOUTH, WEST, EAST
 	};
 	private static final Direction[] values = Direction.values();
 	public final int x, y, z;

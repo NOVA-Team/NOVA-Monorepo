@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.Optional;
 
 /**
-* Created by asie on 1/26/15.
-*/
+ * Created by asie on 1/26/15.
+ */
 class InventoryIterator implements Iterator<ItemStack> {
 	private final Inventory inv;
 	private int i;

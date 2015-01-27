@@ -3,8 +3,7 @@ package nova.core.util;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-public interface Storable
-{
+public interface Storable {
 	default void saveToStore(Map<String, Object> data) {
 		for (Field f : this.getClass().getFields()) {
 			if (f.isAnnotationPresent(Stored.class)) {

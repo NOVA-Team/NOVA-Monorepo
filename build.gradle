@@ -1,17 +1,17 @@
 buildscript {
-    repositories {
-        mavenCentral()
-        //mavenLocal()
-        jcenter()
+	repositories {
+		mavenCentral()
+		//mavenLocal()
+		jcenter()
 
-        maven {
-            url 'http://maven.magik6k.net/'
-        }
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
-        classpath 'us.phildop:gradle-sublimetext-plugin:0.5.3'
-    }
+		maven {
+			url 'http://maven.magik6k.net/'
+		}
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+		classpath 'us.phildop:gradle-sublimetext-plugin:0.5.3'
+	}
 }
 
 apply plugin: 'java'
@@ -36,55 +36,55 @@ group = 'nova'
 }*/
 
 compileJava {
-    sourceCompatibility = '1.8'
-    options.encoding = 'UTF-8'
-    options.fork = true
-    options.compilerArgs << '-Xlint'
+	sourceCompatibility = '1.8'
+	options.encoding = 'UTF-8'
+	options.fork = true
+	options.compilerArgs << '-Xlint'
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    compile 'com.google.guava:guava:18.0'
-    compile 'org.msgpack:msgpack-core:0.7.0-p4'
+	compile 'com.google.guava:guava:18.0'
+	compile 'org.msgpack:msgpack-core:0.7.0-p4'
 
-    testCompile "junit:junit:4.12"
-    testCompile 'org.assertj:assertj-core:1.+'
+	testCompile "junit:junit:4.12"
+	testCompile 'org.assertj:assertj-core:1.+'
 
-    //checkstyle 'com.puppycrawl.tools:checkstyle:6.2'
+	//checkstyle 'com.puppycrawl.tools:checkstyle:6.2'
 }
 
 task sourceJar(type: Jar) {
-    from sourceSets.main.java
-    from sourceSets.main.resources
-    classifier = "sources"
+	from sourceSets.main.java
+	from sourceSets.main.resources
+	classifier = "sources"
 }
 
 javadoc {
-    include 'nova/core/**'
+	include 'nova/core/**'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    from 'build/docs/javadoc'
-    classifier 'javadoc'
+	from 'build/docs/javadoc'
+	classifier 'javadoc'
 }
 
 task writeNewPom << {
-    pom {
-        project {
-            //TODO:
+	pom {
+		project {
+			//TODO:
 
-            /*licenses {
-                license {
-                    name ''
-                    url ''
-                    distribution ''
-                }
-            }*/
-        }
-    }.writeTo("$buildDir/libs/pom.xml")
+			/*licenses {
+				license {
+					name ''
+					url ''
+					distribution ''
+				}
+			}*/
+		}
+	}.writeTo("$buildDir/libs/pom.xml")
 }
 
 shadowJar {
@@ -94,26 +94,26 @@ shadowJar {
 }
 
 artifacts {
-    archives shadowJar
-    archives sourceJar
+	archives shadowJar
+	archives sourceJar
 }
 
 sublimeText {
-    defaultFileExcludePatterns = ['.project', '.classpath', '.pydevproject']
-    defaultFolderExcludePatterns = ['.gradle', 'bin', 'build', '.settings']
-    generateSublimeJavaClasspath = true
-    generateSublimeJavaSrcpath = true
-    addGradleCompile = true
+	defaultFileExcludePatterns = ['.project', '.classpath', '.pydevproject']
+	defaultFolderExcludePatterns = ['.gradle', 'bin', 'build', '.settings']
+	generateSublimeJavaClasspath = true
+	generateSublimeJavaSrcpath = true
+	addGradleCompile = true
 }
 
 test {
-    testLogging {
-        exceptionFormat = 'full'
-    }
+	testLogging {
+		exceptionFormat = 'full'
+	}
 
-    testLogging.showStandardStreams = true
+	testLogging.showStandardStreams = true
 
-    beforeTest { descriptor ->
-        logger.lifecycle("Running " + descriptor)
-    }
+	beforeTest {descriptor ->
+		logger.lifecycle("Running " + descriptor)
+	}
 }
