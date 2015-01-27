@@ -42,13 +42,10 @@ public class Vector3d extends Vector3<Vector3d> {
 		return new Vector3d(1 / x, 1 / y, 1 / z);
 	}
 
-	/**
-	 * Returns the cross product between this vector and the other.
-	 * Calculated by finding the determinant of a 3x3 matrix.
-	 * @return A vector representing the normal, perpendicular to these two vectors
-	 */
-	public Vector3d cross(Vector3d other) {
-		return new Vector3d(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
+	@Override
+	public Vector3d cross(Vector3 other)
+	{
+		return new Vector3d(y * other.zd() - z * other.yd(), z * other.xd() - x * other.zd(), x * other.yd() - y * other.xd());
 	}
 
 	public Vector3d perpendicular() {
