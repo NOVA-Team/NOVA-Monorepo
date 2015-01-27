@@ -8,7 +8,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public interface Inventory extends Iterable<ItemStack> {
 	Optional<ItemStack> get(int slot);
@@ -58,7 +61,11 @@ public interface Inventory extends Iterable<ItemStack> {
 		return new InventoryIterator(this);
 	}
 
+	default Spliterator<ItemStack> spliterator() {
+		return Spliterators.spliterator(iterator(), getSize(), Spliterator.NONNULL | Spliterator.ORDERED | Spliterator.SORTED);
+	}
+
 	default Stream<ItemStack> stream() {
-		return toList().stream();
+		return StreamSupport.stream(spliterator(), false);
 	}
 }
