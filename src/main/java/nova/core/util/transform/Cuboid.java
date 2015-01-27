@@ -8,6 +8,7 @@ import java.math.RoundingMode;
  * A cuboid is a shape that represents a cube.
  * @author Calclavia
  */
+@SuppressWarnings({"unchecked","rawtypes"})
 public class Cuboid extends Shape<Cuboid, Cuboid> {
 	public final Vector3d min;
 	public final Vector3d max;
@@ -27,7 +28,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 		return new Cuboid(min.add(other.min), max.add(other.max));
 	}
 
-	public Cuboid add(Vector3 other) {
+	public Cuboid add(Vector3<?> other) {
 		return new Cuboid(min.add(other), max.add(other));
 	}
 

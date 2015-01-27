@@ -5,6 +5,7 @@ package nova.core.util.transform;
  * Vector3 and Vector2 may extend this. Requires the Vector self type as a generic parameter.
  * @author Calclavia
  */
+@SuppressWarnings("unchecked")
 public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operator<I, O> {
 	/**
 	 * Returns the dot product between this vector and the other.
