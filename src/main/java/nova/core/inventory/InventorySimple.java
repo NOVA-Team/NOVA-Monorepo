@@ -2,7 +2,6 @@ package nova.core.inventory;
 
 import nova.core.item.ItemStack;
 
-import java.util.Iterator;
 import java.util.Optional;
 
 public class InventorySimple implements Inventory {

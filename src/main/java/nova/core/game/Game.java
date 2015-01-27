@@ -8,12 +8,14 @@ import java.util.Map;
 
 public class Game {
 	public static Game instance;
-	private Map<Class<? extends Identifiable>, Registry> registryMap = new HashMap<>();
+	private Map<Class<? extends Identifiable>, Registry<?>> registryMap = new HashMap<>();
 
+	@SuppressWarnings("unchecked")
 	public <T extends Identifiable> Registry<T> getRegistry(Class<T> type) {
 		if (!registryMap.containsKey(type)) {
 			registryMap.put(type, new Registry<T>());
 		}
-		return registryMap.get(type);
+		return (Registry<T>) registryMap.get(type);
 	}
+
 }

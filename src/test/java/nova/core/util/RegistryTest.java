@@ -21,12 +21,15 @@ public class RegistryTest
         assertThat(registry.contains("ID1")).isTrue();
         assertThat(registry.contains("ID2")).isTrue();
 
-        assertThat(registry.get("ID1").getID()).isEqualTo("ID1");
-        assertThat(registry.get("ID2").getID()).isEqualTo("ID2");
+        assertThat(registry.get("ID1").get().getID()).isEqualTo("ID1");
+        assertThat(registry.get("ID2").get().getID()).isEqualTo("ID2");
 
-        assertThat(registry.get("ID1")).isEqualTo(id1);
-        assertThat(registry.get("ID2")).isEqualTo(id2);
+        assertThat(registry.get("ID1").get()).isEqualTo(id1);
+        assertThat(registry.get("ID2").get()).isEqualTo(id2);
 
         assertThat(registry.iterator()).containsOnly(id1, id2);
+        
+        assertThat(registry.get("None").isPresent()).isFalse();
+        
     }
 }

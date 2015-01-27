@@ -12,15 +12,15 @@ public class ItemUtils {
 	}
 
 	public static Item getItemFromBlock(Block block) {
-		return getItemRegistry().get(block.getID());
+		return getItemRegistry().get(block.getID()).get();
 	}
 
-	public static Block getBlockFromItem(Item item) {
+	public static Optional<Block> getBlockFromItem(Item item) {
 		return BlockUtils.getBlockRegistry().get(item.getID());
 	}
 
 	public static Optional<Item> getItem(String name) {
-		return Optional.ofNullable(getItemRegistry().get(name));
+		return getItemRegistry().get(name);
 	}
 
 	public static Registry<Item> getItemRegistry() {

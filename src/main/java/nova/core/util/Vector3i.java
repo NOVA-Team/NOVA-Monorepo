@@ -4,7 +4,7 @@ package nova.core.util;
  * An integer implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
  *
  */
-public class Vector3i implements Comparable
+public class Vector3i implements Comparable<Vector3i>
 {
 	public final int x, y, z;
 
@@ -50,7 +50,7 @@ public class Vector3i implements Comparable
 	}
 
 	@Override
-	public int compareTo(Object o)
+	public int compareTo(Vector3i o)
 	{
 		if (o instanceof Vector3i)
 		{

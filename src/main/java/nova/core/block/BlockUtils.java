@@ -11,7 +11,7 @@ public class BlockUtils {
 	}
 
 	public static Optional<Block> getBlock(String name) {
-		return Optional.ofNullable(getBlockRegistry().get(name));
+		return getBlockRegistry().get(name);
 	}
 
 	public static Registry<Block> getBlockRegistry() {

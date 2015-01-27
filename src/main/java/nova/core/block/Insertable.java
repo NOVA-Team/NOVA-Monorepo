@@ -12,7 +12,7 @@ public interface Insertable {
 	 * @param side The side the object is inserted on.
 	 * @return true if this type can be injected
 	 */
-	boolean canInsert(Class type, Direction side);
+	boolean canInsert(Class<?> type, Direction side);
 
 	/**
 	 * @param object The inserted object.

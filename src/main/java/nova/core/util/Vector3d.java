@@ -5,7 +5,7 @@ package nova.core.util;
  *
  * @author Calclavia
  */
-public class Vector3d implements Comparable
+public class Vector3d implements Comparable<Vector3d>
 {
 	public final double x, y, z;
 
@@ -166,7 +166,7 @@ public class Vector3d implements Comparable
 	}
 
 	@Override
-	public int compareTo(Object o)
+	public int compareTo(Vector3d o)
 	{
 		if (o instanceof Vector3d)
 		{
