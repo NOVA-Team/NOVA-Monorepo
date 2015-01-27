@@ -9,6 +9,6 @@ cache:
 
 before_install: chmod +x gradlew
 install: ./gradlew assemble
-script: ./gradlew check
-
-after_script: rm ~/.gradle/cache/modules-2/modules-2.lock
+script:
+  - ./gradlew check
+  - rm ~/.gradle/cache/modules-2/modules-2.lock
