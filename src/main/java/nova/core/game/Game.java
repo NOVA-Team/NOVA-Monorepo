@@ -13,7 +13,7 @@ public class Game {
 
 	/**
 	 * Use only when injection is not a solution. For example when performance
-	 * is a concern. Treat as -100 style points. Must be unidealized by code handling launch.
+	 * is a concern. Treat as -100 style points. Must be initialized by code handling launch and dependency injection entry point.
 	 */
 	public static Optional<Game> instance = Optional.empty();
 
@@ -26,7 +26,6 @@ public class Game {
 		this.blockManager = blockManager;
 		this.itemManager = itemManager;
 		this.worldManager = worldManager;
-		instance = Optional.of(this);
 	}
 
 }
