@@ -44,6 +44,9 @@ compileJava {
 
 repositories {
 	mavenCentral()
+	maven {
+		url 'http://maven.magik6k.net/'
+	}
 }
 
 dependencies {
@@ -51,6 +54,7 @@ dependencies {
 	compile 'org.msgpack:msgpack-core:0.7.0-p4'
 	compile 'com.google.inject:guice:4.0-beta5'
 	compile 'com.typesafe:config:1.2.1'
+	compile 'com.google.inject.extensions:guice-multibindings:4.0-SNAPSHOT'
 
 	testCompile "junit:junit:4.12"
 	testCompile 'org.assertj:assertj-core:1.+'
