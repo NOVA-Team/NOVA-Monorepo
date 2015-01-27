@@ -7,7 +7,6 @@ import java.util.Optional;
 
 /**
  * A registry of one type of identifiable object.
- *
  * @param &lt;T&gt; The object type
  */
 public class Registry<T extends Identifiable> implements Iterable<T> {
@@ -15,7 +14,6 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 
 	/**
 	 * Registers an identifiable object in the registry.
-	 *
 	 * @param object the object to register.
 	 */
 	public void register(T object) {
@@ -24,7 +22,6 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 
 	/**
 	 * Tests whether a given ID is in the Registry.
-	 *
 	 * @param ID the id to find.
 	 * @return true if the registry contains the object with the given ID.
 	 */
@@ -34,7 +31,6 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 
 	/**
 	 * Gets the object with the given id from the registry.
-	 *
 	 * @param id the id to find.
 	 * @return the object found or empty Optional if not found.
 	 */
@@ -44,7 +40,6 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 
 	/**
 	 * Gets the name of a given object if contained in registry.
-	 *
 	 * @param object the object to find.
 	 * @return the name of the object or empty Optional if not found.
 	 */

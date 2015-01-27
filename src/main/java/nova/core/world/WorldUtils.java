@@ -1,6 +1,5 @@
 package nova.core.world;
 
-import nova.core.block.Block;
 import nova.core.game.Game;
 import nova.core.util.Registry;
 
