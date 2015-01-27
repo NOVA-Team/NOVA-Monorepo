@@ -1,9 +1,8 @@
 package nova.core.depmodules;
 
-import nova.core.world.WorldManager;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
+import nova.core.world.WorldManager;
 
 class WorldModule extends AbstractModule {
 
