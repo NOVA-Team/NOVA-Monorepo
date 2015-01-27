@@ -4,16 +4,44 @@ import nova.core.item.ItemStack;
 import nova.core.item.ItemUtils;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector3i;
-import nova.core.world.World;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 public abstract class Block implements Identifiable {
-	public Collection<ItemStack> getDroppedStacks(World world, Vector3i position) {
+	private final BlockAccess blockAccess;
+	private final Vector3i position;
+
+	public Block(BlockAccess blockAccess, Vector3i position) {
+		this.blockAccess = blockAccess;
+		this.position = position;
+	}
+
+	public Collection<ItemStack> getDroppedStacks() {
 		ArrayList<ItemStack> list = new ArrayList<>();
 		list.add(new ItemStack(ItemUtils.getItemFromBlock(this)));
 		return list;
+	}
+
+	public BlockAccess getBlockAccess() {
+		return blockAccess;
+	}
+
+	public Vector3i getPosition() {
+		return position;
+	}
+
+	public int getX() {
+		return position.x;
+	}
+
+	public int getY() {
+		return position.y;
+	}
+
+	public int getZ() {
+		return position.z;
 	}
 
 	public boolean isCube() {
@@ -24,15 +52,15 @@ public abstract class Block implements Identifiable {
 		return isCube();
 	}
 
-	public void onNeighborChange(World world, Vector3i position, Vector3i neighborPosition) {
+	public void onNeighborChange(Vector3i neighborPosition) {
 
 	}
 
-	public void onPlaced(World world, Vector3i position, BlockChanger changer) {
+	public void onPlaced(BlockChanger changer) {
 
 	}
 
-	public void onRemoved(World world, Vector3i position, BlockChanger changer) {
+	public void onRemoved(BlockChanger changer) {
 
 	}
 }

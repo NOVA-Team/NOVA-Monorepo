@@ -1,4 +1,6 @@
-package nova.core.util;
+package nova.core.util.components;
+
+import nova.core.util.Stored;
 
 import java.lang.reflect.Field;
 import java.util.Map;

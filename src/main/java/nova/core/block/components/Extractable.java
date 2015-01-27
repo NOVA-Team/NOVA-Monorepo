@@ -1,4 +1,4 @@
-package nova.core.block;
+package nova.core.block.components;
 
 import nova.core.util.Direction;
 

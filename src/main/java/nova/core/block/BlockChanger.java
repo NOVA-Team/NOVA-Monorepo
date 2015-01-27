@@ -1,8 +1,6 @@
 package nova.core.block;
 
 import nova.core.player.Player;
-import nova.core.util.transform.Vector3i;
-import nova.core.world.World;
 
 import java.util.Optional;
 
@@ -14,19 +12,17 @@ public abstract class BlockChanger {
 	}
 
 	public class Block extends BlockChanger {
-		private final Block block;
-		private final World world;
-		private final Vector3i position;
+		public final BlockAccess blockAccess;
+		public final Block block;
 
-		public Block(World world, Vector3i position, Block block) {
-			this.world = world;
-			this.position = position;
+		public Block(BlockAccess blockAccess, Block block) {
+			this.blockAccess = blockAccess;
 			this.block = block;
 		}
 	}
 
 	public class Entity extends BlockChanger {
-		private final Entity entity;
+		public final Entity entity;
 
 		public Entity(Entity entity) {
 			this.entity = entity;
