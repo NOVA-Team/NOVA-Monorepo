@@ -9,5 +9,29 @@ package nova.core.block;
  * Storable.
  */
 public interface Stateful {
+	/**
+	 * This function will get called upon the very first initialization of
+	 * a block instance. It will NOT be called after loading, for example via
+	 * the Storable interface.
+	 */
 	void initialize();
+
+	/**
+	 * This function will get called every time a block is created or reloaded,
+	 * including Storable loads.
+	 */
+	void validate();
+
+	/**
+	 * This function will get called before a block instance is destroyed, for
+	 * example removed from the World.
+	 */
+	void invalidate();
+
+	/**
+	 * This function should return whether a block instance has ben invalidated
+	 * or not.
+	 * @return
+	 */
+	boolean isValid();
 }

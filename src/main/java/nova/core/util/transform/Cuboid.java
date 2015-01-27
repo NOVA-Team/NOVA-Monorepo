@@ -17,6 +17,11 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 		this.max = max;
 	}
 
+	public Cuboid(Vector3i min, Vector3i max) {
+		this.min = min.toDouble();
+		this.max = max.toDouble();
+	}
+
 	@Override
 	public Cuboid add(Cuboid other) {
 		return new Cuboid(min.add(other.min), max.add(other.max));

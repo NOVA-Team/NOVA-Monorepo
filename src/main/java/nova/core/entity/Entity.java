@@ -1,5 +1,6 @@
 package nova.core.entity;
 
+import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.world.World;
 
