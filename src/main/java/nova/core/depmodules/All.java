@@ -22,7 +22,7 @@ public class All {
 	static{
 		add(BlockModule::new);
 		add(ItemModule::new);
-		add(RegistryModule::new);
+		add(UtilModule::new);
 		add(WorldModule::new);
 	}
 	
