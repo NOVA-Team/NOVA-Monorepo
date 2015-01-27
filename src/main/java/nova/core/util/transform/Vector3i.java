@@ -3,6 +3,7 @@ package nova.core.util.transform;
 /**
  * An integer implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
  */
+@SuppressWarnings("rawtypes")
 public class Vector3i extends Vector3<Vector3i> {
 	public final int x, y, z;
 

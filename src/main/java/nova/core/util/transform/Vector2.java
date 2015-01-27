@@ -5,6 +5,7 @@ package nova.core.util.transform;
  *
  * @author Calclavia
  */
+@SuppressWarnings("rawtypes")
 public abstract class Vector2<O extends Vector2<O>> extends AbstractVector2<Vector2<O>, O> implements Comparable
 {
 }

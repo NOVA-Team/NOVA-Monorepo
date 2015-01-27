@@ -7,7 +7,6 @@ import nova.core.util.transform.Vector3i;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 public abstract class Block implements Identifiable {
 	private final BlockAccess blockAccess;

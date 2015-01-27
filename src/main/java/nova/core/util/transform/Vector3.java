@@ -4,6 +4,7 @@ package nova.core.util.transform;
  * An abstract Vector3 class that is extended by both Vector3i and Vector3d
  * @author Calclavia
  */
+@SuppressWarnings("rawtypes")
 public abstract class Vector3<O extends Vector3<O>> extends AbstractVector2<Vector3<O>, O> implements Comparable
 {
 
@@ -28,7 +29,7 @@ public abstract class Vector3<O extends Vector3<O>> extends AbstractVector2<Vect
 	 *
 	 * @return A vector representing the normal, perpendicular to these two vectors
 	 */
-	public abstract O cross(Vector3 other);
+	public abstract O cross(Vector3<?> other);
 
 	@Override
 	public int compareTo(Object o) {

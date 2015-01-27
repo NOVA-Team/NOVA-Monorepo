@@ -5,6 +5,7 @@ package nova.core.util.transform;
  *
  * @author Calclavia
  */
+@SuppressWarnings("rawtypes")
 public class Vector2d extends Vector2<Vector2d>
 {
 	public final double x, y;
