@@ -1,0 +1,23 @@
+# Ignore All
+/*
+
+# Except:
+
+# Sources
+!/src
+
+# github
+!/.gitignore
+!/README
+
+# gradle
+!/build.gradle
+!/settings.gradle
+!/gradle.properties
+!/gradlew*
+
+# checkstyle
+!/checkstyle*.xml
+
+# Travis
+!/.travis.yml
