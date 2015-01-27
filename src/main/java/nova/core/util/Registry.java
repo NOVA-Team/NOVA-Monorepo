@@ -5,6 +5,8 @@ import com.google.inject.Inject;
 
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.stream.Stream;
 
 /**
  * A registry of one type of identifiable object.
@@ -59,5 +61,13 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		return objects.values().iterator();
+	}
+
+	public Spliterator<T> spliterator() {
+		return objects.values().spliterator();
+	}
+
+	public Stream<T> stream() {
+		return objects.values().stream();
 	}
 }

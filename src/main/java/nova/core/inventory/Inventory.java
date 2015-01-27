@@ -4,6 +4,10 @@ import nova.core.item.ItemStack;
 
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public interface Inventory extends Iterable<ItemStack> {
 	Optional<ItemStack> getStack(int slot);
@@ -41,5 +45,13 @@ public interface Inventory extends Iterable<ItemStack> {
 
 	default Iterator<ItemStack> iterator() {
 		return new InventoryIterator(this);
+	}
+
+	default Spliterator<ItemStack> spliterator() {
+		return Spliterators.spliterator(iterator(), getSize(), Spliterator.NONNULL | Spliterator.ORDERED | Spliterator.SORTED);
+	}
+
+	default Stream<ItemStack> stream() {
+		return StreamSupport.stream(spliterator(), false);
 	}
 }
