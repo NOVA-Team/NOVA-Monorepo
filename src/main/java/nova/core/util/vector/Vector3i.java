@@ -3,7 +3,7 @@ package nova.core.util.vector;
 /**
  * An integer implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
  */
-public class Vector3i implements Comparable, VectorOperator<Vector3i>
+public class Vector3i extends Vector3 implements Comparable
 {
 	public final int x, y, z;
 

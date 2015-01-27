@@ -5,7 +5,7 @@ package nova.core.util.vector;
  *
  * @author Calclavia
  */
-public class Vector3d implements Comparable, VectorOperator<Vector3d>
+public class Vector3d extends Vector3 implements Comparable
 {
 	public final double x, y, z;
 
@@ -128,5 +128,41 @@ public class Vector3d implements Comparable, VectorOperator<Vector3d>
 	public Vector3i toInt()
 	{
 		return new Vector3i((int) x, (int) y, (int) z);
+	}
+
+	@Override
+	public int xi()
+	{
+		return (int) x;
+	}
+
+	@Override
+	public int yi()
+	{
+		return (int) y;
+	}
+
+	@Override
+	public int zi()
+	{
+		return (int) z;
+	}
+
+	@Override
+	public double xd()
+	{
+		return x;
+	}
+
+	@Override
+	public double yd()
+	{
+		return 0;
+	}
+
+	@Override
+	public double zd()
+	{
+		return 0;
 	}
 }
