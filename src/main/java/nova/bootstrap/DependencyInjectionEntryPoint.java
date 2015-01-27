@@ -48,8 +48,9 @@ public class DependencyInjectionEntryPoint {
 
 		Set<Module> secondaryModules = new HashSet<>();    //TODO: Detect modules in wrappers.
 
-		additionalModules.ifPresent(modules -> secondaryModules.addAll(modules));
-		injector = injector.map(inje -> inje.createChildInjector(secondaryModules)); //swap to secondary bindings
+		additionalModules.ifPresent(secondaryModules::addAll);
+
+		injector = injector.map(injector -> injector.createChildInjector(secondaryModules)); //swap to secondary bindings
 
 		state = State.INIT;
 	}
@@ -66,12 +67,13 @@ public class DependencyInjectionEntryPoint {
 
 		Set<Module> tertiaryModules = new HashSet<>(); //TODO: Detect modules in mods.
 
-		additionalModules.ifPresent(modules -> tertiaryModules.addAll(modules));
-		injector = injector.map(inje -> inje.createChildInjector(tertiaryModules)); //swap to tertiary bindings
+		additionalModules.ifPresent(tertiaryModules::addAll);
+
+		injector = injector.map(injector -> injector.createChildInjector(tertiaryModules)); //swap to tertiary bindings
 
 		state = State.POSTINIT;
 
-		return injector.map(inje -> inje.getInstance(Game.class)).orElseThrow(IllegalStateException::new);
+		return injector.map(injector -> injector.getInstance(Game.class)).orElseThrow(IllegalStateException::new);
 	}
 
 	private enum State {
