@@ -1,4 +1,6 @@
-package nova.core.util;
+package nova.test.core.util;
+
+import nova.core.util.Identifiable;
 
 public class MockIdentifiable implements Identifiable {
 	String ID;

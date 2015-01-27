@@ -1,14 +1,21 @@
-package nova.core.util;
+package nova.test.core.util;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import nova.core.util.Identifiable;
+import nova.core.util.Registry;
+import nova.test.di.WithInjector;
 
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.google.inject.Key;
 
-public class RegistryTest {
+public class RegistryTest extends WithInjector{
+	
 
 	@Test
 	public void testRegistry() throws Exception {
-		Registry<Identifiable> registry = new Registry<>();
+			
+		Registry<Identifiable> registry = injector.getInstance(new Key<Registry<Identifiable>>(){});
 
 		Identifiable id1 = new MockIdentifiable("ID1");
 		Identifiable id2 = new MockIdentifiable("ID2");

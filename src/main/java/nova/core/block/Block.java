@@ -1,7 +1,7 @@
 package nova.core.block;
 
+import nova.core.game.Game;
 import nova.core.item.ItemStack;
-import nova.core.item.ItemUtils;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector3i;
 
@@ -19,7 +19,7 @@ public abstract class Block implements Identifiable {
 
 	public Collection<ItemStack> getDroppedStacks() {
 		ArrayList<ItemStack> list = new ArrayList<>();
-		list.add(new ItemStack(ItemUtils.getItemFromBlock(this)));
+		list.add(new ItemStack(Game.instance.get().itemManager.getItemFromBlock(this))); // -100 style points.
 		return list;
 	}
 
