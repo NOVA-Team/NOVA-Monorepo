@@ -44,8 +44,7 @@ public class Vector3d extends Vector3<Vector3d> {
 	}
 
 	@Override
-	public Vector3d cross(Vector3 other)
-	{
+	public Vector3d cross(Vector3 other) {
 		return new Vector3d(y * other.zd() - z * other.yd(), z * other.xd() - x * other.zd(), x * other.yd() - y * other.xd());
 	}
 

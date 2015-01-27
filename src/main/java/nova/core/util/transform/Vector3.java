@@ -5,8 +5,7 @@ package nova.core.util.transform;
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
-public abstract class Vector3<O extends Vector3<O>> extends AbstractVector2<Vector3<O>, O> implements Comparable
-{
+public abstract class Vector3<O extends Vector3<O>> extends AbstractVector2<Vector3<O>, O> implements Comparable {
 
 	/**
 	 * Integer coordinate values
@@ -26,7 +25,6 @@ public abstract class Vector3<O extends Vector3<O>> extends AbstractVector2<Vect
 	/**
 	 * Returns the cross product between this vector and the other.
 	 * Calculated by finding the determinant of a 3x3 matrix.
-	 *
 	 * @return A vector representing the normal, perpendicular to these two vectors
 	 */
 	public abstract O cross(Vector3<?> other);
