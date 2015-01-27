@@ -4,6 +4,7 @@ sudo: false
 
 before_install: chmod +x gradlew
 install:
+  - ""
 script:
   - ./gradlew check
   - rm ~/.gradle/caches/modules-2/modules-2.lock
