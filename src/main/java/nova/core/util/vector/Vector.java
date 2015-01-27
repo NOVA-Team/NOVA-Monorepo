@@ -87,4 +87,14 @@ public abstract class Vector<I extends Vector<I, O>, O extends I>
 	{
 		return add(other).divide(2);
 	}
+
+	/**
+	 * Returns the maximum vector of this vector and the other vector.
+	 */
+	public abstract O max(I other);
+
+	/**
+	 * Returns the maximum vector of this vector and the other vector.
+	 */
+	public abstract O min(I other);
 }

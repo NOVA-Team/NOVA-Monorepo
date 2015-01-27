@@ -81,6 +81,18 @@ public class Vector3d extends Vector3<Vector3d>
 	}
 
 	@Override
+	public Vector3d max(Vector3 other)
+	{
+		return new Vector3d(Math.max(xd(), other.xd()), Math.max(yd(), other.yd()), Math.max(zd(), other.zd()));
+	}
+
+	@Override
+	public Vector3d min(Vector3 other)
+	{
+		return new Vector3d(Math.min(xd(), other.xd()), Math.min(yd(), other.yd()), Math.min(zd(), other.zd()));
+	}
+
+	@Override
 	public int hashCode()
 	{
 		long x = Double.doubleToLongBits(this.x);

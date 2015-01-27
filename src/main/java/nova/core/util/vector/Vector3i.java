@@ -77,6 +77,18 @@ public class Vector3i extends Vector3<Vector3i>
 	{
 		return new Vector3d(-y, x, 0);
 	}
+	
+	@Override
+	public Vector3i max(Vector3 other)
+	{
+		return new Vector3i(Math.max(xi(), other.xi()), Math.max(yi(), other.yi()), Math.max(zi(), other.zi()));
+	}
+
+	@Override
+	public Vector3i min(Vector3 other)
+	{
+		return new Vector3i(Math.min(xi(), other.xi()), Math.min(yi(), other.yi()), Math.min(zi(), other.zi()));
+	}
 
 	@Override
 	public int hashCode()
