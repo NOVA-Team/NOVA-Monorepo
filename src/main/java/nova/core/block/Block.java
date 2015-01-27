@@ -25,11 +25,15 @@ public abstract class Block implements Identifiable {
 		return isCube();
 	}
 
-	public void onPlaced(World world, Vector3i position, Player player) {
+	public void onNeighborChange(World world, Vector3i position, Vector3i neighborPosition) {
 
 	}
 
-	public void onRemoved(World world, Vector3i position, Player player) {
+	public void onPlaced(World world, Vector3i position, BlockChanger changer) {
+
+	}
+
+	public void onRemoved(World world, Vector3i position, BlockChanger changer) {
 
 	}
 }
