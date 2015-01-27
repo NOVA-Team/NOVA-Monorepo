@@ -48,13 +48,11 @@ public class Vector3i extends Vector3<Vector3i> {
 	 * @return A vector representing the normal, perpendicular to these two vectors
 	 */
 	@Override
-	public Vector3i cross(Vector3 other)
-	{
+	public Vector3i cross(Vector3 other) {
 		return new Vector3i(y * other.zi() - z * other.yi(), z * other.xi() - x * other.zi(), x * other.yi() - y * other.xi());
 	}
 
-	public Vector3i perpendicular()
-	{
+	public Vector3i perpendicular() {
 		if (z == 0) {
 			return zCross();
 		}
@@ -62,13 +60,11 @@ public class Vector3i extends Vector3<Vector3i> {
 		return xCross();
 	}
 
-	public Vector3i xCross()
-	{
+	public Vector3i xCross() {
 		return new Vector3i(0, z, -y);
 	}
 
-	public Vector3i zCross()
-	{
+	public Vector3i zCross() {
 		return new Vector3i(-y, x, 0);
 	}
 
