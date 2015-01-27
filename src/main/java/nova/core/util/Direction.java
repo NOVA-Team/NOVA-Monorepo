@@ -1,5 +1,7 @@
 package nova.core.util;
 
+import nova.core.util.vector.Vector3i;
+
 public enum Direction {
 	DOWN(0, -1, 0),
 	UP(0, 1, 0),
@@ -9,6 +11,10 @@ public enum Direction {
 	EAST(1, 0, 0),
 	UNKNOWN(0, 0, 0);
 
+	public static final Direction[] DIRECTIONS = new Direction[] {
+			DOWN, UP, NORTH, SOUTH, WEST, EAST
+	};
+	private static final Direction[] values = Direction.values();
 	public final int x, y, z;
 	private final Vector3i vector;
 
@@ -18,12 +24,6 @@ public enum Direction {
 		z = oz;
 		vector = new Vector3i(x, y, z);
 	}
-
-	public static final Direction[] DIRECTIONS = new Direction[] {
-			DOWN, UP, NORTH, SOUTH, WEST, EAST
-	};
-
-	private static final Direction[] values = Direction.values();
 
 	public static Direction fromOrdinal(int i) {
 		return Direction.values[i % Direction.values.length];

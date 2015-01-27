@@ -4,7 +4,7 @@ import nova.core.item.ItemStack;
 import nova.core.item.ItemUtils;
 import nova.core.player.Player;
 import nova.core.util.Identifiable;
-import nova.core.util.Vector3i;
+import nova.core.util.vector.Vector3i;
 import nova.core.world.World;
 
 import java.util.ArrayList;

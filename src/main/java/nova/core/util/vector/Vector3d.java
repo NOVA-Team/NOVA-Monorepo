@@ -1,11 +1,11 @@
-package nova.core.util;
+package nova.core.util.vector;
 
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
  *
  * @author Calclavia
  */
-public class Vector3d implements Comparable<Vector3d>
+public class Vector3d implements Comparable, VectorOperator<Vector3d>
 {
 	public final double x, y, z;
 
@@ -16,6 +16,7 @@ public class Vector3d implements Comparable<Vector3d>
 		this.z = z;
 	}
 
+	@Override
 	public Vector3d add(Vector3d other)
 	{
 		return new Vector3d(x + other.x, y + other.y, z + other.z);
@@ -26,14 +27,10 @@ public class Vector3d implements Comparable<Vector3d>
 		return new Vector3d(x + other.x, y + other.y, z + other.z);
 	}
 
+	@Override
 	public Vector3d add(double other)
 	{
 		return new Vector3d(x + other, y + other, z + other);
-	}
-
-	public Vector3d subtract(Vector3d other)
-	{
-		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
 
 	public Vector3d subtract(Vector3i other)
@@ -41,29 +38,16 @@ public class Vector3d implements Comparable<Vector3d>
 		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
 
-	public Vector3d subtract(double other)
-	{
-		return add(-other);
-	}
-
+	@Override
 	public Vector3d multiply(Vector3d other)
 	{
 		return new Vector3d(x * other.x, y * other.y, z * other.z);
 	}
 
+	@Override
 	public Vector3d multiply(double other)
 	{
 		return new Vector3d(x * other, y * other, z * other);
-	}
-
-	public Vector3d divide(Vector3d other)
-	{
-		return multiply(other.reciprocal());
-	}
-
-	public Vector3d divide(double other)
-	{
-		return multiply(1 / other);
 	}
 
 	/**
@@ -76,52 +60,12 @@ public class Vector3d implements Comparable<Vector3d>
 	}
 
 	/**
-	 * Returns the inverse of this vector.
-	 */
-	public Vector3d inverse()
-	{
-		return multiply(-1);
-	}
-
-	public Vector3d midpoint(Vector3d other)
-	{
-		return add(other).divide(2);
-	}
-
-	public double distance(Vector3d other)
-	{
-		return other.subtract(this).magnitude();
-	}
-
-	public Vector3d normalize()
-	{
-		return divide(magnitude());
-	}
-
-	public double magnitude()
-	{
-		return Math.sqrt(magnitudeSquared());
-	}
-
-	public double magnitudeSquared()
-	{
-		return dot(this);
-	}
-
-	/**
 	 * Returns the dot product between this vector and the other.
 	 */
+	@Override
 	public double dot(Vector3d other)
 	{
 		return x * other.x + y * other.y + z * other.z;
-	}
-
-	/**
-	 * Gets the angle between this vector and the other.
-	 */
-	public double angle(Vector3d other)
-	{
-		return Math.acos(dot(other) / (magnitude() * other.magnitude()));
 	}
 
 	/**
@@ -166,7 +110,7 @@ public class Vector3d implements Comparable<Vector3d>
 	}
 
 	@Override
-	public int compareTo(Vector3d o)
+	public int compareTo(Object o)
 	{
 		if (o instanceof Vector3d)
 		{
@@ -179,5 +123,10 @@ public class Vector3d implements Comparable<Vector3d>
 				return 1;
 		}
 		return 0;
+	}
+
+	public Vector3i toInt()
+	{
+		return new Vector3i((int) x, (int) y, (int) z);
 	}
 }

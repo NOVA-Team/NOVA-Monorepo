@@ -1,10 +1,9 @@
-package nova.core.util;
+package nova.core.util.vector;
 
 /**
  * An integer implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
- *
  */
-public class Vector3i implements Comparable<Vector3i>
+public class Vector3i implements Comparable, VectorOperator<Vector3i>
 {
 	public final int x, y, z;
 
@@ -15,29 +14,40 @@ public class Vector3i implements Comparable<Vector3i>
 		this.z = z;
 	}
 
+	@Override
 	public Vector3i add(Vector3i other)
 	{
 		return new Vector3i(x + other.x, y + other.y, z + other.z);
 	}
 
-	public Vector3i add(int other)
+	@Override
+	public Vector3i add(double other)
 	{
-		return new Vector3i(x + other, y + other, z + other);
+		return new Vector3i(x + (int) other, y + (int) other, z + (int) other);
 	}
 
-	public Vector3i subtract(Vector3i other)
+	@Override
+	public Vector3i multiply(Vector3i other)
 	{
-		return new Vector3i(x - other.x, y - other.y, z - other.z);
+		return new Vector3i(x * other.x, y * other.y, z * other.z);
 	}
 
-	public Vector3i subtract(int other)
+	@Override
+	public Vector3i multiply(double other)
 	{
-		return new Vector3i(x - other, y - other, z - other);
+		return new Vector3i(x * (int) other, y * (int) other, z * (int) other);
 	}
 
-	public Vector3i inverse()
+	@Override
+	public Vector3i reciprocal()
 	{
-		return new Vector3i(-x, -y, -z);
+		return new Vector3i(1 / x, 1 / y, 1 / z);
+	}
+
+	@Override
+	public double dot(Vector3i other)
+	{
+		return x * other.x + y * other.y + z * other.z;
 	}
 
 	@Override
@@ -50,7 +60,7 @@ public class Vector3i implements Comparable<Vector3i>
 	}
 
 	@Override
-	public int compareTo(Vector3i o)
+	public int compareTo(Object o)
 	{
 		if (o instanceof Vector3i)
 		{
@@ -65,7 +75,8 @@ public class Vector3i implements Comparable<Vector3i>
 		return 0;
 	}
 
-	public Vector3d toDouble() {
+	public Vector3d toDouble()
+	{
 		return new Vector3d(x, y, z);
 	}
 }

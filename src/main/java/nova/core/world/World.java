@@ -2,7 +2,7 @@ package nova.core.world;
 
 import nova.core.block.Block;
 import nova.core.util.Identifiable;
-import nova.core.util.Vector3i;
+import nova.core.util.vector.Vector3i;
 
 import java.util.Optional;
 
