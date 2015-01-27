@@ -62,7 +62,7 @@ public interface Inventory extends Iterable<ItemStack> {
 	}
 
 	default Spliterator<ItemStack> spliterator() {
-		return Spliterators.spliterator(iterator(), getSize(), Spliterator.NONNULL | Spliterator.ORDERED | Spliterator.SORTED);
+		return Spliterators.spliterator(iterator(), size(), Spliterator.NONNULL | Spliterator.ORDERED | Spliterator.SORTED);
 	}
 
 	default Stream<ItemStack> stream() {
