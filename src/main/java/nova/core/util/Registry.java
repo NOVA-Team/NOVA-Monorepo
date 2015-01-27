@@ -14,8 +14,7 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 	private final HashBiMap<String, T> objects = HashBiMap.create();
 	
 	@Inject
-	private Registry(){
-		
+	public Registry() {
 	}
 
 	/**
