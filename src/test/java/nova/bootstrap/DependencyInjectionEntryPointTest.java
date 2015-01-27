@@ -1,14 +1,13 @@
-package nova.test.di;
+package nova.bootstrap;
 
 import java.util.Optional;
 
-import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
-public class BasicInjectionTest {
+public class DependencyInjectionEntryPointTest {
 
 	@Test
 	public void starting_injection_should_not_crash(){

@@ -1,9 +1,8 @@
-package nova.test.core.util;
+package nova.core.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import nova.core.util.Identifiable;
-import nova.core.util.Registry;
-import nova.test.di.WithInjector;
+
+import nova.bootstrap.WithInjector;
 
 import org.junit.Test;
 

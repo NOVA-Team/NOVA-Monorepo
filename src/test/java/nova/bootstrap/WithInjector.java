@@ -1,8 +1,6 @@
-package nova.test.di;
+package nova.bootstrap;
 
 import java.util.Optional;
-
-import nova.bootstrap.DependencyInjectionEntryPoint;
 
 import org.junit.Before;
 
