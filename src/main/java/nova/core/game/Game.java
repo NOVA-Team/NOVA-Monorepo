@@ -26,6 +26,7 @@ public class Game {
 		this.blockManager = blockManager;
 		this.itemManager = itemManager;
 		this.worldManager = worldManager;
+		instance = Optional.of(this);
 	}
 
 }
