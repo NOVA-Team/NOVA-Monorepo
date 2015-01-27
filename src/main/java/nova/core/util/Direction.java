@@ -1,6 +1,6 @@
 package nova.core.util;
 
-import nova.core.util.vector.Vector3i;
+import nova.core.util.transform.Vector3i;
 
 public enum Direction {
 	DOWN(0, -1, 0),

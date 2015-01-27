@@ -1,4 +1,4 @@
-package nova.core.util.vector;
+package nova.core.util.transform;
 
 /**
  * An integer implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.

@@ -1,7 +1,7 @@
 package nova.core.block;
 
 import nova.core.player.Player;
-import nova.core.util.vector.Vector3i;
+import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
 
 import java.util.Optional;

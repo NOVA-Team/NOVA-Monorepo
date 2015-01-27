@@ -1,6 +1,6 @@
 package nova.core.entity;
 
-import nova.core.util.vector.Vector3d;
+import nova.core.util.transform.Vector3d;
 import nova.core.world.World;
 
 public interface Entity {
