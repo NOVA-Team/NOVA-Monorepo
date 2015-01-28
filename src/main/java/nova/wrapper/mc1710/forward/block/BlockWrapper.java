@@ -1,6 +1,7 @@
 package nova.wrapper.mc1710.forward.block;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -75,6 +76,7 @@ public class BlockWrapper extends net.minecraft.block.Block {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
 		getBlockInstance(world, new Vector3i(x, y, z)).onPlaced(new BlockChanger.Entity(new EntityWrapper(entity)));
+		//TODO: Should we consider onBlockPlaced also?
 	}
 
 	@Override
@@ -87,11 +89,16 @@ public class BlockWrapper extends net.minecraft.block.Block {
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		//TODO: Check this traytrace.
 		MovingObjectPosition mop = player.rayTrace(10, 1);
-		getBlockInstance(world, new Vector3i(x, y, z)).leftClick(new EntityWrapper(player), mop.sideHit, new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+		getBlockInstance(world, new Vector3i(x, y, z)).onLeftClick(new EntityWrapper(player), mop.sideHit, new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		return getBlockInstance(world, new Vector3i(x, y, z)).rightClick(new EntityWrapper(player), side, new Vector3d(hitX, hitY, hitZ));
+		return getBlockInstance(world, new Vector3i(x, y, z)).onRightClick(new EntityWrapper(player), side, new Vector3d(hitX, hitY, hitZ));
+	}
+
+	@Override
+	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+		getBlockInstance(world, new Vector3i(x, y, z)).onEntityCollide(new EntityWrapper(entity));
 	}
 }
