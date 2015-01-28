@@ -1,9 +1,11 @@
 package nova.core.block;
 
+import nova.core.entity.Entity;
 import nova.core.game.Game;
 import nova.core.item.ItemStack;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Cuboid;
+import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 
 import java.util.ArrayList;
@@ -66,5 +68,27 @@ public abstract class Block implements Identifiable {
 
 	public void onRemoved(BlockChanger changer) {
 
+	}
+
+	/**
+	 * Called when the block is left clicked.
+	 * @param entity - The entity that right clicked this object. Most likely a player.
+	 * @param side - The side it was clicked.
+	 * @param hit - The position it was clicked.
+	 * @return True if the right click action does something.
+	 */
+	public boolean leftClick(Entity entity, int side, Vector3d hit) {
+		return false;
+	}
+
+	/**
+	 * Called when the block is right clicked.
+	 * @param entity - The entity that right clicked this object. Most likely a player.
+	 * @param side - The side it was clicked.
+	 * @param hit - The position it was clicked.
+	 * @return True if the right click action does something.
+	 */
+	public boolean rightClick(Entity entity, int side, Vector3d hit) {
+		return false;
 	}
 }
