@@ -84,4 +84,18 @@ public class Vector2d extends Vector2<Vector2d> {
 	public double yd() {
 		return y;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Vector2) {
+			Vector2 v = ((Vector2) obj);
+			return xd() == v.xd() && yd() == v.yd();
+		}
+		return this == obj;
+	}
+
+	@Override
+	public String toString() {
+		return "[Vector2d] " + x + ", " + y;
+	}
 }

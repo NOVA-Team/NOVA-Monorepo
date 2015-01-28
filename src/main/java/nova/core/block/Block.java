@@ -1,13 +1,17 @@
 package nova.core.block;
 
+import nova.core.entity.Entity;
 import nova.core.game.Game;
 import nova.core.item.ItemStack;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Cuboid;
+import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Block implements Identifiable {
 	private final BlockAccess blockAccess;
@@ -26,6 +30,17 @@ public abstract class Block implements Identifiable {
 
 	public Cuboid getBoundingBox() {
 		return new Cuboid(position, position.add(1));
+	}
+
+	public Set<Cuboid> getCollidingBoxes(Cuboid intersect, Entity entity) {
+		Set<Cuboid> bounds = new HashSet<>();
+		Cuboid defaultBound = getBoundingBox();
+
+		if (defaultBound.intersects(intersect)) {
+			bounds.add(getBoundingBox());
+		}
+
+		return bounds;
 	}
 
 	public BlockAccess getBlockAccess() {
@@ -65,6 +80,37 @@ public abstract class Block implements Identifiable {
 	}
 
 	public void onRemoved(BlockChanger changer) {
+
+	}
+
+	/**
+	 * Called when the block is left clicked.
+	 * @param entity - The entity that right clicked this object. Most likely a player.
+	 * @param side - The side it was clicked.
+	 * @param hit - The position it was clicked.
+	 * @return True if the right click action does something.
+	 */
+	public boolean onLeftClick(Entity entity, int side, Vector3d hit) {
+		return false;
+	}
+
+	/**
+	 * Called when the block is right clicked.
+	 * @param entity - The entity that right clicked this object. Most likely a player.
+	 * @param side - The side it was clicked.
+	 * @param hit - The position it was clicked.
+	 * @return True if the right click action does something.
+	 */
+	public boolean onRightClick(Entity entity, int side, Vector3d hit) {
+		return false;
+	}
+
+	/**
+	 * Called when an entity collides with this block.
+	 * More specifically, when the entity's block bounds coincide with the block bounds.
+	 * @param entity
+	 */
+	public void onEntityCollide(Entity entity) {
 
 	}
 }

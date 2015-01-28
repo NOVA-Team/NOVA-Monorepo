@@ -119,4 +119,18 @@ public class Vector3i extends Vector3<Vector3i> {
 	public Vector3d toDouble() {
 		return new Vector3d(xd(), yd(), zd());
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Vector3) {
+			Vector3 v = ((Vector3) obj);
+			return xi() == v.xi() && yi() == v.yi() && zi() == v.zi();
+		}
+		return this == obj;
+	}
+
+	@Override
+	public String toString() {
+		return "[Vector3d] " + x + ", " + y + ", " + z;
+	}
 }

@@ -118,4 +118,18 @@ public class Vector3d extends Vector3<Vector3d> {
 	public Vector3i toInt() {
 		return new Vector3i(xi(), yi(), zi());
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Vector3) {
+			Vector3 v = ((Vector3) obj);
+			return xd() == v.xd() && yd() == v.yd() && zd() == v.zd();
+		}
+		return this == obj;
+	}
+
+	@Override
+	public String toString() {
+		return "[Vector3d] " + x + ", " + y + ", " + z;
+	}
 }
