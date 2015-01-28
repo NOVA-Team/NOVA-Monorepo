@@ -51,4 +51,7 @@ public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operat
 	 * Returns the maximum vector of this vector and the other vector.
 	 */
 	public abstract O min(I other);
+
+	//Forces re-implemtation of equals()
+	public abstract boolean equals(Object obj);
 }
