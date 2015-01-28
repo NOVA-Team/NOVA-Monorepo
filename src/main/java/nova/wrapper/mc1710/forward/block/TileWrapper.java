@@ -4,7 +4,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.util.components.Storable;
-import nova.core.util.components.Tickable;
+import nova.core.util.components.Updater;
+import nova.core.util.transform.Vector3i;
+import nova.wrapper.mc1710.backward.world.WorldWrapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +19,10 @@ public class TileWrapper extends TileEntity {
 
 	private Block block;
 
-	public TileWrapper() {
-	}
-
-	public TileWrapper(Block block) {
-		this.block = block;
+	@Override
+	public void validate() {
+		super.validate();
+		block = ((BlockWrapper) getBlockType()).newBlockInstance(new WorldWrapper(worldObj), new Vector3i(xCoord, yCoord, zCoord));
 	}
 
 	/**
@@ -29,7 +30,7 @@ public class TileWrapper extends TileEntity {
 	 */
 	@Override
 	public void updateEntity() {
-		((Tickable) block).update(0.05);
+		((Updater) block).update(0.05);
 	}
 
 	/**
@@ -38,7 +39,7 @@ public class TileWrapper extends TileEntity {
 	 */
 	@Override
 	public boolean canUpdate() {
-		return block instanceof Tickable;
+		return block instanceof Updater;
 	}
 
 	@Override

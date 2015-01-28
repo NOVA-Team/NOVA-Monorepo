@@ -8,7 +8,7 @@
 
 # github
 !/.gitignore
-!/README
+!/README.md
 
 # gradle
 !/build.gradle
