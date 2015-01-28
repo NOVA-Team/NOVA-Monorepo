@@ -19,7 +19,6 @@ import nova.wrapper.mc1710.backward.world.BlockAccessWrapper;
  * A Minecraft to Nova block wrapper
  * @author Calclavia
  */
-//TODO: How should blockAccess and World be injected?
 public class BlockWrapper extends net.minecraft.block.Block {
 
 	/**
@@ -27,22 +26,30 @@ public class BlockWrapper extends net.minecraft.block.Block {
 	 */
 	private Class<? extends Block> blockClass;
 
-	public BlockWrapper(Material material) {
-		super(material);
+	//TODO: Resolve unknown material issue
+	public BlockWrapper() {
+		super(Material.piston);
 	}
 
-	public Block newBlockInstance(net.minecraft.world.IBlockAccess access, Vector3i position) {
-		return newBlockInstance(new BlockAccessWrapper(access), position);
+	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3i position) {
+
+		/**
+		 * If this block has a TileEntity, forward the method into the Stateful block.
+		 * Otherwise, create a new instance of the block and forward the methods over.
+		 */
+		if (hasTileEntity()) {
+			return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block;
+		} else {
+			return getBlockInstance(new BlockAccessWrapper(access), position);
+		}
 	}
 
-	public Block newBlockInstance(nova.core.block.BlockAccess access, Vector3i position) {
+	public Block getBlockInstance(nova.core.block.BlockAccess access, Vector3i position) {
 		try {
 			return blockClass.getConstructor(nova.core.block.BlockAccess.class, Vector3i.class).newInstance(access, position);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
 		}
-		//TODO: Should this be null?
-		return null;
 	}
 
 	@Override
@@ -59,11 +66,17 @@ public class BlockWrapper extends net.minecraft.block.Block {
 	//TODO: This method seems to only be invoked when a TileEntity changes, not when blocks change!
 	@Override
 	public void onNeighborChange(IBlockAccess access, int x, int y, int z, int tileX, int tileY, int tileZ) {
-		newBlockInstance(access, new Vector3i(x, y, z)).onNeighborChange(new Vector3i(tileX, tileY, tileZ));
+		getBlockInstance(access, new Vector3i(x, y, z)).onNeighborChange(new Vector3i(tileX, tileY, tileZ));
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-		newBlockInstance(world, new Vector3i(x, y, z)).onPlaced(new BlockChanger.Entity(new EntityWrapper(entity)));
+		getBlockInstance(world, new Vector3i(x, y, z)).onPlaced(new BlockChanger.Entity(new EntityWrapper(entity)));
+	}
+
+	@Override
+	public void breakBlock(World world, int x, int y, int z, net.minecraft.block.Block block, int i) {
+		getBlockInstance(world, new Vector3i(x, y, z)).onRemoved(new BlockChanger.Unknown());
+		super.breakBlock(world, x, y, z, block, i);
 	}
 }

@@ -17,12 +17,12 @@ import java.util.Map;
  */
 public class TileWrapper extends TileEntity {
 
-	private Block block;
+	Block block;
 
 	@Override
 	public void validate() {
 		super.validate();
-		block = ((BlockWrapper) getBlockType()).newBlockInstance(new WorldWrapper(worldObj), new Vector3i(xCoord, yCoord, zCoord));
+		block = ((BlockWrapper) getBlockType()).getBlockInstance(new WorldWrapper(worldObj), new Vector3i(xCoord, yCoord, zCoord));
 	}
 
 	/**
