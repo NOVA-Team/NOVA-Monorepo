@@ -35,11 +35,12 @@ public class BlockWrapper extends net.minecraft.block.Block {
 	/**
 	 * Reference to the wrapped Nova block
 	 */
-	private Class<? extends Block> blockClass;
+	private final Class<? extends Block> blockClass;
 
 	//TODO: Resolve unknown material issue
-	public BlockWrapper() {
+	public BlockWrapper(Class<? extends Block> blockClass) {
 		super(Material.piston);
+		this.blockClass = blockClass;
 	}
 
 	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3i position) {
