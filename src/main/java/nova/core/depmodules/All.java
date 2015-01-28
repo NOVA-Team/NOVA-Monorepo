@@ -20,6 +20,7 @@ public class All {
 
 	static {
 		add(BlockModule::new);
+		add(EntityModule::new);
 		add(ItemModule::new);
 		add(UtilModule::new);
 		add(WorldModule::new);
