@@ -7,6 +7,7 @@ import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.world.WorldWrapper;
+import nova.wrapper.mc1710.util.NBTUtility;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class TileWrapper extends TileEntity {
 	}
 
 	/**
-	 * Only register tile updates if the block is an instance of Tickable.
+	 * Only register tile updates if the block is an instance of Updater.
 	 * @return
 	 */
 	@Override
@@ -49,7 +50,7 @@ public class TileWrapper extends TileEntity {
 		if (block instanceof Storable) {
 			Map<String, Object> data = new HashMap<>();
 			((Storable) block).saveToStore(data);
-			//TODO: Actually write to NBT
+			nbt.setTag("nova", NBTUtility.mapToNBT(data));
 		}
 	}
 
@@ -58,9 +59,7 @@ public class TileWrapper extends TileEntity {
 		super.readFromNBT(nbt);
 
 		if (block instanceof Storable) {
-			Map<String, Object> data = new HashMap<>();
-			((Storable) block).loadFromStore(data);
-			//TODO: Actually read from NBT
+			((Storable) block).loadFromStore(NBTUtility.nbtToMap(nbt.getCompoundTag("nova")));
 		}
 	}
 }
