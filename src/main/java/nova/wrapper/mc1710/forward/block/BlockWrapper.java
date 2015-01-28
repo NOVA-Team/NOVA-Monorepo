@@ -2,8 +2,10 @@ package nova.wrapper.mc1710.forward.block;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nova.core.block.Block;
@@ -11,6 +13,7 @@ import nova.core.block.BlockChanger;
 import nova.core.block.Stateful;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
+import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.entity.EntityWrapper;
 import nova.wrapper.mc1710.backward.world.BlockAccessWrapper;
@@ -78,5 +81,17 @@ public class BlockWrapper extends net.minecraft.block.Block {
 	public void breakBlock(World world, int x, int y, int z, net.minecraft.block.Block block, int i) {
 		getBlockInstance(world, new Vector3i(x, y, z)).onRemoved(new BlockChanger.Unknown());
 		super.breakBlock(world, x, y, z, block, i);
+	}
+
+	@Override
+	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
+		//TODO: Check this traytrace.
+		MovingObjectPosition mop = player.rayTrace(10, 1);
+		getBlockInstance(world, new Vector3i(x, y, z)).leftClick(new EntityWrapper(player), mop.sideHit, new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		return getBlockInstance(world, new Vector3i(x, y, z)).rightClick(new EntityWrapper(player), side, new Vector3d(hitX, hitY, hitZ));
 	}
 }
