@@ -127,4 +127,9 @@ public class Vector3d extends Vector3<Vector3d> {
 		}
 		return this == obj;
 	}
+
+	@Override
+	public String toString() {
+		return "[Vector3d] " + x + ", " + y + ", " + z;
+	}
 }

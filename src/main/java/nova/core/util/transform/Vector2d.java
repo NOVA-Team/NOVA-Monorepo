@@ -93,4 +93,9 @@ public class Vector2d extends Vector2<Vector2d> {
 		}
 		return this == obj;
 	}
+
+	@Override
+	public String toString() {
+		return "[Vector2d] " + x + ", " + y;
+	}
 }
