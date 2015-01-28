@@ -11,7 +11,7 @@ public abstract class BlockChanger {
 	/**
 	 * An unknown object changed the block.
 	 */
-	public class Unknown extends BlockChanger {
+	public static class Unknown extends BlockChanger {
 		public Unknown() {
 
 		}
@@ -20,7 +20,7 @@ public abstract class BlockChanger {
 	/**
 	 * A block changed the block.
 	 */
-	public class Block extends BlockChanger {
+	public static class Block extends BlockChanger {
 		/**
 		 * The BlockAccess used to access the block.
 		 */
@@ -39,7 +39,7 @@ public abstract class BlockChanger {
 	/**
 	 * An entity changed the block.
 	 */
-	public class Entity extends BlockChanger {
+	public static class Entity extends BlockChanger {
 		/**
 		 * The entity which changed the block.
 		 */
