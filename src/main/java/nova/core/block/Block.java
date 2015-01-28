@@ -10,6 +10,8 @@ import nova.core.util.transform.Vector3i;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Block implements Identifiable {
 	private final BlockAccess blockAccess;
@@ -28,6 +30,17 @@ public abstract class Block implements Identifiable {
 
 	public Cuboid getBoundingBox() {
 		return new Cuboid(position, position.add(1));
+	}
+
+	public Set<Cuboid> getCollidingBoxes(Cuboid intersect, Entity entity) {
+		Set<Cuboid> bounds = new HashSet<>();
+		Cuboid defaultBound = getBoundingBox();
+
+		if (defaultBound.intersects(intersect)) {
+			bounds.add(getBoundingBox());
+		}
+
+		return bounds;
 	}
 
 	public BlockAccess getBlockAccess() {
