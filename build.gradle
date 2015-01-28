@@ -1,0 +1,132 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            url 'http://maven.magik6k.net/'
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+        classpath 'us.phildop:gradle-sublimetext-plugin:0.5.3'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'forge'
+
+apply plugin: 'maven'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+apply plugin: 'sublimeText'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+version = minecraft_version + "-" + wrapper_version
+group = "nova.wrapper.mc1710"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url 'http://maven.magik6k.net/'
+    }
+}
+
+dependencies {
+    compile "nova:NovaCore:$nova_version"
+
+    testCompile "junit:junit:4.12"
+    testCompile 'org.assertj:assertj-core:1.+'
+}
+
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+    options.encoding = 'UTF-8'
+    options.fork = true
+    options.compilerArgs << '-Xlint'
+}
+
+minecraft {
+    version = minecraft_version + "-" + forge_version
+    runDir = "run"
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+shadowJar {
+    manifest {
+        attributes("Implementation-Title": project.name,
+                   "Implementation-Version": version,
+                   "Specification-Title": "NovaCore")
+    }
+}
+
+artifacts {
+    archives sourcesJar
+    archives deobfJar
+    archives javadocJar
+    archives shadowJar
+}
+
+sublimeText {
+    defaultFileExcludePatterns = ['.project', '.classpath', '.pydevproject']
+    defaultFolderExcludePatterns = ['.gradle', 'bin', 'build', '.settings']
+    generateSublimeJavaClasspath = true
+    generateSublimeJavaSrcpath = true
+    addGradleCompile = true
+}
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+
+    testLogging.showStandardStreams = true
+
+    beforeTest {descriptor ->
+        logger.lifecycle("Running " + descriptor)
+    }
+}
