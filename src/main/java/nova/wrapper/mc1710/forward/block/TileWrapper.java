@@ -49,7 +49,7 @@ public class TileWrapper extends TileEntity {
 
 		if (block instanceof Storable) {
 			Map<String, Object> data = new HashMap<>();
-			((Storable) block).saveToStore(data);
+			((Storable) block).save(data);
 			nbt.setTag("nova", NBTUtility.mapToNBT(data));
 		}
 	}
@@ -59,7 +59,7 @@ public class TileWrapper extends TileEntity {
 		super.readFromNBT(nbt);
 
 		if (block instanceof Storable) {
-			((Storable) block).loadFromStore(NBTUtility.nbtToMap(nbt.getCompoundTag("nova")));
+			((Storable) block).load(NBTUtility.nbtToMap(nbt.getCompoundTag("nova")));
 		}
 	}
 }
