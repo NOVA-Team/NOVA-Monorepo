@@ -77,7 +77,7 @@ public abstract class Block implements Identifiable {
 	 * @param hit - The position it was clicked.
 	 * @return True if the right click action does something.
 	 */
-	public boolean leftClick(Entity entity, int side, Vector3d hit) {
+	public boolean onLeftClick(Entity entity, int side, Vector3d hit) {
 		return false;
 	}
 
@@ -88,7 +88,16 @@ public abstract class Block implements Identifiable {
 	 * @param hit - The position it was clicked.
 	 * @return True if the right click action does something.
 	 */
-	public boolean rightClick(Entity entity, int side, Vector3d hit) {
+	public boolean onRightClick(Entity entity, int side, Vector3d hit) {
 		return false;
+	}
+
+	/**
+	 * Called when an entity collides with this block.
+	 * More specifically, when the entity's block bounds coincide with the block bounds.
+	 * @param entity
+	 */
+	public void onEntityCollide(Entity entity) {
+
 	}
 }
