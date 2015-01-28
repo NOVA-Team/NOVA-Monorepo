@@ -10,11 +10,11 @@ import nova.wrapper.mc1710.backward.world.WorldWrapper;
  * @author Calclavia
  */
 //TODO: Incomplete. All methods should be fully implemented.
-public class EntityWrapper extends Entity {
+public class EntityBackwardWrapper extends Entity {
 
 	public net.minecraft.entity.Entity entity;
 
-	public EntityWrapper(net.minecraft.entity.Entity entity) {
+	public EntityBackwardWrapper(net.minecraft.entity.Entity entity) {
 		//TODO: Should this be entity ID?
 		super(entity.getEntityId(), new WorldWrapper(entity.worldObj), new Vector3d(entity.posX, entity.posY, entity.posZ));
 		this.entity = entity;
