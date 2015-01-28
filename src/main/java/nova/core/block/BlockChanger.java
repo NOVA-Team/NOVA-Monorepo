@@ -43,9 +43,9 @@ public abstract class BlockChanger {
 		/**
 		 * The entity which changed the block.
 		 */
-		public final Entity entity;
+		public final nova.core.entity.Entity entity;
 
-		public Entity(Entity entity) {
+		public Entity(nova.core.entity.Entity entity) {
 			this.entity = entity;
 		}
 

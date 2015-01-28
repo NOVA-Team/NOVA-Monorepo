@@ -1,8 +1,6 @@
 package nova.core.player;
 
-import nova.core.entity.Entity;
-
-public interface Player extends Entity {
+public interface Player {
 	String getUserName();
 
 	InventoryPlayer getInventory();
