@@ -1,7 +1,5 @@
 package nova.core.game;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import nova.core.block.BlockManager;
 import nova.core.entity.EntityManager;
 import nova.core.item.ItemManager;
@@ -9,7 +7,7 @@ import nova.core.world.WorldManager;
 
 import java.util.Optional;
 
-@Singleton
+
 public class Game {
 
 	/**
@@ -23,7 +21,6 @@ public class Game {
 	public final ItemManager itemManager;
 	public final WorldManager worldManager;
 
-	@Inject
 	private Game(BlockManager blockManager, EntityManager entityManager, ItemManager itemManager, WorldManager worldManager) {
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;

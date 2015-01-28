@@ -1,12 +1,11 @@
 package nova.core.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-import nova.bootstrap.WithInjector;
+import nova.core.di.WithInjector;
 
 import org.junit.Test;
 
-import com.google.inject.Key;
+import se.jbee.inject.Dependency;
 
 public class RegistryTest extends WithInjector{
 	
@@ -14,7 +13,8 @@ public class RegistryTest extends WithInjector{
 	@Test
 	public void testRegistry() throws Exception {
 			
-		Registry<Identifiable> registry = injector.getInstance(new Key<Registry<Identifiable>>(){});
+		@SuppressWarnings("unchecked")
+		Registry<Identifiable> registry = injector.resolve(Dependency.dependency(Registry.class));
 
 		Identifiable id1 = new MockIdentifiable("ID1");
 		Identifiable id2 = new MockIdentifiable("ID2");

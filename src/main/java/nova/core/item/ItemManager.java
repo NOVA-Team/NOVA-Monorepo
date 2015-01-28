@@ -1,6 +1,5 @@
 package nova.core.item;
 
-import com.google.inject.Inject;
 import nova.core.block.Block;
 import nova.core.block.BlockManager;
 import nova.core.util.Registry;
@@ -12,7 +11,6 @@ public class ItemManager {
 	public final Registry<Item> itemRegistry;
 	private final BlockManager blockManager;
 
-	@Inject
 	private ItemManager(Registry<Item> itemRegistry, BlockManager blockManager) {
 		this.itemRegistry = itemRegistry;
 		this.blockManager = blockManager;

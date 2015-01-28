@@ -1,10 +1,10 @@
-package nova.bootstrap;
+package nova.core.di;
 
-import java.util.Optional;
+import nova.bootstrap.DependencyInjectionEntryPoint;
 
 import org.junit.Before;
 
-import com.google.inject.Injector;
+import se.jbee.inject.Injector;
 
 public abstract class WithInjector {
 	protected Injector injector;
@@ -13,8 +13,8 @@ public abstract class WithInjector {
 	public  void prepare(){
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 		diep.preInit();
-		diep.init(Optional.empty());
-		diep.postInit(Optional.empty());
+		diep.init();
+		diep.postInit();
 		injector = diep.getInjector().get();
 	}
 	

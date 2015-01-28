@@ -1,7 +1,5 @@
 package nova.bootstrap;
 
-import java.util.Optional;
-
 import nova.core.game.Game;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,10 +12,11 @@ public class DependencyInjectionEntryPointTest {
 		DependencyInjectionEntryPoint ep = new DependencyInjectionEntryPoint();
 
 		ep.preInit();
-		ep.init(Optional.empty());
-		Game game = ep.postInit(Optional.empty());
+		ep.init();
+		Game game = ep.postInit();
 
 		assertThat(game).isNotNull();
+		assertThat(game.blockManager).isNotNull();
 	}
 	
 }

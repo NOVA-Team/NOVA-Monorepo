@@ -1,15 +1,15 @@
 package nova.core.depmodules;
 
+import se.jbee.inject.bind.BinderModule;
+import se.jbee.inject.util.Scoped;
 import nova.core.block.BlockManager;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 
-class BlockModule extends AbstractModule {
+class BlockModule extends BinderModule {
 
 	@Override
-	protected void configure() {
-		bind(BlockManager.class).in(Singleton.class);
+	protected void declare() {
+		per(Scoped.APPLICATION).bind(BlockManager.class).toConstructor();
 	}
 
 }

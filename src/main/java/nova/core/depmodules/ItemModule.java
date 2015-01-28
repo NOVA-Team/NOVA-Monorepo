@@ -1,14 +1,15 @@
 package nova.core.depmodules;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
+import se.jbee.inject.bind.BinderModule;
+import se.jbee.inject.util.Scoped;
+
 import nova.core.item.ItemManager;
 
-class ItemModule extends AbstractModule {
+class ItemModule extends BinderModule {
 
 	@Override
-	protected void configure() {
-		bind(ItemManager.class).in(Singleton.class);
+	protected void declare() {
+		per(Scoped.APPLICATION).bind(ItemManager.class).toConstructor();
 	}
 
 }

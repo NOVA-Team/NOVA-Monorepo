@@ -1,7 +1,5 @@
 package nova.core.util;
 
-import com.google.inject.Inject;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,7 +16,6 @@ public class Dictionary<T> {
 	private final Map<String, Set<T>> entries = new HashMap<>();
 	private final Map<T, Set<String>> locations = new HashMap<>();
 
-	@Inject
 	public Dictionary() {
 
 	}
