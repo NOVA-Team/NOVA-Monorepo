@@ -20,9 +20,9 @@ import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.internal.dummy.BlockDummy;
-import nova.wrapper.mc1710.backward.entity.EntityBackwardWrapper;
-import nova.wrapper.mc1710.backward.util.CuboidBackwardWrapper;
-import nova.wrapper.mc1710.backward.world.BlockAccessWrapper;
+import nova.wrapper.mc1710.backward.BackwardProxyUtil;
+import nova.wrapper.mc1710.backward.util.BWCuboid;
+import nova.wrapper.mc1710.backward.world.BWBlockAccess;
 import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
 import nova.wrapper.mc1710.util.WrapUtility;
 
@@ -49,6 +49,7 @@ public class BlockWrapper extends net.minecraft.block.Block {
 		super(Material.piston);
 		this.block = block;
 		this.blockClass = block.getClass();
+		this.setBlockName(block.getID());
 	}
 
 	/**
@@ -71,7 +72,7 @@ public class BlockWrapper extends net.minecraft.block.Block {
 		if (hasTileEntity()) {
 			return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block;
 		} else {
-			return getBlockInstance(new BlockAccessWrapper(access), position);
+			return getBlockInstance(new BWBlockAccess(access), position);
 		}
 	}
 
@@ -104,7 +105,7 @@ public class BlockWrapper extends net.minecraft.block.Block {
 
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-		getBlockInstance(world, new Vector3i(x, y, z)).onPlaced(new BlockChanger.Entity(new EntityBackwardWrapper(entity)));
+		getBlockInstance(world, new Vector3i(x, y, z)).onPlaced(new BlockChanger.Entity(BackwardProxyUtil.getEntityWrapper(entity)));
 		//TODO: Should we consider onBlockPlaced also?
 	}
 
@@ -118,22 +119,22 @@ public class BlockWrapper extends net.minecraft.block.Block {
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		//TODO: Check this raytrace.
 		MovingObjectPosition mop = player.rayTrace(10, 1);
-		getBlockInstance(world, new Vector3i(x, y, z)).onLeftClick(new EntityBackwardWrapper(player), mop.sideHit, new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+		getBlockInstance(world, new Vector3i(x, y, z)).onLeftClick(BackwardProxyUtil.getEntityWrapper(player), mop.sideHit, new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		return getBlockInstance(world, new Vector3i(x, y, z)).onRightClick(new EntityBackwardWrapper(player), side, new Vector3d(hitX, hitY, hitZ));
+		return getBlockInstance(world, new Vector3i(x, y, z)).onRightClick(BackwardProxyUtil.getEntityWrapper(player), side, new Vector3d(hitX, hitY, hitZ));
 	}
 
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
-		getBlockInstance(world, new Vector3i(x, y, z)).onEntityCollide(new EntityBackwardWrapper(entity));
+		getBlockInstance(world, new Vector3i(x, y, z)).onEntityCollide(BackwardProxyUtil.getEntityWrapper(entity));
 	}
 
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List list, Entity entity) {
-		Set<Cuboid> boxes = getBlockInstance(world, new Vector3i(x, y, z)).getCollidingBoxes(new CuboidBackwardWrapper(aabb), new EntityBackwardWrapper(entity));
+		Set<Cuboid> boxes = getBlockInstance(world, new Vector3i(x, y, z)).getCollidingBoxes(new BWCuboid(aabb), BackwardProxyUtil.getEntityWrapper(entity));
 		list.addAll(
 			boxes
 				.stream()
@@ -145,7 +146,7 @@ public class BlockWrapper extends net.minecraft.block.Block {
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		return getBlockInstance(world, new Vector3i(x, y, z)).getDrops()
+		return getBlockInstance(world, new Vector3i(x, y, z)).getDroppedStacks()
 			.stream()
 			.map(WrapUtility::wrapItemStack)
 			.collect(Collectors.toCollection(ArrayList::new));

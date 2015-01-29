@@ -4,22 +4,31 @@ import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
 import nova.core.block.BlockAccess;
 import nova.core.util.transform.Vector3i;
+import nova.wrapper.mc1710.backward.block.BWBlock;
+import nova.wrapper.mc1710.forward.block.BlockWrapper;
 
 import java.util.Optional;
 
 /**
  * @author Calclavia
  */
-public class BlockAccessWrapper implements BlockAccess {
+public class BWBlockAccess implements BlockAccess {
 	private final net.minecraft.world.IBlockAccess access;
 
-	public BlockAccessWrapper(IBlockAccess access) {
+	public BWBlockAccess(IBlockAccess access) {
 		this.access = access;
 	}
 
 	@Override
 	public Optional<Block> getBlock(Vector3i position) {
-		return null;
+		net.minecraft.block.Block mcBlock = access.getBlock(position.x, position.y, position.z);
+		if (mcBlock == null) {
+			return Optional.empty();
+		} else if (mcBlock instanceof BlockWrapper) {
+			return Optional.of(((BlockWrapper) mcBlock).getBlockInstance(this, position));
+		} else {
+			return Optional.of(new BWBlock(this, position, mcBlock));
+		}
 	}
 
 	@Override
