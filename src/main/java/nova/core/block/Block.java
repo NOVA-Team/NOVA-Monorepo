@@ -7,6 +7,7 @@ import nova.core.util.Identifiable;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
+import nova.internal.dummy.BlockAccessDummy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,9 +22,9 @@ public abstract class Block implements Identifiable {
 	 * For dummy block instantiation. Dummy blocks have no blockAccess and position, and are only used for registration and information purposes.
 	 */
 	public Block() {
-		//TODO: Should we REALLY null these or use options?
-		blockAccess = null;
-		position = null;
+		//TODO: Would these dummy classes cause problems?
+		blockAccess = new BlockAccessDummy();
+		position = new Vector3i(0, 0, 0);
 	}
 
 	/**
@@ -43,7 +44,7 @@ public abstract class Block implements Identifiable {
 	}
 
 	public Cuboid getBoundingBox() {
-		return new Cuboid(position, position.add(1));
+		return new Cuboid(new Vector3i(0, 0, 0), new Vector3i(1, 1, 1));
 	}
 
 	public Set<Cuboid> getCollidingBoxes(Cuboid intersect, Entity entity) {
