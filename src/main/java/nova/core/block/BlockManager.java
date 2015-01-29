@@ -24,4 +24,9 @@ public class BlockManager {
 			return Optional.empty();
 		}
 	}
+
+	public Block registerBlock(BlockBuilder<?> builder) {
+		registry.register(builder);
+		return builder.getDummyBlock();
+	}
 }

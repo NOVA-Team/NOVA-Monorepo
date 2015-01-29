@@ -1,4 +1,4 @@
 package nova.core.util;
 
-public class NotBuildableException extends Exception {
+public class NotBuildableException extends NovaException {
 }
