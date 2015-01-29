@@ -25,23 +25,27 @@ public class BlockBuilder<T extends Block> implements Identifiable {
 		} catch (Exception e) {
 			throw new NotBuildableException();
 		}
-		this.dummyBlock = createBlock(new BlockAccessDummy(), new Vector3i(0, 0, 0));
+		this.dummyBlock = newBlockInstance(new BlockAccessDummy(), new Vector3i(0, 0, 0));
 	}
 
 	public BlockBuilder(Class<T> blockClass) throws NotBuildableException {
 		this(blockClass, block -> block);
 	}
 
+	private T newBlockInstance(BlockAccess access, Vector3i position) throws NotBuildableException {
+		try {
+			T baseBlock = constructor.newInstance(access, position);
+			return configurer.apply(baseBlock);
+		} catch (Exception e) {
+			throw new NotBuildableException();
+		}
+	}
+
 	public T createBlock(BlockAccess access, Vector3i position) throws NotBuildableException {
 		if (!positionDependent) {
 			return dummyBlock;
 		} else {
-			try {
-				T baseBlock = constructor.newInstance(access, position);
-				return configurer.apply(baseBlock);
-			} catch (Exception e) {
-				throw new NotBuildableException();
-			}
+			return newBlockInstance(access, position);
 		}
 	}
 
