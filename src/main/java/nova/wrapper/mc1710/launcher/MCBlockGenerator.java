@@ -13,7 +13,7 @@ public class MCBlockGenerator {
 	public void init() {
 		Game.instance.get().blockManager.registry.forEach(b ->
 		{
-			BlockWrapper newBlock = new BlockWrapper(b.getClass());
+			BlockWrapper newBlock = new BlockWrapper(b);
 			GameRegistry.registerBlock(newBlock, b.getID());
 		});
 	}

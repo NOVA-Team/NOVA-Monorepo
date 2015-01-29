@@ -137,16 +137,12 @@ public class BlockWrapper extends net.minecraft.block.Block {
 
 	@Override
 	public boolean isOpaqueCube() {
-		//TODO: No world, position param
-		//		return getBlockInstance(null, null).isOpaqueCube();
-		return false;
+		return block.isOpaqueCube();
 	}
 
 	@Override
 	public boolean isNormalCube() {
-		//TODO: No world, position param
-		//		return getBlockInstance(null, null).isCube();
-		return false;
+		return block.isCube();
 	}
 
 	@Override
