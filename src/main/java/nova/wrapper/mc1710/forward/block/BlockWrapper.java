@@ -12,13 +12,16 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nova.core.block.Block;
 import nova.core.block.BlockAccess;
+import nova.core.block.BlockBuilder;
 import nova.core.block.BlockChanger;
 import nova.core.block.Stateful;
+import nova.core.util.NotBuildableException;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
+import nova.internal.dummy.BlockAccessDummy;
 import nova.internal.dummy.BlockDummy;
 import nova.wrapper.mc1710.backward.BackwardProxyUtil;
 import nova.wrapper.mc1710.backward.util.BWCuboid;
@@ -37,39 +40,32 @@ import java.util.stream.Collectors;
  * @author Calclavia
  */
 public class BlockWrapper extends net.minecraft.block.Block {
-
 	/**
 	 * Reference to the wrapped Nova block
 	 */
+	private final BlockBuilder<?> builder;
 	private final Block block;
 	private final Class<? extends Block> blockClass;
 
 	//TODO: Resolve unknown material issue
-	public BlockWrapper(Block block) {
+	public BlockWrapper(BlockBuilder<?> builder) {
 		super(Material.piston);
-		this.block = block;
+		this.builder = builder;
+		this.block = builder.getDummyBlock();
 		this.blockClass = block.getClass();
 		this.setBlockName(block.getID());
-	}
 
-	/**
-	 * Retrieves the block instance or a dummy block. A dummy block needs to be used.
-	 * @return
-	 */
-	private Block getDummyBlock() {
-		if (block != null) {
-			return block;
-		}
-		return new BlockDummy();
+		// Recalculate superconstructor things after loading the block properly
+		this.opaque = this.isOpaqueCube();
+		this.lightOpacity = this.isOpaqueCube() ? 255 : 0;
 	}
 
 	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3i position) {
-
 		/**
 		 * If this block has a TileEntity, forward the method into the Stateful block.
 		 * Otherwise, create a new instance of the block and forward the methods over.
 		 */
-		if (hasTileEntity()) {
+		if (hasTileEntity(0)) {
 			return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block;
 		} else {
 			return getBlockInstance(new BWBlockAccess(access), position);
@@ -78,11 +74,10 @@ public class BlockWrapper extends net.minecraft.block.Block {
 
 	public Block getBlockInstance(nova.core.block.BlockAccess access, Vector3i position) {
 		try {
-			Constructor<? extends Block> constructor = blockClass.getDeclaredConstructor(BlockAccess.class, Vector3i.class);
-			constructor.setAccessible(true);
-			return constructor.newInstance(access, position);
-		} catch (Exception e) {
-			throw new ExceptionInInitializerError(e);
+			return builder.createBlock(access, position);
+		} catch (NotBuildableException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -154,12 +149,16 @@ public class BlockWrapper extends net.minecraft.block.Block {
 
 	@Override
 	public boolean isOpaqueCube() {
-		return getDummyBlock().isOpaqueCube();
+		if (block == null) {
+			// Superconstructor fix. -10 style points.
+			return true;
+		}
+		return block.isOpaqueCube();
 	}
 
 	@Override
 	public boolean isNormalCube() {
-		return getDummyBlock().isCube();
+		return block.isCube();
 	}
 
 	@Override

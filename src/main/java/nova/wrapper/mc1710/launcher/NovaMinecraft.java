@@ -1,17 +1,25 @@
 package nova.wrapper.mc1710.launcher;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.launchwrapper.Launch;
 import nova.core.game.Game;
 import nova.core.loader.NovaMod;
 import nova.internal.NovaLauncher;
 import nova.wrapper.mc1710.forward.block.BlockWrapper;
+import org.apache.logging.log4j.core.helpers.Loader;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -46,8 +54,13 @@ public class NovaMinecraft {
 				.collect(Collectors.toList())
 		);
 
-		//TODO: Inject fake mods into Forge
 		launcher.preInit();
+
+		launcher.getLoadedMods().forEach(novaMod -> {
+			Map<String, String> novaMap = new HashMap<String, String>();
+
+			Launch.blackboard.put("nova:" + novaMod.id(), novaMap);
+		});
 
 		registerBlocks();
 	}
