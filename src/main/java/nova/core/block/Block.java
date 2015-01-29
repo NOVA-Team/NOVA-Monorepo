@@ -64,7 +64,7 @@ public abstract class Block implements Identifiable {
 	}
 
 	public boolean isCube() {
-		return true;
+		return getBoundingBox().isCube();
 	}
 
 	public boolean isOpaqueCube() {
@@ -112,5 +112,11 @@ public abstract class Block implements Identifiable {
 	 */
 	public void onEntityCollide(Entity entity) {
 
+	}
+
+	public Collection<ItemStack> getDrops() {
+		//TODO: We need itemblocks
+		//return new ItemStack(block);
+		return null;
 	}
 }
