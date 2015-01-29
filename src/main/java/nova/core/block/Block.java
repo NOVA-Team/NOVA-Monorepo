@@ -27,6 +27,10 @@ public abstract class Block implements Identifiable {
 		this.position = position;
 	}
 
+	public final BlockBuilder<?> getBuilder() {
+		return Game.instance.get().blockManager.getBlockBuilder(this.getID()).get();
+	}
+
 	public Collection<ItemStack> getDrops() {
 		ArrayList<ItemStack> list = new ArrayList<>();
 		list.add(new ItemStack(Game.instance.get().itemManager.getItemFromBlock(this))); // -100 style points.

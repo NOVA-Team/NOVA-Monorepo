@@ -1,5 +1,6 @@
 package nova.core.block;
 
+import nova.core.block.components.PositionDependent;
 import nova.core.util.Identifiable;
 import nova.core.util.NotBuildableException;
 import nova.core.util.transform.Vector3i;
@@ -13,10 +14,12 @@ public class BlockBuilder<T extends Block> implements Identifiable {
 	private final Constructor<T> constructor;
 	private final T dummyBlock;
 	private final UnaryOperator<T> configurer;
+	private final boolean positionDependent;
 
 	public BlockBuilder(Class<T> blockClass, UnaryOperator<T> configurer) throws NotBuildableException {
 		this.blockClass = blockClass;
 		this.configurer = configurer;
+		this.positionDependent = PositionDependent.class.isAssignableFrom(blockClass);
 		try {
 			this.constructor = blockClass.getConstructor(BlockAccess.class, Vector3i.class);
 		} catch (Exception e) {
@@ -30,11 +33,15 @@ public class BlockBuilder<T extends Block> implements Identifiable {
 	}
 
 	public T createBlock(BlockAccess access, Vector3i position) throws NotBuildableException {
-		try {
-			T baseBlock = constructor.newInstance(access, position);
-			return configurer.apply(baseBlock);
-		} catch (Exception e) {
-			throw new NotBuildableException();
+		if (!positionDependent) {
+			return dummyBlock;
+		} else {
+			try {
+				T baseBlock = constructor.newInstance(access, position);
+				return configurer.apply(baseBlock);
+			} catch (Exception e) {
+				throw new NotBuildableException();
+			}
 		}
 	}
 
