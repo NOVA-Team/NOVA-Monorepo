@@ -17,6 +17,8 @@ public class UpdateTicker {
 	 */
 	private final Set<Updater> updaters = Collections.newSetFromMap(new WeakHashMap<>());
 
+	private final Set<Runnable> preEvents = Collections.newSetFromMap(new WeakHashMap<>());
+
 	/**
 	 * The last update time.
 	 */
@@ -38,7 +40,22 @@ public class UpdateTicker {
 		}
 	}
 
+	/**
+	 * Queues an event to be executed.
+	 */
+	public void preQueue(Runnable func) {
+		synchronized (preEvents) {
+			preEvents.add(func);
+		}
+	}
+
 	public void update() {
+
+		synchronized (preEvents) {
+			preEvents.forEach(e -> e.run());
+			preEvents.clear();
+		}
+
 		long current = System.currentTimeMillis();
 		//The time in milliseconds between the last update and this one.
 		double deltaTime = (last - current) / 1000;
@@ -46,6 +63,7 @@ public class UpdateTicker {
 			updaters.parallelStream().forEach(t -> t.update(deltaTime));
 		}
 		last = current;
+
 	}
 
 	public static class ThreadTicker extends Thread {
