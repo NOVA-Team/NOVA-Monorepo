@@ -22,9 +22,12 @@ import nova.wrapper.mc1710.backward.entity.EntityBackwardWrapper;
 import nova.wrapper.mc1710.backward.util.CuboidBackwardWrapper;
 import nova.wrapper.mc1710.backward.world.BlockAccessWrapper;
 import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
+import nova.wrapper.mc1710.util.WrapUtility;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A Minecraft to Nova block wrapper
@@ -35,12 +38,14 @@ public class BlockWrapper extends net.minecraft.block.Block {
 	/**
 	 * Reference to the wrapped Nova block
 	 */
+	private final Block block;
 	private final Class<? extends Block> blockClass;
 
 	//TODO: Resolve unknown material issue
-	public BlockWrapper(Class<? extends Block> blockClass) {
+	public BlockWrapper(Block block) {
 		super(Material.piston);
-		this.blockClass = blockClass;
+		this.block = block;
+		this.blockClass = block.getClass();
 	}
 
 	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3i position) {
@@ -95,7 +100,7 @@ public class BlockWrapper extends net.minecraft.block.Block {
 
 	@Override
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
-		//TODO: Check this traytrace.
+		//TODO: Check this raytrace.
 		MovingObjectPosition mop = player.rayTrace(10, 1);
 		getBlockInstance(world, new Vector3i(x, y, z)).onLeftClick(new EntityBackwardWrapper(player), mop.sideHit, new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
 	}
@@ -113,10 +118,39 @@ public class BlockWrapper extends net.minecraft.block.Block {
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List list, Entity entity) {
 		Set<Cuboid> boxes = getBlockInstance(world, new Vector3i(x, y, z)).getCollidingBoxes(new CuboidBackwardWrapper(aabb), new EntityBackwardWrapper(entity));
-		boxes
+		list.addAll(
+			boxes
+				.stream()
+				.map(c -> c.add(new Vector3i(x, y, z)))
+				.map(c -> new CuboidForwardWrapper(c))
+				.collect(Collectors.toList())
+		);
+	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+		return getBlockInstance(world, new Vector3i(x, y, z)).getDrops()
 			.stream()
-			.map(c -> c.add(new Vector3i(x, y, z)))
-			.map(c -> new CuboidForwardWrapper(c))
-			.forEach(c -> list.add(c));
+			.map(WrapUtility::wrapItemStack)
+			.collect(Collectors.toCollection(ArrayList::new));
+	}
+
+	@Override
+	public boolean isOpaqueCube() {
+		//TODO: No world, position param
+		//		return getBlockInstance(null, null).isOpaqueCube();
+		return false;
+	}
+
+	@Override
+	public boolean isNormalCube() {
+		//TODO: No world, position param
+		//		return getBlockInstance(null, null).isCube();
+		return false;
+	}
+
+	@Override
+	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+		return new CuboidForwardWrapper(getBlockInstance(world, new Vector3i(x, y, z)).getBoundingBox());
 	}
 }
