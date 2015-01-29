@@ -13,7 +13,7 @@ import java.util.Optional;
  * @author Calclavia
  */
 public class BWBlockAccess implements BlockAccess {
-	private final net.minecraft.world.IBlockAccess access;
+	public final net.minecraft.world.IBlockAccess access;
 
 	public BWBlockAccess(IBlockAccess access) {
 		this.access = access;

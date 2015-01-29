@@ -14,7 +14,8 @@ import nova.core.block.Block;
 import nova.core.block.BlockAccess;
 import nova.core.block.BlockBuilder;
 import nova.core.block.BlockChanger;
-import nova.core.block.Stateful;
+import nova.core.block.components.LightEmitter;
+import nova.core.block.components.Stateful;
 import nova.core.util.NotBuildableException;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
@@ -164,5 +165,14 @@ public class BlockWrapper extends net.minecraft.block.Block {
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
 		return new CuboidForwardWrapper(getBlockInstance(world, new Vector3i(x, y, z)).getBoundingBox());
+	}
+
+	@Override
+	public int getLightValue(IBlockAccess access, int x, int y, int z) {
+		if (block instanceof LightEmitter) {
+			return Math.round(((LightEmitter) getBlockInstance(access, new Vector3i(x, y, z))).getEmittedLightLevel() * 15.0F);
+		} else {
+			return 0;
+		}
 	}
 }

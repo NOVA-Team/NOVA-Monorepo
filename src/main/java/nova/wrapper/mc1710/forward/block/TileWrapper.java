@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.forward.block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
-import nova.core.block.Stateful;
+import nova.core.block.components.Stateful;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Vector3i;
@@ -18,7 +18,6 @@ import java.util.Map;
  * @author Calclavia
  */
 public class TileWrapper extends TileEntity {
-
 	Block block;
 
 	@Override
