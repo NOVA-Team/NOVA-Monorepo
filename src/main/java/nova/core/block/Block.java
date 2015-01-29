@@ -19,20 +19,10 @@ public abstract class Block implements Identifiable {
 	private final Vector3i position;
 
 	/**
-	 * For dummy block instantiation. Dummy blocks have no blockAccess and position, and are only used for registration and information purposes.
-	 */
-	public Block() {
-		//TODO: Would these dummy classes cause problems?
-		blockAccess = new BlockAccessDummy();
-		position = new Vector3i(0, 0, 0);
-	}
-
-	/**
-	 * This constructor is used only in block wrappers.
 	 * @param blockAccess - The block access
 	 * @param position - The position of the block
 	 */
-	protected Block(BlockAccess blockAccess, Vector3i position) {
+	public Block(BlockAccess blockAccess, Vector3i position) {
 		this.blockAccess = blockAccess;
 		this.position = position;
 	}
