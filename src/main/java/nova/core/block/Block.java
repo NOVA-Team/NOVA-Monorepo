@@ -32,7 +32,7 @@ public abstract class Block implements Identifiable {
 	 * @param blockAccess - The block access
 	 * @param position - The position of the block
 	 */
-	private Block(BlockAccess blockAccess, Vector3i position) {
+	protected Block(BlockAccess blockAccess, Vector3i position) {
 		this.blockAccess = blockAccess;
 		this.position = position;
 	}
