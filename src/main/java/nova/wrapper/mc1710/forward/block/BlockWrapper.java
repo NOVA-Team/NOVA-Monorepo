@@ -146,7 +146,7 @@ public class BlockWrapper extends net.minecraft.block.Block {
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		return getBlockInstance(world, new Vector3i(x, y, z)).getDroppedStacks()
+		return getBlockInstance(world, new Vector3i(x, y, z)).getDrops()
 			.stream()
 			.map(WrapUtility::wrapItemStack)
 			.collect(Collectors.toCollection(ArrayList::new));
