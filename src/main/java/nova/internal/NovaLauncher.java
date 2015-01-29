@@ -3,9 +3,15 @@ package nova.internal;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.core.loader.Loadable;
+import nova.core.loader.NovaMod;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -15,7 +21,8 @@ import java.util.stream.Collectors;
 public class NovaLauncher implements Loadable {
 
 	private final List<Class> modClasses;
-	private List<Loadable> mods;
+	private Map<NovaMod, Loadable> mods;
+	private ArrayList<Loadable> orderedMods;
 
 	//TODO: A lot of work and clean up has to be done to ensure this class is not susceptible to other classes touching it.
 
@@ -35,13 +42,9 @@ public class NovaLauncher implements Loadable {
 		Game.instance = Optional.of(ep.postInit());
 
 		/**
-		 * TODO: Re-order mods based on dependencies
+		 * Instantiate nova mods.
 		 */
-
-		/**
-		 * Instantiate nova mods. 
-		 */
-		mods = modClasses
+		List<Loadable> modInstances = modClasses
 			.stream()
 			.map(c -> {
 				try {
@@ -54,22 +57,40 @@ public class NovaLauncher implements Loadable {
 			.map(m -> (Loadable) m)
 			.collect(Collectors.toList());
 
+
+		mods = new HashMap<NovaMod, Loadable>();
+		modInstances.stream().forEach(mod -> {
+			NovaMod an = mod.getClass().getAnnotation(NovaMod.class);
+			if (an != null) {
+				mods.put(an, mod);
+			}
+		});
+
+		/**
+		 * TODO: Re-order mods based on dependencies
+		 */
+
+		orderedMods = new ArrayList<Loadable>();
+		orderedMods.addAll(modInstances);
+
 		/**
 		 * Initialize all the NOVA mods.
 		 */
-		mods.stream().forEach(Loadable::preInit);
+		orderedMods.stream().forEach(Loadable::preInit);
 		
 		System.out.println("NOVA Mods Loaded: " + mods.size());
 	}
 
 	@Override
-	public void init() {
-		mods.stream().forEach(Loadable::init);
+	public void init() { orderedMods.stream().forEach(Loadable::init);
 	}
 
 	@Override
 	public void postInit() {
+		orderedMods.stream().forEach(Loadable::postInit);
+	}
 
-		mods.stream().forEach(Loadable::postInit);
+	public Set<NovaMod> getLoadedMods() {
+		return mods.keySet();
 	}
 }
