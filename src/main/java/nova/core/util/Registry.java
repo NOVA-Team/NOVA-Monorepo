@@ -22,8 +22,9 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 	 * Registers an identifiable object in the registry.
 	 * @param object the object to register.
 	 */
-	public void register(T object) {
+	public T register(T object) {
 		objects.put(object.getID(), object);
+		return object;
 	}
 
 	/**
