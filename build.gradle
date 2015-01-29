@@ -16,14 +16,46 @@ buildscript {
 
 apply plugin: 'java'
 //apply plugin: 'checkstyle'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 apply plugin: 'sublimeText'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
-group = 'nova'
+
+file "build.properties" withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.nova.version}"
+group = "nova.core"
+archivesBaseName = "NovaAPI"
+
+def getGitRef() {
+	try {
+		def stdout = new ByteArrayOutputStream()
+		exec {
+			commandLine 'git', 'rev-parse', '--short', 'HEAD'
+			standardOutput = stdout
+		}
+		return stdout.toString().trim()
+	} catch (Throwable e) {
+		return "unknown"
+	}
+}
+
+if (System.getenv("BUILD_NUMBER") != null)
+	version += ".${System.getenv("BUILD_NUMBER")}"
+else
+	version += "-" + getGitRef()
+
+if (config.nova.subversion != null && config.nova.subversion != "")
+	version += "-${config.nova.subversion}"
+
+ext.simpleVersion = version
 
 /*checkstyle {
     configFile = file('checkstyle.xml')
@@ -66,6 +98,13 @@ task sourceJar(type: Jar) {
 	classifier = "sources"
 }
 
+task apiJar(type: Jar) {
+	from sourceSets.main.output
+	from sourceSets.main.java
+	classifier = 'api'
+	include 'nova/core/**'
+}
+
 javadoc {
 	include 'nova/core/**'
 }
@@ -75,22 +114,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 	classifier 'javadoc'
 }
 
-task writeNewPom << {
-	pom {
-		project {
-			//TODO:
-
-			/*licenses {
-				license {
-					name ''
-					url ''
-					distribution ''
-				}
-			}*/
-		}
-	}.writeTo("$buildDir/libs/pom.xml")
-}
-
 shadowJar {
 	manifest {
 		attributes("Implementation-Title": "NovaCore", "Implementation-Version": version)
@@ -98,8 +121,35 @@ shadowJar {
 }
 
 artifacts {
+	archives apiJar
+	archives javadocJar
 	archives shadowJar
 	archives sourceJar
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifact apiJar {
+				classifier "api"
+			}
+			artifact javadocJar {
+				classifier "javadoc"
+			}
+			artifact shadowJar {
+				classifier "all"
+			}
+			artifact sourceJar {
+				classifier "sources"
+			}
+			
+		}
+	}
+	repositories {
+		maven {
+			url "${config.maven.url}"
+		}
+	}
 }
 
 sublimeText {
