@@ -1,6 +1,7 @@
 package nova.bootstrap;
 
 import nova.core.depmodules.CoreBundle;
+import nova.core.di.ModsBundle;
 import nova.core.di.WrapperBundle;
 import nova.core.game.Game;
 

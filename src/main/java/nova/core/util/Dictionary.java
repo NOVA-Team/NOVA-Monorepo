@@ -10,7 +10,7 @@ import java.util.Set;
  * A dictionary where each identifying string represents a set of objects
  * and each object can have a set of identifiers.
  *
- * @param &lt;T&gt; The object type
+ * @param <T> The object type
  */
 public class Dictionary<T> {
 	private final Map<String, Set<T>> entries = new HashMap<>();

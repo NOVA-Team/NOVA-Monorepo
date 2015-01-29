@@ -33,7 +33,7 @@ public interface Stateful extends PositionDependent {
 	/**
 	 * This function should return whether a block instance has ben invalidated
 	 * or not.
-	 * @return
+	 * @return Whether a block instance has ben invalidated
 	 */
 	boolean isValid();
 }
