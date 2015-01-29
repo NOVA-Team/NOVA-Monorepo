@@ -17,12 +17,26 @@ public abstract class Block implements Identifiable {
 	private final BlockAccess blockAccess;
 	private final Vector3i position;
 
-	public Block(BlockAccess blockAccess, Vector3i position) {
+	/**
+	 * For dummy block instantiation. Dummy blocks have no blockAccess and position, and are only used for registration and information purposes.
+	 */
+	public Block() {
+		//TODO: Should we REALLY null these or use options?
+		blockAccess = null;
+		position = null;
+	}
+
+	/**
+	 * This constructor is used only in block wrappers.
+	 * @param blockAccess - The block access
+	 * @param position - The position of the block
+	 */
+	private Block(BlockAccess blockAccess, Vector3i position) {
 		this.blockAccess = blockAccess;
 		this.position = position;
 	}
 
-	public Collection<ItemStack> getDroppedStacks() {
+	public Collection<ItemStack> getDrops() {
 		ArrayList<ItemStack> list = new ArrayList<>();
 		list.add(new ItemStack(Game.instance.get().itemManager.getItemFromBlock(this))); // -100 style points.
 		return list;
@@ -112,11 +126,5 @@ public abstract class Block implements Identifiable {
 	 */
 	public void onEntityCollide(Entity entity) {
 
-	}
-
-	public Collection<ItemStack> getDrops() {
-		//TODO: We need itemblocks
-		//return new ItemStack(block);
-		return null;
 	}
 }
