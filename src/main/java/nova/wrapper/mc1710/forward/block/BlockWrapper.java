@@ -11,6 +11,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nova.core.block.Block;
+import nova.core.block.BlockAccess;
 import nova.core.block.BlockChanger;
 import nova.core.block.Stateful;
 import nova.core.util.components.Storable;
@@ -18,12 +19,14 @@ import nova.core.util.components.Updater;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
+import nova.internal.dummy.BlockDummy;
 import nova.wrapper.mc1710.backward.entity.EntityBackwardWrapper;
 import nova.wrapper.mc1710.backward.util.CuboidBackwardWrapper;
 import nova.wrapper.mc1710.backward.world.BlockAccessWrapper;
 import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
 import nova.wrapper.mc1710.util.WrapUtility;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +51,17 @@ public class BlockWrapper extends net.minecraft.block.Block {
 		this.blockClass = block.getClass();
 	}
 
+	/**
+	 * Retrieves the block instance or a dummy block. A dummy block needs to be used.
+	 * @return
+	 */
+	private Block getDummyBlock() {
+		if (block != null) {
+			return block;
+		}
+		return new BlockDummy();
+	}
+
 	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3i position) {
 
 		/**
@@ -63,7 +77,9 @@ public class BlockWrapper extends net.minecraft.block.Block {
 
 	public Block getBlockInstance(nova.core.block.BlockAccess access, Vector3i position) {
 		try {
-			return blockClass.getConstructor(nova.core.block.BlockAccess.class, Vector3i.class).newInstance(access, position);
+			Constructor<? extends Block> constructor = blockClass.getDeclaredConstructor(BlockAccess.class, Vector3i.class);
+			constructor.setAccessible(true);
+			return constructor.newInstance(access, position);
 		} catch (Exception e) {
 			throw new ExceptionInInitializerError(e);
 		}
@@ -137,12 +153,12 @@ public class BlockWrapper extends net.minecraft.block.Block {
 
 	@Override
 	public boolean isOpaqueCube() {
-		return block.isOpaqueCube();
+		return getDummyBlock().isOpaqueCube();
 	}
 
 	@Override
 	public boolean isNormalCube() {
-		return block.isCube();
+		return getDummyBlock().isCube();
 	}
 
 	@Override
