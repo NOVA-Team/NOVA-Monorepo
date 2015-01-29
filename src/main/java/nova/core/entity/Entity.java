@@ -1,6 +1,6 @@
 package nova.core.entity;
 
-import nova.core.block.Stateful;
+import nova.core.block.components.Stateful;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector3d;
 import nova.core.world.World;
