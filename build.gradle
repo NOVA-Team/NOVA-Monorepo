@@ -34,6 +34,10 @@ apply plugin: 'idea'
 version = minecraft_version + "-" + wrapper_version
 group = "nova.wrapper.mc1710"
 
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 5, 'minutes'
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -43,7 +47,7 @@ repositories {
 }
 
 dependencies {
-    compile "nova.core:NovaCore:$nova_version"
+    compile group: "nova.core", name: "NovaCore", version:"$nova_version", changing: true
 
     testCompile "junit:junit:4.12"
     testCompile 'org.assertj:assertj-core:1.+'
