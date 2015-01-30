@@ -42,4 +42,19 @@ public abstract class Operator<I extends Operator<I, O>, O extends I> {
 		return multiply(-1);
 	}
 
+	public O $plus(I v) {
+		return add(v);
+	}
+
+	public O $minus(I v) {
+		return subtract(v);
+	}
+
+	public O $times(double d) {
+		return multiply(d);
+	}
+
+	public O $div(double d) {
+		return multiply(1 / d);
+	}
 }

@@ -66,4 +66,16 @@ public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operat
 
 	//Forces re-implemtation of equals()
 	public abstract boolean equals(Object obj);
+
+	public final O $tilde() {
+		return normalize();
+	}
+
+	public O unary_$tilde() {
+		return normalize();
+	}
+
+	public double $dot$times(I v) {
+		return dot(v);
+	}
 }
