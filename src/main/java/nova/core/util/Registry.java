@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 /**
  * A registry of one type of identifiable object.
- * @param &lt;T&gt; The object type
+ * @param <T> The object type
  */
 public class Registry<T extends Identifiable> implements Iterable<T> {
 	private final HashBiMap<String, T> objects = HashBiMap.create();
@@ -21,6 +21,7 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 	/**
 	 * Registers an identifiable object in the registry.
 	 * @param object the object to register.
+	 * @return Given object
 	 */
 	public T register(T object) {
 		objects.put(object.getID(), object);
@@ -38,7 +39,7 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 
 	/**
 	 * Gets the object with the given id from the registry.
-	 * @param id the id to find.
+	 * @param ID the id to find.
 	 * @return the object found or empty Optional if not found.
 	 */
 	public Optional<T> get(String ID) {
