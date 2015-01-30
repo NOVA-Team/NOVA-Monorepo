@@ -7,7 +7,6 @@ import nova.core.world.WorldManager;
 
 import java.util.Optional;
 
-
 public class Game {
 
 	/**

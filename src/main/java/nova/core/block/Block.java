@@ -87,6 +87,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the block is left clicked.
+	 *
 	 * @param entity - The entity that right clicked this object. Most likely a player.
 	 * @param side - The side it was clicked.
 	 * @param hit - The position it was clicked.
@@ -98,6 +99,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the block is right clicked.
+	 *
 	 * @param entity - The entity that right clicked this object. Most likely a player.
 	 * @param side - The side it was clicked.
 	 * @param hit - The position it was clicked.
@@ -110,6 +112,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when an entity collides with this block.
 	 * More specifically, when the entity's block bounds coincide with the block bounds.
+	 *
 	 * @param entity Colliding entity
 	 */
 	public void onEntityCollide(Entity entity) {
@@ -118,6 +121,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when this block is to be rendered.
+	 *
 	 * @param artist The artist who is rendering this block.
 	 */
 	public void renderWorld(Artist artist) {
@@ -126,6 +130,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the item of this block is to be rendered.
+	 *
 	 * @param artist The artist who is rendering this block.
 	 */
 	public void renderItem(Artist artist) {

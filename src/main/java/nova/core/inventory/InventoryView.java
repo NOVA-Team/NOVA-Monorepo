@@ -13,6 +13,7 @@ public class InventoryView implements Inventory {
 
 	/**
 	 * Creates new inventory view
+	 *
 	 * @param parent Parent inventory
 	 * @param slots Map of slots
 	 */

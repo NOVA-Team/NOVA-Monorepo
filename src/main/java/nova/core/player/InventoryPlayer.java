@@ -7,6 +7,7 @@ import java.util.Optional;
 
 /**
  * Player {@link Inventory}
+ *
  * @see Inventory
  */
 public interface InventoryPlayer extends Inventory {

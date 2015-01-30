@@ -8,6 +8,7 @@ import java.util.WeakHashMap;
 
 /**
  * The update ticker is responsible for ticking Update objects.
+ *
  * @author Calclavia
  */
 public class UpdateTicker {
@@ -42,6 +43,7 @@ public class UpdateTicker {
 
 	/**
 	 * Queues an event to be executed.
+	 *
 	 * @param func Event to be executed.
 	 */
 	public void preQueue(Runnable func) {

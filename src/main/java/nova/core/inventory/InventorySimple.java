@@ -19,6 +19,7 @@ public class InventorySimple implements Inventory {
 	/**
 	 * Tells if this inventory has changed since last
 	 * invocation of {@link #clearChanged()}
+	 *
 	 * @return Whether the inventory has changed
 	 */
 	public boolean hasChanged() {

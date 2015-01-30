@@ -13,6 +13,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * This interface provides inventory that can hold {@link ItemStack ItemStacks}
+ *
  * @see InventorySimple
  * @see InventoryView
  */
@@ -21,6 +22,7 @@ public interface Inventory extends Iterable<ItemStack> {
 
 	/**
 	 * Sets {@link ItemStack} in slot
+	 *
 	 * @param slot Slot number
 	 * @param stack Stack to insert
 	 * @return Whether succeed
@@ -29,6 +31,7 @@ public interface Inventory extends Iterable<ItemStack> {
 
 	/**
 	 * Gets count of slots
+	 *
 	 * @return Number of slots in this inventory
 	 */
 	int size();
@@ -40,6 +43,7 @@ public interface Inventory extends Iterable<ItemStack> {
 
 	/**
 	 * Adds items to this inventory at specified slot
+	 *
 	 * @param slot Slot to add items into
 	 * @param stack {@link ItemStack} containing items
 	 * @return Amount of items left(did not fit inside this inventory)
@@ -60,6 +64,7 @@ public interface Inventory extends Iterable<ItemStack> {
 
 	/**
 	 * Adds items to this inventory
+	 *
 	 * @param stack {@link ItemStack} containing items
 	 * @return Amount of items left(did not fit inside this inventory)
 	 */
@@ -78,6 +83,7 @@ public interface Inventory extends Iterable<ItemStack> {
 
 	/**
 	 * Represents this inventory as list of {@link ItemStack ItemStacks}
+	 *
 	 * @return This inventory as list of {@link ItemStack ItemStacks}
 	 */
 	default List<ItemStack> toList() {
@@ -98,6 +104,7 @@ public interface Inventory extends Iterable<ItemStack> {
 
 	/**
 	 * Represents this inventory as {@link ItemStack} {@link Stream}
+	 *
 	 * @return This inventory as {@link ItemStack} {@link Stream}
 	 */
 	default Stream<ItemStack> stream() {

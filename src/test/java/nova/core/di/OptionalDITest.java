@@ -30,11 +30,12 @@ public class OptionalDITest {
 	public void prepare() {
 		injector = Bootstrap.injector(OptionalBundle.class);
 	}
+
 	@Test
 	public void should_inject_Optional() {
-		
+
 		TestManager m = injector.resolve(Dependency
-				.dependency(TestManager.class));
+			.dependency(TestManager.class));
 
 		assertTrue(m.map.isPresent());
 		assertFalse(m.set.isPresent());
@@ -49,7 +50,7 @@ public class OptionalDITest {
 		Optional<Map<Integer, Integer>> map2;
 
 		public TestManager(Optional<Map<Integer, Integer>> map,
-				Optional<Registry<MockIdentifiable>> set, Optional<Map<Integer, Integer>> map2) {
+			Optional<Registry<MockIdentifiable>> set, Optional<Map<Integer, Integer>> map2) {
 			this.map = map;
 			this.set = set;
 			this.map2 = map2;
@@ -67,7 +68,7 @@ public class OptionalDITest {
 			bind(TestManager.class).toConstructor();
 			try {
 				starbind(Map.class).to(
-						HashMap.class.getConstructor(new Class[] {}), (Parameter[]) null);
+					HashMap.class.getConstructor(new Class[] { }), (Parameter[]) null);
 			} catch (NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 			}

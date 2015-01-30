@@ -10,6 +10,7 @@ public class ItemStack implements Cloneable {
 
 	/**
 	 * Creates new ItemStack
+	 *
 	 * @param item Item to create stack of
 	 * @param stackSize Number of items in this stack
 	 */
@@ -20,6 +21,7 @@ public class ItemStack implements Cloneable {
 
 	/**
 	 * Creates new ItemStack with one item
+	 *
 	 * @param item Item to create stack of
 	 */
 	public ItemStack(Item item) {
@@ -27,7 +29,6 @@ public class ItemStack implements Cloneable {
 	}
 
 	/**
-	 * 
 	 * @return {@link Item} of which this ItemStack is made of
 	 */
 	public Item getItem() {
@@ -40,9 +41,10 @@ public class ItemStack implements Cloneable {
 	public int getStackSize() {
 		return stackSize;
 	}
-	
+
 	/**
 	 * Sets new size of this ItemStack
+	 *
 	 * @param size New size
 	 */
 	public void setStackSize(int size) {
@@ -54,6 +56,7 @@ public class ItemStack implements Cloneable {
 
 	/**
 	 * Adds size to this ItemStack
+	 *
 	 * @param size Size to add
 	 * @return Size added
 	 */
@@ -71,6 +74,7 @@ public class ItemStack implements Cloneable {
 
 	/**
 	 * Returns new ItemStack of the same {@link Item} with specified size
+	 *
 	 * @param amount Size of cloned ItemStack
 	 * @return new ItemStack
 	 */
@@ -91,6 +95,7 @@ public class ItemStack implements Cloneable {
 
 	/**
 	 * Check if this ItemStack is of type of another ItemStack
+	 *
 	 * @param stack The another ItemStack
 	 * @return Result
 	 */

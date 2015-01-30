@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  * The main class that launches NOVA mods.
- * 
+ *
  * @author Calclavia, Kubuxu
  */
 public class NovaLauncher implements Loadable {
@@ -30,16 +30,14 @@ public class NovaLauncher implements Loadable {
 
 	/**
 	 * Creates NovaLauncher.
-	 * 
-	 * @param modClasses
-	 *            mods to instantialize.
-	 * @param diep
-	 *            is required as we are installing additional modules to it.
+	 *
+	 * @param modClasses mods to instantialize.
+	 * @param diep is required as we are installing additional modules to it.
 	 */
 	public NovaLauncher(DependencyInjectionEntryPoint diep, List<Class<?>> modClasses) {
 		this.diep = diep;
 		this.modClasses = modClasses;
-		
+
 		Map<NovaMod, Class<? extends Loadable>> classesMap = modClasses.stream()
 			.filter(clazz -> Loadable.class.isAssignableFrom(clazz))
 			.map(clazz -> (Class<? extends Loadable>) clazz.asSubclass(Loadable.class))
@@ -51,7 +49,7 @@ public class NovaLauncher implements Loadable {
 			.forEach(bundle -> diep.install(bundle));
 
 		List<Loadable> modInstances = classesMap.values().stream()
-			.map(calzz-> {
+			.map(calzz -> {
 				try {
 					return (Loadable) calzz.newInstance();
 				} catch (Exception e) {
@@ -66,11 +64,11 @@ public class NovaLauncher implements Loadable {
 
 		orderedMods = new ArrayList<Loadable>();
 		orderedMods.addAll(modInstances);
-		
+
 	}
 
 	public void preInit() {
-		
+
 		/**
 		 * Initialize all the NOVA mods.
 		 */
