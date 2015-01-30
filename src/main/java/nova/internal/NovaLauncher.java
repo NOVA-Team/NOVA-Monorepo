@@ -50,22 +50,22 @@ public class NovaLauncher implements Loadable {
 			.flatMap(mod -> Arrays.stream(mod.modules()))
 			.forEach(bundle -> diep.install(bundle));
 
-		List<Loadable> modInstances = classesMap.values().stream()
-			.map(calzz-> {
+		mods = classesMap.entrySet().stream()
+			.collect(Collectors.toMap(entry -> entry.getKey(), ((entry) -> {
 				try {
-					return (Loadable) calzz.newInstance();
+					return (Loadable) entry.getValue().newInstance();
 				} catch (Exception e) {
 					throw new ExceptionInInitializerError(e);
 				}
-			})
-			.collect(Collectors.toList());
+			})));
+		//	.collect(Collectors.toList());
 
 		/**
 		 * TODO: Re-order mods based on dependencies
 		 */
 
 		orderedMods = new ArrayList<Loadable>();
-		orderedMods.addAll(modInstances);
+		orderedMods.addAll(mods.values());
 		
 	}
 
