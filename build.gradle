@@ -14,6 +14,8 @@ buildscript {
 	}
 }
 
+apply from: 'gradle/modules/utils.gradle'
+
 apply plugin: 'java'
 //apply plugin: 'checkstyle'
 apply plugin: 'maven-publish'
@@ -23,29 +25,10 @@ apply plugin: 'sublimeText'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
+ext.config = parseConfig("build.properties")
 
-file "build.properties" withReader {
-    def prop = new Properties()
-    prop.load(it)
-    ext.config = new ConfigSlurper().parse prop
-}
-
-version = "${config.nova.version}"
+version = config.nova.version
 group = "nova.core"
-archivesBaseName = "NovaAPI"
-
-def getGitRef() {
-	try {
-		def stdout = new ByteArrayOutputStream()
-		exec {
-			commandLine 'git', 'rev-parse', '--short', 'HEAD'
-			standardOutput = stdout
-		}
-		return stdout.toString().trim()
-	} catch (Throwable e) {
-		return "unknown"
-	}
-}
 
 if (System.getenv("BUILD_NUMBER") != null)
 	version += ".${System.getenv("BUILD_NUMBER")}"
@@ -128,46 +111,38 @@ artifacts {
 	archives sourceJar
 }
 
+print components
+
 publishing {
 	publications {
 		main(MavenPublication) {
 			from components.java
 			
-			artifact apiJar {
-				classifier "api"
-			}
-			artifact javadocJar {
-				classifier "javadoc"
-			}
-			artifact shadowJar {
-				classifier "all"
-			}
-			artifact sourceJar {
-				classifier "sources"
-			}
+			artifact apiJar
+			artifact javadocJar
+			artifact shadowJar
+			artifact sourceJar
+
+			pom.withXml(writePom())
 		}
 		
 		latest(MavenPublication) {
-			from components.java
 			version "latest-${config.nova.subversion}"
-		
-			artifact apiJar {
-				classifier "api"
-			}
-			artifact javadocJar {
-				classifier "javadoc"
-			}
-			artifact shadowJar {
-				classifier "all"
-			}
-			artifact sourceJar {
-				classifier "sources"
-			}
+			from components.java
+
+			artifact apiJar
+			artifact javadocJar
+			artifact shadowJar
+			artifact sourceJar
+
+			pom.withXml(writePom())
 		}
 	}
 	repositories {
-		maven {
-			url "${config.maven.url}"
+		if (System.getenv("MAVEN_DIR") != null) {
+			maven {
+				url System.getenv("MAVEN_DIR")
+			}
 		}
 	}
 }

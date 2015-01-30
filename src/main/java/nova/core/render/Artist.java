@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * An artist is capable of drawing different artworks (shapes).
+ *
  * @author Calclavia
  */
 public abstract class Artist {
@@ -13,6 +14,7 @@ public abstract class Artist {
 	/**
 	 * Starts drawing, by returning an Artwork for the Artist to work on.
 	 * Add vertices to this Artwork and finish it by calling endDrawing()
+	 *
 	 * @return new {@link Artwork}
 	 */
 	public Artwork startDrawing() {
@@ -21,6 +23,7 @@ public abstract class Artist {
 
 	/**
 	 * Finish drawing the Artwork by adding it into the list of artworks.
+	 *
 	 * @param artwork - The finished masterpiece.
 	 */
 	public void endDrawing(Artwork artwork) {
@@ -29,6 +32,7 @@ public abstract class Artist {
 
 	/**
 	 * Draws a 1x1x1 cube
+	 *
 	 * @return This Artist
 	 */
 	public Artist drawCube() {

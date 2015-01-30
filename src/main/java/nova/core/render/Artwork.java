@@ -9,18 +9,20 @@ import java.util.Optional;
 
 /**
  * A artwork is classified as a shape. It is group of vertices that result in a surface.
+ *
  * @author Calclavia
  */
 public class Artwork {
 	public final List<Vertex5> vertices = new ArrayList<>();
-	public Vector3d normal = new Vector3d();
-	public Vector3d translation = new Vector3d();
+	public Vector3d normal = Vector3d.ZERO;
+	public Vector3d translation = Vector3d.ZERO;
 	public Quaternion rotation = new Quaternion();
-	public Vector3d scale = new Vector3d();
+	public Vector3d scale = Vector3d.ZERO;
 	private Optional<Texture> texture = Optional.empty();
 
 	/**
 	 * Binds a specific texture to this artist.
+	 *
 	 * @param texture Texture to bind
 	 * @return This Artist
 	 */
@@ -36,6 +38,7 @@ public class Artwork {
 
 	/**
 	 * Draws a quadrilateral with four corners.
+	 *
 	 * @param a
 	 * @param b
 	 * @param c

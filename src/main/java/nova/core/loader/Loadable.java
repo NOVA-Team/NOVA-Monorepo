@@ -2,6 +2,7 @@ package nova.core.loader;
 
 /**
  * A mod interface implemented to receive mod load event calls.
+ *
  * @author Calclavia
  */
 public interface Loadable {

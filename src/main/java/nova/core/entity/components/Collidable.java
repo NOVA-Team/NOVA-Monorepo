@@ -12,12 +12,14 @@ import java.util.Collection;
 public interface Collidable {
 	/**
 	 * This method is used to get box of this entity
+	 *
 	 * @return {@link Collection} of {@link Cuboid Cuboids} making up collision box
 	 */
 	Collection<Cuboid> getCollisionBoxes();
-	
+
 	/**
 	 * Called when this entity collided with another
+	 *
 	 * @param collidedWith Another entity
 	 */
 	void onCollide(Entity collidedWith);

@@ -61,6 +61,7 @@ public class Quaternion {
 
 	/**
 	 * Retrieves a quaternion based on Euler Angles.
+	 *
 	 * @param yaw - Radians
 	 * @param pitch - Radians
 	 * @param roll - Radians

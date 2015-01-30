@@ -51,6 +51,7 @@ public class Vector3i extends Vector3<Vector3i> {
 	/**
 	 * Returns the cross product between this vector and the other.
 	 * Calculated by finding the determinant of a 3x3 matrix.
+	 *
 	 * @return A vector representing the normal, perpendicular to these two vectors
 	 */
 	@Override

@@ -5,7 +5,7 @@ import nova.core.util.Identifiable;
 
 /**
  * Item that can be stacked using {@link ItemStack}
- * 
+ *
  * @see ItemStack
  * @see Inventory
  */

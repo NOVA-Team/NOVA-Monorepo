@@ -1,7 +1,5 @@
 package nova.core.block.components;
 
-import nova.core.block.components.PositionDependent;
-
 /**
  * This interface should be implemented by any block willing to keep a
  * per-block-instance state. This means that once the block instance is
@@ -33,6 +31,7 @@ public interface Stateful extends PositionDependent {
 	/**
 	 * This function should return whether a block instance has ben invalidated
 	 * or not.
+	 *
 	 * @return Whether a block instance has ben invalidated
 	 */
 	boolean isValid();

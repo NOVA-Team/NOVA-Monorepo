@@ -1,14 +1,15 @@
 package nova.core.loader;
 
+import se.jbee.inject.bootstrap.Bundle;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import se.jbee.inject.bootstrap.Bundle;
-
 /**
  * An annotation placed in the mod's main loading class.
+ *
  * @author Calclavia
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -20,22 +21,22 @@ public @interface NovaMod {
 	String id();
 
 	/**
-	 * A user friendly name for the mod
+	 * The user friendly name for the mod
 	 */
 	String name();
 
 	/**
-	 * A version of this mod
+	 * The version identifier of this mod
 	 */
 	String version();
 
 	/**
-	 * A version of Nova version for this mod
+	 * The version of Nova this mod is compatible with
 	 */
 	String novaVersion();
 
 	/**
-	 * An array of dependencies for this mod. The mod will load after all the dependencies are loaded.
+	 * An array of the dependencies for this mod. The mod will load after all the dependencies are loaded.
 	 *
 	 * String format:
 	 *
@@ -44,9 +45,9 @@ public @interface NovaMod {
 	 * E.g: BuildCraft@6.1.x?
 	 */
 	String[] dependencies() default { };
-	
+
 	/**
 	 * Modules of Dependency Injection that will be added to core injector allowing provision of modules by mods.
 	 */
-	Class<? extends Bundle>[] modules() default {}; 
+	Class<? extends Bundle>[] modules() default { };
 }

@@ -1,9 +1,8 @@
 package nova.core.depmodules;
 
+import nova.core.item.ItemManager;
 import se.jbee.inject.bind.BinderModule;
 import se.jbee.inject.util.Scoped;
-
-import nova.core.item.ItemManager;
 
 class ItemModule extends BinderModule {
 

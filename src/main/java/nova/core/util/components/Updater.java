@@ -6,6 +6,7 @@ package nova.core.util.components;
 public interface Updater {
 	/**
 	 * Ticks the object.
+	 *
 	 * @param deltaTime The time since the last update, in seconds.
 	 */
 	void update(double deltaTime);

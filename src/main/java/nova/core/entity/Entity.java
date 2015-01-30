@@ -40,6 +40,7 @@ public abstract class Entity implements Identifiable, Stateful {
 
 	/**
 	 * Specifies whether this entity is valid
+	 *
 	 * @return Validity state
 	 */
 	public boolean isValid() {
@@ -48,6 +49,7 @@ public abstract class Entity implements Identifiable, Stateful {
 
 	/**
 	 * Returns unique id of this entity
+	 *
 	 * @return Unique ID
 	 */
 	public int getUniqueID() {
@@ -56,6 +58,7 @@ public abstract class Entity implements Identifiable, Stateful {
 
 	/**
 	 * Gets world of this entity
+	 *
 	 * @return The {@link World}
 	 */
 	public World getWorld() {
@@ -64,6 +67,7 @@ public abstract class Entity implements Identifiable, Stateful {
 
 	/**
 	 * Gets position of this entity
+	 *
 	 * @return {@link Vector3d} containing position in world of this entity
 	 */
 	public Vector3d getPosition() {
@@ -72,6 +76,7 @@ public abstract class Entity implements Identifiable, Stateful {
 
 	/**
 	 * Sets world of this entity
+	 *
 	 * @param world World to set
 	 * @return Whether succeed
 	 */
@@ -82,6 +87,7 @@ public abstract class Entity implements Identifiable, Stateful {
 
 	/**
 	 * Sets position of this entity
+	 *
 	 * @param position Position to set
 	 * @return Whether succeed
 	 */
