@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    compile "nova.core:nova:$nova_version"
+    compile "nova.core:NovaCore:$nova_version"
 
     testCompile "junit:junit:4.12"
     testCompile 'org.assertj:assertj-core:1.+'
