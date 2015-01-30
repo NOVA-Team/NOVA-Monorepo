@@ -130,7 +130,7 @@ artifacts {
 
 publishing {
 	publications {
-		mavenJava(MavenPublication) {
+		main(MavenPublication) {
 			artifact apiJar {
 				classifier "api"
 			}
@@ -144,7 +144,24 @@ publishing {
 			artifact sourceJar {
 				classifier "sources"
 			}
-			
+		}
+		
+		latest(MavenPublication) {
+			version "latest-${config.nova.subversion}"
+		
+			artifact apiJar {
+				classifier "api"
+			}
+			artifact jar
+			artifact javadocJar {
+				classifier "javadoc"
+			}
+			artifact shadowJar {
+				classifier "all"
+			}
+			artifact sourceJar {
+				classifier "sources"
+			}
 		}
 	}
 	repositories {
