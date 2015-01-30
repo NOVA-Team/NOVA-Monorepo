@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nova.core.recipes;
 
 /**
- *
+ * A recipe removed event is fired when a recipe of the right type has been
+ * removed from the RecipeManager.
+ * 
  * @author Stan Hebben
- * @param <T>
+ * @param <T> recipe type
  */
 public class RecipeRemovedEvent<T extends Recipe>
 {

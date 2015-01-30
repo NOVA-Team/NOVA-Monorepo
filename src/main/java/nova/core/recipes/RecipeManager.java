@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nova.core.recipes;
 
 import java.util.Collection;
@@ -16,7 +11,8 @@ import nova.core.event.EventListenerHandle;
 import nova.core.event.EventListenerList;
 
 /**
- *
+ * The RecipeManager manages all recipes (of any type) in the game.
+ * 
  * @author Stan Hebben
  */
 public class RecipeManager {
@@ -49,7 +45,8 @@ public class RecipeManager {
 		return getRecipeList(type).unmodifyableRecipes;
 	}
 	
-	public <T extends Recipe> EventListenerHandle addRecipeAddedListener(
+	public <T extends Recipe> EventListenerHandle<RecipeAddedEvent<T>>
+		 addRecipeAddedListener(
 			Class<T> type,
 			EventListener<RecipeAddedEvent<T>> listener) {
 		return getRecipeList(type).recipeAddedListeners.add(listener);
@@ -61,7 +58,8 @@ public class RecipeManager {
 		getRecipeList(type).recipeAddedListeners.remove(listener);
 	}
 	
-	public <T extends Recipe> EventListenerHandle addRecipeRemovedListener(
+	public <T extends Recipe> EventListenerHandle<RecipeRemovedEvent<T>>
+		 addRecipeRemovedListener(
 			Class<T> type,
 			EventListener<RecipeRemovedEvent<T>> listener) {
 		return getRecipeList(type).recipeRemovedListeners.add(listener);
@@ -73,6 +71,10 @@ public class RecipeManager {
 		getRecipeList(type).recipeRemovedListeners.remove(listener);
 	}
 	
+	// #######################
+	// ### Private methods ###
+	// #######################
+	
 	@SuppressWarnings("unchecked")
 	private <T extends Recipe> RecipeList<T> getRecipeList(Class<T> type) {
 		if (!recipesForType.containsKey(type))
@@ -80,10 +82,6 @@ public class RecipeManager {
 		
 		return (RecipeList<T>) recipesForType.get(type);
 	}
-	
-	// #######################
-	// ### Private methods ###
-	// #######################
 	
 	@SuppressWarnings("unchecked")
 	private <T extends Recipe> RecipeList<T> collectRecipes(Class<T> type) {

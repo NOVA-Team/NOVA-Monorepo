@@ -1,12 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nova.core.recipes;
 
 /**
- *
+ * A recipe added event is fired when a recipe of the right type has been added
+ * to the RecipeManager.
+ * 
  * @author Stan Hebben
  * @param <T> recipe type
  */
