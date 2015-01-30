@@ -120,7 +120,15 @@ public abstract class Block implements Identifiable {
 	 * Called when this block is to be rendered.
 	 * @param artist The artist who is rendering this block.
 	 */
-	public void render(Artist artist) {
+	public void renderWorld(Artist artist) {
+
+	}
+
+	/**
+	 * Called when the item of this block is to be rendered.
+	 * @param artist The artist who is rendering this block.
+	 */
+	public void renderItem(Artist artist) {
 
 	}
 }
