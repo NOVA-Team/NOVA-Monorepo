@@ -1,11 +1,11 @@
 package nova.core.di;
 
-import java.util.Optional;
-
 import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
 import se.jbee.inject.Supplier;
 import se.jbee.inject.bind.BinderModule;
+
+import java.util.Optional;
 
 public class OptionalModule extends BinderModule {
 

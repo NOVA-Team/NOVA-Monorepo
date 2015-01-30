@@ -1,15 +1,15 @@
 package nova.core.recipes;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
-
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
 import nova.core.event.EventListenerList;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The RecipeManager manages all recipes (of any type) in the game.

@@ -1,18 +1,16 @@
 package nova.bootstrap;
 
+import com.google.common.collect.Sets;
 import nova.core.depmodules.CoreBundle;
 import nova.core.game.Game;
-
-import java.util.Optional;
-import java.util.Set;
-
-import com.google.common.collect.Sets;
-
 import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
 import se.jbee.inject.bootstrap.Bootstrap;
 import se.jbee.inject.bootstrap.BootstrapperBundle;
 import se.jbee.inject.bootstrap.Bundle;
+
+import java.util.Optional;
+import java.util.Set;
 
 public class DependencyInjectionEntryPoint {
 

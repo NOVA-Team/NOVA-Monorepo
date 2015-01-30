@@ -1,7 +1,5 @@
 package nova.core.block.components;
 
-import nova.core.block.components.PositionDependent;
-
 /**
  * This interface should be implemented by any block willing to keep a
  * per-block-instance state. This means that once the block instance is

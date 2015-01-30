@@ -1,11 +1,11 @@
 package nova.core.depmodules;
 
-import se.jbee.inject.bind.BinderModule;
-import se.jbee.inject.util.Scoped;
 import nova.core.di.NovaScopes;
 import nova.core.game.Game;
 import nova.core.util.Dictionary;
 import nova.core.util.Registry;
+import se.jbee.inject.bind.BinderModule;
+import se.jbee.inject.util.Scoped;
 
 class UtilModule extends BinderModule {
 

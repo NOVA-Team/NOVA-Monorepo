@@ -1,13 +1,12 @@
 package nova.core.depmodules;
 
-import java.util.Collections;
-import java.util.Set;
-
 import com.google.common.collect.Sets;
-
 import nova.core.di.OptionalModule;
 import se.jbee.inject.bootstrap.BootstrapperBundle;
 import se.jbee.inject.bootstrap.Bundle;
+
+import java.util.Collections;
+import java.util.Set;
 
 public class CoreBundle extends BootstrapperBundle {
 	private static Set<Class<? extends Bundle>> coreModules = Sets.newHashSet();

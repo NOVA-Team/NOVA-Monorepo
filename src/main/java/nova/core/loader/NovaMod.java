@@ -1,11 +1,11 @@
 package nova.core.loader;
 
+import se.jbee.inject.bootstrap.Bundle;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import se.jbee.inject.bootstrap.Bundle;
 
 /**
  * An annotation placed in the mod's main loading class.

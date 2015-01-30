@@ -1,10 +1,10 @@
 package nova.core.recipes;
 
-import java.util.List;
-import java.util.Optional;
-
 import nova.core.item.Item;
 import nova.core.item.ItemStack;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Contains a single item ingredient. An ingredient can be a specific item,

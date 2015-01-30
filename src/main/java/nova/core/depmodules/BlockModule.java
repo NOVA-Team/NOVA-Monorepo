@@ -1,8 +1,8 @@
 package nova.core.depmodules;
 
+import nova.core.block.BlockManager;
 import se.jbee.inject.bind.BinderModule;
 import se.jbee.inject.util.Scoped;
-import nova.core.block.BlockManager;
 
 class BlockModule extends BinderModule {
 
