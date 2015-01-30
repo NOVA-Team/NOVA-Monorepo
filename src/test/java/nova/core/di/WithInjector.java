@@ -12,9 +12,7 @@ public abstract class WithInjector {
 	@Before
 	public  void prepare(){
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
-		diep.preInit();
 		diep.init();
-		diep.postInit();
 		injector = diep.getInjector().get();
 	}
 	

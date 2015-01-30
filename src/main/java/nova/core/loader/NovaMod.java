@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import se.jbee.inject.bootstrap.Bundle;
+
 /**
  * An annotation placed in the mod's main loading class.
  * @author Calclavia
@@ -42,4 +44,9 @@ public @interface NovaMod {
 	 * E.g: BuildCraft@6.1.x?
 	 */
 	String[] dependencies() default { };
+	
+	/**
+	 * Modules of Dependency Injection that will be added to core injector allowing provision of modules by mods.
+	 */
+	Class<? extends Bundle>[] modules() default {}; 
 }
