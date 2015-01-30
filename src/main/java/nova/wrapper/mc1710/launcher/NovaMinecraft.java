@@ -1,7 +1,7 @@
 package nova.wrapper.mc1710.launcher;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -13,12 +13,8 @@ import nova.core.game.Game;
 import nova.core.loader.NovaMod;
 import nova.internal.NovaLauncher;
 import nova.wrapper.mc1710.forward.block.BlockWrapper;
-import org.apache.logging.log4j.core.helpers.Loader;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,6 +26,9 @@ import java.util.stream.Collectors;
 public class NovaMinecraft {
 
 	private NovaLauncher launcher;
+
+	@SidedProxy(clientSide = "nova.wrapper.mc1710.launcher.ClientProxy", serverSide = "nova.wrapper.mc1710.launcher.CommonProxy")
+	private CommonProxy proxy = null;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
@@ -82,6 +81,7 @@ public class NovaMinecraft {
 		Game.instance.get().blockManager.registry.forEach(b -> {
 			BlockWrapper newBlock = new BlockWrapper(b);
 			GameRegistry.registerBlock(newBlock, b.getID());
+
 			//TODO: Testing purposes:
 			newBlock.setCreativeTab(CreativeTabs.tabBlock);
 			System.out.println("NovaMinecraft: Registered '" + b.getID() + "' block.");

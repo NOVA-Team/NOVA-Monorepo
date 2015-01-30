@@ -1,6 +1,8 @@
 package nova.wrapper.mc1710.forward.block;
 
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +13,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nova.core.block.Block;
-import nova.core.block.BlockAccess;
 import nova.core.block.BlockBuilder;
 import nova.core.block.BlockChanger;
 import nova.core.block.components.LightEmitter;
@@ -22,15 +23,12 @@ import nova.core.util.components.Updater;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
-import nova.internal.dummy.BlockAccessDummy;
-import nova.internal.dummy.BlockDummy;
 import nova.wrapper.mc1710.backward.BackwardProxyUtil;
 import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.backward.world.BWBlockAccess;
 import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
 import nova.wrapper.mc1710.util.WrapUtility;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +38,8 @@ import java.util.stream.Collectors;
  * A Minecraft to Nova block wrapper
  * @author Calclavia
  */
-public class BlockWrapper extends net.minecraft.block.Block {
+public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler
+{
 	/**
 	 * Reference to the wrapped Nova block
 	 */
@@ -174,5 +173,32 @@ public class BlockWrapper extends net.minecraft.block.Block {
 		} else {
 			return 0;
 		}
+	}
+
+	/**
+	 * Rendering forwarding
+	 */
+	@Override
+	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer)
+	{
+		//		this.block.render()
+	}
+
+	@Override
+	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean shouldRender3DInInventory(int modelId)
+	{
+		return false;
+	}
+
+	@Override
+	public int getRenderId()
+	{
+		return 0;
 	}
 }
