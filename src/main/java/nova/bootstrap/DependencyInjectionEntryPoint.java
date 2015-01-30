@@ -6,7 +6,7 @@ import nova.core.game.Game;
 import java.util.Optional;
 import java.util.Set;
 
-import org.assertj.core.util.Sets;
+import com.google.common.collect.Sets;
 
 import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
