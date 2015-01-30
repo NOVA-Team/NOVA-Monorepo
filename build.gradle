@@ -122,6 +122,7 @@ shadowJar {
 
 artifacts {
 	archives apiJar
+	archives jar
 	archives javadocJar
 	archives shadowJar
 	archives sourceJar
@@ -133,6 +134,7 @@ publishing {
 			artifact apiJar {
 				classifier "api"
 			}
+			artifact jar
 			artifact javadocJar {
 				classifier "javadoc"
 			}
