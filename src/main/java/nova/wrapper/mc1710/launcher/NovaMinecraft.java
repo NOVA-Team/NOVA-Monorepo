@@ -81,7 +81,7 @@ public class NovaMinecraft {
 			BlockWrapper newBlock = new BlockWrapper(b);
 			GameRegistry.registerBlock(newBlock, b.getID());
 			proxy.registerBlock(newBlock);
-			
+
 			//TODO: Testing purposes:
 			newBlock.setCreativeTab(CreativeTabs.tabBlock);
 			System.out.println("NovaMinecraft: Registered '" + b.getID() + "' block.");

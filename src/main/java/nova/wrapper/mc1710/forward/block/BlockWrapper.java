@@ -1,6 +1,9 @@
 package nova.wrapper.mc1710.forward.block;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
@@ -12,17 +15,20 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.IItemRenderer;
 import nova.core.block.Block;
 import nova.core.block.BlockChanger;
 import nova.core.block.BlockFactory;
 import nova.core.block.components.LightEmitter;
 import nova.core.block.components.Stateful;
+import nova.core.render.Artist;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.BackwardProxyUtil;
+import nova.wrapper.mc1710.backward.render.MinecraftArtist;
 import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.backward.world.BWBlockAccess;
 import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
@@ -37,13 +43,15 @@ import java.util.stream.Collectors;
  * A Minecraft to Nova block wrapper
  * @author Calclavia
  */
-public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler {
+public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
+	public final Block block;
 	/**
 	 * Reference to the wrapped Nova block
 	 */
 	private final BlockFactory factory;
-	private final Block block;
 	private final Class<? extends Block> blockClass;
+	@SideOnly(Side.CLIENT)
+	private final int blockRenderingID = RenderingRegistry.getNextAvailableRenderId();
 
 	//TODO: Resolve unknown material issue
 	public BlockWrapper(BlockFactory factory) {
@@ -172,22 +180,49 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	 * Rendering forwarding
 	 */
 	@Override
-	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
-		//		this.block.render()
+	public int getRenderType() {
+		return blockRenderingID;
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
+		//NO-OP
+	}
+
+	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
+		Artist artist = new MinecraftArtist();
+		this.block.renderWorld(artist);
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean shouldRender3DInInventory(int modelId) {
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderId() {
-		return 0;
+		return blockRenderingID;
+	}
+
+	@Override
+	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
+		return true;
+	}
+
+	@Override
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
+		return true;
+	}
+
+	@Override
+	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+		Artist artist = new MinecraftArtist();
+		this.block.renderItem(artist);
 	}
 }
