@@ -121,7 +121,7 @@ public abstract class Block implements Identifiable {
 	 * @param artist The artist who is rendering this block.
 	 */
 	public void renderWorld(Artist artist) {
-
+		artist.drawCube();
 	}
 
 	/**
