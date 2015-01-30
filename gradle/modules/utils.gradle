@@ -1,0 +1,41 @@
+def getGitRef() {
+	try {
+		def stdout = new ByteArrayOutputStream()
+		exec {
+			commandLine 'git', 'rev-parse', '--short', 'HEAD'
+			standardOutput = stdout
+		}
+		return stdout.toString().trim()
+	} catch (Throwable e) {
+		return "unknown"
+	}
+}
+
+def parseConfig(String configFile) {
+	file(configFile).withReader {
+		def prop = new Properties()
+		prop.load(it)
+		return new ConfigSlurper().parse(prop)
+	}
+}
+
+def writePom() {
+	return new Action<XmlProvider>() {
+		@Override
+		void execute(XmlProvider xmlProvider) {
+			def node = xmlProvider.asNode()
+
+			node.appendNode("description", config.info.description)
+			node.appendNode("inceptionYear", config.info.inceptionYear)
+			node.appendNode("organization", config.info.organization)
+			node.appendNode("packaging", config.packaging)
+		}
+	}
+}
+
+// Fucking gradle
+ext {
+	getGitRef = this.&getGitRef
+	parseConfig = this.&parseConfig
+	writePom = this.&writePom
+}
