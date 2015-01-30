@@ -8,6 +8,7 @@ import nova.core.util.Identifiable;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
+import nova.internal.dummy.BlockAccessDummy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,9 +16,38 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Block implements Identifiable {
-	
+
+	private final BlockAccess blockAccess = BlockAccessDummy.INSTANCE;
+	private final Vector3i position = new Vector3i();
+
 	public final BlockFactory getFactory() {
 		return Game.instance.get().blockManager.getBlockFactory(this.getID()).get();
+	}
+
+	/**
+	 * These are dummy method will always be overridden by the BlockFactory.
+	 */
+	public BlockAccess getBlockAccess() {
+		return blockAccess;
+	}
+
+	/**
+	 * These are dummy method will always be overridden by the BlockFactory.
+	 */
+	public Vector3i getPosition() {
+		return position;
+	}
+
+	public final int x() {
+		return getPosition().x;
+	}
+
+	public final int y() {
+		return getPosition().y;
+	}
+
+	public final int z() {
+		return getPosition().z;
 	}
 
 	public Collection<ItemStack> getDrops() {
@@ -96,8 +126,7 @@ public abstract class Block implements Identifiable {
 	 * Called when this block is to be rendered.
 	 * @param artist The artist who is rendering this block.
 	 */
-	public void render(Artist artist)
-	{
+	public void render(Artist artist) {
 
 	}
 }

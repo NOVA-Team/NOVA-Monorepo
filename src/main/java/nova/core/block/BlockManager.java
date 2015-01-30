@@ -1,12 +1,28 @@
 package nova.core.block;
 
+import nova.core.util.NovaException;
 import nova.core.util.Registry;
 
+import java.lang.reflect.Field;
 import java.util.Optional;
-import nova.core.util.transform.Vector3i;
-import nova.internal.dummy.BlockAccessDummy;
+import java.util.function.Supplier;
 
 public class BlockManager {
+
+	public static final Field blockAccessField;
+	public static final Field posField;
+
+	static {
+		try {
+			blockAccessField = Block.class.getDeclaredField("blockAccess");
+			blockAccessField.setAccessible(true);
+			posField = Block.class.getDeclaredField("position");
+			posField.setAccessible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NovaException();
+		}
+	}
 
 	public final Registry<BlockFactory> registry;
 
@@ -19,81 +35,47 @@ public class BlockManager {
 	}
 
 	public Optional<Block> getBlock(String name) {
-	 	Optional<BlockFactory> blockFactory = getBlockFactory(name);
+		Optional<BlockFactory> blockFactory = getBlockFactory(name);
 		if (blockFactory.isPresent()) {
 			return Optional.of(blockFactory.get().getDummyBlock());
 		} else {
 			return Optional.empty();
 		}
 	}
-	
-	public void registerBlock(Block block) {
-		registry.register(new SimpleBlockFactory(block));
+
+	/**
+	 * Registers a new block that will not receive blockAccess or position values.
+	 */
+	public Block registerBlock(Block block) {
+		return registerBlock(new BlockFactory(() -> block));
 	}
 
-	public void registerBlock(PositionedConstructor constructor) {
-		registry.register(new PositionedBlockFactory(constructor));
+	/**
+	 * Registers a block with no constructor arguments
+	 */
+	public Block registerBlock(Class<? extends Block> block) {
+		return registerBlock(new BlockFactory(
+			() -> {
+				try {
+					return block.newInstance();
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new NovaException();
+				}
+			}
+		));
 	}
-	
+
+	/**
+	 * Register a new block with custom constructor arguments.
+	 */
+	public void registerBlock(Supplier<Block> constructor) {
+		registry.register(new BlockFactory(constructor));
+	}
+
 	public Block registerBlock(BlockFactory factory) {
 		registry.register(factory);
 		return factory.getDummyBlock();
 	}
-	
-	private class SimpleBlockFactory implements BlockFactory {
-		
-		private final Block block;
-		
-		private SimpleBlockFactory(Block block) {
-			this.block = block;
-		}
-		
-		@Override
-		public Block getDummyBlock() {
-			return block;
-		}
 
-		@Override
-		public Block makeBlock(BlockAccess blockAccess, Vector3i position) {
-			return block;
-		}
-
-		@Override
-		public String getID() {
-			return block.getID();
-		}
-	}
-	
-	@FunctionalInterface
-	public static interface PositionedConstructor {
-		public Block construct(BlockAccess blockAccess, Vector3i position);
-	}
-	
-	private class PositionedBlockFactory implements BlockFactory {
-		private PositionedConstructor constructor;
-		private Block dummyBlock;
-		
-		public PositionedBlockFactory(PositionedConstructor constructor) {
-			this.constructor = constructor;
-			dummyBlock = constructor.construct(BlockAccessDummy.INSTANCE, Vector3i.ZERO);
-		}
-		
-		@Override
-		public Block getDummyBlock()
-		{
-			return dummyBlock;
-		}
-
-		@Override
-		public Block makeBlock(BlockAccess blockAccess, Vector3i position)
-		{
-			return constructor.construct(blockAccess, position);
-		}
-
-		@Override
-		public String getID()
-		{
-			return dummyBlock.getID();
-		}
-	}
 }
