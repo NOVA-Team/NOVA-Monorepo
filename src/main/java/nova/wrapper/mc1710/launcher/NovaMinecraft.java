@@ -9,6 +9,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.launchwrapper.Launch;
+import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.core.loader.NovaMod;
 import nova.internal.NovaLauncher;
@@ -16,6 +17,7 @@ import nova.wrapper.mc1710.forward.block.BlockWrapper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +39,10 @@ public class NovaMinecraft {
 		 */
 		ASMDataTable asmData = evt.getAsmData();
 
-		launcher = new NovaLauncher(
+		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
+		
+		
+		launcher = new NovaLauncher(diep, 
 			asmData.
 				getAll(NovaMod.class.getName())
 				.stream()
@@ -52,6 +57,8 @@ public class NovaMinecraft {
 				.collect(Collectors.toList())
 		);
 
+		Game.instance = Optional.of(diep.init());
+		
 		launcher.preInit();
 
 		launcher.getLoadedMods().forEach(novaMod -> {
