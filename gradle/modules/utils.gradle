@@ -27,8 +27,9 @@ def writePom() {
 
 			node.appendNode("description", config.info.description)
 			node.appendNode("inceptionYear", config.info.inceptionYear)
-			node.appendNode("organization", config.info.organization)
 			node.appendNode("packaging", config.packaging)
+			node.append(new Node(node, "organization")
+				.appendNode("name", config.info.organization.name))
 		}
 	}
 }
