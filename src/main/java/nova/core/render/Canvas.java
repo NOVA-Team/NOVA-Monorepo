@@ -25,6 +25,8 @@ public class Canvas
 
 	/**
 	 * Binds a specific texture to this artist.
+	 * @param texture Texture to bind
+	 * @return This Canvas
 	 */
 	public Canvas bindTexture(Texture texture)
 	{
@@ -39,7 +41,7 @@ public class Canvas
 	 * @param b
 	 * @param c
 	 * @param d
-	 * @return
+	 * @return This Canvas
 	 */
 	public Canvas drawQuad(Vector3d a, Vector3d b, Vector3d c, Vector3d d)
 	{
@@ -53,7 +55,7 @@ public class Canvas
 	/**
 	 * Draws a 1x1x1 cube
 	 *
-	 * @return
+	 * @return This Canvas
 	 */
 	public Canvas drawCube()
 	{

@@ -86,7 +86,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when an entity collides with this block.
 	 * More specifically, when the entity's block bounds coincide with the block bounds.
-	 * @param entity
+	 * @param entity Colliding entity
 	 */
 	public void onEntityCollide(Entity entity) {
 
@@ -94,8 +94,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when this block is to be rendered.
-	 *
-	 * @artist The artist who is rendering this block.
+	 * @param artist The artist who is rendering this block.
 	 */
 	public void render(Artist artist)
 	{
