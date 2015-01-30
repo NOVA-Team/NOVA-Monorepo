@@ -85,7 +85,7 @@ public class DependencyInjectionEntryPoint {
 	}
 
 	private enum State {
-		PREINIT, POSTINIT;
+		PREINIT, POSTINIT
 	}
 
 	private static final class DIEPBundle extends BootstrapperBundle {

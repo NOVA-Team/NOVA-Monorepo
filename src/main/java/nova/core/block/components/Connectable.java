@@ -6,6 +6,6 @@ public interface Connectable {
 	Connectable.Type canConnect(Class<?> type, Direction side);
 
 	public enum Type {
-		DEFAULT, FORCE, DENY;
+		DEFAULT, FORCE, DENY
 	}
 }

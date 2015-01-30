@@ -81,7 +81,7 @@ public class UpdateTicker {
 			setPriority(Thread.MIN_PRIORITY);
 
 			this.tps = tps;
-			this.sleepMillis = 1/tps * 1000;
+			this.sleepMillis = 1 / tps * 1000;
 		}
 
 		@Override

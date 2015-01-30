@@ -66,10 +66,10 @@ public class ItemStack implements Cloneable {
 		return stackSize - original;
 	}
 
+	@SuppressWarnings("CloneDoesntCallSuperClone")
 	@Override
 	public ItemStack clone() {
-		ItemStack cloned = new ItemStack(item, stackSize);
-		return cloned;
+		return new ItemStack(item, stackSize);
 	}
 
 	/**

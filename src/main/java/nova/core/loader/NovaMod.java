@@ -21,22 +21,22 @@ public @interface NovaMod {
 	String id();
 
 	/**
-	 * A user friendly name for the mod
+	 * The user friendly name for the mod
 	 */
 	String name();
 
 	/**
-	 * A version of this mod
+	 * The version identifier of this mod
 	 */
 	String version();
 
 	/**
-	 * A version of Nova version for this mod
+	 * The version of Nova this mod is compatible with
 	 */
 	String novaVersion();
 
 	/**
-	 * An array of dependencies for this mod. The mod will load after all the dependencies are loaded.
+	 * An array of the dependencies for this mod. The mod will load after all the dependencies are loaded.
 	 *
 	 * String format:
 	 *
