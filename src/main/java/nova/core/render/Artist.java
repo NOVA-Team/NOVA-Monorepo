@@ -10,7 +10,7 @@ import java.util.List;
  */
 public abstract class Artist
 {
-	private final List<Canvas> canvases = new ArrayList<>();
+	protected final List<Canvas> canvases = new ArrayList<>();
 
 	public void drawCanvas(Canvas canvas)
 	{

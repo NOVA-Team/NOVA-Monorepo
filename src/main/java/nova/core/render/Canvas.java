@@ -9,17 +9,15 @@ import java.util.Optional;
 /**
  * @author Calclavia
  */
-public class Canvas
-{
+public class Canvas {
+	public final List<Vector3d> vertices = new ArrayList<>();
 	public Vector3d translation = new Vector3d();
 	public Vector3d rotation = new Vector3d();
 	public Vector3d scale = new Vector3d();
-	private List<Vector3d> verticies = new ArrayList<>();
 	private Optional<Texture> texture = Optional.empty();
 
-	public Canvas drawVertex(Vector3d pos)
-	{
-		verticies.add(pos);
+	public Canvas drawVertex(Vector3d pos) {
+		vertices.add(pos);
 		return this;
 	}
 
@@ -28,23 +26,20 @@ public class Canvas
 	 * @param texture Texture to bind
 	 * @return This Canvas
 	 */
-	public Canvas bindTexture(Texture texture)
-	{
+	public Canvas bindTexture(Texture texture) {
 		this.texture = Optional.of(texture);
 		return this;
 	}
 
 	/**
 	 * Draws a quadrilateral with four corners.
-	 *
 	 * @param a
 	 * @param b
 	 * @param c
 	 * @param d
 	 * @return This Canvas
 	 */
-	public Canvas drawQuad(Vector3d a, Vector3d b, Vector3d c, Vector3d d)
-	{
+	public Canvas drawQuad(Vector3d a, Vector3d b, Vector3d c, Vector3d d) {
 		drawVertex(a);
 		drawVertex(b);
 		drawVertex(c);
@@ -54,11 +49,9 @@ public class Canvas
 
 	/**
 	 * Draws a 1x1x1 cube
-	 *
 	 * @return This Canvas
 	 */
-	public Canvas drawCube()
-	{
+	public Canvas drawCube() {
 		drawQuad(new Vector3d(-0.5, -0.5, -0.5), new Vector3d(-0.5, 0.5, -0.5), new Vector3d(-0.5, 0.5, 0.5), new Vector3d(-0.5, 0.5, -0.5));
 		drawQuad(new Vector3d(-0.5, -0.5, -0.5), new Vector3d(0.5, -0.5, -0.5), new Vector3d(0.5, -0.5, 0.5), new Vector3d(-0.5, -0.5, 0.5));
 		drawQuad(new Vector3d(-0.5, -0.5, -0.5), new Vector3d(0.5, -0.5, -0.5), new Vector3d(0.5, 0.5, -0.5), new Vector3d(-0.5, 0.5, -0.5));
