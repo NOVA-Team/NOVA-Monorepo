@@ -58,7 +58,7 @@ public abstract class Block implements Identifiable {
 		Set<Cuboid> bounds = new HashSet<>();
 		Cuboid defaultBound = getBoundingBox();
 
-		if (defaultBound.intersects(intersect)) {
+		if (defaultBound.add(position).intersects(intersect)) {
 			bounds.add(getBoundingBox());
 		}
 
