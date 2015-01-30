@@ -3,26 +3,10 @@ package nova.core.block;
 import nova.core.util.NovaException;
 import nova.core.util.Registry;
 
-import java.lang.reflect.Field;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 public class BlockManager {
-
-	public static final Field blockAccessField;
-	public static final Field posField;
-
-	static {
-		try {
-			blockAccessField = Block.class.getDeclaredField("blockAccess");
-			blockAccessField.setAccessible(true);
-			posField = Block.class.getDeclaredField("position");
-			posField.setAccessible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new NovaException();
-		}
-	}
 
 	public final Registry<BlockFactory> registry;
 
@@ -44,13 +28,6 @@ public class BlockManager {
 	}
 
 	/**
-	 * Registers a new block that will not receive blockAccess or position values.
-	 */
-	public Block registerBlock(Block block) {
-		return registerBlock(new BlockFactory(() -> block));
-	}
-
-	/**
 	 * Registers a block with no constructor arguments
 	 */
 	public Block registerBlock(Class<? extends Block> block) {
@@ -65,6 +42,11 @@ public class BlockManager {
 			}
 		));
 	}
+	
+	/*
+	public Block registerBlock(Block block) {
+		return registerBlock(new BlockFactory(() -> block));
+	}*/
 
 	/**
 	 * Register a new block with custom constructor arguments.

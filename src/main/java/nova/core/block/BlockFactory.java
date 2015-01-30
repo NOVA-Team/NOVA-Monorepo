@@ -4,12 +4,28 @@ import nova.core.util.Identifiable;
 import nova.core.util.NovaException;
 import nova.core.util.transform.Vector3i;
 
+import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
 /**
  * @author Stan Hebben
  */
 public class BlockFactory implements Identifiable {
+
+	public static final Field blockAccessField;
+	public static final Field posField;
+
+	static {
+		try {
+			blockAccessField = Block.class.getDeclaredField("blockAccess");
+			blockAccessField.setAccessible(true);
+			posField = Block.class.getDeclaredField("position");
+			posField.setAccessible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NovaException();
+		}
+	}
 
 	private final Supplier<Block> constructor;
 	private final Block dummyBlock;
@@ -31,8 +47,8 @@ public class BlockFactory implements Identifiable {
 		Block newBlock = constructor.get();
 
 		try {
-			BlockManager.blockAccessField.set(newBlock, blockAccess);
-			BlockManager.posField.set(newBlock, position);
+			blockAccessField.set(newBlock, blockAccess);
+			posField.set(newBlock, position);
 		} catch (Exception e) {
 			throw new NovaException();
 		}

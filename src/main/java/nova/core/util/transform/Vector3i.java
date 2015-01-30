@@ -5,10 +5,12 @@ package nova.core.util.transform;
  */
 @SuppressWarnings("rawtypes")
 public class Vector3i extends Vector3<Vector3i> {
+	public static final Vector3i ZERO = new Vector3i(0, 0, 0);
+	public static final Vector3i ONE = new Vector3i(1, 1, 1);
 	public static final Vector3i AXIS_X = new Vector3i(1, 0, 0);
 	public static final Vector3i AXIS_Y = new Vector3i(0, 1, 0);
 	public static final Vector3i AXIS_Z = new Vector3i(0, 0, 1);
-	
+
 	public final int x, y, z;
 
 	public Vector3i() {

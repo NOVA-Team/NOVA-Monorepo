@@ -18,22 +18,16 @@ import java.util.Set;
 public abstract class Block implements Identifiable {
 
 	private final BlockAccess blockAccess = BlockAccessDummy.INSTANCE;
-	private final Vector3i position = new Vector3i();
+	private final Vector3i position = Vector3i.ZERO;
 
 	public final BlockFactory getFactory() {
 		return Game.instance.get().blockManager.getBlockFactory(this.getID()).get();
 	}
 
-	/**
-	 * These are dummy method will always be overridden by the BlockFactory.
-	 */
 	public BlockAccess getBlockAccess() {
 		return blockAccess;
 	}
 
-	/**
-	 * These are dummy method will always be overridden by the BlockFactory.
-	 */
 	public Vector3i getPosition() {
 		return position;
 	}
