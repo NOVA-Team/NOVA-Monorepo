@@ -10,6 +10,10 @@ import java.util.Optional;
  * @author Calclavia
  */
 public class BlockAccessDummy implements BlockAccess {
+	public static final BlockAccessDummy INSTANCE = new BlockAccessDummy();
+	
+	private BlockAccessDummy() {}
+	
 	@Override
 	public Optional<Block> getBlock(Vector3i position) {
 		return Optional.empty();

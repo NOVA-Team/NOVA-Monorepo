@@ -15,20 +15,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Block implements Identifiable {
-	private final BlockAccess blockAccess;
-	private final Vector3i position;
-
-	/**
-	 * @param blockAccess - The block access
-	 * @param position - The position of the block
-	 */
-	public Block(BlockAccess blockAccess, Vector3i position) {
-		this.blockAccess = blockAccess;
-		this.position = position;
-	}
-
-	public final BlockBuilder<?> getBuilder() {
-		return Game.instance.get().blockManager.getBlockBuilder(this.getID()).get();
+	
+	public final BlockFactory getFactory() {
+		return Game.instance.get().blockManager.getBlockFactory(this.getID()).get();
 	}
 
 	public Collection<ItemStack> getDrops() {
@@ -50,26 +39,6 @@ public abstract class Block implements Identifiable {
 		}
 
 		return bounds;
-	}
-
-	public BlockAccess getBlockAccess() {
-		return blockAccess;
-	}
-
-	public Vector3i getPosition() {
-		return position;
-	}
-
-	public int getX() {
-		return position.x;
-	}
-
-	public int getY() {
-		return position.y;
-	}
-
-	public int getZ() {
-		return position.z;
 	}
 
 	public boolean isCube() {

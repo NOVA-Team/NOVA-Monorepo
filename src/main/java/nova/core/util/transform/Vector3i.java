@@ -5,6 +5,11 @@ package nova.core.util.transform;
  */
 @SuppressWarnings("rawtypes")
 public class Vector3i extends Vector3<Vector3i> {
+	public static final Vector3i ZERO = new Vector3i(0, 0, 0);
+	public static final Vector3i AXIS_X = new Vector3i(1, 0, 0);
+	public static final Vector3i AXIS_Y = new Vector3i(0, 1, 0);
+	public static final Vector3i AXIS_Z = new Vector3i(0, 0, 1);
+	
 	public final int x, y, z;
 
 	public Vector3i() {
@@ -79,14 +84,6 @@ public class Vector3i extends Vector3<Vector3i> {
 	}
 
 	@Override
-	public int hashCode() {
-		long hash = (x ^ (x >>> 32));
-		hash = 31 * hash + y ^ (y >>> 32);
-		hash = 31 * hash + z ^ (z >>> 32);
-		return (int) hash;
-	}
-
-	@Override
 	public int xi() {
 		return x;
 	}
@@ -118,6 +115,14 @@ public class Vector3i extends Vector3<Vector3i> {
 
 	public Vector3d toDouble() {
 		return new Vector3d(xd(), yd(), zd());
+	}
+
+	@Override
+	public int hashCode() {
+		long hash = x;
+		hash = 31 * hash + y;
+		hash = 31 * hash + z;
+		return (int) hash;
 	}
 
 	@Override
