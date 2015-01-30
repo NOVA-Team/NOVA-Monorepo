@@ -17,39 +17,74 @@ public abstract class Entity implements Identifiable, Stateful {
 		setPosition(position);
 	}
 
+	/**
+	 * Initializes this Entity
+	 */
 	public void initialize() {
 
 	}
 
+	/**
+	 * Marks this entity as valid
+	 */
 	public void validate() {
 		valid = true;
 	}
 
+	/**
+	 * Marks this entity as invalid
+	 */
 	public void invalidate() {
 		valid = false;
 	}
 
+	/**
+	 * Specifies whether this entity is valid
+	 * @return Validity state
+	 */
 	public boolean isValid() {
 		return valid;
 	}
 
+	/**
+	 * Returns unique id of this entity
+	 * @return Unique ID
+	 */
 	public int getUniqueID() {
 		return uniqueId;
 	}
 
+	/**
+	 * Gets world of this entity
+	 * @return The {@link World}
+	 */
 	public World getWorld() {
 		return world;
 	}
 
+	/**
+	 * Gets position of this entity
+	 * @return {@link Vector3d} containing position in world of this entity
+	 */
 	public Vector3d getPosition() {
 		return position;
 	}
 
+	/**
+	 * Sets world of this entity
+	 * @param world World to set
+	 * @return Whether succeed
+	 */
 	public boolean setWorld(World world) {
 		this.world = world;
 		return true;
 	}
 
+	/**
+	 * Sets position of this entity
+	 * @param position Position to set
+	 * @return Whether succeed
+	 */
 	public boolean setPosition(Vector3d position) {
 		this.position = position;
 		return true;

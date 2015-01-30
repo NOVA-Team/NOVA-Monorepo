@@ -4,6 +4,9 @@ import nova.core.item.ItemStack;
 
 import java.util.Optional;
 
+/**
+ * This class provides implementation of {@link Inventory}
+ */
 public class InventorySimple implements Inventory {
 
 	private final ItemStack[] stacks;
@@ -13,6 +16,11 @@ public class InventorySimple implements Inventory {
 		stacks = new ItemStack[size];
 	}
 
+	/**
+	 * Tells if this inventory has changed since last
+	 * invocation of {@link #clearChanged()}
+	 * @return Whether the inventory has changed
+	 */
 	public boolean hasChanged() {
 		return changed;
 	}
@@ -22,6 +30,9 @@ public class InventorySimple implements Inventory {
 		changed = true;
 	}
 
+	/**
+	 * Marks this inventory as unchanged
+	 */
 	public void clearChanged() {
 		changed = false;
 	}
