@@ -12,6 +12,11 @@ public class EntityManager {
 		this.registry = registry;
 	}
 
+	/**
+	 * Returns entity by its name
+	 * @param name Name of entity to search for
+	 * @return {@link Entity} that was searched for
+	 */
 	public Optional<Entity> getEntity(String name) {
 		return registry.get(name);
 	}
