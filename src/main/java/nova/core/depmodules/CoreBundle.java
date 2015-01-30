@@ -24,6 +24,7 @@ public class CoreBundle extends BootstrapperBundle{
 	static {
 		add(BlockModule.class);
 		add(ItemModule.class);
+		add(FluidModule.class);
 		add(WorldModule.class);
 		add(EntityModule.class);
 		

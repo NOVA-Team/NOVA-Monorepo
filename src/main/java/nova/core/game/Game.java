@@ -2,6 +2,7 @@ package nova.core.game;
 
 import nova.core.block.BlockManager;
 import nova.core.entity.EntityManager;
+import nova.core.fluid.FluidManager;
 import nova.core.item.ItemManager;
 import nova.core.world.WorldManager;
 
@@ -19,12 +20,14 @@ public class Game {
 	public final BlockManager blockManager;
 	public final EntityManager entityManager;
 	public final ItemManager itemManager;
+	public final FluidManager fluidManager;
 	public final WorldManager worldManager;
 
-	private Game(BlockManager blockManager, EntityManager entityManager, ItemManager itemManager, WorldManager worldManager) {
+	private Game(BlockManager blockManager, EntityManager entityManager, ItemManager itemManager, FluidManager fluidManager, WorldManager worldManager) {
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
 		this.itemManager = itemManager;
+		this.fluidManager = fluidManager;
 		this.worldManager = worldManager;
 	}
 

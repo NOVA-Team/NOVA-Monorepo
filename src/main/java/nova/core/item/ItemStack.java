@@ -27,7 +27,6 @@ public class ItemStack implements Cloneable {
 	}
 
 	/**
-	 * 
 	 * @return {@link Item} of which this ItemStack is made of
 	 */
 	public Item getItem() {
