@@ -3,11 +3,13 @@ package nova.core.util.transform;
 /**
  * An abstract Vector3 class that is extended by both Vector3i and Vector3d
  * @author Calclavia
+ * @param <O> -describeme-
  */
 @SuppressWarnings("rawtypes")
 public abstract class Vector2<O extends Vector2<O>> extends Vector<Vector2<O>, O> implements Comparable {
 	/**
 	 * Integer coordinate values
+	 * @return -describeme-
 	 */
 	public abstract int xi();
 
@@ -15,6 +17,7 @@ public abstract class Vector2<O extends Vector2<O>> extends Vector<Vector2<O>, O
 
 	/**
 	 * Double coordinate values
+	 * @return -describeme-
 	 */
 	public abstract double xd();
 

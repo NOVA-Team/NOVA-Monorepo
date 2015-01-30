@@ -4,15 +4,30 @@ import nova.core.player.Player;
 
 import java.util.Optional;
 
+/**
+ * A class representing several types of object which could change a block.
+ */
 public abstract class BlockChanger {
-	public class Unknown extends BlockChanger {
+	/**
+	 * An unknown object changed the block.
+	 */
+	public static class Unknown extends BlockChanger {
 		public Unknown() {
 
 		}
 	}
 
-	public class Block extends BlockChanger {
+	/**
+	 * A block changed the block.
+	 */
+	public static class Block extends BlockChanger {
+		/**
+		 * The BlockAccess used to access the block.
+		 */
 		public final BlockAccess blockAccess;
+		/**
+		 * The block which changed the block.
+		 */
 		public final Block block;
 
 		public Block(BlockAccess blockAccess, Block block) {
@@ -21,17 +36,31 @@ public abstract class BlockChanger {
 		}
 	}
 
-	public class Entity extends BlockChanger {
-		public final Entity entity;
+	/**
+	 * An entity changed the block.
+	 */
+	public static class Entity extends BlockChanger {
+		/**
+		 * The entity which changed the block.
+		 */
+		public final nova.core.entity.Entity entity;
 
-		public Entity(Entity entity) {
+		public Entity(nova.core.entity.Entity entity) {
 			this.entity = entity;
 		}
 
+		/**
+		 * @return true if the Entity is a player.
+		 */
 		public boolean hasPlayer() {
 			return entity instanceof Player;
 		}
 
+		/**
+		 * Gets the player from the Entity.
+		 *
+		 * @return an optional of the Player.
+		 */
 		public Optional<Player> getPlayer() {
 			return hasPlayer() ? Optional.of((Player) entity) : Optional.empty();
 		}

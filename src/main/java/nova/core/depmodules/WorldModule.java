@@ -1,14 +1,15 @@
 package nova.core.depmodules;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
+import se.jbee.inject.bind.BinderModule;
+import se.jbee.inject.util.Scoped;
 import nova.core.world.WorldManager;
 
-class WorldModule extends AbstractModule {
+class WorldModule extends BinderModule {
 
 	@Override
-	protected void configure() {
-		bind(WorldManager.class).in(Singleton.class);
+	protected void declare() {
+		per(Scoped.APPLICATION).bind(WorldManager.class).toConstructor();
 	}
 
 }
+

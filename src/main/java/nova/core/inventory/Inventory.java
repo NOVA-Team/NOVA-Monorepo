@@ -1,10 +1,8 @@
 package nova.core.inventory;
 
-import nova.core.item.Item;
 import nova.core.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;

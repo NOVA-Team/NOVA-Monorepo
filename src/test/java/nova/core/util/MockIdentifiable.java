@@ -1,4 +1,4 @@
-package nova.test.core.util;
+package nova.core.util;
 
 import nova.core.util.Identifiable;
 

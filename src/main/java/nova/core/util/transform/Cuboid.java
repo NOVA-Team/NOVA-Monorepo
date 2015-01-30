@@ -58,6 +58,8 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Expands the cuboid by a certain vector.
+	 * @param other Given vector
+	 * @return New cuboid
 	 */
 	public Cuboid expand(Vector3 other) {
 		return new Cuboid(min.subtract(other), max.add(other));
@@ -65,6 +67,8 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Expands the cuboid by a certain amount.
+	 * @param other The amount
+	 * @return New cuboid
 	 */
 	public Cuboid expand(double other) {
 		return new Cuboid(min.subtract(other), max.add(other));
@@ -72,6 +76,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Returns if this cuboid is a cube.
+	 * @return If this cuboid is a cube.
 	 */
 	public boolean isCube() {
 		return size().x == size().y && size().y == size().z;
@@ -95,6 +100,8 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Checks if another cuboid is within this cuboid
+	 * @param other Cuboid to check
+	 * @return Result of the check
 	 */
 	public boolean intersects(Cuboid other) {
 		return (other.max.x > min.x && other.min.x < max.x) ? ((other.max.y > min.y && other.min.y < max.y) ? other.max.z > min.z && other.min.z < max.z : false) : false;
@@ -102,6 +109,8 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Checks if a vector is within this cuboid.
+	 * @param other Vector to check
+	 * @return Result of the check
 	 */
 	public boolean intersects(Vector3 other) {
 		return other.xd() > this.min.x && other.xd() < this.max.x ? (other.yd() > this.min.y && other.yd() < this.max.y ? other.zd() > this.min.z && other.zd() < this.max.z : false) : false;
