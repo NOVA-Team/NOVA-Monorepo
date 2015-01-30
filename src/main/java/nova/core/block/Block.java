@@ -3,11 +3,11 @@ package nova.core.block;
 import nova.core.entity.Entity;
 import nova.core.game.Game;
 import nova.core.item.ItemStack;
+import nova.core.render.Artist;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
-import nova.internal.dummy.BlockAccessDummy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -120,6 +120,16 @@ public abstract class Block implements Identifiable {
 	 * @param entity
 	 */
 	public void onEntityCollide(Entity entity) {
+
+	}
+
+	/**
+	 * Called when this block is to be rendered.
+	 *
+	 * @artist The artist who is rendering this block.
+	 */
+	public void render(Artist artist)
+	{
 
 	}
 }
