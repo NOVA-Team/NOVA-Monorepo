@@ -39,7 +39,8 @@ public class DependencyInjectionEntryPoint {
 		return state;
 	}
 	/**
-	 * Installs bundle in core Injector. Works until, finalization later throws {@see IllegalStateException}.
+	 * Installs bundle in core Injector. Works until, finalization later throws {@link IllegalStateException}.
+	 * @param bundle Bundle
 	 */
 	public void install(Class<? extends Bundle> bundle){
 		if (state != State.PREINIT) {
@@ -49,7 +50,8 @@ public class DependencyInjectionEntryPoint {
 	}
 	
 	/**
-	 * Removes bundle from core Injector. Works until finalization, later throws {@see IllegalStateException}.
+	 * Removes bundle from core Injector. Works until finalization, later throws {@link IllegalStateException}.
+	 * @param bundle Bundle
 	 * @return whether module being uninstalled was installed.  
 	 */
 	public boolean uninstall(Class<? extends Bundle> bundle){
@@ -64,7 +66,7 @@ public class DependencyInjectionEntryPoint {
 	 * being installed in core injector. Alternating module composition in core injector after initialization
 	 * is not possible.
 	 * 
-	 * @return Game instance {@link Game}. Use it for future injections and general management. {@link Game.instance}
+	 * @return Game instance {@link Game}. Use it for future injections and general management. {@link Game#instance}
 	 */
 	public Game init() {
 		if (state != State.PREINIT) {

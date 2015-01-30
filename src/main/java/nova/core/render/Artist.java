@@ -13,6 +13,7 @@ public abstract class Artist {
 	/**
 	 * Starts drawing, by returning an Artwork for the Artist to work on.
 	 * Add vertices to this Artwork and finish it by calling endDrawing()
+	 * @return new {@link Artwork}
 	 */
 	public Artwork startDrawing() {
 		return new Artwork();

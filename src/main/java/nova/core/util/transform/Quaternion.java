@@ -64,6 +64,7 @@ public class Quaternion {
 	 * @param yaw - Radians
 	 * @param pitch - Radians
 	 * @param roll - Radians
+	 * @return {@link Quaternion} based on Euler Angles.
 	 */
 	public static Quaternion fromEuler(double yaw, double pitch, double roll) {
 		// Assuming the angles are in radians.
@@ -86,7 +87,7 @@ public class Quaternion {
 		return new Quaternion().setAroundAxis(ax, ay, az, angle);
 	}
 
-	public static Quaternion aroundAxis(Vector3 axis, double angle) {
+	public static Quaternion aroundAxis(Vector3<?> axis, double angle) {
 		return aroundAxis(axis.xd(), axis.yd(), axis.zd(), angle);
 	}
 

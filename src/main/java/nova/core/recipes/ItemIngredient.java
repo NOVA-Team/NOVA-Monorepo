@@ -34,16 +34,16 @@ public interface ItemIngredient
 	 * ingredient is a subset if all items that match this ingredient also
 	 * match the other ingredient.
 	 * 
-	 * @param ingredient
-	 * @return 
+	 * @param ingredient The another ingredient
+	 * @return Result of the check
 	 */
 	public boolean isSubsetOf(ItemIngredient ingredient);
 	
 	/**
 	 * Checks if this ingredient matches the given item.
 	 * 
-	 * @param item
-	 * @return 
+	 * @param item Item to check
+	 * @return Whether the item matches or not
 	 */
 	public boolean matches(ItemStack item);
 }

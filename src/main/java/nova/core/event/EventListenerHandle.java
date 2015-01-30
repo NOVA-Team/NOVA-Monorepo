@@ -7,6 +7,7 @@ import java.io.Closeable;
  * EventListenerList, which can then be used to unregister the event listener.
  * 
  * @author Stan Hebben
+ * @param <T> Event type
  */
 public interface EventListenerHandle<T> extends Closeable
 {
