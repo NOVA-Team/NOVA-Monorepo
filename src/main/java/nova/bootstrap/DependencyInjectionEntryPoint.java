@@ -45,7 +45,7 @@ public class DependencyInjectionEntryPoint {
 	 */
 	public void install(Class<? extends Bundle> bundle) {
 		if (state != State.PREINIT) {
-			throw new IllegalStateException("This funcion may only be used before DependencyInjectionEntryPoint initialization.");
+			throw new IllegalStateException("This function may only be used before DependencyInjectionEntryPoint initialization.");
 		}
 		bundles.add(bundle);
 	}
@@ -58,7 +58,7 @@ public class DependencyInjectionEntryPoint {
 	 */
 	public boolean uninstall(Class<? extends Bundle> bundle) {
 		if (state != State.PREINIT) {
-			throw new IllegalStateException("This funcion may only be used before DependencyInjectionEntryPoint initialization.");
+			throw new IllegalStateException("This function may only be used before DependencyInjectionEntryPoint initialization.");
 		}
 		return bundles.remove(bundle);
 	}
@@ -72,7 +72,7 @@ public class DependencyInjectionEntryPoint {
 	 */
 	public Game init() {
 		if (state != State.PREINIT) {
-			throw new IllegalStateException("EntryPoint#postInit() has to be only onece.");
+			throw new IllegalStateException("EntryPoint#postInit() has to be only once.");
 		}
 
 		DIEPBundle.bundles = bundles;
@@ -92,7 +92,7 @@ public class DependencyInjectionEntryPoint {
 
 		@Override
 		protected void bootstrap() {
-			bundles.stream().forEach(bundle -> this.install(bundle));
+			bundles.stream().forEach(this::install);
 		}
 
 	}

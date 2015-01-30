@@ -43,7 +43,7 @@ public class RecipeManager {
 	}
 
 	public <T extends Recipe> Collection<T> getRecipes(Class<T> type) {
-		return getRecipeList(type).unmodifyableRecipes;
+		return getRecipeList(type).unmodifiableRecipes;
 	}
 
 	public <T extends Recipe> EventListenerHandle<RecipeAddedEvent<T>>
@@ -90,7 +90,7 @@ public class RecipeManager {
 		Set<T> result = new HashSet<>();
 
 		recipes.stream()
-			.filter(recipe -> type.isInstance(recipe))
+			.filter(type::isInstance)
 			.forEach(recipe -> result.add((T) recipe));
 
 		return new RecipeList<>(result);
@@ -98,13 +98,13 @@ public class RecipeManager {
 
 	private class RecipeList<T extends Recipe> {
 		private Set<T> recipes;
-		private Set<T> unmodifyableRecipes;
+		private Set<T> unmodifiableRecipes;
 		private EventListenerList<RecipeAddedEvent<T>> recipeAddedListeners;
 		private EventListenerList<RecipeRemovedEvent<T>> recipeRemovedListeners;
 
 		private RecipeList(Set<T> recipes) {
 			this.recipes = recipes;
-			this.unmodifyableRecipes = Collections.unmodifiableSet(recipes);
+			this.unmodifiableRecipes = Collections.unmodifiableSet(recipes);
 			this.recipeAddedListeners = new EventListenerList<>();
 			this.recipeRemovedListeners = new EventListenerList<>();
 		}

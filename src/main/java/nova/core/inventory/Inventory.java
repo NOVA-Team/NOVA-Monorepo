@@ -87,7 +87,7 @@ public interface Inventory extends Iterable<ItemStack> {
 	 * @return This inventory as list of {@link ItemStack ItemStacks}
 	 */
 	default List<ItemStack> toList() {
-		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> list = new ArrayList<>();
 		for (ItemStack i : this) {
 			list.add(i);
 		}

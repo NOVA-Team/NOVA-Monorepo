@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  * The main class that launches NOVA mods.
- * 
+ *
  * @author Calclavia, Kubuxu
  */
 public class NovaLauncher implements Loadable {
@@ -30,28 +30,26 @@ public class NovaLauncher implements Loadable {
 
 	/**
 	 * Creates NovaLauncher.
-	 * 
-	 * @param modClasses
-	 *            mods to instantialize.
-	 * @param diep
-	 *            is required as we are installing additional modules to it.
+	 *
+	 * @param modClasses mods to instantialize.
+	 * @param diep is required as we are installing additional modules to it.
 	 */
 	public NovaLauncher(DependencyInjectionEntryPoint diep, List<Class<?>> modClasses) {
 		this.diep = diep;
 		this.modClasses = modClasses;
-		
+
 		Map<NovaMod, Class<? extends Loadable>> classesMap = modClasses.stream()
-			.filter(clazz -> Loadable.class.isAssignableFrom(clazz))
+			.filter(Loadable.class::isAssignableFrom)
 			.map(clazz -> (Class<? extends Loadable>) clazz.asSubclass(Loadable.class))
 			.filter(clazz -> clazz.getAnnotation(NovaMod.class) != null)
 			.collect(Collectors.toMap((clazz) -> clazz.getAnnotation(NovaMod.class), Function.identity()));
 
 		classesMap.keySet().stream()
 			.flatMap(mod -> Arrays.stream(mod.modules()))
-			.forEach(bundle -> diep.install(bundle));
+			.forEach(diep::install);
 
 		mods = classesMap.entrySet().stream()
-			.collect(Collectors.toMap(entry -> entry.getKey(), ((entry) -> {
+			.collect(Collectors.toMap(Map.Entry::getKey, ((entry) -> {
 				try {
 					return (Loadable) entry.getValue().newInstance();
 				} catch (Exception e) {
@@ -63,13 +61,13 @@ public class NovaLauncher implements Loadable {
 		 * TODO: Re-order mods based on dependencies
 		 */
 
-		orderedMods = new ArrayList<Loadable>();
+		orderedMods = new ArrayList<>();
 		orderedMods.addAll(mods.values());
-		
+
 	}
 
 	public void preInit() {
-		
+
 		/**
 		 * Initialize all the NOVA mods.
 		 */

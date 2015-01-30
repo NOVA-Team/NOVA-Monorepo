@@ -31,7 +31,7 @@ public class CoreBundle extends BootstrapperBundle {
 
 	@Override
 	protected void bootstrap() {
-		coreModules.stream().forEach(module -> this.install(module));
+		coreModules.stream().forEach(this::install);
 	}
 
 }

@@ -55,7 +55,7 @@ public class UpdateTicker {
 	public void update() {
 
 		synchronized (preEvents) {
-			preEvents.forEach(e -> e.run());
+			preEvents.forEach(Runnable::run);
 			preEvents.clear();
 		}
 
