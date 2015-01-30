@@ -4,6 +4,7 @@ import nova.core.util.Registry;
 
 import java.util.Optional;
 import nova.core.util.transform.Vector3i;
+import nova.internal.dummy.BlockAccessDummy;
 
 public class BlockManager {
 
@@ -30,6 +31,10 @@ public class BlockManager {
 		registry.register(new SimpleBlockFactory(block));
 	}
 
+	public void registerBlock(PositionedConstructor constructor) {
+		registry.register(new PositionedBlockFactory(constructor));
+	}
+	
 	public Block registerBlock(BlockFactory factory) {
 		registry.register(factory);
 		return factory.getDummyBlock();
@@ -56,6 +61,39 @@ public class BlockManager {
 		@Override
 		public String getID() {
 			return block.getID();
+		}
+	}
+	
+	@FunctionalInterface
+	public static interface PositionedConstructor {
+		public Block construct(BlockAccess blockAccess, Vector3i position);
+	}
+	
+	private class PositionedBlockFactory implements BlockFactory {
+		private PositionedConstructor constructor;
+		private Block dummyBlock;
+		
+		public PositionedBlockFactory(PositionedConstructor constructor) {
+			this.constructor = constructor;
+			dummyBlock = constructor.construct(BlockAccessDummy.INSTANCE, Vector3i.ZERO);
+		}
+		
+		@Override
+		public Block getDummyBlock()
+		{
+			return dummyBlock;
+		}
+
+		@Override
+		public Block makeBlock(BlockAccess blockAccess, Vector3i position)
+		{
+			return constructor.construct(blockAccess, position);
+		}
+
+		@Override
+		public String getID()
+		{
+			return dummyBlock.getID();
 		}
 	}
 }
