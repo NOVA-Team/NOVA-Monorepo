@@ -11,9 +11,9 @@ import java.util.Optional;
  */
 public class Canvas {
 	public final List<Vector3d> vertices = new ArrayList<>();
-	public Vector3d translation = new Vector3d();
-	public Vector3d rotation = new Vector3d();
-	public Vector3d scale = new Vector3d();
+	public Vector3d translation = Vector3d.ZERO;
+	public Vector3d rotation = Vector3d.ZERO;
+	public Vector3d scale = Vector3d.ONE;
 	private Optional<Texture> texture = Optional.empty();
 
 	public Canvas drawVertex(Vector3d pos) {

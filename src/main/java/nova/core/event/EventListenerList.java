@@ -9,6 +9,7 @@ package nova.core.event;
  */
 public class EventListenerList<T> {
 	// TODO: actually test concurrency
+	
 	// implements a linked list of nodes
 	private volatile EventListenerNode first = null;
 	private EventListenerNode last = null;
@@ -17,7 +18,13 @@ public class EventListenerList<T> {
 		first = last = null;
 	}
 	
-	public EventListenerHandle add(EventListener<T> listener) {
+	/**
+	 * Adds an EventListener to the list.
+	 * 
+	 * @param listener event listener
+	 * @return event listener's handle
+	 */
+	public EventListenerHandle<T> add(EventListener<T> listener) {
 		EventListenerNode node = new EventListenerNode(listener, last, null);
 		
 		synchronized(this) {
@@ -33,6 +40,11 @@ public class EventListenerList<T> {
 		return node;
 	}
 	
+	/**
+	 * Removes an EventListener from the list.
+	 * @param listener listener to be removed
+	 * @return true if the listener was removed, false it it wasn't there
+	 */
 	public synchronized boolean remove(EventListener<T> listener) {
 		EventListenerNode current = first;
 		
@@ -47,10 +59,20 @@ public class EventListenerList<T> {
 		return false;
 	}
 	
+	/**
+	 * Checks if there are any listeners in this list.
+	 * 
+	 * @return true if empty
+	 */
 	public boolean isEmpty() {
 		return first == null;
 	}
 	
+	/**
+	 * Publishes an event by calling all of the registered listeners.
+	 * 
+	 * @param event event to be published
+	 */
 	public void publish(T event) {
 		EventListenerNode current;
 		
@@ -65,7 +87,11 @@ public class EventListenerList<T> {
 		}
 	}
 	
-	private class EventListenerNode implements EventListenerHandle {
+	// #######################
+	// ### Private classes ###
+	// #######################
+	
+	private class EventListenerNode implements EventListenerHandle<T> {
 		private final EventListener<T> listener;
 		private EventListenerNode next;
 		private EventListenerNode prev;
@@ -74,6 +100,11 @@ public class EventListenerList<T> {
 			this.listener = handler;
 			this.prev = prev;
 			this.next = next;
+		}
+		
+		@Override
+		public EventListener<T> getListener() {
+			return listener;
 		}
 		
 		@Override
