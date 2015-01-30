@@ -131,10 +131,11 @@ artifacts {
 publishing {
 	publications {
 		main(MavenPublication) {
+			from components.java
+			
 			artifact apiJar {
 				classifier "api"
 			}
-			artifact jar
 			artifact javadocJar {
 				classifier "javadoc"
 			}
@@ -147,12 +148,12 @@ publishing {
 		}
 		
 		latest(MavenPublication) {
+			from components.java
 			version "latest-${config.nova.subversion}"
 		
 			artifact apiJar {
 				classifier "api"
 			}
-			artifact jar
 			artifact javadocJar {
 				classifier "javadoc"
 			}
