@@ -7,6 +7,7 @@ package nova.core.util;
 public interface Identifiable {
 	/**
 	 * Get the ID to identify this object by
+	 *
 	 * @return the ID
 	 */
 	String getID();

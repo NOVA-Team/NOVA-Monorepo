@@ -8,17 +8,16 @@ import nova.core.util.Dictionary;
 import nova.core.util.Registry;
 
 class UtilModule extends BinderModule {
-	
+
 	public UtilModule() {
 		super(NovaScopes.MULTIPLE_INSTANCES);
 	}
-	
+
 	@Override
 	protected void declare() {
 		bind(Registry.class).toConstructor();
 		bind(Dictionary.class).toConstructor();
-		
-		
+
 		per(Scoped.APPLICATION).bind(Game.class).toConstructor();
 	}
 

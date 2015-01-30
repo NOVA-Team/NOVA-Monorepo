@@ -3,6 +3,5 @@ package nova.core.render;
 /**
  * @author Calclavia
  */
-public abstract class Texture
-{
+public abstract class Texture {
 }

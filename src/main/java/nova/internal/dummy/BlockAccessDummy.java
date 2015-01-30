@@ -11,9 +11,10 @@ import java.util.Optional;
  */
 public class BlockAccessDummy implements BlockAccess {
 	public static final BlockAccessDummy INSTANCE = new BlockAccessDummy();
-	
-	private BlockAccessDummy() {}
-	
+
+	private BlockAccessDummy() {
+	}
+
 	@Override
 	public Optional<Block> getBlock(Vector3i position) {
 		return Optional.empty();

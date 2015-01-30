@@ -4,10 +4,19 @@ import nova.core.item.ItemStack;
 
 import java.util.Optional;
 
+/**
+ * This class is virtual inventory used for inventory re-mapping
+ */
 public class InventoryView implements Inventory {
 	private final Inventory parent;
 	private final int[] slots;
 
+	/**
+	 * Creates new inventory view
+	 *
+	 * @param parent Parent inventory
+	 * @param slots Map of slots
+	 */
 	public InventoryView(Inventory parent, int[] slots) {
 		this.parent = parent;
 		this.slots = slots;

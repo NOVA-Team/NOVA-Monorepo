@@ -8,12 +8,12 @@ import se.jbee.inject.Injector;
 
 public abstract class WithInjector {
 	protected Injector injector;
-	
+
 	@Before
-	public  void prepare(){
+	public void prepare() {
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 		diep.init();
 		injector = diep.getInjector().get();
 	}
-	
+
 }

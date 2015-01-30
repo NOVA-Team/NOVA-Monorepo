@@ -11,15 +11,43 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**
+ * This interface provides inventory that can hold {@link ItemStack ItemStacks}
+ *
+ * @see InventorySimple
+ * @see InventoryView
+ */
 public interface Inventory extends Iterable<ItemStack> {
 	Optional<ItemStack> get(int slot);
 
+	/**
+	 * Sets {@link ItemStack} in slot
+	 *
+	 * @param slot Slot number
+	 * @param stack Stack to insert
+	 * @return Whether succeed
+	 */
 	boolean set(int slot, ItemStack stack);
 
+	/**
+	 * Gets count of slots
+	 *
+	 * @return Number of slots in this inventory
+	 */
 	int size();
 
+	/**
+	 * Tells this inventory that something has changed
+	 */
 	void markChanged();
 
+	/**
+	 * Adds items to this inventory at specified slot
+	 *
+	 * @param slot Slot to add items into
+	 * @param stack {@link ItemStack} containing items
+	 * @return Amount of items left(did not fit inside this inventory)
+	 */
 	default int add(int slot, ItemStack stack) {
 		Optional<ItemStack> o = get(slot);
 		if (o.isPresent()) {
@@ -34,6 +62,12 @@ public interface Inventory extends Iterable<ItemStack> {
 		}
 	}
 
+	/**
+	 * Adds items to this inventory
+	 *
+	 * @param stack {@link ItemStack} containing items
+	 * @return Amount of items left(did not fit inside this inventory)
+	 */
 	default int add(ItemStack stack) {
 		int itemsLeft = stack.getStackSize();
 		for (int i = 0; i < size(); i++) {
@@ -47,6 +81,11 @@ public interface Inventory extends Iterable<ItemStack> {
 		return itemsLeft;
 	}
 
+	/**
+	 * Represents this inventory as list of {@link ItemStack ItemStacks}
+	 *
+	 * @return This inventory as list of {@link ItemStack ItemStacks}
+	 */
 	default List<ItemStack> toList() {
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
 		for (ItemStack i : this) {
@@ -63,6 +102,11 @@ public interface Inventory extends Iterable<ItemStack> {
 		return Spliterators.spliterator(iterator(), size(), Spliterator.NONNULL | Spliterator.ORDERED | Spliterator.SORTED);
 	}
 
+	/**
+	 * Represents this inventory as {@link ItemStack} {@link Stream}
+	 *
+	 * @return This inventory as {@link ItemStack} {@link Stream}
+	 */
 	default Stream<ItemStack> stream() {
 		return StreamSupport.stream(spliterator(), false);
 	}

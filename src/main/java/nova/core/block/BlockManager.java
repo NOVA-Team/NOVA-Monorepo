@@ -29,6 +29,7 @@ public class BlockManager {
 
 	/**
 	 * Registers a block with no constructor arguments
+	 *
 	 * @param block Block to register
 	 * @return New block instance
 	 */
@@ -52,6 +53,7 @@ public class BlockManager {
 
 	/**
 	 * Register a new block with custom constructor arguments.
+	 *
 	 * @param constructor Block instance {@link Supplier}
 	 */
 	public void registerBlock(Supplier<Block> constructor) {

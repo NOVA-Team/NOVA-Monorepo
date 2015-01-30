@@ -8,6 +8,7 @@ import java.util.WeakHashMap;
 
 /**
  * The update ticker is responsible for ticking Update objects.
+ *
  * @author Calclavia
  */
 public class UpdateTicker {
@@ -42,6 +43,7 @@ public class UpdateTicker {
 
 	/**
 	 * Queues an event to be executed.
+	 *
 	 * @param func Event to be executed.
 	 */
 	public void preQueue(Runnable func) {
@@ -71,10 +73,15 @@ public class UpdateTicker {
 
 		private final UpdateTicker ticker = new UpdateTicker();
 		public boolean pause = false;
+		public final int tps;
+		public final long sleepMillis;
 
-		public ThreadTicker() {
+		public ThreadTicker(int tps) {
 			setName("Nova Thread");
 			setPriority(Thread.MIN_PRIORITY);
+
+			this.tps = tps;
+			this.sleepMillis = 1/tps * 1000;
 		}
 
 		@Override
@@ -85,8 +92,7 @@ public class UpdateTicker {
 						ticker.update();
 					}
 
-					//TODO: Allow a variable tick rate based on. Temporarily, it is based on 20 ticks per second.
-					Thread.sleep(50);
+					Thread.sleep(sleepMillis);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

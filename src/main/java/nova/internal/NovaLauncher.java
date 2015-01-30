@@ -58,7 +58,6 @@ public class NovaLauncher implements Loadable {
 					throw new ExceptionInInitializerError(e);
 				}
 			})));
-		//	.collect(Collectors.toList());
 
 		/**
 		 * TODO: Re-order mods based on dependencies
