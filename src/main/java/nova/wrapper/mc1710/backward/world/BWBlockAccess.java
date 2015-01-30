@@ -27,7 +27,7 @@ public class BWBlockAccess implements BlockAccess {
 		} else if (mcBlock instanceof BlockWrapper) {
 			return Optional.of(((BlockWrapper) mcBlock).getBlockInstance(this, position));
 		} else {
-			return Optional.of(new BWBlock(this, position, mcBlock));
+			return Optional.of(new BWBlock(mcBlock));
 		}
 	}
 

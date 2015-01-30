@@ -25,10 +25,9 @@ import java.util.stream.Collectors;
 @Mod(modid = "nova", name = "NOVA")
 public class NovaMinecraft {
 
-	private NovaLauncher launcher;
-
 	@SidedProxy(clientSide = "nova.wrapper.mc1710.launcher.ClientProxy", serverSide = "nova.wrapper.mc1710.launcher.CommonProxy")
-	private CommonProxy proxy = null;
+	private static CommonProxy proxy;
+	private NovaLauncher launcher;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
@@ -81,7 +80,8 @@ public class NovaMinecraft {
 		Game.instance.get().blockManager.registry.forEach(b -> {
 			BlockWrapper newBlock = new BlockWrapper(b);
 			GameRegistry.registerBlock(newBlock, b.getID());
-
+			proxy.registerBlock(newBlock);
+			
 			//TODO: Testing purposes:
 			newBlock.setCreativeTab(CreativeTabs.tabBlock);
 			System.out.println("NovaMinecraft: Registered '" + b.getID() + "' block.");

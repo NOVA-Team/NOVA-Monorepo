@@ -13,11 +13,10 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nova.core.block.Block;
-import nova.core.block.BlockBuilder;
 import nova.core.block.BlockChanger;
+import nova.core.block.BlockFactory;
 import nova.core.block.components.LightEmitter;
 import nova.core.block.components.Stateful;
-import nova.core.util.NotBuildableException;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Cuboid;
@@ -38,26 +37,25 @@ import java.util.stream.Collectors;
  * A Minecraft to Nova block wrapper
  * @author Calclavia
  */
-public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler
-{
+public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler {
 	/**
 	 * Reference to the wrapped Nova block
 	 */
-	private final BlockBuilder<?> builder;
+	private final BlockFactory factory;
 	private final Block block;
 	private final Class<? extends Block> blockClass;
 
 	//TODO: Resolve unknown material issue
-	public BlockWrapper(BlockBuilder<?> builder) {
+	public BlockWrapper(BlockFactory factory) {
 		super(Material.piston);
-		this.builder = builder;
-		this.block = builder.getDummyBlock();
+		this.factory = factory;
+		this.block = factory.getDummyBlock();
 		this.blockClass = block.getClass();
 		this.setBlockName(block.getID());
 
-		// Recalculate superconstructor things after loading the block properly
-		this.opaque = this.isOpaqueCube();
-		this.lightOpacity = this.isOpaqueCube() ? 255 : 0;
+		// Recalculate super constructor things after loading the block properly
+		this.opaque = isOpaqueCube();
+		this.lightOpacity = isOpaqueCube() ? 255 : 0;
 	}
 
 	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3i position) {
@@ -73,12 +71,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	}
 
 	public Block getBlockInstance(nova.core.block.BlockAccess access, Vector3i position) {
-		try {
-			return builder.createBlock(access, position);
-		} catch (NotBuildableException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return factory.makeBlock(access, position);
 	}
 
 	@Override
@@ -179,26 +172,22 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	 * Rendering forwarding
 	 */
 	@Override
-	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer)
-	{
+	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
 		//		this.block.render()
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer)
-	{
+	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
 		return false;
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
+	public boolean shouldRender3DInInventory(int modelId) {
 		return false;
 	}
 
 	@Override
-	public int getRenderId()
-	{
+	public int getRenderId() {
 		return 0;
 	}
 }
