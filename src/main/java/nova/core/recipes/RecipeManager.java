@@ -5,8 +5,6 @@
  */
 package nova.core.recipes;
 
-import com.google.inject.Singleton;
-import java.io.Closeable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +19,6 @@ import nova.core.event.EventListenerList;
  *
  * @author Stan Hebben
  */
-@Singleton
 public class RecipeManager {
 	
 	private final Set<IRecipe> recipes;
