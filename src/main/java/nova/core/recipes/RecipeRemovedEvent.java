@@ -10,7 +10,7 @@ package nova.core.recipes;
  * @author Stan Hebben
  * @param <T>
  */
-public class RecipeRemovedEvent<T extends IRecipe>
+public class RecipeRemovedEvent<T extends Recipe>
 {
 	private final T recipe;
 	

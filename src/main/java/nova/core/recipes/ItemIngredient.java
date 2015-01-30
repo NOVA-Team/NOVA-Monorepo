@@ -14,13 +14,13 @@ import nova.core.item.ItemStack;
  *
  * @author Stan
  */
-public interface IItemIngredient
+public interface ItemIngredient
 {
 	public Optional<List<Item>> getPossibleItems();
 	
 	public Optional<List<Item>> getExampleItems();
 	
-	public boolean isSubsetOf(IItemIngredient ingredient);
+	public boolean isSubsetOf(ItemIngredient ingredient);
 	
 	public boolean matches(ItemStack item);
 }

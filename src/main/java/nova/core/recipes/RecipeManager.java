@@ -21,15 +21,15 @@ import nova.core.event.EventListenerList;
  */
 public class RecipeManager {
 	
-	private final Set<IRecipe> recipes;
-	private final Map<Class<? extends IRecipe>, RecipeList<IRecipe>> recipesForType;
+	private final Set<Recipe> recipes;
+	private final Map<Class<? extends Recipe>, RecipeList<Recipe>> recipesForType;
 	
 	public RecipeManager() {
 		recipes = new HashSet<>();
 		recipesForType = new HashMap<>();
 	}
 	
-	public void addRecipe(IRecipe recipe) {
+	public void addRecipe(Recipe recipe) {
 		recipes.add(recipe);
 		
 		recipesForType
@@ -39,44 +39,44 @@ public class RecipeManager {
 				.forEach(cls -> recipesForType.get(cls).add(recipe));
 	}
 	
-	public void removeRecipe(IRecipe recipe) {
+	public void removeRecipe(Recipe recipe) {
 		recipes.remove(recipe);
 		
 		recipesForType.values().forEach(entry -> entry.remove(recipe));
 	}
 	
-	public <T extends IRecipe> Collection<T> getRecipes(Class<T> type) {
+	public <T extends Recipe> Collection<T> getRecipes(Class<T> type) {
 		return getRecipeList(type).unmodifyableRecipes;
 	}
 	
-	public <T extends IRecipe> EventListenerHandle addRecipeAddedListener(
+	public <T extends Recipe> EventListenerHandle addRecipeAddedListener(
 			Class<T> type,
 			EventListener<RecipeAddedEvent<T>> listener) {
 		return getRecipeList(type).recipeAddedListeners.add(listener);
 	}
 	
-	public <T extends IRecipe> void removeRecipeAddedListener(
+	public <T extends Recipe> void removeRecipeAddedListener(
 			Class<T> type,
 			EventListener<RecipeAddedEvent<T>> listener) {
 		getRecipeList(type).recipeAddedListeners.remove(listener);
 	}
 	
-	public <T extends IRecipe> EventListenerHandle addRecipeRemovedListener(
+	public <T extends Recipe> EventListenerHandle addRecipeRemovedListener(
 			Class<T> type,
 			EventListener<RecipeRemovedEvent<T>> listener) {
 		return getRecipeList(type).recipeRemovedListeners.add(listener);
 	}
 	
-	public <T extends IRecipe> void removeRecipeRemovedListener(
+	public <T extends Recipe> void removeRecipeRemovedListener(
 			Class<T> type,
 			EventListener<RecipeRemovedEvent<T>> listener) {
 		getRecipeList(type).recipeRemovedListeners.remove(listener);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private <T extends IRecipe> RecipeList<T> getRecipeList(Class<T> type) {
+	private <T extends Recipe> RecipeList<T> getRecipeList(Class<T> type) {
 		if (!recipesForType.containsKey(type))
-			recipesForType.put(type, (RecipeList<IRecipe>) collectRecipes(type));
+			recipesForType.put(type, (RecipeList<Recipe>) collectRecipes(type));
 		
 		return (RecipeList<T>) recipesForType.get(type);
 	}
@@ -86,7 +86,7 @@ public class RecipeManager {
 	// #######################
 	
 	@SuppressWarnings("unchecked")
-	private <T extends IRecipe> RecipeList<T> collectRecipes(Class<T> type) {
+	private <T extends Recipe> RecipeList<T> collectRecipes(Class<T> type) {
 		Set<T> result = new HashSet<>();
 		
 		recipes.stream()
@@ -96,7 +96,7 @@ public class RecipeManager {
 		return new RecipeList<>(result);
 	}
 	
-	private class RecipeList<T extends IRecipe>
+	private class RecipeList<T extends Recipe>
 	{
 		private Set<T> recipes;
 		private Set<T> unmodifyableRecipes;

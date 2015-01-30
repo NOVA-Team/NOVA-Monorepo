@@ -9,7 +9,7 @@ package nova.core.recipes;
  *
  * @author Stan
  */
-public interface IRecipe
+public interface Recipe
 {
 	
 }
