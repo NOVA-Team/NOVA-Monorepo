@@ -21,7 +21,6 @@ import nova.core.block.BlockChanger;
 import nova.core.block.BlockFactory;
 import nova.core.block.components.LightEmitter;
 import nova.core.block.components.Stateful;
-import nova.core.render.Artist;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Cuboid;
@@ -226,7 +225,8 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		Artist artist = new MinecraftArtist();
+		MinecraftArtist artist = new MinecraftArtist();
 		this.block.renderItem(artist);
+		artist.complete();
 	}
 }
