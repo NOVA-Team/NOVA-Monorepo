@@ -6,7 +6,6 @@ import nova.core.loader.NovaMod;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class NovaLauncher implements Loadable {
 
-	private final List<Class<?>> modClasses;
+	private final Set<Class<?>> modClasses;
 	private final DependencyInjectionEntryPoint diep;
 
 	private Map<NovaMod, Loadable> mods;
@@ -32,7 +31,7 @@ public class NovaLauncher implements Loadable {
 	 * @param modClasses mods to instantialize.
 	 * @param diep is required as we are installing additional modules to it.
 	 */
-	public NovaLauncher(DependencyInjectionEntryPoint diep, List<Class<?>> modClasses) {
+	public NovaLauncher(DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
 		this.diep = diep;
 		this.modClasses = modClasses;
 
