@@ -17,6 +17,7 @@ public class Shape {
 	public Vector3d translation = Vector3d.zero;
 	public Quaternion rotation = Quaternion.identity;
 	public Vector3d scale = Vector3d.zero;
+	public double brightness = 1;
 	public Optional<Texture> texture = Optional.empty();
 
 	/**
