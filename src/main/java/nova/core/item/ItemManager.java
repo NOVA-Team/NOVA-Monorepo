@@ -8,12 +8,14 @@ import nova.core.util.Registry;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import se.jbee.inject.util.Provider;
+
 public class ItemManager {
 
 	public final Registry<ItemFactory> registry;
-	private final BlockManager blockManager;
+	private final Provider<BlockManager> blockManager;
 
-	private ItemManager(Registry<ItemFactory> itemRegistry, BlockManager blockManager) {
+	private ItemManager(Registry<ItemFactory> itemRegistry, Provider<BlockManager> blockManager) {
 		this.registry = itemRegistry;
 		this.blockManager = blockManager;
 	}
@@ -37,7 +39,7 @@ public class ItemManager {
 	}
 
 	public Optional<Block> getBlockFromItem(Item item) {
-		return blockManager.getBlock(item.getID());
+		return blockManager.provide().getBlock(item.getID());
 	}
 
 	public Optional<Item> getItem(String name) {

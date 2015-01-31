@@ -1,19 +1,23 @@
 package nova.core.block;
 
-import nova.core.game.Game;
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import nova.core.item.ItemBlock;
+import nova.core.item.ItemManager;
 import nova.core.util.NovaException;
 import nova.core.util.Registry;
 
-import java.util.Optional;
-import java.util.function.Supplier;
+import se.jbee.inject.util.Provider;
 
 public class BlockManager {
 
 	public final Registry<BlockFactory> registry;
+	private final Provider<ItemManager> itemManager;
 
-	private BlockManager(Registry<BlockFactory> registry) {
+	private BlockManager(Registry<BlockFactory> registry, Provider<ItemManager> itemManager) {
 		this.registry = registry;
+		this.itemManager = itemManager;
 	}
 
 	public Optional<BlockFactory> getBlockFactory(String name) {
@@ -31,25 +35,27 @@ public class BlockManager {
 
 	/**
 	 * Registers a block with no constructor arguments
-	 * @param block Block to register
+	 * 
+	 * @param block
+	 *            Block to register
 	 * @return New block instance
 	 */
 	public Block registerBlock(Class<? extends Block> block) {
-		return registerBlock(new BlockFactory(
-			() -> {
-				try {
-					return block.newInstance();
-				} catch (Exception e) {
-					e.printStackTrace();
-					throw new NovaException();
-				}
+		return registerBlock(new BlockFactory(() -> {
+			try {
+				return block.newInstance();
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new NovaException();
 			}
-		));
+		}));
 	}
-	
+
 	/**
 	 * Register a new block with custom constructor arguments.
-	 * @param constructor Block instance {@link Supplier}
+	 * 
+	 * @param constructor
+	 *            Block instance {@link Supplier}
 	 */
 	public Block registerBlock(Supplier<Block> constructor) {
 		return registerBlock(new BlockFactory(constructor));
@@ -57,7 +63,7 @@ public class BlockManager {
 
 	public Block registerBlock(BlockFactory factory) {
 		registry.register(factory);
-		Game.instance.get().itemManager.registerItem(() -> new ItemBlock(factory.getDummy()));
+		itemManager.provide().registerItem(() -> new ItemBlock(factory.getDummy()));
 		return factory.getDummy();
 	}
 

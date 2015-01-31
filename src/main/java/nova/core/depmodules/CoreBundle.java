@@ -1,6 +1,8 @@
 package nova.core.depmodules;
 
 import com.google.common.collect.Sets;
+
+import nova.core.di.DICoreModule;
 import nova.core.di.OptionalModule;
 import se.jbee.inject.bootstrap.BootstrapperBundle;
 import se.jbee.inject.bootstrap.Bundle;
@@ -20,15 +22,25 @@ public class CoreBundle extends BootstrapperBundle {
 	}
 
 	static {
+		/** 
+		 * Managers
+		 */
 		add(BlockModule.class);
 		add(ItemModule.class);
 		add(FluidModule.class);
 		add(WorldModule.class);
 		add(EntityModule.class);
 		add(RenderModule.class);
-
+		/**
+		 * General 
+		 */
 		add(UtilModule.class);
+		
+		/**
+		 * DI Internal
+		 */
 		add(OptionalModule.class);
+		add(DICoreModule.class);
 	}
 
 	@Override
