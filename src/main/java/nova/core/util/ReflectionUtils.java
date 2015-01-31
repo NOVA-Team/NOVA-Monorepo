@@ -5,7 +5,14 @@ import java.util.function.BiConsumer;
 
 public class ReflectionUtils {
 	private ReflectionUtils() {
+	}
 
+	public static <T> T newInstance(Class<T> clazz) {
+		try {
+			return clazz.newInstance();
+		} catch (Exception e) {
+			throw new NovaException();
+		}
 	}
 
 	public static void forEachStoredField(Object source, BiConsumer<Field, String> action) {

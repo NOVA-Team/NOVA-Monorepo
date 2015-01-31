@@ -21,7 +21,7 @@ public class BlockManager {
 	public Optional<Block> getBlock(String name) {
 		Optional<BlockFactory> blockFactory = getBlockFactory(name);
 		if (blockFactory.isPresent()) {
-			return Optional.of(blockFactory.get().getDummyBlock());
+			return Optional.of(blockFactory.get().getDummy());
 		} else {
 			return Optional.empty();
 		}
@@ -62,7 +62,7 @@ public class BlockManager {
 
 	public Block registerBlock(BlockFactory factory) {
 		registry.register(factory);
-		return factory.getDummyBlock();
+		return factory.getDummy();
 	}
 
 }

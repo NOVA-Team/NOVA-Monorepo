@@ -1,5 +1,6 @@
 package nova.core.block;
 
+import nova.core.util.Factory;
 import nova.core.util.Identifiable;
 import nova.core.util.NovaException;
 import nova.core.util.transform.Vector3i;
@@ -10,7 +11,7 @@ import java.util.function.Supplier;
 /**
  * @author Stan Hebben
  */
-public class BlockFactory implements Identifiable {
+public class BlockFactory extends Factory<Block> implements Identifiable {
 
 	public static final Field blockAccessField;
 	public static final Field posField;
@@ -27,21 +28,12 @@ public class BlockFactory implements Identifiable {
 		}
 	}
 
-	private final Supplier<Block> constructor;
-	private final Block dummyBlock;
-
 	public BlockFactory(Supplier<Block> constructor) {
-		this.constructor = constructor;
-		this.dummyBlock = constructor.get();
-	}
-
-	public Block getDummyBlock() {
-		return dummyBlock;
+		super(constructor);
 	}
 
 	/**
 	 * Creates a new instance of this block with blockAccess and position parameters.
-	 *
 	 * @param blockAccess {@link BlockAccess}
 	 * @param position Position of the block
 	 * @return A new block instance with these parameters.
@@ -57,9 +49,5 @@ public class BlockFactory implements Identifiable {
 		}
 
 		return newBlock;
-	}
-
-	public String getID() {
-		return dummyBlock.getID();
 	}
 }
