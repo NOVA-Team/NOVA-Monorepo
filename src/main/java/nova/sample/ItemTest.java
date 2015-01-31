@@ -9,6 +9,6 @@ public class ItemTest extends Item {
 
 	@Override
 	public String getID() {
-		return "test";
+		return "test2";
 	}
 }

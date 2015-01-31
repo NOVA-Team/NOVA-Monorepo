@@ -3,16 +3,20 @@ package nova.wrapper.mc1710;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
+import java.util.Map;
+
 @MCVersion(value = "1.7.10")
 public class NovaMinecraftCore implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass() {
-		return null;
+		return new String[] {
+			"nova.wrapper.mc1710.asm.NovaMinecraftTransformer"
+		};
 	}
 
 	@Override
 	public String getModContainerClass() {
-		return null;
+		return "nova.wrapper.mc1710.asm.NovaMinecraftPreloader";
 	}
 
 	@Override
@@ -22,7 +26,7 @@ public class NovaMinecraftCore implements IFMLLoadingPlugin {
 
 	@Override
 	public void injectData(Map<String, Object> data) {
-		System.out.println("Hi from coremod!");
+
 	}
 
 	@Override
