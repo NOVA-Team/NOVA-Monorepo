@@ -11,8 +11,8 @@ import java.util.Optional;
  * A artwork is classified as a shape. It is group of vertices that result in a surface.
  * @author Calclavia
  */
-public class Artwork {
-	public final List<Vertex5> vertices = new ArrayList<>();
+public class Shape {
+	public final List<Vertex> vertices = new ArrayList<>();
 	public Vector3d normal = Vector3d.zero;
 	public Vector3d translation = Vector3d.zero;
 	public Quaternion rotation = Quaternion.identity;
@@ -24,12 +24,12 @@ public class Artwork {
 	 * @param texture Texture to bind
 	 * @return This Artist
 	 */
-	public Artwork bindTexture(Texture texture) {
+	public Shape bindTexture(Texture texture) {
 		this.texture = Optional.of(texture);
 		return this;
 	}
 
-	public Artwork drawVertex(Vertex5 vert) {
+	public Shape drawVertex(Vertex vert) {
 		vertices.add(vert);
 		return this;
 	}

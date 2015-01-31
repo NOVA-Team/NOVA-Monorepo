@@ -14,22 +14,22 @@ public abstract class Artist {
 	/**
 	 * A list of all the shapes drawn.
 	 */
-	protected List<Artwork> artworks = new ArrayList<>();
+	protected List<Shape> artworks = new ArrayList<>();
 
 	/**
 	 * Starts drawing, by returning an Artwork for the Artist to work on.
-	 * Add vertices to this Artwork and finish it by calling endDrawing()
-	 * @return new {@link Artwork}
+	 * Add vertices to this Artwork and finish it by calling drawShape()
+	 * @return new {@link Shape}
 	 */
-	public Artwork startDrawing() {
-		return new Artwork();
+	public Shape createShape() {
+		return new Shape();
 	}
 
 	/**
 	 * Finish drawing the Artwork by adding it into the list of artworks.
 	 * @param artwork - The finished masterpiece.
 	 */
-	public void endDrawing(Artwork artwork) {
+	public void drawShape(Shape artwork) {
 		artworks.add(artwork);
 	}
 
@@ -42,92 +42,98 @@ public abstract class Artist {
 		/**
 		 * Draw down
 		 */
-		Artwork down = startDrawing();
+		Shape down = createShape();
+		down.normal = Direction.DOWN.toVector().toDouble();
 		down.texture = block.getTexture(Direction.UP);
 		//Top-left corner
-		down.drawVertex(new Vertex5(0.5, -0.5, 0.5, 0, 0));
+		down.drawVertex(new Vertex(0.5, -0.5, 0.5, 0, 0));
 		//Top-right corner
-		down.drawVertex(new Vertex5(-0.5, -0.5, 0.5, 1, 0));
+		down.drawVertex(new Vertex(-0.5, -0.5, 0.5, 1, 0));
 		//Bottom-right corner
-		down.drawVertex(new Vertex5(-0.5, -0.5, -0.5, 1, 1));
+		down.drawVertex(new Vertex(-0.5, -0.5, -0.5, 1, 1));
 		//Bottom-left corner
-		down.drawVertex(new Vertex5(0.5, -0.5, -0.5, 0, 1));
-		endDrawing(down);
+		down.drawVertex(new Vertex(0.5, -0.5, -0.5, 0, 1));
+		drawShape(down);
 
 		/**
 		 * Draw up
 		 */
-		Artwork up = startDrawing();
+		Shape up = createShape();
+		down.normal = Direction.DOWN.toVector().toDouble();
 		up.texture = block.getTexture(Direction.UP);
 		//Bottom-left corner
-		up.drawVertex(new Vertex5(0.5, 0.5, -0.5, 0, 1));
+		up.drawVertex(new Vertex(0.5, 0.5, -0.5, 0, 1));
 		//Bottom-right corner
-		up.drawVertex(new Vertex5(-0.5, 0.5, -0.5, 1, 1));
+		up.drawVertex(new Vertex(-0.5, 0.5, -0.5, 1, 1));
 		//Top-right corner
-		up.drawVertex(new Vertex5(-0.5, 0.5, 0.5, 1, 0));
+		up.drawVertex(new Vertex(-0.5, 0.5, 0.5, 1, 0));
 		//Top-left corner
-		up.drawVertex(new Vertex5(0.5, 0.5, 0.5, 0, 0));
-		endDrawing(up);
+		up.drawVertex(new Vertex(0.5, 0.5, 0.5, 0, 0));
+		drawShape(up);
 
 		/**
 		 * Draw north
 		 */
-		Artwork north = startDrawing();
+		Shape north = createShape();
+		down.normal = Direction.NORTH.toVector().toDouble();
 		north.texture = block.getTexture(Direction.NORTH);
 		//Top-left corner
-		north.drawVertex(new Vertex5(-0.5, 0.5, -0.5, 0, 0));
+		north.drawVertex(new Vertex(-0.5, 0.5, -0.5, 0, 0));
 		//Top-right corner
-		north.drawVertex(new Vertex5(0.5, 0.5, -0.5, 1, 0));
+		north.drawVertex(new Vertex(0.5, 0.5, -0.5, 1, 0));
 		//Bottom-right corner
-		north.drawVertex(new Vertex5(0.5, -0.5, -0.5, 1, 1));
+		north.drawVertex(new Vertex(0.5, -0.5, -0.5, 1, 1));
 		//Bottom-left corner
-		north.drawVertex(new Vertex5(-0.5, -0.5, -0.5, 0, 1));
-		endDrawing(north);
+		north.drawVertex(new Vertex(-0.5, -0.5, -0.5, 0, 1));
+		drawShape(north);
 
 		/**
 		 * Draw south
 		 */
-		Artwork south = startDrawing();
+		Shape south = createShape();
+		down.normal = Direction.SOUTH.toVector().toDouble();
 		south.texture = block.getTexture(Direction.SOUTH);
 		//Bottom-left corner
-		south.drawVertex(new Vertex5(-0.5, -0.5, 0.5, 0, 1));
+		south.drawVertex(new Vertex(-0.5, -0.5, 0.5, 0, 1));
 		//Bottom-right corner
-		south.drawVertex(new Vertex5(0.5, -0.5, 0.5, 1, 1));
+		south.drawVertex(new Vertex(0.5, -0.5, 0.5, 1, 1));
 		//Top-right corner
-		south.drawVertex(new Vertex5(0.5, 0.5, 0.5, 1, 0));
+		south.drawVertex(new Vertex(0.5, 0.5, 0.5, 1, 0));
 		//Top-left corner
-		south.drawVertex(new Vertex5(-0.5, 0.5, 0.5, 0, 0));
-		endDrawing(south);
+		south.drawVertex(new Vertex(-0.5, 0.5, 0.5, 0, 0));
+		drawShape(south);
 
 		/**
 		 * Draw west
 		 */
-		Artwork west = startDrawing();
+		Shape west = createShape();
+		down.normal = Direction.WEST.toVector().toDouble();
 		west.texture = block.getTexture(Direction.WEST);
 		//Bottom-left corner
-		west.drawVertex(new Vertex5(-0.5, -0.5, -0.5, 0, 1));
+		west.drawVertex(new Vertex(-0.5, -0.5, -0.5, 0, 1));
 		//Bottom-right corner
-		west.drawVertex(new Vertex5(-0.5, -0.5, 0.5, 1, 1));
+		west.drawVertex(new Vertex(-0.5, -0.5, 0.5, 1, 1));
 		//Top-right corner
-		west.drawVertex(new Vertex5(-0.5, 0.5, 0.5, 1, 0));
+		west.drawVertex(new Vertex(-0.5, 0.5, 0.5, 1, 0));
 		//Top-left corner
-		west.drawVertex(new Vertex5(-0.5, 0.5, -0.5, 0, 0));
-		endDrawing(west);
+		west.drawVertex(new Vertex(-0.5, 0.5, -0.5, 0, 0));
+		drawShape(west);
 
 		/**
 		 * Draw east
 		 */
-		Artwork east = startDrawing();
+		Shape east = createShape();
+		down.normal = Direction.EAST.toVector().toDouble();
 		east.texture = block.getTexture(Direction.EAST);
 		//Top-left corner
-		east.drawVertex(new Vertex5(0.5, 0.5, -0.5, 0, 0));
+		east.drawVertex(new Vertex(0.5, 0.5, -0.5, 0, 0));
 		//Top-right corner
-		east.drawVertex(new Vertex5(0.5, 0.5, 0.5, 1, 0));
+		east.drawVertex(new Vertex(0.5, 0.5, 0.5, 1, 0));
 		//Bottom-right corner
-		east.drawVertex(new Vertex5(0.5, -0.5, 0.5, 1, 1));
+		east.drawVertex(new Vertex(0.5, -0.5, 0.5, 1, 1));
 		//Bottom-left corner
-		east.drawVertex(new Vertex5(0.5, -0.5, -0.5, 0, 1));
-		endDrawing(east);
+		east.drawVertex(new Vertex(0.5, -0.5, -0.5, 0, 1));
+		drawShape(east);
 
 		return this;
 	}
