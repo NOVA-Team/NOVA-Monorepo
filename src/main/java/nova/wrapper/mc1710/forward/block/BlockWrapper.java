@@ -57,7 +57,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	public BlockWrapper(BlockFactory factory) {
 		super(Material.piston);
 		this.factory = factory;
-		this.block = factory.getDummyBlock();
+		this.block = factory.getDummy();
 		this.blockClass = block.getClass();
 		this.setBlockName(block.getID());
 
