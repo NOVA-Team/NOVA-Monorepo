@@ -1,7 +1,7 @@
 package nova.core.block;
 
+import nova.core.game.Game;
 import nova.core.item.ItemBlock;
-import nova.core.item.ItemManager;
 import nova.core.util.NovaException;
 import nova.core.util.Registry;
 
@@ -11,11 +11,9 @@ import java.util.function.Supplier;
 public class BlockManager {
 
 	public final Registry<BlockFactory> registry;
-	private final ItemManager itemManager;
 
-	private BlockManager(Registry<BlockFactory> registry, ItemManager itemManager) {
+	private BlockManager(Registry<BlockFactory> registry) {
 		this.registry = registry;
-		this.itemManager = itemManager;
 	}
 
 	public Optional<BlockFactory> getBlockFactory(String name) {
@@ -49,11 +47,6 @@ public class BlockManager {
 		));
 	}
 	
-	/*
-	public Block registerBlock(Block block) {
-		return registerBlock(new BlockFactory(() -> block));
-	}*/
-
 	/**
 	 * Register a new block with custom constructor arguments.
 	 * @param constructor Block instance {@link Supplier}
@@ -64,7 +57,7 @@ public class BlockManager {
 
 	public Block registerBlock(BlockFactory factory) {
 		registry.register(factory);
-		itemManager.registerItem(() -> new ItemBlock(factory.getDummy()));
+		Game.instance.get().itemManager.registerItem(() -> new ItemBlock(factory.getDummy()));
 		return factory.getDummy();
 	}
 
