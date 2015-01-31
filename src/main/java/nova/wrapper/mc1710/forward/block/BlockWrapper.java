@@ -193,8 +193,9 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
-		Artist artist = new MinecraftArtist();
+		MinecraftArtist artist = new MinecraftArtist();
 		this.block.renderWorld(artist);
+		artist.complete();
 		return false;
 	}
 

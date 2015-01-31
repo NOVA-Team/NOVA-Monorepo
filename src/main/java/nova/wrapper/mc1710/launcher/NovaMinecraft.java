@@ -2,27 +2,20 @@ package nova.wrapper.mc1710.launcher;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.asm.transformers.TerminalTransformer;
 import cpw.mods.fml.common.discovery.ASMDataTable;
-import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.launchwrapper.LaunchClassLoader;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.core.loader.NovaMod;
 import nova.internal.NovaLauncher;
 import nova.wrapper.mc1710.forward.block.BlockWrapper;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,9 +38,7 @@ public class NovaMinecraft {
 		 * Search through all classes with @NovaMod
 		 */
 		ASMDataTable asmData = evt.getAsmData();
-
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
-		
 		
 		launcher = new NovaLauncher(diep, 
 			asmData.

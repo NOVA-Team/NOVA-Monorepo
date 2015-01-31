@@ -10,9 +10,11 @@ public class MinecraftArtist extends Artist {
 
 	/**
 	 * Completes this rendering masterpiece.
-	 * @param tesselator - The Minecraft tesselator.
 	 */
-	public void complete(Tessellator tesselator) {
-		//canvases.forEach(c -> c.vertices.forEach(v -> tesselator.addVertexWithUV(v.vec.x, v.vec.y, v.vec.z, v.uv.x, v.uv.y)));
+	public void complete() {
+		Tessellator tesselator = Tessellator.instance;
+		artworks.stream()
+			.flatMap(a -> a.vertices.stream())
+			.forEach(v -> tesselator.addVertexWithUV(v.vec.x, v.vec.y, v.vec.z, v.uv.x, v.uv.y));
 	}
 }
