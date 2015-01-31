@@ -2,11 +2,14 @@ package nova.core.item;
 
 import nova.core.entity.Entity;
 import nova.core.inventory.Inventory;
+import nova.core.render.ItemTexture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
+
+import java.util.Optional;
 
 /**
  * Item that can be stacked using {@link ItemStack}
@@ -44,4 +47,10 @@ public abstract class Item implements Identifiable {
 
 	}
 
+	/**
+	 * Gets the texture of this item. If there is no texture provided, it will not render any and default to onRender() method for custom item rendering.
+	 */
+	public Optional<ItemTexture> getTexture() {
+		return Optional.empty();
+	}
 }
