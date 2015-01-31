@@ -1,6 +1,8 @@
 package nova.wrapper.mc1710.launcher;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import net.minecraft.item.Item;
+import net.minecraftforge.client.MinecraftForgeClient;
 import nova.wrapper.mc1710.forward.block.BlockWrapper;
 
 /**
@@ -15,7 +17,6 @@ public class ClientProxy extends CommonProxy {
 		 * Registers a block rendering handler for this block
 		 */
 		RenderingRegistry.registerBlockHandler(block);
-		//TODO: Implement this
-		//MinecraftForgeClient.registerItemRenderer(new ItemWrapper(Game.instance.get().itemManager.getItemFromBlock(block.block)), block);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), block);
 	}
 }

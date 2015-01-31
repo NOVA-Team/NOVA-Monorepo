@@ -36,6 +36,7 @@ import nova.wrapper.mc1710.util.WrapUtility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -130,7 +131,9 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List list, Entity entity) {
-		Set<Cuboid> boxes = getBlockInstance(world, new Vector3i(x, y, z)).getCollidingBoxes(new BWCuboid(aabb), BackwardProxyUtil.getEntityWrapper(entity));
+		Set<Cuboid> boxes = getBlockInstance(world, new Vector3i(x, y, z))
+			.getCollidingBoxes(new BWCuboid(aabb), entity != null ? Optional.of(BackwardProxyUtil.getEntityWrapper(entity)) : Optional.empty());
+
 		list.addAll(
 			boxes
 				.stream()
@@ -202,7 +205,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean shouldRender3DInInventory(int modelId) {
-		return false;
+		return true;
 	}
 
 	@SideOnly(Side.CLIENT)

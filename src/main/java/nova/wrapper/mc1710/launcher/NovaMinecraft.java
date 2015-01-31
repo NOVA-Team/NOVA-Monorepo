@@ -6,14 +6,12 @@ import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.launchwrapper.Launch;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.core.loader.NovaMod;
 import nova.internal.NovaLauncher;
-import nova.wrapper.mc1710.forward.block.BlockWrapper;
+import nova.wrapper.mc1710.forward.block.BlockWrapperUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +26,7 @@ import java.util.stream.Collectors;
 public class NovaMinecraft {
 
 	@SidedProxy(clientSide = "nova.wrapper.mc1710.launcher.ClientProxy", serverSide = "nova.wrapper.mc1710.launcher.CommonProxy")
-	private static CommonProxy proxy;
+	public static CommonProxy proxy;
 	private NovaLauncher launcher;
 
 	@Mod.EventHandler
@@ -39,8 +37,8 @@ public class NovaMinecraft {
 		 */
 		ASMDataTable asmData = evt.getAsmData();
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
-		
-		launcher = new NovaLauncher(diep, 
+
+		launcher = new NovaLauncher(diep,
 			asmData.
 				getAll(NovaMod.class.getName())
 				.stream()
@@ -56,7 +54,7 @@ public class NovaMinecraft {
 		);
 
 		Game.instance = Optional.of(diep.init());
-		
+
 		launcher.preInit();
 
 		launcher.getLoadedMods().forEach(novaMod -> {
@@ -64,7 +62,7 @@ public class NovaMinecraft {
 			Launch.blackboard.put("nova:" + novaMod.id(), novaMap);
 		});
 
-		registerBlocks();
+		BlockWrapperUtil.registerBlocks();
 	}
 
 	@Mod.EventHandler
@@ -77,19 +75,4 @@ public class NovaMinecraft {
 		launcher.postInit();
 	}
 
-	/**
-	 * Register all Nova blocks
-	 */
-	public void registerBlocks() {
-		Game.instance.get().blockManager.registry.forEach(b -> {
-			BlockWrapper newBlock = new BlockWrapper(b);
-			GameRegistry.registerBlock(newBlock, b.getID());
-			proxy.registerBlock(newBlock);
-
-			//TODO: Testing purposes:
-			newBlock.setCreativeTab(CreativeTabs.tabBlock);
-			System.out.println("NovaMinecraft: Registered '" + b.getID() + "' block.");
-		});
-
-	}
 }
