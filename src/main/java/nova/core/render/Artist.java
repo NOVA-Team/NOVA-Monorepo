@@ -2,7 +2,6 @@ package nova.core.render;
 
 import nova.core.block.Block;
 import nova.core.util.Direction;
-import nova.core.util.transform.Vector3d;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +11,9 @@ import java.util.List;
  * @author Calclavia
  */
 public abstract class Artist {
+	/**
+	 * A list of all the shapes drawn.
+	 */
 	protected List<Artwork> artworks = new ArrayList<>();
 
 	/**
@@ -38,42 +40,95 @@ public abstract class Artist {
 	public Artist renderBlock(Block block) {
 		//TODO: Change render size based on block bounds.
 		/**
-		 * Draw the side faces of a cube.
+		 * Draw down
 		 */
-		for (Direction dir : new Direction[] { Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST }) {
-			Artwork artwork = startDrawing();
-			artwork.texture = block.getTexture(dir);
-			Vector3d dirVec = dir.toVector().toDouble().multiply(0.5);
-			//Draw a square clockwise
-			//Top-left corner
-			artwork.drawVertex(new Vertex5(dirVec.x != 0 ? dirVec.x : -0.5, 0.5, dirVec.z != 0 ? dirVec.z : -0.5, 0, 0));
-			//Top-right corner
-			artwork.drawVertex(new Vertex5(dirVec.x != 0 ? dirVec.x : 0.5, 0.5, dirVec.z != 0 ? dirVec.z : 0.5, 1, 0));
-			//Bottom-right corner
-			artwork.drawVertex(new Vertex5(dirVec.x != 0 ? dirVec.x : -0.5, -0.5, dirVec.z != 0 ? dirVec.z : 0.5, 1, 1));
-			//Bottom-left corner
-			artwork.drawVertex(new Vertex5(dirVec.x != 0 ? dirVec.x : -0.5, -0.5, dirVec.z != 0 ? dirVec.z : -0.5, 0, 1));
-			endDrawing(artwork);
-		}
+		Artwork down = startDrawing();
+		down.texture = block.getTexture(Direction.UP);
+		//Top-left corner
+		down.drawVertex(new Vertex5(0.5, -0.5, 0.5, 0, 0));
+		//Top-right corner
+		down.drawVertex(new Vertex5(-0.5, -0.5, 0.5, 1, 0));
+		//Bottom-right corner
+		down.drawVertex(new Vertex5(-0.5, -0.5, -0.5, 1, 1));
+		//Bottom-left corner
+		down.drawVertex(new Vertex5(0.5, -0.5, -0.5, 0, 1));
+		endDrawing(down);
 
 		/**
-		 * Draw top/bottom faces
+		 * Draw up
 		 */
-		for (Direction dir : new Direction[] { Direction.UP, Direction.DOWN }) {
-			Artwork artwork = startDrawing();
-			artwork.texture = block.getTexture(dir);
-			Vector3d dirVec = dir.toVector().toDouble().multiply(0.5);
-			//Draw a square clockwise
-			//Top-left corner
-			artwork.drawVertex(new Vertex5(0.5, dirVec.y, 0.5, 0, 0));
-			//Top-right corner
-			artwork.drawVertex(new Vertex5(-0.5, dirVec.y, 0.5, 1, 0));
-			//Bottom-right corner
-			artwork.drawVertex(new Vertex5(-0.5, dirVec.y, -0.5, 1, 1));
-			//Bottom-left corner
-			artwork.drawVertex(new Vertex5(0.5, dirVec.y, -0.5, 0, 1));
-			endDrawing(artwork);
-		}
+		Artwork up = startDrawing();
+		up.texture = block.getTexture(Direction.UP);
+		//Bottom-left corner
+		up.drawVertex(new Vertex5(0.5, 0.5, -0.5, 0, 1));
+		//Bottom-right corner
+		up.drawVertex(new Vertex5(-0.5, 0.5, -0.5, 1, 1));
+		//Top-right corner
+		up.drawVertex(new Vertex5(-0.5, 0.5, 0.5, 1, 0));
+		//Top-left corner
+		up.drawVertex(new Vertex5(0.5, 0.5, 0.5, 0, 0));
+		endDrawing(up);
+
+		/**
+		 * Draw north
+		 */
+		Artwork north = startDrawing();
+		north.texture = block.getTexture(Direction.NORTH);
+		//Top-left corner
+		north.drawVertex(new Vertex5(-0.5, 0.5, -0.5, 0, 0));
+		//Top-right corner
+		north.drawVertex(new Vertex5(0.5, 0.5, -0.5, 1, 0));
+		//Bottom-right corner
+		north.drawVertex(new Vertex5(0.5, -0.5, -0.5, 1, 1));
+		//Bottom-left corner
+		north.drawVertex(new Vertex5(-0.5, -0.5, -0.5, 0, 1));
+		endDrawing(north);
+
+		/**
+		 * Draw south
+		 */
+		Artwork south = startDrawing();
+		south.texture = block.getTexture(Direction.SOUTH);
+		//Bottom-left corner
+		south.drawVertex(new Vertex5(-0.5, -0.5, 0.5, 0, 1));
+		//Bottom-right corner
+		south.drawVertex(new Vertex5(0.5, -0.5, 0.5, 1, 1));
+		//Top-right corner
+		south.drawVertex(new Vertex5(0.5, 0.5, 0.5, 1, 0));
+		//Top-left corner
+		south.drawVertex(new Vertex5(-0.5, 0.5, 0.5, 0, 0));
+		endDrawing(south);
+
+		/**
+		 * Draw west
+		 */
+		Artwork west = startDrawing();
+		west.texture = block.getTexture(Direction.WEST);
+		//Bottom-left corner
+		west.drawVertex(new Vertex5(-0.5, -0.5, -0.5, 0, 1));
+		//Bottom-right corner
+		west.drawVertex(new Vertex5(-0.5, -0.5, 0.5, 1, 1));
+		//Top-right corner
+		west.drawVertex(new Vertex5(-0.5, 0.5, 0.5, 1, 0));
+		//Top-left corner
+		west.drawVertex(new Vertex5(-0.5, 0.5, -0.5, 0, 0));
+		endDrawing(west);
+
+		/**
+		 * Draw east
+		 */
+		Artwork east = startDrawing();
+		east.texture = block.getTexture(Direction.EAST);
+		//Top-left corner
+		east.drawVertex(new Vertex5(0.5, 0.5, -0.5, 0, 0));
+		//Top-right corner
+		east.drawVertex(new Vertex5(0.5, 0.5, 0.5, 1, 0));
+		//Bottom-right corner
+		east.drawVertex(new Vertex5(0.5, -0.5, 0.5, 1, 1));
+		//Bottom-left corner
+		east.drawVertex(new Vertex5(0.5, -0.5, -0.5, 0, 1));
+		endDrawing(east);
+
 		return this;
 	}
 }
