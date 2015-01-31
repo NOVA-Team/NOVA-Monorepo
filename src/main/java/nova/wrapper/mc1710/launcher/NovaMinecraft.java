@@ -52,7 +52,7 @@ public class NovaMinecraft {
 						throw new ExceptionInInitializerError(e);
 					}
 				})
-				.collect(Collectors.toList())
+				.collect(Collectors.toSet())
 		);
 
 		Game.instance = Optional.of(diep.init());
@@ -60,8 +60,7 @@ public class NovaMinecraft {
 		launcher.preInit();
 
 		launcher.getLoadedMods().forEach(novaMod -> {
-			Map<String, String> novaMap = new HashMap<String, String>();
-
+			Map<String, String> novaMap = new HashMap<>();
 			Launch.blackboard.put("nova:" + novaMod.id(), novaMap);
 		});
 
