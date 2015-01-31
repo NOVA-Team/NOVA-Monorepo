@@ -13,6 +13,7 @@ import nova.internal.dummy.BlockAccessDummy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public abstract class Block implements Identifiable {
@@ -54,7 +55,7 @@ public abstract class Block implements Identifiable {
 		return new Cuboid(new Vector3i(0, 0, 0), new Vector3i(1, 1, 1));
 	}
 
-	public Set<Cuboid> getCollidingBoxes(Cuboid intersect, Entity entity) {
+	public Set<Cuboid> getCollidingBoxes(Cuboid intersect, Optional<Entity> entity) {
 		Set<Cuboid> bounds = new HashSet<>();
 		Cuboid defaultBound = getBoundingBox();
 
