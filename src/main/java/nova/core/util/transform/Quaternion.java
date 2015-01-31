@@ -24,6 +24,8 @@
 
 package nova.core.util.transform;
 
+import javafx.util.Pair;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -68,9 +70,12 @@ public class Quaternion {
 	 * to the sky. -90 Degrees - Looking straight down to the void.
 	 *
 	 * Make sure all models use the Techne Model loader, they will naturally follow this rule.
-	 *
 	 * @author Calclavia
 	 */
+	public static Quaternion fromEuler(Vector3<?> euler) {
+		return fromEuler(euler);
+	}
+
 	public static Quaternion fromEuler(double yaw, double pitch, double roll) {
 		// Assuming the angles are in radians.
 		double c1 = Math.cos(yaw / 2);
@@ -88,14 +93,18 @@ public class Quaternion {
 		return new Quaternion(w, x, y, z);
 	}
 
+	/**
+	 * Returns a quaternion from Angle Axis rotation.
+	 * @return The Quaternion representation of the angle axis rotation.
+	 */
+	public static Quaternion fromAxis(Vector3<?> axis, double angle) {
+		return fromAxis(axis.xd(), axis.yd(), axis.zd(), angle);
+	}
+
 	public static Quaternion fromAxis(double ax, double ay, double az, double angle) {
 		angle *= 0.5;
 		double d4 = Math.sin(angle);
 		return new Quaternion(Math.cos(angle), ax * d4, ay * d4, az * d4);
-	}
-
-	public static Quaternion fromAxis(Vector3<?> axis, double angle) {
-		return fromAxis(axis.xd(), axis.yd(), axis.zd(), angle);
 	}
 
 	public Quaternion multiply(Quaternion q) {
@@ -133,6 +142,30 @@ public class Quaternion {
 		double d2 = w * vec.yd() - x * vec.zd() + z * vec.xd();
 		double d3 = w * vec.zd() + x * vec.yd() - y * vec.xd();
 		return new Vector3d(d1 * w - d * x - d2 * z + d3 * y, d2 * w - d * y + d1 * z - d3 * x, d3 * w - d * z - d1 * y + d2 * x);
+	}
+
+	public Vector3d toEuler() {
+		double sqw = w * w;
+		double sqx = x * x;
+		double sqy = y * y;
+		double sqz = z * z;
+		double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+		double test = x * y + z * w;
+
+		// singularity at north pole
+		if (test > 0.499 * unit) {
+			return new Vector3d(2 * Math.atan2(x, w), Math.PI / 2, 0);
+		}
+
+		// singularity at south pole
+		if (test < -0.499 * unit) {
+			return new Vector3d(-2 * Math.atan2(x, w), -Math.PI / 2, 0);
+		}
+		return new Vector3d(Math.atan2(2 * y * w - 2 * x * z, sqx - sqy - sqz + sqw), Math.asin(2 * test / unit), Math.atan2(2 * x * w - 2 * y * z, -sqx + sqy - sqz + sqw));
+	}
+
+	public Pair<Vector3d, Double> toAngleAxis() {
+		return new Pair<>(new Vector3d(x / Math.sqrt(1 - w * w), y / Math.sqrt(1 - w * w), z / Math.sqrt(1 - w * w)), 2 * Math.acos(w));
 	}
 
 	public String toString() {
