@@ -36,4 +36,12 @@ public abstract class Item implements Identifiable {
 
 	}
 
+	/**
+	 * Called when this item is being rendered.
+	 * @param data
+	 */
+	public void onRender(int type, Object... data) {
+
+	}
+
 }
