@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,6 +33,7 @@ import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.backward.world.BWBlockAccess;
 import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
 import nova.wrapper.mc1710.util.WrapUtility;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +191,20 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
-		//NO-OP
+		//TODO: We should use the item renderer.
+		if (renderer.useInventoryTint) {
+			int j = 16777215;
+			double r = (j >> 16 & 255) / 255.0F;
+			double g = (j >> 8 & 255) / 255.0F;
+			double b = (j & 255) / 255.0F;
+			GL11.glColor4d(r, g, b, 1.0F);
+		}
+
+		Tessellator.instance.startDrawingQuads();
+		MinecraftArtist artist = new MinecraftArtist();
+		this.block.renderItem(artist);
+		artist.complete(Vector3d.zero);
+		Tessellator.instance.draw();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -228,5 +243,6 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 		MinecraftArtist artist = new MinecraftArtist();
 		this.block.renderItem(artist);
 		artist.complete(Vector3d.zero);
+		Tessellator.instance.draw();
 	}
 }

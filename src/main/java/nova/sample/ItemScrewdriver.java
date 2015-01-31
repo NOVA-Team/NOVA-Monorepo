@@ -5,7 +5,7 @@ import nova.core.item.Item;
 /**
  * @author Calclavia
  */
-public class ItemTest extends Item {
+public class ItemScrewdriver extends Item {
 
 	@Override
 	public String getID() {

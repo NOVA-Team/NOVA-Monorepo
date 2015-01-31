@@ -16,6 +16,8 @@ public class MinecraftArtist extends Artist {
 	 */
 	public void complete(Vector3d translation) {
 		Tessellator tessellator = Tessellator.instance;
+		tessellator.setColorRGBA_F(1, 1, 1, 1);
+
 		artworks.forEach(a -> a.translation = a.translation.add(translation));
 
 		/**
@@ -23,6 +25,7 @@ public class MinecraftArtist extends Artist {
 		 */
 		artworks.forEach(a ->
 		{
+			tessellator.setNormal(a.normal.xf(), a.normal.yf(), a.normal.zf());
 			if (a.texture.isPresent()) {
 				IIcon icon = RenderUtility.instance.getIcon(a.texture.get());
 				a.vertices.forEach(v -> tessellator.addVertexWithUV(v.vec.x + a.translation.x, v.vec.y + a.translation.y, v.vec.z + a.translation.z, icon.getInterpolatedU(16 * v.uv.x), icon.getInterpolatedV(16 * v.uv.y)));

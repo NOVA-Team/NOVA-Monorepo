@@ -22,7 +22,7 @@ public class NovaTest implements Loadable {
 	@Override
 	public void preInit() {
 		blockTest = Game.instance.get().blockManager.registerBlock(BlockTest.class);
-		itemTest = Game.instance.get().itemManager.registerItem(ItemTest.class);
+		itemTest = Game.instance.get().itemManager.registerItem(ItemScrewdriver.class);
 		steelTexture = Game.instance.get().renderManager.registerTexture(new BlockTexture("nova:blockSteel"));
 	}
 }
