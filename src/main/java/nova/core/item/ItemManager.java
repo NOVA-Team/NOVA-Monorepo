@@ -52,5 +52,4 @@ public class ItemManager {
 	public Optional<ItemFactory> getItemFactory(String name) {
 		return registry.get(name);
 	}
-
 }
