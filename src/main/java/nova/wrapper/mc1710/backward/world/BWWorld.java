@@ -3,8 +3,6 @@ package nova.wrapper.mc1710.backward.world;
 import nova.core.block.Block;
 import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
-import nova.wrapper.mc1710.backward.block.BWBlock;
-import nova.wrapper.mc1710.forward.block.BlockWrapper;
 
 import java.util.Optional;
 

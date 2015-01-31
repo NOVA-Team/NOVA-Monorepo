@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.common.MinecraftForge;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.core.loader.NovaMod;
@@ -32,6 +33,8 @@ public class NovaMinecraft {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
 
+		MinecraftForge.EVENT_BUS.register(proxy);
+		
 		/**
 		 * Search through all classes with @NovaMod
 		 */
