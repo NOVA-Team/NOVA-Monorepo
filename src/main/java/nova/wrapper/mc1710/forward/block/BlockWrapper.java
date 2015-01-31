@@ -197,7 +197,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
 		MinecraftArtist artist = new MinecraftArtist();
 		this.block.renderWorld(artist);
-		artist.complete();
+		artist.complete(new Vector3d(x + 0.5, y + 0.5, z + 0.5));
 		return false;
 	}
 
@@ -227,6 +227,6 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 		MinecraftArtist artist = new MinecraftArtist();
 		this.block.renderItem(artist);
-		artist.complete();
+		artist.complete(Vector3d.zero);
 	}
 }
