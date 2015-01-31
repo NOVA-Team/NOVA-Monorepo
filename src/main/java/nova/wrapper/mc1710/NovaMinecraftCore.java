@@ -2,6 +2,7 @@ package nova.wrapper.mc1710;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
+import java.util.Map;
 
 @MCVersion(value = "1.7.10")
 public class NovaMinecraftCore implements IFMLLoadingPlugin {
