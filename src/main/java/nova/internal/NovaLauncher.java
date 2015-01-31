@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 /**
  * The main class that launches NOVA mods.
- *
  * @author Calclavia, Kubuxu
  */
 public class NovaLauncher implements Loadable {
@@ -30,7 +29,6 @@ public class NovaLauncher implements Loadable {
 
 	/**
 	 * Creates NovaLauncher.
-	 *
 	 * @param modClasses mods to instantialize.
 	 * @param diep is required as we are installing additional modules to it.
 	 */
@@ -48,7 +46,9 @@ public class NovaLauncher implements Loadable {
 			.flatMap(mod -> Arrays.stream(mod.modules()))
 			.forEach(diep::install);
 
-		mods = classesMap.entrySet().stream()
+		mods = classesMap
+			.entrySet()
+			.stream()
 			.collect(Collectors.toMap(Map.Entry::getKey, ((entry) -> {
 				try {
 					return (Loadable) entry.getValue().newInstance();
@@ -58,11 +58,25 @@ public class NovaLauncher implements Loadable {
 			})));
 
 		/**
-		 * TODO: Re-order mods based on dependencies
+		 * Re-order mods based on dependencies
 		 */
-
 		orderedMods = new ArrayList<>();
-		orderedMods.addAll(mods.values());
+		orderedMods.addAll(
+			mods.entrySet()
+				.stream()
+				.sorted((o1, o2) -> {
+					//Split string by @ and versions
+					Map<String, String> loadAfter = Arrays.asList(o1.getKey().dependencies())
+						.stream()
+						.map(s -> s.split("@", 1))
+						.collect(Collectors.toMap(s -> s[0], s -> s[1]));
+
+					//TODO: Compare version requirements.
+					return loadAfter.containsKey(o2.getKey().id()) ? 1 : 0;
+				})
+				.map(entry -> entry.getValue())
+				.collect(Collectors.toList())
+		);
 
 	}
 
