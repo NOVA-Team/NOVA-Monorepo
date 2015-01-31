@@ -17,7 +17,7 @@ public class Artwork {
 	public Vector3d translation = Vector3d.zero;
 	public Quaternion rotation = Quaternion.identity;
 	public Vector3d scale = Vector3d.zero;
-	private Optional<Texture> texture = Optional.empty();
+	public Optional<Texture> texture = Optional.empty();
 
 	/**
 	 * Binds a specific texture to this artist.

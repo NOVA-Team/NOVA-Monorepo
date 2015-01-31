@@ -42,6 +42,7 @@ public abstract class Artist {
 		 */
 		for (Direction dir : new Direction[] { Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST }) {
 			Artwork artwork = startDrawing();
+			artwork.texture = block.getTexture(dir);
 			Vector3d dirVec = dir.toVector().toDouble().multiply(0.5);
 			//Draw a square clockwise
 			//Top-left corner
@@ -60,6 +61,7 @@ public abstract class Artist {
 		 */
 		for (Direction dir : new Direction[] { Direction.UP, Direction.DOWN }) {
 			Artwork artwork = startDrawing();
+			artwork.texture = block.getTexture(dir);
 			Vector3d dirVec = dir.toVector().toDouble().multiply(0.5);
 			//Draw a square clockwise
 			//Top-left corner

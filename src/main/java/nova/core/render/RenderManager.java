@@ -8,10 +8,10 @@ import java.util.Set;
  */
 public class RenderManager {
 
-	public final Set<BlockTexture> textures = new HashSet<>();
+	public final Set<BlockTexture> blockTextures = new HashSet<>();
 
 	public BlockTexture registerTexture(BlockTexture texture) {
-		textures.add(texture);
+		blockTextures.add(texture);
 		return texture;
 	}
 }
