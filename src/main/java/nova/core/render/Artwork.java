@@ -9,7 +9,6 @@ import java.util.Optional;
 
 /**
  * A artwork is classified as a shape. It is group of vertices that result in a surface.
- *
  * @author Calclavia
  */
 public class Artwork {
@@ -22,7 +21,6 @@ public class Artwork {
 
 	/**
 	 * Binds a specific texture to this artist.
-	 *
 	 * @param texture Texture to bind
 	 * @return This Artist
 	 */
@@ -35,22 +33,4 @@ public class Artwork {
 		vertices.add(vert);
 		return this;
 	}
-
-	/**
-	 * Draws a quadrilateral with four corners.
-	 *
-	 * @param a
-	 * @param b
-	 * @param c
-	 * @param d
-	 * @return This Artist
-	 */
-	public Artwork drawQuad(Vertex5 a, Vertex5 b, Vertex5 c, Vertex5 d) {
-		drawVertex(a);
-		drawVertex(b);
-		drawVertex(c);
-		drawVertex(d);
-		return this;
-	}
-
 }

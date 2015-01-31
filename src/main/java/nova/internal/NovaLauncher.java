@@ -66,13 +66,13 @@ public class NovaLauncher implements Loadable {
 
 	}
 
+	@Override
 	public void preInit() {
 
 		/**
 		 * Initialize all the NOVA mods.
 		 */
 		orderedMods.stream().forEach(Loadable::preInit);
-
 		System.out.println("NOVA Mods Loaded: " + mods.size());
 	}
 
