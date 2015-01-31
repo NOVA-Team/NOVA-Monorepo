@@ -1,0 +1,81 @@
+package nova.wrapper.mc1710.asm;
+
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.discovery.ASMDataTable;
+import cpw.mods.fml.common.event.FMLConstructionEvent;
+import cpw.mods.fml.relauncher.Side;
+import net.minecraft.client.resources.IResourcePack;
+import nova.core.loader.Loadable;
+import nova.core.loader.NovaMod;
+import nova.wrapper.mc1710.util.NovaResourcePack;
+
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+/**
+ * Created by asie on 1/31/15.
+ */
+public class NovaMinecraftLoader {
+	public static Set<Class<?>> modClasses;
+
+	public static void load(FMLConstructionEvent event) {
+		// Scan mod classes
+		ASMDataTable asmData = event.getASMHarvestedData();
+		modClasses = asmData.
+			getAll(NovaMod.class.getName())
+			.stream()
+			.map(d -> d.getClassName())
+			.map(c -> {
+				try {
+					return Class.forName(c);
+				} catch (ClassNotFoundException e) {
+					throw new ExceptionInInitializerError(e);
+				}
+			})
+			.collect(Collectors.toSet());
+
+		// Register resource packs
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+			registerResourcePacks();
+		}
+	}
+
+	public static void registerResourcePacks() {
+		// TODO TODO TODO - combine with identical snippet in NovaLauncher
+		Map<NovaMod, Class<? extends Loadable>> classesMap = modClasses.stream()
+			.filter(Loadable.class::isAssignableFrom)
+			.map(clazz -> (Class<? extends Loadable>) clazz.asSubclass(Loadable.class))
+			.filter(clazz -> clazz.getAnnotation(NovaMod.class) != null)
+			.collect(Collectors.toMap((clazz) -> clazz.getAnnotation(NovaMod.class), Function.identity()));
+
+		try {
+			// The same list exists in the Minecraft class, but that can be SRG or not.
+			// Reflecting FML is just less work for us. (Minecraft.field_110449_ao)
+			Field resourcePackField = FMLClientHandler.class.getDeclaredField("resourcePackList");
+			resourcePackField.setAccessible(true);
+			List<IResourcePack> packs = (List<IResourcePack>) resourcePackField.get(FMLClientHandler.instance());
+
+			Set<String> addedPacks = new HashSet<>();
+
+			classesMap.keySet().forEach(novaMod -> {
+				Class<? extends Loadable> c = classesMap.get(novaMod);
+				String fn = c.getProtectionDomain().getCodeSource().getLocation().getPath();
+				fn = fn.substring(0, fn.indexOf('!')).replaceFirst("file:", "");
+				if (!addedPacks.contains(fn)) {
+					addedPacks.add(fn);
+					packs.add(new NovaResourcePack(new File(fn), novaMod.id()));
+					System.out.println("Registered NOVA resource pack: " + fn);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

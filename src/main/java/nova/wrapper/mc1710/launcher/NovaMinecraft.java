@@ -6,17 +6,22 @@ import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.launchwrapper.Launch;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.core.loader.NovaMod;
 import nova.internal.NovaLauncher;
+import nova.wrapper.mc1710.asm.NovaMinecraftLoader;
+import nova.wrapper.mc1710.asm.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.forward.item.ItemWrapperRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -36,23 +41,12 @@ public class NovaMinecraft {
 		/**
 		 * Search through all classes with @NovaMod
 		 */
-		ASMDataTable asmData = evt.getAsmData();
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 
-		launcher = new NovaLauncher(diep,
-			asmData.
-				getAll(NovaMod.class.getName())
-				.stream()
-				.map(d -> d.getClassName())
-				.map(c -> {
-					try {
-						return Class.forName(c);
-					} catch (ClassNotFoundException e) {
-						throw new ExceptionInInitializerError(e);
-					}
-				})
-				.collect(Collectors.toSet())
-		);
+		Set<Class<?>> modClasses = NovaMinecraftLoader.modClasses;
+
+		proxy.registerResourcePacks(modClasses);
+		launcher = new NovaLauncher(diep, modClasses);
 
 		Game.instance = Optional.of(diep.init());
 
