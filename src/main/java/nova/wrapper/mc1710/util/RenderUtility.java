@@ -92,7 +92,7 @@ public class RenderUtility {
 		if (event.map.getTextureType() == 0) {
 			Game.instance.get().renderManager.blockTextures.forEach(t -> registerIcon(t, event));
 		} else if (event.map.getTextureType() == 1) {
-
+			Game.instance.get().renderManager.itemTextures.forEach(t -> registerIcon(t, event));
 		}
 	}
 

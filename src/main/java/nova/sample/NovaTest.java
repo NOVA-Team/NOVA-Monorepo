@@ -6,6 +6,7 @@ import nova.core.item.Item;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
 import nova.core.render.BlockTexture;
+import nova.core.render.ItemTexture;
 
 /**
  * A test Nova Mod
@@ -15,14 +16,17 @@ import nova.core.render.BlockTexture;
 public class NovaTest implements Loadable {
 
 	public static Block blockTest;
-	public static Item itemTest;
+	public static Item itemScrewdriver;
 
 	public static BlockTexture steelTexture;
+	public static ItemTexture screwTexture;
 
 	@Override
 	public void preInit() {
 		blockTest = Game.instance.get().blockManager.registerBlock(BlockTest.class);
-		itemTest = Game.instance.get().itemManager.registerItem(ItemScrewdriver.class);
+		itemScrewdriver = Game.instance.get().itemManager.registerItem(ItemScrewdriver.class);
+		
 		steelTexture = Game.instance.get().renderManager.registerTexture(new BlockTexture("nova:blockSteel"));
+		screwTexture = Game.instance.get().renderManager.registerTexture(new ItemTexture("nova:screwdriver"));
 	}
 }
