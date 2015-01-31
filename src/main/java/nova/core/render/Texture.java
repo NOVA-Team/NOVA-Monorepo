@@ -1,7 +1,14 @@
 package nova.core.render;
 
 /**
+ * A texture has a file location.
  * @author Calclavia
  */
-public abstract class Texture {
+public class Texture {
+
+	public final String resource;
+
+	public Texture(String resource) {
+		this.resource = resource;
+	}
 }

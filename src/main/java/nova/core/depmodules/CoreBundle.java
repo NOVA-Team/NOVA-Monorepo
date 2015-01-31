@@ -25,6 +25,7 @@ public class CoreBundle extends BootstrapperBundle {
 		add(FluidModule.class);
 		add(WorldModule.class);
 		add(EntityModule.class);
+		add(RenderModule.class);
 
 		add(UtilModule.class);
 		add(OptionalModule.class);
