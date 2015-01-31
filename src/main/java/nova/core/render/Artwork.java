@@ -13,10 +13,10 @@ import java.util.Optional;
  */
 public class Artwork {
 	public final List<Vertex5> vertices = new ArrayList<>();
-	public Vector3d normal = Vector3d.ZERO;
-	public Vector3d translation = Vector3d.ZERO;
-	public Quaternion rotation = new Quaternion();
-	public Vector3d scale = Vector3d.ZERO;
+	public Vector3d normal = Vector3d.zero;
+	public Vector3d translation = Vector3d.zero;
+	public Quaternion rotation = Quaternion.identity;
+	public Vector3d scale = Vector3d.zero;
 	private Optional<Texture> texture = Optional.empty();
 
 	/**

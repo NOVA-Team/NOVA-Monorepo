@@ -2,23 +2,17 @@ package nova.core.util.transform;
 
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
- *
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
 public class Vector3d extends Vector3<Vector3d> {
-	public static final Vector3d ZERO = new Vector3d(0, 0, 0);
-	public static final Vector3d ONE = new Vector3d(1, 1, 1);
-	public static final Vector3d AXIS_X = new Vector3d(1, 0, 0);
-	public static final Vector3d AXIS_Y = new Vector3d(0, 1, 0);
-	public static final Vector3d AXIS_Z = new Vector3d(0, 0, 1);
+	public static final Vector3d zero = new Vector3d(0, 0, 0);
+	public static final Vector3d one = new Vector3d(1, 1, 1);
+	public static final Vector3d xAxis = new Vector3d(1, 0, 0);
+	public static final Vector3d yAxis = new Vector3d(0, 1, 0);
+	public static final Vector3d zAxis = new Vector3d(0, 0, 1);
 
 	public final double x, y, z;
-
-	@Deprecated // use Vector3d.ZERO instead - it's more expressive and avoids creating an unnecessary object
-	public Vector3d() {
-		this(0, 0, 0);
-	}
 
 	public Vector3d(double x, double y, double z) {
 		this.x = x;
