@@ -12,16 +12,18 @@ import java.util.HashMap;
 /**
  * @author Calclavia
  */
-public class BlockWrapperUtil {
+public class BlockWrapperRegistry {
+	public static final BlockWrapperRegistry instance = new BlockWrapperRegistry();
+
 	/**
 	 * A map of all blocks registered
 	 */
-	public static final HashMap<Block, net.minecraft.block.Block> blockWrapperMap = new HashMap<>();
+	public final HashMap<Block, net.minecraft.block.Block> blockWrapperMap = new HashMap<>();
 
 	/**
 	 * Register all Nova blocks
 	 */
-	public static void registerBlocks() {
+	public void registerBlocks() {
 		Game.instance.get().blockManager.registry.forEach(b -> {
 			BlockWrapper blockWrapper = new BlockWrapper(b);
 			blockWrapperMap.put(blockWrapper.block, blockWrapper);
@@ -30,8 +32,7 @@ public class BlockWrapperUtil {
 
 			//TODO: Testing purposes:
 			blockWrapper.setCreativeTab(CreativeTabs.tabBlock);
-			System.out.println("NovaMinecraft: Registered '" + b.getID() + "' block.");
+			System.out.println("[NOVA]: Registered '" + b.getID() + "' block.");
 		});
-
 	}
 }

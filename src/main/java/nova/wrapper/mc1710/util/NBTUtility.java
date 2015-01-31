@@ -36,8 +36,10 @@ public class NBTUtility {
 
 	public static Map<String, Object> nbtToMap(NBTTagCompound nbt) {
 		Map<String, Object> map = new HashMap<>();
-		Set<String> keys = nbt.func_150296_c();
-		keys.forEach(k -> map.put(k, nbt.getTag(k)));
+		if (nbt != null) {
+			Set<String> keys = nbt.func_150296_c();
+			keys.forEach(k -> map.put(k, nbt.getTag(k)));
+		}
 		return map;
 	}
 

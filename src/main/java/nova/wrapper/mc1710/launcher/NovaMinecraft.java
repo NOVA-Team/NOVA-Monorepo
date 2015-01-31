@@ -6,14 +6,13 @@ import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.launchwrapper.Launch;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.core.loader.NovaMod;
 import nova.internal.NovaLauncher;
-import nova.wrapper.mc1710.forward.block.BlockWrapperUtil;
+import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
+import nova.wrapper.mc1710.forward.item.ItemWrapperRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +64,8 @@ public class NovaMinecraft {
 		});
 
 		proxy.preInit();
-		BlockWrapperUtil.registerBlocks();
+		BlockWrapperRegistry.instance.registerBlocks();
+		ItemWrapperRegistry.instance.registerItems();
 	}
 
 	@Mod.EventHandler

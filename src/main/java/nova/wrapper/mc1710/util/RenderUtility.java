@@ -14,9 +14,9 @@ import java.util.HashMap;
  * @author Calclavia
  */
 @SideOnly(Side.CLIENT)
-public class RenderUtil {
+public class RenderUtility {
 
-	public static final RenderUtil instance = new RenderUtil();
+	public static final RenderUtility instance = new RenderUtility();
 	private final HashMap<Texture, IIcon> iconMap = new HashMap<>();
 
 	public IIcon getIcon(Texture texture) {

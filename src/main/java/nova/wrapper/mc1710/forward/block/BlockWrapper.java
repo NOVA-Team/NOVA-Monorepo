@@ -138,7 +138,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 			boxes
 				.stream()
 				.map(c -> c.add(new Vector3i(x, y, z)))
-				.map(c -> new CuboidForwardWrapper(c))
+				.map(CuboidForwardWrapper::new)
 				.collect(Collectors.toList())
 		);
 	}

@@ -5,7 +5,8 @@ import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import nova.wrapper.mc1710.forward.block.BlockWrapper;
-import nova.wrapper.mc1710.util.RenderUtil;
+import nova.wrapper.mc1710.forward.item.ItemWrapper;
+import nova.wrapper.mc1710.util.RenderUtility;
 
 /**
  * @author Calclavia
@@ -14,7 +15,13 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void preInit() {
-		MinecraftForge.EVENT_BUS.register(RenderUtil.instance);
+		MinecraftForge.EVENT_BUS.register(RenderUtility.instance);
+	}
+
+	@Override
+	public void registerItem(ItemWrapper item) {
+		super.registerItem(item);
+		MinecraftForgeClient.registerItemRenderer(item, item);
 	}
 
 	@Override
