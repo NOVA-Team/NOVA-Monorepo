@@ -6,13 +6,21 @@ import nova.core.loader.NovaMod;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.lang.reflect.Constructor;
+
+import se.jbee.inject.Dependency;
 
 /**
  * The main class that launches NOVA mods.
+ * 
  * @author Calclavia, Kubuxu
  */
 public class NovaLauncher implements Loadable {
@@ -22,20 +30,24 @@ public class NovaLauncher implements Loadable {
 
 	private Map<NovaMod, Loadable> mods;
 	private ArrayList<Loadable> orderedMods;
-
-	// TODO: A lot of work and clean up has to be done to ensure this class is not susceptible to
+	private Map<NovaMod, Class<? extends Loadable>> classesMap;
+	// TODO: A lot of work and clean up has to be done to ensure this class is
+	// not susceptible to
 	// other classes touching it.
 
 	/**
 	 * Creates NovaLauncher.
-	 * @param modClasses mods to instantialize.
-	 * @param diep is required as we are installing additional modules to it.
+	 * 
+	 * @param modClasses
+	 *            mods to instantialize.
+	 * @param diep
+	 *            is required as we are installing additional modules to it.
 	 */
 	public NovaLauncher(DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
 		this.diep = diep;
 		this.modClasses = modClasses;
 
-		Map<NovaMod, Class<? extends Loadable>> classesMap = modClasses.stream()
+		classesMap = modClasses.stream()
 			.filter(Loadable.class::isAssignableFrom)
 			.map(clazz -> (Class<? extends Loadable>) clazz.asSubclass(Loadable.class))
 			.filter(clazz -> clazz.getAnnotation(NovaMod.class) != null)
@@ -45,12 +57,28 @@ public class NovaLauncher implements Loadable {
 			.flatMap(mod -> Arrays.stream(mod.modules()))
 			.forEach(diep::install);
 
+	}
+
+	@Override
+	public void preInit() {
+		/**
+		 * Create instances.
+		 */
 		mods = classesMap
 			.entrySet()
 			.stream()
-			.collect(Collectors.toMap(Map.Entry::getKey, ((entry) -> {
+			.collect(Collectors.toMap(Entry::getKey, ((entry) -> {
 				try {
-					return (Loadable) entry.getValue().newInstance();
+					Stream<Constructor<?>> candidates = Arrays.stream(entry.getValue().getConstructors());
+					
+					//get constructor with most parameters.
+					Optional<Constructor<?>> ocons = candidates.max(Comparator.comparingInt((constructor) -> constructor.getParameterTypes().length));
+
+					Constructor<?> cons = ocons.get();
+					Object[] parameters = Arrays.stream(cons.getParameterTypes())
+						.map(clazz -> diep.getInjector().get().resolve(Dependency.dependency(clazz)))
+						.collect(Collectors.toList()).toArray();
+					return (Loadable) cons.newInstance(parameters);
 				} catch (Exception e) {
 					throw new ExceptionInInitializerError(e);
 				}
@@ -64,24 +92,19 @@ public class NovaLauncher implements Loadable {
 			mods.entrySet()
 				.stream()
 				.sorted((o1, o2) -> {
-					//Split string by @ and versions
+					// Split string by @ and versions
 					Map<String, String> loadAfter = Arrays.asList(o1.getKey().dependencies())
 						.stream()
 						.map(s -> s.split("@", 1))
 						.collect(Collectors.toMap(s -> s[0], s -> s[1]));
 
-					//TODO: Compare version requirements.
+					// TODO: Compare version requirements.
 					return loadAfter.containsKey(o2.getKey().id()) ? 1 : 0;
 				})
 				.map(entry -> entry.getValue())
 				.collect(Collectors.toList())
-		);
-
-	}
-
-	@Override
-	public void preInit() {
-
+			);
+		
 		/**
 		 * Initialize all the NOVA mods.
 		 */
@@ -102,4 +125,5 @@ public class NovaLauncher implements Loadable {
 	public Set<NovaMod> getLoadedMods() {
 		return mods.keySet();
 	}
+
 }
