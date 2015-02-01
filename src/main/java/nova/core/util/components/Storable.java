@@ -6,13 +6,8 @@ import java.util.Map;
 
 public interface Storable {
 	default void save(Map<String, Object> data) {
-		ReflectionUtils.forEachStoredField(this, (field, annotation) -> {
+		ReflectionUtils.forEachStoredField(this, (field, key) -> {
 			try {
-				String key = annotation.key();
-				if (key.length() == 0) {
-					key = field.getName();
-				}
-
 				data.put(key, field.get(this));
 			} catch (IllegalAccessException e) {
 				// TODO
@@ -21,12 +16,7 @@ public interface Storable {
 	}
 
 	default void load(Map<String, Object> data) {
-		ReflectionUtils.forEachStoredField(this, (field, annotation) -> {
-			String key = annotation.key();
-			if (key.length() == 0) {
-				key = field.getName();
-			}
-
+		ReflectionUtils.forEachStoredField(this, (field, key) -> {
 			if (data.containsKey(key)) {
 				try {
 					field.set(this, data.get(key));
