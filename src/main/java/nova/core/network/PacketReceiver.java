@@ -11,7 +11,7 @@ public interface PacketReceiver {
 	 * @param packet - data encoded into the packet
 	 */
 	default void read(Packet packet) {
-		ReflectionUtils.forEachField(Sync.class, this, (field, annotation) -> {
+		ReflectionUtils.forEachAnnotatedField(Sync.class, this, (field, annotation) -> {
 			try {
 				//TODO: find read object type.
 				Object value = field.get(this);
