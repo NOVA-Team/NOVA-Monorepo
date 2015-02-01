@@ -1,26 +1,14 @@
 package nova.wrapper.mc1710.launcher;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
-import nova.core.loader.Loadable;
-import nova.core.loader.NovaMod;
 import nova.wrapper.mc1710.forward.block.BlockWrapper;
 import nova.wrapper.mc1710.forward.item.ItemWrapper;
-import nova.wrapper.mc1710.util.NovaResourcePack;
 import nova.wrapper.mc1710.util.RenderUtility;
-
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author Calclavia
@@ -48,4 +36,8 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), block);
 	}
 
+	@Override
+	public EntityPlayer getClientPlayer() {
+		return Minecraft.getMinecraft().thePlayer;
+	}
 }

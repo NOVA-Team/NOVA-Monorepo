@@ -2,38 +2,40 @@ package nova.wrapper.mc1710.launcher;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.ResourcePackRepository;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.launchwrapper.Launch;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
-import nova.core.loader.NovaMod;
 import nova.internal.NovaLauncher;
 import nova.wrapper.mc1710.asm.NovaMinecraftLoader;
-import nova.wrapper.mc1710.asm.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.forward.item.ItemWrapperRegistry;
+import nova.wrapper.mc1710.network.netty.ChannelHandler;
+import nova.wrapper.mc1710.network.netty.MinecraftPacketManager;
+import nova.wrapper.mc1710.network.netty.PacketHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * The main Nova Minecraft Wrapper loader, using Minecraft Forge.
  * @author Calclavia
  */
-@Mod(modid = "nova", name = "NOVA")
+@Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name)
 public class NovaMinecraft {
+
+	public static final String id = "nova";
+	public static final String name = "NOVA";
 
 	@SidedProxy(clientSide = "nova.wrapper.mc1710.launcher.ClientProxy", serverSide = "nova.wrapper.mc1710.launcher.CommonProxy")
 	public static CommonProxy proxy;
-	private NovaLauncher launcher;
+	private static NovaLauncher launcher;
+	private static MinecraftPacketManager packetLoader;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
@@ -57,6 +59,11 @@ public class NovaMinecraft {
 			Launch.blackboard.put("nova:" + novaMod.id(), novaMap);
 		});
 
+		/**
+		 * Initiate packet system
+		 */
+		packetLoader = new MinecraftPacketManager(id, NetworkRegistry.INSTANCE.newChannel(id, new ChannelHandler(), new PacketHandler()));
+		
 		proxy.preInit();
 		BlockWrapperRegistry.instance.registerBlocks();
 		ItemWrapperRegistry.instance.registerItems();

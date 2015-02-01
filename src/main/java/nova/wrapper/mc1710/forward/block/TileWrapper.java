@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Calclavia
  */
 public class TileWrapper extends TileEntity {
-	Block block;
+	public Block block;
 
 	@Override
 	public void validate() {
@@ -28,7 +28,7 @@ public class TileWrapper extends TileEntity {
 			// TODO: Initialize, by spec, is only called the first time a block is placed.
 			// Perhaps the spec should be changed?
 			((Stateful) block).initialize();
-			((Stateful) block).validate();
+			((Stateful) block).load();
 		}
 	}
 
@@ -36,7 +36,7 @@ public class TileWrapper extends TileEntity {
 	public void invalidate() {
 		super.invalidate();
 		if (block instanceof Stateful) {
-			((Stateful) block).invalidate();
+			((Stateful) block).unload();
 		}
 	}
 
