@@ -34,7 +34,7 @@ apply plugin: 'idea'
 
 ext.config = parseConfig("build.properties")
 
-version = config.minecraft.version + "-" + config.wrapper.version
+version = config.wrapper.version
 group = "nova.wrapper.mc1710"
 
 configurations.all {
@@ -78,8 +78,8 @@ jar {
 }
 
 minecraft {
-    version = config.minecraft.version + "-" + config.forge.version
-    runDir = "run"
+	version = config.minecraft.version + "-" + config.forge.version
+	runDir = "run"
 }
 
 processResources {
@@ -139,7 +139,15 @@ publishing {
 			artifact deobfJar
 			artifact javadocJar
 
-			//pom.withXml(writePom())
+			pom.withXml(writePom())
+			pom.withXml { xml ->
+				def children = xml.asNode().get("dependencies")[0]
+				for (child in children) {
+					if (child.get("artifactId")[0].value()[0].equals("forgeSrc")) {
+						child.appendNode("groupId", "net.minecraftforge")
+					}
+				}
+			}
 		}
 	}
 	repositories {
