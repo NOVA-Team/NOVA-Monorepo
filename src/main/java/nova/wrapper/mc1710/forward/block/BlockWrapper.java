@@ -175,7 +175,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-		return new CuboidForwardWrapper(getBlockInstance(world, new Vector3i(x, y, z)).getBoundingBox());
+		return new CuboidForwardWrapper(getBlockInstance(world, new Vector3i(x, y, z)).getBoundingBox().add(new Vector3i(x, y, z)));
 	}
 
 	@Override
