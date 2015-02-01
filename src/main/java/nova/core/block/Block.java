@@ -127,6 +127,14 @@ public abstract class Block implements Identifiable {
 		artist.renderBlock(this);
 	}
 
+	/**
+	 * Called for a dynamic render.
+	 * @param artist
+	 */
+	public void renderDynamic(Artist artist) {
+
+	}
+
 	public Optional<Texture> getTexture(Direction side) {
 		return Optional.empty();
 	}
