@@ -33,12 +33,20 @@ import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.backward.world.BWBlockAccess;
 import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
 import nova.wrapper.mc1710.util.WrapUtility;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
+import static org.lwjgl.opengl.GL11.glPopAttrib;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushAttrib;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
 
 /**
  * A Minecraft to Nova block wrapper
@@ -191,11 +199,16 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@Override
 	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
 		//TODO: We should use the item renderer.
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		glPushAttrib(GL_TEXTURE_BIT);
+		glPushMatrix();
 		Tessellator.instance.startDrawingQuads();
 		MinecraftArtist artist = new MinecraftArtist();
 		this.block.renderItem(artist);
 		artist.complete(Vector3d.zero);
 		Tessellator.instance.draw();
+		glPopMatrix();
+		glPopAttrib();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -233,9 +246,11 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+		GL11.glPushMatrix();
 		MinecraftArtist artist = new MinecraftArtist();
 		this.block.renderItem(artist);
 		artist.complete(Vector3d.zero);
 		Tessellator.instance.draw();
+		glPopMatrix();
 	}
 }
