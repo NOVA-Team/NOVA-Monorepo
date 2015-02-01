@@ -128,7 +128,6 @@ artifacts {
     archives sourcesJar
     archives deobfJar
     archives javadocJar
-    archives shadowJar
 }
 
 publishing {
@@ -138,8 +137,7 @@ publishing {
 
 			artifact sourcesJar
 			artifact deobfJar
-			//artifact javadocJar
-			artifact shadowJar
+			artifact javadocJar
 
 			//pom.withXml(writePom())
 		}
