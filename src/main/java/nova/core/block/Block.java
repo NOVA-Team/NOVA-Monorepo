@@ -192,6 +192,11 @@ public abstract class Block implements Identifiable {
 	public void renderDynamic(Model model) {
 	}
 
+	/**
+	 * Called to get the texture of this block for a certain side
+	 * @param side The side of the block that the texture is for
+	 * @return An optional of the texture
+	 */
 	public Optional<Texture> getTexture(Direction side) {
 		return Optional.empty();
 	}
