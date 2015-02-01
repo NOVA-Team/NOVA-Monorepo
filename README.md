@@ -2,7 +2,8 @@ Nova API
 ========
 NOVA is a voxel game modding framework designed to allow mods to be run across different voxel games.
 
-Early version of the Nova API. No license as of right now - all rights reserved.
+NOVA is licensed under the LGPL v3 License.
+http://opensource.org/licenses/lgpl-3.0.html
 
 ###Build
 [![Build Status](https://travis-ci.org/NOVAAPI/NovaCore.svg?branch=master)](https://travis-ci.org/NOVAAPI/NovaCore)

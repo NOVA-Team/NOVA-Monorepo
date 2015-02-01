@@ -29,14 +29,14 @@ public abstract class Entity implements Identifiable, Stateful {
 	/**
 	 * Marks this entity as valid
 	 */
-	public void validate() {
+	public void load() {
 		valid = true;
 	}
 
 	/**
 	 * Marks this entity as invalid
 	 */
-	public void invalidate() {
+	public void unload() {
 		valid = false;
 	}
 

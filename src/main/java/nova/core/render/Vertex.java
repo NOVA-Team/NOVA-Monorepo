@@ -10,16 +10,22 @@ import java.math.RoundingMode;
 /**
  * @author Calclavia, Kubuxu, inspired by ChickenBones
  */
-public class Vertex5 {
+public class Vertex {
 	public final Vector3d vec;
 	public final Vector2d uv;
 
-	public Vertex5(Vector3d vert, Vector2d uv) {
+	/**
+	 * A RGC color value from 0 to 1.
+	 */
+	public final Vector3d color;
+
+	public Vertex(Vector3d vert, Vector2d uv) {
 		this.vec = vert;
 		this.uv = uv;
+		this.color = Vector3d.one;
 	}
 
-	public Vertex5(double x, double y, double z, double u, double v) {
+	public Vertex(double x, double y, double z, double u, double v) {
 		this(new Vector3d(x, y, z), new Vector2d(u, v));
 	}
 

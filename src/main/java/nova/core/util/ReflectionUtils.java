@@ -1,5 +1,6 @@
 package nova.core.util;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
 
@@ -15,15 +16,14 @@ public class ReflectionUtils {
 		}
 	}
 
-	public static void forEachStoredField(Object source, BiConsumer<Field, String> action) {
-		for (Field f : source.getClass().getFields()) {
-			if (f.isAnnotationPresent(Stored.class)) {
-				String key = f.getAnnotation(Stored.class).key();
-				if (key.length() == 0) {
-					key = f.getName();
-				}
+	public static void forEachStoredField(Object source, BiConsumer<Field, Stored> action) {
+		forEachField(Stored.class, source, action);
+	}
 
-				action.accept(f, key);
+	public static <T extends Annotation> void forEachField(Class<? extends T> annotation, Object source, BiConsumer<Field, T> action) {
+		for (Field f : source.getClass().getFields()) {
+			if (f.isAnnotationPresent(annotation)) {
+				action.accept(f, f.getAnnotation(annotation));
 			}
 		}
 	}
