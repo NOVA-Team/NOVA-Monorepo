@@ -19,6 +19,7 @@ public class MinecraftArtist extends Artist {
 
 	/**
 	 * Completes this rendering masterpiece.
+	 * @param translation Translation
 	 */
 	public void complete(Vector3d translation) {
 		Tessellator tessellator = Tessellator.instance;

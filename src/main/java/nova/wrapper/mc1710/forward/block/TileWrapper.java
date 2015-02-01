@@ -58,7 +58,7 @@ public class TileWrapper extends TileEntity {
 
 	/**
 	 * Only register tile updates if the block is an instance of Updater.
-	 * @return
+	 * @return Whether can update
 	 */
 	@Override
 	public boolean canUpdate() {

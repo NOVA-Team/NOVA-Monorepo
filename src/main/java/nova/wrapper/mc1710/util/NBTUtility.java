@@ -24,6 +24,8 @@ public class NBTUtility {
 
 	/**
 	 * Converts a Map of objects into NBT.
+	 * @param map Map
+	 * @return NBT
 	 */
 	public static NBTTagCompound mapToNBT(Map<String, Object> map) {
 		return mapToNBT(new NBTTagCompound(), map);

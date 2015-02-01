@@ -7,9 +7,9 @@ import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * For custom packets extend this Class and register on Mod loading phase
- * <p/>
+ * <p>
  * Without registering a NPE will be thrown as the {@link nova.wrapper.mc1710.network.netty.MinecraftPacketManager} won't know how to handle it
- * <p/>
+ * </p>
  * To send this packet also look at {@link nova.wrapper.mc1710.network.netty.MinecraftPacketManager#sendToAll(PacketAbstract)}
  * And other implementations there.
  * @author tgame14, Calclavia
@@ -23,7 +23,7 @@ public abstract class PacketAbstract {
 	 * Encode the packet data into the ByteBuf stream. Complex data sets may need specific data handlers
 	 * @param ctx channel context
 	 * @param buffer the buffer to encode into
-	 * @see {@link cpw.mods.fml.common.network.ByteBufUtils}
+	 * @see cpw.mods.fml.common.network.ByteBufUtils
 	 */
 	public abstract void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer);
 
@@ -31,7 +31,7 @@ public abstract class PacketAbstract {
 	 * Decode the packet data from the ByteBuf stream. Complex data sets may need specific data handlers
 	 * @param ctx channel context
 	 * @param buffer the buffer to decode from
-	 * @See {@link cpw.mods.fml.common.network.ByteBufUtils}
+	 * @see cpw.mods.fml.common.network.ByteBufUtils
 	 */
 	public abstract void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer);
 

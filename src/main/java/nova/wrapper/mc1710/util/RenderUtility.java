@@ -86,6 +86,7 @@ public class RenderUtility {
 
 	/**
 	 * Handles NOVA texture registration.
+	 * @param event Event
 	 */
 	@SubscribeEvent
 	public void preTextureHook(TextureStitchEvent.Pre event) {
