@@ -16,11 +16,18 @@ public class ReflectionUtils {
 		}
 	}
 
-	public static void forEachStoredField(Object source, BiConsumer<Field, Stored> action) {
-		forEachField(Stored.class, source, action);
+	public static void forEachStoredField(Object source, BiConsumer<Field, String> action) {
+		forEachAnnotatedField(Stored.class, source, (field, annotation) -> {
+			String key = annotation.key();
+			if (key.length() == 0) {
+				key = field.getName();
+			}
+			
+			action.accept(field, key);
+		});
 	}
 
-	public static <T extends Annotation> void forEachField(Class<? extends T> annotation, Object source, BiConsumer<Field, T> action) {
+	public static <T extends Annotation> void forEachAnnotatedField(Class<? extends T> annotation, Object source, BiConsumer<Field, T> action) {
 		for (Field f : source.getClass().getFields()) {
 			if (f.isAnnotationPresent(annotation)) {
 				action.accept(f, f.getAnnotation(annotation));

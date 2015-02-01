@@ -11,7 +11,7 @@ public interface PacketSender {
 	 * @param packet - data encoded into the packet
 	 */
 	default void write(Packet packet) {
-		ReflectionUtils.forEachField(Sync.class, this, (field, annotation) -> {
+		ReflectionUtils.forEachAnnotatedField(Sync.class, this, (field, annotation) -> {
 			try {
 				packet.write(field.get(this));
 			} catch (IllegalAccessException e) {
