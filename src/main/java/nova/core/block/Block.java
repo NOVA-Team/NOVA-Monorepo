@@ -23,10 +23,19 @@ public abstract class Block implements Identifiable {
 	private final BlockAccess blockAccess = BlockAccessDummy.INSTANCE;
 	private final Vector3i position = Vector3i.ZERO;
 
+	/**
+	 * TODO: I do not really know what this is
+	 * @return The Factory that refers to this block
+	 */
 	public final BlockFactory getFactory() {
 		return Game.instance.get().blockManager.getBlockFactory(this.getID()).get();
 	}
 
+	/**
+	 * Get the BlockAccess that refers to this block
+	 * TODO: Is this really what it is?
+	 * @return The BlockAccess that refers to this block
+	 */
 	public BlockAccess getBlockAccess() {
 		return blockAccess;
 	}
@@ -81,6 +90,12 @@ public abstract class Block implements Identifiable {
 		return new Cuboid(new Vector3i(0, 0, 0), new Vector3i(1, 1, 1));
 	}
 
+	/**
+	 * Called to get the collision boxes for this block
+	 * @param intersect TODO: No clue what this is
+	 * @param entity The entity that is colliding
+	 * @return TODO: No clue what this is
+	 */
 	public Set<Cuboid> getCollidingBoxes(Cuboid intersect, Optional<Entity> entity) {
 		Set<Cuboid> bounds = new HashSet<>();
 		Cuboid defaultBound = getBoundingBox();
