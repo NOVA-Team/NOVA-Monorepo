@@ -22,7 +22,6 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 apply plugin: 'sublimeText'
-apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 ext.config = parseConfig("build.properties")
