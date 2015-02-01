@@ -1,7 +1,7 @@
-package nova.wrapper.mc1710.util;
+package nova.wrapper.mc1710.render;
 
 import com.google.common.base.Charsets;
-import net.minecraft.client.resources.FileResourcePack;
+import net.minecraft.client.resources.FolderResourcePack;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -10,10 +10,11 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-public class NovaResourcePack extends FileResourcePack {
+public class NovaFolderResourcePack extends FolderResourcePack {
 	private final String modid;
-	public NovaResourcePack(File p_i1290_1_, String modid) {
-		super(p_i1290_1_);
+
+	public NovaFolderResourcePack(File file, String modid) {
+		super(file);
 		this.modid = modid;
 	}
 
@@ -39,12 +40,12 @@ public class NovaResourcePack extends FileResourcePack {
 		try {
 			System.out.println("[" + modid + "] Loading " + path);
 			return super.getInputStreamByName(transform(path));
-		} catch(IOException e) {
+		} catch (IOException e) {
 			if (path.equals("pack.mcmeta")) {
 				return new ByteArrayInputStream(("{\n" +
-					" \"pack\": {\n"+
-					" \"description\": \"NOVA mod resource pack\",\n"+
-					" \"pack_format\": 1\n"+
+					" \"pack\": {\n" +
+					" \"description\": \"NOVA mod resource pack\",\n" +
+					" \"pack_format\": 1\n" +
 					"}\n" +
 					"}").getBytes(Charsets.UTF_8));
 			} else {

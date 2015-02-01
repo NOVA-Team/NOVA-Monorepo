@@ -9,7 +9,8 @@ import net.minecraft.client.resources.IResourcePack;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
 import nova.core.util.NovaException;
-import nova.wrapper.mc1710.util.NovaResourcePack;
+import nova.wrapper.mc1710.render.NovaFolderResourcePack;
+import nova.wrapper.mc1710.render.NovaResourcePack;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -68,12 +69,23 @@ public class NovaMinecraftLoader {
 
 			classesMap.keySet().forEach(novaMod -> {
 				Class<? extends Loadable> c = classesMap.get(novaMod);
+
+				//Add jar resource pack
 				String fn = c.getProtectionDomain().getCodeSource().getLocation().getPath();
 				fn = fn.substring(0, fn.indexOf('!')).replaceFirst("file:", "");
 				if (!addedPacks.contains(fn)) {
 					addedPacks.add(fn);
 					packs.add(new NovaResourcePack(new File(fn), novaMod.id()));
 					System.out.println("Registered NOVA resource pack: " + fn);
+				}
+
+				//Add folder resource pack
+				String fn2 = c.getProtectionDomain().getCodeSource().getLocation().getPath();
+				fn2 = fn2.substring(0, fn2.indexOf('!')).replaceFirst("file:", "");
+				if (!addedPacks.contains(fn2)) {
+					addedPacks.add(fn2);
+					packs.add(new NovaFolderResourcePack(new File(fn2), novaMod.id()));
+					System.out.println("Registered NOVA resource pack: " + fn2);
 				}
 			});
 		} catch (Exception e) {
