@@ -132,7 +132,6 @@ public abstract class Block implements Identifiable {
 	 * @param artist
 	 */
 	public void renderDynamic(Artist artist) {
-
 	}
 
 	public Optional<Texture> getTexture(Direction side) {
