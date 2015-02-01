@@ -3,7 +3,9 @@ package nova.internal;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
+import se.jbee.inject.Dependency;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -14,9 +16,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.lang.reflect.Constructor;
-
-import se.jbee.inject.Dependency;
 
 /**
  * The main class that launches NOVA mods.
@@ -38,10 +37,9 @@ public class NovaLauncher implements Loadable {
 	/**
 	 * Creates NovaLauncher.
 	 * 
-	 * @param modClasses
-	 *            mods to instantialize.
-	 * @param diep
-	 *            is required as we are installing additional modules to it.
+	 * @param modClasses mods to instantialize.
+	 *            
+	 * @param diep is required as we are installing additional modules to it.
 	 */
 	public NovaLauncher(DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
 		this.diep = diep;
@@ -76,7 +74,7 @@ public class NovaLauncher implements Loadable {
 
 					Constructor<?> cons = ocons.get();
 					Object[] parameters = Arrays.stream(cons.getParameterTypes())
-						.map(clazz -> diep.getInjector().get().resolve(Dependency.dependency(clazz)))
+						.map(clazz -> (Object) diep.getInjector().get().resolve(Dependency.dependency(clazz)))
 						.collect(Collectors.toList()).toArray();
 					return (Loadable) cons.newInstance(parameters);
 				} catch (Exception e) {
@@ -104,11 +102,11 @@ public class NovaLauncher implements Loadable {
 				.map(entry -> entry.getValue())
 				.collect(Collectors.toList())
 			);
-		
+
 		/**
 		 * Initialize all the NOVA mods.
 		 */
-		orderedMods.stream().forEach(Loadable::preInit);
+		orderedMods.stream().forEachOrdered(Loadable::preInit);
 		System.out.println("NOVA Mods Loaded: " + mods.size());
 	}
 
