@@ -30,7 +30,7 @@ public abstract class Block implements Identifiable {
 	public final BlockFactory getFactory() {
 		return Game.instance.get().blockManager.getBlockFactory(this.getID()).get();
 	}
-
+	
 	/**
 	 * Get the BlockAccess that refers to this block.
 	 * @return The BlockAccess that refers to this block
@@ -129,6 +129,7 @@ public abstract class Block implements Identifiable {
 	public void onNeighborChange(Vector3i neighborPosition) {
 
 	}
+	
 	/**
 	 * Called when the block is placed.
 	 * @param changer The BlockChanger that placed the block
@@ -166,8 +167,7 @@ public abstract class Block implements Identifiable {
 	public boolean onRightClick(Entity entity, int side, Vector3d hit) {
 		return false;
 	}
-
-
+	
 	/**
 	 * Called when an entity collides with this block.
 	 * More specifically, when the entity's block bounds coincide with the block bounds.
