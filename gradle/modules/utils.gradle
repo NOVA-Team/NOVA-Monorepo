@@ -28,8 +28,8 @@ def writePom() {
 			node.appendNode("description", config.info.description)
 			node.appendNode("inceptionYear", config.info.inceptionYear)
 			node.appendNode("packaging", config.packaging)
-			node.append(new Node(node, "organization")
-				.appendNode("name", config.info.organization.name))
+			new Node(node, "organization")
+				.appendNode("name", config.info.organization.name)
 		}
 	}
 }
