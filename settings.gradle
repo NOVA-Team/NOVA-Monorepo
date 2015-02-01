@@ -1,1 +1,2 @@
-rootProject.name = 'NovaWrapper-MC' + minecraft_version
+apply from: "https://raw.githubusercontent.com/NOVAAPI/NovaCore/8dad409a7c67e156a8f7cbea90ff28af4a950f26/gradle/modules/utils.gradle"
+rootProject.name = 'NovaWrapper-MC' + parseConfig(rootDir.getAbsolutePath() + "/" + "build.properties").minecraft.version

@@ -21,17 +21,20 @@ buildscript {
     }
 }
 
+apply from: "https://raw.githubusercontent.com/NOVAAPI/NovaCore/23b9fa71908ad1fbbce9c45f69602c1d601e72c2/gradle/modules/utils.gradle"
 apply plugin: 'java'
 apply plugin: 'forge'
 
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 apply plugin: 'sublimeText'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
-version = minecraft_version + "-" + wrapper_version
+ext.config = parseConfig("build.properties")
+
+version = config.minecraft.version + "-" + config.wrapper.version
 group = "nova.wrapper.mc1710"
 
 configurations.all {
@@ -47,7 +50,7 @@ repositories {
 }
 
 dependencies {
-    compile group: "nova.core", name: "NovaCore", version:"$nova_version", changing: true
+    compile group: "nova.core", name: "NovaCore", version:"$config.nova.version", changing: true
 
     testCompile "junit:junit:4.12"
     testCompile 'org.assertj:assertj-core:1.+'
@@ -76,7 +79,7 @@ jar {
 }
 
 minecraft {
-    version = minecraft_version + "-" + forge_version
+    version = config.minecraft.version + "-" + config.forge.version
     runDir = "run"
 }
 
@@ -127,6 +130,28 @@ artifacts {
     archives deobfJar
     archives javadocJar
     archives shadowJar
+}
+
+publishing {
+	publications {
+		main(MavenPublication) {
+			from components.java
+
+			artifact sourcesJar
+			artifact deobfJar
+			//artifact javadocJar
+			artifact shadowJar
+
+			//pom.withXml(writePom())
+		}
+	}
+	repositories {
+		if (System.getenv("MAVEN_DIR") != null) {
+			maven {
+				url System.getenv("MAVEN_DIR")
+			}
+		}
+	}
 }
 
 sublimeText {
