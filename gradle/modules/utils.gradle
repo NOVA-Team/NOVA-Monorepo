@@ -12,7 +12,7 @@ def getGitRef() {
 }
 
 def parseConfig(String configFile) {
-	file(configFile).withReader {
+	file(rootProject.rootDir.getAbsolutePath() + "/" + configFile).withReader {
 		def prop = new Properties()
 		prop.load(it)
 		return new ConfigSlurper().parse(prop)
