@@ -14,20 +14,30 @@ public interface Stateful extends PositionDependent {
 	 * a block instance. It will NOT be called after loading, for example via
 	 * the Storable interface.
 	 */
-	void initialize();
+	default void initialize()
+	{
+		
+		
+	}
 
 	/**
 	 * This function will get called every time a block is created or reloaded,
 	 * including Storable loads.
 	 */
-	void validate();
+	default	void load()
+	{
 
+
+	}
 	/**
 	 * This function will get called before a block instance is destroyed, for
 	 * example removed from the World.
 	 */
-	void invalidate();
+	default	void unload()
+	{
 
+	}
+	
 	/**
 	 * This function should return whether a block instance has ben invalidated
 	 * or not.
