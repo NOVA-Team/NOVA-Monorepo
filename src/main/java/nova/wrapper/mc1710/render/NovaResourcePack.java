@@ -26,7 +26,7 @@ public class NovaResourcePack extends FileResourcePack {
 	}
 
 	private String transform(String path) {
-		return path.replaceFirst("assets/minecraft", modid);
+		return path.replaceFirst("assets[/\\\\]minecraft", modid);
 	}
 
 	@Override

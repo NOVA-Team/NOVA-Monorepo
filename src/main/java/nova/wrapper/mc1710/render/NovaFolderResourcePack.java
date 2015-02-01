@@ -1,10 +1,14 @@
 package nova.wrapper.mc1710.render;
 
 import com.google.common.base.Charsets;
-import net.minecraft.client.resources.FolderResourcePack;
 
+import net.minecraft.client.resources.FolderResourcePack;
+import net.minecraft.util.ResourceLocation;
+
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -19,7 +23,7 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 	}
 
 	@Override
-	public Set getResourceDomains() {
+	public Set<String> getResourceDomains() {
 		HashSet<String> domains = new HashSet<>();
 		domains.add(modid);
 		//		domains.add("minecraft");
@@ -27,7 +31,7 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 	}
 
 	private String transform(String path) {
-		return path.replaceFirst("assets/minecraft", modid);
+		return path.replaceFirst("assets[/\\\\]", "");
 	}
 
 	@Override
@@ -38,8 +42,8 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 	@Override
 	protected InputStream getInputStreamByName(String path) throws IOException {
 		try {
-			System.out.println("[" + modid + "] Loading " + path);
-			return super.getInputStreamByName(transform(path));
+			System.out.println("[" + modid + "] Loading " + new File(this.resourcePackFile, transform(path)));
+			return new BufferedInputStream(new FileInputStream(new File(this.resourcePackFile, transform(path))));
 		} catch (IOException e) {
 			if (path.equals("pack.mcmeta")) {
 				return new ByteArrayInputStream(("{\n" +
@@ -49,8 +53,14 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 					"}\n" +
 					"}").getBytes(Charsets.UTF_8));
 			} else {
+				if (path.endsWith(".mcmeta"))
+					return new ByteArrayInputStream("{}".getBytes());
 				throw e;
 			}
 		}
+	}
+	@Override
+	public boolean resourceExists(ResourceLocation rl) {
+		return new File(resourcePackFile,  rl.getResourceDomain() + "/" + rl.getResourcePath()).isFile() || new File(resourcePackFile,  rl.getResourceDomain() + "/" + rl.getResourcePath().replace(".mcmeta", "")).isFile();
 	}
 }

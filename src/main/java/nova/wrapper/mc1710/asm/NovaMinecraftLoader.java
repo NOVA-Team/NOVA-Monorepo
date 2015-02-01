@@ -72,6 +72,7 @@ public class NovaMinecraftLoader {
 
 				//Add jar resource pack
 				String fn = c.getProtectionDomain().getCodeSource().getLocation().getPath();
+				
 				if (fn.contains("!")) {
 					fn = fn.substring(0, fn.indexOf('!')).replaceFirst("file:", "");
 					if (!addedPacks.contains(fn)) {
@@ -83,6 +84,11 @@ public class NovaMinecraftLoader {
 					//Add folder resource pack
 					String fn2 = c.getProtectionDomain().getCodeSource().getLocation().getPath();
 					fn2 = fn2.replaceFirst("file:", "");
+					if (fn2.contains("/bin/")) {
+						int i = fn2.indexOf("/bin/");
+						fn2 = fn2.substring(0, i+5);
+					}
+					System.out.println(new File(fn2).exists());
 					if (!addedPacks.contains(fn2)) {
 						addedPacks.add(fn2);
 						packs.add(new NovaFolderResourcePack(new File(fn2), novaMod.id()));
