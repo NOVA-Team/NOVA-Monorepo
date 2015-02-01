@@ -24,7 +24,7 @@ public class MinecraftArtist extends Artist {
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.setColorRGBA_F(1, 1, 1, 1);
 
-		artworks.forEach(a -> a.translation = a.translation.add(translation));
+		artworks.forEach(a -> a.translation = a.rotation.rotate(a.translation).add(translation));
 
 		/**
 		 * Convert textures and UV into Minecraft equivalent. 

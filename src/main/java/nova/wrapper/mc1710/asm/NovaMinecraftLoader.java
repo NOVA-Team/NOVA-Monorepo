@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.resources.IResourcePack;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
+import nova.core.util.NovaException;
 import nova.wrapper.mc1710.util.NovaResourcePack;
 
 import java.io.File;
@@ -20,7 +21,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Created by asie on 1/31/15.
+ * @author asie
+ * @since 1/31/15.
  */
 public class NovaMinecraftLoader {
 	public static Set<Class<?>> modClasses;
@@ -76,6 +78,7 @@ public class NovaMinecraftLoader {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new NovaException();
 		}
 	}
 }

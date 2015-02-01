@@ -2,7 +2,6 @@ package nova.wrapper.mc1710.util;
 
 import com.google.common.base.Charsets;
 import net.minecraft.client.resources.FileResourcePack;
-import net.minecraft.client.resources.ResourcePackFileNotFoundException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -10,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 public class NovaResourcePack extends FileResourcePack {
 	private final String modid;
@@ -23,8 +20,8 @@ public class NovaResourcePack extends FileResourcePack {
 	@Override
 	public Set getResourceDomains() {
 		HashSet<String> domains = new HashSet<>();
-		//domains.add(modid);
-		domains.add("minecraft");
+		domains.add(modid);
+		//		domains.add("minecraft");
 		return domains;
 	}
 

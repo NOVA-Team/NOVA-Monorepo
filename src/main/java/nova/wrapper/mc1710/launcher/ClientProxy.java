@@ -1,5 +1,6 @@
 package nova.wrapper.mc1710.launcher;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,6 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import nova.wrapper.mc1710.forward.block.BlockWrapper;
+import nova.wrapper.mc1710.forward.block.TESRWrapper;
+import nova.wrapper.mc1710.forward.block.TileWrapper;
 import nova.wrapper.mc1710.forward.item.ItemWrapper;
 import nova.wrapper.mc1710.util.RenderUtility;
 
@@ -17,6 +20,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		MinecraftForge.EVENT_BUS.register(RenderUtility.instance);
+		ClientRegistry.registerTileEntity(TileWrapper.class, "novaTile", TESRWrapper.instance);
 	}
 
 	@Override
