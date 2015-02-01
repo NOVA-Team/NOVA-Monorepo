@@ -111,8 +111,6 @@ artifacts {
 	archives sourceJar
 }
 
-print components
-
 publishing {
 	publications {
 		main(MavenPublication) {
