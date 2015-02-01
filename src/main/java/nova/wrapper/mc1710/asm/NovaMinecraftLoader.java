@@ -72,20 +72,22 @@ public class NovaMinecraftLoader {
 
 				//Add jar resource pack
 				String fn = c.getProtectionDomain().getCodeSource().getLocation().getPath();
-				fn = fn.substring(0, fn.indexOf('!')).replaceFirst("file:", "");
-				if (!addedPacks.contains(fn)) {
-					addedPacks.add(fn);
-					packs.add(new NovaResourcePack(new File(fn), novaMod.id()));
-					System.out.println("Registered NOVA resource pack: " + fn);
-				}
-
-				//Add folder resource pack
-				String fn2 = c.getProtectionDomain().getCodeSource().getLocation().getPath();
-				fn2 = fn2.substring(0, fn2.indexOf('!')).replaceFirst("file:", "");
-				if (!addedPacks.contains(fn2)) {
-					addedPacks.add(fn2);
-					packs.add(new NovaFolderResourcePack(new File(fn2), novaMod.id()));
-					System.out.println("Registered NOVA resource pack: " + fn2);
+				if (fn.contains("!")) {
+					fn = fn.substring(0, fn.indexOf('!')).replaceFirst("file:", "");
+					if (!addedPacks.contains(fn)) {
+						addedPacks.add(fn);
+						packs.add(new NovaResourcePack(new File(fn), novaMod.id()));
+						System.out.println("Registered NOVA jar resource pack: " + fn);
+					}
+				} else {
+					//Add folder resource pack
+					String fn2 = c.getProtectionDomain().getCodeSource().getLocation().getPath();
+					fn2 = fn2.replaceFirst("file:", "");
+					if (!addedPacks.contains(fn2)) {
+						addedPacks.add(fn2);
+						packs.add(new NovaFolderResourcePack(new File(fn2), novaMod.id()));
+						System.out.println("Registered NOVA folder resource pack: " + fn2);
+					}
 				}
 			});
 		} catch (Exception e) {
