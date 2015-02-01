@@ -3,10 +3,20 @@ package nova.core.recipes.crafting;
 import java.util.*;
 
 import nova.core.item.ItemStack;
-import nova.core.recipes.ItemIngredient;
 import nova.core.util.transform.Vector2i;
 
 /**
+ * Contains a single shaped crafting recipe. Can contain custom crafting logic.
+ *
+ * Crafting recipes can be specified as a 2-dimensional array of ingredients (with Optional.empty() being used for empty spots)
+ * or as a 1-dimensional array of ingredients and a pattern string (lines are separated by -, spaces for empty spots, A-Z for ingredients.
+ *
+ * For instance, to define a stick recipe with a pattern string:
+ *
+ * new ShapedCraftingRecipe("A - A", ItemIngredient.forDictionary("plankWood"));
+ *
+ * Two kinds of recipes can be defined: basic or advanced. Basic recipes always return the same item, while advanced
+ * recipes have their output defined by a lambda expression. RecipeFunctions will receive information about the 
  *
  * @author Stan Hebben
  */
@@ -15,9 +25,12 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
      * This class contains an optimized recipe resolution algorithm.
      *
      * This algorithms works as follows:
-     * - During construction, the 2D ingredients array is transformed to a flat list of ingredients and their positions
-     * - During recipe resolution, the first non-empty crafting grid spot is searched
-     * -
+     * A: During construction, the 2D ingredients array is transformed to a flat list of ingredients and their positions
+     * B: During recipe resolution, the first non-empty crafting grid spot is searched
+     * C: That position marks the position of the recipe inside the crafting grid (a 2x2 recipe has 4 possible positions in a 3x3 crafting grid)
+     * D: The list of ingredients is run over and filled into an array for later processing
+     * E: If any of the ingredients doesn't match, the crafting is rejected
+     * F: For mirrored recipes B-E are repeated in the mirrored direction
      */
 
 	private final int width;
@@ -30,10 +43,96 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	
 	private final ItemIngredient[] ingredients;
 
+    /**
+     * Defines a basic structured crafting recipe, using a format string.
+     *
+     * @param output
+     * @param format
+     * @param ingredients
+     */
+    public ShapedCraftingRecipe(ItemStack output, String format, ItemIngredient... ingredients) {
+        this(output, format, false, ingredients);
+    }
+
+    /**
+     * Defines a basic structured crafting recipe, possibly mirrored, using a format string.
+     *
+     * @param output
+     * @param format
+     * @param mirrored
+     * @param ingredients
+     */
+    public ShapedCraftingRecipe(ItemStack output, String format, boolean mirrored, ItemIngredient... ingredients) {
+        this((grid, tagged) -> Optional.of(output), format, mirrored, ingredients);
+    }
+
+    /**
+     * Defines an advanced crafting recipe, using a format string.
+     *
+     * @param recipeFunction
+     * @param format
+     * @param mirrored
+     * @param ingredients
+     */
+    public ShapedCraftingRecipe(RecipeFunction recipeFunction, String format, boolean mirrored, ItemIngredient... ingredients) {
+        String[] formatLines = format.split("\\-");
+        int numIngredients = 0;
+        int width = 0;
+        for (String formatLine : formatLines) {
+            width = Math.max(width, formatLine.length());
+            for (char c : formatLine.toCharArray()) {
+                if (c == ' ')
+                    continue;
+                else if (c >= 'A' && c <= 'Z')
+                    numIngredients++;
+                else
+                    throw new IllegalArgumentException("Invalid character in format string " + format + ": " + c);
+            }
+        }
+
+        this.width = width;
+        this.height = formatLines.length;
+        this.posx = new int[numIngredients];
+        this.posy = new int[numIngredients];
+        this.ingredients = new ItemIngredient[numIngredients];
+        this.mirrored = mirrored;
+
+        int ingredientIndex = 0;
+        for (int y = 0; y < this.height; y++) {
+            String formatLine = formatLines[y];
+            for (int x = 0; x < formatLine.length(); x++) {
+                char c = formatLine.charAt(x);
+                if (c == ' ')
+                    continue;
+
+                this.posx[ingredientIndex] = x;
+                this.posy[ingredientIndex] = y;
+                this.ingredients[ingredientIndex] = ingredients[c - 'A'];
+            }
+        }
+
+        this.recipeFunction = recipeFunction;
+        this.lastIngredientIndexOnFirstLine = getLastIngredientIndexOnFirstLine();
+    }
+
+    /**
+     * Defines a basic crafting recipe, using a 2D ingredients array.
+     *
+     * @param output
+     * @param ingredients
+     * @param mirrored
+     */
     public ShapedCraftingRecipe(ItemStack output, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
         this((grid, tagged) -> Optional.of(output), ingredients, mirrored);
     }
 
+    /**
+     * Defines an advanced crafting recipe, using a 2D ingredients array.
+     *
+     * @param recipeFunction
+     * @param ingredients
+     * @param mirrored
+     */
 	public ShapedCraftingRecipe(RecipeFunction recipeFunction, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
 		int numIngredients = 0;
 		for (Optional<ItemIngredient>[] row : ingredients) {
@@ -118,7 +217,13 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
             return;
 
         for (int i = 0; i < ingredients.length; i++) {
-            ItemStack consumed = ingredients[i].consumeOnCrafting(mapping.itemStacks[i], craftingGrid);
+            ItemStack original = mapping.itemStacks[i];
+            ItemStack consumed = ingredients[i].consumeOnCrafting(original, craftingGrid);
+
+            // -- only works if ItemStack is immutable
+            //if (original == consumed)
+            //    continue;
+
             if (consumed.getStackSize() == 0)
                 consumed = null;
 
