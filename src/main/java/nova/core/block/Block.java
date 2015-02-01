@@ -25,7 +25,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * TODO: I do not really know what this is
-	 * @return The Factory that refers to this block
+	 * @return The BlockFactory that refers to this block
 	 */
 	public final BlockFactory getFactory() {
 		return Game.instance.get().blockManager.getBlockFactory(this.getID()).get();
