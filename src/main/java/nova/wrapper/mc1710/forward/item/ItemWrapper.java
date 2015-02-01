@@ -16,6 +16,7 @@ public class ItemWrapper extends net.minecraft.item.Item implements IItemRendere
 
 	public ItemWrapper(ItemFactory item) {
 		this.itemFactory = item;
+		setUnlocalizedName(item.getID());
 	}
 
 	@Override
