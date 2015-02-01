@@ -2,7 +2,9 @@ package nova.core.recipes;
 
 import nova.core.item.Item;
 import nova.core.item.ItemStack;
+import nova.core.recipes.crafting.CraftingGrid;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +21,7 @@ public interface ItemIngredient {
 	 *
 	 * @return possible items
 	 */
-	public Optional<List<Item>> getPossibleItems();
+	public Optional<Collection<String>> getPossibleItemIds();
 
 	/**
 	 * Returns a list of example items. This list could be used to render
@@ -27,7 +29,7 @@ public interface ItemIngredient {
 	 *
 	 * @return example items
 	 */
-	public Optional<List<Item>> getExampleItems();
+	public Optional<Collection<Item>> getExampleItems();
 
 	/**
 	 * Checks if this ingredient is a subset of another ingredient. An
@@ -46,4 +48,21 @@ public interface ItemIngredient {
 	 * @return Whether the item matches or not
 	 */
 	public boolean matches(ItemStack item);
+
+    /**
+     * Returns the ingredient tag. Ingredients can be tagged to make them easy to read from recipe functions.
+     *
+     * @return ingredient tag
+     */
+    public Optional<String> getTag();
+
+    /**
+     * Performs any necessary actions when this ingredient is consumed due to crafting a single item. May return a
+     * stack with zero size, but cannot return null.
+     *
+     * @param original
+     * @param craftingGrid
+     * @return
+     */
+    public ItemStack consumeOnCrafting(ItemStack original, CraftingGrid craftingGrid);
 }
