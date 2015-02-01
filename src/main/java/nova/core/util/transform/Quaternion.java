@@ -24,7 +24,7 @@
 
 package nova.core.util.transform;
 
-import javafx.util.Pair;
+import nova.core.util.collection.Pair;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
