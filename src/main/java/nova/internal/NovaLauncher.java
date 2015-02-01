@@ -3,7 +3,9 @@ package nova.internal;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
+import se.jbee.inject.Dependency;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -14,9 +16,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.lang.reflect.Constructor;
-
-import se.jbee.inject.Dependency;
 
 /**
  * The main class that launches NOVA mods.
@@ -107,7 +106,7 @@ public class NovaLauncher implements Loadable {
 		/**
 		 * Initialize all the NOVA mods.
 		 */
-		orderedMods.stream().forEach(Loadable::preInit);
+		orderedMods.stream().forEachOrdered(Loadable::preInit);
 		System.out.println("NOVA Mods Loaded: " + mods.size());
 	}
 
