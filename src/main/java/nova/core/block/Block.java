@@ -121,17 +121,17 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when this block is to be rendered.
-	 * @param artist The artist who is rendering this block.
+	 * @param model The artist who is rendering this block.
 	 */
-	public void renderWorld(Model artist) {
-		artist.renderBlock(this);
+	public void renderWorld(Model model) {
+		model.renderBlock(this);
 	}
 
 	/**
 	 * Called for a dynamic render.
-	 * @param artist an {@link nova.core.render.model.Model} to use
+	 * @param model an {@link nova.core.render.model.Model} to use
 	 */
-	public void renderDynamic(Model artist) {
+	public void renderDynamic(Model model) {
 	}
 
 	public Optional<Texture> getTexture(Direction side) {
@@ -140,9 +140,9 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the item of this block is to be rendered.
-	 * @param artist The artist who is rendering this block.
+	 * @param model The artist who is rendering this block.
 	 */
-	public void renderItem(Model artist) {
-		renderWorld(artist);
+	public void renderItem(Model model) {
+		renderWorld(model);
 	}
 }
