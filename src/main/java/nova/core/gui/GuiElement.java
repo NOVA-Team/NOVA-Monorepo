@@ -10,6 +10,7 @@ import nova.core.util.Identifiable;
 
 /**
  * Defines basic GuiElement
+ * 
  * @param <T> {@link NativeCanvas} type
  */
 public abstract class GuiElement<T extends NativeCanvas> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
@@ -17,6 +18,7 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 	private String uniqueID;
 	private T nativeElement;
 	private EventListenerList<GuiElementEvent> eventListenerList = new EventListenerList<GuiElementEvent>();
+	private EventListenerList<GuiEvent> listenerList = new EventListenerList<GuiEvent>();
 
 	private boolean isActive = true;
 	private boolean isVisible = true;
@@ -30,17 +32,16 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 	 * @return Shape of this GuiElement
 	 * @see Rectangle
 	 */
-	public Rectangle getShape()
-	{
+	public Rectangle getShape() {
 		return nativeElement.getShape();
 	}
 
 	/**
 	 * Sets shape of this GuiElement
+	 * 
 	 * @param rect {@link Rectangle} to use as shape
 	 */
-	public void setShape(Rectangle rect)
-	{
+	public void setShape(Rectangle rect) {
 		nativeElement.setShape(rect);
 	}
 
@@ -59,6 +60,7 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 
 	/**
 	 * Sets activity state for this element
+	 * 
 	 * @param isActive New state
 	 */
 	public void setActive(boolean isActive) {
@@ -74,6 +76,7 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 
 	/**
 	 * Sets visibility of this element
+	 * 
 	 * @param isVisible New visibility
 	 */
 	public void setVisible(boolean isVisible) {
@@ -93,22 +96,25 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 
 	@Override
 	public void onEvent(GuiEvent event) {
-		// TODO Should also have multiple event listeners.
+		listenerList.publish(event);
 	}
 
 	public void triggerEvent(GuiElementEvent event) {
-		// eventListenerList.publish(event);
+		eventListenerList.publish(event);
 	}
 
-	public <EVENT extends GuiElementEvent> GuiElement<T> registerEventHandler(EventListener<EVENT> listener, Class<EVENT> clazz) {
-		// TODO doesn't discriminate the handlers based on their desired event
-		// type.
-		// eventListenerList.add(listener);
+	protected <EVENT extends GuiEvent> void registerListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
+		listenerList.add(listener, clazz);
+	}
+
+	public <EVENT extends GuiElementEvent> GuiElement<T> registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
+		eventListenerList.add(listener, clazz);
 		return this;
 	}
 
 	/**
 	 * Does rendering logic
+	 * 
 	 * @param mouseX Mouse position in X-axis on screen
 	 * @param mouseY Mouse position in Y-axis on screen
 	 * @param artist {@link nova.core.render.model.Model} to use

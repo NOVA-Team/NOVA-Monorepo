@@ -27,6 +27,7 @@ public class GuiContainer extends GuiElement<NativeCanvas> {
 
 	/**
 	 * Sets layout of this container
+	 * 
 	 * @param layout {@link GuiLayout} to set
 	 * @return This GuiContainer
 	 */
@@ -38,9 +39,11 @@ public class GuiContainer extends GuiElement<NativeCanvas> {
 
 	/**
 	 * Processes an event, i.e. sends it to each children
+	 * 
 	 * @param event {@link GuiEvent} to process
 	 */
 	public void onEvent(GuiEvent event) {
+		super.onEvent(event);
 		getChildElements().stream().forEach((e) -> {
 			e.onEvent(event);
 		});
@@ -48,8 +51,11 @@ public class GuiContainer extends GuiElement<NativeCanvas> {
 
 	/**
 	 * Adds {@link GuiComponent} to this container
+	 * 
 	 * @param element {@link GuiComponent} to add
-	 * @param properties Properties for {@link GuiLayout#add(GuiComponent, GuiContainer, Object...) GuiLayout.add}
+	 * @param properties Properties for
+	 *        {@link GuiLayout#add(GuiComponent, GuiContainer, Object...)
+	 *        GuiLayout.add}
 	 * @return This GuiContainer
 	 */
 	public GuiContainer addElement(GuiComponent element, Object... properties) {
@@ -60,6 +66,7 @@ public class GuiContainer extends GuiElement<NativeCanvas> {
 
 	/**
 	 * Removes {@link GuiComponent}
+	 * 
 	 * @param element {@link GuiComponent} to remove
 	 * @return This GuiContainer
 	 */

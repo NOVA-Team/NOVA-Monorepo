@@ -43,6 +43,18 @@ public class EventListenerList<T> {
 	}
 
 	/**
+	 * Adds an EventListener to the list that only accepts a specific subclass
+	 * of &lt;T&gt;
+	 * 
+	 * @param listener listener to register
+	 * @param clazz class to listen for
+	 * @return event listener's handle
+	 */
+	public <EVENT extends T> EventListenerHandle<T> add(EventListener<EVENT> listener, Class<EVENT> clazz) {
+		return add(new EventListener.SingleEventListener<EVENT, T>(listener, clazz));
+	}
+
+	/**
 	 * Removes an EventListener from the list.
 	 *
 	 * @param listener listener to be removed
