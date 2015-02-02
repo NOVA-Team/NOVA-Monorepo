@@ -90,10 +90,10 @@ public abstract class Block implements Identifiable {
 	}
 
 	/**
-	 * Called to get the collision boxes for this block.
-	 * @param intersect TODO: No clue what this is
-	 * @param entity The entity that is colliding
-	 * @return TODO: No clue what this is
+	 * Called to check for collisions.
+	 * @param intersect Cuboid that could be colliding
+	 * @param entity The entity that could be colliding
+	 * @return Cuboids that represent colliding areas
 	 */
 	public Set<Cuboid> getCollidingBoxes(Cuboid intersect, Optional<Entity> entity) {
 		Set<Cuboid> bounds = new HashSet<>();
