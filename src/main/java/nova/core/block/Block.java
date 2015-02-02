@@ -24,8 +24,8 @@ public abstract class Block implements Identifiable {
 	private final Vector3i position = Vector3i.ZERO;
 
 	/**
-	 * TODO: I do not really know what this is
-	 * @return The Factory that refers to this block
+	 * Called to get the BlockFactory that refers to this Block class
+	 * @return The BlockFactory that refers to this Block class
 	 */
 	public final BlockFactory getFactory() {
 		return Game.instance.get().blockManager.getBlockFactory(this.getID()).get();
@@ -33,7 +33,6 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Get the BlockAccess that refers to this block
-	 * TODO: Is this really what it is?
 	 * @return The BlockAccess that refers to this block
 	 */
 	public BlockAccess getBlockAccess() {
@@ -124,7 +123,7 @@ public abstract class Block implements Identifiable {
 	}
 
 	/**
-	 * Called when a neighboring block changes (removed, placed, etc...)
+	 * Called when a block next to this one changes (removed, placed, etc...)
 	 * @param neighborPosition The position of the block that changed
 	 */
 	public void onNeighborChange(Vector3i neighborPosition) {
