@@ -8,7 +8,8 @@ import nova.core.util.ReflectionUtils;
 public interface PacketSender {
 
 	default void write(Packet packet) {
-		write(packet.readInt(), packet);
+		packet.writeInt(0);
+		write(0, packet);
 	}
 
 	/**

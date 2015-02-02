@@ -13,7 +13,6 @@ public interface PacketReceiver {
 
 	/**
 	 * Reads a packet
-	 *
 	 * @param id - an ID to indicate the type of packet receiving.
 	 * @param packet - data encoded into the packet.
 	 */
@@ -21,23 +20,23 @@ public interface PacketReceiver {
 		ReflectionUtils.forEachAnnotatedField(Sync.class, this, (field, annotation) -> {
 			if (annotation.id() == id) {
 				try {
-					if (field.getType().isAssignableFrom(Boolean.class)) {
+					if (field.getType() == Boolean.class || field.getType() == Boolean.TYPE) {
 						field.set(this, packet.readBoolean());
-					} else if (field.getType().isAssignableFrom(Byte.class)) {
+					} else if (field.getType() == Byte.class || field.getType() == Byte.TYPE) {
 						field.set(this, packet.readByte());
-					} else if (field.getType().isAssignableFrom(Short.class)) {
+					} else if (field.getType() == Short.class || field.getType() == Short.TYPE) {
 						field.set(this, packet.readShort());
-					} else if (field.getType().isAssignableFrom(Integer.class)) {
+					} else if (field.getType() == Integer.class || field.getType() == Integer.TYPE) {
 						field.set(this, packet.readInt());
-					} else if (field.getType().isAssignableFrom(Long.class)) {
+					} else if (field.getType() == Long.class || field.getType() == Long.TYPE) {
 						field.set(this, packet.readLong());
-					} else if (field.getType().isAssignableFrom(Character.class)) {
+					} else if (field.getType() == Character.class || field.getType() == Character.TYPE) {
 						field.set(this, packet.readChar());
-					} else if (field.getType().isAssignableFrom(Float.class)) {
+					} else if (field.getType() == Float.class || field.getType() == Float.TYPE) {
 						field.set(this, packet.readFloat());
-					} else if (field.getType().isAssignableFrom(Double.class)) {
+					} else if (field.getType() == Double.class || field.getType() == Double.TYPE) {
 						field.set(this, packet.readDouble());
-					} else if (field.getType().isAssignableFrom(String.class)) {
+					} else if (field.getType() == String.class) {
 						field.set(this, packet.readString());
 					}
 				} catch (IllegalAccessException e) {

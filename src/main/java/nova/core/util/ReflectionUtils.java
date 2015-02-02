@@ -40,9 +40,11 @@ public class ReflectionUtils {
 	 * @param action Action to invoke
 	 */
 	public static <T extends Annotation> void forEachAnnotatedField(Class<? extends T> annotation, Object source, BiConsumer<Field, T> action) {
-		for (Field f : source.getClass().getFields()) {
+		for (Field f : source.getClass().getDeclaredFields()) {
 			if (f.isAnnotationPresent(annotation)) {
+				f.setAccessible(true);
 				action.accept(f, f.getAnnotation(annotation));
+				f.setAccessible(false);
 			}
 		}
 	}
