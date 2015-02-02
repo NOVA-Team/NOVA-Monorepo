@@ -27,7 +27,7 @@ public interface CraftingGrid {
      * Returns the total size of this crafting grid. For a square crafting grid, this is width x height. Note that the
      * size can be less than width x height in the case of non-square crafting grid (but never more).
      *
-     * @return
+     * @return The size
      */
     public int size();
 
@@ -90,7 +90,7 @@ public interface CraftingGrid {
      * Gives back a certain item. In the case of a player's crafting grid, this would typically go back to the player's
      * inventory. Machines may implement this method differently.
      *
-     * @param itemStack
+     * @param itemStack The {@link ItemStack}
      */
     public void giveBack(ItemStack itemStack);
 

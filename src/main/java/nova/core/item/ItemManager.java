@@ -27,6 +27,7 @@ public class ItemManager {
 	/**
 	 * Register a new item with custom constructor arguments.
 	 * @param constructor The lambda expression to create a new constructor.
+	 * @return Dummy item
 	 */
 	public Item registerItem(Supplier<Item> constructor) {
 		ItemFactory factory = new ItemFactory(constructor);
