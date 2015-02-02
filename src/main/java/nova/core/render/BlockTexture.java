@@ -6,7 +6,7 @@ package nova.core.render;
  */
 public class BlockTexture extends Texture {
 
-	public BlockTexture(String resource) {
-		super(resource);
+	public BlockTexture(String domain, String resource) {
+		super(domain, resource);
 	}
 }

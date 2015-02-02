@@ -6,7 +6,7 @@ package nova.core.render;
  */
 public class ItemTexture extends Texture {
 
-	public ItemTexture(String resource) {
-		super(resource);
+	public ItemTexture(String domain, String resource) {
+		super(domain, resource);
 	}
 }

@@ -6,9 +6,15 @@ package nova.core.render;
  */
 public class Texture {
 
+	public final String domain;
 	public final String resource;
 
-	public Texture(String resource) {
+	public Texture(String domain, String resource) {
+		this.domain = domain;
 		this.resource = resource;
+	}
+
+	public String getResource() {
+		return domain + ":" + resource;
 	}
 }
