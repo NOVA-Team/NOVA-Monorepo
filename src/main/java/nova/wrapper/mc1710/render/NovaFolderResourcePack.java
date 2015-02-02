@@ -4,7 +4,12 @@ import com.google.common.base.Charsets;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,12 +25,11 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 	public Set<String> getResourceDomains() {
 		HashSet<String> domains = new HashSet<>();
 		domains.add(modid);
-		//			domains.add("minecraft");
 		return domains;
 	}
 
 	private String transform(String path) {
-		return path.replaceFirst("assets[/\\\\]", "");
+		return path;
 	}
 
 	@Override
@@ -47,14 +51,16 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 					"}\n" +
 					"}").getBytes(Charsets.UTF_8));
 			} else {
-				if (path.endsWith(".mcmeta"))
+				if (path.endsWith(".mcmeta")) {
 					return new ByteArrayInputStream("{}".getBytes());
+				}
 				throw e;
 			}
 		}
 	}
+
 	@Override
 	public boolean resourceExists(ResourceLocation rl) {
-		return new File(resourcePackFile,  rl.getResourceDomain() + "/" + rl.getResourcePath()).isFile() || new File(resourcePackFile,  rl.getResourceDomain() + "/" + rl.getResourcePath().replace(".mcmeta", "")).isFile();
+		return new File(resourcePackFile, "assets/" + rl.getResourceDomain() + "/" + rl.getResourcePath()).isFile() || new File(resourcePackFile, rl.getResourceDomain() + "/" + rl.getResourcePath().replace(".mcmeta", "")).isFile();
 	}
 }

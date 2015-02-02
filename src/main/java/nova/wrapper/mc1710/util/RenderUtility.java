@@ -98,7 +98,7 @@ public class RenderUtility {
 	}
 
 	public void registerIcon(Texture texture, TextureStitchEvent.Pre event) {
-		iconMap.put(texture, event.map.registerIcon(texture.resource));
+		iconMap.put(texture, event.map.registerIcon(texture.getResource()));
 	}
 
 	@SubscribeEvent

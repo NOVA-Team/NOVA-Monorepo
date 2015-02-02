@@ -81,18 +81,15 @@ public class NovaMinecraftLoader {
 						System.out.println("Registered NOVA jar resource pack: " + fn);
 					}
 				} else {
-					//Add folder resource pack
-					String fn2 = c.getProtectionDomain().getCodeSource().getLocation().getPath();
-					fn2 = fn2.replaceFirst("file:", "");
-					if (fn2.contains("/bin/")) {
-						int i = fn2.indexOf("/bin/");
-						fn2 = fn2.substring(0, i+5);
-					}
-					System.out.println(new File(fn2).exists());
-					if (!addedPacks.contains(fn2)) {
-						addedPacks.add(fn2);
-						packs.add(new NovaFolderResourcePack(new File(fn2), novaMod.id()));
-						System.out.println("Registered NOVA folder resource pack: " + fn2);
+					//Add folder resource pack location. The folderLocation is the root of the project, including the packages of classes, and an assets folder inside.
+					String folderLocation = c.getProtectionDomain().getCodeSource().getLocation().getPath();
+					String classPath = c.getCanonicalName().replaceAll("\\.", "/");
+					folderLocation = folderLocation.replaceFirst("file:", "").replace(classPath, "").replace("/.class", "");
+
+					if (!addedPacks.contains(folderLocation)) {
+						addedPacks.add(folderLocation);
+						packs.add(new NovaFolderResourcePack(new File(folderLocation), novaMod.id()));
+						System.out.println("Registered NOVA folder resource pack: " + folderLocation);
 					}
 				}
 			});

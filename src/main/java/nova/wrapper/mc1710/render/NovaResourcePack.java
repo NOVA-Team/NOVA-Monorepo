@@ -21,7 +21,6 @@ public class NovaResourcePack extends FileResourcePack {
 	public Set getResourceDomains() {
 		HashSet<String> domains = new HashSet<>();
 		domains.add(modid);
-		//		domains.add("minecraft");
 		return domains;
 	}
 
