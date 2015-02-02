@@ -28,7 +28,7 @@ import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.BackwardProxyUtil;
-import nova.wrapper.mc1710.backward.render.MinecraftArtist;
+import nova.wrapper.mc1710.backward.render.ModelWrapper;
 import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.backward.world.BWBlockAccess;
 import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
@@ -201,7 +201,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glPushMatrix();
 		Tessellator.instance.startDrawingQuads();
-		MinecraftArtist artist = new MinecraftArtist();
+		ModelWrapper artist = new ModelWrapper();
 		this.block.renderItem(artist);
 		artist.renderItem();
 		Tessellator.instance.draw();
@@ -212,7 +212,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
-		MinecraftArtist artist = new MinecraftArtist();
+		ModelWrapper artist = new ModelWrapper();
 		this.block.renderWorld(artist);
 		artist.renderWorld(world, new Vector3d(x + 0.5, y + 0.5, z + 0.5));
 		return false;
