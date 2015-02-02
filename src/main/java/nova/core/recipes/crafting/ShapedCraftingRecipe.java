@@ -46,9 +46,9 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
     /**
      * Defines a basic structured crafting recipe, using a format string.
      *
-     * @param output
-     * @param format
-     * @param ingredients
+     * @param output Output {@link ItemStack} of the recipe
+     * @param format Format
+     * @param ingredients {@link ItemIngredient ItemIngredients}
      */
     public ShapedCraftingRecipe(ItemStack output, String format, ItemIngredient... ingredients) {
         this(output, format, false, ingredients);
@@ -57,10 +57,10 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
     /**
      * Defines a basic structured crafting recipe, possibly mirrored, using a format string.
      *
-     * @param output
-     * @param format
-     * @param mirrored
-     * @param ingredients
+     * @param output Output {@link ItemStack} of the recipe
+     * @param format Format
+     * @param mirrored Whether this recipe is mirrored
+     * @param ingredients {@link ItemIngredient ItemIngredients}
      */
     public ShapedCraftingRecipe(ItemStack output, String format, boolean mirrored, ItemIngredient... ingredients) {
         this((grid, tagged) -> Optional.of(output), format, mirrored, ingredients);
@@ -69,10 +69,10 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
     /**
      * Defines an advanced crafting recipe, using a format string.
      *
-     * @param recipeFunction
-     * @param format
-     * @param mirrored
-     * @param ingredients
+     * @param recipeFunction {@link RecipeFunction}
+     * @param format Format
+     * @param mirrored Whether this recipe is mirrored
+     * @param ingredients {@link ItemIngredient ItemIngredients}
      */
     public ShapedCraftingRecipe(RecipeFunction recipeFunction, String format, boolean mirrored, ItemIngredient... ingredients) {
         String[] formatLines = format.split("\\-");
@@ -118,9 +118,9 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
     /**
      * Defines a basic crafting recipe, using a 2D ingredients array.
      *
-     * @param output
-     * @param ingredients
-     * @param mirrored
+     * @param output Output {@link ItemStack} of the recipe
+     * @param ingredients {@link ItemIngredient ItemIngredients}
+     * @param mirrored Whether this recipe is mirrored
      */
     public ShapedCraftingRecipe(ItemStack output, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
         this((grid, tagged) -> Optional.of(output), ingredients, mirrored);
@@ -129,9 +129,9 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
     /**
      * Defines an advanced crafting recipe, using a 2D ingredients array.
      *
-     * @param recipeFunction
-     * @param ingredients
-     * @param mirrored
+     * @param recipeFunction {@link RecipeFunction}
+     * @param ingredients {@link ItemIngredient ItemIngredients}
+     * @param mirrored Whether this recipe is mirrored
      */
 	public ShapedCraftingRecipe(RecipeFunction recipeFunction, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
 		int numIngredients = 0;

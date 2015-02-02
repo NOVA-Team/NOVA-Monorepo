@@ -3,6 +3,9 @@ package nova.core.gui;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
 
+/**
+ * Event for GUI, like mouse click
+ */
 public class GuiEvent {
 
 	public static class MouseEvent extends GuiEvent {

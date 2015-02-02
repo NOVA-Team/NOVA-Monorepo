@@ -3,6 +3,8 @@ package nova.core.util.collection;
 /**
  * A 2-Tuple
  * @author Calclavia
+ * @param <L> First type
+ * @param <R> Second type
  */
 public class Pair<L, R> {
 	public L _1;
@@ -29,7 +31,7 @@ public class Pair<L, R> {
 		if (!(o instanceof Pair)) {
 			return false;
 		}
-		Pair pairo = (Pair) o;
+		Pair<?, ?> pairo = (Pair<?, ?>) o;
 		return this._1.equals(pairo._1) && this._2.equals(pairo._2);
 	}
 }

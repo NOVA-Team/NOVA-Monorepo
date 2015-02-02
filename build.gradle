@@ -5,7 +5,7 @@ buildscript {
 		jcenter()
 
 		maven {
-			url 'http://maven.magik6k.net/'
+			url 'http://maven.novaapi.net/'
 		}
 	}
 	dependencies {
@@ -17,7 +17,7 @@ buildscript {
 apply from: 'gradle/modules/utils.gradle'
 
 apply plugin: 'java'
-//apply plugin: 'checkstyle'
+//transform plugin: 'checkstyle'
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -60,7 +60,7 @@ compileJava {
 repositories {
 	mavenCentral()
 	maven {
-		url 'http://maven.magik6k.net/'
+		url 'http://maven.novaapi.net/'
 	}
 }
 

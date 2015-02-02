@@ -2,6 +2,12 @@ package nova.core.fluid;
 
 import java.util.Optional;
 
+/**
+ * Classes with this interface declare ability of storing fluids
+ * 
+ * @see FluidConsumer
+ * @see FluidContainer
+ */
 public interface FluidContainer extends FluidConsumer, FluidProvider {
 	
 	/**

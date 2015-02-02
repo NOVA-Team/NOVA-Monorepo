@@ -56,6 +56,10 @@ public abstract class Vector3<O extends Vector3<O>> extends Vector<Vector3<O>, O
 		return cross(v);
 	}
 
+	public O transform(Transform transform) {
+		return (O) transform.transform(this);
+	}
+
 	@Override
 	public int compareTo(Object o) {
 		if (o instanceof Vector3) {

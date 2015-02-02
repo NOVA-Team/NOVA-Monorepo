@@ -56,11 +56,17 @@ public class BlockManager {
 	 * 
 	 * @param constructor
 	 *            Block instance {@link Supplier}
+	 * @return Dummy block
 	 */
 	public Block registerBlock(Supplier<Block> constructor) {
 		return registerBlock(new BlockFactory(constructor));
 	}
 
+	/**
+	 * Register a new block with custom constructor arguments.
+	 * @param factory {@link BlockFactory} of registered block
+	 * @return Dummy block
+	 */
 	public Block registerBlock(BlockFactory factory) {
 		registry.register(factory);
 		itemManager.provide().registerItem(() -> new ItemBlock(factory.getDummy()));

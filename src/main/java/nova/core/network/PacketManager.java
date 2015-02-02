@@ -19,6 +19,7 @@ public abstract class PacketManager {
 
 	/**
 	 * Sends a packet.
+	 * @param sender {@link PacketSender}
 	 */
 	public final void sync(PacketSender sender) {
 		if (sender instanceof Block) {

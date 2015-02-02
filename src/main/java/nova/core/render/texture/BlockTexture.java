@@ -1,4 +1,4 @@
-package nova.core.render;
+package nova.core.render.texture;
 
 /**
  * A texture that will be stiched into a large Atlass Texture
@@ -6,7 +6,7 @@ package nova.core.render;
  */
 public class BlockTexture extends Texture {
 
-	public BlockTexture(String resource) {
-		super(resource);
+	public BlockTexture(String domain, String resource) {
+		super(domain, resource);
 	}
 }

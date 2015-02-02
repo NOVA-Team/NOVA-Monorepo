@@ -1,6 +1,5 @@
 package nova.core.recipes.crafting;
 
-import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemStack;
 
@@ -80,9 +79,9 @@ public interface ItemIngredient {
      * Performs any necessary actions when this ingredient is consumed due to crafting a single item. May return a
      * stack with zero size, but cannot return null.
      *
-     * @param original
-     * @param craftingGrid
-     * @return
+     * @param original Ingredient
+     * @param craftingGrid {@link CraftingGrid} used
+     * @return Resulting {@link ItemStack}
      */
     public ItemStack consumeOnCrafting(ItemStack original, CraftingGrid craftingGrid);
 }

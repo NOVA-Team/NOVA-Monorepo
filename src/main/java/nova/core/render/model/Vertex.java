@@ -1,4 +1,4 @@
-package nova.core.render;
+package nova.core.render.model;
 
 import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector3d;
@@ -11,13 +11,13 @@ import java.math.RoundingMode;
  * @author Calclavia, Kubuxu, inspired by ChickenBones
  */
 public class Vertex {
-	public final Vector3d vec;
-	public final Vector2d uv;
+	public Vector3d vec;
+	public Vector2d uv;
 
 	/**
 	 * A RGC color value from 0 to 1.
 	 */
-	public final Vector3d color;
+	public Vector3d color;
 
 	public Vertex(Vector3d vert, Vector2d uv) {
 		this.vec = vert;
