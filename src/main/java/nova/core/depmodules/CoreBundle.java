@@ -31,6 +31,9 @@ public class CoreBundle extends BootstrapperBundle {
 		add(WorldModule.class);
 		add(EntityModule.class);
 		add(RenderModule.class);
+
+        add(RecipesModule.class);
+        add(CraftingModule.class);
 		/**
 		 * General 
 		 */
