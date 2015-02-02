@@ -117,6 +117,14 @@ public class Vector3d extends Vector3<Vector3d> {
 		return z;
 	}
 
+	public Vector3i round() {
+		return new Vector3i((int) Math.round(x), (int) Math.round(y), (int) Math.round(z));
+	}
+
+	public Vector3i ceil() {
+		return new Vector3i((int) Math.ceil(x), (int) Math.ceil(y), (int) Math.ceil(z));
+	}
+
 	public Vector3i toInt() {
 		return new Vector3i(xi(), yi(), zi());
 	}

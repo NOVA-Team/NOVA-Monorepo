@@ -8,6 +8,8 @@ public class Texture {
 
 	public final String domain;
 	public final String resource;
+	//An integer representing the rotation of this texture
+	public final int rotation = 0;
 
 	public Texture(String domain, String resource) {
 		this.domain = domain;
