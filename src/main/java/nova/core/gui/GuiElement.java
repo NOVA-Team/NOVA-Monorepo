@@ -29,20 +29,27 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 	}
 
 	/**
-	 * @return Shape of this GuiElement
-	 * @see Rectangle
+	 * @return Outline of this GuiElement
+	 * @see Outline
 	 */
-	public Rectangle getShape() {
-		return nativeElement.getShape();
+	public Outline getOutline() {
+		return nativeElement.getOutline();
 	}
 
 	/**
-	 * Sets shape of this GuiElement
+	 * Sets the outline of this GuiElement
 	 * 
-	 * @param rect {@link Rectangle} to use as shape
+	 * @param outline {@link Outline} to use as outline
 	 */
-	public void setShape(Rectangle rect) {
-		nativeElement.setShape(rect);
+	public void setOutline(Outline outline) {
+		nativeElement.setOutline(outline);
+	}
+
+	/**
+	 * @return Native container element
+	 */
+	protected T getNative() {
+		return nativeElement;
 	}
 
 	// TODO inserted by some sort of factory?
@@ -91,7 +98,7 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 	}
 
 	public final void preRender(int mouseX, int mouseY, Model artist) {
-		isMouseOver = getShape().contains(mouseX, mouseY);
+		isMouseOver = getOutline().contains(mouseX, mouseY);
 	}
 
 	@Override
@@ -117,9 +124,9 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 	 * 
 	 * @param mouseX Mouse position in X-axis on screen
 	 * @param mouseY Mouse position in Y-axis on screen
-	 * @param artist {@link nova.core.render.model.Model} to use
+	 * @param model {@link nova.core.render.model.Model} to use
 	 */
-	public void render(int mouseX, int mouseY, Model artist) {
+	public void render(int mouseX, int mouseY, Model model) {
 
 	}
 

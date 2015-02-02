@@ -4,9 +4,9 @@ public interface GuiLayout {
 
 	public void reposition(GuiContainer container);
 
-	public void add(GuiComponent element, GuiContainer parent, Object... properties);
+	public void add(GuiCanvas element, GuiContainer parent, Object... properties);
 
-	public void remove(GuiComponent element);
+	public void remove(GuiCanvas element);
 
 	public static class BorderLayout implements GuiLayout {
 
@@ -17,12 +17,12 @@ public interface GuiLayout {
 		}
 
 		@Override
-		public void add(GuiComponent element, GuiContainer parent, Object... properties) {
+		public void add(GuiCanvas element, GuiContainer parent, Object... properties) {
 			// property = property == null ? BorderPropery.CENTER : property;
 		}
 
 		@Override
-		public void remove(GuiComponent element) {
+		public void remove(GuiCanvas element) {
 			// TODO Auto-generated method stub
 
 		}

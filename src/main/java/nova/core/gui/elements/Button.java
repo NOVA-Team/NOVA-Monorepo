@@ -1,11 +1,10 @@
 package nova.core.gui.elements;
 
-import nova.core.gui.GuiElement;
+import nova.core.gui.GuiCanvas;
 import nova.core.gui.GuiElementEvent;
 import nova.core.gui.GuiEvent.MouseEvent;
-import nova.core.gui.nativeimpl.NativeButton;
 
-public class Button extends GuiElement<NativeButton> {
+public class Button extends GuiCanvas {
 
 	public Button(String uniqueID) {
 		super(uniqueID);
@@ -13,8 +12,13 @@ public class Button extends GuiElement<NativeButton> {
 	}
 
 	private void onMousePressed(MouseEvent event) {
-		if (getShape().contains(event.mouseX, event.mouseY)) {
-			triggerEvent(new GuiElementEvent.ActionEvent(this));
+		switch (event.state) {
+			case CLICK:
+				if (getOutline().contains(event.mouseX, event.mouseY)) {
+					triggerEvent(new GuiElementEvent.ActionEvent(this));
+				}
+			default:
+				break;
 		}
 	}
 }
