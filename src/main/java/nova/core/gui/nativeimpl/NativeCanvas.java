@@ -7,18 +7,18 @@ import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseButton;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseState;
 import nova.core.gui.GuiEvent.MouseWheelEvent;
-import nova.core.gui.Rectangle;
+import nova.core.gui.Outline;
 import nova.core.render.model.Model;
 
 public interface NativeCanvas {
 
-	public void applyElement(GuiElement element);
+	public void applyElement(GuiElement<?> element);
 
-	public GuiElement getElement();
+	public GuiElement<?> getElement();
 
-	public Rectangle getShape();
+	public Outline getOutline();
 
-	public void setShape(Rectangle rect);
+	public void setOutline(Outline outline);
 
 	/**
 	 * Added to support GUI systems that don't re-render the components on every

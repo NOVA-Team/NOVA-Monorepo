@@ -1,24 +1,24 @@
 package nova.core.gui.elements;
 
-import nova.core.gui.GuiElement;
+import nova.core.gui.GuiCanvas;
 import nova.core.gui.GuiElementEvent;
-import nova.core.gui.GuiEvent;
 import nova.core.gui.GuiEvent.MouseEvent;
-import nova.core.gui.nativeimpl.NativeButton;
 
-public class Button extends GuiElement<NativeButton> {
+public class Button extends GuiCanvas {
 
 	public Button(String uniqueID) {
 		super(uniqueID);
+		registerListener(this::onMousePressed, MouseEvent.class);
 	}
 
-	@Override
-	public void onEvent(GuiEvent event) {
-		if (event instanceof MouseEvent) {
-			MouseEvent mouseEvent = (MouseEvent) event;
-			if (getShape().contains(mouseEvent.mouseX, mouseEvent.mouseY)) {
-				triggerEvent(new GuiElementEvent.ActionEvent(this));
-			}
+	private void onMousePressed(MouseEvent event) {
+		switch (event.state) {
+			case CLICK:
+				if (getOutline().contains(event.mouseX, event.mouseY)) {
+					triggerEvent(new GuiElementEvent.ActionEvent(this));
+				}
+			default:
+				break;
 		}
 	}
 }
