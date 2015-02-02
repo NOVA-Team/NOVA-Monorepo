@@ -1,5 +1,8 @@
 package nova.core.gui;
 
+/**
+ * Event created by {@link GuiElement}
+ */
 public abstract class GuiElementEvent {
 
 	public final GuiElement<?> element;
