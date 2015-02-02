@@ -9,9 +9,11 @@ http://opensource.org/licenses/lgpl-3.0.html
 [![Build Status](https://travis-ci.org/NOVAAPI/NovaCore.svg?branch=master)](https://travis-ci.org/NOVAAPI/NovaCore)
 
 ### Dependencies
-* Guice
-* Guava
-* JUnit
+
+For all libraries we use, include it in your IDE as a jar library.
+* Silk Dependency Injection (http://search.maven.org/remotecontent?filepath=se/jbee/silk-di/0.6/silk-di-0.6.jar
+* Guava (http://search.maven.org/remotecontent?filepath=com/google/guava/guava/18.0/guava-18.0.jar)
+* JUnit (http://search.maven.org/remotecontent?filepath=junit/junit/4.12/junit-4.12.jar)
 * AssertJ
 
 Using the IDEA formatter
