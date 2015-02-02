@@ -214,9 +214,9 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
-		ModelWrapper artist = new ModelWrapper();
-		this.block.renderWorld(artist);
-		artist.renderWorld(world, new Vector3d(x + 0.5, y + 0.5, z + 0.5));
+		ModelWrapper model = new ModelWrapper();
+		getBlockInstance(world, new Vector3i(x, y, z)).renderWorld(model);
+		model.renderWorld(world, new Vector3d(x + 0.5, y + 0.5, z + 0.5));
 		return false;
 	}
 

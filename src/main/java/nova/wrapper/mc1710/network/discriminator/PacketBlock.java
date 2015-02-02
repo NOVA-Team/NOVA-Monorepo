@@ -81,13 +81,14 @@ public class PacketBlock extends PacketAbstract {
 				PacketReceiver receiver = (PacketReceiver) block;
 				receiver.read(new PacketWrapper(data.slice()));
 			} catch (IndexOutOfBoundsException e) {
-				System.out.println("Packet sent to a TileEntity was read out side its bounds [" + tile + "] in " + new Vector3d(x, y, z));
+				System.out.println("Packet sent to a block and received IndexOutOfBoundsException: [" + tile + "] in " + new Vector3d(x, y, z));
+				e.printStackTrace();
 			} catch (Exception e) {
 				System.out.println("Packet sent to a TileEntity failed to be received [" + tile + "] in " + new Vector3d(x, y, z));
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("Packet was sent to a tile not implementing IPacketReceiver, this is a coding error [" + tile + "] in " + new Vector3d(x, y, z));
+			System.out.println("Packet was sent to a block not implementing IPacketReceiver, this is a coding error [" + tile + "] in " + new Vector3d(x, y, z));
 		}
 	}
 }
