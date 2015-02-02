@@ -30,16 +30,6 @@ ext.config = parseConfig("build.properties")
 version = config.nova.version
 group = "nova.core"
 
-if (System.getenv("BUILD_NUMBER") != null)
-	version += ".${System.getenv("BUILD_NUMBER")}"
-else
-	version += "-" + getGitRef()
-
-if (config.nova.subversion != null && config.nova.subversion != "")
-	version += "-${config.nova.subversion}"
-
-ext.simpleVersion = version
-
 /*checkstyle {
     configFile = file('checkstyle.xml')
     configProperties = [
@@ -116,18 +106,6 @@ publishing {
 		main(MavenPublication) {
 			from components.java
 			
-			artifact apiJar
-			artifact javadocJar
-			artifact shadowJar
-			artifact sourceJar
-
-			pom.withXml(writePom())
-		}
-		
-		latest(MavenPublication) {
-			version "latest-${config.nova.subversion}"
-			from components.java
-
 			artifact apiJar
 			artifact javadocJar
 			artifact shadowJar
