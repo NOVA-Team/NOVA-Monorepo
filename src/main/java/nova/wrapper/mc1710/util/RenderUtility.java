@@ -9,7 +9,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import nova.core.game.Game;
-import nova.core.render.Texture;
+import nova.core.render.texture.Texture;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;

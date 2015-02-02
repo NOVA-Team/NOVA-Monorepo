@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import nova.core.render.Artist;
+import nova.core.render.model.Model;
 import nova.core.util.Direction;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
@@ -13,7 +13,7 @@ import nova.wrapper.mc1710.util.RenderUtility;
 /**
  * @author Calclavia
  */
-public class MinecraftArtist extends Artist {
+public class MinecraftArtist extends Model {
 
 	/**
 	 * Completes this rendering for a block.
@@ -24,12 +24,12 @@ public class MinecraftArtist extends Artist {
 		tessellator.setColorRGBA_F(1, 1, 1, 1);
 
 		//Apply transformation: rotate, scale, translate.
-		artworks.forEach(a -> a.translation = a.rotation.rotate(a.translation).multiply(a.scale).add(translation));
+		faces.forEach(a -> a.translation = a.rotation.rotate(a.translation).multiply(a.scale).add(translation));
 
 		/**
 		 * Convert textures and UV into Minecraft equivalent. 
 		 */
-		artworks.forEach(a ->
+		faces.forEach(a ->
 		{
 			//Brightness is defined as: skyLight << 20 | blockLight << 4
 			if (a.getBrightness() >= 0) {
@@ -75,12 +75,12 @@ public class MinecraftArtist extends Artist {
 		tessellator.setColorRGBA_F(1, 1, 1, 1);
 
 		//Apply transformation: rotate, scale, translate.
-		artworks.forEach(a -> a.translation = a.rotation.rotate(a.translation).multiply(a.scale));
+		faces.forEach(a -> a.translation = a.rotation.rotate(a.translation).multiply(a.scale));
 
 		/**
 		 * Convert textures and UV into Minecraft equivalent.
 		 */
-		artworks.forEach(a ->
+		faces.forEach(a ->
 		{
 			//Brightness is defined as: skyLight << 20 | blockLight << 4
 			if (a.getBrightness() >= 0) {
