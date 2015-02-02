@@ -77,9 +77,11 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 		 * Otherwise, create a new instance of the block and forward the methods over.
 		 */
 		if (hasTileEntity(0)) {
-			if (((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block != null) {
-				return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block;
+			if (((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block == null) {
+				//TODO: There must be a better way to instantiate block
+				((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block = getBlockInstance(new BWBlockAccess(access), position);
 			}
+			return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block;
 		}
 		return getBlockInstance(new BWBlockAccess(access), position);
 
