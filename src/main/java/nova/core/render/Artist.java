@@ -1,9 +1,7 @@
 package nova.core.render;
 
 import nova.core.block.Block;
-import nova.core.block.BlockAccess;
 import nova.core.util.Direction;
-import nova.core.util.transform.Vector3i;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,22 +14,22 @@ public abstract class Artist {
 	/**
 	 * A list of all the shapes drawn.
 	 */
-	protected List<Shape> artworks = new ArrayList<>();
+	protected List<Face> artworks = new ArrayList<>();
 
 	/**
 	 * Starts drawing, by returning an Artwork for the Artist to work on.
 	 * Add vertices to this Artwork and finish it by calling drawShape()
-	 * @return new {@link Shape}
+	 * @return new {@link Face}
 	 */
-	public Shape createShape() {
-		return new Shape();
+	public Face createShape() {
+		return new Face();
 	}
 
 	/**
 	 * Finish drawing the Artwork by adding it into the list of artworks.
 	 * @param artwork - The finished masterpiece.
 	 */
-	public void drawShape(Shape artwork) {
+	public void drawShape(Face artwork) {
 		artworks.add(artwork);
 	}
 
@@ -45,8 +43,7 @@ public abstract class Artist {
 		/**
 		 * Draw down
 		 */
-		Shape down = createShape();
-		down.brightness = getBrightness(block.getBlockAccess(), block.getPosition().add(Direction.DOWN.toVector()));
+		Face down = createShape();
 		down.normal = Direction.DOWN.toVector().toDouble();
 		down.texture = block.getTexture(Direction.UP);
 		//Top-left corner
@@ -62,9 +59,8 @@ public abstract class Artist {
 		/**
 		 * Draw up
 		 */
-		Shape up = createShape();
-		up.brightness = getBrightness(block.getBlockAccess(), block.getPosition().add(Direction.UP.toVector()));
-		up.normal = Direction.DOWN.toVector().toDouble();
+		Face up = createShape();
+		up.normal = Direction.UP.toVector().toDouble();
 		up.texture = block.getTexture(Direction.UP);
 		//Bottom-left corner
 		up.drawVertex(new Vertex(0.5, 0.5, -0.5, 0, 1));
@@ -79,8 +75,7 @@ public abstract class Artist {
 		/**
 		 * Draw north
 		 */
-		Shape north = createShape();
-		north.brightness = getBrightness(block.getBlockAccess(), block.getPosition().add(Direction.NORTH.toVector()));
+		Face north = createShape();
 		north.normal = Direction.NORTH.toVector().toDouble();
 		north.texture = block.getTexture(Direction.NORTH);
 		//Top-left corner
@@ -96,8 +91,7 @@ public abstract class Artist {
 		/**
 		 * Draw south
 		 */
-		Shape south = createShape();
-		south.brightness = getBrightness(block.getBlockAccess(), block.getPosition().add(Direction.SOUTH.toVector()));
+		Face south = createShape();
 		south.normal = Direction.SOUTH.toVector().toDouble();
 		south.texture = block.getTexture(Direction.SOUTH);
 		//Bottom-left corner
@@ -113,8 +107,7 @@ public abstract class Artist {
 		/**
 		 * Draw west
 		 */
-		Shape west = createShape();
-		west.brightness = getBrightness(block.getBlockAccess(), block.getPosition().add(Direction.WEST.toVector()));
+		Face west = createShape();
 		west.normal = Direction.WEST.toVector().toDouble();
 		west.texture = block.getTexture(Direction.WEST);
 		//Bottom-left corner
@@ -130,8 +123,7 @@ public abstract class Artist {
 		/**
 		 * Draw east
 		 */
-		Shape east = createShape();
-		east.brightness = getBrightness(block.getBlockAccess(), block.getPosition().add(Direction.EAST.toVector()));
+		Face east = createShape();
 		east.normal = Direction.EAST.toVector().toDouble();
 		east.texture = block.getTexture(Direction.EAST);
 		//Top-left corner
@@ -146,6 +138,4 @@ public abstract class Artist {
 
 		return this;
 	}
-
-	protected abstract double getBrightness(BlockAccess access, Vector3i position);
 }
