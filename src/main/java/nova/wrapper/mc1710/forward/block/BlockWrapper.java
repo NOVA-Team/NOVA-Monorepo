@@ -43,10 +43,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
-import static org.lwjgl.opengl.GL11.glPopAttrib;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushAttrib;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
 
 /**
  * A Minecraft to Nova block wrapper
@@ -201,16 +197,16 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@Override
 	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
 		//TODO: We should use the item renderer.
+		GL11.glPushAttrib(GL_TEXTURE_BIT);
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-		glPushAttrib(GL_TEXTURE_BIT);
-		glPushMatrix();
+		GL11.glPushMatrix();
 		Tessellator.instance.startDrawingQuads();
 		MinecraftArtist artist = new MinecraftArtist();
 		this.block.renderItem(artist);
 		artist.renderItem();
 		Tessellator.instance.draw();
-		glPopMatrix();
-		glPopAttrib();
+		GL11.glPopMatrix();
+		GL11.glPopAttrib();
 	}
 
 	@SideOnly(Side.CLIENT)

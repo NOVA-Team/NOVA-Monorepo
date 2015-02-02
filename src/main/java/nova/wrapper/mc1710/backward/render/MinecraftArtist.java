@@ -1,10 +1,13 @@
 package nova.wrapper.mc1710.backward.render;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import nova.core.render.Artist;
+import nova.core.util.Direction;
 import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.util.RenderUtility;
 
 /**
@@ -33,9 +36,26 @@ public class MinecraftArtist extends Artist {
 				tessellator.setBrightness((int) a.getBrightness());
 			} else {
 				//Determine nearest adjacent block.
-				//Vector3i nearestPos = a.translation.add(a.getCenter()).add(a.normal.divide(2)).toInt();
-				//int brightness = blockAccess.getBlock(nearestPos.x, nearestPos.y, nearestPos.z).getMixedBrightnessForBlock(blockAccess, nearestPos.x, nearestPos.y, nearestPos.z);
-				int brightness = blockAccess.getBlock(translation.xi(), translation.yi(), translation.zi()).getMixedBrightnessForBlock(blockAccess, translation.xi(), translation.yi(), translation.zi());
+				Vector3i nearestPos = a.translation.add(a.getCenter()).add(a.normal.divide(2)).round();
+				Block block = blockAccess.getBlock(nearestPos.x, nearestPos.y, nearestPos.z);
+				int brightness = block.getMixedBrightnessForBlock(blockAccess, nearestPos.x, nearestPos.y, nearestPos.z);
+				//TODO: Add Ambient Occlusion
+				/*
+				int aoBrightnessXYNN = block.getMixedBrightnessForBlock(blockAccess, translation.xi() - 1, translation.yi(), translation.zi());
+				int aoBrightnessYZNN = block.getMixedBrightnessForBlock(blockAccess, translation.xi(), translation.yi(), translation.zi() - 1);
+				int aoBrightnessYZNP = block.getMixedBrightnessForBlock(blockAccess, translation.xi(), translation.yi(), translation.zi() + 1);
+				int aoBrightnessXYPN = block.getMixedBrightnessForBlock(blockAccess, translation.xi() + 1, translation.yi(), translation.zi());
+				
+				int brightnessTopLeft = getAoBrightness(aoBrightnessXYZNNP, this.aoBrightnessXYNN, this.aoBrightnessYZNP, i1);
+				int brightnessTopRight = getAoBrightness(aoBrightnessYZNP, this.aoBrightnessXYZPNP, this.aoBrightnessXYPN, i1);
+				int brightnessBottomRight = getAoBrightness(this.aoBrightnessYZNN, this.aoBrightnessXYPN, this.aoBrightnessXYZPNN, i1);
+				int brightnessBottomLeft = getAoBrightness(this.aoBrightnessXYNN, this.aoBrightnessXYZNNN, this.aoBrightnessYZNN, i1);
+				*/
+
+				if (a.normal.equals(Direction.WEST.toVector())) {
+					System.out.println(nearestPos + " with " + brightness);
+				}
+
 				tessellator.setBrightness(brightness);
 			}
 
@@ -79,5 +99,21 @@ public class MinecraftArtist extends Artist {
 				a.vertices.forEach(v -> tessellator.addVertex(v.vec.x, v.vec.y, v.vec.z));
 			}
 		});
+	}
+
+	public int getAoBrightness(int a, int b, int c, int d) {
+		if (a == 0) {
+			a = d;
+		}
+
+		if (b == 0) {
+			b = d;
+		}
+
+		if (c == 0) {
+			c = d;
+		}
+
+		return a + b + c + d >> 2 & 16711935;
 	}
 }
