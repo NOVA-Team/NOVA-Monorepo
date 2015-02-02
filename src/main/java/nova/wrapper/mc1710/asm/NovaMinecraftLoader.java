@@ -96,6 +96,7 @@ public class NovaMinecraftLoader {
 					}
 				}
 			});
+			resourcePackField.set(FMLClientHandler.instance(), packs);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NovaException();
