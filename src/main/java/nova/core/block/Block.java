@@ -1,3 +1,4 @@
+
 package nova.core.block;
 
 import nova.core.entity.Entity;
