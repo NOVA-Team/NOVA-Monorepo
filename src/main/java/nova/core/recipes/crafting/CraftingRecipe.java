@@ -41,7 +41,7 @@ public interface CraftingRecipe extends Recipe {
      * Gets the possible items for this recipe in the first non-empty recipe slot. Used to index recipes and can return
      * empty if the recipe is calculated dynamically.
      *
-     * @return
+     * @return The items
      */
     public default Optional<Collection<String>> getPossibleItemsInFirstSlot() {
         return Optional.empty();

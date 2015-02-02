@@ -37,6 +37,7 @@ public abstract class Artist {
 
 	/**
 	 * Draws a standard block.
+	 * @param block Block to draw
 	 * @return This Artist
 	 */
 	public Artist renderBlock(Block block) {

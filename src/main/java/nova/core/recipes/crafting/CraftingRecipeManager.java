@@ -34,7 +34,7 @@ public class CraftingRecipeManager {
     /**
      * Adds a recipe. Adds it to the global recipe list as CraftingRecipe.
      *
-     * @param recipe
+     * @param recipe {@link CraftingRecipe}
      */
     public void addRecipe(CraftingRecipe recipe) {
         recipeManager.addRecipe(recipe);
@@ -43,7 +43,7 @@ public class CraftingRecipeManager {
     /**
      * Removes a recipes. Removes if from the global recipe list.
      *
-     * @param recipe
+     * @param recipe {@link CraftingRecipe}
      */
     public void removeRecipe(CraftingRecipe recipe) {
         recipeManager.removeRecipe(recipe);

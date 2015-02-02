@@ -16,6 +16,11 @@ public class ReflectionUtils {
 		}
 	}
 
+	/**
+	 * Invokes action for each field in source object annotated with {@link Stored}
+	 * @param source Object to iterate over
+	 * @param action Action to do
+	 */
 	public static void forEachStoredField(Object source, BiConsumer<Field, String> action) {
 		forEachAnnotatedField(Stored.class, source, (field, annotation) -> {
 			String key = annotation.key();
@@ -27,6 +32,13 @@ public class ReflectionUtils {
 		});
 	}
 
+	/**
+	 * Invokes an action on each field annotated with specified annotation of given object
+	 * @param <T> Annotation type
+	 * @param annotation Annotation type
+	 * @param source Object to scan
+	 * @param action Action to invoke
+	 */
 	public static <T extends Annotation> void forEachAnnotatedField(Class<? extends T> annotation, Object source, BiConsumer<Field, T> action) {
 		for (Field f : source.getClass().getFields()) {
 			if (f.isAnnotationPresent(annotation)) {

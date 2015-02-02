@@ -5,7 +5,7 @@ buildscript {
 		jcenter()
 
 		maven {
-			url 'http://maven.magik6k.net/'
+			url 'http://maven.novaapi.net/'
 		}
 	}
 	dependencies {
@@ -60,7 +60,7 @@ compileJava {
 repositories {
 	mavenCentral()
 	maven {
-		url 'http://maven.magik6k.net/'
+		url 'http://maven.novaapi.net/'
 	}
 }
 
@@ -110,8 +110,6 @@ artifacts {
 	archives shadowJar
 	archives sourceJar
 }
-
-print components
 
 publishing {
 	publications {

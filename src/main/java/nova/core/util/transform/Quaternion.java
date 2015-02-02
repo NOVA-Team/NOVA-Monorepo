@@ -71,6 +71,8 @@ public class Quaternion {
 	 *
 	 * Make sure all models use the Techne Model loader, they will naturally follow this rule.
 	 * @author Calclavia
+	 * @param euler input {@link Vector3}
+	 * @return resulting {@link Quaternion}
 	 */
 	public static Quaternion fromEuler(Vector3<?> euler) {
 		return fromEuler(euler);
@@ -95,6 +97,8 @@ public class Quaternion {
 
 	/**
 	 * Returns a quaternion from Angle Axis rotation.
+	 * @param axis Axis {@link Vector3}
+	 * @param angle Angle
 	 * @return The Quaternion representation of the angle axis rotation.
 	 */
 	public static Quaternion fromAxis(Vector3<?> axis, double angle) {

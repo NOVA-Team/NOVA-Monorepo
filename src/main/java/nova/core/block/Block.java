@@ -129,7 +129,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called for a dynamic render.
-	 * @param artist
+	 * @param artist an {@link Artist} to use
 	 */
 	public void renderDynamic(Artist artist) {
 	}

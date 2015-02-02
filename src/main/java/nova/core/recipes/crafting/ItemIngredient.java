@@ -1,11 +1,9 @@
-package nova.core.recipes;
+package nova.core.recipes.crafting;
 
 import nova.core.item.Item;
 import nova.core.item.ItemStack;
-import nova.core.recipes.crafting.CraftingGrid;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,6 +13,27 @@ import java.util.Optional;
  * @author Stan Hebben
  */
 public interface ItemIngredient {
+    /**
+     * Retrieves an ingredient to represent a specific item.
+     *
+     * @param itemId item ID
+     * @return ingredient
+     */
+    public static ItemIngredient forItem(String itemId) {
+        return new SpecificItemIngredient(itemId);
+    }
+
+    /**
+     * Retrieves an ingredient to represent a dictionary entry.
+     *
+     * @param id dictionary entry ID
+     * @return ingredient
+     */
+    public static ItemIngredient forDictionary(String id) {
+        // TODO: how do we fetch the ore dictionary..?
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
 	/**
 	 * Returns a list of all items that could possibly match this ingredient.
 	 * Should return Optional.empty() if there is no such list.
@@ -60,9 +79,9 @@ public interface ItemIngredient {
      * Performs any necessary actions when this ingredient is consumed due to crafting a single item. May return a
      * stack with zero size, but cannot return null.
      *
-     * @param original
-     * @param craftingGrid
-     * @return
+     * @param original Ingredient
+     * @param craftingGrid {@link CraftingGrid} used
+     * @return Resulting {@link ItemStack}
      */
     public ItemStack consumeOnCrafting(ItemStack original, CraftingGrid craftingGrid);
 }

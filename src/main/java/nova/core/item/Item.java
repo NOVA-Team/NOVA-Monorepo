@@ -41,7 +41,8 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Called when this item is being rendered.
-	 * @param data
+	 * @param type Type
+	 * @param data Data
 	 */
 	public void onRender(int type, Object... data) {
 
@@ -49,6 +50,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Gets the texture of this item. If there is no texture provided, it will not render any and default to onRender() method for custom item rendering.
+	 * @return {@link ItemTexture} instance
 	 */
 	public Optional<ItemTexture> getTexture() {
 		return Optional.empty();

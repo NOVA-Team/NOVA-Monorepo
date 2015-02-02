@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 /**
  * @author Calclavia
+ * @param <T> Type of produced object
  */
 public class Factory<T extends Identifiable> implements Identifiable {
 	protected final Supplier<T> constructor;

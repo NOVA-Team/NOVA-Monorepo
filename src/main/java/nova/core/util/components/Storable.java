@@ -4,6 +4,9 @@ import nova.core.util.ReflectionUtils;
 
 import java.util.Map;
 
+/**
+ * Classes with this interface declare ability to store and load itself
+ */
 public interface Storable {
 	default void save(Map<String, Object> data) {
 		ReflectionUtils.forEachStoredField(this, (field, key) -> {
