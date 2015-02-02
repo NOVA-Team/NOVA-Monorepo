@@ -2,6 +2,9 @@ package nova.core.util;
 
 import nova.core.util.transform.Vector3i;
 
+/**
+ * defines basic directions in world
+ */
 public enum Direction {
 	DOWN(0, -1, 0),
 	UP(0, 1, 0),
@@ -25,10 +28,19 @@ public enum Direction {
 		vector = new Vector3i(x, y, z);
 	}
 
-	public static Direction fromOrdinal(int i) {
-		return Direction.values[i % Direction.values.length];
+	//FIXME: This method may return null!!
+	/**
+	 * Turns direction number into Direction
+	 * @param is Direction id
+	 * @return Resulting Direction
+	 */
+	public static Direction fromOrdinal(int is) {
+		return Direction.values[is % Direction.values.length];
 	}
 
+	/**
+	 * @return Direction opposite to this
+	 */
 	public Direction opposite() {
 		if (this == Direction.UNKNOWN) {
 			return this;
@@ -37,6 +49,9 @@ public enum Direction {
 		}
 	}
 
+	/**
+	 * @return This Direction represented as {@link Vector3i}
+	 */
 	public Vector3i toVector() {
 		return vector;
 	}

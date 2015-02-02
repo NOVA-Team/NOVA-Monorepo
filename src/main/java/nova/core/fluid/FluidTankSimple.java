@@ -2,6 +2,9 @@ package nova.core.fluid;
 
 import java.util.Optional;
 
+/**
+ * This class provides basic implementation of {@link FluidContainer}
+ */
 public class FluidTankSimple implements FluidContainer {
 
 	private Optional<FluidStack> containedFluid;
