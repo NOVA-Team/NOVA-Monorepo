@@ -143,7 +143,8 @@ publishing {
 			pom.withXml { xml ->
 				def children = xml.asNode().get("dependencies")[0]
 				for (child in children) {
-					if (child.get("artifactId")[0].value()[0].equals("forgeSrc")) {
+					def artifactId = child.get("artifactId")[0].value()[0]
+					if (artifactId.equals("forgeSrc") || artifactId.equals("forgeBin")) {
 						child.appendNode("groupId", "net.minecraftforge")
 					}
 				}
