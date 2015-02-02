@@ -17,7 +17,7 @@ buildscript {
 apply from: 'gradle/modules/utils.gradle'
 
 apply plugin: 'java'
-//apply plugin: 'checkstyle'
+//transform plugin: 'checkstyle'
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 

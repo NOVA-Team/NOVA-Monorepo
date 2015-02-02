@@ -34,7 +34,7 @@ import java.math.RoundingMode;
  * All rotation operations operate in radians.
  * @author Calclavia, ChickenBones
  */
-public class Quaternion {
+public class Quaternion implements Transform {
 
 	public static final Quaternion identity = new Quaternion(0, 0, 0, 1);
 
@@ -70,9 +70,9 @@ public class Quaternion {
 	 * to the sky. -90 Degrees - Looking straight down to the void.
 	 *
 	 * Make sure all models use the Techne Model loader, they will naturally follow this rule.
-	 * @author Calclavia
 	 * @param euler input {@link Vector3}
 	 * @return resulting {@link Quaternion}
+	 * @author Calclavia
 	 */
 	public static Quaternion fromEuler(Vector3<?> euler) {
 		return fromEuler(euler);
@@ -140,7 +140,8 @@ public class Quaternion {
 		return new Quaternion(x / d, y / d, z / d, w / d);
 	}
 
-	public Vector3d rotate(Vector3<?> vec) {
+	@Override
+	public Vector3d transform(Vector3<?> vec) {
 		double d = -x * vec.xd() - y * vec.yd() - z * vec.zd();
 		double d1 = w * vec.xd() + y * vec.zd() - z * vec.yd();
 		double d2 = w * vec.yd() - x * vec.zd() + z * vec.xd();

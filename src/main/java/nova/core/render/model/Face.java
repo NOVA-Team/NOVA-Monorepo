@@ -1,7 +1,6 @@
 package nova.core.render.model;
 
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
 
 import java.util.ArrayList;
@@ -17,12 +16,6 @@ public class Face {
 	public final List<Vertex> vertices = new ArrayList<>();
 	//The normal (or direction) this face is facing. Normals must be unit vectors.
 	public Vector3d normal = Vector3d.zero;
-	//The translation of the face.
-	public Vector3d translation = Vector3d.zero;
-	//The Quaternion rotation of the face.
-	public Quaternion rotation = Quaternion.identity;
-	//The scale of the face.
-	public Vector3d scale = Vector3d.one;
 	//The texture that is to be rendered on this face.
 	public Optional<Texture> texture = Optional.empty();
 	//The brightness value defines how bright the face should be rendered. The default value will let NOVA decide the brightness based on the world surroundings.
