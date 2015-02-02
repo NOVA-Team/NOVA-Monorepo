@@ -22,11 +22,13 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 		this.uniqueID = uniqueID;
 	}
 
-	public AxisAlignedRect getShape() {
+	public Rectangle getShape()
+	{
 		return nativeElement.getShape();
 	}
 
-	public void setShape(AxisAlignedRect rect) {
+	public void setShape(Rectangle rect)
+	{
 		nativeElement.setShape(rect);
 	}
 

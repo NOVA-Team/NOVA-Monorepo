@@ -1,6 +1,5 @@
 package nova.core.gui.nativeimpl;
 
-import nova.core.gui.AxisAlignedRect;
 import nova.core.gui.GuiElement;
 import nova.core.gui.GuiEvent.KeyEvent;
 import nova.core.gui.GuiEvent.KeyEvent.EnumKeyState;
@@ -8,6 +7,7 @@ import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseButton;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseState;
 import nova.core.gui.GuiEvent.MouseWheelEvent;
+import nova.core.gui.Rectangle;
 import nova.core.render.Artist;
 
 public interface NativeCanvas {
@@ -16,9 +16,9 @@ public interface NativeCanvas {
 
 	public GuiElement getElement();
 
-	public AxisAlignedRect getShape();
+	public Rectangle getShape();
 
-	public void setShape(AxisAlignedRect rect);
+	public void setShape(Rectangle rect);
 
 	/**
 	 * Added to support GUI systems that don't re-render the components on every

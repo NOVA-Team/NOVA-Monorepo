@@ -2,35 +2,42 @@ package nova.core.gui;
 
 import nova.core.util.transform.Vector2i;
 
-//TODO Could probably use this for things like Icons too.
-public class AxisAlignedRect {
-
+//TODO: Could probably use this for things like Icons too.
+//TODO: This should extend Shape
+public class Rectangle
+{
 	public final Vector2i position;
 	public final Vector2i dimension;
 
-	public AxisAlignedRect(Vector2i position, Vector2i dimension) {
+	public Rectangle(Vector2i position, Vector2i dimension)
+	{
 		this.position = position;
 		this.dimension = dimension;
 	}
 
-	public AxisAlignedRect(int x, int y, int width, int height) {
+	public Rectangle(int x, int y, int width, int height)
+	{
 		this.position = new Vector2i(x, y);
 		this.dimension = new Vector2i(width, height);
 	}
 
-	public AxisAlignedRect setPosition(Vector2i position) {
-		return new AxisAlignedRect(position, this.dimension);
+	public Rectangle setPosition(Vector2i position)
+	{
+		return new Rectangle(position, this.dimension);
 	}
 
-	public AxisAlignedRect setDimension(Vector2i dimension) {
-		return new AxisAlignedRect(this.position, dimension);
+	public Rectangle setDimension(Vector2i dimension)
+	{
+		return new Rectangle(this.position, dimension);
 	}
 
-	public AxisAlignedRect setPosition(int x, int y) {
+	public Rectangle setPosition(int x, int y)
+	{
 		return setPosition(new Vector2i(x, y));
 	}
 
-	public AxisAlignedRect setDimension(int width, int height) {
+	public Rectangle setDimension(int width, int height)
+	{
 		return setDimension(new Vector2i(width, height));
 	}
 
