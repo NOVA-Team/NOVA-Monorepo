@@ -2,12 +2,15 @@ package nova.core.gui;
 
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
+import nova.core.network.Target.Side;
 
 /**
  * Event for GUI, like mouse click
  */
 public class GuiEvent {
 
+	// TODO Document.
+	// TODO Split this up into multiple events maybe?
 	public static class MouseEvent extends GuiEvent {
 
 		public final int mouseX;
@@ -57,7 +60,16 @@ public class GuiEvent {
 		}
 	}
 
-	public static abstract class GuiEventSynced extends GuiEvent implements PacketReceiver, PacketSender {
+	public static class ResizeEvent extends GuiEvent {
 
+		public final Outline oldOutline;
+
+		public ResizeEvent(Outline oldOutline) {
+			this.oldOutline = oldOutline;
+		}
+	}
+
+	public static interface GuiEventSynced extends PacketSender, PacketReceiver {
+		public Side getTarget();
 	}
 }

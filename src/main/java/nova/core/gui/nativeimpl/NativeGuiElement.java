@@ -10,7 +10,13 @@ import nova.core.gui.GuiEvent.MouseWheelEvent;
 import nova.core.gui.Outline;
 import nova.core.render.model.Model;
 
-public interface NativeCanvas {
+/**
+ * The native interface for any {@link GuiElement}.
+ * 
+ * @author Vic Nightfall
+ *
+ */
+public interface NativeGuiElement {
 
 	public void applyElement(GuiElement<?> element);
 

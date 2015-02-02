@@ -1,6 +1,6 @@
 package nova.core.gui.nativeimpl;
 
-public interface NativeButton extends NativeCanvas {
+public interface NativeButton extends NativeGuiElement {
 
 	public String getText();
 
