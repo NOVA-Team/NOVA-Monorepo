@@ -2,7 +2,7 @@ package nova.core.item;
 
 import nova.core.entity.Entity;
 import nova.core.inventory.Inventory;
-import nova.core.render.ItemTexture;
+import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector3d;

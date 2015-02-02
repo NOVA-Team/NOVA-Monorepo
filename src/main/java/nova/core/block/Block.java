@@ -3,8 +3,8 @@ package nova.core.block;
 import nova.core.entity.Entity;
 import nova.core.game.Game;
 import nova.core.item.ItemStack;
-import nova.core.render.Artist;
-import nova.core.render.Texture;
+import nova.core.render.model.Model;
+import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Cuboid;
@@ -123,15 +123,15 @@ public abstract class Block implements Identifiable {
 	 * Called when this block is to be rendered.
 	 * @param artist The artist who is rendering this block.
 	 */
-	public void renderWorld(Artist artist) {
+	public void renderWorld(Model artist) {
 		artist.renderBlock(this);
 	}
 
 	/**
 	 * Called for a dynamic render.
-	 * @param artist an {@link Artist} to use
+	 * @param artist an {@link nova.core.render.model.Model} to use
 	 */
-	public void renderDynamic(Artist artist) {
+	public void renderDynamic(Model artist) {
 	}
 
 	public Optional<Texture> getTexture(Direction side) {
@@ -142,7 +142,7 @@ public abstract class Block implements Identifiable {
 	 * Called when the item of this block is to be rendered.
 	 * @param artist The artist who is rendering this block.
 	 */
-	public void renderItem(Artist artist) {
+	public void renderItem(Model artist) {
 		renderWorld(artist);
 	}
 }

@@ -1,4 +1,4 @@
-package nova.core.render;
+package nova.core.render.texture;
 
 /**
  * A texture has a file location.

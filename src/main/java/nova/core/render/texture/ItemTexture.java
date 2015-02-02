@@ -1,4 +1,4 @@
-package nova.core.render;
+package nova.core.render.texture;
 
 /**
  * A texture that will be stiched into a large Atlass Texture

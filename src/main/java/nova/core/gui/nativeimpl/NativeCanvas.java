@@ -8,7 +8,7 @@ import nova.core.gui.GuiEvent.MouseEvent.EnumMouseButton;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseState;
 import nova.core.gui.GuiEvent.MouseWheelEvent;
 import nova.core.gui.Rectangle;
-import nova.core.render.Artist;
+import nova.core.render.model.Model;
 
 public interface NativeCanvas {
 
@@ -26,7 +26,7 @@ public interface NativeCanvas {
 	 */
 	public void requestRender();
 
-	public default void render(int mouseX, int mouseY, Artist artist) {
+	public default void render(int mouseX, int mouseY, Model artist) {
 		if (getElement().isVisible()) {
 			getElement().preRender(mouseX, mouseY, artist);
 			getElement().render(mouseX, mouseY, artist);

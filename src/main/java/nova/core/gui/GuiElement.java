@@ -5,7 +5,7 @@ import nova.core.event.EventListenerList;
 import nova.core.gui.nativeimpl.NativeCanvas;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
-import nova.core.render.Artist;
+import nova.core.render.model.Model;
 import nova.core.util.Identifiable;
 
 /**
@@ -87,7 +87,7 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 		return isMouseOver;
 	}
 
-	public final void preRender(int mouseX, int mouseY, Artist artist) {
+	public final void preRender(int mouseX, int mouseY, Model artist) {
 		isMouseOver = getShape().contains(mouseX, mouseY);
 	}
 
@@ -111,9 +111,9 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 	 * Does rendering logic
 	 * @param mouseX Mouse position in X-axis on screen
 	 * @param mouseY Mouse position in Y-axis on screen
-	 * @param artist {@link Artist} to use
+	 * @param artist {@link nova.core.render.model.Model} to use
 	 */
-	public void render(int mouseX, int mouseY, Artist artist) {
+	public void render(int mouseX, int mouseY, Model artist) {
 
 	}
 

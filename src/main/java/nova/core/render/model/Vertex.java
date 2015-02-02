@@ -1,4 +1,4 @@
-package nova.core.render;
+package nova.core.render.model;
 
 import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector3d;

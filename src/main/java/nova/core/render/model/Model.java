@@ -1,4 +1,4 @@
-package nova.core.render;
+package nova.core.render.model;
 
 import nova.core.block.Block;
 import nova.core.util.Direction;
@@ -7,18 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An artist is capable of drawing different artworks (shapes).
+ * An model is capable of containing multiple faces.
  * @author Calclavia
  */
-public abstract class Artist {
+public abstract class Model {
 	/**
 	 * A list of all the shapes drawn.
 	 */
-	protected List<Face> artworks = new ArrayList<>();
+	protected List<Face> faces = new ArrayList<>();
 
 	/**
-	 * Starts drawing, by returning an Artwork for the Artist to work on.
-	 * Add vertices to this Artwork and finish it by calling drawShape()
+	 * Starts drawing, by returning an Face for the Model to work on.
+	 * Add vertices to this Face and finish it by calling drawShape()
 	 * @return new {@link Face}
 	 */
 	public Face createShape() {
@@ -26,19 +26,19 @@ public abstract class Artist {
 	}
 
 	/**
-	 * Finish drawing the Artwork by adding it into the list of artworks.
-	 * @param artwork - The finished masterpiece.
+	 * Finish drawing the Face by adding it into the list of Faces.
+	 * @param Face - The finished masterpiece.
 	 */
-	public void drawShape(Face artwork) {
-		artworks.add(artwork);
+	public void drawShape(Face Face) {
+		faces.add(Face);
 	}
 
 	/**
 	 * Draws a standard block.
 	 * @param block Block to draw
-	 * @return This Artist
+	 * @return This Model
 	 */
-	public Artist renderBlock(Block block) {
+	public Model renderBlock(Block block) {
 		//TODO: Change render size based on block bounds.
 		/**
 		 * Draw down

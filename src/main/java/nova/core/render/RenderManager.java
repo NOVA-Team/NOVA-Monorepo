@@ -1,5 +1,8 @@
 package nova.core.render;
 
+import nova.core.render.texture.BlockTexture;
+import nova.core.render.texture.ItemTexture;
+
 import java.util.HashSet;
 import java.util.Set;
 

@@ -1,5 +1,6 @@
-package nova.core.render;
+package nova.core.render.model;
 
+import nova.core.render.texture.Texture;
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
 
