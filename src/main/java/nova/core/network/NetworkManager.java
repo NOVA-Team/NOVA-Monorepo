@@ -37,4 +37,10 @@ public abstract class NetworkManager {
 	}
 
 	protected abstract void syncBlock(int id, PacketSender sender);
+
+	public final boolean isClient() {
+		return !isServer();
+	}
+
+	public abstract boolean isServer();
 }
