@@ -30,6 +30,13 @@ public interface CraftingRecipe extends Recipe {
     public Optional<ItemStack> getCraftingResult(CraftingGrid craftingGrid);
 
     /**
+     * Gets a nominal (example) output for this recipe. Used in recipe display.
+     *
+     * @return example output
+     */
+    public Optional<ItemStack> getNominalOutput();
+
+    /**
      * Consumes items for the crafting of a single item. Removes items and applies any necessary modifications on the
      * stacks in the given crafting grid, and gives back any items if necessary.
      *

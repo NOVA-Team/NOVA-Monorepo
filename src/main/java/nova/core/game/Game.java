@@ -4,6 +4,7 @@ import nova.core.block.BlockManager;
 import nova.core.entity.EntityManager;
 import nova.core.fluid.FluidManager;
 import nova.core.item.ItemManager;
+import nova.core.item.OreDictionary;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
@@ -27,6 +28,7 @@ public class Game {
 	public final RenderManager renderManager;
     public final RecipeManager recipeManager;
     public final CraftingRecipeManager craftingRecipeManager;
+    public final OreDictionary oreDictionary;
 
 	private Game(
             BlockManager blockManager,
@@ -36,7 +38,8 @@ public class Game {
             WorldManager worldManager,
             RenderManager renderManager,
             RecipeManager recipeManager,
-            CraftingRecipeManager craftingRecipeManager) {
+            CraftingRecipeManager craftingRecipeManager,
+            OreDictionary oreDictionary) {
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
 		this.itemManager = itemManager;
@@ -45,6 +48,6 @@ public class Game {
 		this.renderManager = renderManager;
         this.recipeManager = recipeManager;
         this.craftingRecipeManager = craftingRecipeManager;
+        this.oreDictionary = oreDictionary;
 	}
-
 }

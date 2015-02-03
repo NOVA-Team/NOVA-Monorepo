@@ -20,6 +20,10 @@ public class SpecificItemIngredient implements ItemIngredient {
         this.itemId = itemId;
     }
 
+    public String getItemId() {
+        return itemId;
+    }
+
     @Override
     public Optional<Collection<String>> getPossibleItemIds() {
         return Optional.of(Collections.singleton(itemId));

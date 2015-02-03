@@ -1,5 +1,8 @@
 package nova.core.block;
 
+import nova.core.event.EventListener;
+import nova.core.event.EventListenerHandle;
+import nova.core.event.EventListenerList;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemManager;
 import nova.core.util.Registry;
@@ -13,6 +16,7 @@ public class BlockManager {
 
 	public final Registry<BlockFactory> registry;
 	private final Provider<ItemManager> itemManager;
+    private final EventListenerList<BlockRegisteredEvent> blockRegisteredListeners = new EventListenerList<>();
 
 	private BlockManager(Registry<BlockFactory> registry, Provider<ItemManager> itemManager) {
 		this.registry = registry;
@@ -69,7 +73,22 @@ public class BlockManager {
 	public Block registerBlock(BlockFactory factory) {
 		registry.register(factory);
 		itemManager.provide().registerItem(() -> new ItemBlock(factory.getDummy()));
+
+        blockRegisteredListeners.publish(new BlockRegisteredEvent(factory));
+
 		return factory.getDummy();
 	}
 
+    public EventListenerHandle<BlockRegisteredEvent> whenBlockRegistered(EventListener<BlockRegisteredEvent> listener) {
+        return blockRegisteredListeners.add(listener);
+    }
+
+
+    public class BlockRegisteredEvent {
+        public final BlockFactory blockFactory;
+
+        public BlockRegisteredEvent(BlockFactory blockFactory) {
+            this.blockFactory = blockFactory;
+        }
+    }
 }

@@ -40,6 +40,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	private final boolean mirrored;
     private final int lastIngredientIndexOnFirstLine; // only actually matters for mirrored recipes
 	private final RecipeFunction recipeFunction;
+    private final ItemStack nominalOutput;
 	
 	private final ItemIngredient[] ingredients;
 
@@ -63,7 +64,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
      * @param ingredients {@link ItemIngredient ItemIngredients}
      */
     public ShapedCraftingRecipe(ItemStack output, String format, boolean mirrored, ItemIngredient... ingredients) {
-        this((grid, tagged) -> Optional.of(output), format, mirrored, ingredients);
+        this(output, (grid, tagged) -> Optional.of(output), format, mirrored, ingredients);
     }
 
     /**
@@ -74,7 +75,9 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
      * @param mirrored Whether this recipe is mirrored
      * @param ingredients {@link ItemIngredient ItemIngredients}
      */
-    public ShapedCraftingRecipe(RecipeFunction recipeFunction, String format, boolean mirrored, ItemIngredient... ingredients) {
+    public ShapedCraftingRecipe(ItemStack nominalOutput, RecipeFunction recipeFunction, String format, boolean mirrored, ItemIngredient... ingredients) {
+        this.nominalOutput = nominalOutput;
+
         String[] formatLines = format.split("\\-");
         int numIngredients = 0;
         int width = 0;
@@ -123,7 +126,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
      * @param mirrored Whether this recipe is mirrored
      */
     public ShapedCraftingRecipe(ItemStack output, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
-        this((grid, tagged) -> Optional.of(output), ingredients, mirrored);
+        this(output, (grid, tagged) -> Optional.of(output), ingredients, mirrored);
     }
 
     /**
@@ -133,7 +136,9 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
      * @param ingredients {@link ItemIngredient ItemIngredients}
      * @param mirrored Whether this recipe is mirrored
      */
-	public ShapedCraftingRecipe(RecipeFunction recipeFunction, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
+	public ShapedCraftingRecipe(ItemStack nominalOutput, RecipeFunction recipeFunction, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
+        this.nominalOutput = nominalOutput;
+
 		int numIngredients = 0;
 		for (Optional<ItemIngredient>[] row : ingredients) {
 			for (Optional<ItemIngredient> ingredient : row) {
@@ -141,6 +146,9 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 					numIngredients++;
 			}
 		}
+
+        if (numIngredients == 0)
+            throw new IllegalArgumentException("Recipe has no ingredients");
 
         // translate 2d ingredient array to ingredient list
 		this.posx = new int[numIngredients];
@@ -249,6 +257,11 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
         } else {
             return ingredients[0].getPossibleItemIds();
         }
+    }
+
+    @Override
+    public Optional<ItemStack> getNominalOutput() {
+        return Optional.of(nominalOutput);
     }
 
     // #######################

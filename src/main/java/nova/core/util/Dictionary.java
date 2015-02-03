@@ -1,5 +1,9 @@
 package nova.core.util;
 
+import nova.core.event.EventListener;
+import nova.core.event.EventListenerHandle;
+import nova.core.event.EventListenerList;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +19,8 @@ import java.util.Set;
 public class Dictionary<T> {
 	private final Map<String, Set<T>> entries = new HashMap<>();
 	private final Map<T, Set<String>> locations = new HashMap<>();
+    private final EventListenerList<AddEvent<T>> addEventListeners = new EventListenerList<>();
+    private final EventListenerList<RemoveEvent<T>> removeEventListeners = new EventListenerList<>();
 
 	public Dictionary() {
 
@@ -23,23 +29,41 @@ public class Dictionary<T> {
 	/**
 	 * Add an object to the dictionary.
 	 *
-	 * @param name the name of the object.
+	 * @param key the name of the object.
 	 * @param object the object to register.
 	 */
-	public void add(String name, T object) {
+	public void add(String key, T object) {
 		// TODO: Enforce name to be in camelCase
-		if (!entries.containsKey(name)) {
-			entries.put(name, new HashSet<>());
+		if (!entries.containsKey(key)) {
+			entries.put(key, new HashSet<>());
 		}
 
-		entries.get(name).add(object);
+		entries.get(key).add(object);
 
 		if (!locations.containsKey(object)) {
 			locations.put(object, new HashSet<>());
 		}
 
-		locations.get(object).add(name);
+		locations.get(object).add(key);
+
+        addEventListeners.publish(new AddEvent<>(key, object));
 	}
+
+    /**.
+     * Removes an object from the dictionary
+     *
+     * @param key the name of the object
+     * @param object the object to remove
+     */
+    public void remove(String key, T object) {
+        if (!entries.containsKey(key))
+            return;
+
+        entries.get(key).remove(object);
+        locations.get(object).remove(key);
+
+        removeEventListeners.publish(new RemoveEvent<>(key, object));
+    }
 
 	/**
 	 * Get an object set from the dictionary.
@@ -75,4 +99,32 @@ public class Dictionary<T> {
 	public Set<String> keys() {
 		return entries.keySet();
 	}
+
+    public EventListenerHandle<AddEvent<T>> whenEntryAdded(EventListener<AddEvent<T>> listener) {
+        return addEventListeners.add(listener);
+    }
+
+    public EventListenerHandle<RemoveEvent<T>> whenEntryRemoved(EventListener<RemoveEvent<T>> listener) {
+        return removeEventListeners.add(listener);
+    }
+
+    public class AddEvent<T> {
+        public final String key;
+        public final T value;
+
+        public AddEvent(String key, T value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    public class RemoveEvent<T> {
+        public final String key;
+        public final T value;
+
+        public RemoveEvent(String key, T value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
 }

@@ -20,6 +20,7 @@ public class ItemManager {
 	private final Provider<BlockManager> blockManager;
 
     private final EventListenerList<ItemIDNotFoundEvent> idNotFoundListeners = new EventListenerList<>();
+    private final EventListenerList<ItemRegistrationEvent> itemRegistryListeners = new EventListenerList<>();
 
 	private ItemManager(Registry<ItemFactory> itemRegistry, Provider<BlockManager> blockManager) {
 		this.registry = itemRegistry;
@@ -38,6 +39,9 @@ public class ItemManager {
 	public Item registerItem(Supplier<Item> constructor) {
 		ItemFactory factory = new ItemFactory(constructor);
 		registry.register(factory);
+
+        itemRegistryListeners.publish(new ItemRegistrationEvent(factory));
+
 		return factory.getDummy();
 	}
 
@@ -70,7 +74,19 @@ public class ItemManager {
         return registry.get(name);
 	}
 
-    public EventListenerHandle<ItemIDNotFoundEvent> addIDNotFoundListener(EventListener<ItemIDNotFoundEvent> listener) {
+    public EventListenerHandle<ItemIDNotFoundEvent> whenIDNotFound(EventListener<ItemIDNotFoundEvent> listener) {
         return idNotFoundListeners.add(listener);
+    }
+
+    public EventListenerHandle<ItemRegistrationEvent> whenItemRegistered(EventListener<ItemRegistrationEvent> listener) {
+        return itemRegistryListeners.add(listener);
+    }
+
+    public class ItemRegistrationEvent {
+        public final ItemFactory itemFactory;
+
+        public ItemRegistrationEvent(ItemFactory itemFactory) {
+            this.itemFactory = itemFactory;
+        }
     }
 }
