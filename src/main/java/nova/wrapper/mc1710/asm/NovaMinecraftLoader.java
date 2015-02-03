@@ -72,7 +72,7 @@ public class NovaMinecraftLoader {
 
 				//Add jar resource pack
 				String fn = c.getProtectionDomain().getCodeSource().getLocation().getPath();
-				
+
 				if (fn.contains("!")) {
 					fn = fn.substring(0, fn.indexOf('!')).replaceFirst("file:", "");
 					if (!addedPacks.contains(fn)) {
@@ -84,7 +84,7 @@ public class NovaMinecraftLoader {
 					//Add folder resource pack location. The folderLocation is the root of the project, including the packages of classes, and an assets folder inside.
 					String folderLocation = c.getProtectionDomain().getCodeSource().getLocation().getPath();
 					String classPath = c.getCanonicalName().replaceAll("\\.", "/");
-					folderLocation = folderLocation.replaceFirst("file:", "").replace(classPath, "").replace("/.class", "");
+					folderLocation = folderLocation.replaceFirst("file:", "").replace(classPath, "").replace("/.class", "").replaceAll("%20", " ");
 
 					if (!addedPacks.contains(folderLocation)) {
 						addedPacks.add(folderLocation);

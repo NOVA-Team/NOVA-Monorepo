@@ -18,12 +18,14 @@ import java.util.Set;
 
 /**
  * Utility that manages common NBT save and load methods
+ *
  * @author Calclavia
  */
 public class NBTUtility {
 
 	/**
 	 * Converts a Map of objects into NBT.
+	 *
 	 * @param map Map
 	 * @return NBT
 	 */
@@ -40,13 +42,14 @@ public class NBTUtility {
 		Map<String, Object> map = new HashMap<>();
 		if (nbt != null) {
 			Set<String> keys = nbt.func_150296_c();
-			keys.forEach(k -> map.put(k, nbt.getTag(k)));
+			keys.forEach(k -> map.put(k, load(nbt, k)));
 		}
 		return map;
 	}
 
 	/**
 	 * Saves an unknown object to NBT
+	 *
 	 * @param tag - NBTTagCompound to save the tag too
 	 * @param key - name to save the object as
 	 * @param value - the actual object
@@ -86,6 +89,7 @@ public class NBTUtility {
 
 	/**
 	 * Reads an unknown object with a known name from NBT
+	 *
 	 * @param tag - tag to read the value from
 	 * @param key - name of the value
 	 * @return object or suggestionValue if nothing is found
@@ -108,8 +112,6 @@ public class NBTUtility {
 				return tag.getByte(key);
 			} else if (saveTag instanceof NBTTagLong) {
 				return tag.getLong(key);
-			} else if (saveTag instanceof NBTBase) {
-				return tag.getTag(key);
 			} else if (saveTag instanceof NBTTagByteArray) {
 				return tag.getByteArray(key);
 			} else if (saveTag instanceof NBTTagIntArray) {

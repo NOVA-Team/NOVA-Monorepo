@@ -46,6 +46,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
 
 /**
  * A Minecraft to Nova block wrapper
+ *
  * @author Calclavia
  */
 public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
@@ -77,11 +78,11 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 		 * Otherwise, create a new instance of the block and forward the methods over.
 		 */
 		if (hasTileEntity(0)) {
-			if (((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).getBlock() == null) {
-				//TODO: There must be a better way to instantiate block
-				((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).setBlock(factory);
+			if (((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).getBlock() != null) {
+				return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).getBlock();
 			}
-			return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).getBlock();
+
+			System.out.println("Error: Block in TileWrapper is null.");
 		}
 		return getBlockInstance(new BWBlockAccess(access), position);
 
@@ -99,7 +100,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
-		return new TileWrapper();
+		return new TileWrapper(factory.getID());
 	}
 
 	//TODO: This method seems to only be invoked when a TileEntity changes, not when blocks change!

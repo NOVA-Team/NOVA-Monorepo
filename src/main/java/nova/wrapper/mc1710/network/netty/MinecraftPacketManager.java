@@ -11,7 +11,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import nova.core.block.Block;
-import nova.core.network.PacketManager;
+import nova.core.network.NetworkManager;
 import nova.core.network.PacketSender;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
@@ -25,7 +25,7 @@ import java.util.EnumMap;
  * @author Calclavia
  * @since 26/05/14
  */
-public class MinecraftPacketManager extends PacketManager {
+public class MinecraftPacketManager extends NetworkManager {
 	public final String channel;
 	protected final EnumMap<Side, FMLEmbeddedChannel> channelEnumMap;
 
