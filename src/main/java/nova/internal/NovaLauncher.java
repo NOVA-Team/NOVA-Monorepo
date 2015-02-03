@@ -1,6 +1,7 @@
 package nova.internal;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.core.deps.DependencyRepoProvider;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
 import se.jbee.inject.Dependency;
@@ -28,6 +29,7 @@ public class NovaLauncher implements Loadable {
 	private final DependencyInjectionEntryPoint diep;
 
 	private Map<NovaMod, Loadable> mods;
+	private Map<NovaMod, ArrayList<String[]>> dependencies;
 	private ArrayList<Loadable> orderedMods;
 	private Map<NovaMod, Class<? extends Loadable>> classesMap;
 	// TODO: A lot of work and clean up has to be done to ensure this class is
@@ -47,7 +49,7 @@ public class NovaLauncher implements Loadable {
 
 		classesMap = modClasses.stream()
 			.filter(Loadable.class::isAssignableFrom)
-			.map(clazz -> (Class<? extends Loadable>) clazz.asSubclass(Loadable.class))
+			.map(clazz -> clazz.asSubclass(Loadable.class))
 			.filter(clazz -> clazz.getAnnotation(NovaMod.class) != null)
 			.collect(Collectors.toMap((clazz) -> clazz.getAnnotation(NovaMod.class), Function.identity()));
 
@@ -122,6 +124,37 @@ public class NovaLauncher implements Loadable {
 
 	public Set<NovaMod> getLoadedMods() {
 		return mods.keySet();
+	}
+
+	/**
+	 * Get the dependencies. Separated from preInit due to issues with ordering in case mods need to download mods before the preInit method is called.
+	 * The wrapper just needs to call this method right before it downloads the dependencies.
+	 *
+	 */
+	public void generateDependencies() {
+		modClasses.stream()
+			.filter(Loadable.class::isAssignableFrom)
+			.map(clazz -> clazz.asSubclass(Loadable.class))
+			.filter(clazz -> clazz.getAnnotation(NovaMod.class) != null)
+			.map((clazz) -> clazz.getAnnotation(NovaMod.class))
+			.forEach(this::generateAndAddDependencies);
+	}
+
+	private void generateAndAddDependencies(NovaMod mod) {
+		if (mod.getClass().isAssignableFrom(DependencyRepoProvider.class)) {
+
+			ArrayList<String[]> dependencyLocations = new ArrayList<>();
+
+			DependencyRepoProvider clazz = (DependencyRepoProvider)mod;
+
+			for (String modid : mod.dependencies()) {
+				if (clazz.getModRepo(modid) != null)
+				dependencyLocations.add(clazz.getModRepo(modid));
+			}
+
+			dependencies.put(mod, dependencyLocations);
+
+		}
 	}
 
 }
