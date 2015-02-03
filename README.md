@@ -37,4 +37,4 @@ To set this up automagically in any __newly cloned__ repos:
 git config --global branch.autosetuprebase always
 ```
 
-[This is an ironic example of what __shouldn't happen__](http://git.io/bseX)
+[This is an ironic example of a merge commit that __shouldn't happen__](http://git.io/bseX)
