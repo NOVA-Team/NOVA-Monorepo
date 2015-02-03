@@ -189,10 +189,14 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 	}
 
 	/**
-	 * Only implemented by {@link AbstractGuiContainer} to update the qualified
-	 * name of its children in case it's been removed from the parent container.
+	 * Called to recreate the qualified name when added to a component or
+	 * removed.
 	 */
 	protected void updateQualifiedName() {
-
+		if (parentContainer.isPresent()) {
+			qualifiedName = parentContainer.get().getQualifiedName() + "." + getID();
+		} else {
+			qualifiedName = getID();
+		}
 	}
 }

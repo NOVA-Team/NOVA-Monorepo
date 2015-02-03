@@ -113,6 +113,7 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 		if (element == null)
 			throw new NullPointerException();
 		element.parentContainer = Optional.of(this);
+		element.updateQualifiedName();
 		children.put(element.getID(), element);
 		layout.add(element, this, properties);
 		return this;
@@ -141,11 +142,9 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 
 	@Override
 	protected void updateQualifiedName() {
+		super.updateQualifiedName();
 		children.forEach((k, v) -> {
-			int dot = v.qualifiedName.indexOf(".");
-			if (dot != -1) {
-				v.qualifiedName = v.qualifiedName.substring(dot);
-			}
+			v.updateQualifiedName();
 		});
 	}
 }
