@@ -3,11 +3,13 @@ package nova.core.render.model;
 import nova.core.block.Block;
 import nova.core.util.Direction;
 import nova.core.util.transform.Quaternion;
+import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector3d;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,6 +18,9 @@ import java.util.stream.Collectors;
  * @author Calclavia
  */
 public class Model {
+
+	//The name of the model
+	public final String name;
 	/**
 	 * A list of all the shapes drawn.
 	 */
@@ -30,6 +35,16 @@ public class Model {
 	public Quaternion rotation = Quaternion.identity;
 	//The scale of the face.
 	public Vector3d scale = Vector3d.one;
+	//The offset of the texture.
+	public Vector2d textureOffset = Vector2d.zero;
+
+	public Model(String name) {
+		this.name = Objects.requireNonNull(name, "Model name cannot be null!");
+	}
+
+	public Model() {
+		this("");
+	}
 
 	/**
 	 * Starts drawing, by returning an Face for the Model to work on.

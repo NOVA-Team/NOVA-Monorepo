@@ -2,6 +2,7 @@ package nova.core.render.model;
 
 import nova.core.util.NovaException;
 import nova.core.util.transform.Quaternion;
+import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector3d;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -32,21 +33,13 @@ public class TechneModel implements ModelProvider {
 
 	//Identifiers for cubes
 	public static final List<String> cubeIDs = Arrays.asList("d9e621f7-957f-4b77-b1ae-20dcd0da7751", "de81aa14-bd60-4228-8d8d-5238bcd3caaa");
-
-	//A map of all models generated with their names
-	public final Map<String, Model> models = new HashMap<>();
 	//The name of the file
-	public final String fileName;
+	public final String name;
+	//A map of all models generated with their names
+	private final Model model = new Model();
 
-	public TechneModel(String resource) {
-		this.fileName = resource.toString();
-
-		try {
-			//TODO: We have to queue this model to be loaded?
-			//loadTechneModel(res.getInputStream());
-		} catch (Exception e) {
-			throw new NovaException("IO exception loading model", e);
-		}
+	public TechneModel(String name) {
+		this.name = name;
 	}
 
 	private void loadTechneModel(InputStream stream) throws NovaException {
@@ -66,7 +59,7 @@ public class TechneModel implements ModelProvider {
 
 			byte[] modelXml = zipContents.get("model.xml");
 			if (modelXml == null) {
-				throw new NovaException("Model " + fileName + " contains no model.xml file");
+				throw new NovaException("Model " + name + " contains no model.xml file");
 			}
 
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -75,17 +68,17 @@ public class TechneModel implements ModelProvider {
 
 			NodeList nodeListTechne = document.getElementsByTagName("Techne");
 			if (nodeListTechne.getLength() < 1) {
-				throw new NovaException("Model " + fileName + " contains no Techne tag");
+				throw new NovaException("Model " + name + " contains no Techne tag");
 			}
 
 			NodeList nodeListModel = document.getElementsByTagName("Model");
 			if (nodeListModel.getLength() < 1) {
-				throw new NovaException("Model " + fileName + " contains no Model tag");
+				throw new NovaException("Model " + name + " contains no Model tag");
 			}
 
 			NamedNodeMap modelAttributes = nodeListModel.item(0).getAttributes();
 			if (modelAttributes == null) {
-				throw new NovaException("Model " + fileName + " contains a Model tag with no attributes");
+				throw new NovaException("Model " + name + " contains a Model tag with no attributes");
 			}
 
 			NodeList textureSize = document.getElementsByTagName("TextureSize");
@@ -97,7 +90,7 @@ public class TechneModel implements ModelProvider {
 				Node shape = shapes.item(i);
 				NamedNodeMap shapeAttributes = shape.getAttributes();
 				if (shapeAttributes == null) {
-					throw new NovaException("Shape #" + (i + 1) + " in " + fileName + " has no attributes");
+					throw new NovaException("Shape #" + (i + 1) + " in " + name + " has no attributes");
 				}
 
 				Node name = shapeAttributes.getNamedItem("name");
@@ -149,31 +142,37 @@ public class TechneModel implements ModelProvider {
 					}
 
 					// Generate new models
-					Model model = new Model();
-					model.drawCube();
-					model.translation = new Vector3d(Double.parseDouble(position[0]), Double.parseDouble(position[1]) - 16, Double.parseDouble(position[2]));
-					model.rotation = Quaternion.fromEuler(Math.toRadians(Double.parseDouble(rotation[0])), Math.toRadians(Double.parseDouble(rotation[1])), Math.toRadians(Double.parseDouble(rotation[2])));
-					//addCube: Double.parseDouble(offset[0]), Double.parseDouble(offset[1]), Double.parseDouble(offset[2]), Integer.parseInt(size[0]), Integer.parseInt(size[1]), Integer.parseInt(size[2])
-					//textureOffset(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
+					final String modelName = shapeName;
+					Model modelPart = new Model(modelName);
+					modelPart.drawCube();
+					modelPart.translation = new Vector3d(Double.parseDouble(position[0]), Double.parseDouble(position[1]) - 16, Double.parseDouble(position[2]));
+					modelPart.offset = new Vector3d(Double.parseDouble(offset[0]), Double.parseDouble(offset[1]), Double.parseDouble(offset[2]));
+					modelPart.rotation = Quaternion.fromEuler(Math.toRadians(Double.parseDouble(rotation[0])), Math.toRadians(Double.parseDouble(rotation[1])), Math.toRadians(Double.parseDouble(rotation[2])));
+					modelPart.scale = new Vector3d(Integer.parseInt(size[0]), Integer.parseInt(size[1]), Integer.parseInt(size[2]));
+					modelPart.textureOffset = new Vector2d(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
 
-					if (models.containsKey(shapeName)) {
+					model.children.add(modelPart);
+					if (model.children.stream().anyMatch(m -> m.name.equals(modelName))) {
 						throw new NovaException("Model contained duplicate part name: '" + shapeName + "' node #" + i);
 					}
-
-					models.put(shapeName, model);
 				} else {
-					System.out.println("Model shape [" + shapeName + "] in " + fileName + " is not a cube, ignoring");
+					System.out.println("Model shape [" + shapeName + "] in " + this.name + " is not a cube, ignoring");
 				}
 			});
 		} catch (ZipException e) {
-			throw new NovaException("Model " + fileName + " is not a valid zip file");
+			throw new NovaException("Model " + name + " is not a valid zip file");
 		} catch (IOException e) {
-			throw new NovaException("Model " + fileName + " could not be read", e);
+			throw new NovaException("Model " + name + " could not be read", e);
 		} catch (SAXException e) {
-			throw new NovaException("Model " + fileName + " contains invalid XML", e);
+			throw new NovaException("Model " + name + " contains invalid XML", e);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public Model getModel() {
+		return model;
 	}
 
 	@Override
