@@ -7,11 +7,6 @@ import nova.core.util.ReflectionUtils;
  */
 public interface PacketSender {
 
-	default void write(Packet packet) {
-		packet.writeInt(0);
-		write(0, packet);
-	}
-
 	/**
 	 * Writes a packet based on the arguments.
 	 *
@@ -19,6 +14,7 @@ public interface PacketSender {
 	 * @param packet - data encoded into the packet
 	 */
 	default void write(int id, Packet packet) {
+		packet.writeInt(id);
 		ReflectionUtils.forEachAnnotatedField(Sync.class, this, (field, annotation) -> {
 			if (annotation.id() == id) {
 				try {

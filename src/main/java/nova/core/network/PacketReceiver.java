@@ -7,10 +7,6 @@ import nova.core.util.ReflectionUtils;
  */
 public interface PacketReceiver {
 
-	default void read(Packet packet) {
-		read(packet.readInt(), packet);
-	}
-
 	/**
 	 * Reads a packet
 	 * @param id - an ID to indicate the type of packet receiving.

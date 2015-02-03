@@ -19,11 +19,16 @@ public abstract class NetworkManager {
 
 	/**
 	 * Sends a packet.
+	 *
 	 * @param sender {@link PacketSender}
 	 */
 	public final void sync(PacketSender sender) {
+		sync(0, sender);
+	}
+
+	public final void sync(int id, PacketSender sender) {
 		if (sender instanceof Block) {
-			syncBlock(sender);
+			syncBlock(id, sender);
 			return;
 		}
 
@@ -31,5 +36,5 @@ public abstract class NetworkManager {
 		throw new NovaException();
 	}
 
-	protected abstract void syncBlock(PacketSender sender);
+	protected abstract void syncBlock(int id, PacketSender sender);
 }
