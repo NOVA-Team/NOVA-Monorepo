@@ -9,14 +9,12 @@ import java.util.Map;
 public class NovaMinecraftCore implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[] {
-			"nova.wrapper.mc1710.asm.NovaMinecraftTransformer"
-		};
+		return null;
 	}
 
 	@Override
 	public String getModContainerClass() {
-		return "nova.wrapper.mc1710.asm.NovaMinecraftPreloader";
+		return "nova.wrapper.mc1710.NovaMinecraftPreloader";
 	}
 
 	@Override

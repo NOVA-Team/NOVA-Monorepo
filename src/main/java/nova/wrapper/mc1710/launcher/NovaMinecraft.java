@@ -10,7 +10,7 @@ import net.minecraft.launchwrapper.Launch;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.internal.NovaLauncher;
-import nova.wrapper.mc1710.asm.NovaMinecraftLoader;
+import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.forward.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.network.netty.ChannelHandler;
@@ -45,7 +45,7 @@ public class NovaMinecraft {
 		 */
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 
-		Set<Class<?>> modClasses = NovaMinecraftLoader.modClasses;
+		Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
 
 		proxy.registerResourcePacks(modClasses);
 		launcher = new NovaLauncher(diep, modClasses);
