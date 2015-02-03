@@ -9,10 +9,11 @@ public interface Connectable {
 	 *
 	 * @param type The type of the connectable object
 	 * @param side The side the side the object is connected on
-	 * @return true if this type can be connected
+	 * @return {@link nova.core.block.components.Connectable.Type} of connection
 	 */
 	Connectable.Type canConnect(Class<?> type, Direction side);
 
+	// TODO: What do these actually do / mean?
 	public enum Type {
 		DEFAULT, FORCE, DENY
 	}
