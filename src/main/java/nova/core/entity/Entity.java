@@ -22,7 +22,7 @@ public abstract class Entity implements Identifiable, Stateful {
 	/**
 	 * Initializes this Entity
 	 */
-	public void initialize() {
+	public void awake() {
 
 	}
 

@@ -8,12 +8,12 @@ import java.util.Optional;
 /**
  * @author Calclavia
  */
-public abstract class PacketManager {
+public abstract class NetworkManager {
 
 	//TODO: This is a bit hacky. Maybe we should do DI for this.
-	public static Optional<PacketManager> instance;
+	public static Optional<NetworkManager> instance;
 
-	protected PacketManager() {
+	protected NetworkManager() {
 		instance = Optional.of(this);
 	}
 

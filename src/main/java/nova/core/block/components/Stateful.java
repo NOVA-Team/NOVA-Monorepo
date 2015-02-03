@@ -11,18 +11,17 @@ package nova.core.block.components;
 public interface Stateful extends PositionDependent {
 	/**
 	 * This function will get called upon the very first initialization of
-	 * a block instance. It will NOT be called after loading, for example via
-	 * the Storable interface.
+	 * a block instance. There is no guarantee that Stored values will be retained,
+	 * and there is also no gaurentee that World and Position will exist.
 	 */
-	default void initialize()
+	default void awake()
 	{
 		
 		
 	}
 
 	/**
-	 * This function will get called every time a block is created or reloaded,
-	 * including Storable loads.
+	 * This function will get called every time a block is loaded. World and position data will be available, including Storable data.
 	 */
 	default	void load()
 	{
@@ -30,19 +29,11 @@ public interface Stateful extends PositionDependent {
 
 	}
 	/**
-	 * This function will get called before a block instance is destroyed, for
-	 * example removed from the World.
+	 * This function will get called before a block instance is destroyed. For
+	 * example: removed from the World.
 	 */
 	default	void unload()
 	{
 
 	}
-	
-	/**
-	 * This function should return whether a block instance has ben invalidated
-	 * or not.
-	 *
-	 * @return Whether a block instance has ben invalidated
-	 */
-	boolean isValid();
 }

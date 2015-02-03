@@ -11,9 +11,11 @@ public interface Storable {
 	default void save(Map<String, Object> data) {
 		ReflectionUtils.forEachStoredField(this, (field, key) -> {
 			try {
+				field.setAccessible(true);
 				data.put(key, field.get(this));
+				field.setAccessible(false);
 			} catch (IllegalAccessException e) {
-				// TODO
+				e.printStackTrace();
 			}
 		});
 	}
@@ -22,9 +24,11 @@ public interface Storable {
 		ReflectionUtils.forEachStoredField(this, (field, key) -> {
 			if (data.containsKey(key)) {
 				try {
+					field.setAccessible(true);
 					field.set(this, data.get(key));
+					field.setAccessible(false);
 				} catch (IllegalAccessException e) {
-					// TODO
+					e.printStackTrace();
 				}
 			}
 		});
