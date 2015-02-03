@@ -1,12 +1,10 @@
 package nova.wrapper.mc1710.backward.render;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import nova.core.render.model.Model;
 import nova.core.util.transform.Vector3d;
-import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.render.RenderUtility;
 
 /**
@@ -36,7 +34,7 @@ public class ModelWrapper extends Model {
 						tessellator.setBrightness((int) face.getBrightness());
 					} else {
 						//Determine nearest adjacent block.
-						Vector3i nearestPos = face.getCenter().add(face.normal.divide(2)).round();
+						/*Vector3i nearestPos = face.getCenter().add(face.normal.divide(2)).round();
 						Block block = blockAccess.getBlock(nearestPos.x, nearestPos.y, nearestPos.z);
 						try {
 							int brightness = block.getMixedBrightnessForBlock(blockAccess, nearestPos.x, nearestPos.y, nearestPos.z);
@@ -52,12 +50,12 @@ public class ModelWrapper extends Model {
 						int brightnessTopRight = getAoBrightness(aoBrightnessYZNP, this.aoBrightnessXYZPNP, this.aoBrightnessXYPN, i1);
 						int brightnessBottomRight = getAoBrightness(this.aoBrightnessYZNN, this.aoBrightnessXYPN, this.aoBrightnessXYZPNN, i1);
 						int brightnessBottomLeft = getAoBrightness(this.aoBrightnessXYNN, this.aoBrightnessXYZNNN, this.aoBrightnessYZNN, i1);
-						*/
+						*
 							tessellator.setBrightness(brightness);
 
 						} catch (Exception e) {
 							e.printStackTrace();
-						}
+						}*/
 					}
 					tessellator.setNormal(face.normal.xf(), face.normal.yf(), face.normal.zf());
 
