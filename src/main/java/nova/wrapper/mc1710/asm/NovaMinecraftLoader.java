@@ -8,7 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.resources.IResourcePack;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.render.NovaFolderResourcePack;
 import nova.wrapper.mc1710.render.NovaResourcePack;
 
