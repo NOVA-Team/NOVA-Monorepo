@@ -66,10 +66,10 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 	 * Adds {@link GuiElement} to this container
 	 * 
 	 * @param element {@link GuiCanvas} to add
-	 * @param properties Properties for
-	 *        {@link GuiLayout#add(GuiCanvas, AbstractGuiContainer, Object...)
-	 *        GuiLayout.add}
+	 * @param properties Properties for the Layout
 	 * @return This GuiContainer
+	 * 
+	 * @see GuiLayout#add(GuiElement, AbstractGuiContainer, Object[])
 	 */
 	public AbstractGuiContainer<T> addElement(GuiElement<?> element, Object... properties) {
 		element.parentContainer = Optional.of(this);
