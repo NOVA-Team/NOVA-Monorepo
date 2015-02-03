@@ -1,15 +1,18 @@
 package nova.wrapper.mc1710.forward.block;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.components.Stateful;
 import nova.core.game.Game;
+import nova.core.network.PacketSender;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.world.BWWorld;
+import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.NBTUtility;
 
 import java.util.HashMap;
@@ -64,6 +67,14 @@ public class TileWrapper extends TileEntity {
 			});
 		}
 		return block;
+	}
+
+	@Override
+	public Packet getDescriptionPacket() {
+		if (block instanceof PacketSender) {
+			return NovaMinecraft.networkManager.toMCPacket(NovaMinecraft.networkManager.getBlockPacket(0, (PacketSender) block));
+		}
+		return null;
 	}
 
 	@Override

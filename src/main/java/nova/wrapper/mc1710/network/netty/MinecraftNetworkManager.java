@@ -43,11 +43,15 @@ public class MinecraftNetworkManager extends NetworkManager {
 	 */
 	@Override
 	protected void syncBlock(int id, PacketSender sender) {
+		sendToAll(getBlockPacket(id, sender));
+	}
+
+	public PacketBlock getBlockPacket(int id, PacketSender sender) {
 		Vector3i position = ((Block) sender).getPosition();
 		PacketBlock discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
 		PacketWrapper wrappedPacket = new PacketWrapper(discriminator.data);
 		sender.write(id, wrappedPacket);
-		sendToAll(discriminator);
+		return discriminator;
 	}
 
 	@Override
