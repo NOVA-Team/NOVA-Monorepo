@@ -10,7 +10,7 @@ public interface PacketSender {
 	/**
 	 * Writes a packet based on the arguments.
 	 *
-	 * @param id - The ID of the packet.
+	 * @param id - The ID of the packet. An ID of 0 indicates the default packet containing basic information.
 	 * @param packet - data encoded into the packet
 	 */
 	default void write(int id, Packet packet) {
