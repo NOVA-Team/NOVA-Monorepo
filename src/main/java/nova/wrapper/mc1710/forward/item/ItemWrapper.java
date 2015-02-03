@@ -4,8 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import nova.core.item.ItemFactory;
+import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.NBTUtility;
-import nova.wrapper.mc1710.util.RenderUtility;
 
 /**
  * @author Calclavia

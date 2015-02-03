@@ -7,7 +7,7 @@ import net.minecraft.world.IBlockAccess;
 import nova.core.render.model.Model;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
-import nova.wrapper.mc1710.util.RenderUtility;
+import nova.wrapper.mc1710.render.RenderUtility;
 
 /**
  * @author Calclavia

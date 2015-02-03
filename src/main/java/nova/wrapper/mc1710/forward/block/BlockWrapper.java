@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -22,6 +23,8 @@ import nova.core.block.BlockChanger;
 import nova.core.block.BlockFactory;
 import nova.core.block.components.LightEmitter;
 import nova.core.block.components.Stateful;
+import nova.core.render.texture.Texture;
+import nova.core.util.Direction;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Cuboid;
@@ -32,6 +35,7 @@ import nova.wrapper.mc1710.backward.render.ModelWrapper;
 import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.backward.world.BWBlockAccess;
 import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
+import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapUtility;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -46,7 +50,6 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
 
 /**
  * A Minecraft to Nova block wrapper
- *
  * @author Calclavia
  */
 public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
@@ -101,6 +104,24 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
 		return new TileWrapper(factory.getID());
+	}
+
+	@Override
+	public IIcon getIcon(IBlockAccess access, int x, int y, int z, int side) {
+		Optional<Texture> texture = getBlockInstance(access, new Vector3i(x, y, z)).getTexture(Direction.values()[side]);
+		if (texture.isPresent()) {
+			return RenderUtility.instance.getIcon(texture.get());
+		}
+		return null;
+	}
+
+	@Override
+	public IIcon getIcon(int side, int meta) {
+		Optional<Texture> texture = block.getTexture(Direction.values()[side]);
+		if (texture.isPresent()) {
+			return RenderUtility.instance.getIcon(texture.get());
+		}
+		return null;
 	}
 
 	//TODO: This method seems to only be invoked when a TileEntity changes, not when blocks change!

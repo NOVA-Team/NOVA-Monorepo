@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.util;
+package nova.wrapper.mc1710.render;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
