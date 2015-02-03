@@ -18,9 +18,9 @@ import nova.core.render.model.Model;
  */
 public interface NativeGuiComponent {
 
-	public void applyElement(GuiComponent<?> component);
+	public void applyElement(GuiComponent<?, ?> component);
 
-	public GuiComponent<?> getElement();
+	public GuiComponent<?, ?> getElement();
 
 	public Outline getOutline();
 

@@ -6,6 +6,7 @@ import nova.core.event.EventListener;
 import nova.core.event.EventListenerList;
 import nova.core.gui.GuiEvent.SidedEvent;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
+import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
 import nova.core.render.model.Model;
@@ -17,19 +18,25 @@ import nova.core.util.Identifiable;
  * 
  * @param <T> {@link NativeGuiComponent} type
  */
-public abstract class GuiComponent<T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
+public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
 
 	private String uniqueID;
 	protected String qualifiedName;
 
 	private T nativeElement;
-	private EventListenerList<ComponentEvent> eventListenerList = new EventListenerList<ComponentEvent>();
-	private SidedEventListenerList<GuiEvent> listenerList = new SidedEventListenerList<GuiEvent>(this::dispatchNetworkEvent);
+	private SidedEventListenerList<ComponentEvent> eventListenerList = new SidedEventListenerList<ComponentEvent>(this::dispatchNetworkEvent);
+	private EventListenerList<GuiEvent> listenerList = new EventListenerList<GuiEvent>();
 	protected Outline preferredOutline;
 
 	private boolean isActive = true;
 	private boolean isVisible = true;
 	private boolean isMouseOver = false;
+
+	/**
+	 * Parent container instance. The instance will be populated once added to a
+	 * {@link AbstractGuiContainer}.
+	 */
+	protected Optional<AbstractGuiContainer<?, ?>> parentContainer = Optional.empty();
 
 	private void dispatchNetworkEvent(SidedEvent event) {
 		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent(event, this));
@@ -39,12 +46,6 @@ public abstract class GuiComponent<T extends NativeGuiComponent> implements Iden
 	protected Optional<Gui> getParentGui() {
 		return parentContainer.isPresent() ? parentContainer.get().getParentGui() : Optional.empty();
 	}
-
-	/**
-	 * Parent container instance. The instance will be populated once added to a
-	 * {@link AbstractGuiContainer}.
-	 */
-	protected Optional<AbstractGuiContainer<?>> parentContainer = Optional.empty();
 
 	public GuiComponent(String uniqueID) {
 		this.uniqueID = uniqueID;
@@ -147,6 +148,7 @@ public abstract class GuiComponent<T extends NativeGuiComponent> implements Iden
 	}
 
 	// Internal listener
+	// TODO expose for GUI builders?
 
 	protected <EVENT extends GuiEvent> void registerListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
 		listenerList.add(listener, clazz);
@@ -154,14 +156,16 @@ public abstract class GuiComponent<T extends NativeGuiComponent> implements Iden
 
 	// External listener
 
-	public <EVENT extends ComponentEvent> GuiComponent<T> registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
-		eventListenerList.add(listener, clazz);
-		return this;
+	@SuppressWarnings("unchecked")
+	public <EVENT extends ComponentEvent> O registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
+		eventListenerList.add(listener, clazz, side);
+		return (O) this;
 	}
 
-	public GuiComponent<T> registerEventListener(EventListener<ComponentEvent> listener) {
-		eventListenerList.add(listener);
-		return this;
+	@SuppressWarnings("unchecked")
+	public <EVENT extends ComponentEvent> O registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
+		eventListenerList.add(listener, clazz);
+		return (O) this;
 	}
 
 	/**

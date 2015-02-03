@@ -20,24 +20,24 @@ public class BorderLayout extends AbstractGuiLayout<BorderLayoutConstraints> {
 		super(BorderLayoutConstraints.class);
 	}
 
-	private final HashMap<BorderLayout.EnumBorderRegion, GuiComponent<?>> components = new HashMap<>();
+	private final HashMap<BorderLayout.EnumBorderRegion, GuiComponent<?, ?>> components = new HashMap<>();
 
 	@Override
-	public void revalidate(AbstractGuiContainer<?> parent) {
+	public void revalidate(AbstractGuiContainer<?, ?> parent) {
 		for (EnumBorderRegion region : components.keySet()) {
 
 		}
 	}
 
 	@Override
-	protected void addImpl(GuiComponent<?> component, AbstractGuiContainer<?> parent, BorderLayoutConstraints constraints) {
+	protected void addImpl(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, BorderLayoutConstraints constraints) {
 		if (components.containsKey(constraints))
 			throw new RuntimeException("BorderLayout doesn't allow multiple elements taking up the same region!");
 		components.put(constraints.region, component);
 	}
 
 	@Override
-	public void remove(GuiComponent<?> component) {
+	public void remove(GuiComponent<?, ?> component) {
 		components.remove(component);
 	}
 
@@ -49,5 +49,10 @@ public class BorderLayout extends AbstractGuiLayout<BorderLayoutConstraints> {
 		private EnumBorderRegion(int priority) {
 			this.priority = priority;
 		}
+	}
+
+	@Override
+	public BorderLayoutConstraints constraints() {
+		return new BorderLayoutConstraints();
 	}
 }

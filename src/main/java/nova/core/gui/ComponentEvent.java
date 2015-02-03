@@ -5,15 +5,15 @@ package nova.core.gui;
  */
 public abstract class ComponentEvent {
 
-	public final GuiComponent<?> component;
+	public final GuiComponent<?, ?> component;
 
-	public ComponentEvent(GuiComponent<?> element) {
+	public ComponentEvent(GuiComponent<?, ?> element) {
 		this.component = element;
 	}
 
 	public static class ActionEvent extends ComponentEvent {
 
-		public ActionEvent(GuiComponent<?> component) {
+		public ActionEvent(GuiComponent<?, ?> component) {
 			super(component);
 		}
 	}

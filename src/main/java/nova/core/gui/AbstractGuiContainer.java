@@ -13,10 +13,10 @@ import nova.core.gui.nativeimpl.NativeContainer;
 /**
  * This class provides container for {@link GuiComponent}
  */
-public abstract class AbstractGuiContainer<T extends NativeContainer> extends GuiComponent<T> {
+public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>, T extends NativeContainer> extends GuiComponent<O, T> {
 
 	private GuiLayout layout = new BorderLayout();
-	private HashMap<String, GuiComponent<?>> children = new HashMap<String, GuiComponent<?>>();
+	private HashMap<String, GuiComponent<?, ?>> children = new HashMap<String, GuiComponent<?, ?>>();
 
 	public AbstractGuiContainer(String uniqueID) {
 		super(uniqueID);
@@ -26,7 +26,7 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 	/**
 	 * @return Immutable collection of components inside this container
 	 */
-	public Collection<GuiComponent<?>> getChildComponents() {
+	public Collection<GuiComponent<?, ?>> getChildComponents() {
 		return Collections.unmodifiableCollection(children.values());
 	}
 
@@ -40,7 +40,7 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 	 * @see GuiComponent#getQualifiedName()
 	 * @see AbstractGuiContainer#getChildElement(String, Class)
 	 */
-	public GuiComponent<?> getChildElement(String qualifiedName) {
+	public GuiComponent<?, ?> getChildElement(String qualifiedName) {
 		// TODO untested.
 		if (qualifiedName.startsWith(getQualifiedName())) {
 			qualifiedName = qualifiedName.substring(getQualifiedName().length());
@@ -49,9 +49,9 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 		if (dot == -1) {
 			return children.get(qualifiedName);
 		}
-		GuiComponent<?> subContainer = children.get(qualifiedName.substring(0, dot - 1));
+		GuiComponent<?, ?> subContainer = children.get(qualifiedName.substring(0, dot - 1));
 		if (subContainer instanceof AbstractGuiContainer) {
-			return ((AbstractGuiContainer<?>) subContainer).getChildElement(qualifiedName.substring(dot + 1));
+			return ((AbstractGuiContainer<?, ?>) subContainer).getChildElement(qualifiedName.substring(dot + 1));
 		}
 		return null;
 	}
@@ -67,13 +67,14 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 	 *         / the type doesn't match.
 	 */
 	@SuppressWarnings("unchecked")
-	public <E extends GuiComponent<?>> E getChildElement(String qualifiedName, Class<T> clazz) {
-		GuiComponent<?> component = getChildElement(qualifiedName);
+	public <E extends GuiComponent<?, ?>> E getChildElement(String qualifiedName, Class<E> clazz) {
+		GuiComponent<?, ?> component = getChildElement(qualifiedName);
 		if (clazz.isInstance(component))
 			return (E) component;
 		return null;
 	}
 
+	// TODO generic return & argument from constructor.
 	/**
 	 * Sets layout of this container
 	 * 
@@ -81,12 +82,13 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 	 * @return This GuiContainer
 	 * @throws NullPointerException if the provided layout is {@code null}.
 	 */
-	public AbstractGuiContainer<T> setLayout(GuiLayout layout) {
+	@SuppressWarnings("unchecked")
+	public O setLayout(GuiLayout layout) {
 		if (layout == null)
 			throw new NullPointerException();
 		this.layout = layout;
 		layout.revalidate(this);
-		return this;
+		return (O) this;
 	}
 
 	/**
@@ -110,14 +112,15 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 	 * 
 	 * @see GuiLayout#add(GuiComponent, AbstractGuiContainer, Object[])
 	 */
-	public AbstractGuiContainer<T> addElement(GuiComponent<?> component, Object... properties) {
+	@SuppressWarnings("unchecked")
+	public O addElement(GuiComponent<?, ?> component, Object... properties) {
 		if (component == null)
 			throw new NullPointerException();
 		component.parentContainer = Optional.of(this);
 		component.updateQualifiedName();
 		children.put(component.getID(), component);
 		layout.add(component, this, properties);
-		return this;
+		return (O) this;
 	}
 
 	/**
@@ -128,13 +131,14 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 	 * @param component {@link GuiComponent} to remove
 	 * @return This GuiContainer
 	 */
-	public AbstractGuiContainer<T> removeElement(GuiComponent<?> component) {
+	@SuppressWarnings("unchecked")
+	public O removeElement(GuiComponent<?, ?> component) {
 		if (component == null)
 			throw new NullPointerException();
 		children.remove(component);
 		layout.remove(component);
 		component.updateQualifiedName();
-		return this;
+		return (O) this;
 	}
 
 	public void onResized(ResizeEvent event) {

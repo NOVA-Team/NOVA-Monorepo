@@ -11,9 +11,9 @@ public interface GuiLayout {
 	 * 
 	 * @param container
 	 */
-	public void revalidate(AbstractGuiContainer<?> container);
+	public void revalidate(AbstractGuiContainer<?, ?> container);
 
-	public void add(GuiComponent<?> component, AbstractGuiContainer<?> parent, Object... parameters);
+	public void add(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, Object... parameters);
 
-	public void remove(GuiComponent<?> component);
+	public void remove(GuiComponent<?, ?> component);
 }

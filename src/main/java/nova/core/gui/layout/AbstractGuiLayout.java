@@ -3,7 +3,7 @@ package nova.core.gui.layout;
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 
-public abstract class AbstractGuiLayout<T extends LayoutConstraints> implements GuiLayout {
+public abstract class AbstractGuiLayout<T extends LayoutConstraints<T>> implements GuiLayout {
 
 	private final Class<T> constraintsClass;
 
@@ -29,14 +29,16 @@ public abstract class AbstractGuiLayout<T extends LayoutConstraints> implements 
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void add(GuiComponent<?> component, AbstractGuiContainer<?> parent, Object... parameters) {
+	public final void add(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, Object... parameters) {
 		if (parameters.length == 1) {
 			if (constraintsClass.isInstance(parameters[0])) {
-				addImpl(component, parent, (T) parameters[0]);
+				addImpl(component, parent, ((T) parameters[0]).clone());
 			}
 		}
-		add(component, parent, LayoutConstraints.createConstraints(constraintsClass, parameters));
+		addImpl(component, parent, LayoutConstraints.createConstraints(constraintsClass, parameters));
 	}
 
-	protected abstract void addImpl(GuiComponent<?> element, AbstractGuiContainer<?> parent, T constraints);
+	protected abstract void addImpl(GuiComponent<?, ?> element, AbstractGuiContainer<?, ?> parent, T constraints);
+
+	public abstract T constraints();
 }
