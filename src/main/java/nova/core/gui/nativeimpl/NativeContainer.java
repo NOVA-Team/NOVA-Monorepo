@@ -8,7 +8,7 @@ import nova.core.gui.GuiElement;
  * @author Vic Nightfall
  *
  */
-public interface NativeContainer extends NativeCanvas {
+public interface NativeContainer extends NativeGuiElement {
 
 	public void addElement(GuiElement<?> element);
 

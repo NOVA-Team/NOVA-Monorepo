@@ -1,8 +1,10 @@
 package nova.core.gui;
 
+import java.util.Optional;
+
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerList;
-import nova.core.gui.nativeimpl.NativeCanvas;
+import nova.core.gui.nativeimpl.NativeGuiElement;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
 import nova.core.render.model.Model;
@@ -11,18 +13,29 @@ import nova.core.util.Identifiable;
 /**
  * Defines basic GuiElement
  * 
- * @param <T> {@link NativeCanvas} type
+ * @param <T> {@link NativeGuiElement} type
  */
-public abstract class GuiElement<T extends NativeCanvas> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
+public abstract class GuiElement<T extends NativeGuiElement> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
 
 	private String uniqueID;
 	private T nativeElement;
 	private EventListenerList<GuiElementEvent> eventListenerList = new EventListenerList<GuiElementEvent>();
 	private EventListenerList<GuiEvent> listenerList = new EventListenerList<GuiEvent>();
+	private Outline preferredOutline;
 
 	private boolean isActive = true;
 	private boolean isVisible = true;
 	private boolean isMouseOver = false;
+
+	protected Optional<Gui> getParentGui() {
+		return parentContainer.isPresent() ? parentContainer.get().getParentGui() : Optional.empty();
+	}
+
+	/**
+	 * Parent container instance. The instance will be populated once added to a
+	 * {@link AbstractGuiContainer}.
+	 */
+	protected Optional<AbstractGuiContainer<?>> parentContainer = Optional.empty();
 
 	public GuiElement(String uniqueID) {
 		this.uniqueID = uniqueID;
@@ -37,12 +50,25 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 	}
 
 	/**
-	 * Sets the outline of this GuiElement
+	 * Sets the outline of this GuiElement. Shouldn't be used as the layout
+	 * controls positioning.
 	 * 
+	 * @see #setOutline(Outline)
 	 * @param outline {@link Outline} to use as outline
 	 */
-	public void setOutline(Outline outline) {
+	@Deprecated
+	protected void setOutlineNative(Outline outline) {
 		nativeElement.setOutline(outline);
+	}
+
+	/**
+	 * Sets the requested outline for this component. Only works if the parent
+	 * container's layout makes use of this.
+	 * 
+	 * @param outline
+	 */
+	public void setOutline(Outline outline) {
+		preferredOutline = outline;
 	}
 
 	/**
@@ -133,5 +159,11 @@ public abstract class GuiElement<T extends NativeCanvas> implements Identifiable
 	@Override
 	public String getID() {
 		return uniqueID;
+	}
+
+	// TODO Has to construct the name "parent.child.subchild". Might want to
+	// buffer it.
+	public String getQualifiedName() {
+		return null;
 	}
 }
