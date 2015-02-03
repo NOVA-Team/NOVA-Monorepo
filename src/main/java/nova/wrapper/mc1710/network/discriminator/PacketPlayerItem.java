@@ -9,6 +9,7 @@ import nova.wrapper.mc1710.network.PacketWrapper;
 
 /**
  * A packet handler for players who are currently holding their item.
+ *
  * @author Calclavia
  */
 public class PacketPlayerItem extends PacketAbstract {
@@ -43,7 +44,7 @@ public class PacketPlayerItem extends PacketAbstract {
 		ItemStack stack = player.inventory.getStackInSlot(this.slotId);
 
 		if (stack != null && stack.getItem() instanceof PacketReceiver) {
-			((PacketReceiver) stack.getItem()).read(new PacketWrapper(data));
+			((PacketReceiver) stack.getItem()).read(data.readInt(), new PacketWrapper(data));
 		}
 	}
 
@@ -52,7 +53,7 @@ public class PacketPlayerItem extends PacketAbstract {
 		ItemStack stack = player.inventory.getStackInSlot(this.slotId);
 
 		if (stack != null && stack.getItem() instanceof PacketReceiver) {
-			((PacketReceiver) stack.getItem()).read(new PacketWrapper(data));
+			((PacketReceiver) stack.getItem()).read(data.readInt(), new PacketWrapper(data));
 		}
 	}
 }

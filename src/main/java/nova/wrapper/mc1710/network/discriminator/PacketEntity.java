@@ -35,7 +35,7 @@ public class PacketEntity extends PacketAbstract {
 		Entity entity = player.getEntityWorld().getEntityByID(entityId);
 
 		if (entity instanceof PacketReceiver) {
-			((PacketReceiver) entity).read(new PacketWrapper(data));
+			((PacketReceiver) entity).read(data.readInt(), new PacketWrapper(data));
 		}
 	}
 
@@ -44,7 +44,7 @@ public class PacketEntity extends PacketAbstract {
 		Entity entity = player.getEntityWorld().getEntityByID(entityId);
 
 		if (entity instanceof PacketReceiver) {
-			((PacketReceiver) entity).read(new PacketWrapper(data));
+			((PacketReceiver) entity).read(data.readInt(), new PacketWrapper(data));
 		}
 	}
 }
