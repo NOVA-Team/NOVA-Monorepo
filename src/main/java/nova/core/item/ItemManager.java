@@ -2,6 +2,10 @@ package nova.core.item;
 
 import nova.core.block.Block;
 import nova.core.block.BlockManager;
+import nova.core.event.EventListener;
+import nova.core.event.EventListenerHandle;
+import nova.core.event.EventListenerList;
+import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.util.ReflectionUtils;
 import nova.core.util.Registry;
 
@@ -14,6 +18,8 @@ public class ItemManager {
 
 	public final Registry<ItemFactory> registry;
 	private final Provider<BlockManager> blockManager;
+
+    private final EventListenerList<ItemIDNotFoundEvent> idNotFoundListeners = new EventListenerList<>();
 
 	private ItemManager(Registry<ItemFactory> itemRegistry, Provider<BlockManager> blockManager) {
 		this.registry = itemRegistry;
@@ -53,6 +59,18 @@ public class ItemManager {
 	}
 
 	public Optional<ItemFactory> getItemFactory(String name) {
-		return registry.get(name);
+        if (!registry.contains(name)) {
+            ItemIDNotFoundEvent event = new ItemIDNotFoundEvent(name);
+            idNotFoundListeners.publish(event);
+
+            if (event.getRemappedFactory() != null)
+                registry.register(event.getRemappedFactory());
+        }
+
+        return registry.get(name);
 	}
+
+    public EventListenerHandle<ItemIDNotFoundEvent> addIDNotFoundListener(EventListener<ItemIDNotFoundEvent> listener) {
+        return idNotFoundListeners.add(listener);
+    }
 }
