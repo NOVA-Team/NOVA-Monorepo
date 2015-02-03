@@ -146,7 +146,9 @@ publishing {
 				for (child in children) {
 					def artifactId = child.get("artifactId")[0].value()[0]
 					if (artifactId.equals("forgeSrc") || artifactId.equals("forgeBin")) {
-						child.appendNode("groupId", "net.minecraftforge")
+						//child.appendNode("groupId", "net.minecraftforge")
+						children.remove(child)
+						break;
 					}
 				}
 			}
