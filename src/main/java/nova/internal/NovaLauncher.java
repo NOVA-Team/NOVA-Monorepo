@@ -149,6 +149,10 @@ public class NovaLauncher implements Loadable {
 		return this.dependencyRepos.keySet().contains(modid) ? this.dependencyRepos.get(modid) : null;
 	}
 
+	public Set<String> getDependencyIds() {
+		return this.dependencyIds;
+	}
+
 	/**
 	 * Get the dependencies. Separated from preInit due to issues with ordering in case mods need to download mods before the preInit method is called.
 	 * The wrapper just needs to call this method right before it downloads the dependencies.
