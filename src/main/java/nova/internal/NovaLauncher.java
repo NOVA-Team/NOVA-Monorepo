@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -30,9 +31,12 @@ public class NovaLauncher implements Loadable {
 	private final DependencyInjectionEntryPoint diep;
 
 	private Map<NovaMod, Loadable> mods;
+
 	private Map<NovaMod, ArrayList<String[]>> dependencies;
 	private Map<String, String> dependencyVersion;
 	private Map<String, String[]> dependencyRepos;
+	private Set<String> dependencyIds;
+
 	private ArrayList<Loadable> orderedMods;
 	private Map<NovaMod, Class<? extends Loadable>> classesMap;
 	// TODO: A lot of work and clean up has to be done to ensure this class is
@@ -145,6 +149,10 @@ public class NovaLauncher implements Loadable {
 		return this.dependencyRepos.keySet().contains(modid) ? this.dependencyRepos.get(modid) : null;
 	}
 
+	public Set<String> getDependencyIds() {
+		return this.dependencyIds;
+	}
+
 	/**
 	 * Get the dependencies. Separated from preInit due to issues with ordering in case mods need to download mods before the preInit method is called.
 	 * The wrapper just needs to call this method right before it downloads the dependencies.
@@ -155,6 +163,7 @@ public class NovaLauncher implements Loadable {
 		if (dependencies == null) {
 			dependencies = new HashMap<>();
 			dependencyVersion = new HashMap<>();
+			dependencyIds = new HashSet<>();
 		}
 
 		modClasses.stream()
@@ -182,11 +191,13 @@ public class NovaLauncher implements Loadable {
 							dependencyLocations.add(provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
 							dependencyVersion.put(modWORequired.substring(0, modid.indexOf("@") - 1), modWORequired.substring(modWORequired.indexOf("@")));
 							dependencyRepos.put(modWORequired.substring(0,modid.indexOf("@") - 1),provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
+							dependencyIds.add(modWORequired.substring(0,modid.indexOf("@") - 1));
 						}
 					} else {
 						if (provider.getModRepo(modWORequired) != null) {
 							dependencyLocations.add(provider.getModRepo(modWORequired));
 							dependencyRepos.put(modWORequired,provider.getModRepo(modWORequired));
+							dependencyIds.add(modWORequired);
 						}
 					}
 				}
