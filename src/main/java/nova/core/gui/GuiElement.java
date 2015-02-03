@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerList;
+import nova.core.gui.GuiEvent.SidedEvent;
 import nova.core.gui.nativeimpl.NativeGuiElement;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
@@ -22,12 +23,16 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 
 	private T nativeElement;
 	private EventListenerList<GuiElementEvent> eventListenerList = new EventListenerList<GuiElementEvent>();
-	private EventListenerList<GuiEvent> listenerList = new EventListenerList<GuiEvent>();
+	private SidedEventListenerList<GuiEvent> listenerList = new SidedEventListenerList<GuiEvent>(this::dispatchNetworkEvent);
 	protected Outline preferredOutline;
 
 	private boolean isActive = true;
 	private boolean isVisible = true;
 	private boolean isMouseOver = false;
+
+	private void dispatchNetworkEvent(SidedEvent event) {
+		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent(event, this));
+	}
 
 	// TODO Recursive call or field? Same goes for the qualified name.
 	protected Optional<Gui> getParentGui() {
@@ -140,12 +145,21 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 		eventListenerList.publish(event);
 	}
 
+	// Internal listener
+
 	protected <EVENT extends GuiEvent> void registerListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
 		listenerList.add(listener, clazz);
 	}
 
+	// External listener
+
 	public <EVENT extends GuiElementEvent> GuiElement<T> registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
 		eventListenerList.add(listener, clazz);
+		return this;
+	}
+
+	public GuiElement<T> registerEventListener(EventListener<GuiElementEvent> listener) {
+		eventListenerList.add(listener);
 		return this;
 	}
 
