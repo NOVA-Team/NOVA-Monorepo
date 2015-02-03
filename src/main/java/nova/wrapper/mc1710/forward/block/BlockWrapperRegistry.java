@@ -4,7 +4,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import nova.core.block.Block;
 import nova.core.game.Game;
-import nova.wrapper.mc1710.forward.item.ItemBlockWrapper;
+import nova.wrapper.mc1710.item.ItemBlockWrapper;
+import nova.wrapper.mc1710.item.MCItem;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 
 import java.util.HashMap;

@@ -11,6 +11,7 @@ import nova.wrapper.mc1710.forward.block.BlockWrapper;
 import nova.wrapper.mc1710.forward.block.TESRWrapper;
 import nova.wrapper.mc1710.forward.block.TileWrapper;
 import nova.wrapper.mc1710.forward.item.ItemWrapper;
+import nova.wrapper.mc1710.item.ItemWrapper;
 import nova.wrapper.mc1710.render.RenderUtility;
 
 /**

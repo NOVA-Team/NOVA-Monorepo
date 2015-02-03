@@ -30,6 +30,9 @@ public class NBTUtility {
 	 * @return NBT
 	 */
 	public static NBTTagCompound mapToNBT(Map<String, Object> map) {
+        if (map == null)
+            return null;
+
 		return mapToNBT(new NBTTagCompound(), map);
 	}
 

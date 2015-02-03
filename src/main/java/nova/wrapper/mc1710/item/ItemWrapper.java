@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.forward.item;
+package nova.wrapper.mc1710.item;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;

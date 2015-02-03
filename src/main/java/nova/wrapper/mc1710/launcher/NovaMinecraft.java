@@ -12,7 +12,7 @@ import nova.core.game.Game;
 import nova.internal.NovaLauncher;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
-import nova.wrapper.mc1710.forward.item.ItemWrapperRegistry;
+import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.network.netty.ChannelHandler;
 import nova.wrapper.mc1710.network.netty.MinecraftNetworkManager;
 import nova.wrapper.mc1710.network.netty.PacketHandler;
