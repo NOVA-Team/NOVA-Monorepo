@@ -5,24 +5,25 @@ import java.util.Optional;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerList;
 import nova.core.gui.GuiEvent.SidedEvent;
-import nova.core.gui.nativeimpl.NativeGuiElement;
+import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
 import nova.core.render.model.Model;
 import nova.core.util.Identifiable;
 
 /**
- * Defines basic GuiElement
+ * Defines a basic gui component. A component can be added to
+ * {@link AbstractGuiContainer}, the root container is a {@link Gui}.
  * 
- * @param <T> {@link NativeGuiElement} type
+ * @param <T> {@link NativeGuiComponent} type
  */
-public abstract class GuiElement<T extends NativeGuiElement> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
+public abstract class GuiComponent<T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
 
 	private String uniqueID;
 	protected String qualifiedName;
 
 	private T nativeElement;
-	private EventListenerList<GuiElementEvent> eventListenerList = new EventListenerList<GuiElementEvent>();
+	private EventListenerList<ComponentEvent> eventListenerList = new EventListenerList<ComponentEvent>();
 	private SidedEventListenerList<GuiEvent> listenerList = new SidedEventListenerList<GuiEvent>(this::dispatchNetworkEvent);
 	protected Outline preferredOutline;
 
@@ -45,13 +46,13 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 	 */
 	protected Optional<AbstractGuiContainer<?>> parentContainer = Optional.empty();
 
-	public GuiElement(String uniqueID) {
+	public GuiComponent(String uniqueID) {
 		this.uniqueID = uniqueID;
 		this.qualifiedName = uniqueID;
 	}
 
 	/**
-	 * @return Outline of this GuiElement
+	 * @return Outline of this component.
 	 * @see Outline
 	 */
 	public Outline getOutline() {
@@ -59,7 +60,7 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 	}
 
 	/**
-	 * Sets the outline of this GuiElement. Shouldn't be used as the layout
+	 * Sets the outline of this component. Shouldn't be used as the layout
 	 * controls positioning. (If you are a layout don't mind the @deprecated)
 	 * 
 	 * @see #setOutline(Outline)
@@ -81,7 +82,7 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 	}
 
 	/**
-	 * @return Native container element
+	 * @return Native component element
 	 */
 	protected T getNative() {
 		return nativeElement;
@@ -94,14 +95,14 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 	}
 
 	/**
-	 * @return Whether this element is active
+	 * @return Whether this component is active
 	 */
 	public boolean isActive() {
 		return isActive;
 	}
 
 	/**
-	 * Sets activity state for this element
+	 * Sets activity state for this component
 	 * 
 	 * @param isActive New state
 	 */
@@ -110,14 +111,14 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 	}
 
 	/**
-	 * @return Whether this element is visible
+	 * @return Whether this component is visible
 	 */
 	public boolean isVisible() {
 		return isVisible;
 	}
 
 	/**
-	 * Sets visibility of this element
+	 * Sets visibility of this component
 	 * 
 	 * @param isVisible New visibility
 	 */
@@ -126,7 +127,7 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 	}
 
 	/**
-	 * @return Whether mouse is over this element
+	 * @return Whether mouse is over this component
 	 */
 	public boolean isMouseOver() {
 		return isMouseOver;
@@ -141,7 +142,7 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 		listenerList.publish(event);
 	}
 
-	public void triggerEvent(GuiElementEvent event) {
+	public void triggerEvent(ComponentEvent event) {
 		eventListenerList.publish(event);
 	}
 
@@ -153,12 +154,12 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 
 	// External listener
 
-	public <EVENT extends GuiElementEvent> GuiElement<T> registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
+	public <EVENT extends ComponentEvent> GuiComponent<T> registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
 		eventListenerList.add(listener, clazz);
 		return this;
 	}
 
-	public GuiElement<T> registerEventListener(EventListener<GuiElementEvent> listener) {
+	public GuiComponent<T> registerEventListener(EventListener<ComponentEvent> listener) {
 		eventListenerList.add(listener);
 		return this;
 	}
@@ -181,13 +182,13 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 
 	/**
 	 * <p>
-	 * Will return the fully qualified name for this element used to pull from
-	 * the parent GUI. Every element is indexed via "parent.child.subchild", it
-	 * will find the element recursive. The qualified name is always relative to
-	 * the GUI, thus using {@code parent.child.subchild} will also return the
-	 * proper element when getting pulled from {@code parent.child}. If this
-	 * element isn't added to a parent container, the qualified name will equal
-	 * {@link #getID()}.
+	 * Will return the fully qualified name for this component used to pull from
+	 * the parent GUI. Every component is indexed via "parent.child.subchild",
+	 * it will find the element recursive. The qualified name is always relative
+	 * to the GUI, thus using {@code parent.child.subchild} will also return the
+	 * proper component when getting pulled from {@code parent.child}. If this
+	 * component isn't added to a parent container, the qualified name will
+	 * equal {@link #getID()}.
 	 * </p>
 	 * 
 	 * <p>
@@ -196,7 +197,7 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 	 * request it.
 	 * </p>
 	 * 
-	 * @return Full qualified unique index for the element.
+	 * @return Full qualified unique index for the component.
 	 */
 	public final String getQualifiedName() {
 		return qualifiedName;

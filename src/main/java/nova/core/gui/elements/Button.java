@@ -1,7 +1,7 @@
 package nova.core.gui.elements;
 
 import nova.core.gui.GuiCanvas;
-import nova.core.gui.GuiElementEvent;
+import nova.core.gui.ComponentEvent;
 import nova.core.gui.GuiEvent.MouseEvent;
 
 public class Button extends GuiCanvas {
@@ -15,7 +15,7 @@ public class Button extends GuiCanvas {
 		switch (event.state) {
 			case CLICK:
 				if (getOutline().contains(event.mouseX, event.mouseY)) {
-					triggerEvent(new GuiElementEvent.ActionEvent(this));
+					triggerEvent(new ComponentEvent.ActionEvent(this));
 				}
 			default:
 				break;

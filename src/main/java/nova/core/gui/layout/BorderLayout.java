@@ -3,7 +3,7 @@ package nova.core.gui.layout;
 import java.util.HashMap;
 
 import nova.core.gui.AbstractGuiContainer;
-import nova.core.gui.GuiElement;
+import nova.core.gui.GuiComponent;
 import nova.core.gui.layout.LayoutConstraints.BorderLayoutConstraints;
 
 /**
@@ -20,25 +20,25 @@ public class BorderLayout extends AbstractGuiLayout<BorderLayoutConstraints> {
 		super(BorderLayoutConstraints.class);
 	}
 
-	private final HashMap<BorderLayout.EnumBorderRegion, GuiElement<?>> elements = new HashMap<>();
+	private final HashMap<BorderLayout.EnumBorderRegion, GuiComponent<?>> components = new HashMap<>();
 
 	@Override
 	public void revalidate(AbstractGuiContainer<?> parent) {
-		for (EnumBorderRegion region : elements.keySet()) {
+		for (EnumBorderRegion region : components.keySet()) {
 
 		}
 	}
 
 	@Override
-	protected void addImpl(GuiElement<?> element, AbstractGuiContainer<?> parent, BorderLayoutConstraints constraints) {
-		if (elements.containsKey(constraints))
+	protected void addImpl(GuiComponent<?> component, AbstractGuiContainer<?> parent, BorderLayoutConstraints constraints) {
+		if (components.containsKey(constraints))
 			throw new RuntimeException("BorderLayout doesn't allow multiple elements taking up the same region!");
-		elements.put(constraints.region, element);
+		components.put(constraints.region, component);
 	}
 
 	@Override
-	public void remove(GuiElement<?> element) {
-		elements.remove(element);
+	public void remove(GuiComponent<?> component) {
+		components.remove(component);
 	}
 
 	public static enum EnumBorderRegion {

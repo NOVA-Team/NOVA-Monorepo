@@ -4,7 +4,7 @@ import nova.core.util.transform.Rectangle;
 import nova.core.util.transform.Vector2i;
 
 /**
- * A {@link Rectangle} that resembles the outline of a {@link GuiElement}.
+ * A {@link Rectangle} that resembles the outline of a {@link GuiComponent}.
  * 
  * @author Vic Nightfall
  *

@@ -16,7 +16,7 @@ public abstract class Gui extends AbstractGuiContainer<NativeGui> {
 
 	// TODO Has to construct packets and send them over the network using the
 	// qualified name of the components.
-	protected void dispatchNetworkEvent(SidedEvent event, GuiElement<?> sender) {
+	protected void dispatchNetworkEvent(SidedEvent event, GuiComponent<?> sender) {
 		// event.getTarget();
 		sender.getQualifiedName();
 	}

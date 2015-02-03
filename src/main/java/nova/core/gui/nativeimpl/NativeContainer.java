@@ -1,6 +1,6 @@
 package nova.core.gui.nativeimpl;
 
-import nova.core.gui.GuiElement;
+import nova.core.gui.GuiComponent;
 
 /**
  * A native interface for anything that can hold components.
@@ -8,9 +8,9 @@ import nova.core.gui.GuiElement;
  * @author Vic Nightfall
  *
  */
-public interface NativeContainer extends NativeGuiElement {
+public interface NativeContainer extends NativeGuiComponent {
 
-	public void addElement(GuiElement<?> element);
+	public void addElement(GuiComponent<?> element);
 
-	public void removeElement(GuiElement<?> element);
+	public void removeElement(GuiComponent<?> element);
 }
