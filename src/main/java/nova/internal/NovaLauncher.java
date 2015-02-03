@@ -10,6 +10,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -30,6 +31,8 @@ public class NovaLauncher implements Loadable {
 
 	private Map<NovaMod, Loadable> mods;
 	private Map<NovaMod, ArrayList<String[]>> dependencies;
+	private Map<String, String> dependencyVersion;
+	private Map<String, String[]> dependencyRepos;
 	private ArrayList<Loadable> orderedMods;
 	private Map<NovaMod, Class<? extends Loadable>> classesMap;
 	// TODO: A lot of work and clean up has to be done to ensure this class is
@@ -126,12 +129,34 @@ public class NovaLauncher implements Loadable {
 		return mods.keySet();
 	}
 
+	public Map<String, String> getDependencyVersions() {
+		return this.dependencyVersion;
+	}
+
+	public Map<NovaMod, ArrayList<String[]>> getDependencyRepos() {
+		return this.dependencies;
+	}
+
+	public String getDependencyVersion(String modid) {
+		return this.dependencyVersion.keySet().contains(modid) ? this.dependencyVersion.get(modid) : null;
+	}
+
+	public String[] getDependencyRepo(String modid) {
+		return this.dependencyRepos.keySet().contains(modid) ? this.dependencyRepos.get(modid) : null;
+	}
+
 	/**
 	 * Get the dependencies. Separated from preInit due to issues with ordering in case mods need to download mods before the preInit method is called.
 	 * The wrapper just needs to call this method right before it downloads the dependencies.
 	 *
 	 */
 	public void generateDependencies() {
+
+		if (dependencies == null) {
+			dependencies = new HashMap<>();
+			dependencyVersion = new HashMap<>();
+		}
+
 		modClasses.stream()
 			.filter(Loadable.class::isAssignableFrom)
 			.map(clazz -> clazz.asSubclass(Loadable.class))
@@ -141,18 +166,34 @@ public class NovaLauncher implements Loadable {
 	}
 
 	private void generateAndAddDependencies(NovaMod mod) {
+
 		if (mod.getClass().isAssignableFrom(DependencyRepoProvider.class)) {
 
 			ArrayList<String[]> dependencyLocations = new ArrayList<>();
+			Map<String, String[]> dependencyRepos = new HashMap<>();
 
-			DependencyRepoProvider clazz = (DependencyRepoProvider)mod;
+			DependencyRepoProvider provider = (DependencyRepoProvider)mod;
 
 			for (String modid : mod.dependencies()) {
-				if (clazz.getModRepo(modid) != null)
-				dependencyLocations.add(clazz.getModRepo(modid));
+				if (modid.contains("?")) {
+					String modWORequired = modid.replace('?', ' ').replaceAll(" ", "");
+					if (modid.contains("@")) {
+						if (provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)) != null) {
+							dependencyLocations.add(provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
+							dependencyVersion.put(modWORequired.substring(0, modid.indexOf("@") - 1), modWORequired.substring(modWORequired.indexOf("@")));
+							dependencyRepos.put(modWORequired.substring(0,modid.indexOf("@") - 1),provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
+						}
+					} else {
+						if (provider.getModRepo(modWORequired) != null) {
+							dependencyLocations.add(provider.getModRepo(modWORequired));
+							dependencyRepos.put(modWORequired,provider.getModRepo(modWORequired));
+						}
+					}
+				}
 			}
 
 			dependencies.put(mod, dependencyLocations);
+			this.dependencyRepos = dependencyRepos;
 
 		}
 	}
