@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * An model is capable of containing multiple faces.
+ * A model is capable of containing multiple faces.
  * @author Calclavia
  */
 public class Model {

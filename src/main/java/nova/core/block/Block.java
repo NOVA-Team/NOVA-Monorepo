@@ -7,9 +7,11 @@ import nova.core.render.model.Model;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
+import nova.core.util.NovaException;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
+import nova.core.world.World;
 import nova.internal.dummy.BlockAccessDummy;
 
 import java.util.ArrayList;
@@ -29,6 +31,14 @@ public abstract class Block implements Identifiable {
 
 	public BlockAccess getBlockAccess() {
 		return blockAccess;
+	}
+
+	public World getWorld() {
+		if (blockAccess instanceof World) {
+			return (World) blockAccess;
+		}
+
+		throw new NovaException("Attempt to cast blockAccess to world invalidly!");
 	}
 
 	public Vector3i getPosition() {
@@ -90,6 +100,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the block is left clicked.
+	 *
 	 * @param entity - The entity that right clicked this object. Most likely a player.
 	 * @param side - The side it was clicked.
 	 * @param hit - The position it was clicked.
@@ -101,6 +112,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the block is right clicked.
+	 *
 	 * @param entity - The entity that right clicked this object. Most likely a player.
 	 * @param side - The side it was clicked.
 	 * @param hit - The position it was clicked.
@@ -113,6 +125,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when an entity collides with this block.
 	 * More specifically, when the entity's block bounds coincide with the block bounds.
+	 *
 	 * @param entity Colliding entity
 	 */
 	public void onEntityCollide(Entity entity) {
@@ -121,14 +134,16 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when this block is to be rendered.
+	 *
 	 * @param model The artist who is rendering this block.
 	 */
-	public void renderWorld(Model model) {
+	public void renderStatic(Model model) {
 		model.renderBlock(this);
 	}
 
 	/**
 	 * Called for a dynamic render.
+	 *
 	 * @param model an {@link nova.core.render.model.Model} to use
 	 */
 	public void renderDynamic(Model model) {
@@ -140,9 +155,10 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the item of this block is to be rendered.
+	 *
 	 * @param model The artist who is rendering this block.
 	 */
 	public void renderItem(Model model) {
-		renderWorld(model);
+		renderStatic(model);
 	}
 }
