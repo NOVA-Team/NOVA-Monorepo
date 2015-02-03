@@ -1,4 +1,4 @@
-package nova.core.util;
+package nova.core.util.exception;
 
 public class NotBuildableException extends NovaException {
 	private static final long serialVersionUID = 5185469563276314486L;

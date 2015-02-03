@@ -1,6 +1,6 @@
 package nova.core.render.model;
 
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector3d;

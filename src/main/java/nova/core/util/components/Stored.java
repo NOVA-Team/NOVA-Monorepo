@@ -1,4 +1,4 @@
-package nova.core.util;
+package nova.core.util.components;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

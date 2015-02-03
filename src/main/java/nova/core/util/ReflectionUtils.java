@@ -1,5 +1,8 @@
 package nova.core.util;
 
+import nova.core.util.components.Stored;
+import nova.core.util.exception.NovaException;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
@@ -17,7 +20,7 @@ public class ReflectionUtils {
 	}
 
 	/**
-	 * Invokes action for each field in source object annotated with {@link Stored}
+	 * Invokes action for each field in source object annotated with {@link nova.core.util.components.Stored}
 	 * @param source Object to iterate over
 	 * @param action Action to do
 	 */

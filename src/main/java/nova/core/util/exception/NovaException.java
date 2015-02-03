@@ -1,4 +1,4 @@
-package nova.core.util;
+package nova.core.util.exception;
 
 /**
  * General exception that can be thrown by Nova internals

@@ -2,7 +2,7 @@ package nova.core.block;
 
 import nova.core.util.Factory;
 import nova.core.util.Identifiable;
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector3i;
 
 import java.lang.reflect.Field;

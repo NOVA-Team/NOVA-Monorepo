@@ -1,7 +1,7 @@
 package nova.core.network;
 
 import nova.core.block.Block;
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 import java.util.Optional;
 
