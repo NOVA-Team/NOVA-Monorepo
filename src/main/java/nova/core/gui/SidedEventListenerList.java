@@ -58,7 +58,7 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 					while (true) {
 						if (listenedNetworkEvents.contains(clazz)) {
 							send = true;
-							listenedNetworkEvents.add(clazz);
+							listenedNetworkEvents.add(event.getClass());
 							break;
 						}
 						if (clazz == Object.class) {
