@@ -18,15 +18,18 @@ import nova.core.util.Identifiable;
 public abstract class GuiElement<T extends NativeGuiElement> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
 
 	private String uniqueID;
+	protected String qualifiedName;
+
 	private T nativeElement;
 	private EventListenerList<GuiElementEvent> eventListenerList = new EventListenerList<GuiElementEvent>();
 	private EventListenerList<GuiEvent> listenerList = new EventListenerList<GuiEvent>();
-	private Outline preferredOutline;
+	protected Outline preferredOutline;
 
 	private boolean isActive = true;
 	private boolean isVisible = true;
 	private boolean isMouseOver = false;
 
+	// TODO Recursive call or field? Same goes for the qualified name.
 	protected Optional<Gui> getParentGui() {
 		return parentContainer.isPresent() ? parentContainer.get().getParentGui() : Optional.empty();
 	}
@@ -39,6 +42,7 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 
 	public GuiElement(String uniqueID) {
 		this.uniqueID = uniqueID;
+		this.qualifiedName = uniqueID;
 	}
 
 	/**
@@ -51,7 +55,7 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 
 	/**
 	 * Sets the outline of this GuiElement. Shouldn't be used as the layout
-	 * controls positioning.
+	 * controls positioning. (If you are a layout don't mind the @deprecated)
 	 * 
 	 * @see #setOutline(Outline)
 	 * @param outline {@link Outline} to use as outline
@@ -157,13 +161,38 @@ public abstract class GuiElement<T extends NativeGuiElement> implements Identifi
 	}
 
 	@Override
-	public String getID() {
+	public final String getID() {
 		return uniqueID;
 	}
 
-	// TODO Has to construct the name "parent.child.subchild". Might want to
-	// buffer it.
-	public String getQualifiedName() {
-		return null;
+	/**
+	 * <p>
+	 * Will return the fully qualified name for this element used to pull from
+	 * the parent GUI. Every element is indexed via "parent.child.subchild", it
+	 * will find the element recursive. The qualified name is always relative to
+	 * the GUI, thus using {@code parent.child.subchild} will also return the
+	 * proper element when getting pulled from {@code parent.child}. If this
+	 * element isn't added to a parent container, the qualified name will equal
+	 * {@link #getID()}.
+	 * </p>
+	 * 
+	 * <p>
+	 * You should always use the full qualified name if possible, as it is
+	 * guaranteed to result in the same element on whatever sub component you
+	 * request it.
+	 * </p>
+	 * 
+	 * @return Full qualified unique index for the element.
+	 */
+	public final String getQualifiedName() {
+		return qualifiedName;
+	}
+
+	/**
+	 * Only implemented by {@link AbstractGuiContainer} to update the qualified
+	 * name of its children in case it's been removed from the parent container.
+	 */
+	protected void updateQualifiedName() {
+
 	}
 }

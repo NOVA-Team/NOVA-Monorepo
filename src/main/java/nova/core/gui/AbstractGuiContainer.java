@@ -1,8 +1,8 @@
 package nova.core.gui;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
 
 import nova.core.gui.GuiEvent.ResizeEvent;
@@ -16,7 +16,7 @@ import nova.core.gui.nativeimpl.NativeContainer;
 public abstract class AbstractGuiContainer<T extends NativeContainer> extends GuiElement<T> {
 
 	private GuiLayout layout = new BorderLayout();
-	private LinkedList<GuiElement<?>> children = new LinkedList<GuiElement<?>>();
+	private HashMap<String, GuiElement<?>> children = new HashMap<String, GuiElement<?>>();
 
 	public AbstractGuiContainer(String uniqueID) {
 		super(uniqueID);
@@ -24,14 +24,52 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 	}
 
 	/**
-	 * @return Immutable list of elements inside this container
+	 * @return Immutable collection of elements inside this container
 	 */
-	public List<GuiElement<?>> getChildElements() {
-		return Collections.unmodifiableList(children);
+	public Collection<GuiElement<?>> getChildElements() {
+		return Collections.unmodifiableCollection(children.values());
 	}
 
-	// TODO Will work using "parent.child.subchild"
-	public GuiElement<?> getChildElement(String uniqueIdentifier) {
+	/**
+	 * Returns a child {@link GuiElement} based on its qualified name.
+	 * 
+	 * @param qualifiedName qualified name of the sub element
+	 * @return The requested {@link GuiElement} or {@code null} if not present.
+	 * 
+	 * @see GuiElement#getQualifiedName()
+	 * @see AbstractGuiContainer#getChildElement(String, Class)
+	 */
+	public GuiElement<?> getChildElement(String qualifiedName) {
+		// TODO untested.
+		if (qualifiedName.startsWith(getQualifiedName())) {
+			qualifiedName = qualifiedName.substring(getQualifiedName().length());
+		}
+		int dot = qualifiedName.indexOf(".");
+		if (dot == -1) {
+			return children.get(qualifiedName);
+		}
+		GuiElement<?> subContainer = children.get(qualifiedName.substring(0, dot - 1));
+		if (subContainer instanceof AbstractGuiContainer) {
+			return ((AbstractGuiContainer<?>) subContainer).getChildElement(qualifiedName.substring(dot + 1));
+		}
+		return null;
+	}
+
+	/**
+	 * Will return a child element that matches the provided subclass of
+	 * {@link GuiElement}.
+	 * 
+	 * @param qualifiedName qualified name of the sub element
+	 * @param clazz class of the requested {@link GuiElement}
+	 * 
+	 * @return The requested {@link GuiElement} or {@code null} if not present /
+	 *         the type doesn't match.
+	 */
+	@SuppressWarnings("unchecked")
+	public <E extends GuiElement<?>> E getChildElement(String qualifiedName, Class<T> clazz) {
+		GuiElement<?> element = getChildElement(qualifiedName);
+		if (clazz.isInstance(element))
+			return (E) element;
 		return null;
 	}
 
@@ -72,25 +110,42 @@ public abstract class AbstractGuiContainer<T extends NativeContainer> extends Gu
 	 * @see GuiLayout#add(GuiElement, AbstractGuiContainer, Object[])
 	 */
 	public AbstractGuiContainer<T> addElement(GuiElement<?> element, Object... properties) {
+		if (element == null)
+			throw new NullPointerException();
 		element.parentContainer = Optional.of(this);
-		children.add(element);
+		children.put(element.getID(), element);
 		layout.add(element, this, properties);
 		return this;
 	}
 
 	/**
-	 * Removes {@link GuiCanvas}
+	 * Removes {@link GuiElement}. Shoudln't be used unless really needed as it
+	 * requires the sub element to update its qualified name using
+	 * {@link #updateQualifiedName()}.
 	 * 
-	 * @param element {@link GuiCanvas} to remove
+	 * @param element {@link GuiElement} to remove
 	 * @return This GuiContainer
 	 */
 	public AbstractGuiContainer<T> removeElement(GuiElement<?> element) {
+		if (element == null)
+			throw new NullPointerException();
 		children.remove(element);
 		layout.remove(element);
+		element.updateQualifiedName();
 		return this;
 	}
 
 	public void onResized(ResizeEvent event) {
 		layout.revalidate(this);
+	}
+
+	@Override
+	protected void updateQualifiedName() {
+		children.forEach((k, v) -> {
+			int dot = v.qualifiedName.indexOf(".");
+			if (dot != -1) {
+				v.qualifiedName = v.qualifiedName.substring(dot);
+			}
+		});
 	}
 }
