@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -29,20 +28,20 @@ import java.util.zip.ZipInputStream;
  * You must load your .tcn file and then bind the Techne texture yourself.
  * @author Calclavia
  */
-public class TechneModel implements ModelProvider {
+public class TechneModel extends ModelProvider {
 
 	//Identifiers for cubes
 	public static final List<String> cubeIDs = Arrays.asList("d9e621f7-957f-4b77-b1ae-20dcd0da7751", "de81aa14-bd60-4228-8d8d-5238bcd3caaa");
-	//The name of the file
-	public final String name;
+
 	//A map of all models generated with their names
 	private final Model model = new Model();
 
-	public TechneModel(String name) {
-		this.name = name;
+	public TechneModel(String domain, String name) {
+		super(domain, name);
 	}
 
-	private void loadTechneModel(InputStream stream) throws NovaException {
+	@Override
+	public void load(InputStream stream) {
 		try {
 			Map<String, byte[]> zipContents = new HashMap<>();
 			ZipInputStream zipInput = new ZipInputStream(stream);
@@ -85,8 +84,7 @@ public class TechneModel implements ModelProvider {
 
 			NodeList shapes = document.getElementsByTagName("Shape");
 
-			IntStream.range(0, shapes.getLength()).forEach(i -> {
-
+			for (int i = 0; i < shapes.getLength(); i++) {
 				Node shape = shapes.item(i);
 				NamedNodeMap shapeAttributes = shape.getAttributes();
 				if (shapeAttributes == null) {
@@ -107,58 +105,60 @@ public class TechneModel implements ModelProvider {
 				if (type != null) {
 					shapeType = type.getNodeValue();
 				}
-				if (!(shapeType != null && !cubeIDs.contains(shapeType))) {
 
-					boolean mirrored = false;
-					String[] offset = new String[3];
-					String[] position = new String[3];
-					String[] rotation = new String[3];
-					String[] size = new String[3];
-					String[] textureOffset = new String[2];
+				if (shapeType != null && !cubeIDs.contains(shapeType)) {
+					System.out.println("Model shape [" + shapeName + "] in " + this.name + " is not a cube, ignoring");
+					continue;
+				}
 
-					NodeList shapeChildren = shape.getChildNodes();
-					for (int j = 0; j < shapeChildren.getLength(); j++) {
-						Node shapeChild = shapeChildren.item(j);
+				boolean mirrored = false;
+				String[] offset = new String[3];
+				String[] position = new String[3];
+				String[] rotation = new String[3];
+				String[] size = new String[3];
+				String[] textureOffset = new String[2];
 
-						String shapeChildName = shapeChild.getNodeName();
-						String shapeChildValue = shapeChild.getTextContent();
-						if (shapeChildValue != null) {
-							shapeChildValue = shapeChildValue.trim();
+				NodeList shapeChildren = shape.getChildNodes();
+				for (int j = 0; j < shapeChildren.getLength(); j++) {
+					Node shapeChild = shapeChildren.item(j);
 
-							if (shapeChildName.equals("IsMirrored")) {
-								mirrored = !shapeChildValue.equals("False");
-							} else if (shapeChildName.equals("Offset")) {
-								offset = shapeChildValue.split(",");
-							} else if (shapeChildName.equals("Position")) {
-								position = shapeChildValue.split(",");
-							} else if (shapeChildName.equals("Rotation")) {
-								rotation = shapeChildValue.split(",");
-							} else if (shapeChildName.equals("Size")) {
-								size = shapeChildValue.split(",");
-							} else if (shapeChildName.equals("TextureOffset")) {
-								textureOffset = shapeChildValue.split(",");
-							}
+					String shapeChildName = shapeChild.getNodeName();
+					String shapeChildValue = shapeChild.getTextContent();
+					if (shapeChildValue != null) {
+						shapeChildValue = shapeChildValue.trim();
+
+						if (shapeChildName.equals("IsMirrored")) {
+							mirrored = !shapeChildValue.equals("False");
+						} else if (shapeChildName.equals("Offset")) {
+							offset = shapeChildValue.split(",");
+						} else if (shapeChildName.equals("Position")) {
+							position = shapeChildValue.split(",");
+						} else if (shapeChildName.equals("Rotation")) {
+							rotation = shapeChildValue.split(",");
+						} else if (shapeChildName.equals("Size")) {
+							size = shapeChildValue.split(",");
+						} else if (shapeChildName.equals("TextureOffset")) {
+							textureOffset = shapeChildValue.split(",");
 						}
 					}
-
-					// Generate new models
-					final String modelName = shapeName;
-					Model modelPart = new Model(modelName);
-					modelPart.drawCube();
-					modelPart.translation = new Vector3d(Double.parseDouble(position[0]), Double.parseDouble(position[1]) - 16, Double.parseDouble(position[2]));
-					modelPart.offset = new Vector3d(Double.parseDouble(offset[0]), Double.parseDouble(offset[1]), Double.parseDouble(offset[2]));
-					modelPart.rotation = Quaternion.fromEuler(Math.toRadians(Double.parseDouble(rotation[0])), Math.toRadians(Double.parseDouble(rotation[1])), Math.toRadians(Double.parseDouble(rotation[2])));
-					modelPart.scale = new Vector3d(Integer.parseInt(size[0]), Integer.parseInt(size[1]), Integer.parseInt(size[2]));
-					modelPart.textureOffset = new Vector2d(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
-
-					model.children.add(modelPart);
-					if (model.children.stream().anyMatch(m -> m.name.equals(modelName))) {
-						throw new NovaException("Model contained duplicate part name: '" + shapeName + "' node #" + i);
-					}
-				} else {
-					System.out.println("Model shape [" + shapeName + "] in " + this.name + " is not a cube, ignoring");
 				}
-			});
+
+				// Generate new models
+				final String modelName = shapeName;
+				Model modelPart = new Model(modelName);
+				modelPart.drawCube();
+				modelPart.translation = new Vector3d(Double.parseDouble(position[0]), Double.parseDouble(position[1]) - 16, Double.parseDouble(position[2]));
+				modelPart.offset = new Vector3d(Double.parseDouble(offset[0]), Double.parseDouble(offset[1]), Double.parseDouble(offset[2]));
+				modelPart.rotation = Quaternion.fromEuler(Math.toRadians(Double.parseDouble(rotation[0])), Math.toRadians(Double.parseDouble(rotation[1])), Math.toRadians(Double.parseDouble(rotation[2])));
+				modelPart.scale = new Vector3d(Integer.parseInt(size[0]), Integer.parseInt(size[1]), Integer.parseInt(size[2]));
+				modelPart.textureOffset = new Vector2d(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
+
+				if (model.children.stream().anyMatch(m -> m.name.equals(modelName))) {
+					throw new NovaException("Model contained duplicate part name: '" + shapeName + "' node #" + i);
+				}
+
+				model.children.add(modelPart);
+			}
 		} catch (ZipException e) {
 			throw new NovaException("Model " + name + " is not a valid zip file");
 		} catch (IOException e) {
@@ -168,6 +168,7 @@ public class TechneModel implements ModelProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	@Override

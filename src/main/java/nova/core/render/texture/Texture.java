@@ -2,6 +2,7 @@ package nova.core.render.texture;
 
 /**
  * A texture has a file location.
+ * All texture must be included in /assets/domain/textures/*
  * @author Calclavia
  */
 public class Texture {

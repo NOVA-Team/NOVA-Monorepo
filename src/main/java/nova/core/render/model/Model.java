@@ -1,15 +1,15 @@
 package nova.core.render.model;
 
 import nova.core.block.Block;
+import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector3d;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
  * A model is capable of containing multiple faces.
  * @author Calclavia
  */
-public class Model {
+public class Model implements Cloneable {
 
 	//The name of the model
 	public final String name;
 	/**
 	 * A list of all the shapes drawn.
 	 */
-	public final List<Face> faces = new ArrayList<>();
-	public final List<Model> children = new ArrayList<>();
+	public final Set<Face> faces = new HashSet<>();
+	public final Set<Model> children = new HashSet<>();
 
 	//The translation of the face.
 	public Vector3d translation = Vector3d.zero;
@@ -44,6 +44,14 @@ public class Model {
 
 	public Model() {
 		this("");
+	}
+
+	/**
+	 * Binds all the faces and all child models with this texture.
+	 */
+	public void bind(Texture texture) {
+		faces.forEach(f -> f.texture = Optional.of(texture));
+		children.forEach(m -> m.bind(texture));
 	}
 
 	/**
@@ -300,4 +308,5 @@ public class Model {
 		models.addAll(children.stream().flatMap(m -> m.flatten(finalTranslation, finalOffset, finalRotation, finalScale).stream()).collect(Collectors.toSet()));
 		return models;
 	}
+
 }
