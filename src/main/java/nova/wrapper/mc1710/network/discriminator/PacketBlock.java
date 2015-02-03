@@ -65,7 +65,7 @@ public class PacketBlock extends PacketAbstract {
 		TileEntity tile = player.getEntityWorld().getTileEntity(x, y, z);
 
 		if (tile instanceof TileWrapper) {
-			block = ((TileWrapper) tile).block;
+			block = ((TileWrapper) tile).getBlock();
 		}
 
 		if (block == null) {

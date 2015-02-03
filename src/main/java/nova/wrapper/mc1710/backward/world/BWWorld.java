@@ -19,6 +19,11 @@ public class BWWorld extends World {
 	}
 
 	@Override
+	public void markStaticRender(Vector3i position) {
+		world.markBlockForUpdate(position.x, position.y, position.z);
+	}
+
+	@Override
 	public Optional<Block> getBlock(Vector3i position) {
 		return blockAccess.getBlock(position);
 	}

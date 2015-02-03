@@ -3,9 +3,12 @@ package nova.wrapper.mc1710.forward.block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
+import nova.core.block.BlockFactory;
 import nova.core.block.components.Stateful;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
+import nova.core.util.transform.Vector3i;
+import nova.wrapper.mc1710.backward.world.BWWorld;
 import nova.wrapper.mc1710.util.NBTUtility;
 
 import java.util.HashMap;
@@ -13,13 +16,22 @@ import java.util.Map;
 
 /**
  * A Minecraft TileEntity to Nova block wrapper
+ *
  * @author Calclavia
  */
 public class TileWrapper extends TileEntity {
-	public Block block;
+	private Block block;
 
 	public TileWrapper() {
 
+	}
+
+	public Block getBlock() {
+		return block;
+	}
+
+	public void setBlock(BlockFactory factory) {
+		this.block = factory.makeBlock(new BWWorld(getWorldObj()), new Vector3i(xCoord, yCoord, zCoord));
 	}
 
 	@Override
@@ -61,6 +73,7 @@ public class TileWrapper extends TileEntity {
 
 	/**
 	 * Only register tile updates if the block is an instance of Updater.
+	 *
 	 * @return Whether can update
 	 */
 	@Override

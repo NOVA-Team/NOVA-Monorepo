@@ -77,11 +77,11 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 		 * Otherwise, create a new instance of the block and forward the methods over.
 		 */
 		if (hasTileEntity(0)) {
-			if (((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block == null) {
+			if (((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).getBlock() == null) {
 				//TODO: There must be a better way to instantiate block
-				((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block = getBlockInstance(new BWBlockAccess(access), position);
+				((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).setBlock(factory);
 			}
-			return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).block;
+			return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).getBlock();
 		}
 		return getBlockInstance(new BWBlockAccess(access), position);
 
@@ -215,7 +215,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
 		ModelWrapper model = new ModelWrapper();
-		getBlockInstance(world, new Vector3i(x, y, z)).renderWorld(model);
+		getBlockInstance(world, new Vector3i(x, y, z)).renderStatic(model);
 		model.renderWorld(world, new Vector3d(x + 0.5, y + 0.5, z + 0.5));
 		return false;
 	}
