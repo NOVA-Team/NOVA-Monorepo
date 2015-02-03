@@ -39,4 +39,13 @@ public final class MinecraftItemMapping {
         result = 31 * result + meta;
         return result;
     }
+
+    @Override
+    public String toString() {
+        if (item.getHasSubtypes()) {
+            return Item.itemRegistry.getNameForObject(item) + ":" + meta;
+        } else {
+            return Item.itemRegistry.getNameForObject(item);
+        }
+    }
 }

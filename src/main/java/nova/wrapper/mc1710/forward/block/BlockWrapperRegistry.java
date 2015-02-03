@@ -3,6 +3,8 @@ package nova.wrapper.mc1710.forward.block;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import nova.core.block.Block;
+import nova.core.block.BlockFactory;
+import nova.core.block.BlockManager;
 import nova.core.game.Game;
 import nova.wrapper.mc1710.item.ItemBlockWrapper;
 import nova.wrapper.mc1710.item.MCItem;
@@ -25,15 +27,24 @@ public class BlockWrapperRegistry {
 	 * Register all Nova blocks
 	 */
 	public void registerBlocks() {
-		Game.instance.get().blockManager.registry.forEach(b -> {
-			BlockWrapper blockWrapper = new BlockWrapper(b);
-			blockWrapperMap.put(blockWrapper.block, blockWrapper);
-			NovaMinecraft.proxy.registerBlock(blockWrapper);
-			GameRegistry.registerBlock(blockWrapper, ItemBlockWrapper.class, b.getID());
+        BlockManager blockManager = Game.instance.get().blockManager;
 
-			//TODO: Testing purposes:
-			blockWrapper.setCreativeTab(CreativeTabs.tabBlock);
-			System.out.println("[NOVA]: Registered '" + b.getID() + "' block.");
-		});
+		blockManager.registry.forEach(this::addNOVABlock);
+        blockManager.whenBlockRegistered(this::onBlockRegistered);
 	}
+
+    private void onBlockRegistered(BlockManager.BlockRegisteredEvent event) {
+        addNOVABlock(event.blockFactory);
+    }
+
+    private void addNOVABlock(BlockFactory blockFactory) {
+        BlockWrapper blockWrapper = new BlockWrapper(blockFactory);
+        blockWrapperMap.put(blockWrapper.block, blockWrapper);
+        NovaMinecraft.proxy.registerBlock(blockWrapper);
+        GameRegistry.registerBlock(blockWrapper, ItemBlockWrapper.class, blockFactory.getID());
+
+        //TODO: Testing purposes:
+        blockWrapper.setCreativeTab(CreativeTabs.tabBlock);
+        System.out.println("[NOVA]: Registered '" + blockFactory.getID() + "' block.");
+    }
 }

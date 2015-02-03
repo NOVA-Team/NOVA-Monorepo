@@ -16,6 +16,7 @@ import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.network.netty.ChannelHandler;
 import nova.wrapper.mc1710.network.netty.MinecraftNetworkManager;
 import nova.wrapper.mc1710.network.netty.PacketHandler;
+import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +53,10 @@ public class NovaMinecraft {
 
 		Game.instance = Optional.of(diep.init());
 
+        BlockWrapperRegistry.instance.registerBlocks();
+        ItemWrapperRegistry.instance.registerItems();
+        MinecraftRecipeRegistry.instance.registerRecipes();
+
 		launcher.preInit();
 
 		launcher.getLoadedMods().forEach(novaMod -> {
@@ -65,8 +70,6 @@ public class NovaMinecraft {
 		networkManager = new MinecraftNetworkManager(id, NetworkRegistry.INSTANCE.newChannel(id, new ChannelHandler(), new PacketHandler()));
 		
 		proxy.preInit();
-		BlockWrapperRegistry.instance.registerBlocks();
-		ItemWrapperRegistry.instance.registerItems();
 	}
 
 	@Mod.EventHandler

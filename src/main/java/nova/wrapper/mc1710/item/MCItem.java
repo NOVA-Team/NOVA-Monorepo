@@ -1,21 +1,9 @@
 package nova.wrapper.mc1710.item;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.client.IItemRenderer;
-import nova.core.game.Game;
 import nova.core.item.Item;
-import nova.core.item.ItemBlock;
-import nova.core.item.ItemFactory;
 import nova.core.util.components.Storable;
-import nova.wrapper.mc1710.launcher.NovaMinecraft;
-import nova.wrapper.mc1710.util.NBTUtility;
-import nova.wrapper.mc1710.util.RenderUtility;
-
-import java.util.HashMap;
 
 /**
  * Created by Stan on 3/02/2015.

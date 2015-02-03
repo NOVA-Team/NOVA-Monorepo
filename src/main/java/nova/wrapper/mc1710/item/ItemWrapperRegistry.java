@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import nova.core.game.Game;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
+import nova.core.item.ItemManager;
 import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.NBTUtility;
@@ -38,6 +39,9 @@ public class ItemWrapperRegistry {
     }
 
     public net.minecraft.item.ItemStack getMCItemStack(nova.core.item.ItemStack itemStack) {
+        if (itemStack == null)
+            return null;
+
         if (itemStack.getItem() instanceof MCItem) {
             return ((MCItem) itemStack.getItem()).makeItemStack(itemStack.getStackSize());
         } else {
@@ -57,7 +61,12 @@ public class ItemWrapperRegistry {
                     ((LinkedNBTTagCompound) itemStack.getTagCompound()).getItem(),
                     itemStack.stackSize);
         } else {
-            ItemFactory itemFactory = backwardMap.get(new MinecraftItemMapping(itemStack));
+            MinecraftItemMapping mapping = new MinecraftItemMapping(itemStack);
+            ItemFactory itemFactory = backwardMap.get(mapping);
+            if (itemFactory == null && itemStack.getHasSubtypes())
+                // load subitem
+                itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
+
             Map<String, Object> data = NBTUtility.nbtToMap(itemStack.getTagCompound());
             if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
                 if (data == null)
@@ -81,28 +90,37 @@ public class ItemWrapperRegistry {
     }
 
     private void registerNOVAItemsToMinecraft() {
-        Game.instance.get().itemManager.registry.forEach(itemFactory -> {
-            if (backwardMap.containsKey(itemFactory))
-                // just a safeguard - don't map stuff twice
-                return;
+        ItemManager itemManager = Game.instance.get().itemManager;
 
-            if (itemFactory.getDummy() instanceof ItemBlock)
-                // don't register ItemBlocks twice
-                return;
+        itemManager.registry.forEach(this::registerNOVAItem);
+        itemManager.whenItemRegistered(this::onItemRegistered);
+    }
 
-            ItemWrapper itemWrapper = new ItemWrapper(itemFactory);
+    private void onItemRegistered(ItemManager.ItemRegistrationEvent event) {
+        registerNOVAItem(event.itemFactory);
+    }
 
-            MinecraftItemMapping minecraftItemMapping = new MinecraftItemMapping(itemWrapper, 0);
-            forwardMap.put(itemFactory, minecraftItemMapping);
-            backwardMap.put(minecraftItemMapping, itemFactory);
+    private void registerNOVAItem(ItemFactory itemFactory) {
+        if (backwardMap.containsKey(itemFactory))
+            // just a safeguard - don't map stuff twice
+            return;
 
-            NovaMinecraft.proxy.registerItem(itemWrapper);
-            GameRegistry.registerItem(itemWrapper, itemFactory.getID());
+        if (itemFactory.getDummy() instanceof ItemBlock)
+            // don't register ItemBlocks twice
+            return;
 
-            //TODO: Testing purposes:
-            itemWrapper.setCreativeTab(CreativeTabs.tabBlock);
-            System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
-        });
+        ItemWrapper itemWrapper = new ItemWrapper(itemFactory);
+
+        MinecraftItemMapping minecraftItemMapping = new MinecraftItemMapping(itemWrapper, 0);
+        forwardMap.put(itemFactory, minecraftItemMapping);
+        backwardMap.put(minecraftItemMapping, itemFactory);
+
+        NovaMinecraft.proxy.registerItem(itemWrapper);
+        GameRegistry.registerItem(itemWrapper, itemFactory.getID());
+
+        //TODO: Testing purposes:
+        itemWrapper.setCreativeTab(CreativeTabs.tabBlock);
+        System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
     }
 
     private void registerMinecraftItemsToNOVA() {
@@ -114,7 +132,7 @@ public class ItemWrapperRegistry {
     }
 
     private void registerSubtypeResolution() {
-        Game.instance.get().itemManager.addIDNotFoundListener(this::onIDNotFound);
+        Game.instance.get().itemManager.whenIDNotFound(this::onIDNotFound);
     }
 
     private void onIDNotFound(ItemIDNotFoundEvent event) {
