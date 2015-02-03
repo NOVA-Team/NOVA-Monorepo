@@ -284,13 +284,18 @@ public class Model implements Cloneable {
 
 		Vector3d finalTranslation = this.translation.add(translation);
 		Vector3d finalOffset = this.offset.add(offset);
-		Quaternion finalRotation = this.rotation.multiply(rotation);
+		Quaternion finalRotation = Quaternion.identity;//this.rotation.multiply(rotation);
 		Vector3d finalScale = this.scale.multiply(scale);
 
 		//Create a new model with transformation applied.
-		Model transformedModel = new Model();
-		transformedModel.faces.addAll(faces);
-		transformedModel.faces.forEach(f ->
+		Model transformedModel = clone();
+		transformedModel.faces.stream().forEach(f -> {
+				f.normal = f.normal.add(finalOffset)
+					.transform(finalRotation)
+					.add(finalOffset.inverse())
+					.multiply(finalScale)
+					.add(finalTranslation);
+
 				f.vertices.forEach(v -> {
 					//Order: offset -> transform -> -offset -> scale -> translate
 					v.vec = v.vec
@@ -300,7 +305,8 @@ public class Model implements Cloneable {
 						.multiply(finalScale)
 						.add(finalTranslation);
 
-				})
+				});
+			}
 		);
 
 		models.add(transformedModel);
@@ -309,4 +315,16 @@ public class Model implements Cloneable {
 		return models;
 	}
 
+	@Override
+	protected Model clone() {
+		Model model = new Model(name);
+		model.faces.addAll(faces.stream().map(Face::clone).collect(Collectors.toSet()));
+		model.children.addAll(children.stream().map(Model::clone).collect(Collectors.toSet()));
+		model.translation = translation;
+		model.offset = offset;
+		model.rotation = rotation;
+		model.scale = scale;
+		model.textureOffset = textureOffset;
+		return model;
+	}
 }

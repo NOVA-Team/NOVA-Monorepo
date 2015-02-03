@@ -8,9 +8,10 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 /**
+ * A Vertex contains a position and UV data.
  * @author Calclavia, Kubuxu, inspired by ChickenBones
  */
-public class Vertex {
+public class Vertex implements Cloneable {
 	public Vector3d vec;
 	public Vector2d uv;
 
@@ -33,5 +34,12 @@ public class Vertex {
 		MathContext cont = new MathContext(4, RoundingMode.HALF_UP);
 		return "Vertex5[" + new BigDecimal(vec.x, cont) + ", " + new BigDecimal(vec.y, cont) + ", " + new BigDecimal(vec.z, cont) + "]" +
 			"[" + new BigDecimal(uv.x, cont) + ", " + new BigDecimal(uv.y) + "]";
+	}
+
+	@Override
+	protected Vertex clone() {
+		Vertex vertex = new Vertex(vec, uv);
+		vertex.color = color;
+		return vertex;
 	}
 }

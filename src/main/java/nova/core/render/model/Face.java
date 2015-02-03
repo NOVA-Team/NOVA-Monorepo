@@ -6,12 +6,13 @@ import nova.core.util.transform.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * A face is defined as at least 3 vertices joined together. It is group of vertices that result in a surface.
  * @author Calclavia
  */
-public class Face {
+public class Face implements Cloneable {
 	//The vertices that make up this face.
 	public final List<Vertex> vertices = new ArrayList<>();
 	//The normal (or direction) this face is facing. Normals must be unit vectors.
@@ -53,5 +54,15 @@ public class Face {
 		}
 
 		return Vector3d.zero;
+	}
+
+	@Override
+	protected Face clone() {
+		Face face = new Face();
+		face.vertices.addAll(vertices.stream().map(Vertex::clone).collect(Collectors.toSet()));
+		face.normal = normal;
+		face.texture = texture;
+		face.brightness = brightness;
+		return face;
 	}
 }
