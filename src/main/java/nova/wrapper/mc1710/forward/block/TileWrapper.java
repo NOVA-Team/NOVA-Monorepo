@@ -69,6 +69,7 @@ public class TileWrapper extends TileEntity {
 	@Override
 	public void validate() {
 		super.validate();
+		getBlock();
 		waitForBlock(() -> {
 			if (block instanceof Stateful) {
 				((Stateful) block).awake();

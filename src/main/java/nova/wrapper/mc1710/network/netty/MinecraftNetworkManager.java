@@ -50,6 +50,11 @@ public class MinecraftNetworkManager extends NetworkManager {
 		sendToAll(discriminator);
 	}
 
+	@Override
+	public boolean isServer() {
+		return FMLCommonHandler.instance().getEffectiveSide().isServer();
+	}
+
 	/**
 	 * @param packet the packet to send to the player
 	 * @param player the player MP object
