@@ -3,15 +3,19 @@ package nova.wrapper.mc1710.render;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.IResource;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.ModelFormatException;
 import nova.core.game.Game;
 import nova.core.render.texture.Texture;
 import org.lwjgl.opengl.GL11;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
@@ -106,4 +110,15 @@ public class RenderUtility {
 
 	}
 
+	public void loadModels() {
+		Game.instance.get().renderManager.modelProviders.forEach(m -> {
+			ResourceLocation resource = new ResourceLocation(m.domain, "models/" + m.name + "." + m.getType());
+			try {
+				IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
+				m.load(res.getInputStream());
+			} catch (IOException e) {
+				throw new ModelFormatException("IO Exception reading model format", e);
+			}
+		});
+	}
 }

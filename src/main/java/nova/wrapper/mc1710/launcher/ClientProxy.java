@@ -20,6 +20,12 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		MinecraftForge.EVENT_BUS.register(RenderUtility.instance);
+
+		/**
+		 * Load models 
+		 */
+		RenderUtility.instance.loadModels();
+		
 		ClientRegistry.registerTileEntity(TileWrapper.class, "novaTile", TESRWrapper.instance);
 	}
 

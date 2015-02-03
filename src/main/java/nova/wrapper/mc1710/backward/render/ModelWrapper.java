@@ -38,9 +38,10 @@ public class ModelWrapper extends Model {
 						//Determine nearest adjacent block.
 						Vector3i nearestPos = face.getCenter().add(face.normal.divide(2)).round();
 						Block block = blockAccess.getBlock(nearestPos.x, nearestPos.y, nearestPos.z);
-						int brightness = block.getMixedBrightnessForBlock(blockAccess, nearestPos.x, nearestPos.y, nearestPos.z);
+						try {
+							int brightness = block.getMixedBrightnessForBlock(blockAccess, nearestPos.x, nearestPos.y, nearestPos.z);
 
-						//TODO: Add Ambient Occlusion
+							//TODO: Add Ambient Occlusion
 						/*
 						int aoBrightnessXYNN = block.getMixedBrightnessForBlock(blockAccess, translation.xi() - 1, translation.yi(), translation.zi());
 						int aoBrightnessYZNN = block.getMixedBrightnessForBlock(blockAccess, translation.xi(), translation.yi(), translation.zi() - 1);
@@ -52,9 +53,12 @@ public class ModelWrapper extends Model {
 						int brightnessBottomRight = getAoBrightness(this.aoBrightnessYZNN, this.aoBrightnessXYPN, this.aoBrightnessXYZPNN, i1);
 						int brightnessBottomLeft = getAoBrightness(this.aoBrightnessXYNN, this.aoBrightnessXYZNNN, this.aoBrightnessYZNN, i1);
 						*/
-						tessellator.setBrightness(brightness);
-					}
+							tessellator.setBrightness(brightness);
 
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 					tessellator.setNormal(face.normal.xf(), face.normal.yf(), face.normal.zf());
 
 					if (face.texture.isPresent()) {
