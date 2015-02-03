@@ -8,9 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * For custom packets extend this Class and register on Mod loading phase
  * <p>
- * Without registering a NPE will be thrown as the {@link nova.wrapper.mc1710.network.netty.MinecraftPacketManager} won't know how to handle it
+ * Without registering a NPE will be thrown as the {@link nova.wrapper.mc1710.network.netty.MinecraftNetworkManager} won't know how to handle it
  * </p>
- * To send this packet also look at {@link nova.wrapper.mc1710.network.netty.MinecraftPacketManager#sendToAll(PacketAbstract)}
+ * To send this packet also look at {@link nova.wrapper.mc1710.network.netty.MinecraftNetworkManager#sendToAll(PacketAbstract)}
  * And other implementations there.
  * @author tgame14, Calclavia
  * @since 26/05/14

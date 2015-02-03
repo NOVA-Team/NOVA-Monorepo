@@ -14,7 +14,7 @@ import nova.wrapper.mc1710.asm.NovaMinecraftLoader;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.forward.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.network.netty.ChannelHandler;
-import nova.wrapper.mc1710.network.netty.MinecraftPacketManager;
+import nova.wrapper.mc1710.network.netty.MinecraftNetworkManager;
 import nova.wrapper.mc1710.network.netty.PacketHandler;
 
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class NovaMinecraft {
 	@SidedProxy(clientSide = "nova.wrapper.mc1710.launcher.ClientProxy", serverSide = "nova.wrapper.mc1710.launcher.CommonProxy")
 	public static CommonProxy proxy;
 	private static NovaLauncher launcher;
-	private static MinecraftPacketManager packetLoader;
+	private static MinecraftNetworkManager packetLoader;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
@@ -62,7 +62,7 @@ public class NovaMinecraft {
 		/**
 		 * Initiate packet system
 		 */
-		packetLoader = new MinecraftPacketManager(id, NetworkRegistry.INSTANCE.newChannel(id, new ChannelHandler(), new PacketHandler()));
+		packetLoader = new MinecraftNetworkManager(id, NetworkRegistry.INSTANCE.newChannel(id, new ChannelHandler(), new PacketHandler()));
 		
 		proxy.preInit();
 		BlockWrapperRegistry.instance.registerBlocks();

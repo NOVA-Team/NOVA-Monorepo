@@ -25,11 +25,11 @@ import java.util.EnumMap;
  * @author Calclavia
  * @since 26/05/14
  */
-public class MinecraftPacketManager extends NetworkManager {
+public class MinecraftNetworkManager extends NetworkManager {
 	public final String channel;
 	protected final EnumMap<Side, FMLEmbeddedChannel> channelEnumMap;
 
-	public MinecraftPacketManager(String channel, EnumMap<Side, FMLEmbeddedChannel> channelEnumMap) {
+	public MinecraftNetworkManager(String channel, EnumMap<Side, FMLEmbeddedChannel> channelEnumMap) {
 		this.channel = channel;
 		this.channelEnumMap = channelEnumMap;
 	}
@@ -42,11 +42,11 @@ public class MinecraftPacketManager extends NetworkManager {
 	 * Syncs a block's packet data.
 	 */
 	@Override
-	protected void syncBlock(PacketSender sender) {
+	protected void syncBlock(int id, PacketSender sender) {
 		Vector3i position = ((Block) sender).getPosition();
 		PacketBlock discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
 		PacketWrapper wrappedPacket = new PacketWrapper(discriminator.data);
-		sender.write(wrappedPacket);
+		sender.write(id, wrappedPacket);
 		sendToAll(discriminator);
 	}
 
@@ -76,6 +76,7 @@ public class MinecraftPacketManager extends NetworkManager {
 
 	/**
 	 * sends to all clients connected to the server
+	 *
 	 * @param packet the packet to send.
 	 */
 	public void sendToAll(PacketAbstract packet) {
