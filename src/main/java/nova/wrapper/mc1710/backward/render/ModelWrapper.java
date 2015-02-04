@@ -56,6 +56,8 @@ public class ModelWrapper extends Model {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}*/
+//TODO: Remove this
+						tessellator.setBrightness(15 << 20 | 11 << 4);
 					}
 					tessellator.setNormal(face.normal.xf(), face.normal.yf(), face.normal.zf());
 
