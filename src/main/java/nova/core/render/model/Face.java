@@ -59,7 +59,7 @@ public class Face implements Cloneable {
 	@Override
 	protected Face clone() {
 		Face face = new Face();
-		face.vertices.addAll(vertices.stream().map(Vertex::clone).collect(Collectors.toSet()));
+		face.vertices.addAll(vertices.stream().map(Vertex::clone).collect(Collectors.toList()));
 		face.normal = normal;
 		face.texture = texture;
 		face.brightness = brightness;

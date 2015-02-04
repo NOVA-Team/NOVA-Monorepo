@@ -150,7 +150,7 @@ public class TechneModel extends ModelProvider {
 				modelPart.translation = new Vector3d(Double.parseDouble(position[0]), Double.parseDouble(position[1]) - 16, Double.parseDouble(position[2]));
 				modelPart.offset = new Vector3d(Double.parseDouble(offset[0]), Double.parseDouble(offset[1]), Double.parseDouble(offset[2]));
 				modelPart.rotation = Quaternion.fromEuler(Math.toRadians(Double.parseDouble(rotation[0])), Math.toRadians(Double.parseDouble(rotation[1])), Math.toRadians(Double.parseDouble(rotation[2])));
-				modelPart.scale = new Vector3d(Integer.parseInt(size[0]), Integer.parseInt(size[1]), Integer.parseInt(size[2]));
+				modelPart.scale = new Vector3d(Double.parseDouble(size[0]), Double.parseDouble(size[1]), Double.parseDouble(size[2]));
 				modelPart.textureOffset = new Vector2d(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
 
 				if (model.children.stream().anyMatch(m -> m.name.equals(modelName))) {

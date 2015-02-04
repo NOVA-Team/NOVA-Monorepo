@@ -83,7 +83,7 @@ public class Model implements Cloneable {
 		 */
 		Face down = createShape();
 		down.normal = Direction.DOWN.toVector().toDouble();
-		down.texture = block.getTexture(Direction.UP);
+		down.texture = block.getTexture(Direction.DOWN);
 		//Top-left corner
 		down.drawVertex(new Vertex(0.5, -0.5, 0.5, 0, 0));
 		//Top-right corner
@@ -290,7 +290,8 @@ public class Model implements Cloneable {
 		//Create a new model with transformation applied.
 		Model transformedModel = clone();
 		transformedModel.faces.stream().forEach(f -> {
-				f.normal = f.normal.add(finalOffset)
+				f.normal = f.normal
+					.add(finalOffset)
 					.transform(finalRotation)
 					.add(finalOffset.inverse())
 					.multiply(finalScale)
