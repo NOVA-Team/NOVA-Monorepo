@@ -12,7 +12,7 @@ public interface Stateful extends PositionDependent {
 	/**
 	 * This function will get called upon the very first initialization of
 	 * a block instance. There is no guarantee that Stored values will be retained,
-	 * and there is also no gaurentee that World and Position will exist.
+	 * and there is also no guarantee that World and Position will exist.
 	 */
 	default void awake()
 	{

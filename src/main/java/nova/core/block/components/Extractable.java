@@ -8,13 +8,17 @@ import nova.core.util.Direction;
  */
 public interface Extractable {
 	/**
+	 * Called to check if a block can have something extracted from it.
+	 *
 	 * @param type The type of the extracted object.
 	 * @param side The side the object is extracted on.
-	 * @return true if this type can be injected
+	 * @return {@code true} if this type can be extracted.
 	 */
 	boolean canExtract(Class<?> type, Direction side);
 
 	/**
+	 * Called when something is extracted from a block.
+	 *
 	 * @param object The extracted object.
 	 * @param side The side the object is extracted on.
 	 * @param simulate Whether to simulate the extraction.

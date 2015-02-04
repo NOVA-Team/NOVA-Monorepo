@@ -39,8 +39,7 @@ public class BlockManager {
 	/**
 	 * Registers a block with no constructor arguments
 	 * 
-	 * @param block
-	 *            Block to register
+	 * @param block Block to register
 	 * @return New block instance
 	 */
 	public Block registerBlock(Class<? extends Block> block) {
@@ -57,8 +56,7 @@ public class BlockManager {
 	/**
 	 * Register a new block with custom constructor arguments.
 	 * 
-	 * @param constructor
-	 *            Block instance {@link Supplier}
+	 * @param constructor Block instance {@link Supplier}
 	 * @return Dummy block
 	 */
 	public Block registerBlock(Supplier<Block> constructor) {

@@ -28,7 +28,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called to get the BlockFactory that refers to this Block class.
 	 *
-	 * @return the {@link nova.core.block.BlockFactory} that refers to this Block class.
+	 * @return The {@link nova.core.block.BlockFactory} that refers to this Block class.
 	 */
 	public final BlockFactory getFactory() {
 		return Game.instance.get().blockManager.getBlockFactory(this.getID()).get();
@@ -37,7 +37,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Get the BlockAccess that refers to this block.
 	 *
-	 * @return the {@link nova.core.block.BlockAccess} that refers to this block.
+	 * @return The {@link nova.core.block.BlockAccess} that refers to this block.
 	 */
 	public BlockAccess getBlockAccess() {
 		return blockAccess;
@@ -60,7 +60,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Get the position of the block.
 	 *
-	 * @return the position of the block.
+	 * @return The position of the block.
 	 */
 	public Vector3i getPosition() {
 		return position;
@@ -69,7 +69,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Get the x co-ordinate of the block.
 	 *
-	 * @return the x co-ordinate of the block.
+	 * @return The x co-ordinate of the block.
 	 */
 	public final int x() {
 		return getPosition().x;
@@ -78,7 +78,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Get the y co-ordinate of the block.
 	 *
-	 * @return the y co-ordinate of the block.
+	 * @return The y co-ordinate of the block.
 	 */
 	public final int y() {
 		return getPosition().y;
@@ -87,7 +87,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Get the z co-ordinate of the block.
 	 *
-	 * @return the z co-ordinate of the block.
+	 * @return The z co-ordinate of the block.
 	 */
 	public final int z() {
 		return getPosition().z;
@@ -96,7 +96,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called to get the drops of this block.
 	 *
-	 * @return a collection of {@link nova.core.item.ItemStack}s that this block drops.
+	 * @return A collection of {@link nova.core.item.ItemStack}s that this block drops.
 	 */
 	public Collection<ItemStack> getDrops() {
 		ArrayList<ItemStack> list = new ArrayList<>();
@@ -134,7 +134,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called to check if the block is a cube.
 	 *
-	 * @return true is this block is a cube.
+	 * @return {@code true} is this block is a cube.
 	 */
 	public boolean isCube() {
 		return getBoundingBox().isCube();
@@ -143,7 +143,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called to check if the block is an opaque cube.
 	 *
-	 * @return true is this block is a cube that is opaque.
+	 * @return {@code true}  is this block is a cube that is opaque.
 	 */
 	public boolean isOpaqueCube() {
 		return isCube();
@@ -152,7 +152,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when a block next to this one changes (removed, placed, etc...).
 	 *
-	 * @param neighborPosition the position of the block that changed.
+	 * @param neighborPosition The position of the block that changed.
 	 */
 	public void onNeighborChange(Vector3i neighborPosition) {
 
@@ -161,7 +161,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when the block is placed.
 	 *
-	 * @param changer the BlockChanger that placed the block.
+	 * @param changer The BlockChanger that placed the block.
 	 */
 	public void onPlaced(BlockChanger changer) {
 
@@ -170,7 +170,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when the block is removed.
 	 *
-	 * @param changer the BlockChanger that removed the block.
+	 * @param changer The BlockChanger that removed the block.
 	 */
 	public void onRemoved(BlockChanger changer) {
 
@@ -182,7 +182,7 @@ public abstract class Block implements Identifiable {
 	 * @param entity The entity that right clicked this object. Most likely a player.
 	 * @param side The side it was clicked.
 	 * @param hit The position it was clicked.
-	 * @return true if the right click action does something.
+	 * @return {@code true} if the right click action does something.
 	 */
 	public boolean onLeftClick(Entity entity, int side, Vector3d hit) {
 		return false;
@@ -194,7 +194,7 @@ public abstract class Block implements Identifiable {
 	 * @param entity The entity that right clicked this object. Most likely a player.
 	 * @param side The side it was clicked.
 	 * @param hit The position it was clicked.
-	 * @return true if the right click action does something.
+	 * @return {@code true}  if the right click action does something.
 	 */
 	public boolean onRightClick(Entity entity, int side, Vector3d hit) {
 		return false;
@@ -213,7 +213,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when this block is to be rendered.
 	 *
-	 * @param model a {@link nova.core.render.model.Model} to use.
+	 * @param model A {@link nova.core.render.model.Model} to use.
 	 */
 	public void renderStatic(Model model) {
 		model.renderBlock(this);
@@ -222,7 +222,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called for a dynamic render.
 	 *
-	 * @param model a {@link nova.core.render.model.Model} to use
+	 * @param model A {@link nova.core.render.model.Model} to use
 	 */
 	public void renderDynamic(Model model) {
 	}
@@ -231,7 +231,7 @@ public abstract class Block implements Identifiable {
 	 * Called to get the texture of this block for a certain side.
 	 *
 	 * @param side The side of the block that the texture is for.
-	 * @return an optional of the texture.
+	 * @return An optional of the texture.
 	 */
 	public Optional<Texture> getTexture(Direction side) {
 		return Optional.empty();
@@ -240,7 +240,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when the item of this block is to be rendered.
 	 *
-	 * @param model a {@link nova.core.render.model.Model} to use.
+	 * @param model A {@link nova.core.render.model.Model} to use.
 	 */
 	public void renderItem(Model model) {
 		renderStatic(model);
