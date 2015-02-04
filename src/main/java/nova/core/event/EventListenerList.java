@@ -2,7 +2,8 @@ package nova.core.event;
 
 /**
  * Implements a list of event listeners. This class is thread-safe and listeners
- * can be added or removed concurrently, no external locking is ever needed. Also, it's very lightweight.
+ * can be added or removed concurrently, no external locking is ever needed.
+ * Also, it's very lightweight.
  *
  * @param <T> event type
  * @author Stan Hebben
@@ -101,16 +102,16 @@ public class EventListenerList<T> {
 		}
 	}
 
-    // only to be used by MultiListenerList, because I can't cast it in there...
-    protected void publishSafely(Object event) {
-        publish((T) event);
-    }
+	// only to be used by MultiListenerList, because I can't cast it in there...
+	protected void publishSafely(Object event) {
+		publish((T) event);
+	}
 
 	// #######################
 	// ### Private classes ###
 	// #######################
 
-	private class EventListenerNode implements EventListenerHandle<T> {
+	protected class EventListenerNode implements EventListenerHandle<T> {
 		private final EventListener<T> listener;
 		private EventListenerNode next;
 		private EventListenerNode prev;
@@ -144,38 +145,38 @@ public class EventListenerList<T> {
 		}
 	}
 
-    /**
-     * A wrapper for an event listener that only accepts a specific type of
-     * event.
-     *
-     * @author Vic Nightfall
-     * @param <E> event type
-     * @param <T> super type
-     */
-    private static class SingleEventListener<E extends T, T> implements EventListener<T> {
-        private final Class<E> eventClass;
-        private final EventListener<E> wrappedListener;
+	/**
+	 * A wrapper for an event listener that only accepts a specific type of
+	 * event.
+	 *
+	 * @author Vic Nightfall
+	 * @param <E> event type
+	 * @param <T> super type
+	 */
+	protected static class SingleEventListener<E extends T, T> implements EventListener<T> {
+		private final Class<E> eventClass;
+		private final EventListener<E> wrappedListener;
 
-        /**
-         * Constructs a new single typed Event listener.
-         *
-         * @param wrappedListener The listener which gets called when the event
-         *        was accepted.
-         * @param eventClass The event to listen for, Any posted event that is
-         *        an instance of said class will get passed through to the
-         *        wrapped listener instance.
-         */
-        public SingleEventListener(EventListener<E> wrappedListener, Class<E> eventClass) {
-            this.eventClass = eventClass;
-            this.wrappedListener = wrappedListener;
-        }
+		/**
+		 * Constructs a new single typed Event listener.
+		 *
+		 * @param wrappedListener The listener which gets called when the event
+		 *        was accepted.
+		 * @param eventClass The event to listen for, Any posted event that is
+		 *        an instance of said class will get passed through to the
+		 *        wrapped listener instance.
+		 */
+		public SingleEventListener(EventListener<E> wrappedListener, Class<E> eventClass) {
+			this.eventClass = eventClass;
+			this.wrappedListener = wrappedListener;
+		}
 
-        @SuppressWarnings("unchecked")
-        @Override
-        public void onEvent(T value) {
-            if (eventClass.isInstance(value)) {
-                wrappedListener.onEvent((E) value);
-            }
-        }
-    }
+		@SuppressWarnings("unchecked")
+		@Override
+		public void onEvent(T value) {
+			if (eventClass.isInstance(value)) {
+				wrappedListener.onEvent((E) value);
+			}
+		}
+	}
 }

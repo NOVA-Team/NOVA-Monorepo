@@ -2,7 +2,7 @@ package nova.core.gui;
 
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
-import nova.core.network.Target.Side;
+import nova.core.network.NetworkTarget.Side;
 
 /**
  * Event for GUI, like mouse click
@@ -69,7 +69,7 @@ public class GuiEvent {
 		}
 	}
 
-	public static interface GuiEventSynced extends PacketSender, PacketReceiver {
+	public static interface SidedEvent extends PacketSender, PacketReceiver {
 		public Side getTarget();
 	}
 }

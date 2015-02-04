@@ -1,12 +1,12 @@
 package nova.core.gui.nativeimpl;
 
 import nova.core.gui.GuiEvent;
-import nova.core.gui.GuiEvent.GuiEventSynced;
+import nova.core.gui.GuiEvent.SidedEvent;
 import nova.core.gui.Outline;
 
 public interface NativeGui extends NativeContainer {
 
-	public void dispatchNetworkEvent(GuiEventSynced syncedEvent);
+	public void dispatchNetworkEvent(SidedEvent sidedEvent);
 
 	/**
 	 * Called when the GUI was resized and the child components need to

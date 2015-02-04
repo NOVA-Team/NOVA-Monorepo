@@ -3,14 +3,19 @@ package nova.core.network;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@java.lang.annotation.Target({ ElementType.METHOD, ElementType.FIELD, ElementType.TYPE })
-public @interface Target {
+@Target({ ElementType.METHOD, ElementType.TYPE })
+public @interface NetworkTarget {
 
 	public Side side();
 
 	public static enum Side {
 		CLIENT, SERVER, BOTH;
+
+		public boolean targets(Side otherSide) {
+			return otherSide == BOTH || this != otherSide;
+		}
 	}
 }

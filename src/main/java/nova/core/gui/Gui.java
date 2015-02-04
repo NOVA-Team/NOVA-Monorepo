@@ -2,13 +2,13 @@ package nova.core.gui;
 
 import java.util.Optional;
 
-import nova.core.gui.GuiEvent.GuiEventSynced;
+import nova.core.gui.GuiEvent.SidedEvent;
 import nova.core.gui.nativeimpl.NativeGui;
 
 /**
  * Root container for GUI
  */
-public abstract class Gui extends AbstractGuiContainer<NativeGui> {
+public abstract class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 
 	private Gui(String uniqueID) {
 		super(uniqueID);
@@ -16,7 +16,7 @@ public abstract class Gui extends AbstractGuiContainer<NativeGui> {
 
 	// TODO Has to construct packets and send them over the network using the
 	// qualified name of the components.
-	protected void dispatchNetworkEvent(GuiEventSynced event, GuiElement<?> sender) {
+	protected void dispatchNetworkEvent(SidedEvent event, GuiComponent<?, ?> sender) {
 		// event.getTarget();
 		sender.getQualifiedName();
 	}

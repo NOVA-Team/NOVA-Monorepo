@@ -1,16 +1,17 @@
 package nova.core.network;
 
-import nova.core.block.Block;
-import nova.core.util.exception.NovaException;
-
 import java.util.Optional;
+
+import nova.core.block.Block;
+import nova.core.network.NetworkTarget.Side;
+import nova.core.util.exception.NovaException;
 
 /**
  * @author Calclavia
  */
 public abstract class NetworkManager {
 
-	//TODO: This is a bit hacky. Maybe we should do DI for this.
+	// TODO: This is a bit hacky. Maybe we should do DI for this.
 	public static Optional<NetworkManager> instance;
 
 	protected NetworkManager() {
@@ -37,6 +38,10 @@ public abstract class NetworkManager {
 	}
 
 	protected abstract void syncBlock(int id, PacketSender sender);
+
+	public final Side getSide() {
+		return isClient() ? Side.CLIENT : Side.SERVER;
+	}
 
 	public final boolean isClient() {
 		return !isServer();

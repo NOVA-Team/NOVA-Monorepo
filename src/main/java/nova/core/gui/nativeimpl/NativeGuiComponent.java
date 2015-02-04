@@ -1,6 +1,6 @@
 package nova.core.gui.nativeimpl;
 
-import nova.core.gui.GuiElement;
+import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.KeyEvent;
 import nova.core.gui.GuiEvent.KeyEvent.EnumKeyState;
 import nova.core.gui.GuiEvent.MouseEvent;
@@ -11,16 +11,16 @@ import nova.core.gui.Outline;
 import nova.core.render.model.Model;
 
 /**
- * The native interface for any {@link GuiElement}.
+ * The native interface for any {@link GuiComponent}.
  * 
  * @author Vic Nightfall
  *
  */
-public interface NativeGuiElement {
+public interface NativeGuiComponent {
 
-	public void applyElement(GuiElement<?> element);
+	public void applyElement(GuiComponent<?, ?> component);
 
-	public GuiElement<?> getElement();
+	public GuiComponent<?, ?> getElement();
 
 	public Outline getOutline();
 

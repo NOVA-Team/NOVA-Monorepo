@@ -1,15 +1,16 @@
 package nova.core.gui.layout;
 
 import java.lang.reflect.Constructor;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import nova.core.gui.layout.BorderLayout.EnumBorderRegion;
 
-public abstract class LayoutConstraints {
+public abstract class LayoutConstraints<O extends LayoutConstraints<O>> implements Cloneable {
 
-	public static class BorderLayoutConstraints extends LayoutConstraints {
+	public static class BorderLayoutConstraints extends LayoutConstraints<BorderLayoutConstraints> {
 
-		public final EnumBorderRegion region;
+		public EnumBorderRegion region;
 
 		public BorderLayoutConstraints(EnumBorderRegion region) {
 			this.region = region;
@@ -21,7 +22,7 @@ public abstract class LayoutConstraints {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends LayoutConstraints> T createConstraints(Class<T> clazz, Object... parameters) {
+	public static <T extends LayoutConstraints<T>> T createConstraints(Class<T> clazz, Object... parameters) {
 
 		for (Constructor<T> constructor : (Constructor<T>[]) clazz.getConstructors()) {
 			Class<?>[] parameterTypes = constructor.getParameterTypes();
@@ -39,5 +40,21 @@ public abstract class LayoutConstraints {
 			}
 		}
 		throw new IllegalArgumentException();
+	}
+
+	@SuppressWarnings("unchecked")
+	public O of(Consumer<O> consumer) {
+		return (O) this;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected O clone() {
+		try {
+			return (O) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
