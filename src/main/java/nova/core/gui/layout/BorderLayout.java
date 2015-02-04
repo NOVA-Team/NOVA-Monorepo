@@ -42,12 +42,14 @@ public class BorderLayout extends AbstractGuiLayout<BorderLayoutConstraints> {
 	}
 
 	public static enum EnumBorderRegion {
-		PAGE_START(1), PAGE_END(1), LINE_START(1), LINE_END(1), CENTER(2), NORTH(0), EAST(0), SOUTH(0), WEST(0);
+		CENTER(2, 2), NORTH(1, 1), EAST(1, 2), SOUTH(1, 1), WEST(1, 2);
 
 		public final int priority;
+		public final int axis;
 
-		private EnumBorderRegion(int priority) {
+		private EnumBorderRegion(int priority, int axis) {
 			this.priority = priority;
+			this.axis = axis;
 		}
 	}
 
