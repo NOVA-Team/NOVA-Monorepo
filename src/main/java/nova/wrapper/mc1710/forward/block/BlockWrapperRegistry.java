@@ -33,6 +33,10 @@ public class BlockWrapperRegistry {
         blockManager.whenBlockRegistered(this::onBlockRegistered);
 	}
 
+    public net.minecraft.block.Block getMCBlock(Block novaBlock) {
+        return blockWrapperMap.get(novaBlock);
+    }
+
     private void onBlockRegistered(BlockManager.BlockRegisteredEvent event) {
         addNOVABlock(event.blockFactory);
     }

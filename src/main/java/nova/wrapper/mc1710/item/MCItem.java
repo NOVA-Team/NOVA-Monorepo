@@ -24,7 +24,7 @@ public class MCItem extends Item implements Storable {
         this.meta = meta;
         this.tag = tag;
 
-        id = net.minecraft.item.Item.getIdFromItem(item) + (item.getHasSubtypes() ? ":" + meta : "");
+        id = net.minecraft.item.Item.itemRegistry.getNameForObject(item) + (item.getHasSubtypes() ? ":" + meta : "");
     }
 
     public net.minecraft.item.Item getItem() {
@@ -40,7 +40,7 @@ public class MCItem extends Item implements Storable {
     }
 
     public net.minecraft.item.ItemStack makeItemStack(int stackSize) {
-        ItemStack result = new ItemStack(item, meta, stackSize);
+        ItemStack result = new ItemStack(item, stackSize, meta);
         if (tag != null)
             result.setTagCompound(tag);
         return result;

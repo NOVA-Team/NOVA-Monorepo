@@ -14,7 +14,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.SlotCrafting;import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.SlotCrafting;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
@@ -25,6 +28,7 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import nova.core.recipes.RecipeManager;
 
 /**
  * Common class for all runtime hacks (stuff requiring reflection). It is not
@@ -41,7 +45,7 @@ public class ReflectionUtil {
 	private static final Field SHAPEDORERECIPE_WIDTH;
 	private static final Field INVENTORYCRAFTING_EVENTHANDLER;
 	private static final Field SLOTCRAFTING_PLAYER;
-	
+
 	private static final Field ENTITYREGISTRY_CLASSREGISTRATIONS;
 	private static final Field SEEDENTRY_SEED;
 	private static final Constructor<? extends WeightedRandom.Item> SEEDENTRY_CONSTRUCTOR;
@@ -201,7 +205,15 @@ public class ReflectionUtil {
 			return null;
 		}
 	}
-	
+
+    public static void setCraftingRecipeList(List<IRecipe> craftingRecipeList) {
+        if (!setPrivateObject(
+                CraftingManager.getInstance(),
+                craftingRecipeList,
+                ObfuscationConstants.CRAFTINGMANAGER_RECIPES))
+            logError("could not set crafting recipe list");
+    }
+
 	/*public static WeightedRandom.Item constructSeedEntry(WeightedItemStack stack) {
 		try {
 			return SEEDENTRY_CONSTRUCTOR.newInstance(MineTweakerMC.getItemStack(stack.getStack()), (int) stack.getChance());
@@ -243,17 +255,29 @@ public class ReflectionUtil {
 				Field field = cls.getDeclaredField(name);
 				field.setAccessible(true);
 				return (T) field.get(object);
-			} catch (NoSuchFieldException ex) {
-
-			} catch (SecurityException ex) {
-
-			} catch (IllegalAccessException ex) {
+			} catch (Exception ex) {
 
 			}
 		}
 		
 		return null;
 	}
+
+    public static boolean setPrivateObject(Object object, Object value, String... names) {
+        Class<?> cls = object.getClass();
+        for (String name : names) {
+            try {
+                Field field = cls.getDeclaredField(name);
+                field.setAccessible(true);
+                field.set(object, value);
+                return true;
+            } catch (Exception ex) {
+
+            }
+        }
+
+        return false;
+    }
 	
 	
 	// #######################

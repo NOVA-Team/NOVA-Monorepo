@@ -4,11 +4,14 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import nova.core.block.Block;
 import nova.core.game.Game;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.item.ItemManager;
 import nova.core.item.event.ItemIDNotFoundEvent;
+import nova.core.util.exception.NovaException;
+import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.NBTUtility;
 
@@ -49,7 +52,10 @@ public class ItemWrapperRegistry {
             LinkedNBTTagCompound tag = new LinkedNBTTagCompound(itemStack.getItem());
 
             MinecraftItemMapping mapping = get(itemFactory);
-            ItemStack result = new ItemStack(mapping.item, mapping.meta, itemStack.getStackSize());
+            if (mapping == null)
+                throw new NovaException("Missing mapping for " + itemFactory.getID());
+
+            ItemStack result = new ItemStack(mapping.item, itemStack.getStackSize(), mapping.meta);
             result.setTagCompound(tag);
             return result;
         }
@@ -101,26 +107,35 @@ public class ItemWrapperRegistry {
     }
 
     private void registerNOVAItem(ItemFactory itemFactory) {
-        if (backwardMap.containsKey(itemFactory))
+        if (forwardMap.containsKey(itemFactory))
             // just a safeguard - don't map stuff twice
             return;
 
-        if (itemFactory.getDummy() instanceof ItemBlock)
-            // don't register ItemBlocks twice
-            return;
+        net.minecraft.item.Item itemWrapper;
 
-        ItemWrapper itemWrapper = new ItemWrapper(itemFactory);
+        if (itemFactory.getDummy() instanceof ItemBlock) {
+            Block block = ((ItemBlock) (itemFactory.getDummy())).block;
+            net.minecraft.block.Block mcBlock = BlockWrapperRegistry.instance.getMCBlock(block);
+            itemWrapper = Item.getItemFromBlock(mcBlock);
+            if (itemWrapper == null)
+                throw new NovaException("Missing block: " + itemFactory.getID());
+        } else {
+            itemWrapper = new ItemWrapper(itemFactory);
+        }
 
         MinecraftItemMapping minecraftItemMapping = new MinecraftItemMapping(itemWrapper, 0);
         forwardMap.put(itemFactory, minecraftItemMapping);
         backwardMap.put(minecraftItemMapping, itemFactory);
 
-        NovaMinecraft.proxy.registerItem(itemWrapper);
-        GameRegistry.registerItem(itemWrapper, itemFactory.getID());
+        // don't register ItemBlocks twice
+        if (!(itemFactory.getDummy() instanceof ItemBlock)) {
+            NovaMinecraft.proxy.registerItem((ItemWrapper) itemWrapper);
+            GameRegistry.registerItem(itemWrapper, itemFactory.getID());
 
-        //TODO: Testing purposes:
-        itemWrapper.setCreativeTab(CreativeTabs.tabBlock);
-        System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
+            //TODO: Testing purposes:
+            itemWrapper.setCreativeTab(CreativeTabs.tabBlock);
+            System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
+        }
     }
 
     private void registerMinecraftItemsToNOVA() {
@@ -164,6 +179,8 @@ public class ItemWrapperRegistry {
         MCItemFactory itemFactory = new MCItemFactory(item, meta);
         forwardMap.put(itemFactory, mapping);
         backwardMap.put(mapping, itemFactory);
+
+        Game.instance.get().itemManager.registerItem(itemFactory);
 
         return itemFactory;
     }
