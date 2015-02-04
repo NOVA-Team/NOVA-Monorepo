@@ -27,7 +27,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	protected String qualifiedName;
 
 	private T nativeElement;
-	private SidedEventListenerList<ComponentEvent> eventListenerList = new SidedEventListenerList<ComponentEvent>(this::dispatchNetworkEvent);
+	private SidedEventListenerList<ComponentEvent<?>> eventListenerList = new SidedEventListenerList<ComponentEvent<?>>(this::dispatchNetworkEvent);
 	private EventListenerList<GuiEvent> listenerList = new EventListenerList<GuiEvent>();
 
 	protected Optional<Vector2i> preferredSize = Optional.empty();
@@ -58,6 +58,10 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		this.qualifiedName = uniqueID;
 	}
 
+	public Optional<AbstractGuiContainer<?, ?>> getParentContainer() {
+		return parentContainer;
+	}
+
 	/**
 	 * @return Outline of this component.
 	 * @see Outline
@@ -74,7 +78,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * @param outline {@link Outline} to use as outline
 	 */
 	@Deprecated
-	protected void setOutlineNative(Outline outline) {
+	public void setOutlineNative(Outline outline) {
 		nativeElement.setOutline(outline);
 	}
 

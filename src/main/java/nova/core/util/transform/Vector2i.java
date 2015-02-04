@@ -1,7 +1,9 @@
 package nova.core.util.transform;
 
 /**
- * A double implementation of Vector2. Vector2 is an immutable quantity that holds an x, y and z value.
+ * A double implementation of Vector2. Vector2 is an immutable quantity that
+ * holds an x, y and z value.
+ * 
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
@@ -10,6 +12,7 @@ public class Vector2i extends Vector2<Vector2i> {
 	public static final Vector2i one = new Vector2i(1, 1);
 	public static final Vector2i xAxis = new Vector2i(1, 0);
 	public static final Vector2i yAxis = new Vector2i(0, 1);
+	public static final Vector2i max = new Vector2i(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
 	public final int x, y;
 
@@ -68,12 +71,12 @@ public class Vector2i extends Vector2<Vector2i> {
 
 	@Override
 	public int xi() {
-		return (int) x;
+		return x;
 	}
 
 	@Override
 	public int yi() {
-		return (int) y;
+		return y;
 	}
 
 	@Override

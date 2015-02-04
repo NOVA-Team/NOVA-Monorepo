@@ -11,10 +11,6 @@ import nova.core.util.transform.Vector2i;
  */
 public class Outline extends Rectangle<Vector2i> {
 
-	private Outline(Vector2i min, Vector2i max) {
-		super(min, max);
-	}
-
 	/**
 	 * Creates a new Outline with the specified position and dimension.
 	 * 
@@ -25,6 +21,10 @@ public class Outline extends Rectangle<Vector2i> {
 	 */
 	public Outline(int x, int y, int width, int height) {
 		super(new Vector2i(x, y), new Vector2i(x + width, y + height));
+	}
+
+	public Outline(Vector2i position, Vector2i dimension) {
+		super(position, position.add(dimension));
 	}
 
 	public int getWidth() {
@@ -41,5 +41,21 @@ public class Outline extends Rectangle<Vector2i> {
 
 	public Outline setWidth(int width) {
 		return new Outline(new Vector2i(x1i(), x1i() + width), max);
+	}
+
+	public Vector2i getDimension() {
+		return new Vector2i(getWidth(), getHeight());
+	}
+
+	public Outline setDimension(Vector2i dimension) {
+		return new Outline(min, min.add(dimension));
+	}
+
+	public Vector2i getPosition() {
+		return getMin();
+	}
+
+	public Outline setPosition(Vector2i position) {
+		return new Outline(position, position.add(getMax()));
 	}
 }
