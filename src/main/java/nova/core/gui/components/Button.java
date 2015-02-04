@@ -4,7 +4,7 @@ import nova.core.gui.ComponentEvent;
 import nova.core.gui.GuiCanvas;
 import nova.core.gui.GuiEvent.MouseEvent;
 
-public class Button extends GuiCanvas {
+public class Button extends GuiCanvas<Button> {
 
 	public Button(String uniqueID) {
 		super(uniqueID);

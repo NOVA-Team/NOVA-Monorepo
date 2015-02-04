@@ -18,7 +18,10 @@ public class GuiTest {
 		BorderLayoutConstraints constraints = layout.constraints();
 		GuiContainer container = new GuiContainer("test").setLayout(layout)
 			.addElement(new Button("testButton1")
-				.registerEventListener(this::onButton1Pressed, ActionEvent.class, Side.SERVER), 
+				.registerEventListener(e -> {
+					// TODO Still needs a cast unfortunately
+					((Button)e.component).setActive(false);
+				}, ActionEvent.class, Side.SERVER), 
 				constraints.of(e -> e.region = EnumBorderRegion.WEST))
 			.addElement(new Button("testButton2"), constraints.of(e -> e.region = EnumBorderRegion.CENTER))
 			.addElement(new Button("testButton3"), constraints.of(e -> e.region = EnumBorderRegion.EAST));

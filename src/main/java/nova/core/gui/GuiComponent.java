@@ -209,6 +209,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	// External listener
 
+	// TODO Should be <EVENT extends ComponentEvent<O>> but that somehow
+	// destroys everything.
 	public <EVENT extends ComponentEvent<?>> O registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
 		eventListenerList.add(listener, clazz, side);
 		return (O) this;
