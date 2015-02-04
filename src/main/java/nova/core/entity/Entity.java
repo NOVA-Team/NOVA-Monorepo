@@ -20,53 +20,57 @@ public abstract class Entity implements Identifiable, Stateful {
 	}
 
 	/**
-	 * Initializes this Entity
+	 * Initializes this Entity.
 	 */
 	public void awake() {
 
 	}
 
 	/**
-	 * Marks this entity as valid
+	 * Marks this entity as valid.
 	 */
 	public void load() {
 		valid = true;
 	}
 
 	/**
-	 * Marks this entity as invalid
+	 * Marks this entity as invalid.
 	 */
 	public void unload() {
 		valid = false;
 	}
 
 	/**
-	 * Specifies whether this entity is valid
-	 * @return Validity state
+	 * Check if this entity is valid.
+	 *
+	 * @return Validity state (true or false).
 	 */
 	public boolean isValid() {
 		return valid;
 	}
 
 	/**
-	 * Returns unique id of this entity
-	 * @return Unique ID
+	 * Gets the unique id of this entity.
+	 *
+	 * @return Unique ID of this entity.
 	 */
 	public int getUniqueID() {
 		return uniqueId;
 	}
 
 	/**
-	 * Gets world of this entity
-	 * @return The {@link World}
+	 * Gets the world of this entity.
+	 *
+	 * @return The {@link nova.core.world.World} that this entity is in.
 	 */
 	public World getWorld() {
 		return world;
 	}
 
 	/**
-	 * Gets position of this entity
-	 * @return {@link Vector3d} containing position in world of this entity
+	 * Gets position of this entity.
+	 *
+	 * @return {@link nova.core.util.transform.Vector3d} containing the position in the world of this entity.
 	 */
 	public Vector3d getPosition() {
 		return position;
@@ -77,9 +81,10 @@ public abstract class Entity implements Identifiable, Stateful {
 	}
 
 	/**
-	 * Sets world of this entity
-	 * @param world World to set
-	 * @return Whether succeed
+	 * Sets the world of this entity.
+	 *
+	 * @param world World to set.
+	 * @return {@code true} if successful.
 	 */
 	public boolean setWorld(World world) {
 		this.world = world;
@@ -87,15 +92,22 @@ public abstract class Entity implements Identifiable, Stateful {
 	}
 
 	/**
-	 * Sets position of this entity
-	 * @param position Position to set
-	 * @return Whether succeed
+	 * Sets the position of this entity.
+	 *
+	 * @param position Position to set.
+	 * @return {@code true} if successful.
 	 */
 	public boolean setPosition(Vector3d position) {
 		this.position = position;
 		return true;
 	}
 
+	/**
+	 * Sets the rotation of this entity.
+	 *
+	 * @param rotation Position to set.
+	 * @return {@code true} if successful.
+	 */
 	public boolean setRotation(Quaternion rotation) {
 		this.rotation = rotation;
 		return true;

@@ -50,7 +50,7 @@ public abstract class BlockChanger {
 		}
 
 		/**
-		 * @return true if the Entity is a player.
+		 * @return {@code true} if the Entity is a player.
 		 */
 		public boolean hasPlayer() {
 			return entity instanceof Player;
@@ -59,7 +59,7 @@ public abstract class BlockChanger {
 		/**
 		 * Gets the player from the Entity.
 		 *
-		 * @return an optional of the Player.
+		 * @return An optional of the Player.
 		 */
 		public Optional<Player> getPlayer() {
 			return hasPlayer() ? Optional.of((Player) entity) : Optional.empty();

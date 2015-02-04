@@ -11,16 +11,16 @@ import java.util.Collection;
  */
 public interface Collidable {
 	/**
-	 * This method is used to get box of this entity
+	 * This method is used to get box of this entity.
 	 *
-	 * @return {@link Collection} of {@link Cuboid Cuboids} making up collision box
+	 * @return {@link java.util.Collection} of {@link nova.core.util.transform.Cuboid}s making up the collision box.
 	 */
 	Collection<Cuboid> getCollisionBoxes();
 
 	/**
-	 * Called when this entity collided with another
+	 * Called when this entity has collided with another.
 	 *
-	 * @param collidedWith Another entity
+	 * @param collidedWith The entity that this has collided with.
 	 */
 	void onCollide(Entity collidedWith);
 }

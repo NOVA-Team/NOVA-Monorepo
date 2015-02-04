@@ -12,7 +12,7 @@ public interface Extractable {
 	 *
 	 * @param type The type of the extracted object.
 	 * @param side The side the object is extracted on.
-	 * @return true if this type can be extracted.
+	 * @return {@code true} if this type can be extracted.
 	 */
 	boolean canExtract(Class<?> type, Direction side);
 
