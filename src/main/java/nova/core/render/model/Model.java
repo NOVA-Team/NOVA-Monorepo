@@ -284,7 +284,7 @@ public class Model implements Cloneable {
 
 		Vector3d finalTranslation = this.translation.add(translation);
 		Vector3d finalOffset = this.offset.add(offset);
-		Quaternion finalRotation = Quaternion.identity;//this.rotation.multiply(rotation);
+		Quaternion finalRotation = this.rotation.multiply(rotation);
 		Vector3d finalScale = this.scale.multiply(scale);
 
 		//Create a new model with transformation applied.
