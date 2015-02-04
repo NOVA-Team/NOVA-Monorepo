@@ -70,11 +70,11 @@ public class BlockManager {
 	 */
 	public Block registerBlock(BlockFactory factory) {
 		registry.register(factory);
-		itemManager.provide().registerItem(() -> new ItemBlock(factory.getDummy()));
-
         blockRegisteredListeners.publish(new BlockRegisteredEvent(factory));
 
-		return factory.getDummy();
+        Block dummy = factory.getDummy();
+		itemManager.provide().registerItem(() -> new ItemBlock(dummy));
+		return dummy;
 	}
 
     public EventListenerHandle<BlockRegisteredEvent> whenBlockRegistered(EventListener<BlockRegisteredEvent> listener) {

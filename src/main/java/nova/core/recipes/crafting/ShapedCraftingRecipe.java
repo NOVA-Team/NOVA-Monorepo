@@ -111,6 +111,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
                 this.posx[ingredientIndex] = x;
                 this.posy[ingredientIndex] = y;
                 this.ingredients[ingredientIndex] = ingredients[c - 'A'];
+                ingredientIndex++;
             }
         }
 
@@ -301,6 +302,9 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
         else
             mapping = new NonMirroredMapping(optOffset.get());
 
+        if (!mapping.fitsInCraftingGrid(craftingGrid))
+            return null;
+
         for (int i = 0; i < ingredients.length; i++) {
             Optional<ItemStack> item = mapping.getStack(craftingGrid, i);
             if (!item.isPresent())
@@ -336,6 +340,13 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
             this.offsetX = offset.x;
             this.offsetY = offset.y;
             this.itemStacks = new ItemStack[ingredients.length];
+        }
+
+        public boolean fitsInCraftingGrid(CraftingGrid craftingGrid) {
+            return offsetX >= 0
+                    && offsetX + getWidth() <= craftingGrid.getWidth()
+                    && offsetY >= 0
+                    && offsetY + getHeight() <= craftingGrid.getHeight();
         }
 
         public abstract Optional<ItemStack> getStack(CraftingGrid craftingGrid, int ingredient);

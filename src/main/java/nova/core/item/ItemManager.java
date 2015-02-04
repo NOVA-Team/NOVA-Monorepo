@@ -37,13 +37,16 @@ public class ItemManager {
 	 * @return Dummy item
 	 */
 	public Item registerItem(Supplier<Item> constructor) {
-		ItemFactory factory = new ItemFactory(constructor);
-		registry.register(factory);
+        return registerItem(new ItemFactory(constructor));
+	}
+
+    public Item registerItem(ItemFactory factory) {
+        registry.register(factory);
 
         itemRegistryListeners.publish(new ItemRegistrationEvent(factory));
 
-		return factory.getDummy();
-	}
+        return factory.getDummy();
+    }
 
 	public Item getItemFromBlock(Block block) {
 		return registry.get(block.getID()).get().getDummy();

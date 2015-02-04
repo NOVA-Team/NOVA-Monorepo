@@ -3,6 +3,7 @@ package nova.core.recipes.crafting;
 import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemStack;
+import nova.core.util.exception.NovaException;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,17 +42,17 @@ public class SpecificItemIngredient implements ItemIngredient {
 
     @Override
     public boolean matches(ItemStack item) {
-        return false;
+        return item.getItem().getID().equals(itemId);
     }
 
     @Override
     public Optional<String> getTag() {
-        return null;
+        return Optional.empty();
     }
 
     @Override
     public ItemStack consumeOnCrafting(ItemStack original, CraftingGrid craftingGrid) {
-        return null;
+        return original;
     }
 
     @Override
@@ -76,6 +77,10 @@ public class SpecificItemIngredient implements ItemIngredient {
     }
 
     private Item getItem(String itemId) {
-        return Game.instance.get().itemManager.getItem(itemId).get();
+        Optional<Item> item = Game.instance.get().itemManager.getItem(itemId);
+        if (!item.isPresent())
+            throw new NovaException("Missing item: " + itemId);
+
+        return item.get();
     }
 }

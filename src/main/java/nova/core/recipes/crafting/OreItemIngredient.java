@@ -48,7 +48,7 @@ public class OreItemIngredient implements ItemIngredient {
 
     @Override
     public Optional<String> getTag() {
-        return null;
+        return Optional.empty();
     }
 
     @Override
