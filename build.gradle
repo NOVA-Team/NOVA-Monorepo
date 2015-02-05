@@ -138,7 +138,8 @@ test {
 
 	testLogging.showStandardStreams = true
 
-	beforeTest {descriptor ->
-		logger.lifecycle("Running " + descriptor)
+	beforeTest { descriptor ->
+		def classPadded = String.format("%-50s", descriptor.className)
+		logger.lifecycle("Running test ${classPadded} ${descriptor.name}()")
 	}
 }
