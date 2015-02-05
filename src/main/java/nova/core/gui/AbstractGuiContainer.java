@@ -16,6 +16,7 @@ import nova.core.gui.nativeimpl.NativeContainer;
 public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>, T extends NativeContainer> extends GuiComponent<O, T> {
 
 	private GuiLayout layout = new BorderLayout();
+
 	private HashMap<String, GuiComponent<?, ?>> children = new HashMap<String, GuiComponent<?, ?>>();
 
 	public AbstractGuiContainer(String uniqueID) {
@@ -96,6 +97,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * 
 	 * @param event {@link GuiEvent} to process
 	 */
+	@Override
 	public void onEvent(GuiEvent event) {
 		super.onEvent(event);
 		getChildComponents().stream().forEach((e) -> {
@@ -151,5 +153,13 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		children.forEach((k, v) -> {
 			v.updateQualifiedName();
 		});
+	}
+
+	@Override
+	protected void repaint() {
+		children.forEach((k, v) -> {
+			v.repaint();
+		});
+		super.repaint();
 	}
 }

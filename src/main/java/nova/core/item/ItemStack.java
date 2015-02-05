@@ -93,13 +93,14 @@ public class ItemStack implements Cloneable {
 	}
 
 	/**
-	 * Check if this ItemStack is of type of another ItemStack
+	 * Check if this ItemStack is of type of another ItemStack. Will compare the
+	 * {@link Item#getID()}.
 	 *
 	 * @param stack The another ItemStack
 	 * @return Result
 	 */
 	public boolean sameStackType(ItemStack stack) {
-		return stack.item == item;
+		return stack.item.getID().equals(item.getID());
 	}
 
 	@Override
