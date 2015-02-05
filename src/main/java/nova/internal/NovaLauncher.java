@@ -58,7 +58,7 @@ public class NovaLauncher implements Loadable {
 			.filter(Loadable.class::isAssignableFrom)
 			.map(clazz -> clazz.asSubclass(Loadable.class))
 			.filter(clazz -> clazz.getAnnotation(NovaMod.class) != null)
-			.collect(Collectors.toMap((clazz) -> clazz.getAnnotation(NovaMod.class), Function.identity()));
+			.collect(Collectors.toMap((clazz) -> clazz.getAnnotation(NovaMod.class), Function.identity())); //Map<NovaMod, Class<? extends Loadable>>
 
 		classesMap.keySet().stream()
 			.flatMap(mod -> Arrays.stream(mod.modules()))
@@ -166,11 +166,7 @@ public class NovaLauncher implements Loadable {
 			dependencyIds = new HashSet<>();
 		}
 
-		modClasses.stream()
-			.filter(Loadable.class::isAssignableFrom)
-			.map(clazz -> clazz.asSubclass(Loadable.class))
-			.filter(clazz -> clazz.getAnnotation(NovaMod.class) != null)
-			.map((clazz) -> clazz.getAnnotation(NovaMod.class))
+		classesMap.keySet().stream()
 			.forEach(this::generateAndAddDependencies);
 	}
 
