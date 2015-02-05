@@ -10,5 +10,5 @@ import java.util.Optional;
  */
 @FunctionalInterface
 public interface RecipeFunction {
-    public Optional<ItemStack> doCrafting(CraftingGrid craftingGrid, Map<String, ItemStack> taggedIngredients);
+	public Optional<ItemStack> doCrafting(CraftingGrid craftingGrid, Map<String, ItemStack> taggedIngredients);
 }

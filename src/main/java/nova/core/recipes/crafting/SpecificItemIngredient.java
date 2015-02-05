@@ -15,72 +15,76 @@ import java.util.Optional;
  * @author Stan Hebben
  */
 public class SpecificItemIngredient implements ItemIngredient {
-    private final String itemId;
+	private final String itemId;
 
-    public SpecificItemIngredient(String itemId) {
-        this.itemId = itemId;
-    }
+	public SpecificItemIngredient(String itemId) {
+		this.itemId = itemId;
+	}
 
-    public String getItemId() {
-        return itemId;
-    }
+	public String getItemId() {
+		return itemId;
+	}
 
-    @Override
-    public Optional<Collection<String>> getPossibleItemIds() {
-        return Optional.of(Collections.singleton(itemId));
-    }
+	@Override
+	public Optional<Collection<String>> getPossibleItemIds() {
+		return Optional.of(Collections.singleton(itemId));
+	}
 
-    @Override
-    public Optional<Collection<Item>> getExampleItems() {
-        return Optional.of(Collections.singleton(getItem(itemId)));
-    }
+	@Override
+	public Optional<Collection<Item>> getExampleItems() {
+		return Optional.of(Collections.singleton(getItem(itemId)));
+	}
 
-    @Override
-    public boolean isSubsetOf(ItemIngredient ingredient) {
-        return ingredient.matches(new ItemStack(getItem(itemId), 1));
-    }
+	@Override
+	public boolean isSubsetOf(ItemIngredient ingredient) {
+		return ingredient.matches(new ItemStack(getItem(itemId), 1));
+	}
 
-    @Override
-    public boolean matches(ItemStack item) {
-        return item.getItem().getID().equals(itemId);
-    }
+	@Override
+	public boolean matches(ItemStack item) {
+		return item.getItem().getID().equals(itemId);
+	}
 
-    @Override
-    public Optional<String> getTag() {
-        return Optional.empty();
-    }
+	@Override
+	public Optional<String> getTag() {
+		return Optional.empty();
+	}
 
-    @Override
-    public ItemStack consumeOnCrafting(ItemStack original, CraftingGrid craftingGrid) {
-        return original;
-    }
+	@Override
+	public ItemStack consumeOnCrafting(ItemStack original, CraftingGrid craftingGrid) {
+		return original;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
 
-        if (o == null || getClass() != o.getClass())
-            return false;
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        SpecificItemIngredient that = (SpecificItemIngredient) o;
+		SpecificItemIngredient that = (SpecificItemIngredient) o;
 
-        if (!itemId.equals(that.itemId))
-            return false;
+		if (!itemId.equals(that.itemId)) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        return itemId.hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return itemId.hashCode();
+	}
 
-    private Item getItem(String itemId) {
-        Optional<Item> item = Game.instance.get().itemManager.getItem(itemId);
-        if (!item.isPresent())
-            throw new NovaException("Missing item: " + itemId);
+	private Item getItem(String itemId) {
+		Optional<Item> item = Game.instance.get().itemManager.getItem(itemId);
+		if (!item.isPresent()) {
+			throw new NovaException("Missing item: " + itemId);
+		}
 
-        return item.get();
-    }
+		return item.get();
+	}
 }

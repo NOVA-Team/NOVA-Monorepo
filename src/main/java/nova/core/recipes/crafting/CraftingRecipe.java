@@ -1,10 +1,10 @@
 package nova.core.recipes.crafting;
 
-import java.util.Collection;
-import java.util.Optional;
-
 import nova.core.item.ItemStack;
 import nova.core.recipes.Recipe;
+
+import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Contains a single crafting recipe, no matter its crafting logic.

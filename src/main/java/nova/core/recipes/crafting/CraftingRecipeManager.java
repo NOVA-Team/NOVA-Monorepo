@@ -1,17 +1,16 @@
 package nova.core.recipes.crafting;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import nova.core.item.ItemStack;
 import nova.core.recipes.RecipeAddedEvent;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.RecipeRemovedEvent;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Manages crafting recipes and has functions to efficiently lookup a crafting
@@ -59,21 +58,25 @@ public class CraftingRecipeManager {
 	 */
 	public Optional<CraftingRecipe> getRecipe(CraftingGrid grid) {
 		for (CraftingRecipe dynamicRecipe : dynamicRecipes) {
-			if (dynamicRecipe.matches(grid))
+			if (dynamicRecipe.matches(grid)) {
 				return Optional.of(dynamicRecipe);
+			}
 		}
 
 		Optional<ItemStack> firstItem = grid.getFirstNonEmptyItem();
-		if (!firstItem.isPresent())
+		if (!firstItem.isPresent()) {
 			return Optional.empty();
+		}
 
 		String firstItemId = firstItem.get().getItem().getID();
-		if (!staticRecipes.containsKey(firstItemId))
+		if (!staticRecipes.containsKey(firstItemId)) {
 			return Optional.empty();
+		}
 
 		for (CraftingRecipe staticRecipe : staticRecipes.get(firstItemId)) {
-			if (staticRecipe.matches(grid))
+			if (staticRecipe.matches(grid)) {
 				return Optional.of(staticRecipe);
+			}
 		}
 
 		return Optional.empty();
