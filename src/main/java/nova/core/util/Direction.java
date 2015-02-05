@@ -3,7 +3,7 @@ package nova.core.util;
 import nova.core.util.transform.Vector3i;
 
 /**
- * defines basic directions in world
+ * Defines basic directions in world.
  */
 public enum Direction {
 	DOWN(0, -1, 0),
@@ -28,18 +28,22 @@ public enum Direction {
 		vector = new Vector3i(x, y, z);
 	}
 
-	//FIXME: This method may return null!!
 	/**
-	 * Turns direction number into Direction
-	 * @param is Direction id
-	 * @return Resulting Direction
+	 * Turns direction number into Direction.
+	 * 
+	 * @param directionID Direction ID / number.
+	 * @return Resulting Direction.
+	 * @throws IllegalArgumentException if the direction ID is invalid (greater than {@code 6} or less than {@code 0})
 	 */
-	public static Direction fromOrdinal(int is) {
-		return Direction.values[is % Direction.values.length];
+	public static Direction fromOrdinal(int directionID) {
+		if (directionID < 0 || directionID >= Direction.values.length) {
+			throw new IllegalArgumentException("Direction ID is invalid! The direction ID " + directionID + " is must be between " + (Direction.values.length - 1) + " and 0 inclusive");
+		}
+		return Direction.values[directionID];
 	}
 
 	/**
-	 * @return Direction opposite to this
+	 * @return Direction opposite to this.
 	 */
 	public Direction opposite() {
 		if (this == Direction.UNKNOWN) {
