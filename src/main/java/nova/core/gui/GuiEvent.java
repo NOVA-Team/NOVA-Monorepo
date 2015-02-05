@@ -1,8 +1,9 @@
 package nova.core.gui;
 
+import nova.core.gui.KeyStroke.Key;
+import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
-import nova.core.network.NetworkTarget.Side;
 
 /**
  * Event for GUI, like mouse click
@@ -45,12 +46,12 @@ public class GuiEvent {
 
 	public static class KeyEvent extends GuiEvent {
 
-		public final int keyCode;
+		public final Key key;
 		public final int character;
 		public final EnumKeyState state;
 
-		public KeyEvent(int keyCode, char character, EnumKeyState state) {
-			this.keyCode = keyCode;
+		public KeyEvent(Key key, char character, EnumKeyState state) {
+			this.key = key;
 			this.character = character;
 			this.state = state;
 		}

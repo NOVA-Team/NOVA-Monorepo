@@ -7,8 +7,17 @@ import nova.core.event.EventListenerHandle;
 import nova.core.event.EventListenerList;
 import nova.core.gui.GuiEvent.SidedEvent;
 import nova.core.network.NetworkManager;
+import nova.core.network.NetworkTarget;
 import nova.core.network.NetworkTarget.Side;
 
+// TODO Move to event package
+/**
+ * Event listener list that can differentiate {@link NetworkTarget} and allows
+ * registration of handlers that only listen on a specific {@link Side}.
+ * 
+ * @author Vic Nightfall
+ * @param <T>
+ */
 public class SidedEventListenerList<T> extends EventListenerList<T> {
 
 	private NetworkEventProcessor eventProcessor;

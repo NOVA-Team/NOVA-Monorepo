@@ -9,6 +9,7 @@ import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseButton;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseState;
 import nova.core.gui.GuiEvent.MouseWheelEvent;
+import nova.core.gui.KeyStroke.Key;
 import nova.core.gui.Outline;
 import nova.core.render.model.Model;
 import nova.core.util.transform.Vector2i;
@@ -85,10 +86,9 @@ public interface NativeGuiComponent {
 		}
 	}
 
-	// TODO Create a wrapper for key codes.
-	public default void onKeyPressed(int keyCode, char character, EnumKeyState state) {
+	public default void onKeyPressed(Key key, char character, EnumKeyState state) {
 		if (getElement().isActive()) {
-			getElement().onEvent(new KeyEvent(keyCode, character, state));
+			getElement().onEvent(new KeyEvent(key, character, state));
 		}
 	}
 }
