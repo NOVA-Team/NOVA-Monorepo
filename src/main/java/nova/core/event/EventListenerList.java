@@ -9,11 +9,16 @@ package nova.core.event;
  * @author Stan Hebben
  */
 public class EventListenerList<T> {
+    public static final int PRIORITY_HIGH = 100;
+    public static final int PRIORITY_DEFAULT = 0;
+    public static final int PRIORITY_LOW = -100;
+
 	// TODO: actually test concurrency
+    // TODO: unit tests
 
 	// implements a linked list of nodes
-	private volatile EventListenerNode first = null;
-	private EventListenerNode last = null;
+	protected volatile EventListenerNode first = null;
+	protected EventListenerNode last = null;
 
 	public synchronized void clear() {
 		first = last = null;
@@ -26,18 +31,37 @@ public class EventListenerList<T> {
 	 * @return event listener's handle
 	 */
 	public EventListenerHandle<T> add(EventListener<T> listener) {
-		EventListenerNode node = new EventListenerNode(listener, last, null);
+        return add(listener, PRIORITY_DEFAULT);
+    }
+
+    public EventListenerHandle<T> add(EventListener<T> listener, int priority) {
+		EventListenerNode node = new EventListenerNode(listener, priority);
 
 		synchronized (this) {
 			if (first == null) {
-				first = node;
-			}
+				first = last = node;
+			} else {
+                // prioritized list: where to insert?
+                EventListenerNode previousNode = last;
+                while (previousNode != null && priority > previousNode.priority) {
+                    previousNode = previousNode.prev;
+                }
 
-			if (last != null) {
-				last.next = node;
-			}
+                if (previousNode == null) {
+                    node.next = first;
+                    first.prev = previousNode;
+                    first = node;
+                } else {
+                    if (previousNode.next == null) {
+                        last = node;
+                    } else {
+                        previousNode.next.prev = node;
+                    }
 
-			last = node;
+                    previousNode.next = node;
+                    node.prev = previousNode;
+                }
+            }
 		}
 
 		return node;
@@ -52,8 +76,12 @@ public class EventListenerList<T> {
 	 * @return event listener's handle
 	 */
 	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz) {
-		return add(new SingleEventListener<E, T>(listener, clazz));
+		return add(new SingleEventListener<E, T>(listener, clazz), PRIORITY_DEFAULT);
 	}
+
+    public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, int priority) {
+        return add(new SingleEventListener<E, T>(listener, clazz), priority);
+    }
 
 	/**
 	 * Removes an EventListener from the list.
@@ -69,6 +97,8 @@ public class EventListenerList<T> {
 				current.close();
 				return true;
 			}
+
+            current = current.next;
 		}
 
 		return false;
@@ -102,24 +132,19 @@ public class EventListenerList<T> {
 		}
 	}
 
-	// only to be used by MultiListenerList, because I can't cast it in there...
-	protected void publishSafely(Object event) {
-		publish((T) event);
-	}
-
 	// #######################
 	// ### Private classes ###
 	// #######################
 
 	protected class EventListenerNode implements EventListenerHandle<T> {
-		private final EventListener<T> listener;
-		private EventListenerNode next;
-		private EventListenerNode prev;
+		protected final EventListener<T> listener;
+        protected final int priority;
+		protected EventListenerNode next = null;
+		protected EventListenerNode prev = null;
 
-		public EventListenerNode(EventListener<T> handler, EventListenerNode prev, EventListenerNode next) {
+		public EventListenerNode(EventListener<T> handler, int priority) {
 			this.listener = handler;
-			this.prev = prev;
-			this.next = next;
+            this.priority = priority;
 		}
 
 		@Override
@@ -173,9 +198,9 @@ public class EventListenerList<T> {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public void onEvent(T value) {
-			if (eventClass.isInstance(value)) {
-				wrappedListener.onEvent((E) value);
+		public void onEvent(T event) {
+			if (eventClass.isInstance(event)) {
+				wrappedListener.onEvent((E) event);
 			}
 		}
 	}

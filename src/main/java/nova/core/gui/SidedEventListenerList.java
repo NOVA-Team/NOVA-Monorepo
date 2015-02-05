@@ -87,14 +87,14 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 		}
 
 		@Override
-		public void onEvent(T value) {
-			if (value instanceof SidedEvent) {
-				SidedEvent sidedEvent = (SidedEvent) value;
+		public void onEvent(T event) {
+			if (event instanceof SidedEvent) {
+				SidedEvent sidedEvent = (SidedEvent) event;
 				if (sidedEvent.getTarget().targets(side)) {
-					onEvent(value);
+					onEvent(event);
 				}
 			} else {
-				onEvent(value);
+				onEvent(event);
 			}
 		}
 	}

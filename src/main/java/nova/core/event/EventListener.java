@@ -8,5 +8,5 @@ package nova.core.event;
  */
 @FunctionalInterface
 public interface EventListener<T> {
-	public void onEvent(T value);
+	public void onEvent(T event);
 }
