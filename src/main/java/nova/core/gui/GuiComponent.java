@@ -128,15 +128,24 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	public Optional<Vector2i> getPreferredSize() {
-		return preferredSize;
+		return preferredSize.isPresent() ? preferredSize : nativeElement.getPreferredSize();
 	}
 
 	public Optional<Vector2i> getMinimumSize() {
-		return minimumSize;
+		return minimumSize.isPresent() ? preferredSize : nativeElement.getPreferredSize();
 	}
 
 	public Optional<Vector2i> getMaximumSize() {
-		return maximumSize;
+		return maximumSize.isPresent() ? preferredSize : nativeElement.getPreferredSize();
+	}
+
+	/**
+	 * Call this when the component's state has changed and needs to be
+	 * re-rendered. The native component is requested to infer
+	 * {@link #render(int, int, Model)} after.
+	 */
+	protected void repaint() {
+		nativeElement.requestRender();
 	}
 
 	/**
