@@ -176,6 +176,6 @@ public class Quaternion implements Transform {
 
 	public String toString() {
 		MathContext cont = new MathContext(4, RoundingMode.HALF_UP);
-		return "Quaternion[" + new BigDecimal(w, cont) + ", " + new BigDecimal(x, cont) + ", " + new BigDecimal(y, cont) + ", " + new BigDecimal(z, cont) + "]";
+		return "Quaternion[" + new BigDecimal(x, cont) + ", " + new BigDecimal(y, cont) + ", " + new BigDecimal(z, cont) + ", " + new BigDecimal(w, cont) + "]";
 	}
 }
