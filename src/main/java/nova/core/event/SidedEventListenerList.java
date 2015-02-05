@@ -1,14 +1,23 @@
-package nova.core.gui;
+package nova.core.event;
 
 import java.util.HashSet;
 
-import nova.core.event.EventListener;
-import nova.core.event.EventListenerHandle;
-import nova.core.event.EventListenerList;
-import nova.core.gui.GuiEvent.SidedEvent;
+import nova.core.event.SidedEventListenerList.SidedEvent;
+import nova.core.gui.GuiEvent;
 import nova.core.network.NetworkManager;
+import nova.core.network.NetworkTarget;
 import nova.core.network.NetworkTarget.Side;
+import nova.core.network.PacketReceiver;
+import nova.core.network.PacketSender;
 
+// TODO Implement priorities
+/**
+ * Event listener list that can differentiate {@link NetworkTarget} and allows
+ * registration of handlers that only listen on a specific {@link Side}.
+ * 
+ * @author Vic Nightfall
+ * @param <T>
+ */
 public class SidedEventListenerList<T> extends EventListenerList<T> {
 
 	private NetworkEventProcessor eventProcessor;
@@ -41,8 +50,8 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 
 	@Override
 	public void publish(T event) {
-		if (event instanceof SidedEvent) {
-			SidedEvent sidedEvent = (SidedEvent) event;
+		if (event instanceof SidedEventListenerList.SidedEvent) {
+			SidedEventListenerList.SidedEvent sidedEvent = (SidedEventListenerList.SidedEvent) event;
 			Side currentSide = NetworkManager.instance.get().getSide();
 
 			// Check if the event targets the current side.
@@ -88,8 +97,8 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 
 		@Override
 		public void onEvent(T event) {
-			if (event instanceof SidedEvent) {
-				SidedEvent sidedEvent = (SidedEvent) event;
+			if (event instanceof SidedEventListenerList.SidedEvent) {
+				SidedEventListenerList.SidedEvent sidedEvent = (SidedEventListenerList.SidedEvent) event;
 				if (sidedEvent.getTarget().targets(side)) {
 					onEvent(event);
 				}
@@ -107,6 +116,10 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 		 * 
 		 * @param event
 		 */
-		public void handleEvent(SidedEvent event);
+		public void handleEvent(SidedEventListenerList.SidedEvent event);
+	}
+
+	public static interface SidedEvent extends PacketSender, PacketReceiver {
+		public Side getTarget();
 	}
 }

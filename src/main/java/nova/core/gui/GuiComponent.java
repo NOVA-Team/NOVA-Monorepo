@@ -4,7 +4,8 @@ import java.util.Optional;
 
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerList;
-import nova.core.gui.GuiEvent.SidedEvent;
+import nova.core.event.SidedEventListenerList;
+import nova.core.event.SidedEventListenerList.SidedEvent;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.network.NetworkTarget.Side;
@@ -44,7 +45,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 */
 	protected Optional<AbstractGuiContainer<?, ?>> parentContainer = Optional.empty();
 
-	private void dispatchNetworkEvent(SidedEvent event) {
+	private void dispatchNetworkEvent(SidedEventListenerList.SidedEvent event) {
 		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent(event, this));
 	}
 
