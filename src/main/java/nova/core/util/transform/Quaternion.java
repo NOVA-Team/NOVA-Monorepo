@@ -50,11 +50,11 @@ public class Quaternion implements Transform {
 		w = Quaternion.w;
 	}
 
-	public Quaternion(double d, double d1, double d2, double d3) {
-		x = d1;
-		y = d2;
-		z = d3;
-		w = d;
+	public Quaternion(double x, double y, double z, double w) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class Quaternion implements Transform {
 		double x = c1c2 * s3 + s1s2 * c3;
 		double y = s1 * c2 * c3 + c1 * s2 * s3;
 		double z = c1 * s2 * c3 - s1 * c2 * s3;
-		return new Quaternion(w, x, y, z);
+		return new Quaternion(x, y, z, w);
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class Quaternion implements Transform {
 	public static Quaternion fromAxis(double ax, double ay, double az, double angle) {
 		angle *= 0.5;
 		double d4 = Math.sin(angle);
-		return new Quaternion(Math.cos(angle), ax * d4, ay * d4, az * d4);
+		return new Quaternion(ax * d4, ay * d4, az * d4, Math.cos(angle));
 	}
 
 	public Quaternion multiply(Quaternion q) {
@@ -116,7 +116,7 @@ public class Quaternion implements Transform {
 		double d1 = w * q.x + x * q.w - y * q.z + z * q.y;
 		double d2 = w * q.y + x * q.z + y * q.w - z * q.x;
 		double d3 = w * q.z - x * q.y + y * q.x + z * q.w;
-		return new Quaternion(d, d1, d2, d3);
+		return new Quaternion(d1, d2, d3, d);
 	}
 
 	public Quaternion rightMultiply(Quaternion q) {
@@ -124,7 +124,7 @@ public class Quaternion implements Transform {
 		double d1 = w * q.x + x * q.w + y * q.z - z * q.y;
 		double d2 = w * q.y - x * q.z + y * q.w + z * q.x;
 		double d3 = w * q.z + x * q.y - y * q.x + z * q.w;
-		return new Quaternion(d, d1, d2, d3);
+		return new Quaternion(d1, d2, d3, d);
 	}
 
 	public Quaternion $times(Quaternion q) {
@@ -142,6 +142,7 @@ public class Quaternion implements Transform {
 
 	@Override
 	public Vector3d transform(Vector3<?> vec) {
+		//TODO: Check this
 		double d = -x * vec.xd() - y * vec.yd() - z * vec.zd();
 		double d1 = w * vec.xd() + y * vec.zd() - z * vec.yd();
 		double d2 = w * vec.yd() - x * vec.zd() + z * vec.xd();

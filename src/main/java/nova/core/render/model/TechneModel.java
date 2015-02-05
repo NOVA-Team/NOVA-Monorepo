@@ -154,10 +154,10 @@ public class TechneModel extends ModelProvider {
 				final String modelName = shapeName;
 				Model modelPart = new Model(modelName);
 				modelPart.drawCube();
-				modelPart.translation = new Vector3d(Double.parseDouble(position[0]) / 16d - Double.parseDouble(size[0]) / 32d, -Double.parseDouble(position[1]) / 16d + 1 + Double.parseDouble(size[1]) / 32d, Double.parseDouble(position[2]) / 16d - Double.parseDouble(size[2]) / 32d);
-				modelPart.offset = new Vector3d(Double.parseDouble(offset[0]) / 16d, -Double.parseDouble(offset[1]) / 16d, Double.parseDouble(offset[2]) / 16d);
-				modelPart.rotation = Quaternion.fromEuler(Math.toRadians(Double.parseDouble(rotation[0])), Math.toRadians(Double.parseDouble(rotation[1])), Math.toRadians(Double.parseDouble(rotation[2])));
 				modelPart.scale = new Vector3d(Double.parseDouble(size[0]) / 16d, Double.parseDouble(size[1]) / 16d, Double.parseDouble(size[2]) / 16d);
+				modelPart.translation = new Vector3d(-Double.parseDouble(position[0]) / 16d, -Double.parseDouble(position[1]) / 16d + 1, -Double.parseDouble(position[2]) / 16d).subtract(modelPart.scale.divide(2));
+				modelPart.offset = new Vector3d(-Double.parseDouble(offset[0]) / 16d, -Double.parseDouble(offset[1]) / 16d, -Double.parseDouble(offset[2]) / 16d).subtract(modelPart.scale.divide(2));
+				modelPart.rotation = Quaternion.fromEuler(Math.toRadians(Double.parseDouble(rotation[0])), Math.toRadians(Double.parseDouble(rotation[1])), Math.toRadians(Double.parseDouble(rotation[2])));
 				modelPart.textureOffset = new Vector2d(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
 
 				if (model.children.stream().anyMatch(m -> m.name.equals(modelName))) {

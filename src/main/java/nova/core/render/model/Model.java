@@ -282,10 +282,10 @@ public class Model implements Cloneable {
 	public Set<Model> flatten(Vector3d translation, Vector3d offset, Quaternion rotation, Vector3d scale) {
 		Set<Model> models = new HashSet<>();
 
-		Vector3d finalTranslation = this.translation.add(translation);
-		Vector3d finalOffset = this.offset.add(offset);
-		Quaternion finalRotation = this.rotation.multiply(rotation);
-		Vector3d finalScale = this.scale.multiply(scale);
+		final Vector3d finalTranslation = this.translation.add(translation);
+		final Vector3d finalOffset = this.offset.add(offset);
+		final Quaternion finalRotation = this.rotation.multiply(rotation);
+		final Vector3d finalScale = this.scale.multiply(scale);
 
 		//Create a new model with transformation applied.
 		Model transformedModel = clone();
@@ -293,7 +293,7 @@ public class Model implements Cloneable {
 				f.normal = f.normal
 					.add(finalOffset)
 					.transform(finalRotation)
-					.add(finalOffset.inverse())
+					.subtract(finalOffset)
 					.multiply(finalScale)
 					.add(finalTranslation);
 
@@ -302,7 +302,7 @@ public class Model implements Cloneable {
 					v.vec = v.vec
 						.add(finalOffset)
 						.transform(finalRotation)
-						.add(finalOffset.inverse())
+						.subtract(finalOffset)
 						.multiply(finalScale)
 						.add(finalTranslation);
 
