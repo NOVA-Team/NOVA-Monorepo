@@ -2,6 +2,8 @@ package nova.core.gui.layout;
 
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
+import nova.core.gui.Outline;
+import nova.core.util.transform.Vector2i;
 
 public abstract class AbstractGuiLayout<T extends LayoutConstraints<T>> implements GuiLayout {
 
@@ -38,7 +40,37 @@ public abstract class AbstractGuiLayout<T extends LayoutConstraints<T>> implemen
 		addImpl(component, parent, LayoutConstraints.createConstraints(constraintsClass, parameters));
 	}
 
-	protected abstract void addImpl(GuiComponent<?, ?> element, AbstractGuiContainer<?, ?> parent, T constraints);
+	protected abstract void addImpl(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, T constraints);
+
+	// TODO Document as needed by possible custom layouts.
+	protected final Vector2i getPreferredSizeOf(GuiComponent<?, ?> component) {
+		return component != null ? component.getPreferredSize().orElse(component.getMinimumSize().orElse(Vector2i.zero)) : Vector2i.zero;
+	}
+
+	protected final Vector2i getMaximumSizeOf(GuiComponent<?, ?> component) {
+		return component != null ? component.getPreferredSize().orElse(component.getMaximumSize().orElse(Vector2i.max)) : Vector2i.max;
+	}
+
+	@SuppressWarnings("deprecation")
+	protected final void setSizeOf(GuiComponent<?, ?> component, Vector2i size) {
+		if (component != null) {
+			component.setOutlineNative(component.getOutline().setDimension(size));
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	protected final void setPositionOf(GuiComponent<?, ?> component, Vector2i position) {
+		if (component != null) {
+			component.setOutlineNative(component.getOutline().setPosition(position));
+		}
+	};
+
+	@SuppressWarnings("deprecation")
+	protected final void setOutlineOf(GuiComponent<?, ?> component, Outline outline) {
+		if (component != null) {
+			component.setOutlineNative(outline);
+		}
+	}
 
 	public abstract T constraints();
 }

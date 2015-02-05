@@ -5,12 +5,14 @@ import java.util.Optional;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerList;
 import nova.core.gui.GuiEvent.SidedEvent;
+import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
 import nova.core.render.model.Model;
 import nova.core.util.Identifiable;
+import nova.core.util.transform.Vector2i;
 
 /**
  * Defines a basic gui component. A component can be added to
@@ -18,15 +20,19 @@ import nova.core.util.Identifiable;
  * 
  * @param <T> {@link NativeGuiComponent} type
  */
+@SuppressWarnings("unchecked")
 public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
 
 	private String uniqueID;
 	protected String qualifiedName;
 
 	private T nativeElement;
-	private SidedEventListenerList<ComponentEvent> eventListenerList = new SidedEventListenerList<ComponentEvent>(this::dispatchNetworkEvent);
+	private SidedEventListenerList<ComponentEvent<?>> eventListenerList = new SidedEventListenerList<ComponentEvent<?>>(this::dispatchNetworkEvent);
 	private EventListenerList<GuiEvent> listenerList = new EventListenerList<GuiEvent>();
-	protected Outline preferredOutline;
+
+	protected Optional<Vector2i> preferredSize = Optional.empty();
+	protected Optional<Vector2i> minimumSize = Optional.empty();
+	protected Optional<Vector2i> maximumSize = Optional.empty();
 
 	private boolean isActive = true;
 	private boolean isVisible = true;
@@ -52,6 +58,10 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		this.qualifiedName = uniqueID;
 	}
 
+	public Optional<AbstractGuiContainer<?, ?>> getParentContainer() {
+		return parentContainer;
+	}
+
 	/**
 	 * @return Outline of this component.
 	 * @see Outline
@@ -64,22 +74,69 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * Sets the outline of this component. Shouldn't be used as the layout
 	 * controls positioning. (If you are a layout don't mind the @deprecated)
 	 * 
-	 * @see #setOutline(Outline)
+	 * @see #setPreferredSize(Vector2i)
 	 * @param outline {@link Outline} to use as outline
 	 */
 	@Deprecated
-	protected void setOutlineNative(Outline outline) {
+	public void setOutlineNative(Outline outline) {
 		nativeElement.setOutline(outline);
 	}
 
 	/**
-	 * Sets the requested outline for this component. Only works if the parent
-	 * container's layout makes use of this.
+	 * Sets the requested size for this component. Only works if the parent
+	 * container's {@link GuiLayout} makes use of it.
 	 * 
-	 * @param outline
+	 * @param size preferred size of the component
 	 */
-	public void setOutline(Outline outline) {
-		preferredOutline = outline;
+	public O setPreferredSize(Vector2i size) {
+		preferredSize = Optional.of(size);
+		return (O) this;
+	}
+
+	public O setPreferredSize(int width, int height) {
+		return setPreferredSize(new Vector2i(width, height));
+	}
+
+	/**
+	 * Sets the minimal size of this component. It indicates that this component
+	 * shouldn't be shrinked below that size.
+	 * 
+	 * @param size minimal size of the component
+	 */
+	public O setMinimumSize(Vector2i size) {
+		minimumSize = Optional.of(size);
+		return (O) this;
+	}
+
+	public O setMinimumSize(int width, int height) {
+		return setMinimumSize(new Vector2i(width, height));
+	}
+
+	/**
+	 * Sets the maximal size of this component. It indicates that this component
+	 * shouldn't be stretched beyond that size.
+	 * 
+	 * @param size maximal size of the component
+	 */
+	public O setMaximumSize(Vector2i size) {
+		maximumSize = Optional.of(size);
+		return (O) this;
+	}
+
+	public O setMaximumSize(int width, int height) {
+		return setMaximumSize(new Vector2i(width, height));
+	}
+
+	public Optional<Vector2i> getPreferredSize() {
+		return preferredSize;
+	}
+
+	public Optional<Vector2i> getMinimumSize() {
+		return minimumSize;
+	}
+
+	public Optional<Vector2i> getMaximumSize() {
+		return maximumSize;
 	}
 
 	/**
@@ -143,7 +200,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		listenerList.publish(event);
 	}
 
-	public void triggerEvent(ComponentEvent event) {
+	public void triggerEvent(ComponentEvent<?> event) {
 		eventListenerList.publish(event);
 	}
 
@@ -156,14 +213,14 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	// External listener
 
-	@SuppressWarnings("unchecked")
-	public <EVENT extends ComponentEvent> O registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
+	// TODO Should be <EVENT extends ComponentEvent<O>> but that somehow
+	// destroys everything.
+	public <EVENT extends ComponentEvent<?>> O registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
 		eventListenerList.add(listener, clazz, side);
 		return (O) this;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <EVENT extends ComponentEvent> O registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
+	public <EVENT extends ComponentEvent<?>> O registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
 		eventListenerList.add(listener, clazz);
 		return (O) this;
 	}
