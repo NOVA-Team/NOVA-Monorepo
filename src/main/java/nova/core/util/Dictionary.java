@@ -19,8 +19,8 @@ import java.util.Set;
 public class Dictionary<T> {
 	private final Map<String, Set<T>> entries = new HashMap<>();
 	private final Map<T, Set<String>> locations = new HashMap<>();
-    private final EventListenerList<AddEvent<T>> addEventListeners = new EventListenerList<>();
-    private final EventListenerList<RemoveEvent<T>> removeEventListeners = new EventListenerList<>();
+	private final EventListenerList<AddEvent<T>> addEventListeners = new EventListenerList<>();
+	private final EventListenerList<RemoveEvent<T>> removeEventListeners = new EventListenerList<>();
 
 	public Dictionary() {
 
@@ -46,24 +46,25 @@ public class Dictionary<T> {
 
 		locations.get(object).add(key);
 
-        addEventListeners.publish(new AddEvent<>(key, object));
+		addEventListeners.publish(new AddEvent<>(key, object));
 	}
 
-    /**.
-     * Removes an object from the dictionary
-     *
-     * @param key the name of the object
-     * @param object the object to remove
-     */
-    public void remove(String key, T object) {
-        if (!entries.containsKey(key))
-            return;
+	/**
+	 * .
+	 * Removes an object from the dictionary
+	 *
+	 * @param key the name of the object
+	 * @param object the object to remove
+	 */
+	public void remove(String key, T object) {
+		if (!entries.containsKey(key))
+			return;
 
-        entries.get(key).remove(object);
-        locations.get(object).remove(key);
+		entries.get(key).remove(object);
+		locations.get(object).remove(key);
 
-        removeEventListeners.publish(new RemoveEvent<>(key, object));
-    }
+		removeEventListeners.publish(new RemoveEvent<>(key, object));
+	}
 
 	/**
 	 * Get an object set from the dictionary.
@@ -100,31 +101,31 @@ public class Dictionary<T> {
 		return entries.keySet();
 	}
 
-    public EventListenerHandle<AddEvent<T>> whenEntryAdded(EventListener<AddEvent<T>> listener) {
-        return addEventListeners.add(listener);
-    }
+	public EventListenerHandle<AddEvent<T>> whenEntryAdded(EventListener<AddEvent<T>> listener) {
+		return addEventListeners.add(listener);
+	}
 
-    public EventListenerHandle<RemoveEvent<T>> whenEntryRemoved(EventListener<RemoveEvent<T>> listener) {
-        return removeEventListeners.add(listener);
-    }
+	public EventListenerHandle<RemoveEvent<T>> whenEntryRemoved(EventListener<RemoveEvent<T>> listener) {
+		return removeEventListeners.add(listener);
+	}
 
-    public class AddEvent<T> {
-        public final String key;
-        public final T value;
+	public class AddEvent<T> {
+		public final String key;
+		public final T value;
 
-        public AddEvent(String key, T value) {
-            this.key = key;
-            this.value = value;
-        }
-    }
+		public AddEvent(String key, T value) {
+			this.key = key;
+			this.value = value;
+		}
+	}
 
-    public class RemoveEvent<T> {
-        public final String key;
-        public final T value;
+	public class RemoveEvent<T> {
+		public final String key;
+		public final T value;
 
-        public RemoveEvent(String key, T value) {
-            this.key = key;
-            this.value = value;
-        }
-    }
+		public RemoveEvent(String key, T value) {
+			this.key = key;
+			this.value = value;
+		}
+	}
 }

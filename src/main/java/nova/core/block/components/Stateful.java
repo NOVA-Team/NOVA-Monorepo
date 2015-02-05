@@ -14,26 +14,22 @@ public interface Stateful extends PositionDependent {
 	 * a block instance. There is no guarantee that Stored values will be retained,
 	 * and there is also no guarantee that World and Position will exist.
 	 */
-	default void awake()
-	{
-		
-		
+	default void awake() {
+
 	}
 
 	/**
 	 * This function will get called every time a block is loaded. World and position data will be available, including Storable data.
 	 */
-	default	void load()
-	{
-
+	default void load() {
 
 	}
+
 	/**
 	 * This function will get called before a block instance is destroyed. For
 	 * example: removed from the World.
 	 */
-	default	void unload()
-	{
+	default void unload() {
 
 	}
 }

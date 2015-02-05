@@ -9,6 +9,7 @@ import nova.core.world.World;
 
 /**
  * An ItemBlock is an Item that is meant to be used to place blocks.
+ *
  * @author Calclavia
  */
 public class ItemBlock extends Item {

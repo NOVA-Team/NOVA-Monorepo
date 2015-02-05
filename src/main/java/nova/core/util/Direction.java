@@ -30,7 +30,7 @@ public enum Direction {
 
 	/**
 	 * Turns direction number into Direction.
-	 * 
+	 *
 	 * @param directionID Direction ID / number.
 	 * @return Resulting Direction.
 	 * @throws IllegalArgumentException if the direction ID is invalid (greater than {@code 6} or less than {@code 0})

@@ -2,9 +2,10 @@ package nova.core.util.collection;
 
 /**
  * A 2-Tuple
- * @author Calclavia
+ *
  * @param <L> First type
  * @param <R> Second type
+ * @author Calclavia
  */
 public class Pair<L, R> {
 	public L _1;

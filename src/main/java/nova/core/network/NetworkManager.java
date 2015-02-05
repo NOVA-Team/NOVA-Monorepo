@@ -1,10 +1,10 @@
 package nova.core.network;
 
-import java.util.Optional;
-
 import nova.core.block.Block;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.util.exception.NovaException;
+
+import java.util.Optional;
 
 /**
  * @author Calclavia

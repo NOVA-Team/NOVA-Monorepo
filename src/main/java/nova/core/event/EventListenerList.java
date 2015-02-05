@@ -70,7 +70,7 @@ public class EventListenerList<T> {
 	/**
 	 * Adds an EventListener to the list that only accepts a specific subclass
 	 * of &lt;T&gt;
-	 * 
+	 *
 	 * @param listener listener to register
 	 * @param clazz class to listen for
 	 * @return event listener's handle
@@ -174,9 +174,9 @@ public class EventListenerList<T> {
 	 * A wrapper for an event listener that only accepts a specific type of
 	 * event.
 	 *
-	 * @author Vic Nightfall
 	 * @param <E> event type
 	 * @param <T> super type
+	 * @author Vic Nightfall
 	 */
 	protected static class SingleEventListener<E extends T, T> implements EventListener<T> {
 		private final Class<E> eventClass;
@@ -186,10 +186,10 @@ public class EventListenerList<T> {
 		 * Constructs a new single typed Event listener.
 		 *
 		 * @param wrappedListener The listener which gets called when the event
-		 *        was accepted.
+		 * was accepted.
 		 * @param eventClass The event to listen for, Any posted event that is
-		 *        an instance of said class will get passed through to the
-		 *        wrapped listener instance.
+		 * an instance of said class will get passed through to the
+		 * wrapped listener instance.
 		 */
 		public SingleEventListener(EventListener<E> wrappedListener, Class<E> eventClass) {
 			this.eventClass = eventClass;

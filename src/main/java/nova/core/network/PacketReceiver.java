@@ -9,6 +9,7 @@ public interface PacketReceiver {
 
 	/**
 	 * Reads a packet.
+	 *
 	 * @param id - An ID to indicate the type of packet receiving. An ID of 0 indicates the default packet containing basic information.
 	 * @param packet - data encoded into the packet.
 	 */

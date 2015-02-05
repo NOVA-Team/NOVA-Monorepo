@@ -1,10 +1,9 @@
 package nova.core.gui;
 
-import java.util.Optional;
-
 import nova.core.event.SidedEventListenerList;
-import nova.core.event.SidedEventListenerList.SidedEvent;
 import nova.core.gui.nativeimpl.NativeGui;
+
+import java.util.Optional;
 
 /**
  * Root container for GUI

@@ -1,7 +1,5 @@
 package nova.core.gui.nativeimpl;
 
-import java.util.Optional;
-
 import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.KeyEvent;
 import nova.core.gui.GuiEvent.KeyEvent.EnumKeyState;
@@ -14,11 +12,12 @@ import nova.core.gui.Outline;
 import nova.core.render.model.Model;
 import nova.core.util.transform.Vector2i;
 
+import java.util.Optional;
+
 /**
  * The native interface for any {@link GuiComponent}.
- * 
- * @author Vic Nightfall
  *
+ * @author Vic Nightfall
  */
 public interface NativeGuiComponent {
 
@@ -34,7 +33,7 @@ public interface NativeGuiComponent {
 	 * Override this in case the component needs a specific dimension. Generally
 	 * components should be designed with a flexible size, however some GUI
 	 * systems might not respect that.
-	 * 
+	 *
 	 * @return preferred size of the native component
 	 */
 	public default Optional<Vector2i> getPreferredSize() {
@@ -44,7 +43,7 @@ public interface NativeGuiComponent {
 	/**
 	 * Override for a minimum size. Will equal {@link #getPreferredSize()} by
 	 * default.
-	 * 
+	 *
 	 * @return minimal size of the native component
 	 */
 	public default Optional<Vector2i> getMinimumSize() {
@@ -54,7 +53,7 @@ public interface NativeGuiComponent {
 	/**
 	 * Override for a maximum size. Will equal {@link #getPreferredSize()} by
 	 * default.
-	 * 
+	 *
 	 * @return maximal size of the native component
 	 */
 	public default Optional<Vector2i> getMaximumSize() {

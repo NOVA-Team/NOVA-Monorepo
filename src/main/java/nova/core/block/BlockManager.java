@@ -16,7 +16,7 @@ public class BlockManager {
 
 	public final Registry<BlockFactory> registry;
 	private final Provider<ItemManager> itemManager;
-    private final EventListenerList<BlockRegisteredEvent> blockRegisteredListeners = new EventListenerList<>();
+	private final EventListenerList<BlockRegisteredEvent> blockRegisteredListeners = new EventListenerList<>();
 
 	private BlockManager(Registry<BlockFactory> registry, Provider<ItemManager> itemManager) {
 		this.registry = registry;
@@ -38,7 +38,7 @@ public class BlockManager {
 
 	/**
 	 * Registers a block with no constructor arguments
-	 * 
+	 *
 	 * @param block Block to register
 	 * @return New block instance
 	 */
@@ -55,7 +55,7 @@ public class BlockManager {
 
 	/**
 	 * Register a new block with custom constructor arguments.
-	 * 
+	 *
 	 * @param constructor Block instance {@link Supplier}
 	 * @return Dummy block
 	 */
@@ -65,28 +65,28 @@ public class BlockManager {
 
 	/**
 	 * Register a new block with custom constructor arguments.
+	 *
 	 * @param factory {@link BlockFactory} of registered block
 	 * @return Dummy block
 	 */
 	public Block registerBlock(BlockFactory factory) {
 		registry.register(factory);
-        blockRegisteredListeners.publish(new BlockRegisteredEvent(factory));
+		blockRegisteredListeners.publish(new BlockRegisteredEvent(factory));
 
-        Block dummy = factory.getDummy();
+		Block dummy = factory.getDummy();
 		itemManager.provide().registerItem(() -> new ItemBlock(dummy));
 		return dummy;
 	}
 
-    public EventListenerHandle<BlockRegisteredEvent> whenBlockRegistered(EventListener<BlockRegisteredEvent> listener) {
-        return blockRegisteredListeners.add(listener);
-    }
+	public EventListenerHandle<BlockRegisteredEvent> whenBlockRegistered(EventListener<BlockRegisteredEvent> listener) {
+		return blockRegisteredListeners.add(listener);
+	}
 
+	public class BlockRegisteredEvent {
+		public final BlockFactory blockFactory;
 
-    public class BlockRegisteredEvent {
-        public final BlockFactory blockFactory;
-
-        public BlockRegisteredEvent(BlockFactory blockFactory) {
-            this.blockFactory = blockFactory;
-        }
-    }
+		public BlockRegisteredEvent(BlockFactory blockFactory) {
+			this.blockFactory = blockFactory;
+		}
+	}
 }

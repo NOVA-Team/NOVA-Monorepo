@@ -1,18 +1,16 @@
 package nova.core.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import nova.core.di.WithInjector;
-
 import org.junit.Test;
-
 import se.jbee.inject.Dependency;
 
-public class RegistryTest extends WithInjector{
-	
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class RegistryTest extends WithInjector {
 
 	@Test
 	public void testRegistry() throws Exception {
-			
+
 		@SuppressWarnings("unchecked")
 		Registry<Identifiable> registry = injector.resolve(Dependency.dependency(Registry.class));
 

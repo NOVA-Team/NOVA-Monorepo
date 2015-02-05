@@ -1,21 +1,19 @@
 package nova.internal;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.test.mod.TestMod;
-import nova.test.mod.NonAnnotatedTestMod;
 import nova.test.mod.NoLoadableTestMod;
-import org.assertj.core.data.MapEntry;
+import nova.test.mod.NonAnnotatedTestMod;
+import nova.test.mod.TestMod;
 import org.assertj.core.util.Sets;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NovaLauncherTest {

@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 /**
  * All models must be included in /assets/domain/models/
+ *
  * @author Calclavia
  */
 public abstract class ModelProvider {
@@ -19,6 +20,7 @@ public abstract class ModelProvider {
 
 	/**
 	 * Loads the model with a input stream.
+	 *
 	 * @param stream
 	 */
 	public abstract void load(InputStream stream);

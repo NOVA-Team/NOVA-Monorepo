@@ -46,8 +46,8 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Get the world that the block is in.
 	 *
-	 * @throws NovaException "Attempt to cast blockAccess to world invalidly!"
 	 * @return {@link nova.core.world.World} that the block is in.
+	 * @throws NovaException Attempt to cast blockAccess to world invalidly!
 	 */
 	public World getWorld() {
 		if (blockAccess instanceof World) {

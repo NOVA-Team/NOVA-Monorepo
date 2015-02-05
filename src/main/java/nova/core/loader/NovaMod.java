@@ -17,24 +17,28 @@ import java.lang.annotation.Target;
 public @interface NovaMod {
 	/**
 	 * The unique mod identifier for this mod
+	 *
 	 * @return Mod ID
 	 */
 	String id();
 
 	/**
 	 * The user friendly name for the mod
+	 *
 	 * @return Mod name
 	 */
 	String name();
 
 	/**
 	 * The version identifier of this mod
+	 *
 	 * @return Mod Version
 	 */
 	String version();
 
 	/**
 	 * The version of Nova this mod is compatible with
+	 *
 	 * @return Nova version
 	 */
 	String novaVersion();
@@ -47,12 +51,14 @@ public @interface NovaMod {
 	 * "x" is the version wildcard.
 	 * Adding "f" after the version will force the dependency to be a requirement.
 	 * E.g: BuildCraft@6.1.x?
+	 *
 	 * @return The dependencies
 	 */
 	String[] dependencies() default { };
 
 	/**
 	 * Modules of Dependency Injection that will be added to core injector allowing provision of modules by mods.
+	 *
 	 * @return The modules
 	 */
 	Class<? extends Bundle>[] modules() default { };

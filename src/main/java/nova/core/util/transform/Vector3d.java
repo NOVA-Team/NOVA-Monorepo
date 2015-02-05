@@ -2,6 +2,7 @@ package nova.core.util.transform;
 
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
+ *
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")

@@ -1,10 +1,10 @@
 package nova.core.gui.layout;
 
+import nova.core.gui.layout.BorderLayout.EnumBorderRegion;
+
 import java.lang.reflect.Constructor;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
-
-import nova.core.gui.layout.BorderLayout.EnumBorderRegion;
 
 public abstract class LayoutConstraints<O extends LayoutConstraints<O>> implements Cloneable {
 

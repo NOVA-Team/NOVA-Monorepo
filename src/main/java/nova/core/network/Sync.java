@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * An annotation applied to fields that can be synchronized between server and client.
+ *
  * @author Calclavia
  */
 @Retention(RetentionPolicy.RUNTIME)

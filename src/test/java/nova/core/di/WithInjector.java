@@ -1,9 +1,7 @@
 package nova.core.di;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
-
 import org.junit.Before;
-
 import se.jbee.inject.Injector;
 
 public abstract class WithInjector {

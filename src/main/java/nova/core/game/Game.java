@@ -26,28 +26,28 @@ public class Game {
 	public final FluidManager fluidManager;
 	public final WorldManager worldManager;
 	public final RenderManager renderManager;
-    public final RecipeManager recipeManager;
-    public final CraftingRecipeManager craftingRecipeManager;
-    public final OreDictionary oreDictionary;
+	public final RecipeManager recipeManager;
+	public final CraftingRecipeManager craftingRecipeManager;
+	public final OreDictionary oreDictionary;
 
 	private Game(
-            BlockManager blockManager,
-            EntityManager entityManager,
-            ItemManager itemManager,
-            FluidManager fluidManager,
-            WorldManager worldManager,
-            RenderManager renderManager,
-            RecipeManager recipeManager,
-            CraftingRecipeManager craftingRecipeManager,
-            OreDictionary oreDictionary) {
+		BlockManager blockManager,
+		EntityManager entityManager,
+		ItemManager itemManager,
+		FluidManager fluidManager,
+		WorldManager worldManager,
+		RenderManager renderManager,
+		RecipeManager recipeManager,
+		CraftingRecipeManager craftingRecipeManager,
+		OreDictionary oreDictionary) {
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
 		this.itemManager = itemManager;
 		this.fluidManager = fluidManager;
 		this.worldManager = worldManager;
 		this.renderManager = renderManager;
-        this.recipeManager = recipeManager;
-        this.craftingRecipeManager = craftingRecipeManager;
-        this.oreDictionary = oreDictionary;
+		this.recipeManager = recipeManager;
+		this.craftingRecipeManager = craftingRecipeManager;
+		this.oreDictionary = oreDictionary;
 	}
 }

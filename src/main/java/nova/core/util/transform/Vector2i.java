@@ -3,7 +3,7 @@ package nova.core.util.transform;
 /**
  * A double implementation of Vector2. Vector2 is an immutable quantity that
  * holds an x, y and z value.
- * 
+ *
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")

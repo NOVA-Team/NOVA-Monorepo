@@ -4,9 +4,8 @@ import nova.core.gui.GuiComponent;
 
 /**
  * A native interface for anything that can hold components.
- * 
- * @author Vic Nightfall
  *
+ * @author Vic Nightfall
  */
 public interface NativeContainer extends NativeGuiComponent {
 

@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 
 /**
  * A Vertex contains a position and UV data.
+ *
  * @author Calclavia, Kubuxu, inspired by ChickenBones
  */
 public class Vertex implements Cloneable {

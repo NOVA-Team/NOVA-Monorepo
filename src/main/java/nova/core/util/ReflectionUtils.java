@@ -21,6 +21,7 @@ public class ReflectionUtils {
 
 	/**
 	 * Invokes action for each field in source object annotated with {@link nova.core.util.components.Stored}
+	 *
 	 * @param source Object to iterate over
 	 * @param action Action to do
 	 */
@@ -30,13 +31,14 @@ public class ReflectionUtils {
 			if (key.length() == 0) {
 				key = field.getName();
 			}
-			
+
 			action.accept(field, key);
 		});
 	}
 
 	/**
 	 * Invokes an action on each field annotated with specified annotation of given object
+	 *
 	 * @param <T> Annotation type
 	 * @param annotation Annotation type
 	 * @param source Object to scan

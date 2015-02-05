@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 /**
  * A face is defined as at least 3 vertices joined together. It is group of vertices that result in a surface.
+ *
  * @author Calclavia
  */
 public class Face implements Cloneable {
@@ -24,6 +25,7 @@ public class Face implements Cloneable {
 
 	/**
 	 * Binds a specific texture to this artist.
+	 *
 	 * @param texture Texture to bind
 	 * @return This Artist
 	 */

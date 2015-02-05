@@ -1,6 +1,5 @@
 package nova.bootstrap;
 
-import nova.core.block.BlockManager;
 import nova.core.game.Game;
 import org.junit.Test;
 

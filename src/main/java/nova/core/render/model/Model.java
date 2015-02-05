@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 /**
  * A model is capable of containing multiple faces.
+ *
  * @author Calclavia
  */
 public class Model implements Cloneable {
@@ -57,6 +58,7 @@ public class Model implements Cloneable {
 	/**
 	 * Starts drawing, by returning an Face for the Model to work on.
 	 * Add vertices to this Face and finish it by calling drawShape()
+	 *
 	 * @return new {@link Face}
 	 */
 	public Face createShape() {
@@ -65,6 +67,7 @@ public class Model implements Cloneable {
 
 	/**
 	 * Finish drawing the Face by adding it into the list of Faces.
+	 *
 	 * @param Face - The finished masterpiece.
 	 */
 	public void drawShape(Face Face) {
@@ -73,6 +76,7 @@ public class Model implements Cloneable {
 
 	/**
 	 * Draws a standard block.
+	 *
 	 * @param block Block to draw
 	 * @return This Model
 	 */

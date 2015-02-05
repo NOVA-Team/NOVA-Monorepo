@@ -3,8 +3,8 @@ package nova.core.util;
 import java.util.function.Supplier;
 
 /**
- * @author Calclavia
  * @param <T> Type of produced object
+ * @author Calclavia
  */
 public class Factory<T extends Identifiable> implements Identifiable {
 	protected final Supplier<T> constructor;

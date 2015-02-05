@@ -1,11 +1,8 @@
 package nova.core.gui;
 
-import java.util.Optional;
-
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerList;
 import nova.core.event.SidedEventListenerList;
-import nova.core.event.SidedEventListenerList.SidedEvent;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.network.NetworkTarget.Side;
@@ -15,10 +12,12 @@ import nova.core.render.model.Model;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector2i;
 
+import java.util.Optional;
+
 /**
  * Defines a basic gui component. A component can be added to
  * {@link AbstractGuiContainer}, the root container is a {@link Gui}.
- * 
+ *
  * @param <T> {@link NativeGuiComponent} type
  */
 @SuppressWarnings("unchecked")
@@ -74,9 +73,9 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	/**
 	 * Sets the outline of this component. Shouldn't be used as the layout
 	 * controls positioning. (If you are a layout don't mind the @deprecated)
-	 * 
-	 * @see #setPreferredSize(Vector2i)
+	 *
 	 * @param outline {@link Outline} to use as outline
+	 * @see #setPreferredSize(Vector2i)
 	 */
 	@Deprecated
 	public void setOutlineNative(Outline outline) {
@@ -86,7 +85,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	/**
 	 * Sets the requested size for this component. Only works if the parent
 	 * container's {@link GuiLayout} makes use of it.
-	 * 
+	 *
 	 * @param size preferred size of the component
 	 */
 	public O setPreferredSize(Vector2i size) {
@@ -101,7 +100,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	/**
 	 * Sets the minimal size of this component. It indicates that this component
 	 * shouldn't be shrinked below that size.
-	 * 
+	 *
 	 * @param size minimal size of the component
 	 */
 	public O setMinimumSize(Vector2i size) {
@@ -116,7 +115,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	/**
 	 * Sets the maximal size of this component. It indicates that this component
 	 * shouldn't be stretched beyond that size.
-	 * 
+	 *
 	 * @param size maximal size of the component
 	 */
 	public O setMaximumSize(Vector2i size) {
@@ -171,7 +170,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	/**
 	 * Sets activity state for this component
-	 * 
+	 *
 	 * @param isActive New state
 	 */
 	public void setActive(boolean isActive) {
@@ -187,7 +186,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	/**
 	 * Sets visibility of this component
-	 * 
+	 *
 	 * @param isVisible New visibility
 	 */
 	public void setVisible(boolean isVisible) {
@@ -237,7 +236,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	/**
 	 * Does rendering logic
-	 * 
+	 *
 	 * @param mouseX Mouse position in X-axis on screen
 	 * @param mouseY Mouse position in Y-axis on screen
 	 * @param model {@link nova.core.render.model.Model} to use
@@ -261,13 +260,13 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * component isn't added to a parent container, the qualified name will
 	 * equal {@link #getID()}.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * You should always use the full qualified name if possible, as it is
 	 * guaranteed to result in the same element on whatever sub component you
 	 * request it.
 	 * </p>
-	 * 
+	 *
 	 * @return Full qualified unique index for the component.
 	 */
 	public final String getQualifiedName() {

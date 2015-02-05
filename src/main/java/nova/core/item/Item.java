@@ -13,6 +13,7 @@ import java.util.Optional;
 
 /**
  * Item that can be stacked using {@link ItemStack}
+ *
  * @see ItemStack
  * @see Inventory
  */
@@ -20,6 +21,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Called when the entity right clicks the item onto the block.
+	 *
 	 * @param entity - The entity using the item
 	 * @param world - The world of the block
 	 * @param position - The position of the block
@@ -33,6 +35,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Called when an entity right clicks the item.
+	 *
 	 * @param entity - The entity right clicking.
 	 */
 	public void onRightClick(Entity entity) {
@@ -41,6 +44,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Called when this item is being rendered.
+	 *
 	 * @param type Type
 	 * @param data Data
 	 */
@@ -50,6 +54,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Gets the texture of this item. If there is no texture provided, it will not render any and default to onRender() method for custom item rendering.
+	 *
 	 * @return {@link ItemTexture} instance
 	 */
 	public Optional<ItemTexture> getTexture() {

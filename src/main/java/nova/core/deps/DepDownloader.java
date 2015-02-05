@@ -20,11 +20,10 @@ public abstract class DepDownloader {
 			File dependencyLocation = new File(locationToDownloadTo);
 
 			byte[] buffer = new byte[4096];
-			int n = - 1;
+			int n = -1;
 
 			OutputStream output = new FileOutputStream(dependencyLocation);
-			while ( (n = stream.read(buffer)) != -1)
-			{
+			while ((n = stream.read(buffer)) != -1) {
 				output.write(buffer, 0, n);
 			}
 			output.close();

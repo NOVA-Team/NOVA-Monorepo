@@ -5,15 +5,14 @@ import nova.core.util.transform.Vector2i;
 
 /**
  * A {@link Rectangle} that resembles the outline of a {@link GuiComponent}.
- * 
- * @author Vic Nightfall
  *
+ * @author Vic Nightfall
  */
 public class Outline extends Rectangle<Vector2i> {
 
 	/**
 	 * Creates a new Outline with the specified position and dimension.
-	 * 
+	 *
 	 * @param x
 	 * @param y
 	 * @param width

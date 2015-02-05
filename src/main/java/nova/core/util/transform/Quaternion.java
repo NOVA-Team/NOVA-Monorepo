@@ -32,6 +32,7 @@ import java.math.RoundingMode;
 
 /**
  * All rotation operations operate in radians.
+ *
  * @author Calclavia, ChickenBones
  */
 public class Quaternion implements Transform {
@@ -70,6 +71,7 @@ public class Quaternion implements Transform {
 	 * to the sky. -90 Degrees - Looking straight down to the void.
 	 *
 	 * Make sure all models use the Techne Model loader, they will naturally follow this rule.
+	 *
 	 * @param euler input {@link Vector3}
 	 * @return resulting {@link Quaternion}
 	 * @author Calclavia
@@ -97,6 +99,7 @@ public class Quaternion implements Transform {
 
 	/**
 	 * Returns a quaternion from Angle Axis rotation.
+	 *
 	 * @param axis Axis {@link Vector3}
 	 * @param angle Angle
 	 * @return The Quaternion representation of the angle axis rotation.

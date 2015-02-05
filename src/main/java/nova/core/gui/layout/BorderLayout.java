@@ -1,20 +1,19 @@
 package nova.core.gui.layout;
 
-import java.util.EnumMap;
-
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.layout.LayoutConstraints.BorderLayoutConstraints;
 import nova.core.util.transform.Vector2i;
 
+import java.util.EnumMap;
+
 /**
  * A basic layout that splits the parent's container up into multiple regions.
  * It's an implementation of Swing's BorderLayout.
- * 
- * @see java.awt.BorderLayout
- * @author Vic Nightfall
  *
+ * @author Vic Nightfall
+ * @see java.awt.BorderLayout
  */
 public class BorderLayout extends AbstractGuiLayout<BorderLayoutConstraints> {
 

@@ -34,6 +34,7 @@ public class BlockFactory extends Factory<Block> implements Identifiable {
 
 	/**
 	 * Creates a new instance of this block with blockAccess and position parameters.
+	 *
 	 * @param blockAccess {@link BlockAccess}
 	 * @param position Position of the block
 	 * @return A new block instance with these parameters.

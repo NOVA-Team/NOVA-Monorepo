@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 /**
  * The main class that launches NOVA mods.
- * 
+ *
  * @author Calclavia, Kubuxu
  */
 public class NovaLauncher implements Loadable {
@@ -45,9 +45,8 @@ public class NovaLauncher implements Loadable {
 
 	/**
 	 * Creates NovaLauncher.
-	 * 
+	 *
 	 * @param modClasses mods to instantialize.
-	 *            
 	 * @param diep is required as we are installing additional modules to it.
 	 */
 	public NovaLauncher(DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
@@ -77,7 +76,7 @@ public class NovaLauncher implements Loadable {
 			.collect(Collectors.toMap(Entry::getKey, ((entry) -> {
 				try {
 					Stream<Constructor<?>> candidates = Arrays.stream(entry.getValue().getConstructors());
-					
+
 					//get constructor with most parameters.
 					Optional<Constructor<?>> ocons = candidates.max(Comparator.comparingInt((constructor) -> constructor.getParameterTypes().length));
 
@@ -110,7 +109,7 @@ public class NovaLauncher implements Loadable {
 				})
 				.map(entry -> entry.getValue())
 				.collect(Collectors.toList())
-			);
+		);
 
 		/**
 		 * Initialize all the NOVA mods.
@@ -160,7 +159,6 @@ public class NovaLauncher implements Loadable {
 	/**
 	 * Get the dependencies. Separated from preInit due to issues with ordering in case mods need to download mods before the preInit method is called.
 	 * The wrapper just needs to call this method right before it downloads the dependencies.
-	 *
 	 */
 	public void generateDependencies() {
 
@@ -181,7 +179,7 @@ public class NovaLauncher implements Loadable {
 			ArrayList<String[]> dependencyLocations = new ArrayList<>();
 			Map<String, String[]> dependencyRepos = new HashMap<>();
 
-			DependencyRepoProvider provider = (DependencyRepoProvider)mod;
+			DependencyRepoProvider provider = (DependencyRepoProvider) mod;
 
 			for (String modid : mod.dependencies()) {
 				if (modid.contains("?")) {
@@ -190,13 +188,13 @@ public class NovaLauncher implements Loadable {
 						if (provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)) != null) {
 							dependencyLocations.add(provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
 							dependencyVersion.put(modWORequired.substring(0, modid.indexOf("@") - 1), modWORequired.substring(modWORequired.indexOf("@")));
-							dependencyRepos.put(modWORequired.substring(0,modid.indexOf("@") - 1),provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
-							dependencyIds.add(modWORequired.substring(0,modid.indexOf("@") - 1));
+							dependencyRepos.put(modWORequired.substring(0, modid.indexOf("@") - 1), provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
+							dependencyIds.add(modWORequired.substring(0, modid.indexOf("@") - 1));
 						}
 					} else {
 						if (provider.getModRepo(modWORequired) != null) {
 							dependencyLocations.add(provider.getModRepo(modWORequired));
-							dependencyRepos.put(modWORequired,provider.getModRepo(modWORequired));
+							dependencyRepos.put(modWORequired, provider.getModRepo(modWORequired));
 							dependencyIds.add(modWORequired);
 						}
 					}

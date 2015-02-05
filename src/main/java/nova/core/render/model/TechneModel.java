@@ -26,6 +26,7 @@ import java.util.zip.ZipInputStream;
 /**
  * A Techne model importer.
  * You must load your .tcn file and then bind the Techne texture yourself.
+ *
  * @author Calclavia
  */
 public class TechneModel extends ModelProvider {

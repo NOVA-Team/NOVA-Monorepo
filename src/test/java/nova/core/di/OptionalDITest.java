@@ -47,7 +47,7 @@ public class OptionalDITest {
 		Optional<Map<Integer, Integer>> map2;
 
 		public TestManager(Optional<Map<Integer, Integer>> map,
-			Optional<Registry<MockIdentifiable>> set, Optional<Map<Integer, Integer>> map2) {
+		                   Optional<Registry<MockIdentifiable>> set, Optional<Map<Integer, Integer>> map2) {
 			this.map = map;
 			this.set = set;
 			this.map2 = map2;

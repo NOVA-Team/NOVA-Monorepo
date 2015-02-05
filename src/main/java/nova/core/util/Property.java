@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * Property of some kind
+ *
  * @param <T> Type of values
  */
 public abstract class Property<T> {

@@ -8,7 +8,7 @@ public interface GuiLayout {
 	/**
 	 * Called when the parent {@link AbstractGuiContainer} gets resized to
 	 * re-validate the positioning.
-	 * 
+	 *
 	 * @param container
 	 */
 	public void revalidate(AbstractGuiContainer<?, ?> container);

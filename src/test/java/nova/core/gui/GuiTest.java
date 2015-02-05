@@ -18,14 +18,14 @@ public class GuiTest {
 		BorderLayoutConstraints constraints = layout.constraints();
 		GuiContainer container = new GuiContainer("test").setLayout(layout)
 			.addElement(new Button("testButton1")
-				.registerEventListener(e -> {
-					// TODO Still needs a cast unfortunately
-					((Button)e.component).setActive(false);
-				}, ActionEvent.class, Side.SERVER), 
+					.registerEventListener(e -> {
+						// TODO Still needs a cast unfortunately
+						((Button) e.component).setActive(false);
+					}, ActionEvent.class, Side.SERVER),
 				constraints.of(e -> e.region = EnumBorderRegion.WEST))
 			.addElement(new Button("testButton2"), constraints.of(e -> e.region = EnumBorderRegion.CENTER))
 			.addElement(new Button("testButton3"), constraints.of(e -> e.region = EnumBorderRegion.EAST));
-		
+
 		// Container 2 is the exact equivalent of container 1, without using any constraints. It's the more error prone way.
 		GuiContainer container2 = new GuiContainer("test")
 			.addElement(new Button("testButton1")
@@ -33,8 +33,8 @@ public class GuiTest {
 			.addElement(new Button("testButton2"))
 			.addElement(new Button("testButton3"), EnumBorderRegion.EAST);
 	}
-	
+
 	private void onButton1Pressed(ActionEvent<Button> event) {
-		
+
 	}
 }

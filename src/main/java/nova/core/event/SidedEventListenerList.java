@@ -1,22 +1,21 @@
 package nova.core.event;
 
-import java.util.HashSet;
-
-import nova.core.event.SidedEventListenerList.SidedEvent;
-import nova.core.gui.GuiEvent;
 import nova.core.network.NetworkManager;
 import nova.core.network.NetworkTarget;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
 
+import java.util.HashSet;
+
 // TODO Implement priorities
+
 /**
  * Event listener list that can differentiate {@link NetworkTarget} and allows
  * registration of handlers that only listen on a specific {@link Side}.
- * 
- * @author Vic Nightfall
+ *
  * @param <T>
+ * @author Vic Nightfall
  */
 public class SidedEventListenerList<T> extends EventListenerList<T> {
 
@@ -113,7 +112,7 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 		/**
 		 * Gets called if the parent {@link SidedEventListener} received an
 		 * event that needs to be sent over the network.
-		 * 
+		 *
 		 * @param event
 		 */
 		public void handleEvent(SidedEventListenerList.SidedEvent event);

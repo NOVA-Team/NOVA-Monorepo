@@ -19,6 +19,7 @@ public class ItemFactory extends Factory<Item> implements Identifiable {
 
 	/**
 	 * Creates a new instance of the Item.
+	 *
 	 * @param data Item data, used if item is {@link Storable}
 	 * @return Resulting item
 	 */
