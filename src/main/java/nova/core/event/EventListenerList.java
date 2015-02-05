@@ -9,12 +9,12 @@ package nova.core.event;
  * @author Stan Hebben
  */
 public class EventListenerList<T> {
-    public static final int PRIORITY_HIGH = 100;
-    public static final int PRIORITY_DEFAULT = 0;
-    public static final int PRIORITY_LOW = -100;
+	public static final int PRIORITY_HIGH = 100;
+	public static final int PRIORITY_DEFAULT = 0;
+	public static final int PRIORITY_LOW = -100;
 
 	// TODO: actually test concurrency
-    // TODO: unit tests
+	// TODO: unit tests
 
 	// implements a linked list of nodes
 	protected volatile EventListenerNode first = null;
@@ -31,37 +31,37 @@ public class EventListenerList<T> {
 	 * @return event listener's handle
 	 */
 	public EventListenerHandle<T> add(EventListener<T> listener) {
-        return add(listener, PRIORITY_DEFAULT);
-    }
+		return add(listener, PRIORITY_DEFAULT);
+	}
 
-    public EventListenerHandle<T> add(EventListener<T> listener, int priority) {
+	public EventListenerHandle<T> add(EventListener<T> listener, int priority) {
 		EventListenerNode node = new EventListenerNode(listener, priority);
 
 		synchronized (this) {
 			if (first == null) {
 				first = last = node;
 			} else {
-                // prioritized list: where to insert?
-                EventListenerNode previousNode = last;
-                while (previousNode != null && priority > previousNode.priority) {
-                    previousNode = previousNode.prev;
-                }
+				// prioritized list: where to insert?
+				EventListenerNode previousNode = last;
+				while (previousNode != null && priority > previousNode.priority) {
+					previousNode = previousNode.prev;
+				}
 
-                if (previousNode == null) {
-                    node.next = first;
-                    first.prev = previousNode;
-                    first = node;
-                } else {
-                    if (previousNode.next == null) {
-                        last = node;
-                    } else {
-                        previousNode.next.prev = node;
-                    }
+				if (previousNode == null) {
+					node.next = first;
+					first.prev = previousNode;
+					first = node;
+				} else {
+					if (previousNode.next == null) {
+						last = node;
+					} else {
+						previousNode.next.prev = node;
+					}
 
-                    previousNode.next = node;
-                    node.prev = previousNode;
-                }
-            }
+					previousNode.next = node;
+					node.prev = previousNode;
+				}
+			}
 		}
 
 		return node;
@@ -79,9 +79,9 @@ public class EventListenerList<T> {
 		return add(new SingleEventListener<E, T>(listener, clazz), PRIORITY_DEFAULT);
 	}
 
-    public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, int priority) {
-        return add(new SingleEventListener<E, T>(listener, clazz), priority);
-    }
+	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, int priority) {
+		return add(new SingleEventListener<E, T>(listener, clazz), priority);
+	}
 
 	/**
 	 * Removes an EventListener from the list.
@@ -98,7 +98,7 @@ public class EventListenerList<T> {
 				return true;
 			}
 
-            current = current.next;
+			current = current.next;
 		}
 
 		return false;
@@ -138,13 +138,13 @@ public class EventListenerList<T> {
 
 	protected class EventListenerNode implements EventListenerHandle<T> {
 		protected final EventListener<T> listener;
-        protected final int priority;
+		protected final int priority;
 		protected EventListenerNode next = null;
 		protected EventListenerNode prev = null;
 
 		public EventListenerNode(EventListener<T> handler, int priority) {
 			this.listener = handler;
-            this.priority = priority;
+			this.priority = priority;
 		}
 
 		@Override

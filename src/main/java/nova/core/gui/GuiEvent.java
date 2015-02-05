@@ -1,9 +1,6 @@
 package nova.core.gui;
 
 import nova.core.gui.KeyStroke.Key;
-import nova.core.network.NetworkTarget.Side;
-import nova.core.network.PacketReceiver;
-import nova.core.network.PacketSender;
 
 /**
  * Event for GUI, like mouse click
@@ -68,9 +65,5 @@ public class GuiEvent {
 		public ResizeEvent(Outline oldOutline) {
 			this.oldOutline = oldOutline;
 		}
-	}
-
-	public static interface SidedEvent extends PacketSender, PacketReceiver {
-		public Side getTarget();
 	}
 }

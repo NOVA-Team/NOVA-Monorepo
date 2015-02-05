@@ -18,7 +18,8 @@ public interface EventListenerHandle<T> extends Closeable {
 	public EventListener<T> getListener();
 
 	/**
-	 * Closes (unregisters) the event listener from the list it was registered to.
+	 * Closes (unregisters) the event listener from the list it was registered
+	 * to.
 	 */
 	@Override
 	public void close();
