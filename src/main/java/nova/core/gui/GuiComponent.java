@@ -132,11 +132,11 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	public Optional<Vector2i> getMinimumSize() {
-		return minimumSize.isPresent() ? preferredSize : nativeElement.getPreferredSize();
+		return minimumSize.isPresent() ? minimumSize : nativeElement.getMinimumSize();
 	}
 
 	public Optional<Vector2i> getMaximumSize() {
-		return maximumSize.isPresent() ? preferredSize : nativeElement.getPreferredSize();
+		return maximumSize.isPresent() ? maximumSize : nativeElement.getMaximumSize();
 	}
 
 	/**
