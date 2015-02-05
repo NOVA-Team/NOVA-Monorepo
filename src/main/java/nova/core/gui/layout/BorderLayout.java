@@ -1,6 +1,6 @@
 package nova.core.gui.layout;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
@@ -22,7 +22,7 @@ public class BorderLayout extends AbstractGuiLayout<BorderLayoutConstraints> {
 		super(BorderLayoutConstraints.class);
 	}
 
-	private final HashMap<BorderLayout.EnumBorderRegion, GuiComponent<?, ?>> components = new HashMap<>();
+	private final EnumMap<EnumBorderRegion, GuiComponent<?, ?>> components = new EnumMap<>(EnumBorderRegion.class);
 
 	// TODO HIGHLY untested
 	@Override
