@@ -105,7 +105,7 @@ public class WavefrontObjectModel extends ModelProvider {
 
 	@Override
 	public Model getModel() {
-		return model;
+		return model.clone();
 	}
 
 	@Override
