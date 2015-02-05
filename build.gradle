@@ -59,8 +59,10 @@ dependencies {
 	compile 'org.msgpack:msgpack-core:0.7.0-p4'
 	compile 'com.typesafe:config:1.2.1'
 	compile 'se.jbee:silk-di:0.6'
+
 	testCompile "junit:junit:4.12"
 	testCompile 'org.assertj:assertj-core:1.+'
+	testCompile "org.mockito:mockito-core:1.+"
 
 	//checkstyle 'com.puppycrawl.tools:checkstyle:6.2'
 }
