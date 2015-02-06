@@ -40,20 +40,20 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * @see GuiComponent#getQualifiedName()
 	 * @see AbstractGuiContainer#getChildElement(String, Class)
 	 */
-	public GuiComponent<?, ?> getChildElement(String qualifiedName) {
+	public Optional<GuiComponent<?, ?>> getChildElement(String qualifiedName) {
 		// TODO untested.
 		if (qualifiedName.startsWith(getQualifiedName())) {
 			qualifiedName = qualifiedName.substring(getQualifiedName().length());
 		}
 		int dot = qualifiedName.indexOf(".");
 		if (dot == -1) {
-			return children.get(qualifiedName);
+			return Optional.of(children.get(qualifiedName));
 		}
 		GuiComponent<?, ?> subContainer = children.get(qualifiedName.substring(0, dot - 1));
 		if (subContainer instanceof AbstractGuiContainer) {
 			return ((AbstractGuiContainer<?, ?>) subContainer).getChildElement(qualifiedName.substring(dot + 1));
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	/**
@@ -66,11 +66,11 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * / the type doesn't match.
 	 */
 	@SuppressWarnings("unchecked")
-	public <E extends GuiComponent<?, ?>> E getChildElement(String qualifiedName, Class<E> clazz) {
-		GuiComponent<?, ?> component = getChildElement(qualifiedName);
+	public <E extends GuiComponent<?, ?>> Optional<E> getChildElement(String qualifiedName, Class<E> clazz) {
+		GuiComponent<?, ?> component = getChildElement(qualifiedName).get();
 		if (clazz.isInstance(component))
-			return (E) component;
-		return null;
+			return Optional.of((E) component);
+		return Optional.empty();
 	}
 
 	// TODO generic return & argument from constructor.

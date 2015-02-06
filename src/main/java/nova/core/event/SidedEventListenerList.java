@@ -1,12 +1,12 @@
 package nova.core.event;
 
+import java.util.HashSet;
+
 import nova.core.network.NetworkManager;
 import nova.core.network.NetworkTarget;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
-
-import java.util.HashSet;
 
 // TODO Implement priorities
 
@@ -118,7 +118,18 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 		public void handleEvent(SidedEventListenerList.SidedEvent event);
 	}
 
+	/**
+	 * An event that specifies a {@link NetworkTarget}. Set the target by either
+	 * overriding {@link #getTarget()} or by using the annotation
+	 * {@link NetworkTarget} on the inherited class.
+	 * 
+	 * @author Vic Nightfall
+	 */
 	public static interface SidedEvent extends PacketSender, PacketReceiver {
-		public Side getTarget();
+
+		public default Side getTarget() {
+			NetworkTarget target = getClass().getAnnotation(NetworkTarget.class);
+			return target != null ? target.side() : Side.BOTH;
+		}
 	}
 }
