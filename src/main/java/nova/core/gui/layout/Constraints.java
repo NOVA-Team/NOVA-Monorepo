@@ -1,28 +1,26 @@
 package nova.core.gui.layout;
 
-import nova.core.gui.layout.BorderLayout.EnumBorderRegion;
-
 import java.lang.reflect.Constructor;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-public abstract class LayoutConstraints<O extends LayoutConstraints<O>> implements Cloneable {
+public abstract class Constraints<O extends Constraints<O>> implements Cloneable {
 
-	public static class BorderLayoutConstraints extends LayoutConstraints<BorderLayoutConstraints> {
+	public static class BorderConstraints extends Constraints<BorderConstraints> {
 
-		public EnumBorderRegion region;
+		public Anchor region;
 
-		public BorderLayoutConstraints(EnumBorderRegion region) {
+		public BorderConstraints(Anchor region) {
 			this.region = region;
 		}
 
-		public BorderLayoutConstraints() {
-			this.region = EnumBorderRegion.CENTER;
+		public BorderConstraints() {
+			this.region = Anchor.CENTER;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends LayoutConstraints<T>> T createConstraints(Class<T> clazz, Object... parameters) {
+	public static <T extends Constraints<T>> T createConstraints(Class<T> clazz, Object... parameters) {
 
 		for (Constructor<T> constructor : (Constructor<T>[]) clazz.getConstructors()) {
 			Class<?>[] parameterTypes = constructor.getParameterTypes();
