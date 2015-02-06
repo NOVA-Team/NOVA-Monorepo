@@ -17,10 +17,9 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 		this.modID = modID;
 	}
 
-	// TODO Do something about the optional id parameter of Synced
 	protected void dispatchNetworkEvent(ComponentEvent<?> event, GuiComponent<?, ?> sender) {
 		Packet packet = getNative().createPacket();
-		GuiFactory.get(modID).constructPacket(event, this, packet, 0);
+		GuiFactory.get(modID).constructPacket(event, this, packet, event.getSyncID());
 		getNative().dispatchNetworkEvent(packet);
 
 	}
