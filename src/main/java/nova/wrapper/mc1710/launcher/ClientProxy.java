@@ -1,8 +1,10 @@
 package nova.wrapper.mc1710.launcher;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -25,7 +27,7 @@ public class ClientProxy extends CommonProxy {
 		 * Load models 
 		 */
 		RenderUtility.instance.loadModels();
-		
+
 		ClientRegistry.registerTileEntity(TileWrapper.class, "novaTile", TESRWrapper.instance);
 	}
 
@@ -44,6 +46,19 @@ public class ClientProxy extends CommonProxy {
 		 */
 		RenderingRegistry.registerBlockHandler(block);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), block);
+	}
+
+	@Override
+	public boolean isPaused() {
+		if (FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic()) {
+			GuiScreen screen = FMLClientHandler.instance().getClient().currentScreen;
+			if (screen != null) {
+				if (screen.doesGuiPauseGame()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override

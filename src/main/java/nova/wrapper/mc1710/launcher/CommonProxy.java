@@ -30,6 +30,10 @@ public class CommonProxy implements Loadable {
 
 	}
 
+	public boolean isPaused() {
+		return false;
+	}
+
 	public EntityPlayer getClientPlayer() {
 		return null;
 	}
