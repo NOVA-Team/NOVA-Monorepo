@@ -78,17 +78,17 @@ public class Quaternion implements Transform {
 	 * @author Calclavia
 	 */
 	public static Quaternion fromEuler(Vector3<?> euler) {
-		return fromEuler(euler.xd(), euler.yd(), euler.zd());
+		return fromEuler(euler.xd(),euler.yd(),euler.zd());
 	}
 
 	public static Quaternion fromEuler(double yaw, double pitch, double roll) {
 		// Assuming the angles are in radians.
 		double c1 = Math.cos(yaw / 2);
 		double s1 = Math.sin(yaw / 2);
-		double c2 = Math.cos(roll / 2);
-		double s2 = Math.sin(roll / 2);
-		double c3 = Math.cos(-pitch / 2);
-		double s3 = Math.sin(-pitch / 2);
+		double c2 = Math.cos(pitch / 2);
+		double s2 = Math.sin(pitch / 2);
+		double c3 = Math.cos(roll / 2);
+		double s3 = Math.sin(roll / 2);
 		double c1c2 = c1 * c2;
 		double s1s2 = s1 * s2;
 		double w = c1c2 * c3 - s1s2 * s3;
@@ -99,7 +99,7 @@ public class Quaternion implements Transform {
 	}
 
 	public static Quaternion fromEulerDegree(double yaw, double pitch, double roll) {
-		return fromEuler(Math.toRadians(yaw), Math.toRadians(pitch), Math.toRadians(roll));
+		return fromEuler(Math.toRadians(yaw),Math.toRadians(pitch),Math.toRadians(roll));
 	}
 
 	/**
@@ -120,11 +120,11 @@ public class Quaternion implements Transform {
 	}
 
 	public Quaternion multiply(Quaternion q) {
-		double d1 = w * q.x + x * q.w + y * q.z - z * q.y;
-		double d2 = w * q.y - x * q.z + y * q.w + z * q.x;
-		double d3 = w * q.z + x * q.y - y * q.x + z * q.w;
-		double d4 = w * q.w - x * q.x - y * q.y - z * q.z;
-		return new Quaternion(d1, d2, d3, d4);
+		double d = w * q.w - x * q.x - y * q.y - z * q.z;
+		double d1 = w * q.x + x * q.w - y * q.z + z * q.y;
+		double d2 = w * q.y + x * q.z + y * q.w - z * q.x;
+		double d3 = w * q.z - x * q.y + y * q.x + z * q.w;
+		return new Quaternion(d1, d2, d3, d);
 	}
 
 	public Quaternion rightMultiply(Quaternion q) {
@@ -148,21 +148,15 @@ public class Quaternion implements Transform {
 		return new Quaternion(x / d, y / d, z / d, w / d);
 	}
 
-	public Quaternion conjugate() {
-		return new Quaternion(-x, -y, -z, w);
-	}
-
 	@Override
 	public Vector3d transform(Vector3<?> vec) {
-
+		//TODO: Check this
 		double d = -x * vec.xd() - y * vec.yd() - z * vec.zd();
 		double d1 = w * vec.xd() + y * vec.zd() - z * vec.yd();
 		double d2 = w * vec.yd() - x * vec.zd() + z * vec.xd();
 		double d3 = w * vec.zd() + x * vec.yd() - y * vec.xd();
 		return new Vector3d(d1 * w - d * x - d2 * z + d3 * y, d2 * w - d * y + d1 * z - d3 * x, d3 * w - d * z - d1 * y + d2 * x);
-
-
-}
+	}
 
 	public Vector3d toEuler() {
 		double sqw = w * w;
@@ -191,10 +185,10 @@ public class Quaternion implements Transform {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Quaternion) {
-			Quaternion other = (Quaternion) obj;
-			return DoubleMath.fuzzyEquals(this.x,other.x,0.000001) &&DoubleMath.fuzzyEquals(this.y,other.y,0.000001) && DoubleMath.fuzzyEquals(this.z,other.z,0.000001) && DoubleMath.fuzzyEquals(this.w,other.w,0.000001);
+			Quaternion other = ((Quaternion) obj);
+			return DoubleMath.fuzzyEquals(this.x, other.x, 0.000001) &&DoubleMath.fuzzyEquals(this.y,other.y,0.000001) && DoubleMath.fuzzyEquals(this.z,other.z,0.000001) && DoubleMath.fuzzyEquals(this.w,other.w,0.000001);
 		}
-		return false;
+		return this == obj;
 	}
 
 	public String toString() {
