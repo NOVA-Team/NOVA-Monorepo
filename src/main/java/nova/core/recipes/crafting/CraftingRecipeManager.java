@@ -28,8 +28,8 @@ public class CraftingRecipeManager {
 		this.dynamicRecipes = new ArrayList<>();
 		this.staticRecipes = ArrayListMultimap.create();
 
-		recipeManager.addRecipeAddedListener(CraftingRecipe.class, this::onCraftingRecipeAdded);
-		recipeManager.addRecipeRemovedListener(CraftingRecipe.class, this::onCraftingRecipeRemoved);
+		recipeManager.whenRecipeAdded(CraftingRecipe.class, this::onCraftingRecipeAdded);
+		recipeManager.whenRecipeRemoved(CraftingRecipe.class, this::onCraftingRecipeRemoved);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class CraftingRecipeManager {
 		recipeManager.addRecipe(recipe);
 	}
 
-	/**
-	 * Removes a recipes. Removes if from the global recipe list.
+	/*
+	 * Removes a recipe. Removes if from the global recipe list.
 	 *
 	 * @param recipe {@link CraftingRecipe}
 	 */

@@ -1,8 +1,8 @@
 package nova.core.recipes;
 
+import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
-import nova.core.event.EventBus;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -46,30 +46,16 @@ public class RecipeManager {
 		return getRecipeList(type).unmodifiableRecipes;
 	}
 
-	public <T extends Recipe> EventListenerHandle<RecipeAddedEvent<T>>
-	addRecipeAddedListener(
+	public <T extends Recipe> EventListenerHandle<RecipeAddedEvent<T>> whenRecipeAdded(
 		Class<T> type,
 		EventListener<RecipeAddedEvent<T>> listener) {
 		return getRecipeList(type).recipeAddedListeners.add(listener);
 	}
 
-	public <T extends Recipe> void removeRecipeAddedListener(
-		Class<T> type,
-		EventListener<RecipeAddedEvent<T>> listener) {
-		getRecipeList(type).recipeAddedListeners.remove(listener);
-	}
-
-	public <T extends Recipe> EventListenerHandle<RecipeRemovedEvent<T>>
-	addRecipeRemovedListener(
+	public <T extends Recipe> EventListenerHandle<RecipeRemovedEvent<T>> whenRecipeRemoved(
 		Class<T> type,
 		EventListener<RecipeRemovedEvent<T>> listener) {
 		return getRecipeList(type).recipeRemovedListeners.add(listener);
-	}
-
-	public <T extends Recipe> void removeRecipeRemovedListener(
-		Class<T> type,
-		EventListener<RecipeRemovedEvent<T>> listener) {
-		getRecipeList(type).recipeRemovedListeners.remove(listener);
 	}
 
 	// #######################
