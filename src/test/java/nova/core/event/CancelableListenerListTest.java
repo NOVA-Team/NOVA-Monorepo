@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class CancelableListenerListTest {
 	@Test
 	public void testCanceling() {
-		CancelableListenerList<TestEvent> listenerList = new CancelableListenerList<>();
+		CancelableEventBus<TestEvent> listenerList = new CancelableEventBus<>();
 		listenerList.add(new TestEventListener("A", true));
 		listenerList.add(new TestEventListener("B"));
 

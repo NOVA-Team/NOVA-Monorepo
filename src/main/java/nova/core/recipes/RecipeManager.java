@@ -2,7 +2,7 @@ package nova.core.recipes;
 
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
-import nova.core.event.EventListenerList;
+import nova.core.event.EventBus;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -99,14 +99,14 @@ public class RecipeManager {
 	private class RecipeList<T extends Recipe> {
 		private Set<T> recipes;
 		private Set<T> unmodifiableRecipes;
-		private EventListenerList<RecipeAddedEvent<T>> recipeAddedListeners;
-		private EventListenerList<RecipeRemovedEvent<T>> recipeRemovedListeners;
+		private EventBus<RecipeAddedEvent<T>> recipeAddedListeners;
+		private EventBus<RecipeRemovedEvent<T>> recipeRemovedListeners;
 
 		private RecipeList(Set<T> recipes) {
 			this.recipes = recipes;
 			this.unmodifiableRecipes = Collections.unmodifiableSet(recipes);
-			this.recipeAddedListeners = new EventListenerList<>();
-			this.recipeRemovedListeners = new EventListenerList<>();
+			this.recipeAddedListeners = new EventBus<>();
+			this.recipeRemovedListeners = new EventBus<>();
 		}
 
 		private void add(T recipe) {

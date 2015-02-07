@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class EventListenerListTest {
 	@Test
 	public void testEmpty() {
-		EventListenerList<TestEvent> listenerList = new EventListenerList<>();
+		EventBus<TestEvent> listenerList = new EventBus<>();
 		TestEvent event = new TestEvent();
 		listenerList.publish(event);
 
@@ -19,7 +19,7 @@ public class EventListenerListTest {
 
 	@Test
 	public void testInvocation() {
-		EventListenerList<TestEvent> listenerList = new EventListenerList<>();
+		EventBus<TestEvent> listenerList = new EventBus<>();
 		listenerList.add(new TestEventListener("A"));
 		listenerList.add(new TestEventListener("B"));
 
@@ -31,7 +31,7 @@ public class EventListenerListTest {
 
 	@Test
 	public void testOrdering() {
-		EventListenerList<TestEvent> listenerList = new EventListenerList<>();
+		EventBus<TestEvent> listenerList = new EventBus<>();
 		listenerList.add(new TestEventListener("A"), 1);
 		listenerList.add(new TestEventListener("B"), 1);
 		listenerList.add(new TestEventListener("C"), 2);
@@ -44,7 +44,7 @@ public class EventListenerListTest {
 
 	@Test
 	public void testRemovalByHandle() {
-		EventListenerList<TestEvent> listenerList = new EventListenerList<>();
+		EventBus<TestEvent> listenerList = new EventBus<>();
 		listenerList.add(new TestEventListener("A"));
 		EventListenerHandle<TestEvent> handle = listenerList.add(new TestEventListener("B"));
 		handle.close();
@@ -57,7 +57,7 @@ public class EventListenerListTest {
 
 	@Test
 	public void testRemovalByObject() {
-		EventListenerList<TestEvent> listenerList = new EventListenerList<>();
+		EventBus<TestEvent> listenerList = new EventBus<>();
 		listenerList.add(new TestEventListener("A"));
 
 		TestEventListener listener = new TestEventListener("B");

@@ -2,7 +2,7 @@ package nova.core.util;
 
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
-import nova.core.event.EventListenerList;
+import nova.core.event.EventBus;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,8 +19,8 @@ import java.util.Set;
 public class Dictionary<T> {
 	private final Map<String, Set<T>> entries = new HashMap<>();
 	private final Map<T, Set<String>> locations = new HashMap<>();
-	private final EventListenerList<AddEvent<T>> addEventListeners = new EventListenerList<>();
-	private final EventListenerList<RemoveEvent<T>> removeEventListeners = new EventListenerList<>();
+	private final EventBus<AddEvent<T>> addEventListeners = new EventBus<>();
+	private final EventBus<RemoveEvent<T>> removeEventListeners = new EventBus<>();
 
 	public Dictionary() {
 

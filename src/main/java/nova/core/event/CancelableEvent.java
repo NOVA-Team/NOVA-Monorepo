@@ -1,5 +1,7 @@
 package nova.core.event;
 
+import nova.core.util.exception.NovaException;
+
 /**
  * A base class for an event that may or may not be cancelable, depending on
  * weather a sub event has the {@link CancelableEvent.Cancelable} annotation on.
@@ -17,7 +19,9 @@ public abstract class CancelableEvent implements Cancelable {
 
 	@Override
 	public void cancel() {
-		canceled = isCancelable;
+		if (!isCancelable)
+			throw new NovaException("Attempted to cancel an uncancable event " + getClass() + " !");
+		canceled = true;
 	}
 
 	@Override

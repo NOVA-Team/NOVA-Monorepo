@@ -9,19 +9,20 @@ import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
 
 /**
- * Event listener list that can differentiate {@link NetworkTarget} and allows
- * registration of handlers that only listen on a specific {@link Side}.
+ * {@link EventBus} that can differentiate {@link NetworkTarget NetworkTargets}
+ * and allows registration of handlers that only listen on a specific
+ * {@link Side}.
  *
  * @param <T>
  * @author Vic Nightfall
  */
-public class SidedEventListenerList<T extends Cancelable> extends CancelableListenerList<T> {
+public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 
 	private NetworkEventProcessor eventProcessor;
 	private boolean checkListenedBeforeSend = true;
 	private HashSet<Class<?>> listenedNetworkEvents = new HashSet<Class<?>>();
 
-	public SidedEventListenerList(NetworkEventProcessor eventProcessor) {
+	public SidedEventBus(NetworkEventProcessor eventProcessor) {
 		this.eventProcessor = eventProcessor;
 	}
 
@@ -64,8 +65,8 @@ public class SidedEventListenerList<T extends Cancelable> extends CancelableList
 
 	@Override
 	public void publish(T event) {
-		if (event instanceof SidedEventListenerList.SidedEvent) {
-			SidedEventListenerList.SidedEvent sidedEvent = (SidedEventListenerList.SidedEvent) event;
+		if (event instanceof SidedEventBus.SidedEvent) {
+			SidedEventBus.SidedEvent sidedEvent = (SidedEventBus.SidedEvent) event;
 			Side currentSide = NetworkManager.instance.get().getSide();
 
 			// Check if the event targets the current side.
@@ -111,8 +112,8 @@ public class SidedEventListenerList<T extends Cancelable> extends CancelableList
 
 		@Override
 		public void onEvent(T event) {
-			if (event instanceof SidedEventListenerList.SidedEvent) {
-				SidedEventListenerList.SidedEvent sidedEvent = (SidedEventListenerList.SidedEvent) event;
+			if (event instanceof SidedEventBus.SidedEvent) {
+				SidedEventBus.SidedEvent sidedEvent = (SidedEventBus.SidedEvent) event;
 				if (sidedEvent.getTarget().targets(side)) {
 					onEvent(event);
 				}
@@ -130,7 +131,7 @@ public class SidedEventListenerList<T extends Cancelable> extends CancelableList
 		 *
 		 * @param event
 		 */
-		public void handleEvent(SidedEventListenerList.SidedEvent event);
+		public void handleEvent(SidedEventBus.SidedEvent event);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package nova.core.gui;
 
 import nova.core.event.CancelableEvent;
-import nova.core.event.SidedEventListenerList.SidedEvent;
+import nova.core.event.SidedEventBus.SidedEvent;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.network.Sync;
 
