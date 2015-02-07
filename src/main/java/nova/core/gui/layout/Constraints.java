@@ -79,7 +79,7 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	 * 
 	 * <pre>
 	 * <code>
-	 * constraints.of(c -> {
+	 * constraints.of(c -&gt; {
 	 * 	c.fielda = "Field A";
 	 * 	c.fieldb = 5;
 	 * 	c.fieldc = Enum.CONSTANT;

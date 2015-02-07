@@ -1,34 +1,23 @@
-package nova.core.gui;
+package nova.core.gui.factory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.Function;
 
-import nova.core.gui.nativeimpl.NativeGuiComponent;
+import nova.core.gui.ComponentEvent;
+import nova.core.gui.Gui;
+import nova.core.gui.GuiComponent;
 import nova.core.network.Packet;
 import nova.core.util.exception.NovaException;
 
-public class GuiFactory {
+public class GuiEventFactory {
 
-	public static GuiFactory get(String modID) {
-		// TODO
-		return null;
-	}
-
-	public static void registerGuiFactory(GuiFactory factory, String modID) {
-
-	}
-
-	public static void applyNativeComponent(GuiComponent<?, ?> component, Class<? extends NativeGuiComponent> clazz) {
-
-	}
+	public static Optional<GuiEventFactory> instance = Optional.empty();
 
 	private final ArrayList<Function<GuiComponent<?, ?>, ?>> networkEvents = new ArrayList<>();
 	private final HashMap<Class<?>, Integer> networkEventsReverse = new HashMap<>();
 
-	// TODO Separate from the factory as events can be registered independently,
-	// no need to create a different supplier for every mod
 	public void registerNetworkEvents() {
 		registerNetworkEvent((component) -> new ComponentEvent.ActionEvent<>(component));
 	}

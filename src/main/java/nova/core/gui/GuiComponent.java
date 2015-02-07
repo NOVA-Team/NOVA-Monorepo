@@ -6,6 +6,8 @@ import nova.core.event.EventListener;
 import nova.core.event.EventListenerList;
 import nova.core.event.SidedEventListenerList;
 import nova.core.gui.GuiEvent.ConstructionEvent;
+import nova.core.gui.factory.GuiComponentFactory;
+import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.network.NetworkTarget.Side;
@@ -57,7 +59,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	public GuiComponent(String uniqueID, Class<T> nativeClass) {
 		this.uniqueID = uniqueID;
 		this.qualifiedName = uniqueID;
-		GuiFactory.applyNativeComponent(this, nativeClass);
+		GuiComponentFactory.applyNativeComponent(this, nativeClass);
 	}
 
 	public Optional<AbstractGuiContainer<?, ?>> getParentContainer() {

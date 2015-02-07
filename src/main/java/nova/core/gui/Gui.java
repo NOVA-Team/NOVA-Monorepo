@@ -2,6 +2,7 @@ package nova.core.gui;
 
 import java.util.Optional;
 
+import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.nativeimpl.NativeGui;
 import nova.core.network.Packet;
 
@@ -19,7 +20,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 
 	protected void dispatchNetworkEvent(ComponentEvent<?> event, GuiComponent<?, ?> sender) {
 		Packet packet = getNative().createPacket();
-		GuiFactory.get(modID).constructPacket(event, this, packet, event.getSyncID());
+		GuiEventFactory.instance.get().constructPacket(event, this, packet, event.getSyncID());
 		getNative().dispatchNetworkEvent(packet);
 
 	}
