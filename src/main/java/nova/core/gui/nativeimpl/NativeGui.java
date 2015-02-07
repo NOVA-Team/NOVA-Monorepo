@@ -2,8 +2,8 @@ package nova.core.gui.nativeimpl;
 
 import nova.core.gui.Gui;
 import nova.core.gui.GuiEvent;
-import nova.core.gui.GuiFactory;
 import nova.core.gui.Outline;
+import nova.core.gui.factory.GuiEventFactory;
 import nova.core.network.Packet;
 
 public interface NativeGui extends NativeContainer {
@@ -25,6 +25,6 @@ public interface NativeGui extends NativeContainer {
 
 	public default void recieveNetworkEvent(Packet packet) {
 		Gui gui = (Gui) getElement();
-		gui.triggerEvent(GuiFactory.get(gui.modID).constructEvent(packet, gui));
+		gui.triggerEvent(GuiEventFactory.instance.get().constructEvent(packet, gui));
 	}
 }

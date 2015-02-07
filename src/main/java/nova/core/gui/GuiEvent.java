@@ -1,14 +1,16 @@
 package nova.core.gui;
 
+import nova.core.event.CancelableEvent;
 import nova.core.gui.KeyStroke.Key;
 
 /**
  * Event for GUI, like mouse click
  */
-public class GuiEvent {
+public class GuiEvent extends CancelableEvent {
 
 	// TODO Document.
 	// TODO Split this up into multiple events maybe?
+	@Cancelable
 	public static class MouseEvent extends GuiEvent {
 
 		public final int mouseX;
@@ -32,6 +34,7 @@ public class GuiEvent {
 		}
 	}
 
+	@Cancelable
 	public static class MouseWheelEvent extends GuiEvent {
 
 		public final int scrollAmount;
@@ -41,6 +44,7 @@ public class GuiEvent {
 		}
 	}
 
+	@Cancelable
 	public static class KeyEvent extends GuiEvent {
 
 		public final Key key;
@@ -65,5 +69,9 @@ public class GuiEvent {
 		public ResizeEvent(Outline oldOutline) {
 			this.oldOutline = oldOutline;
 		}
+	}
+
+	public static class ConstructionEvent extends GuiEvent {
+
 	}
 }

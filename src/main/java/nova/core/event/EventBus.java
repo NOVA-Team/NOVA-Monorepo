@@ -1,14 +1,14 @@
 package nova.core.event;
 
 /**
- * Implements a list of event listeners. This class is thread-safe and listeners
- * can be added or removed concurrently, no external locking is ever needed.
- * Also, it's very lightweight.
+ * A general purpose event bus. This class is thread-safe and listeners can be
+ * added or removed concurrently, no external locking is ever needed. Also, it's
+ * very lightweight.
  *
  * @param <T> event type
  * @author Stan Hebben
  */
-public class EventListenerList<T> {
+public class EventBus<T> {
 	public static final int PRIORITY_HIGH = 100;
 	public static final int PRIORITY_DEFAULT = 0;
 	public static final int PRIORITY_LOW = -100;
@@ -25,7 +25,7 @@ public class EventListenerList<T> {
 	}
 
 	/**
-	 * Adds an EventListener to the list.
+	 * Adds an EventListener to the bus.
 	 *
 	 * @param listener event listener
 	 * @return event listener's handle
@@ -154,7 +154,7 @@ public class EventListenerList<T> {
 
 		@Override
 		public void close() {
-			synchronized (EventListenerList.this) {
+			synchronized (EventBus.this) {
 				if (prev == null) {
 					first = next;
 				} else {
@@ -186,10 +186,10 @@ public class EventListenerList<T> {
 		 * Constructs a new single typed Event listener.
 		 *
 		 * @param wrappedListener The listener which gets called when the event
-		 * was accepted.
+		 *        was accepted.
 		 * @param eventClass The event to listen for, Any posted event that is
-		 * an instance of said class will get passed through to the
-		 * wrapped listener instance.
+		 *        an instance of said class will get passed through to the
+		 *        wrapped listener instance.
 		 */
 		public SingleEventListener(EventListener<E> wrappedListener, Class<E> eventClass) {
 			this.eventClass = eventClass;

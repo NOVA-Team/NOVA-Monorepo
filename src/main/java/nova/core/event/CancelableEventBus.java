@@ -1,12 +1,12 @@
 package nova.core.event;
 
 /**
- * Variant of EventListenerList which stops publishing events after they are
+ * Variant of {@link EventBus} which stops publishing events after they are
  * canceled.
  *
  * @author Stan Hebben
  */
-public class CancelableListenerList<T extends Cancelable> extends EventListenerList<T> {
+public class CancelableEventBus<T extends Cancelable> extends EventBus<T> {
 	@Override
 	public void publish(T event) {
 		EventListenerNode current;

@@ -8,22 +8,21 @@ import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
 
-// TODO Implement priorities
-
 /**
- * Event listener list that can differentiate {@link NetworkTarget} and allows
- * registration of handlers that only listen on a specific {@link Side}.
+ * {@link EventBus} that can differentiate {@link NetworkTarget NetworkTargets}
+ * and allows registration of handlers that only listen on a specific
+ * {@link Side}.
  *
  * @param <T>
  * @author Vic Nightfall
  */
-public class SidedEventListenerList<T> extends EventListenerList<T> {
+public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 
 	private NetworkEventProcessor eventProcessor;
 	private boolean checkListenedBeforeSend = true;
 	private HashSet<Class<?>> listenedNetworkEvents = new HashSet<Class<?>>();
 
-	public SidedEventListenerList(NetworkEventProcessor eventProcessor) {
+	public SidedEventBus(NetworkEventProcessor eventProcessor) {
 		this.eventProcessor = eventProcessor;
 	}
 
@@ -37,9 +36,21 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 	}
 
 	@Override
+	public EventListenerHandle<T> add(EventListener<T> listener, int priority) {
+		checkListenedBeforeSend = false;
+		return super.add(listener, priority);
+	}
+
+	@Override
 	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz) {
 		listenedNetworkEvents.add(clazz);
 		return super.add(listener, clazz);
+	}
+
+	@Override
+	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, int priority) {
+		listenedNetworkEvents.add(clazz);
+		return super.add(listener, clazz, priority);
 	}
 
 	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, Side sideToListen) {
@@ -47,10 +58,15 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 		return add(new SidedEventListener<E, T>(listener, clazz, sideToListen));
 	}
 
+	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, Side sideToListen, int priority) {
+		listenedNetworkEvents.add(clazz);
+		return add(new SidedEventListener<E, T>(listener, clazz, sideToListen), priority);
+	}
+
 	@Override
 	public void publish(T event) {
-		if (event instanceof SidedEventListenerList.SidedEvent) {
-			SidedEventListenerList.SidedEvent sidedEvent = (SidedEventListenerList.SidedEvent) event;
+		if (event instanceof SidedEventBus.SidedEvent) {
+			SidedEventBus.SidedEvent sidedEvent = (SidedEventBus.SidedEvent) event;
 			Side currentSide = NetworkManager.instance.get().getSide();
 
 			// Check if the event targets the current side.
@@ -96,8 +112,8 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 
 		@Override
 		public void onEvent(T event) {
-			if (event instanceof SidedEventListenerList.SidedEvent) {
-				SidedEventListenerList.SidedEvent sidedEvent = (SidedEventListenerList.SidedEvent) event;
+			if (event instanceof SidedEventBus.SidedEvent) {
+				SidedEventBus.SidedEvent sidedEvent = (SidedEventBus.SidedEvent) event;
 				if (sidedEvent.getTarget().targets(side)) {
 					onEvent(event);
 				}
@@ -115,7 +131,7 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 		 *
 		 * @param event
 		 */
-		public void handleEvent(SidedEventListenerList.SidedEvent event);
+		public void handleEvent(SidedEventBus.SidedEvent event);
 	}
 
 	/**

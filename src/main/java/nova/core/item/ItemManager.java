@@ -4,7 +4,7 @@ import nova.core.block.Block;
 import nova.core.block.BlockManager;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
-import nova.core.event.EventListenerList;
+import nova.core.event.EventBus;
 import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.util.ReflectionUtils;
 import nova.core.util.Registry;
@@ -18,8 +18,8 @@ public class ItemManager {
 	public final Registry<ItemFactory> registry;
 	private final Provider<BlockManager> blockManager;
 
-	private final EventListenerList<ItemIDNotFoundEvent> idNotFoundListeners = new EventListenerList<>();
-	private final EventListenerList<ItemRegistrationEvent> itemRegistryListeners = new EventListenerList<>();
+	private final EventBus<ItemIDNotFoundEvent> idNotFoundListeners = new EventBus<>();
+	private final EventBus<ItemRegistrationEvent> itemRegistryListeners = new EventBus<>();
 
 	private ItemManager(Registry<ItemFactory> itemRegistry, Provider<BlockManager> blockManager) {
 		this.registry = itemRegistry;

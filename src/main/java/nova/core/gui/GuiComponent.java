@@ -1,8 +1,13 @@
 package nova.core.gui;
 
+import java.util.Optional;
+
 import nova.core.event.EventListener;
-import nova.core.event.EventListenerList;
-import nova.core.event.SidedEventListenerList;
+import nova.core.event.EventBus;
+import nova.core.event.SidedEventBus;
+import nova.core.gui.GuiEvent.ConstructionEvent;
+import nova.core.gui.factory.GuiComponentFactory;
+import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.network.NetworkTarget.Side;
@@ -11,8 +16,6 @@ import nova.core.network.PacketSender;
 import nova.core.render.model.Model;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector2i;
-
-import java.util.Optional;
 
 /**
  * Defines a basic gui component. A component can be added to
@@ -27,8 +30,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	protected String qualifiedName;
 
 	private T nativeElement;
-	private SidedEventListenerList<ComponentEvent<?>> eventListenerList = new SidedEventListenerList<ComponentEvent<?>>(this::dispatchNetworkEvent);
-	private EventListenerList<GuiEvent> listenerList = new EventListenerList<GuiEvent>();
+	private SidedEventBus<ComponentEvent<?>> eventListenerList = new SidedEventBus<ComponentEvent<?>>(this::dispatchNetworkEvent);
+	private EventBus<GuiEvent> listenerList = new EventBus<GuiEvent>();
 
 	protected Optional<Vector2i> preferredSize = Optional.empty();
 	protected Optional<Vector2i> minimumSize = Optional.empty();
@@ -44,7 +47,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 */
 	protected Optional<AbstractGuiContainer<?, ?>> parentContainer = Optional.empty();
 
-	private void dispatchNetworkEvent(SidedEventListenerList.SidedEvent event) {
+	private void dispatchNetworkEvent(SidedEventBus.SidedEvent event) {
 		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((ComponentEvent<?>) event, this));
 	}
 
@@ -53,9 +56,10 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		return parentContainer.isPresent() ? parentContainer.get().getParentGui() : Optional.empty();
 	}
 
-	public GuiComponent(String uniqueID) {
+	public GuiComponent(String uniqueID, Class<T> nativeClass) {
 		this.uniqueID = uniqueID;
 		this.qualifiedName = uniqueID;
+		GuiComponentFactory.applyNativeComponent(this, nativeClass);
 	}
 
 	public Optional<AbstractGuiContainer<?, ?>> getParentContainer() {
@@ -155,10 +159,19 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		return nativeElement;
 	}
 
-	// TODO inserted by some sort of factory?
+	/**
+	 * Gets called right after the {@link #nativeElement} instance has been
+	 * populated by a {@link GuiFactory}. Use this to pass arguments to the
+	 * underlying {@link NativeGuiComponent}.
+	 */
+	protected void construct() {
+		onEvent(new ConstructionEvent());
+	}
+
 	protected void setNativeElement(T nativeElement) {
 		this.nativeElement = nativeElement;
-		nativeElement.requestRender();
+		construct();
+		repaint();
 	}
 
 	/**
@@ -174,7 +187,10 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * @param isActive New state
 	 */
 	public void setActive(boolean isActive) {
-		this.isActive = isActive;
+		if (this.isActive != isActive) {
+			this.isActive = isActive;
+			repaint();
+		}
 	}
 
 	/**
@@ -190,7 +206,10 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * @param isVisible New visibility
 	 */
 	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
+		if (this.isVisible != isVisible) {
+			this.isVisible = isVisible;
+			repaint();
+		}
 	}
 
 	/**
@@ -209,14 +228,18 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		listenerList.publish(event);
 	}
 
+	/**
+	 * Triggers an event for the external listeners registered with
+	 * registerEventListener
+	 * 
+	 * @param event ComponentEvent to trigger
+	 */
 	public void triggerEvent(ComponentEvent<?> event) {
 		eventListenerList.publish(event);
 	}
 
 	// Internal listener
-	// TODO expose for GUI builders?
-
-	protected <EVENT extends GuiEvent> void registerListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
+	public <EVENT extends GuiEvent> void registerListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
 		listenerList.add(listener, clazz);
 	}
 

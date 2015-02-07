@@ -1,14 +1,14 @@
 package nova.core.gui;
 
-import nova.core.gui.GuiEvent.ResizeEvent;
-import nova.core.gui.layout.BorderLayout;
-import nova.core.gui.layout.GuiLayout;
-import nova.core.gui.nativeimpl.NativeContainer;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
+
+import nova.core.gui.GuiEvent.ResizeEvent;
+import nova.core.gui.layout.BorderLayout;
+import nova.core.gui.layout.GuiLayout;
+import nova.core.gui.nativeimpl.NativeContainer;
 
 /**
  * This class provides container for {@link GuiComponent}
@@ -19,8 +19,8 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	private HashMap<String, GuiComponent<?, ?>> children = new HashMap<String, GuiComponent<?, ?>>();
 
-	public AbstractGuiContainer(String uniqueID) {
-		super(uniqueID);
+	public AbstractGuiContainer(String uniqueID, Class<T> nativeClass) {
+		super(uniqueID, nativeClass);
 		this.registerListener(this::onResized, ResizeEvent.class);
 	}
 
@@ -36,7 +36,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 *
 	 * @param qualifiedName qualified name of the sub component
 	 * @return The requested {@link GuiComponent} or {@code null} if not
-	 * present.
+	 *         present.
 	 * @see GuiComponent#getQualifiedName()
 	 * @see AbstractGuiContainer#getChildElement(String, Class)
 	 */
@@ -63,7 +63,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * @param qualifiedName qualified name of the sub component
 	 * @param clazz class of the requested {@link GuiComponent}
 	 * @return The requested {@link GuiComponent} or {@code null} if not present
-	 * / the type doesn't match.
+	 *         / the type doesn't match.
 	 */
 	@SuppressWarnings("unchecked")
 	public <E extends GuiComponent<?, ?>> Optional<E> getChildElement(String qualifiedName, Class<E> clazz) {
