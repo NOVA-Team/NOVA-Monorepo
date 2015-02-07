@@ -1,11 +1,5 @@
 package nova.internal;
 
-import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.core.deps.DependencyRepoProvider;
-import nova.core.loader.Loadable;
-import nova.core.loader.NovaMod;
-import se.jbee.inject.Dependency;
-
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +13,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.core.deps.DependencyRepoProvider;
+import nova.core.loader.Loadable;
+import nova.core.loader.NovaMod;
+import se.jbee.inject.Dependency;
 
 /**
  * The main class that launches NOVA mods.
@@ -52,13 +52,13 @@ public class NovaLauncher implements Loadable {
 	public NovaLauncher(DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
 		this.diep = diep;
 		this.modClasses = modClasses;
-
+		
 		classesMap = modClasses.stream()
 			.filter(Loadable.class::isAssignableFrom)
-			.map(clazz -> clazz.asSubclass(Loadable.class))
+			.map(clazz -> (Class<? extends Loadable>) clazz.asSubclass(Loadable.class))
 			.filter(clazz -> clazz.getAnnotation(NovaMod.class) != null)
 			.collect(Collectors.toMap((clazz) -> clazz.getAnnotation(NovaMod.class), Function.identity())); //Map<NovaMod, Class<? extends Loadable>>
-
+		
 		classesMap.keySet().stream()
 			.flatMap(mod -> Arrays.stream(mod.modules()))
 			.forEach(diep::install);
@@ -82,7 +82,7 @@ public class NovaLauncher implements Loadable {
 
 					Constructor<?> cons = ocons.get();
 					Object[] parameters = Arrays.stream(cons.getParameterTypes())
-						.map(clazz -> (Object) diep.getInjector().get().resolve(Dependency.dependency(clazz)))
+						.map(clazz -> diep.getInjector().get().resolve(Dependency.dependency(clazz)))
 						.collect(Collectors.toList()).toArray();
 					return (Loadable) cons.newInstance(parameters);
 				} catch (Exception e) {
