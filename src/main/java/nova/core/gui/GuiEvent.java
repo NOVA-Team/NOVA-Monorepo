@@ -66,4 +66,8 @@ public class GuiEvent {
 			this.oldOutline = oldOutline;
 		}
 	}
+
+	public static class ConstructionEvent extends GuiEvent {
+
+	}
 }

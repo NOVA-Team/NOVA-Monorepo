@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.Function;
 
+import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.network.Packet;
 import nova.core.util.exception.NovaException;
 
@@ -13,6 +14,14 @@ public class GuiFactory {
 	public static GuiFactory get(String modID) {
 		// TODO
 		return null;
+	}
+
+	public static void registerGuiFactory(GuiFactory factory, String modID) {
+
+	}
+
+	public static void applyNativeComponent(GuiComponent<?, ?> component, Class<? extends NativeGuiComponent> clazz) {
+
 	}
 
 	private final ArrayList<Function<GuiComponent<?, ?>, ?>> networkEvents = new ArrayList<>();

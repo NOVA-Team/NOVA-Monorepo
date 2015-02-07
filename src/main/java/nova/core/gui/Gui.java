@@ -13,7 +13,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	public final String modID;
 
 	protected Gui(String uniqueID, String modID) {
-		super(uniqueID);
+		super(uniqueID, NativeGui.class);
 		this.modID = modID;
 	}
 
