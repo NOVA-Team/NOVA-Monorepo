@@ -41,7 +41,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,6 +64,8 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@SideOnly(Side.CLIENT)
 	private final int blockRenderingID = RenderingRegistry.getNextAvailableRenderId();
 
+	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
+
 	//TODO: Resolve unknown material issue
 	public BlockWrapper(BlockFactory factory) {
 		super(Material.piston);
@@ -81,7 +85,8 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 		 * Otherwise, create a new instance of the block and forward the methods over.
 		 */
 		if (hasTileEntity(0)) {
-			if (((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).getBlock() != null) {
+			TileWrapper tileWrapper = ((TileWrapper) access.getTileEntity(position.x, position.y, position.z));
+			if (tileWrapper != null && tileWrapper.getBlock() != null) {
 				return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).getBlock();
 			}
 
@@ -93,6 +98,16 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 
 	public Block getBlockInstance(nova.core.block.BlockAccess access, Vector3i position) {
 		return factory.makeBlock(access, position);
+	}
+
+
+	@Override
+	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
+	{
+		// HACK: called before block is destroyed by the player prior to the player getting the drops. Determine drops here.
+		// hack is needed because the player sets the block to air *before* getting the drops. woo good logic from mojang.
+		if (!player.capabilities.isCreativeMode)
+			harvestedBlocks.put(new BlockPosition(world, x, y, z), getBlockInstance(world, new Vector3i(x, y, z)));
 	}
 
 	@Override
@@ -175,7 +190,17 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		return getBlockInstance(world, new Vector3i(x, y, z)).getDrops()
+		Block block;
+
+		// see onBlockHarvested for why the harvestedBlocks hack exists
+		// this method will be called exactly once after destroying the block
+		BlockPosition position = new BlockPosition(world, x, y, z);
+		if (harvestedBlocks.containsKey(position))
+			block = harvestedBlocks.remove(position);
+		else
+			block = getBlockInstance(world, new Vector3i(x, y, z));
+
+		return block.getDrops()
 			.stream()
 			.map(WrapUtility::wrapItemStack)
 			.collect(Collectors.toCollection(ArrayList::new));

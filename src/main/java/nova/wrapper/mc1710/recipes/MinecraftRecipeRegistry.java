@@ -11,8 +11,6 @@ import nova.wrapper.mc1710.util.ReflectionUtil;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 /**
@@ -45,8 +43,8 @@ public class MinecraftRecipeRegistry {
 
         System.out.println("Initialized recipes in " + (System.currentTimeMillis() - startTime) + " ms");
 
-        recipeManager.addRecipeAddedListener(CraftingRecipe.class, this::onNOVARecipeAdded);
-        recipeManager.addRecipeRemovedListener(CraftingRecipe.class, this::onNOVARecipeRemoved);
+        recipeManager.whenRecipeAdded(CraftingRecipe.class, this::onNOVARecipeAdded);
+        recipeManager.whenRecipeRemoved(CraftingRecipe.class, this::onNOVARecipeRemoved);
     }
 
     private CraftingRecipe convert(IRecipe recipe) {
