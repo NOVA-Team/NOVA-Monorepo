@@ -1,7 +1,7 @@
 package nova.core.event;
 
 /**
- * Created by Stan on 5/02/2015.
+ * @author Stan Hebben
  */
 public class TestEvent implements Cancelable {
 	private final StringBuilder output;
