@@ -1,8 +1,11 @@
 package nova.core.game;
 
+import java.util.Optional;
+
 import nova.core.block.BlockManager;
 import nova.core.entity.EntityManager;
 import nova.core.fluid.FluidManager;
+import nova.core.gui.factory.GuiComponentFactory;
 import nova.core.item.ItemManager;
 import nova.core.item.OreDictionary;
 import nova.core.recipes.RecipeManager;
@@ -10,13 +13,12 @@ import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
 import nova.core.world.WorldManager;
 
-import java.util.Optional;
-
 public class Game {
 
 	/**
 	 * Use only when injection is not a solution. For example when performance
-	 * is a concern. Treat as -100 style points. Must be initialized by code handling launch and dependency injection entry point.
+	 * is a concern. Treat as -100 style points. Must be initialized by code
+	 * handling launch and dependency injection entry point.
 	 */
 	public static Optional<Game> instance = Optional.empty();
 
@@ -29,17 +31,19 @@ public class Game {
 	public final RecipeManager recipeManager;
 	public final CraftingRecipeManager craftingRecipeManager;
 	public final OreDictionary oreDictionary;
+	public final GuiComponentFactory guiComponentFactory;
 
 	private Game(
-		BlockManager blockManager,
-		EntityManager entityManager,
-		ItemManager itemManager,
-		FluidManager fluidManager,
-		WorldManager worldManager,
-		RenderManager renderManager,
-		RecipeManager recipeManager,
-		CraftingRecipeManager craftingRecipeManager,
-		OreDictionary oreDictionary) {
+		BlockManager blockManager, 
+		EntityManager entityManager, 
+		ItemManager itemManager, 
+		FluidManager fluidManager, 
+		WorldManager worldManager, 
+		RenderManager renderManager, 
+		RecipeManager recipeManager, 
+		CraftingRecipeManager craftingRecipeManager, 
+		OreDictionary oreDictionary, 
+		GuiComponentFactory guiComponentFactory) {
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
 		this.itemManager = itemManager;
@@ -49,5 +53,6 @@ public class Game {
 		this.recipeManager = recipeManager;
 		this.craftingRecipeManager = craftingRecipeManager;
 		this.oreDictionary = oreDictionary;
+		this.guiComponentFactory = guiComponentFactory;
 	}
 }

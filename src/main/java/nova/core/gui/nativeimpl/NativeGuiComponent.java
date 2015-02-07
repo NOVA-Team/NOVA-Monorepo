@@ -23,8 +23,6 @@ import nova.core.util.transform.Vector2i;
  */
 public interface NativeGuiComponent {
 
-	public void applyElement(GuiComponent<?, ?> component);
-
 	public GuiComponent<?, ?> getElement();
 
 	public Outline getOutline();

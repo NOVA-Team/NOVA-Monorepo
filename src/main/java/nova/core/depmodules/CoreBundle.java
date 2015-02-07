@@ -1,13 +1,14 @@
 package nova.core.depmodules;
 
-import com.google.common.collect.Sets;
+import java.util.Collections;
+import java.util.Set;
+
 import nova.core.di.DICoreModule;
 import nova.core.di.OptionalModule;
 import se.jbee.inject.bootstrap.BootstrapperBundle;
 import se.jbee.inject.bootstrap.Bundle;
 
-import java.util.Collections;
-import java.util.Set;
+import com.google.common.collect.Sets;
 
 public class CoreBundle extends BootstrapperBundle {
 	private static Set<Class<? extends Bundle>> coreModules = Sets.newHashSet();
@@ -34,8 +35,10 @@ public class CoreBundle extends BootstrapperBundle {
 
 		add(RecipesModule.class);
 		add(CraftingModule.class);
+		add(GuiModule.class);
+
 		/**
-		 * General 
+		 * General
 		 */
 		add(UtilModule.class);
 

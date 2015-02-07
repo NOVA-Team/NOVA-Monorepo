@@ -1,9 +1,9 @@
 package nova.bootstrap;
 
-import nova.core.game.Game;
-import org.junit.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import nova.core.game.Game;
+
+import org.junit.Test;
 
 public class DependencyInjectionEntryPointTest {
 
@@ -23,6 +23,7 @@ public class DependencyInjectionEntryPointTest {
 		assertThat(game.recipeManager).isNotNull();
 		assertThat(game.craftingRecipeManager).isNotNull();
 		assertThat(game.oreDictionary).isNotNull();
+		assertThat(game.guiComponentFactory).isNotNull();
 	}
 
 }

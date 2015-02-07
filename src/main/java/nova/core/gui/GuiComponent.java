@@ -2,11 +2,11 @@ package nova.core.gui;
 
 import java.util.Optional;
 
-import nova.core.event.EventListener;
 import nova.core.event.EventBus;
+import nova.core.event.EventListener;
 import nova.core.event.SidedEventBus;
+import nova.core.game.Game;
 import nova.core.gui.GuiEvent.ConstructionEvent;
-import nova.core.gui.factory.GuiComponentFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
@@ -59,7 +59,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	public GuiComponent(String uniqueID, Class<T> nativeClass) {
 		this.uniqueID = uniqueID;
 		this.qualifiedName = uniqueID;
-		GuiComponentFactory.applyNativeComponent(this, nativeClass);
+		Game.instance.get().guiComponentFactory.applyNativeComponent(this, nativeClass);
 	}
 
 	public Optional<AbstractGuiContainer<?, ?>> getParentContainer() {
@@ -168,7 +168,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		onEvent(new ConstructionEvent());
 	}
 
-	protected void setNativeElement(T nativeElement) {
+	public void setNativeComponent(T nativeElement) {
 		this.nativeElement = nativeElement;
 		construct();
 		repaint();

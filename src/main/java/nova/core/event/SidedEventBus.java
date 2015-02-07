@@ -115,10 +115,10 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 			if (event instanceof SidedEventBus.SidedEvent) {
 				SidedEventBus.SidedEvent sidedEvent = (SidedEventBus.SidedEvent) event;
 				if (sidedEvent.getTarget().targets(side)) {
-					onEvent(event);
+					super.onEvent(event);
 				}
 			} else {
-				onEvent(event);
+				super.onEvent(event);
 			}
 		}
 	}
