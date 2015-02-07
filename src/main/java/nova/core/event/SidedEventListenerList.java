@@ -8,8 +8,6 @@ import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
 
-// TODO Implement priorities
-
 /**
  * Event listener list that can differentiate {@link NetworkTarget} and allows
  * registration of handlers that only listen on a specific {@link Side}.
@@ -37,14 +35,31 @@ public class SidedEventListenerList<T> extends EventListenerList<T> {
 	}
 
 	@Override
+	public EventListenerHandle<T> add(EventListener<T> listener, int priority) {
+		checkListenedBeforeSend = false;
+		return super.add(listener, priority);
+	}
+
+	@Override
 	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz) {
 		listenedNetworkEvents.add(clazz);
 		return super.add(listener, clazz);
 	}
 
+	@Override
+	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, int priority) {
+		listenedNetworkEvents.add(clazz);
+		return super.add(listener, clazz, priority);
+	}
+
 	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, Side sideToListen) {
 		listenedNetworkEvents.add(clazz);
 		return add(new SidedEventListener<E, T>(listener, clazz, sideToListen));
+	}
+
+	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, Side sideToListen, int priority) {
+		listenedNetworkEvents.add(clazz);
+		return add(new SidedEventListener<E, T>(listener, clazz, sideToListen), priority);
 	}
 
 	@Override
