@@ -1,5 +1,7 @@
 package nova.core.util.transform;
 
+import com.google.common.math.DoubleMath;
+
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
  *
@@ -133,8 +135,8 @@ public class Vector3d extends Vector3<Vector3d> {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Vector3) {
-			Vector3 v = ((Vector3) obj);
-			return xd() == v.xd() && yd() == v.yd() && zd() == v.zd();
+			Vector3 other = ((Vector3) obj);
+			return DoubleMath.fuzzyEquals(this.xd(), other.xd(), 0.000001) &&DoubleMath.fuzzyEquals(this.yd(),other.yd(),0.000001) && DoubleMath.fuzzyEquals(this.zd(),other.zd(),0.000001);
 		}
 		return this == obj;
 	}
