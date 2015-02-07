@@ -1,5 +1,7 @@
 package nova.core.gui.nativeimpl;
 
+import java.util.Optional;
+
 import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.KeyEvent;
 import nova.core.gui.GuiEvent.KeyEvent.EnumKeyState;
@@ -12,7 +14,7 @@ import nova.core.gui.Outline;
 import nova.core.render.model.Model;
 import nova.core.util.transform.Vector2i;
 
-import java.util.Optional;
+//TODO Make this generic even if it means writing novels when extending.
 
 /**
  * The native interface for any {@link GuiComponent}.

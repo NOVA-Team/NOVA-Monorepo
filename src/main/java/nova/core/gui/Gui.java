@@ -1,24 +1,27 @@
 package nova.core.gui;
 
-import nova.core.event.SidedEventListenerList;
-import nova.core.gui.nativeimpl.NativeGui;
-
 import java.util.Optional;
+
+import nova.core.gui.nativeimpl.NativeGui;
+import nova.core.network.Packet;
 
 /**
  * Root container for GUI
  */
-public abstract class Gui extends AbstractGuiContainer<Gui, NativeGui> {
+public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 
-	private Gui(String uniqueID) {
+	public final String modID;
+
+	protected Gui(String uniqueID, String modID) {
 		super(uniqueID);
+		this.modID = modID;
 	}
 
-	// TODO Has to construct packets and send them over the network using the
-	// qualified name of the components.
-	protected void dispatchNetworkEvent(SidedEventListenerList.SidedEvent event, GuiComponent<?, ?> sender) {
-		// event.getTarget();
-		sender.getQualifiedName();
+	protected void dispatchNetworkEvent(ComponentEvent<?> event, GuiComponent<?, ?> sender) {
+		Packet packet = getNative().createPacket();
+		GuiFactory.get(modID).constructPacket(event, this, packet, event.getSyncID());
+		getNative().dispatchNetworkEvent(packet);
+
 	}
 
 	@Override

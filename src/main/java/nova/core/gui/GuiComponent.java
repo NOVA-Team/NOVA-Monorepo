@@ -45,7 +45,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	protected Optional<AbstractGuiContainer<?, ?>> parentContainer = Optional.empty();
 
 	private void dispatchNetworkEvent(SidedEventListenerList.SidedEvent event) {
-		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent(event, this));
+		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((ComponentEvent<?>) event, this));
 	}
 
 	// TODO Recursive call or field? Same goes for the qualified name.

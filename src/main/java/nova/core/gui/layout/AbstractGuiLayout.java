@@ -5,7 +5,7 @@ import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.util.transform.Vector2i;
 
-public abstract class AbstractGuiLayout<T extends LayoutConstraints<T>> implements GuiLayout {
+public abstract class AbstractGuiLayout<T extends Constraints<T>> implements GuiLayout {
 
 	private final Class<T> constraintsClass;
 
@@ -15,7 +15,7 @@ public abstract class AbstractGuiLayout<T extends LayoutConstraints<T>> implemen
 
 	/**
 	 * Adds a {@link GuiComponent} to this layout. The parameters have to match
-	 * the {@link LayoutConstraints} required by this layout. (See generic type
+	 * the {@link Constraints} required by this layout. (See generic type
 	 * arguments for convenience) If there is only one argument passed and it is
 	 * an instance of the needed constraint type, it will be passed directly to
 	 * the layout. Otherwise, it will try to create one based on the supplied
@@ -23,7 +23,7 @@ public abstract class AbstractGuiLayout<T extends LayoutConstraints<T>> implemen
 	 *
 	 * @param component The component to add to this layout.
 	 * @param parent The parent container of this layout.
-	 * @param parameters arguments passed to the {@link LayoutConstraints} or a
+	 * @param parameters arguments passed to the {@link Constraints} or a
 	 * fitting instance of &lt;T&gt;
 	 * @throws IllegalArgumentException if the Object array couldn't be
 	 * converted to the required constraint type.
@@ -36,7 +36,7 @@ public abstract class AbstractGuiLayout<T extends LayoutConstraints<T>> implemen
 				addImpl(component, parent, ((T) parameters[0]).clone());
 			}
 		}
-		addImpl(component, parent, LayoutConstraints.createConstraints(constraintsClass, parameters));
+		addImpl(component, parent, Constraints.createConstraints(constraintsClass, parameters));
 	}
 
 	protected abstract void addImpl(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, T constraints);

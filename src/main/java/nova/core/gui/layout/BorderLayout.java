@@ -1,12 +1,12 @@
 package nova.core.gui.layout;
 
+import java.util.EnumMap;
+
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
-import nova.core.gui.layout.LayoutConstraints.BorderLayoutConstraints;
+import nova.core.gui.layout.Constraints.BorderConstraints;
 import nova.core.util.transform.Vector2i;
-
-import java.util.EnumMap;
 
 /**
  * A basic layout that splits the parent's container up into multiple regions.
@@ -15,13 +15,13 @@ import java.util.EnumMap;
  * @author Vic Nightfall
  * @see java.awt.BorderLayout
  */
-public class BorderLayout extends AbstractGuiLayout<BorderLayoutConstraints> {
+public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 
 	public BorderLayout() {
-		super(BorderLayoutConstraints.class);
+		super(BorderConstraints.class);
 	}
 
-	private final EnumMap<EnumBorderRegion, GuiComponent<?, ?>> components = new EnumMap<>(EnumBorderRegion.class);
+	private final EnumMap<Anchor, GuiComponent<?, ?>> components = new EnumMap<>(Anchor.class);
 
 	// TODO HIGHLY untested
 	@Override
@@ -29,11 +29,11 @@ public class BorderLayout extends AbstractGuiLayout<BorderLayoutConstraints> {
 		Outline outline = parent.getOutline();
 		Vector2i dimension = outline.getDimension();
 
-		GuiComponent<?, ?> cComp = components.get(EnumBorderRegion.CENTER);
-		GuiComponent<?, ?> wComp = components.get(EnumBorderRegion.WEST);
-		GuiComponent<?, ?> eComp = components.get(EnumBorderRegion.EAST);
-		GuiComponent<?, ?> nComp = components.get(EnumBorderRegion.NORTH);
-		GuiComponent<?, ?> sComp = components.get(EnumBorderRegion.SOUTH);
+		GuiComponent<?, ?> cComp = components.get(Anchor.CENTER);
+		GuiComponent<?, ?> wComp = components.get(Anchor.WEST);
+		GuiComponent<?, ?> eComp = components.get(Anchor.EAST);
+		GuiComponent<?, ?> nComp = components.get(Anchor.NORTH);
+		GuiComponent<?, ?> sComp = components.get(Anchor.SOUTH);
 
 		Vector2i wDim = getPreferredSizeOf(wComp);
 		Vector2i eDim = getPreferredSizeOf(eComp);
@@ -101,7 +101,7 @@ public class BorderLayout extends AbstractGuiLayout<BorderLayoutConstraints> {
 	}
 
 	@Override
-	protected void addImpl(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, BorderLayoutConstraints constraints) {
+	protected void addImpl(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, BorderConstraints constraints) {
 		if (components.containsKey(constraints))
 			throw new RuntimeException("BorderLayout doesn't allow multiple elements taking up the same region!");
 		components.put(constraints.region, component);
@@ -112,12 +112,8 @@ public class BorderLayout extends AbstractGuiLayout<BorderLayoutConstraints> {
 		components.remove(component);
 	}
 
-	public static enum EnumBorderRegion {
-		CENTER, NORTH, EAST, SOUTH, WEST;
-	}
-
 	@Override
-	public BorderLayoutConstraints constraints() {
-		return new BorderLayoutConstraints();
+	public BorderConstraints constraints() {
+		return new BorderConstraints();
 	}
 }
