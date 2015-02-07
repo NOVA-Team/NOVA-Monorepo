@@ -2,19 +2,19 @@ package nova.core.event;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Created by Stan on 5/02/2015.
+ * @author Stan Hebben
  */
-public class EventListenerListTest {
+public class EventBusTest {
 	@Test
 	public void testEmpty() {
 		EventBus<TestEvent> listenerList = new EventBus<>();
 		TestEvent event = new TestEvent();
 		listenerList.publish(event);
 
-		assertEquals("", event.toString());
+		assertThat(event.toString()).isEqualTo("");
 	}
 
 	@Test
@@ -26,7 +26,7 @@ public class EventListenerListTest {
 		TestEvent event = new TestEvent();
 		listenerList.publish(event);
 
-		assertEquals("AB", event.toString());
+		assertThat(event.toString()).isEqualTo("AB");
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class EventListenerListTest {
 		TestEvent event = new TestEvent();
 		listenerList.publish(event);
 
-		assertEquals("CAB", event.toString());
+		assertThat(event.toString()).isEqualTo("CAB");
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class EventListenerListTest {
 		TestEvent event = new TestEvent();
 		listenerList.publish(event);
 
-		assertEquals("A", event.toString());
+		assertThat(event.toString()).isEqualTo("A");
 	}
 
 	@Test
@@ -67,6 +67,6 @@ public class EventListenerListTest {
 		TestEvent event = new TestEvent();
 		listenerList.publish(event);
 
-		assertEquals("A", event.toString());
+		assertThat(event.toString()).isEqualTo("A");
 	}
 }

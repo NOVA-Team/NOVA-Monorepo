@@ -30,7 +30,7 @@ public class WavefrontObjectModel extends ModelProvider {
 	private static Pattern face_V_VT_Pattern = Pattern.compile("(f( \\d+/\\d+){3,4} *\\n)|(f( \\d+/\\d+){3,4} *$)");
 	private static Pattern face_V_VN_Pattern = Pattern.compile("(f( \\d+//\\d+){3,4} *\\n)|(f( \\d+//\\d+){3,4} *$)");
 	private static Pattern face_V_Pattern = Pattern.compile("(f( \\d+){3,4} *\\n)|(f( \\d+){3,4} *$)");
-	private static Pattern subModelPattern = Pattern.compile("([go]( [\\w\\d\\.]+) *\\n)|([go]( [\\w\\d\\.]+) *$)");
+	private static Pattern subModelPattern = Pattern.compile("([go]([^\\\\ ]*+)*\\n)|([go]( [^\\\\ ]*+) *$)");
 	private static Matcher globalMatcher;
 
 	private Model currentModel = null;
@@ -137,7 +137,7 @@ public class WavefrontObjectModel extends ModelProvider {
 			line = line.substring(line.indexOf(" ") + 1);
 			String[] tokens = line.split(" ");
 			try {
-				if (tokens.length == 2) {
+				if (tokens.length >= 2) {
 					return new Vector2d(Float.parseFloat(tokens[0]), 1 - Float.parseFloat(tokens[1]));
 				}
 			} catch (NumberFormatException e) {
@@ -255,6 +255,7 @@ public class WavefrontObjectModel extends ModelProvider {
 		try {
 			return textureCoordinates.get(index);
 		} catch (IndexOutOfBoundsException e) {
+			System.err.println("[OBJ]: Can't get textureCoordinate " + index + "! Is this model corrupted?");
 			return Vector2d.zero;
 		}
 	}

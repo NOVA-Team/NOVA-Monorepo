@@ -2,12 +2,12 @@ package nova.core.event;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by Stan on 5/02/2015.
  */
-public class CancelableListenerListTest {
+public class CancelableEventBusTest {
 	@Test
 	public void testCanceling() {
 		CancelableEventBus<TestEvent> listenerList = new CancelableEventBus<>();
@@ -17,7 +17,7 @@ public class CancelableListenerListTest {
 		TestEvent event = new TestEvent();
 		listenerList.publish(event);
 
-		assertEquals("A", event.toString());
-		assertTrue(event.isCanceled());
+		assertThat(event.toString()).isEqualTo("A");
+		assertThat(event.isCanceled()).isTrue();
 	}
 }
