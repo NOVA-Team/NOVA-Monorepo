@@ -1,11 +1,16 @@
 package nova.wrapper.mc1710.item;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import nova.core.item.ItemFactory;
+import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.NBTUtility;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Calclavia
@@ -17,6 +22,11 @@ public class ItemWrapper extends net.minecraft.item.Item implements IItemRendere
 	public ItemWrapper(ItemFactory item) {
 		this.itemFactory = item;
 		setUnlocalizedName(item.getID());
+	}
+
+	@Override
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
+		list.addAll(itemFactory.makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).getTooltips(Optional.of(new BWEntityPlayer(player))));
 	}
 
 	@Override
