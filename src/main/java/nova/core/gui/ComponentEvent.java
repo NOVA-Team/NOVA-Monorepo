@@ -1,5 +1,6 @@
 package nova.core.gui;
 
+import nova.core.event.CancelableEvent;
 import nova.core.event.SidedEventListenerList.SidedEvent;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.network.Sync;
@@ -8,7 +9,7 @@ import nova.core.network.Sync;
  * Event created by {@link GuiComponent}, is also a {@link SidedEvent}. Needs to
  * be registered with the {@link GuiFactory}.
  */
-public abstract class ComponentEvent<T extends GuiComponent<?, ?>> implements SidedEvent {
+public abstract class ComponentEvent<T extends GuiComponent<?, ?>> extends CancelableEvent implements SidedEvent {
 
 	public final T component;
 
@@ -26,6 +27,7 @@ public abstract class ComponentEvent<T extends GuiComponent<?, ?>> implements Si
 		return 0;
 	}
 
+	@Cancelable
 	public static class ActionEvent<T extends GuiComponent<?, ?>> extends ComponentEvent<T> {
 
 		public ActionEvent(T component) {

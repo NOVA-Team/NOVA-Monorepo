@@ -16,6 +16,7 @@ public class TestEvent implements Cancelable {
 		output.append(value);
 	}
 
+	@Override
 	public String toString() {
 		return output.toString();
 	}

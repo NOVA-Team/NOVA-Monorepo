@@ -15,7 +15,7 @@ import nova.core.network.PacketSender;
  * @param <T>
  * @author Vic Nightfall
  */
-public class SidedEventListenerList<T> extends EventListenerList<T> {
+public class SidedEventListenerList<T extends Cancelable> extends CancelableListenerList<T> {
 
 	private NetworkEventProcessor eventProcessor;
 	private boolean checkListenedBeforeSend = true;
