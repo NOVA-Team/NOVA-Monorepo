@@ -1,12 +1,19 @@
 package nova.wrapper.mc1710.forward.block;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,18 +44,14 @@ import nova.wrapper.mc1710.backward.world.BWBlockAccess;
 import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapUtility;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A Minecraft to Nova block wrapper
@@ -162,6 +165,11 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 		//TODO: Check this raytrace.
 		MovingObjectPosition mop = player.rayTrace(10, 1);
 		getBlockInstance(world, new Vector3i(x, y, z)).onLeftClick(BackwardProxyUtil.getEntityWrapper(player), mop.sideHit, new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+	}
+
+	@Override
+	public void registerBlockIcons(IIconRegister ir) {
+		
 	}
 
 	@Override

@@ -1,5 +1,9 @@
 package nova.wrapper.mc1710.item;
 
+import java.util.List;
+import java.util.Optional;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -8,9 +12,6 @@ import nova.core.item.ItemFactory;
 import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.NBTUtility;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Calclavia
@@ -58,5 +59,10 @@ public class ItemWrapper extends net.minecraft.item.Item implements IItemRendere
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack itemStack, Object... data) {
 		itemFactory.makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).onRender(type.ordinal(), data);
+	}
+
+	@Override
+	public void registerIcons(IIconRegister ir) {
+		
 	}
 }
