@@ -30,7 +30,7 @@ public abstract class Block implements Identifiable {
 	 *
 	 * @return The {@link nova.core.block.BlockFactory} that refers to this Block class.
 	 */
-	public final BlockFactory getFactory() {
+	public final BlockFactory factory() {
 		return Game.instance.get().blockManager.getBlockFactory(this.getID()).get();
 	}
 
@@ -39,7 +39,7 @@ public abstract class Block implements Identifiable {
 	 *
 	 * @return The {@link nova.core.block.BlockAccess} that refers to this block.
 	 */
-	public BlockAccess getBlockAccess() {
+	public BlockAccess blockAccess() {
 		return blockAccess;
 	}
 
@@ -49,7 +49,7 @@ public abstract class Block implements Identifiable {
 	 * @return {@link nova.core.world.World} that the block is in.
 	 * @throws NovaException Attempt to cast blockAccess to world invalidly!
 	 */
-	public World getWorld() {
+	public World world() {
 		if (blockAccess instanceof World) {
 			return (World) blockAccess;
 		}
@@ -62,7 +62,7 @@ public abstract class Block implements Identifiable {
 	 *
 	 * @return The position of the block.
 	 */
-	public Vector3i getPosition() {
+	public Vector3i position() {
 		return position;
 	}
 
@@ -72,7 +72,7 @@ public abstract class Block implements Identifiable {
 	 * @return The x co-ordinate of the block.
 	 */
 	public final int x() {
-		return getPosition().x;
+		return position().x;
 	}
 
 	/**
@@ -81,7 +81,7 @@ public abstract class Block implements Identifiable {
 	 * @return The y co-ordinate of the block.
 	 */
 	public final int y() {
-		return getPosition().y;
+		return position().y;
 	}
 
 	/**
@@ -90,7 +90,7 @@ public abstract class Block implements Identifiable {
 	 * @return The z co-ordinate of the block.
 	 */
 	public final int z() {
-		return getPosition().z;
+		return position().z;
 	}
 
 	/**
