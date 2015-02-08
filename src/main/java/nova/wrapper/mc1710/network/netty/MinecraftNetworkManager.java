@@ -47,7 +47,7 @@ public class MinecraftNetworkManager extends NetworkManager {
 	}
 
 	public PacketBlock getBlockPacket(int id, PacketSender sender) {
-		Vector3i position = ((Block) sender).getPosition();
+		Vector3i position = ((Block) sender).position();
 		PacketBlock discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
 		PacketWrapper wrappedPacket = new PacketWrapper(discriminator.data);
 		sender.write(id, wrappedPacket);

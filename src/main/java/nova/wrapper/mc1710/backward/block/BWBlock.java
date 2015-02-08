@@ -15,16 +15,16 @@ public class BWBlock extends Block implements LightEmitter {
 	}
 
 	private IBlockAccess getMcBlockAccess() {
-		return ((BWBlockAccess) getBlockAccess()).access;
+		return ((BWBlockAccess) blockAccess()).access;
 	}
 
 	private int getMetadata() {
-		return getMcBlockAccess().getBlockMetadata(getPosition().x, getPosition().y, getPosition().z);
+		return getMcBlockAccess().getBlockMetadata(position().x, position().y, position().z);
 	}
 
 	private TileEntity getTileEntity() {
 		if (mcTileEntity == null && mcBlock.hasTileEntity(getMetadata())) {
-			mcTileEntity = getMcBlockAccess().getTileEntity(getPosition().x, getPosition().y, getPosition().z);
+			mcTileEntity = getMcBlockAccess().getTileEntity(position().x, position().y, position().z);
 		}
 		return mcTileEntity;
 	}
@@ -36,6 +36,6 @@ public class BWBlock extends Block implements LightEmitter {
 
 	@Override
 	public float getEmittedLightLevel() {
-		return mcBlock.getLightValue(getMcBlockAccess(), getPosition().x, getPosition().y, getPosition().z) / 15.0F;
+		return mcBlock.getLightValue(getMcBlockAccess(), position().x, position().y, position().z) / 15.0F;
 	}
 }
