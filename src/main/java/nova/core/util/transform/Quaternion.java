@@ -63,7 +63,6 @@ public class Quaternion implements Transform {
 	 * Pitch: 0 Degrees - Looking straight forward towards the horizon. 90 Degrees - Looking straight up
 	 * to the sky. -90 Degrees - Looking straight down to the void.
 	 *
-	 * Make sure all models use the Techne Model loader, they will naturally follow this rule.
 	 * @param euler input {@link Vector3}
 	 * @return resulting {@link Quaternion}
 	 * @author Calclavia

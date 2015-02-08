@@ -1,7 +1,6 @@
 package nova.core.util.transform;
 
 import junit.framework.TestCase;
-import org.junit.Test;
 
 public class QuaternionTest extends TestCase {
 
@@ -83,8 +82,8 @@ public class QuaternionTest extends TestCase {
 		assertEquals(new Vector3d(1, 0, 1), q.transform(new Vector3d(1, 0, 1)));
 
 		q = Quaternion.fromEulerDegree(0,90,0);
-		assertEquals(new Vector3d(0, 1, 0), q.transform(new Vector3d(0, 0, 1)));
-		assertEquals(new Vector3d(0, 0, 1), q.transform(new Vector3d(0, -1, 0)));
+		assertEquals(new Vector3d(0, 0, 1), q.transform(new Vector3d(0, 0, 1)));
+		assertEquals(new Vector3d(1, 0, 0), q.transform(new Vector3d(0, -1, 0)));
 
 		q = Quaternion.fromEulerDegree(90,90,0);
 		assertEquals(new Vector3d(0, 1, 0), q.transform(new Vector3d(0, 0, 1)));
