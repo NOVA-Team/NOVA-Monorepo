@@ -59,7 +59,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	public GuiComponent(String uniqueID, Class<T> nativeClass) {
 		this.uniqueID = uniqueID;
 		this.qualifiedName = uniqueID;
-		Game.instance.get().guiComponentFactory.applyNativeComponent(this, nativeClass);
+		Game.instance.get().guiComponentFactory.ifPresent((cf)-> cf.applyNativeComponent(this, nativeClass));
 	}
 
 	public Optional<AbstractGuiContainer<?, ?>> getParentContainer() {

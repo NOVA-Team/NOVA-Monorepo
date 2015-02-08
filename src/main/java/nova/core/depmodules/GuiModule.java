@@ -7,7 +7,7 @@ class GuiModule extends BinderModule {
 
 	@Override
 	protected void declare() {
-		require(GuiComponentFactory.class);
+		//require(GuiComponentFactory.class);
 	}
 
 }

@@ -15,10 +15,10 @@ import java.util.function.Supplier;
 public class BlockManager {
 
 	public final Registry<BlockFactory> registry;
-	private final Provider<ItemManager> itemManager;
+	private final Supplier<ItemManager> itemManager;
 	private final EventBus<BlockRegisteredEvent> blockRegisteredListeners = new EventBus<>();
 
-	private BlockManager(Registry<BlockFactory> registry, Provider<ItemManager> itemManager) {
+	private BlockManager(Registry<BlockFactory> registry, Supplier<ItemManager> itemManager) {
 		this.registry = registry;
 		this.itemManager = itemManager;
 	}
@@ -74,7 +74,7 @@ public class BlockManager {
 		blockRegisteredListeners.publish(new BlockRegisteredEvent(factory));
 
 		Block dummy = factory.getDummy();
-		itemManager.provide().registerItem(() -> new ItemBlock(dummy));
+		itemManager.get().registerItem(() -> new ItemBlock(dummy));
 		return dummy;
 	}
 

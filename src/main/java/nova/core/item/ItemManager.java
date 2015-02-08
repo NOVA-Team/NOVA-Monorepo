@@ -16,12 +16,12 @@ import java.util.function.Supplier;
 public class ItemManager {
 
 	public final Registry<ItemFactory> registry;
-	private final Provider<BlockManager> blockManager;
+	private final Supplier<BlockManager> blockManager;
 
 	private final EventBus<ItemIDNotFoundEvent> idNotFoundListeners = new EventBus<>();
 	private final EventBus<ItemRegistrationEvent> itemRegistryListeners = new EventBus<>();
 
-	private ItemManager(Registry<ItemFactory> itemRegistry, Provider<BlockManager> blockManager) {
+	private ItemManager(Registry<ItemFactory> itemRegistry, Supplier<BlockManager> blockManager) {
 		this.registry = itemRegistry;
 		this.blockManager = blockManager;
 	}
@@ -53,7 +53,7 @@ public class ItemManager {
 	}
 
 	public Optional<Block> getBlockFromItem(Item item) {
-		return blockManager.provide().getBlock(item.getID());
+		return blockManager.get().getBlock(item.getID());
 	}
 
 	public Optional<Item> getItem(String name) {

@@ -31,7 +31,7 @@ public class Game {
 	public final RecipeManager recipeManager;
 	public final CraftingRecipeManager craftingRecipeManager;
 	public final OreDictionary oreDictionary;
-	public final GuiComponentFactory guiComponentFactory;
+	public final Optional<GuiComponentFactory> guiComponentFactory;
 
 	private Game(
 		BlockManager blockManager, 
@@ -43,7 +43,7 @@ public class Game {
 		RecipeManager recipeManager, 
 		CraftingRecipeManager craftingRecipeManager, 
 		OreDictionary oreDictionary, 
-		GuiComponentFactory guiComponentFactory) {
+		Optional<GuiComponentFactory> guiComponentFactory) {
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
 		this.itemManager = itemManager;
