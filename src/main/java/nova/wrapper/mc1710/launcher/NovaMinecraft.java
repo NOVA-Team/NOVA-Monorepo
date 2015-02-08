@@ -1,11 +1,12 @@
 package nova.wrapper.mc1710.launcher;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
 import nova.bootstrap.DependencyInjectionEntryPoint;
@@ -20,16 +21,15 @@ import nova.wrapper.mc1710.network.netty.ChannelHandler;
 import nova.wrapper.mc1710.network.netty.MinecraftNetworkManager;
 import nova.wrapper.mc1710.network.netty.PacketHandler;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
+import nova.wrapper.mc1710.util.MinecraftSaveManager;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * The main Nova Minecraft Wrapper loader, using Minecraft Forge.
- * 
  * @author Calclavia
  */
 @Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name)
@@ -41,6 +41,7 @@ public class NovaMinecraft {
 	@SidedProxy(clientSide = "nova.wrapper.mc1710.launcher.ClientProxy", serverSide = "nova.wrapper.mc1710.launcher.CommonProxy")
 	public static CommonProxy proxy;
 	public static MinecraftNetworkManager networkManager;
+	public static MinecraftSaveManager saveManager;
 	private static NovaLauncher launcher;
 
 	@Mod.EventHandler
@@ -72,14 +73,15 @@ public class NovaMinecraft {
 		});
 
 		/**
-		 * Initiate packet system
+		 * Initiate different systems
 		 */
-		networkManager = new MinecraftNetworkManager(id, NetworkRegistry.INSTANCE.newChannel(id, new ChannelHandler(),
-				new PacketHandler()));
+		networkManager = new MinecraftNetworkManager(id, NetworkRegistry.INSTANCE.newChannel(id, new ChannelHandler(), new PacketHandler()));
+		saveManager = new MinecraftSaveManager();
 
 		proxy.preInit();
 
 		MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
+		MinecraftForge.EVENT_BUS.register(saveManager);
 		FMLCommonHandler.instance().bus().register(new FMLEventHandler());
 	}
 

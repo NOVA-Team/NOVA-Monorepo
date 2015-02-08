@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Utility that manages common NBT save and load methods
+ * Utility that manages common NBT queueSave and load methods
  *
  * @author Calclavia
  */
@@ -53,8 +53,8 @@ public class NBTUtility {
 	/**
 	 * Saves an unknown object to NBT
 	 *
-	 * @param tag - NBTTagCompound to save the tag too
-	 * @param key - name to save the object as
+	 * @param tag - NBTTagCompound to queueSave the tag too
+	 * @param key - name to queueSave the object as
 	 * @param value - the actual object
 	 * @return the tag when done saving too i
 	 */
