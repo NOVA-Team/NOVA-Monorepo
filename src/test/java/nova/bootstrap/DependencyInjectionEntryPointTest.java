@@ -22,7 +22,7 @@ public class DependencyInjectionEntryPointTest {
 		assertThat(game.renderManager).isNotNull();
 		assertThat(game.recipeManager).isNotNull();
 		assertThat(game.craftingRecipeManager).isNotNull();
-		assertThat(game.oreDictionary).isNotNull();
+		assertThat(game.itemDictionary).isNotNull();
 	}
 
 }

@@ -7,7 +7,7 @@ import nova.core.entity.EntityManager;
 import nova.core.fluid.FluidManager;
 import nova.core.gui.factory.GuiComponentFactory;
 import nova.core.item.ItemManager;
-import nova.core.item.OreDictionary;
+import nova.core.item.ItemDictionary;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
@@ -30,7 +30,7 @@ public class Game {
 	public final RenderManager renderManager;
 	public final RecipeManager recipeManager;
 	public final CraftingRecipeManager craftingRecipeManager;
-	public final OreDictionary oreDictionary;
+	public final ItemDictionary itemDictionary;
 	public final Optional<GuiComponentFactory> guiComponentFactory;
 
 	private Game(
@@ -42,7 +42,7 @@ public class Game {
 		RenderManager renderManager, 
 		RecipeManager recipeManager, 
 		CraftingRecipeManager craftingRecipeManager, 
-		OreDictionary oreDictionary, 
+		ItemDictionary itemDictionary,
 		Optional<GuiComponentFactory> guiComponentFactory) {
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
@@ -52,7 +52,7 @@ public class Game {
 		this.renderManager = renderManager;
 		this.recipeManager = recipeManager;
 		this.craftingRecipeManager = craftingRecipeManager;
-		this.oreDictionary = oreDictionary;
+		this.itemDictionary = itemDictionary;
 		this.guiComponentFactory = guiComponentFactory;
 	}
 }
