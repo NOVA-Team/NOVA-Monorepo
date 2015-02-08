@@ -9,6 +9,7 @@ import nova.core.game.Game;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.item.ItemManager;
+import nova.core.item.OreDictionary;
 import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
@@ -61,30 +62,40 @@ public class ItemWrapperRegistry {
         }
     }
 
+	public net.minecraft.item.ItemStack getMCItemStack(String id) {
+		return getMCItemStack(new nova.core.item.ItemStack(Game.instance.get().itemManager.getItem(id).get(), 1));
+	}
+
     public nova.core.item.ItemStack getNovaItemStack(net.minecraft.item.ItemStack itemStack) {
-        if (itemStack.getTagCompound() != null && itemStack.getTagCompound() instanceof LinkedNBTTagCompound) {
-            return new nova.core.item.ItemStack(
-                    ((LinkedNBTTagCompound) itemStack.getTagCompound()).getItem(),
-                    itemStack.stackSize);
-        } else {
-            MinecraftItemMapping mapping = new MinecraftItemMapping(itemStack);
-            ItemFactory itemFactory = backwardMap.get(mapping);
-            if (itemFactory == null && itemStack.getHasSubtypes())
-                // load subitem
-                itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
-
-            Map<String, Object> data = NBTUtility.nbtToMap(itemStack.getTagCompound());
-            if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
-                if (data == null)
-                    data = new HashMap<>();
-
-                data.put("damage", itemStack.getItemDamage());
-            }
-
-            nova.core.item.Item item = itemFactory.makeItem(data);
-            return new nova.core.item.ItemStack(item, itemStack.stackSize);
-        }
+		return new nova.core.item.ItemStack(getNovaItem(itemStack), itemStack.stackSize);
     }
+
+	public nova.core.item.Item getNovaItem(net.minecraft.item.ItemStack itemStack) {
+		if (itemStack.getItemDamage() == net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE) {
+			// TODO: Deal with wildcard meta values - important for the ore dictionary
+			return getNovaItem(new ItemStack(itemStack.getItem(), 1, 0));
+		}
+
+		if (itemStack.getTagCompound() != null && itemStack.getTagCompound() instanceof LinkedNBTTagCompound) {
+			return ((LinkedNBTTagCompound) itemStack.getTagCompound()).getItem();
+		} else {
+			MinecraftItemMapping mapping = new MinecraftItemMapping(itemStack);
+			ItemFactory itemFactory = backwardMap.get(mapping);
+			if (itemFactory == null && itemStack.getHasSubtypes())
+				// load subitem
+				itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
+
+			Map<String, Object> data = NBTUtility.nbtToMap(itemStack.getTagCompound());
+			if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
+				if (data == null)
+					data = new HashMap<>();
+
+				data.put("damage", itemStack.getItemDamage());
+			}
+
+			return itemFactory.makeItem(data);
+		}
+	}
 
 	/**
 	 * Register all Nova blocks

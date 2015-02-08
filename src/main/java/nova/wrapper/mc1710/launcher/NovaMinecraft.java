@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.common.MinecraftForge;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.internal.NovaLauncher;
@@ -13,6 +15,7 @@ import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.depmodules.GuiModule;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
+import nova.wrapper.mc1710.item.OreDictionaryIntegration;
 import nova.wrapper.mc1710.network.netty.ChannelHandler;
 import nova.wrapper.mc1710.network.netty.MinecraftNetworkManager;
 import nova.wrapper.mc1710.network.netty.PacketHandler;
@@ -58,6 +61,7 @@ public class NovaMinecraft {
 
 		BlockWrapperRegistry.instance.registerBlocks();
 		ItemWrapperRegistry.instance.registerItems();
+		OreDictionaryIntegration.instance.registerOreDictionary();
 		MinecraftRecipeRegistry.instance.registerRecipes();
 
 		launcher.preInit();
@@ -74,6 +78,9 @@ public class NovaMinecraft {
 				new PacketHandler()));
 
 		proxy.preInit();
+
+		MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
+		FMLCommonHandler.instance().bus().register(new FMLEventHandler());
 	}
 
 	@Mod.EventHandler
