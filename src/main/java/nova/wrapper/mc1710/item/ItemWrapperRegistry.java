@@ -9,7 +9,6 @@ import nova.core.game.Game;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.item.ItemManager;
-import nova.core.item.OreDictionary;
 import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;

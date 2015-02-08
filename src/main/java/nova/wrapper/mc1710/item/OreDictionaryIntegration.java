@@ -3,6 +3,7 @@ package nova.wrapper.mc1710.item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import nova.core.game.Game;
+import nova.core.item.ItemDictionary;
 import nova.core.util.Dictionary;
 import nova.wrapper.mc1710.util.ReflectionUtil;
 
@@ -19,10 +20,10 @@ public class OreDictionaryIntegration {
 	private OreDictionaryIntegration() {}
 
 	public void registerOreDictionary() {
-		nova.core.item.OreDictionary novaOreDictionary = Game.instance.get().oreDictionary;
+		ItemDictionary novaItemDictionary = Game.instance.get().itemDictionary;
 
-		for (String oredictEntry : novaOreDictionary.keys()) {
-			for (String oreValue : novaOreDictionary.get(oredictEntry)) {
+		for (String oredictEntry : novaItemDictionary.keys()) {
+			for (String oreValue : novaItemDictionary.get(oredictEntry)) {
 				OreDictionary.registerOre(oredictEntry, ItemWrapperRegistry.instance.getMCItemStack(oreValue));
 			}
 		}
@@ -30,13 +31,13 @@ public class OreDictionaryIntegration {
 		for (String oredictEntry : OreDictionary.getOreNames()) {
 			for (ItemStack oreValue : OreDictionary.getOres(oredictEntry)) {
 				String id = ItemWrapperRegistry.instance.getNovaItem(oreValue).getID();
-				if (!novaOreDictionary.get(oredictEntry).contains(id))
-					novaOreDictionary.add(oredictEntry, id);
+				if (!novaItemDictionary.get(oredictEntry).contains(id))
+					novaItemDictionary.add(oredictEntry, id);
 			}
 		}
 
-		novaOreDictionary.whenEntryAdded(this::onEntryAdded);
-		novaOreDictionary.whenEntryRemoved(this::onEntryRemoved);
+		novaItemDictionary.whenEntryAdded(this::onEntryAdded);
+		novaItemDictionary.whenEntryRemoved(this::onEntryRemoved);
 	}
 
 	private void onEntryAdded(Dictionary.AddEvent<String> event) {
