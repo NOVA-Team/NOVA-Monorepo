@@ -33,7 +33,6 @@ import java.math.RoundingMode;
 
 /**
  * All rotation operations operate in radians.
- *
  * @author Calclavia, ChickenBones
  */
 public class Quaternion implements Transform {
@@ -44,13 +43,6 @@ public class Quaternion implements Transform {
 	public final double y;
 	public final double z;
 	public final double w;
-
-	public Quaternion(Quaternion Quaternion) {
-		x = Quaternion.x;
-		y = Quaternion.y;
-		z = Quaternion.z;
-		w = Quaternion.w;
-	}
 
 	public Quaternion(double x, double y, double z, double w) {
 		this.x = x;
@@ -72,13 +64,12 @@ public class Quaternion implements Transform {
 	 * to the sky. -90 Degrees - Looking straight down to the void.
 	 *
 	 * Make sure all models use the Techne Model loader, they will naturally follow this rule.
-	 *
 	 * @param euler input {@link Vector3}
 	 * @return resulting {@link Quaternion}
 	 * @author Calclavia
 	 */
 	public static Quaternion fromEuler(Vector3<?> euler) {
-		return fromEuler(euler.xd(),euler.yd(),euler.zd());
+		return fromEuler(euler.xd(), euler.yd(), euler.zd());
 	}
 
 	public static Quaternion fromEuler(double yaw, double pitch, double roll) {
@@ -99,12 +90,11 @@ public class Quaternion implements Transform {
 	}
 
 	public static Quaternion fromEulerDegree(double yaw, double pitch, double roll) {
-		return fromEuler(Math.toRadians(yaw),Math.toRadians(pitch),Math.toRadians(roll));
+		return fromEuler(Math.toRadians(yaw), Math.toRadians(pitch), Math.toRadians(roll));
 	}
 
 	/**
 	 * Returns a quaternion from Angle Axis rotation.
-	 *
 	 * @param axis Axis {@link Vector3}
 	 * @param angle Angle
 	 * @return The Quaternion representation of the angle axis rotation.
@@ -127,6 +117,23 @@ public class Quaternion implements Transform {
 		return new Quaternion(d1, d2, d3, d);
 	}
 
+	/**
+	 * Use right multiply for compound operations.
+	 *
+	 * We can for pure rotations, for instance if the first rotation is q1 we have:
+	 *
+	 * x2 = q1 * x * q1'
+	 *
+	 * we now apply a second rotation q2 to x2 giving:
+	 *
+	 * x3 = q2 * (q1 * x * q1') * q2'
+	 *
+	 * using the associative property of quaternions and the fact that (q2*q1)'=q1'* q2' (see conjugate function) then we get:
+	 *
+	 * x3 = (q2*q1) * x * (q2*q1)'
+	 * @param q - The quaternion to multiply with
+	 * @return The new Quaternion
+	 */
 	public Quaternion rightMultiply(Quaternion q) {
 		double d = w * q.w - x * q.x - y * q.y - z * q.z;
 		double d1 = w * q.x + x * q.w + y * q.z - z * q.y;
@@ -150,12 +157,10 @@ public class Quaternion implements Transform {
 
 	@Override
 	public Vector3d transform(Vector3<?> vec) {
-		//TODO: Check this
-		double d = -x * vec.xd() - y * vec.yd() - z * vec.zd();
-		double d1 = w * vec.xd() + y * vec.zd() - z * vec.yd();
-		double d2 = w * vec.yd() - x * vec.zd() + z * vec.xd();
-		double d3 = w * vec.zd() + x * vec.yd() - y * vec.xd();
-		return new Vector3d(d1 * w - d * x - d2 * z + d3 * y, d2 * w - d * y + d1 * z - d3 * x, d3 * w - d * z - d1 * y + d2 * x);
+		double vX = w * w * vec.xd() + 2 * y * w * vec.zd() - 2 * z * w * vec.yd() + x * x * vec.xd() + 2 * y * x * vec.yd() + 2 * z * x * vec.zd() - z * z * vec.xd() - y * y * vec.xd();
+		double vY = 2 * x * y * vec.xd() + y * y * vec.yd() + 2 * z * y * vec.zd() + 2 * w * z * vec.xd() - z * z * vec.yd() + w * w * vec.yd() - 2 * x * w * vec.zd() - x * x * vec.yd();
+		double vZ = 2 * x * z * vec.xd() + 2 * y * z * vec.yd() + z * z * vec.zd() - 2 * w * y * vec.xd() - y * y * vec.zd() + 2 * w * x * vec.yd() - x * x * vec.zd() + w * w * vec.zd();
+		return new Vector3d(vX, vY, vZ);
 	}
 
 	public Vector3d toEuler() {
@@ -186,7 +191,7 @@ public class Quaternion implements Transform {
 	public boolean equals(Object obj) {
 		if (obj instanceof Quaternion) {
 			Quaternion other = ((Quaternion) obj);
-			return DoubleMath.fuzzyEquals(this.x, other.x, 0.000001) &&DoubleMath.fuzzyEquals(this.y,other.y,0.000001) && DoubleMath.fuzzyEquals(this.z,other.z,0.000001) && DoubleMath.fuzzyEquals(this.w,other.w,0.000001);
+			return DoubleMath.fuzzyEquals(this.x, other.x, 0.000001) && DoubleMath.fuzzyEquals(this.y, other.y, 0.000001) && DoubleMath.fuzzyEquals(this.z, other.z, 0.000001) && DoubleMath.fuzzyEquals(this.w, other.w, 0.000001);
 		}
 		return this == obj;
 	}
