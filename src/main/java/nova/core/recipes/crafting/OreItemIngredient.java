@@ -46,7 +46,7 @@ public class OreItemIngredient implements ItemIngredient {
 
 	@Override
 	public boolean matches(ItemStack item) {
-		return false;
+		return Game.instance.get().oreDictionary.get(name).contains(item.getItem().getID());
 	}
 
 	@Override

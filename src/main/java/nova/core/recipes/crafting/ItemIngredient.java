@@ -30,8 +30,7 @@ public interface ItemIngredient {
 	 * @return ingredient
 	 */
 	public static ItemIngredient forDictionary(String id) {
-		// TODO: how do we fetch the ore dictionary..?
-		throw new UnsupportedOperationException("Not yet implemented");
+		return new OreItemIngredient(id);
 	}
 
 	/**

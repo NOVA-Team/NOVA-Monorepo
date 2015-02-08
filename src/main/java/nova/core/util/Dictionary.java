@@ -109,7 +109,7 @@ public class Dictionary<T> {
 		return removeEventListeners.add(listener);
 	}
 
-	public class AddEvent<T> {
+	public static class AddEvent<T> {
 		public final String key;
 		public final T value;
 
@@ -119,7 +119,7 @@ public class Dictionary<T> {
 		}
 	}
 
-	public class RemoveEvent<T> {
+	public static class RemoveEvent<T> {
 		public final String key;
 		public final T value;
 
