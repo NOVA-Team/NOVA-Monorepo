@@ -13,7 +13,7 @@ import nova.core.network.PacketSender;
  * and allows registration of handlers that only listen on a specific
  * {@link Side}.
  *
- * @param <T>
+ * @param <T> -Describe me-
  * @author Vic Nightfall
  */
 public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
@@ -125,11 +125,12 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 
 	@FunctionalInterface
 	public static interface NetworkEventProcessor {
+		
 		/**
-		 * Gets called if the parent {@link SidedEventListener} received an
+		 * Gets called if the parent {@link nova.core.event.SidedEventBus.SidedEventListener} received an
 		 * event that needs to be sent over the network.
 		 *
-		 * @param event
+		 * @param event The event
 		 */
 		public void handleEvent(SidedEventBus.SidedEvent event);
 	}

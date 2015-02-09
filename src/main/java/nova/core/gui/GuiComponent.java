@@ -20,7 +20,8 @@ import nova.core.util.transform.Vector2i;
 /**
  * Defines a basic gui component. A component can be added to
  * {@link AbstractGuiContainer}, the root container is a {@link Gui}.
- *
+ * 
+ * @param <O> -describe me-
  * @param <T> {@link NativeGuiComponent} type
  */
 @SuppressWarnings("unchecked")
@@ -91,6 +92,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * container's {@link GuiLayout} makes use of it.
 	 *
 	 * @param size preferred size of the component
+	 * @return This component
 	 */
 	public O setPreferredSize(Vector2i size) {
 		preferredSize = Optional.of(size);
@@ -106,6 +108,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * shouldn't be shrinked below that size.
 	 *
 	 * @param size minimal size of the component
+	 * @return This component
 	 */
 	public O setMinimumSize(Vector2i size) {
 		minimumSize = Optional.of(size);
@@ -121,6 +124,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * shouldn't be stretched beyond that size.
 	 *
 	 * @param size maximal size of the component
+	 * @return This component
 	 */
 	public O setMaximumSize(Vector2i size) {
 		maximumSize = Optional.of(size);
@@ -160,7 +164,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	/**
-	 * Gets called right after the {@link #nativeElement} instance has been
+	 * Gets called right after the nativeElement instance has been
 	 * populated by a {@link GuiFactory}. Use this to pass arguments to the
 	 * underlying {@link NativeGuiComponent}.
 	 */

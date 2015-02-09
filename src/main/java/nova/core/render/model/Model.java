@@ -49,6 +49,7 @@ public class Model implements Cloneable {
 
 	/**
 	 * Binds all the faces and all child models with this texture.
+	 * @param texture The texture
 	 */
 	public void bind(Texture texture) {
 		faces.forEach(f -> f.texture = Optional.of(texture));
@@ -282,6 +283,11 @@ public class Model implements Cloneable {
 	/**
 	 * Flattens the model into a set of models with no additional transformations,
 	 * applying all the transformations into the individual vertices.
+	 * @param translation Translation
+	 * @param offset Offset
+	 * @param rotation Rotation
+	 * @param scale Scale
+	 * @return Resulting set of models
 	 */
 	public Set<Model> flatten(Vector3d translation, Vector3d offset, Quaternion rotation, Vector3d scale) {
 		Set<Model> models = new HashSet<>();

@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
  * </p>
  * 
  * @author Vic Nightfall
- * @param <O>
+ * @param <O> -Describe me-
  */
 public abstract class Constraints<O extends Constraints<O>> implements Cloneable {
 
@@ -45,15 +45,17 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	 * Creates a new constraint based on an array of properties. It will try to
 	 * choose a valid constructor for the passed arguments and invoke it.
 	 * 
-	 * @throws IllegalArgumentException if there is no matching constructor for
-	 *         the given set of arguments
-	 * 
+	 * @param <T> constraints type
 	 * @param clazz constraints class
 	 * @param parameters array of object passed to a constructor of the class
 	 * @return instanced constraints object
+	 * 
+	 * @throws IllegalArgumentException if there is no matching constructor for
+	 *         the given set of arguments
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Constraints<T>> T createConstraints(Class<T> clazz, Object... parameters) {
+	public static <T extends Constraints<T>> T createConstraints(Class<T> clazz, Object... parameters) 
+		throws IllegalArgumentException {
 
 		for (Constructor<T> constructor : (Constructor<T>[]) clazz.getConstructors()) {
 			Class<?>[] parameterTypes = constructor.getParameterTypes();

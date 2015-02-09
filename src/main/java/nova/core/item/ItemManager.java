@@ -1,17 +1,16 @@
 package nova.core.item;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import nova.core.block.Block;
 import nova.core.block.BlockManager;
+import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
-import nova.core.event.EventBus;
 import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.util.ReflectionUtils;
 import nova.core.util.Registry;
-import se.jbee.inject.util.Provider;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 public class ItemManager {
 

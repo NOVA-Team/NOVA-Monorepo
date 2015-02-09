@@ -13,10 +13,10 @@ public class Outline extends Rectangle<Vector2i> {
 	/**
 	 * Creates a new Outline with the specified position and dimension.
 	 *
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
+	 * @param x X position
+	 * @param y Y position
+	 * @param width Width
+	 * @param height Height
 	 */
 	public Outline(int x, int y, int width, int height) {
 		super(new Vector2i(x, y), new Vector2i(x + width, y + height));

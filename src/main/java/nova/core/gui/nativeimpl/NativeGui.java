@@ -17,7 +17,7 @@ public interface NativeGui extends NativeContainer {
 	 * Called when the GUI was resized and the child components need to
 	 * re-validate their layout. The new size has to be set before calling this.
 	 *
-	 * @param oldOutline
+	 * @param oldOutline Old  {@link Outline}
 	 */
 	public default void onResized(Outline oldOutline) {
 		getElement().onEvent(new GuiEvent.ResizeEvent(oldOutline));

@@ -4,7 +4,7 @@ package nova.core.util.transform;
  * Immutable, generic rectangle that defines the area between two coordinates in
  * 2D space.
  *
- * @param <T>
+ * @param <T> -Describe me-
  * @author Vic Nightfall
  */
 public class Rectangle<T extends Vector2<T>> extends Shape<Rectangle<T>, Rectangle<T>> {

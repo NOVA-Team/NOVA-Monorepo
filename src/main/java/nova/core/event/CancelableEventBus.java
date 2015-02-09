@@ -5,6 +5,7 @@ package nova.core.event;
  * canceled.
  *
  * @author Stan Hebben
+ * @param <T> {@link Cancelable} type
  */
 public class CancelableEventBus<T extends Cancelable> extends EventBus<T> {
 	@Override

@@ -8,6 +8,8 @@ import nova.core.network.Sync;
 /**
  * Event created by {@link GuiComponent}, is also a {@link SidedEvent}. Needs to
  * be registered with the {@link GuiFactory}.
+ * 
+ * @param <T> {@link GuiComponent} type
  */
 public abstract class ComponentEvent<T extends GuiComponent<?, ?>> extends CancelableEvent implements SidedEvent {
 

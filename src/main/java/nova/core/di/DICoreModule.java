@@ -1,10 +1,8 @@
 package nova.core.di;
 
-import se.jbee.inject.bind.BinderModule;
-import se.jbee.inject.bind.BuildinBundle;
-import se.jbee.inject.bootstrap.BootstrapperBundle;
-
 import java.util.function.Supplier;
+
+import se.jbee.inject.bind.BinderModule;
 
 public class DICoreModule extends BinderModule {
 

@@ -45,6 +45,7 @@ public class Face implements Cloneable {
 
 	/**
 	 * Gets the center of this face.
+	 * @return Center
 	 */
 	public Vector3d getCenter() {
 		if (vertices.size() >= 3) {

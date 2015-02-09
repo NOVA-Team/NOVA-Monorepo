@@ -12,6 +12,8 @@ import nova.core.gui.nativeimpl.NativeContainer;
 
 /**
  * This class provides container for {@link GuiComponent}
+ * @param <O> -describe me-
+ * @param <T> {@link NativeContainer} type
  */
 public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>, T extends NativeContainer> extends GuiComponent<O, T> {
 
@@ -59,7 +61,8 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	/**
 	 * Will return a child component that matches the provided subclass of
 	 * {@link GuiComponent}.
-	 *
+	 * 
+	 * @param <E> type of the requested {@link GuiComponent}
 	 * @param qualifiedName qualified name of the sub component
 	 * @param clazz class of the requested {@link GuiComponent}
 	 * @return The requested {@link GuiComponent} or {@code null} if not present
@@ -126,7 +129,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	/**
 	 * Removes {@link GuiComponent}. Shouldn't be used unless really needed as
 	 * it requires the sub component to update its qualified name using
-	 * {@link #updateQualifiedName()}.
+	 * updateQualifiedName().
 	 *
 	 * @param component {@link GuiComponent} to remove
 	 * @return This GuiContainer

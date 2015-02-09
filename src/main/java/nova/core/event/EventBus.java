@@ -70,7 +70,8 @@ public class EventBus<T> {
 	/**
 	 * Adds an EventListener to the list that only accepts a specific subclass
 	 * of &lt;T&gt;
-	 *
+	 * 
+	 * @param <E> -describe me-
 	 * @param listener listener to register
 	 * @param clazz class to listen for
 	 * @return event listener's handle

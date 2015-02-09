@@ -1,16 +1,15 @@
 package nova.core.block;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
-import nova.core.event.EventBus;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemManager;
 import nova.core.util.Registry;
 import nova.core.util.exception.NovaException;
-import se.jbee.inject.util.Provider;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 public class BlockManager {
 

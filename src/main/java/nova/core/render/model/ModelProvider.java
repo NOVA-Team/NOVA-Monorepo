@@ -21,7 +21,7 @@ public abstract class ModelProvider {
 	/**
 	 * Loads the model with a input stream.
 	 *
-	 * @param stream
+	 * @param stream The {@link InputStream}
 	 */
 	public abstract void load(InputStream stream);
 

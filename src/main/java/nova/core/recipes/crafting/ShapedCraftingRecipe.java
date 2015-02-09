@@ -75,6 +75,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	/**
 	 * Defines an advanced crafting recipe, using a format string.
 	 *
+	 * @param nominalOutput Nominal output of the recipe
 	 * @param recipeFunction {@link RecipeFunction}
 	 * @param format Format
 	 * @param mirrored Whether this recipe is mirrored
@@ -140,6 +141,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	/**
 	 * Defines an advanced crafting recipe, using a 2D ingredients array.
 	 *
+	 * @param nominalOutput Nominal output of the recipe
 	 * @param recipeFunction {@link RecipeFunction}
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
 	 * @param mirrored Whether this recipe is mirrored

@@ -23,6 +23,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Gets a list of tooltips for this item.
+	 * @param player {@link Player}
 	 * @return The tooltip strings
 	 */
 	public Collection<String> getTooltips(Optional<Player> player) {
