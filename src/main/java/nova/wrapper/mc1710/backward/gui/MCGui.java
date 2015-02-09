@@ -2,6 +2,7 @@ package nova.wrapper.mc1710.backward.gui;
 
 import net.minecraft.client.gui.GuiScreen;
 import nova.core.gui.GuiComponent;
+import nova.core.gui.GuiConstraints;
 import nova.core.gui.Outline;
 import nova.core.gui.nativeimpl.NativeGui;
 import nova.core.network.Packet;
@@ -54,6 +55,18 @@ public class MCGui extends GuiScreen implements NativeGui {
 	public void dispatchNetworkEvent(Packet packet) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void bind(GuiConstraints constraints) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unbind() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
