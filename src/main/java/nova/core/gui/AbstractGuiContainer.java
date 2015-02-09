@@ -3,6 +3,7 @@ package nova.core.gui;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
 
 import nova.core.gui.GuiEvent.ResizeEvent;
@@ -76,8 +77,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		return Optional.empty();
 	}
 
-	// TODO generic return & argument from constructor.
-
 	/**
 	 * Sets layout of this container
 	 *
@@ -87,9 +86,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 */
 	@SuppressWarnings("unchecked")
 	public O setLayout(GuiLayout layout) {
-		if (layout == null)
-			throw new NullPointerException();
-		this.layout = layout;
+		this.layout = Objects.requireNonNull(layout);
 		layout.revalidate(this);
 		return (O) this;
 	}
@@ -117,8 +114,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 */
 	@SuppressWarnings("unchecked")
 	public O addElement(GuiComponent<?, ?> component, Object... properties) {
-		if (component == null)
-			throw new NullPointerException();
+		Objects.requireNonNull(component);
 		component.parentContainer = Optional.of(this);
 		component.updateQualifiedName();
 		children.put(component.getID(), component);
@@ -136,8 +132,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 */
 	@SuppressWarnings("unchecked")
 	public O removeElement(GuiComponent<?, ?> component) {
-		if (component == null)
-			throw new NullPointerException();
+		Objects.requireNonNull(component);
 		children.remove(component);
 		layout.remove(component);
 		component.updateQualifiedName();

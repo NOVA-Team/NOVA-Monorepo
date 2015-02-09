@@ -1,6 +1,7 @@
 package nova.core.gui.nativeimpl;
 
 import nova.core.gui.Gui;
+import nova.core.gui.GuiConstraints;
 import nova.core.gui.GuiEvent;
 import nova.core.gui.Outline;
 import nova.core.gui.factory.GuiEventFactory;
@@ -12,6 +13,10 @@ public interface NativeGui extends NativeContainer {
 	public Packet createPacket();
 
 	public void dispatchNetworkEvent(Packet packet);
+
+	public void bind(GuiConstraints constraints);
+
+	public void unbind();
 
 	/**
 	 * Called when the GUI was resized and the child components need to

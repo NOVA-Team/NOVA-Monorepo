@@ -71,6 +71,26 @@ public class GuiEvent extends CancelableEvent {
 		}
 	}
 
+	public static class BindEvent extends GuiEvent {
+
+		public final Gui gui;
+		public final GuiConstraints constraints;
+
+		public BindEvent(Gui gui, GuiConstraints constraints) {
+			this.gui = gui;
+			this.constraints = constraints;
+		}
+	}
+
+	public static class UnBindEvent extends GuiEvent {
+
+		public final Gui gui;
+
+		public UnBindEvent(Gui gui) {
+			this.gui = gui;
+		}
+	}
+
 	public static class ConstructionEvent extends GuiEvent {
 
 	}
