@@ -49,7 +49,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	/**
 	 * Binds the GUI, called when displayed.
 	 * 
-	 * @param Constraints to initialize this GUI with.
+	 * @param constraints {@link GuiConstraints} to initialize this GUI with.
 	 */
 	public void bind(GuiConstraints constraints) {
 		onEvent(new GuiEvent.BindEvent(this, constraints));
