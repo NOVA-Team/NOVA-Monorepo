@@ -69,12 +69,22 @@ public class UpdateTicker {
 
 	}
 
-	public static class ThreadTicker extends Thread {
+	/**
+	 * A synchronized ticker ticks using the game's update loop.
+	 */
+	public static class SynchronizedTicker extends UpdateTicker {
+		public static final SynchronizedTicker instance = new SynchronizedTicker();
+	}
 
-		private final UpdateTicker ticker = new UpdateTicker();
-		public boolean pause = false;
+	/**
+	 * A thread ticker ticks independent on the game's update loop.
+	 */
+	public static class ThreadTicker extends Thread {
+		public static ThreadTicker instance;
 		public final int tps;
 		public final long sleepMillis;
+		private final UpdateTicker ticker = new UpdateTicker();
+		public boolean pause = false;
 
 		public ThreadTicker(int tps) {
 			setName("Nova Thread");
