@@ -9,6 +9,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.internal.NovaLauncher;
@@ -17,12 +18,14 @@ import nova.wrapper.mc1710.depmodules.GuiModule;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.item.OreDictionaryIntegration;
+import nova.wrapper.mc1710.manager.ConfigManager;
+import nova.wrapper.mc1710.manager.MinecraftSaveManager;
 import nova.wrapper.mc1710.network.netty.ChannelHandler;
 import nova.wrapper.mc1710.network.netty.MinecraftNetworkManager;
 import nova.wrapper.mc1710.network.netty.PacketHandler;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
-import nova.wrapper.mc1710.util.MinecraftSaveManager;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,6 +33,7 @@ import java.util.Set;
 
 /**
  * The main Nova Minecraft Wrapper loader, using Minecraft Forge.
+ *
  * @author Calclavia
  */
 @Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name)
@@ -75,8 +79,15 @@ public class NovaMinecraft {
 		/**
 		 * Initiate different systems
 		 */
+		//Initiate network manager
 		networkManager = new MinecraftNetworkManager(id, NetworkRegistry.INSTANCE.newChannel(id, new ChannelHandler(), new PacketHandler()));
+		//Initiate save manager
 		saveManager = new MinecraftSaveManager();
+		//Initiate config manager
+		launcher.getLoadedModMap().forEach((mod, loader) -> {
+			Configuration config = new Configuration(new File(evt.getModConfigurationDirectory(), mod.name()));
+			ConfigManager.instance.sync(config, loader.getClass().getPackage().getName());
+		});
 
 		proxy.preInit();
 

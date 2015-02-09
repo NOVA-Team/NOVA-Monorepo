@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.util;
+package nova.wrapper.mc1710.manager;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -9,6 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.world.WorldEvent;
 import nova.core.util.SaveManager;
 import nova.core.util.components.Storable;
+import nova.wrapper.mc1710.util.NBTUtility;
 
 import java.io.File;
 import java.io.FileInputStream;
