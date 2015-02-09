@@ -13,6 +13,7 @@ import net.minecraftforge.common.config.Configuration;
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 import nova.internal.NovaLauncher;
+import nova.internal.tick.UpdateTicker;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.depmodules.GuiModule;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
@@ -91,9 +92,12 @@ public class NovaMinecraft {
 
 		proxy.preInit();
 
+		/**
+		 * Register event handlers
+		 */
 		MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
-		MinecraftForge.EVENT_BUS.register(saveManager);
 		FMLCommonHandler.instance().bus().register(new FMLEventHandler());
+		MinecraftForge.EVENT_BUS.register(saveManager);
 	}
 
 	@Mod.EventHandler
@@ -106,6 +110,12 @@ public class NovaMinecraft {
 	public void postInit(FMLPostInitializationEvent evt) {
 		proxy.postInit();
 		launcher.postInit();
+
+		/**
+		 * Initiated threaded ticker
+		 */
+		UpdateTicker.ThreadTicker.instance = new UpdateTicker.ThreadTicker(20);
+		UpdateTicker.ThreadTicker.instance.start();
 	}
 
 }
