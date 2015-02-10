@@ -80,10 +80,10 @@ public class UpdateTicker {
 	 * A thread ticker ticks independent on the game's update loop.
 	 */
 	public static class ThreadTicker extends Thread {
+		public static final UpdateTicker ticker = new UpdateTicker();
 		public static ThreadTicker instance;
 		public final int tps;
 		public final long sleepMillis;
-		private final UpdateTicker ticker = new UpdateTicker();
 		public boolean pause = false;
 
 		public ThreadTicker(int tps) {
