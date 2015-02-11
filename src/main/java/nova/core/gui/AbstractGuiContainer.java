@@ -100,10 +100,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	@Override
 	public void onEvent(GuiEvent event) {
 		super.onEvent(event);
-		// Needed because it gets called from the parent constructor, before any
-		// variables could initialize. TODO Find a better solution probably.
-		if (children == null)
-			return;
 		getChildComponents().stream().forEach((e) -> {
 			e.onEvent(event);
 		});
