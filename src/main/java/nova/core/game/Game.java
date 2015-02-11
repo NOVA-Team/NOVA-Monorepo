@@ -6,8 +6,9 @@ import nova.core.block.BlockManager;
 import nova.core.entity.EntityManager;
 import nova.core.fluid.FluidManager;
 import nova.core.gui.factory.GuiComponentFactory;
-import nova.core.item.ItemManager;
+import nova.core.gui.factory.GuiFactory;
 import nova.core.item.ItemDictionary;
+import nova.core.item.ItemManager;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
@@ -31,7 +32,10 @@ public class Game {
 	public final RecipeManager recipeManager;
 	public final CraftingRecipeManager craftingRecipeManager;
 	public final ItemDictionary itemDictionary;
+	
+	// TODO Move somewhere else, also... Optional inconvenient here, it has to exist as required.
 	public final Optional<GuiComponentFactory> guiComponentFactory;
+	public final Optional<GuiFactory> guiFactory;
 
 	private Game(
 		BlockManager blockManager, 
@@ -43,7 +47,9 @@ public class Game {
 		RecipeManager recipeManager, 
 		CraftingRecipeManager craftingRecipeManager, 
 		ItemDictionary itemDictionary,
-		Optional<GuiComponentFactory> guiComponentFactory) {
+		Optional<GuiComponentFactory> guiComponentFactory,
+		Optional<GuiFactory> guiFactory) {
+		
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
 		this.itemManager = itemManager;
@@ -53,6 +59,8 @@ public class Game {
 		this.recipeManager = recipeManager;
 		this.craftingRecipeManager = craftingRecipeManager;
 		this.itemDictionary = itemDictionary;
+		
 		this.guiComponentFactory = guiComponentFactory;
+		this.guiFactory = guiFactory;
 	}
 }

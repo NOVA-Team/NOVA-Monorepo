@@ -13,6 +13,7 @@ import nova.core.gui.nativeimpl.NativeContainer;
 
 /**
  * This class provides container for {@link GuiComponent}
+ * 
  * @param <O> -describe me-
  * @param <T> {@link NativeContainer} type
  */
@@ -20,7 +21,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	private GuiLayout layout = new BorderLayout();
 
-	private HashMap<String, GuiComponent<?, ?>> children = new HashMap<String, GuiComponent<?, ?>>();
+	private HashMap<String, GuiComponent<?, ?>> children = new HashMap<>();
 
 	public AbstractGuiContainer(String uniqueID, Class<T> nativeClass) {
 		super(uniqueID, nativeClass);
@@ -99,6 +100,10 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	@Override
 	public void onEvent(GuiEvent event) {
 		super.onEvent(event);
+		// Needed because it gets called from the parent constructor, before any
+		// variables could initialize. TODO Find a better solution probably.
+		if (children == null)
+			return;
 		getChildComponents().stream().forEach((e) -> {
 			e.onEvent(event);
 		});
