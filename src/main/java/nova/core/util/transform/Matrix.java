@@ -1,8 +1,14 @@
 package nova.core.util.transform;
 
+import com.google.common.hash.Funnel;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
 import com.google.common.math.DoubleMath;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  *  4x4 Matrix for 3D Vector transforms. It is immutable.
@@ -95,6 +101,12 @@ public class Matrix implements Cloneable, Transform{
 		}
 		return new Matrix(res);
 	}
+
+	/**
+	 * Transform vector by this matrix.
+	 * @param vector to be transformed.
+	 * @return transformed vector.
+	 */
 	@Override
 	public Vector3d transform(Vector3<?> vector) {
 		double x,y,z,w;
@@ -126,6 +138,16 @@ public class Matrix implements Cloneable, Transform{
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		Hasher hasher = Hashing.goodFastHash(32).newHasher();
+		for(double[] array : mat)
+			for(double d : array)
+				hasher.putDouble(d);
+
+		return  hasher.hash().asInt();
 	}
 
 	@Override
