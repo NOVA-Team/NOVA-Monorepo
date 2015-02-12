@@ -7,7 +7,7 @@ import java.util.EmptyStackException;
 
 import static org.junit.Assert.*;
 
-public class MatrixStackTest {
+public class Matrix4x4StackTest {
 	MatrixStack ms;
 	@Before
 	public void setUp() {
@@ -21,9 +21,9 @@ public class MatrixStackTest {
 
 	@Test
 	public void testStack() {
-		Matrix one = MatrixHelper.translationMatrix(1,0,0);
-		Matrix two = MatrixHelper.translationMatrix(0,1,0);
-		Matrix three = MatrixHelper.translationMatrix(0,0,1);
+		Matrix4x4 one = MatrixHelper.translationMatrix(1,0,0);
+		Matrix4x4 two = MatrixHelper.translationMatrix(0,1,0);
+		Matrix4x4 three = MatrixHelper.translationMatrix(0,0,1);
 		ms.loadMatrix(one);
 		ms.pushMatrix();
 		ms.loadMatrix(two);
@@ -34,11 +34,11 @@ public class MatrixStackTest {
 		ms.pushMatrix();
 		ms.loadIdentity();
 
-		assertEquals(Matrix.IDENTITY,ms.getMatrix());
+		assertEquals(Matrix4x4.IDENTITY,ms.getMatrix());
 		ms.popMatrix();
 		assertEquals(three, ms.getMatrix());
 		ms.popMatrix();
-		assertEquals(Matrix.IDENTITY, ms.getMatrix());
+		assertEquals(Matrix4x4.IDENTITY, ms.getMatrix());
 		ms.popMatrix();
 		assertEquals(two,ms.getMatrix());
 		ms.popMatrix();

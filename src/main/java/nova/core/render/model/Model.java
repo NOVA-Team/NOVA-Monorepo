@@ -3,11 +3,9 @@ package nova.core.render.model;
 import nova.core.block.Block;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
-import nova.core.util.transform.Matrix;
+import nova.core.util.transform.Matrix4x4;
 import nova.core.util.transform.MatrixStack;
-import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector2d;
-import nova.core.util.transform.Vector3d;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -31,7 +29,7 @@ public class Model implements Cloneable {
 	public final Set<Model> children = new HashSet<>();
 
 
-	public Matrix matrix = Matrix.IDENTITY;
+	public Matrix4x4 matrix = Matrix4x4.IDENTITY;
 
 	public Vector2d textureOffset = Vector2d.zero;
 

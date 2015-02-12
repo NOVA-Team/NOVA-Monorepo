@@ -1,14 +1,8 @@
 package nova.core.render.model;
 
-import com.sun.javafx.geom.Vec3d;
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Matrix;
-import nova.core.util.transform.MatrixHelper;
 import nova.core.util.transform.MatrixStack;
-import nova.core.util.transform.Quaternion;
-import nova.core.util.transform.Vector;
 import nova.core.util.transform.Vector2d;
-import nova.core.util.transform.Vector3;
 import nova.core.util.transform.Vector3d;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;

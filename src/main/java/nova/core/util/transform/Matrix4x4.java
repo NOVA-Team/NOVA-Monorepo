@@ -1,19 +1,15 @@
 package nova.core.util.transform;
 
-import com.google.common.hash.Funnel;
-import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.math.DoubleMath;
 
-import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
- *  4x4 Matrix for 3D Vector transforms. It is immutable.
+ *  Matrix4x4 for 3D Vector transforms. It is immutable.
  */
-public class Matrix implements Cloneable, Transform{
+public class Matrix4x4 implements Cloneable, Transform{
 
 	/**
 	 * 4x4 array [row][column]
@@ -21,10 +17,10 @@ public class Matrix implements Cloneable, Transform{
 	private double[][] mat;
 
 	/**
-	 * Creates Matrix form 2D double array creating defensive copy of it.
-	 * @param mat 4x4 array to create Matrix form.
+	 * Creates Matrix4x4 form 2D double array creating defensive copy of it.
+	 * @param mat 4x4 array to create Matrix4x4 form.
 	 */
-	public Matrix(double[][] mat) {
+	public Matrix4x4(double[][] mat) {
 		if (mat.length != 4)
 			throw new IllegalArgumentException("Template array has to bye 4x4");
 		this.mat = new double[4][];
@@ -39,22 +35,22 @@ public class Matrix implements Cloneable, Transform{
 	 * Copy constructor
 	 * @param old matrix to copy.
 	 */
-	public Matrix(Matrix old) {
+	public Matrix4x4(Matrix4x4 old) {
 		this(old.mat);
 	}
 
 	/**
-	 * Use Matrix.IDENTITY instead.
+	 * Use Matrix4x4.IDENTITY instead.
 	 */
 	@Deprecated()
-	public Matrix() {
-		this(Matrix.IDENTITY);
+	public Matrix4x4() {
+		this(Matrix4x4.IDENTITY);
 	}
 
 	/**
 	 * Identity matrix.
 	 */
-	public static Matrix IDENTITY = new Matrix(new double[][] {
+	public static Matrix4x4 IDENTITY = new Matrix4x4(new double[][] {
 		{ 1, 0, 0, 0 },
 		{ 0, 1, 0, 0 },
 		{ 0, 0, 1, 0 },
@@ -65,7 +61,7 @@ public class Matrix implements Cloneable, Transform{
 	 * @param other matrix to multiply by.
 	 * @return this x other
 	 */
-	public Matrix multiply(Matrix other) {
+	public Matrix4x4 multiply(Matrix4x4 other) {
 		double[][] res = new double[4][4];
 
 		//Let JIT and loop unrolling do their work.
@@ -76,7 +72,7 @@ public class Matrix implements Cloneable, Transform{
 				}
 			}
 		}
-		return new Matrix(res);
+		return new Matrix4x4(res);
 	}
 
 	/**
@@ -84,7 +80,7 @@ public class Matrix implements Cloneable, Transform{
 	 * @param other matrix to be multiplied by.
 	 * @return other x this
 	 */
-	public Matrix rightlyMultiply(Matrix other) {
+	public Matrix4x4 rightlyMultiply(Matrix4x4 other) {
 		return other.multiply(this);
 	}
 
@@ -92,14 +88,14 @@ public class Matrix implements Cloneable, Transform{
 	 * Transposes matrix.
 	 * @return transposed matrix
 	 */
-	public Matrix transpose() {
+	public Matrix4x4 transpose() {
 		double[][] res = new double[4][4];
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				res[j][i] = mat[i][j];
 			}
 		}
-		return new Matrix(res);
+		return new Matrix4x4(res);
 	}
 
 	/**
@@ -122,8 +118,8 @@ public class Matrix implements Cloneable, Transform{
 
 		if (this == obj) {
 			return true;
-		} else if (obj instanceof Matrix) {
-			Matrix other = (Matrix) obj;
+		} else if (obj instanceof Matrix4x4) {
+			Matrix4x4 other = (Matrix4x4) obj;
 			boolean res = true;
 			outer:
 			for (int i = 0; i < 4; i++) {
@@ -151,8 +147,8 @@ public class Matrix implements Cloneable, Transform{
 	}
 
 	@Override
-	public Matrix clone() {
-		return new Matrix(this);
+	public Matrix4x4 clone() {
+		return new Matrix4x4(this);
 	}
 
 	@Override

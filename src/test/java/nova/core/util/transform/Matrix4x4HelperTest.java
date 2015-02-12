@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static java.lang.Math.PI;
 
-public class MatrixHelperTest {
+public class Matrix4x4HelperTest {
 	@Test
 	public void testTranslation() {
 		Vector3d start = Vector3d.zero;

@@ -13,8 +13,8 @@ public class MatrixHelper {
 	 * @param z translation.
 	 * @return translation matrix.
 	 */
-	public static Matrix translationMatrix(double x, double y, double z) {
-		return new Matrix(new double[][] {
+	public static Matrix4x4 translationMatrix(double x, double y, double z) {
+		return new Matrix4x4(new double[][] {
 			{ 1, 0, 0, 0 },
 			{ 0, 1, 0, 0 },
 			{ 0, 0, 1, 0 },
@@ -26,7 +26,7 @@ public class MatrixHelper {
 	 * @param translationVector which components are translation parameters.
 	 * @return translation matrix.
 	 */
-	public static Matrix translationMatrix(Vector3<?> translationVector) {
+	public static Matrix4x4 translationMatrix(Vector3<?> translationVector) {
 		return translationMatrix(translationVector.xd(), translationVector.yd(), translationVector.zd());
 	}
 
@@ -37,8 +37,8 @@ public class MatrixHelper {
 	 * @param z scale.
 	 * @return scale matrix.
 	 */
-	public static Matrix scaleMatrix(double x, double y, double z) {
-		return new Matrix(new double[][] {
+	public static Matrix4x4 scaleMatrix(double x, double y, double z) {
+		return new Matrix4x4(new double[][] {
 			{ x, 0, 0, 0 },
 			{ 0, y, 0, 0 },
 			{ 0, 0, z, 0 },
@@ -50,7 +50,7 @@ public class MatrixHelper {
 	 * @param scaleVector which components are scale parameters.
 	 * @return scale matrix.
 	 */
-	public static Matrix scaleMatrix(Vector3<?>  scaleVector) {
+	public static Matrix4x4 scaleMatrix(Vector3<?>  scaleVector) {
 		return scaleMatrix(scaleVector.xd(), scaleVector.yd(), scaleVector.zd());
 	}
 
@@ -60,7 +60,7 @@ public class MatrixHelper {
 	 * @param angle in radians.
 	 * @return Rotation matrix.
 	 */
-	public static Matrix rotationMatrix(Vector3<?> rotationVector, double angle) {
+	public static Matrix4x4 rotationMatrix(Vector3<?> rotationVector, double angle) {
 		double c = Math.cos(angle);
 		double s = Math.sin(angle);
 		if (!DoubleMath.fuzzyEquals(rotationVector.magnitudeSquared(), 1,0.000001)) {
@@ -70,7 +70,7 @@ public class MatrixHelper {
 		double y = rotationVector.yd();
 		double z = rotationVector.zd();
 
-		return new Matrix(new double[][] {
+		return new Matrix4x4(new double[][] {
 			{ x * x * (1 - c) + c, x * y * (1 - c) - z * s, x * z * (1 - c) + y * s, 0 },
 			{ y * x * (1 - c) + z * s, y * y * (1 - c) + c, y * z * (1 - c) - x * s, 0 },
 			{ x * z * (1 - c) - y * s, y * z * (1 - c) + x * s, z * z * (1 - c) + c, 0 },

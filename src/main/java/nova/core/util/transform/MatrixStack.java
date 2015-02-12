@@ -4,19 +4,19 @@ import java.util.Stack;
 
 public class MatrixStack implements Transform{
 
-	private final Stack<Matrix> stack = new Stack<>();
-	private Matrix current = Matrix.IDENTITY;
+	private final Stack<Matrix4x4> stack = new Stack<>();
+	private Matrix4x4 current = Matrix4x4.IDENTITY;
 
 	/**
 	 * Replaces current transformation matrix by an identity matrix.
 	 */
 	public void loadIdentity() {
-		current = Matrix.IDENTITY;
+		current = Matrix4x4.IDENTITY;
 	}
 	/**
 	 * Replaces current transformation matrix by an identity current.
 	 */
-	public void loadMatrix(Matrix matrix) {
+	public void loadMatrix(Matrix4x4 matrix) {
 		current = matrix;
 	}
 
@@ -24,7 +24,7 @@ public class MatrixStack implements Transform{
 	 * Exposes current transformation matrix.
 	 * @return current transformation matrix.
 	 */
-	public Matrix getMatrix() {
+	public Matrix4x4 getMatrix() {
 		return current;
 	}
 
@@ -32,7 +32,7 @@ public class MatrixStack implements Transform{
 	 * Transforms current matrix with give matrix.
 	 * @param matrix to transform current matrix.
 	 */
-	public void transform(Matrix matrix) {
+	public void transform(Matrix4x4 matrix) {
 		current = current.multiply(matrix);
 	}
 
