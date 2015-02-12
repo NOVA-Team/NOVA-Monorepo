@@ -286,7 +286,7 @@ public class Model implements Cloneable {
 		Set<Model> models = new HashSet<>();
 
 		matrixStack.pushMatrix();
-
+		matrixStack.transform(matrix);
 		//Create a new model with transformation applied.
 		Model transformedModel = clone();
 		transformedModel.faces.stream().forEach(f -> {
