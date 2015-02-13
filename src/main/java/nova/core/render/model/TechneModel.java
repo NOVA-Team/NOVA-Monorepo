@@ -1,7 +1,7 @@
 package nova.core.render.model;
 
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Quaternion;
+import nova.core.util.transform.MatrixStack;
 import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector3d;
 import org.w3c.dom.Document;
@@ -26,7 +26,6 @@ import java.util.zip.ZipInputStream;
 /**
  * A Techne model importer.
  * You must load your .tcn file and then bind the Techne texture yourself.
- *
  * @author Calclavia
  */
 public class TechneModel extends ModelProvider {
@@ -149,16 +148,24 @@ public class TechneModel extends ModelProvider {
 				 * 	Models in Techne are based on cubes.
 				 * 	Each cube is, by default, skewed to the side. They are not centered.
 				 *
-				 * 	Everything is caled by a factor of 16.
+				 * 	Everything is scaled by a factor of 16.
 				 * 	The y coordinate is inversed.
 				 */
 				final String modelName = shapeName;
 				Model modelPart = new Model(modelName);
 				modelPart.drawCube();
-				modelPart.scale = new Vector3d(Double.parseDouble(size[0]) / 16d, Double.parseDouble(size[1]) / 16d, Double.parseDouble(size[2]) / 16d);
-				modelPart.translation = new Vector3d(-Double.parseDouble(position[0]) / 16d, -Double.parseDouble(position[1]) / 16d + 1, -Double.parseDouble(position[2]) / 16d).subtract(modelPart.scale.divide(2));
-				modelPart.offset = new Vector3d(-Double.parseDouble(offset[0]) / 16d, -Double.parseDouble(offset[1]) / 16d, -Double.parseDouble(offset[2]) / 16d).subtract(modelPart.scale.divide(2));
-				modelPart.rotation = Quaternion.fromEuler(Math.toRadians(Double.parseDouble(rotation[0])), Math.toRadians(Double.parseDouble(rotation[2])), Math.toRadians(Double.parseDouble(rotation[1])));
+				MatrixStack ms = new MatrixStack();
+				Vector3d scale = new Vector3d(Double.parseDouble(size[0]) / 16d, Double.parseDouble(size[1]) / 16d, Double.parseDouble(size[2]) / 16d);
+				Vector3d pos = new Vector3d(-Double.parseDouble(position[0]) / 16d, -Double.parseDouble(position[1]) / 16d + 1, -Double.parseDouble(position[2]) / 16d);
+				Vector3d offset3 = new Vector3d(Double.parseDouble(offset[0]) / 16d, Double.parseDouble(offset[1]) / 16d, Double.parseDouble(offset[2]) / 16d).subtract(scale.divide(2));
+				ms.scale(scale);
+				ms.translate(offset3);
+				ms.rotate(Vector3d.yAxis, Math.toRadians(Double.parseDouble(rotation[0])));
+				ms.rotate(Vector3d.xAxis, Math.toRadians(Double.parseDouble(rotation[2])));
+				ms.rotate(Vector3d.zAxis, Math.toRadians(Double.parseDouble(rotation[1])));
+				ms.translate(offset3.inverse());
+				ms.translate(pos);
+				modelPart.matrix = ms.getMatrix();
 				modelPart.textureOffset = new Vector2d(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
 
 				if (model.children.stream().anyMatch(m -> m.name.equals(modelName))) {

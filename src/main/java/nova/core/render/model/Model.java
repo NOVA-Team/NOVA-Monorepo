@@ -3,9 +3,9 @@ package nova.core.render.model;
 import nova.core.block.Block;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
-import nova.core.util.transform.Quaternion;
+import nova.core.util.transform.Matrix4x4;
+import nova.core.util.transform.MatrixStack;
 import nova.core.util.transform.Vector2d;
-import nova.core.util.transform.Vector3d;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -28,15 +28,9 @@ public class Model implements Cloneable {
 	public final Set<Face> faces = new HashSet<>();
 	public final Set<Model> children = new HashSet<>();
 
-	//The translation of the face.
-	public Vector3d translation = Vector3d.zero;
-	//The rotation offset
-	public Vector3d offset = Vector3d.zero;
-	//The Quaternion rotation of the model.
-	public Quaternion rotation = Quaternion.identity;
-	//The scale of the face.
-	public Vector3d scale = Vector3d.one;
-	//The offset of the texture.
+
+	public Matrix4x4 matrix = Matrix4x4.IDENTITY;
+
 	public Vector2d textureOffset = Vector2d.zero;
 
 	public Model(String name) {
@@ -277,52 +271,32 @@ public class Model implements Cloneable {
 	}
 
 	public Set<Model> flatten() {
-		return flatten(Vector3d.zero, Vector3d.zero, Quaternion.identity, Vector3d.one);
+		return flatten(new MatrixStack());
 	}
 
 	/**
 	 * Flattens the model into a set of models with no additional transformations,
 	 * applying all the transformations into the individual vertices.
-	 * @param translation Translation
-	 * @param offset Offset
-	 * @param rotation Rotation
-	 * @param scale Scale
+	 * @param matrixStack transformation matrix.
 	 * @return Resulting set of models
 	 */
-	public Set<Model> flatten(Vector3d translation, Vector3d offset, Quaternion rotation, Vector3d scale) {
+	public Set<Model> flatten(MatrixStack matrixStack) {
 		Set<Model> models = new HashSet<>();
 
-		final Vector3d finalTranslation = this.translation.add(translation);
-		final Vector3d finalOffset = this.offset.add(offset);
-		final Quaternion finalRotation = this.rotation.multiply(rotation);
-		final Vector3d finalScale = this.scale.multiply(scale);
-
+		matrixStack.pushMatrix();
+		matrixStack.transform(matrix);
 		//Create a new model with transformation applied.
 		Model transformedModel = clone();
 		transformedModel.faces.stream().forEach(f -> {
-				f.normal = f.normal
-					.add(finalOffset)
-					.transform(finalRotation)
-					.subtract(finalOffset)
-					.multiply(finalScale)
-					.add(finalTranslation);
-
-				f.vertices.forEach(v -> {
-					//Order: offset -> transform -> -offset -> scale -> translate
-					v.vec = v.vec
-						.add(finalOffset)
-						.transform(finalRotation)
-						.subtract(finalOffset)
-						.multiply(finalScale)
-						.add(finalTranslation);
-
-				});
+				f.normal = f.normal; //TODO normal matrix;
+				f.vertices.forEach(v -> v.vec = matrixStack.transform(v.vec));
 			}
 		);
 
 		models.add(transformedModel);
 		//Flatten child models
-		models.addAll(children.stream().flatMap(m -> m.flatten(finalTranslation, finalOffset, finalRotation, finalScale).stream()).collect(Collectors.toSet()));
+		models.addAll(children.stream().flatMap(m -> m.flatten(matrixStack).stream()).collect(Collectors.toSet()));
+		matrixStack.popMatrix();
 		return models;
 	}
 
@@ -331,10 +305,7 @@ public class Model implements Cloneable {
 		Model model = new Model(name);
 		model.faces.addAll(faces.stream().map(Face::clone).collect(Collectors.toSet()));
 		model.children.addAll(children.stream().map(Model::clone).collect(Collectors.toSet()));
-		model.translation = translation;
-		model.offset = offset;
-		model.rotation = rotation;
-		model.scale = scale;
+		model.matrix = matrix;
 		model.textureOffset = textureOffset;
 		return model;
 	}
