@@ -23,14 +23,12 @@ public class ModelWrapper extends Model {
 
 		//Apply transformation to this model for the world
 		MatrixStack stack = new MatrixStack();
-		stack.loadMatrix(matrix);
 		stack.translate(translation);
-		matrix = stack.getMatrix();
-
+		stack.transform(matrix);
 		/**
 		 * Convert textures and UV into Minecraft equivalent. 
 		 */
-		flatten().forEach(model ->
+		flatten(stack).forEach(model ->
 				model.faces.forEach(face ->
 				{
 					if (face.getBrightness() >= 0) {
