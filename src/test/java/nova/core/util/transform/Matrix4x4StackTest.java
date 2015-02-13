@@ -50,11 +50,11 @@ public class Matrix4x4StackTest {
 		ms.scale(Vector3d.one.multiply(2));
 		ms.pushMatrix();
 		ms.rotate(Vector3d.yAxis, Math.PI/2);
-		assertEquals(MatrixHelper.translationMatrix(Vector3d.one).multiply(MatrixHelper.scaleMatrix(Vector3d.one.multiply(2))).multiply(MatrixHelper.rotationMatrix(Vector3d.yAxis,Math.PI/2)),ms.getMatrix());
+		assertEquals(new Vector3d(-1,1,1),ms.transform(Vector3d.zAxis));
 
 		ms.popMatrix();
 		ms.transform(MatrixHelper.rotationMatrix(Vector3d.yAxis, Math.PI / 2));
-		assertEquals(MatrixHelper.translationMatrix(Vector3d.one).multiply(MatrixHelper.scaleMatrix(Vector3d.one.multiply(2))).multiply(MatrixHelper.rotationMatrix(Vector3d.yAxis, Math.PI / 2)), ms.getMatrix());
+		assertEquals(new Vector3d(-1,1,1),ms.transform(Vector3d.zAxis));
 
 		assertEquals(ms.getMatrix().transform(Vector3d.one), ms.transform(Vector3d.one));
 
