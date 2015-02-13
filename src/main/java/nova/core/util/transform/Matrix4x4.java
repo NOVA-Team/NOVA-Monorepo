@@ -12,6 +12,14 @@ import java.util.Arrays;
 public class Matrix4x4 implements Cloneable, Transform{
 
 	/**
+	 * Identity matrix.
+	 */
+	public static Matrix4x4 IDENTITY = new Matrix4x4(new double[][] {
+		{ 1, 0, 0, 0 },
+		{ 0, 1, 0, 0 },
+		{ 0, 0, 1, 0 },
+		{ 0, 0, 0, 1 } });
+	/**
 	 * 4x4 array [row][column]
 	 */
 	private double[][] mat;
@@ -48,15 +56,6 @@ public class Matrix4x4 implements Cloneable, Transform{
 	}
 
 	/**
-	 * Identity matrix.
-	 */
-	public static Matrix4x4 IDENTITY = new Matrix4x4(new double[][] {
-		{ 1, 0, 0, 0 },
-		{ 0, 1, 0, 0 },
-		{ 0, 0, 1, 0 },
-		{ 0, 0, 0, 1 }});
-
-	/**
 	 *  Cross multiples matrices.
 	 * @param other matrix to multiply by.
 	 * @return this x other
@@ -80,7 +79,7 @@ public class Matrix4x4 implements Cloneable, Transform{
 	 * @param other matrix to be multiplied by.
 	 * @return other x this
 	 */
-	public Matrix4x4 rightlyMultiply(Matrix4x4 other) {
+	public Matrix4x4 rightMultiply(Matrix4x4 other) {
 		return other.multiply(this);
 	}
 

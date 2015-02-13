@@ -33,7 +33,7 @@ public class MatrixStack implements Transform{
 	 * @param matrix to transform current matrix.
 	 */
 	public void transform(Matrix4x4 matrix) {
-		current = current.multiply(matrix);
+		current = current.rightMultiply(matrix);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class MatrixStack implements Transform{
 	 * @param z translation.
 	 */
 	public void translate(double x, double y, double z) {
-		current = current.multiply(MatrixHelper.translationMatrix(x, y, z));
+		current = current.rightMultiply(MatrixHelper.translationMatrix(x, y, z));
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class MatrixStack implements Transform{
 	 * @param angle in radians.
 	 */
 	public void rotate(Vector3<?> rotateVector, double angle) {
-		current = current.multiply(MatrixHelper.rotationMatrix(rotateVector, angle));
+		current = current.rightMultiply(MatrixHelper.rotationMatrix(rotateVector, angle));
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class MatrixStack implements Transform{
 	 * @param z scale.
 	 */
 	public void scale(double x, double y, double z) {
-		current = current.multiply(MatrixHelper.scaleMatrix(x, y, z));
+		current = current.rightMultiply(MatrixHelper.scaleMatrix(x, y, z));
 	}
 
 	/**

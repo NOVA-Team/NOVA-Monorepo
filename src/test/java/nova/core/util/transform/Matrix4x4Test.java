@@ -39,7 +39,7 @@ public class Matrix4x4Test {
 			{ 0, 0, 0, 0 } };
 		assertEquals(new Matrix4x4(res), startMatrix.multiply(startMatrix));
 
-		assertEquals(new Matrix4x4(res), startMatrix.rightlyMultiply(startMatrix));
+		assertEquals(new Matrix4x4(res), startMatrix.rightMultiply(startMatrix));
 	}
 
 	@Test
