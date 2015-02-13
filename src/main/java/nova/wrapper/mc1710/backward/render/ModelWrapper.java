@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import nova.core.render.model.Model;
+import nova.core.util.transform.MatrixStack;
 import nova.core.util.transform.Vector3d;
 import nova.wrapper.mc1710.render.RenderUtility;
 
@@ -21,7 +22,10 @@ public class ModelWrapper extends Model {
 		tessellator.setColorRGBA_F(1, 1, 1, 1);
 
 		//Apply transformation to this model for the world
-		this.translation = this.translation.add(translation);
+		MatrixStack stack = new MatrixStack();
+		stack.loadMatrix(matrix);
+		stack.translate(translation);
+		matrix = stack.getMatrix();
 
 		/**
 		 * Convert textures and UV into Minecraft equivalent. 
@@ -56,7 +60,7 @@ public class ModelWrapper extends Model {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}*/
-//TODO: Remove this
+						//TODO: Remove this
 						tessellator.setBrightness(15 << 20 | 11 << 4);
 					}
 					tessellator.setNormal(face.normal.xf(), face.normal.yf(), face.normal.zf());
