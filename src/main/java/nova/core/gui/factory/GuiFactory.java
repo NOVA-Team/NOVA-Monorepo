@@ -8,9 +8,12 @@ import java.util.Optional;
 
 import nova.core.gui.Gui;
 import nova.core.gui.GuiConstraints;
+import nova.core.gui.GuiEvent.BindEvent;
+import nova.core.loader.NovaMod;
 import nova.core.player.Player;
 import nova.core.util.Registry;
 import nova.core.util.exception.NovaException;
+import nova.core.util.transform.Vector3i;
 
 public abstract class GuiFactory {
 
@@ -44,10 +47,30 @@ public abstract class GuiFactory {
 		overlayRegistry.get(guiType).add(gui);
 	}
 
-	public void showGui(String modID, String identifier, Player player) {
-		showGui(modID, identifier, new GuiConstraints(player));
+	/**
+	 * Reduced version of {@link #showGui(String, String, GuiConstraints)}, will
+	 * create a new instance of {@link GuiConstraints} with the supplied player
+	 * as argument.
+	 * 
+	 * @param modID Id of the {@link NovaMod} that registered the GU
+	 * @param identifier Unique identifier for the GUI
+	 * @param player {@link Player} who opened the GUI
+	 * @param position The block coordinate on which to open the GUI
+	 */
+	public void showGui(String modID, String identifier, Player player, Vector3i position) {
+		showGui(modID, identifier, new GuiConstraints(player, position));
 	}
 
+	/**
+	 * Shows the provided {@link Gui} previously registered over the factory
+	 * instance. It will trigger the {@link BindEvent}, so any changes to the
+	 * instance can be done there.
+	 * 
+	 * @param modID Id of the {@link NovaMod} that registered the GU
+	 * @param identifier Unique identifier for the GUI
+	 * @param constraints Constraints object to provide arguments to the GUI
+	 *        instance
+	 */
 	public void showGui(String modID, String identifier, GuiConstraints constraints) {
 		Registry<Gui> gr = guiRegistry.get(modID);
 		if (gr == null)
@@ -56,31 +79,32 @@ public abstract class GuiFactory {
 		if (!optGui.isPresent())
 			throw new NovaException(String.format("No GUI called %s registered for mod %s!", identifier, modID));
 		Gui gui = optGui.get();
-		bind(gui);
+		bind(gui, constraints);
 		gui.bind(constraints);
 	}
 
-	public abstract void bind(Gui gui);
+	public abstract void bind(Gui gui, GuiConstraints constraints);
 
 	/**
 	 * Closes the currently open NOVA {@link Gui}, if present, and returns to
-	 * the in-game GUI.
+	 * the in-game GUI. It will not affect any native GUIs that might exist
+	 * along with NOVA.
 	 */
 	public void closeGui() {
 		if (activeGUI.isPresent()) {
 			activeGUI.get().unbind();
-			closeGui(activeGUI.get());
+			unbind(activeGUI.get());
 			activeGUI = Optional.empty();
 		}
 	}
 
-	public abstract void closeGui(Gui gui);
+	protected abstract void unbind(Gui gui);
 
 	public Optional<Gui> getActiveGui() {
 		return activeGUI;
 	}
 
 	public GuiType getActiveGuiType() {
-		return GuiType.NATIVE;
+		return activeGUI.isPresent() ? GuiType.CUSTOM : GuiType.NATIVE;
 	}
 }

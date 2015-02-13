@@ -14,22 +14,26 @@ public interface NativeGui extends NativeContainer {
 
 	public void dispatchNetworkEvent(Packet packet);
 
-	public void bind(GuiConstraints constraints);
+	public default void bind(GuiConstraints constraints) {
 
-	public void unbind();
+	}
+
+	public default void unbind() {
+
+	}
 
 	/**
 	 * Called when the GUI was resized and the child components need to
 	 * re-validate their layout. The new size has to be set before calling this.
 	 *
-	 * @param oldOutline Old  {@link Outline}
+	 * @param oldOutline Old {@link Outline}
 	 */
 	public default void onResized(Outline oldOutline) {
-		getElement().onEvent(new GuiEvent.ResizeEvent(oldOutline));
+		getComponent().onEvent(new GuiEvent.ResizeEvent(oldOutline));
 	}
 
 	public default void recieveNetworkEvent(Packet packet) {
-		Gui gui = (Gui) getElement();
+		Gui gui = (Gui) getComponent();
 		gui.triggerEvent(GuiEventFactory.instance.get().constructEvent(packet, gui));
 	}
 }

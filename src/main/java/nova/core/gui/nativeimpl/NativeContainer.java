@@ -9,7 +9,7 @@ import nova.core.gui.GuiComponent;
  */
 public interface NativeContainer extends NativeGuiComponent {
 
-	public void addElement(GuiComponent<?, ?> element);
+	public void addElement(GuiComponent<?, ?> component);
 
-	public void removeElement(GuiComponent<?, ?> element);
+	public void removeElement(GuiComponent<?, ?> component);
 }

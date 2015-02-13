@@ -15,7 +15,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 
 	protected String modID;
 
-	protected Gui(String uniqueID) {
+	public Gui(String uniqueID) {
 		super(uniqueID, NativeGui.class);
 	}
 

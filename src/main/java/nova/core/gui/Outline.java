@@ -10,6 +10,8 @@ import nova.core.util.transform.Vector2i;
  */
 public class Outline extends Rectangle<Vector2i> {
 
+	public static Outline empty = new Outline(0, 0, 0, 0);
+
 	/**
 	 * Creates a new Outline with the specified position and dimension.
 	 *

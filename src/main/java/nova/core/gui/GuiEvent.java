@@ -90,8 +90,4 @@ public class GuiEvent extends CancelableEvent {
 			this.gui = gui;
 		}
 	}
-
-	public static class ConstructionEvent extends GuiEvent {
-
-	}
 }
