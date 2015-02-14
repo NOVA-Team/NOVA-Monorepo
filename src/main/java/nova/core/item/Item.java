@@ -21,6 +21,10 @@ import java.util.Optional;
  */
 public abstract class Item implements Identifiable {
 
+	public int getMaxStackSize() {
+		return 64;
+	}
+
 	/**
 	 * Gets a list of tooltips for this item.
 	 * @param player {@link Player}
