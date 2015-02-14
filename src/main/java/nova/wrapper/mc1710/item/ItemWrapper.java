@@ -1,8 +1,5 @@
 package nova.wrapper.mc1710.item;
 
-import java.util.List;
-import java.util.Optional;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -12,6 +9,9 @@ import nova.core.item.ItemFactory;
 import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.NBTUtility;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Calclavia
@@ -23,6 +23,7 @@ public class ItemWrapper extends net.minecraft.item.Item implements IItemRendere
 	public ItemWrapper(ItemFactory item) {
 		this.itemFactory = item;
 		setUnlocalizedName(item.getID());
+		setMaxStackSize(item.getDummy().getMaxStackSize());
 	}
 
 	@Override
