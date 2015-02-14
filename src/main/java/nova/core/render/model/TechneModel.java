@@ -81,6 +81,12 @@ public class TechneModel extends ModelProvider {
 			}
 
 			NodeList textureSize = document.getElementsByTagName("TextureSize");
+			if (textureSize.getLength() == 0)
+				throw new NovaException("Model has no texture size");
+
+			String[] textureDimensions = textureSize.item(0).getTextContent().split(",");
+			double textureWidth = Integer.parseInt(textureDimensions[0]);
+			double textureHeight = Integer.parseInt(textureDimensions[1]);
 
 			NodeList shapes = document.getElementsByTagName("Shape");
 
@@ -149,22 +155,49 @@ public class TechneModel extends ModelProvider {
 				 * 	Each cube is, by default, skewed to the side. They are not centered.
 				 *
 				 * 	Everything is scaled by a factor of 16.
-				 * 	The y coordinate is inversed.
+				 * 	The y coordinate is inversed, y = 24 is the surface
+				 * 	The z coordinate is inverted, too.
 				 */
+				double positionX = Double.parseDouble(position[0]) / 16d;
+				double positionY = (16 - Double.parseDouble(position[1])) / 16d;
+				double positionZ = -Double.parseDouble(position[2]) / 16d;
+
+				double sizeX = Double.parseDouble(size[0]) / 16d;
+				double sizeY = Double.parseDouble(size[1]) / 16d;
+				double sizeZ = Double.parseDouble(size[2]) / 16d;
+
+				double offsetX = Double.parseDouble(offset[0]) / 16d;
+				double offsetY = -Double.parseDouble(offset[1]) / 16d;
+				double offsetZ = -Double.parseDouble(offset[2]) / 16d;
+
+				double angleX = -Math.toRadians(Double.parseDouble(rotation[0]));
+				double angleY = Math.toRadians(Double.parseDouble(rotation[1]));
+				double angleZ = Math.toRadians(Double.parseDouble(rotation[2]));
+
+				double textureOffsetU = Double.parseDouble(textureOffset[0]);
+				double textureOffsetV = Double.parseDouble(textureOffset[1]);
+
+				CubeTextureCoordinates textureCoordinates = new TechneCubeTextureCoordinates(
+					textureWidth, textureHeight,
+					textureOffsetU, textureOffsetV,
+					sizeX, sizeY, sizeZ);
+
 				final String modelName = shapeName;
 				Model modelPart = new Model(modelName);
-				modelPart.drawCube();
+				modelPart.drawCube(
+					offsetX,
+					offsetY - sizeY,
+					offsetZ - sizeZ,
+					offsetX + sizeX,
+					offsetY,
+					offsetZ,
+					textureCoordinates);
+
 				MatrixStack ms = new MatrixStack();
-				Vector3d scale = new Vector3d(Double.parseDouble(size[0]) / 16d, Double.parseDouble(size[1]) / 16d, Double.parseDouble(size[2]) / 16d);
-				Vector3d pos = new Vector3d(-Double.parseDouble(position[0]) / 16d, -Double.parseDouble(position[1]) / 16d + 1, -Double.parseDouble(position[2]) / 16d);
-				Vector3d offset3 = new Vector3d(Double.parseDouble(offset[0]) / 16d, Double.parseDouble(offset[1]) / 16d, Double.parseDouble(offset[2]) / 16d).subtract(scale.divide(2));
-				ms.scale(scale);
-				ms.translate(offset3);
-				ms.rotate(Vector3d.yAxis, Math.toRadians(Double.parseDouble(rotation[0])));
-				ms.rotate(Vector3d.xAxis, Math.toRadians(Double.parseDouble(rotation[2])));
-				ms.rotate(Vector3d.zAxis, Math.toRadians(Double.parseDouble(rotation[1])));
-				ms.translate(offset3.inverse());
-				ms.translate(pos);
+				ms.translate(positionX, positionY, positionZ);
+				ms.rotate(Vector3d.yAxis, angleY);
+				ms.rotate(Vector3d.xAxis, angleX);
+				ms.rotate(Vector3d.zAxis, angleZ);
 				modelPart.matrix = ms.getMatrix();
 				modelPart.textureOffset = new Vector2d(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
 
@@ -193,5 +226,156 @@ public class TechneModel extends ModelProvider {
 	@Override
 	public String getType() {
 		return "tcn";
+	}
+
+	private static class TechneCubeTextureCoordinates implements CubeTextureCoordinates {
+		private final double textureWidth;
+		private final double textureHeight;
+		private final double offsetU;
+		private final double offsetV;
+		private final double sizeX;
+		private final double sizeY;
+		private final double sizeZ;
+
+		public TechneCubeTextureCoordinates(
+			double textureWidth, double textureHeight,
+			double offsetU, double offsetV,
+			double sizeX, double sizeY, double sizeZ) {
+			this.textureWidth = textureWidth;
+			this.textureHeight = textureHeight;
+			this.offsetU = offsetU;
+			this.offsetV = offsetV;
+			this.sizeX = sizeX * 16;
+			this.sizeY = sizeY * 16;
+			this.sizeZ = sizeZ * 16;
+		}
+
+		private double translateU(double pixelsU) {
+			return (offsetU + pixelsU) / textureWidth;
+		}
+
+		private double translateV(double pixelsV) {
+			return (offsetV + pixelsV) / textureHeight;
+		}
+
+		@Override
+		public double getTopMinU() {
+			return translateU(sizeZ + sizeX);
+		}
+
+		@Override
+		public double getTopMinV() {
+			return translateV(sizeZ);
+		}
+
+		@Override
+		public double getTopMaxU() {
+			return translateU(sizeZ);
+		}
+
+		@Override
+		public double getTopMaxV() {
+			return translateV(0);
+		}
+
+		@Override
+		public double getBottomMinU() {
+			return translateU(sizeZ + 2 * sizeX);
+		}
+
+		@Override
+		public double getBottomMinV() {
+			return translateV(0);
+		}
+
+		@Override
+		public double getBottomMaxU() {
+			return translateU(sizeZ + sizeX);
+		}
+
+		@Override
+		public double getBottomMaxV() {
+			return translateV(sizeZ);
+		}
+
+		@Override
+		public double getWestMinU() {
+			return translateU(0);
+		}
+
+		@Override
+		public double getWestMinV() {
+			return translateV(sizeZ);
+		}
+
+		@Override
+		public double getWestMaxU() {
+			return translateU(sizeZ);
+		}
+
+		@Override
+		public double getWestMaxV() {
+			return translateV(sizeZ + sizeY);
+		}
+
+		@Override
+		public double getEastMinU() {
+			return translateU(sizeX + sizeZ * 2);
+		}
+
+		@Override
+		public double getEastMinV() {
+			return translateV(sizeZ);
+		}
+
+		@Override
+		public double getEastMaxU() {
+			return translateU(sizeX + sizeZ);
+		}
+
+		@Override
+		public double getEastMaxV() {
+			return translateV(sizeZ + sizeY);
+		}
+
+		@Override
+		public double getNorthMinU() {
+			return translateU(sizeX + 2 * sizeZ);
+		}
+
+		@Override
+		public double getNorthMinV() {
+			return translateV(sizeZ);
+		}
+
+		@Override
+		public double getNorthMaxU() {
+			return translateU(2 * sizeX + 2 * sizeZ);
+		}
+
+		@Override
+		public double getNorthMaxV() {
+			return translateV(sizeZ + sizeY);
+		}
+
+		@Override
+		public double getSouthMinU() {
+			return translateU(sizeZ);
+		}
+
+		@Override
+		public double getSouthMinV() {
+			return translateV(sizeZ);
+		}
+
+		@Override
+		public double getSouthMaxU() {
+			return translateU(sizeX + sizeZ);
+		}
+
+		@Override
+		public double getSouthMaxV() {
+			return translateV(sizeZ + sizeY);
+		}
 	}
 }

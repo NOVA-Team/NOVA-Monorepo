@@ -176,20 +176,23 @@ public class Model implements Cloneable {
 		return this;
 	}
 
-	public Model drawCube() {
+	public Model drawCube(
+		double minX, double minY, double minZ,
+		double maxX, double maxY, double maxZ,
+		CubeTextureCoordinates textureCoordinates) {
 		/**
 		 * Draw down
 		 */
 		Face down = createShape();
 		down.normal = Direction.DOWN.toVector().toDouble();
 		//Top-left corner
-		down.drawVertex(new Vertex(0.5, -0.5, 0.5, 0, 0));
+		down.drawVertex(new Vertex(maxX, minY, maxZ, textureCoordinates.getBottomMinU(), textureCoordinates.getBottomMinV()));
 		//Top-right corner
-		down.drawVertex(new Vertex(-0.5, -0.5, 0.5, 1, 0));
+		down.drawVertex(new Vertex(minX, minY, maxZ, textureCoordinates.getBottomMaxU(), textureCoordinates.getBottomMinV()));
 		//Bottom-right corner
-		down.drawVertex(new Vertex(-0.5, -0.5, -0.5, 1, 1));
+		down.drawVertex(new Vertex(minX, minY, minZ, textureCoordinates.getBottomMaxU(), textureCoordinates.getBottomMaxV()));
 		//Bottom-left corner
-		down.drawVertex(new Vertex(0.5, -0.5, -0.5, 0, 1));
+		down.drawVertex(new Vertex(maxX, minY, minZ, textureCoordinates.getBottomMinU(), textureCoordinates.getBottomMaxV()));
 		drawShape(down);
 
 		/**
@@ -198,13 +201,13 @@ public class Model implements Cloneable {
 		Face up = createShape();
 		up.normal = Direction.UP.toVector().toDouble();
 		//Bottom-left corner
-		up.drawVertex(new Vertex(0.5, 0.5, -0.5, 0, 1));
+		up.drawVertex(new Vertex(maxX, maxY, minZ, textureCoordinates.getTopMinU(), textureCoordinates.getTopMaxV()));
 		//Bottom-right corner
-		up.drawVertex(new Vertex(-0.5, 0.5, -0.5, 1, 1));
+		up.drawVertex(new Vertex(minX, maxY, minZ, textureCoordinates.getTopMaxU(), textureCoordinates.getTopMaxV()));
 		//Top-right corner
-		up.drawVertex(new Vertex(-0.5, 0.5, 0.5, 1, 0));
+		up.drawVertex(new Vertex(minX, maxY, maxZ, textureCoordinates.getTopMaxU(), textureCoordinates.getTopMinV()));
 		//Top-left corner
-		up.drawVertex(new Vertex(0.5, 0.5, 0.5, 0, 0));
+		up.drawVertex(new Vertex(maxX, maxY, maxZ, textureCoordinates.getTopMinU(), textureCoordinates.getTopMinV()));
 		drawShape(up);
 
 		/**
@@ -213,13 +216,13 @@ public class Model implements Cloneable {
 		Face north = createShape();
 		north.normal = Direction.NORTH.toVector().toDouble();
 		//Top-left corner
-		north.drawVertex(new Vertex(-0.5, 0.5, -0.5, 0, 0));
+		north.drawVertex(new Vertex(minX, maxY, minZ, textureCoordinates.getNorthMinU(), textureCoordinates.getNorthMinV()));
 		//Top-right corner
-		north.drawVertex(new Vertex(0.5, 0.5, -0.5, 1, 0));
+		north.drawVertex(new Vertex(maxX, maxY, minZ, textureCoordinates.getNorthMaxU(), textureCoordinates.getNorthMinV()));
 		//Bottom-right corner
-		north.drawVertex(new Vertex(0.5, -0.5, -0.5, 1, 1));
+		north.drawVertex(new Vertex(maxX, minY, minZ, textureCoordinates.getNorthMaxU(), textureCoordinates.getNorthMaxV()));
 		//Bottom-left corner
-		north.drawVertex(new Vertex(-0.5, -0.5, -0.5, 0, 1));
+		north.drawVertex(new Vertex(minX, minY, minZ, textureCoordinates.getNorthMinU(), textureCoordinates.getNorthMaxV()));
 		drawShape(north);
 
 		/**
@@ -228,13 +231,13 @@ public class Model implements Cloneable {
 		Face south = createShape();
 		south.normal = Direction.SOUTH.toVector().toDouble();
 		//Bottom-left corner
-		south.drawVertex(new Vertex(-0.5, -0.5, 0.5, 0, 1));
+		south.drawVertex(new Vertex(minX, minY, maxZ, textureCoordinates.getSouthMinU(), textureCoordinates.getSouthMaxV()));
 		//Bottom-right corner
-		south.drawVertex(new Vertex(0.5, -0.5, 0.5, 1, 1));
+		south.drawVertex(new Vertex(maxX, minY, maxZ, textureCoordinates.getSouthMaxU(), textureCoordinates.getSouthMaxV()));
 		//Top-right corner
-		south.drawVertex(new Vertex(0.5, 0.5, 0.5, 1, 0));
+		south.drawVertex(new Vertex(maxX, maxY, maxZ, textureCoordinates.getSouthMaxU(), textureCoordinates.getSouthMinV()));
 		//Top-left corner
-		south.drawVertex(new Vertex(-0.5, 0.5, 0.5, 0, 0));
+		south.drawVertex(new Vertex(minX, maxY, maxZ, textureCoordinates.getSouthMinU(), textureCoordinates.getSouthMinV()));
 		drawShape(south);
 
 		/**
@@ -243,13 +246,13 @@ public class Model implements Cloneable {
 		Face west = createShape();
 		west.normal = Direction.WEST.toVector().toDouble();
 		//Bottom-left corner
-		west.drawVertex(new Vertex(-0.5, -0.5, -0.5, 0, 1));
+		west.drawVertex(new Vertex(minX, minY, minZ, textureCoordinates.getWestMinU(), textureCoordinates.getWestMaxV()));
 		//Bottom-right corner
-		west.drawVertex(new Vertex(-0.5, -0.5, 0.5, 1, 1));
+		west.drawVertex(new Vertex(minX, minY, maxZ, textureCoordinates.getWestMaxU(), textureCoordinates.getWestMaxV()));
 		//Top-right corner
-		west.drawVertex(new Vertex(-0.5, 0.5, 0.5, 1, 0));
+		west.drawVertex(new Vertex(minX, maxY, maxZ, textureCoordinates.getWestMaxU(), textureCoordinates.getWestMinV()));
 		//Top-left corner
-		west.drawVertex(new Vertex(-0.5, 0.5, -0.5, 0, 0));
+		west.drawVertex(new Vertex(minX, maxY, minZ, textureCoordinates.getWestMinU(), textureCoordinates.getWestMinV()));
 		drawShape(west);
 
 		/**
@@ -258,16 +261,20 @@ public class Model implements Cloneable {
 		Face east = createShape();
 		east.normal = Direction.EAST.toVector().toDouble();
 		//Top-left corner
-		east.drawVertex(new Vertex(0.5, 0.5, -0.5, 0, 0));
+		east.drawVertex(new Vertex(maxX, maxY, minZ, textureCoordinates.getEastMinU(), textureCoordinates.getEastMinV()));
 		//Top-right corner
-		east.drawVertex(new Vertex(0.5, 0.5, 0.5, 1, 0));
+		east.drawVertex(new Vertex(maxX, maxY, maxZ, textureCoordinates.getEastMaxU(), textureCoordinates.getEastMinV()));
 		//Bottom-right corner
-		east.drawVertex(new Vertex(0.5, -0.5, 0.5, 1, 1));
+		east.drawVertex(new Vertex(maxX, minY, maxZ, textureCoordinates.getEastMaxU(), textureCoordinates.getEastMaxV()));
 		//Bottom-left corner
-		east.drawVertex(new Vertex(0.5, -0.5, -0.5, 0, 1));
+		east.drawVertex(new Vertex(maxX, minY, minZ, textureCoordinates.getEastMinU(), textureCoordinates.getEastMaxV()));
 		drawShape(east);
 
 		return this;
+	}
+
+	public Model drawCube() {
+		return drawCube(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, StaticCubeTextureCoordinates.INSTANCE);
 	}
 
 	public Set<Model> flatten() {
