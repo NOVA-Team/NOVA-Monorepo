@@ -24,6 +24,11 @@ public class BWWorld extends World {
 	}
 
 	@Override
+	public void markChange(Vector3i position) {
+		world.notifyBlockChange(position.x, position.y, position.z, world.getBlock(position.x, position.y, position.z));
+	}
+
+	@Override
 	public Optional<Block> getBlock(Vector3i position) {
 		return blockAccess.getBlock(position);
 	}
