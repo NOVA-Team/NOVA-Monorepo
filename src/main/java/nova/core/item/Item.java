@@ -10,8 +10,8 @@ import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,8 +30,8 @@ public abstract class Item implements Identifiable {
 	 * @param player {@link Player}
 	 * @return The tooltip strings
 	 */
-	public Collection<String> getTooltips(Optional<Player> player) {
-		return new HashSet<>();
+	public List<String> getTooltips(Optional<Player> player) {
+		return new ArrayList<>();
 	}
 
 	/**
