@@ -53,7 +53,7 @@ public abstract class GuiFactory {
 	 * instance. It will trigger the {@link BindEvent}, so any changes to the
 	 * instance can be done there.
 	 * 
-	 * @param modID Id of the {@link NovaMod} that registered the GU
+	 * @param modID Id of the {@link NovaMod} that registered the GUI
 	 * @param identifier Unique identifier for the GUI
 	 * @param entity {@link Entity} which opened the GUI
 	 * @param position The block coordinate on which to open the GUI

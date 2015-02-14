@@ -51,7 +51,8 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	/**
 	 * Binds the GUI, called when displayed.
 	 * 
-	 * @param constraints {@link GuiConstraints} to initialize this GUI with.
+	 * @param entity Entity which interacted to display this GUI
+	 * @param position block position
 	 */
 	public void bind(Entity entity, Vector3i position) {
 		onEvent(new GuiEvent.BindEvent(this, entity, position));
