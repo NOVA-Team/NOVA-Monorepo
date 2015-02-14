@@ -5,8 +5,8 @@ import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import nova.core.entity.Entity;
 import nova.core.gui.Gui;
-import nova.core.gui.GuiConstraints;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
@@ -18,9 +18,8 @@ public class MCGuiFactory extends GuiFactory {
 	private static Optional<Gui> guiToOpen = Optional.empty();
 	
 	@Override
-	public void bind(Gui gui, GuiConstraints constraints) {
-		BWEntityPlayer player = (BWEntityPlayer) constraints.player;
-		Vector3i pos = constraints.position;
+	public void bind(Gui gui, Entity entity, Vector3i pos) {
+		BWEntityPlayer player = (BWEntityPlayer) entity;
 		guiToOpen = Optional.of(gui);
 		player.entity.openGui(NovaMinecraft.id, 0, player.entity.getEntityWorld(), pos.x, pos.y, pos.z);
 	}
