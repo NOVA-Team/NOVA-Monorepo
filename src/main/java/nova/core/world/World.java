@@ -6,15 +6,19 @@ import nova.core.util.transform.Vector3i;
 
 /**
  * A in-game world
- *
  * @see BlockAccess
  */
 public abstract class World implements Identifiable, BlockAccess {
 
 	/**
 	 * Marks a position to render static.
-	 *
 	 * @param position - The position to perform the static re-rendering.
 	 */
 	public abstract void markStaticRender(Vector3i position);
+
+	/**
+	 * Marks a specific block to indicate it changed.
+	 * @param position - The position being changed.
+	 */
+	public abstract void markChange(Vector3i position);
 }
