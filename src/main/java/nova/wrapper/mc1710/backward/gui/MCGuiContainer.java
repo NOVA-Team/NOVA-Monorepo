@@ -7,8 +7,9 @@ import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.nativeimpl.NativeContainer;
+import nova.core.render.model.Model;
 
-public class MCGuiContainer implements NativeContainer {
+public class MCGuiContainer implements NativeContainer, DrawableGuiComponent {
 	
 	private AbstractGuiContainer<?, ?> component;
 	private List<GuiComponent<?, ?>> components = new ArrayList<>();
@@ -46,5 +47,11 @@ public class MCGuiContainer implements NativeContainer {
 	@Override
 	public void removeElement(GuiComponent<?, ?> element) {
 		components.remove(element);
+	}
+
+	@Override
+	public void draw(int mouseX, int mouseY, float partial) {
+		getComponent().render(mouseX, mouseY, new Model());
+		components.forEach((component) -> ((DrawableGuiComponent)component.getNative()).draw(mouseX, mouseY, partial));
 	}
 }

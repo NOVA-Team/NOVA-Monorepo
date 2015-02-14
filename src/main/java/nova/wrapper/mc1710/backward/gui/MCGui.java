@@ -7,14 +7,16 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import nova.core.game.Game;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.nativeimpl.NativeGui;
 import nova.core.network.Packet;
+import nova.core.render.model.Model;
 import nova.wrapper.mc1710.network.PacketWrapper;
 
-public class MCGui extends GuiScreen implements NativeGui {
+public class MCGui extends GuiScreen implements NativeGui, DrawableGuiComponent {
 
 	private Gui component;
 	private List<GuiComponent<?, ?>> components = new ArrayList<>();
@@ -67,6 +69,31 @@ public class MCGui extends GuiScreen implements NativeGui {
 	@Override
 	public void setWorldAndResolution(Minecraft mc, int width, int height) {
 		super.setWorldAndResolution(mc, width, height);
+		boolean resized = width != outline.getWidth() || height != outline.getHeight();
+		Outline oldOutline = outline;
 		outline = new Outline(0, 0, width, height);
+		if(resized) onResized(oldOutline);
+	}
+	
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partial) {
+		getComponent().render(mouseX, mouseY, new Model());
+		components.forEach((component) -> ((DrawableGuiComponent)component.getNative()).draw(mouseX, mouseY, partial));
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void onGuiClosed() {
+		Game.instance.get().guiFactory.get().unbindCurrentGui();
+	}
+
+	@Override
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
+	
+	@Override
+	public void draw(int mouseX, int mouseY, float partial) {
+		drawScreen(mouseX, mouseY, partial);
 	}
 }

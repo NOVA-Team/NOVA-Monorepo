@@ -44,8 +44,9 @@ public class MCGuiFactory extends GuiFactory {
 		@Override
 		public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 			if(guiToOpen.isPresent()) {
+				Gui gui = guiToOpen.get();
 				guiToOpen = Optional.empty();
-				return guiToOpen.get().getNative();
+				return gui.getNative();
 			}
 			return null;
 		}	
