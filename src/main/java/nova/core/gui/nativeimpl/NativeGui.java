@@ -1,11 +1,12 @@
 package nova.core.gui.nativeimpl;
 
+import nova.core.entity.Entity;
 import nova.core.gui.Gui;
-import nova.core.gui.GuiConstraints;
 import nova.core.gui.GuiEvent;
 import nova.core.gui.Outline;
 import nova.core.gui.factory.GuiEventFactory;
 import nova.core.network.Packet;
+import nova.core.util.transform.Vector3i;
 
 public interface NativeGui extends NativeContainer {
 
@@ -14,7 +15,7 @@ public interface NativeGui extends NativeContainer {
 
 	public void dispatchNetworkEvent(Packet packet);
 
-	public default void bind(GuiConstraints constraints) {
+	public default void bind(Entity entity, Vector3i pos) {
 
 	}
 

@@ -1,7 +1,14 @@
 package nova.core.gui;
 
+import java.util.Optional;
+
+import nova.core.block.Block;
+import nova.core.entity.Entity;
 import nova.core.event.CancelableEvent;
 import nova.core.gui.KeyStroke.Key;
+import nova.core.player.Player;
+import nova.core.util.transform.Vector3i;
+import nova.core.world.World;
 
 /**
  * Event for GUI, like mouse click
@@ -74,11 +81,19 @@ public class GuiEvent extends CancelableEvent {
 	public static class BindEvent extends GuiEvent {
 
 		public final Gui gui;
-		public final GuiConstraints constraints;
+		public final Entity entity;
+		public final Player player;
+		public final Vector3i position;
+		public final World world;
+		public final Optional<Block> block;
 
-		public BindEvent(Gui gui, GuiConstraints constraints) {
+		public BindEvent(Gui gui, Entity entity, Vector3i position) {
 			this.gui = gui;
-			this.constraints = constraints;
+			this.entity = entity;
+			this.position = position;
+			this.player = (Player) entity;
+			this.world = entity.getWorld();
+			this.block = world.getBlock(position);
 		}
 	}
 

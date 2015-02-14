@@ -2,11 +2,13 @@ package nova.core.gui;
 
 import java.util.Optional;
 
+import nova.core.entity.Entity;
 import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.nativeimpl.NativeGui;
 import nova.core.loader.NovaMod;
 import nova.core.network.Packet;
+import nova.core.util.transform.Vector3i;
 
 /**
  * Root container for GUI
@@ -51,9 +53,9 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 * 
 	 * @param constraints {@link GuiConstraints} to initialize this GUI with.
 	 */
-	public void bind(GuiConstraints constraints) {
-		onEvent(new GuiEvent.BindEvent(this, constraints));
-		getNative().bind(constraints);
+	public void bind(Entity entity, Vector3i position) {
+		onEvent(new GuiEvent.BindEvent(this, entity, position));
+		getNative().bind(entity, position);
 		repaint();
 	}
 

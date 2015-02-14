@@ -6,12 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import nova.core.entity.Entity;
 import nova.core.gui.Gui;
-import nova.core.gui.GuiConstraints;
 import nova.core.gui.GuiEvent.BindEvent;
 import nova.core.gui.GuiEvent.UnBindEvent;
 import nova.core.loader.NovaMod;
-import nova.core.player.Player;
 import nova.core.util.Registry;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector3i;
@@ -50,30 +49,17 @@ public abstract class GuiFactory {
 	}
 
 	/**
-	 * Reduced version of {@link #showGui(String, String, GuiConstraints)}, will
-	 * create a new instance of {@link GuiConstraints} with the supplied player
-	 * as argument.
-	 * 
-	 * @param modID Id of the {@link NovaMod} that registered the GU
-	 * @param identifier Unique identifier for the GUI
-	 * @param player {@link Player} who opened the GUI
-	 * @param position The block coordinate on which to open the GUI
-	 */
-	public void showGui(String modID, String identifier, Player player, Vector3i position) {
-		showGui(modID, identifier, new GuiConstraints(player, position));
-	}
-
-	/**
 	 * Shows the provided {@link Gui} previously registered over the factory
 	 * instance. It will trigger the {@link BindEvent}, so any changes to the
 	 * instance can be done there.
 	 * 
 	 * @param modID Id of the {@link NovaMod} that registered the GU
 	 * @param identifier Unique identifier for the GUI
-	 * @param constraints Constraints object to provide arguments to the GUI
-	 *        instance
+	 * @param entity {@link Entity} which opened the GUI
+	 * @param position The block coordinate on which to open the GUI
 	 */
-	public void showGui(String modID, String identifier, GuiConstraints constraints) {
+	public void showGui(String modID, String identifier, Entity entity, Vector3i position) {
+
 		Registry<Gui> gr = guiRegistry.get(modID);
 		if (gr == null)
 			throw new NovaException(String.format("No GUI called %s registered for mod %s!", identifier, modID));
@@ -82,11 +68,11 @@ public abstract class GuiFactory {
 			throw new NovaException(String.format("No GUI called %s registered for mod %s!", identifier, modID));
 		Gui gui = optGui.get();
 		activeGUI = optGui;
-		bind(gui, constraints);
-		gui.bind(constraints);
+		bind(gui, entity, position);
+		gui.bind(entity, position);
 	}
 
-	public abstract void bind(Gui gui, GuiConstraints constraints);
+	public abstract void bind(Gui gui, Entity entity, Vector3i position);
 
 	/**
 	 * Closes the currently open NOVA {@link Gui}, if present, and returns to
