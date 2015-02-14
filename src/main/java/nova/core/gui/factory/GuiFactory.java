@@ -9,18 +9,20 @@ import java.util.Optional;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiConstraints;
 import nova.core.gui.GuiEvent.BindEvent;
+import nova.core.gui.GuiEvent.UnBindEvent;
 import nova.core.loader.NovaMod;
 import nova.core.player.Player;
 import nova.core.util.Registry;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector3i;
 
+// TODO Allow showing GUIs without registering, with plain Gui objects.
 public abstract class GuiFactory {
 
 	protected HashMap<String, Registry<Gui>> guiRegistry = new HashMap<>();
 	protected EnumMap<GuiType, List<Gui>> overlayRegistry = new EnumMap<>(GuiType.class);
 
-	protected Optional<Gui> activeGUI;
+	protected Optional<Gui> activeGUI = Optional.empty();
 
 	public static enum GuiType {
 		INGAME, TITLE, OPTIONS, INGAME_OPTIONS, CRAFTING, NATIVE, CUSTOM
@@ -79,6 +81,7 @@ public abstract class GuiFactory {
 		if (!optGui.isPresent())
 			throw new NovaException(String.format("No GUI called %s registered for mod %s!", identifier, modID));
 		Gui gui = optGui.get();
+		activeGUI = optGui;
 		bind(gui, constraints);
 		gui.bind(constraints);
 	}
@@ -94,6 +97,26 @@ public abstract class GuiFactory {
 		if (activeGUI.isPresent()) {
 			activeGUI.get().unbind();
 			unbind(activeGUI.get());
+			activeGUI = Optional.empty();
+		}
+	}
+
+	/**
+	 * <p>
+	 * Triggers the {@link UnBindEvent} for the currently active NOVA
+	 * {@link Gui}, if present, and resets the currently open GUI to
+	 * {@code null}.
+	 * </p>
+	 * <p>
+	 * <b>This won't close the active GUI, it keeps displaying!</b>
+	 * </p>
+	 * 
+	 * @see #closeGui()
+	 */
+	@Deprecated
+	public void unbindCurrentGui() {
+		if (activeGUI.isPresent()) {
+			activeGUI.get().unbind();
 			activeGUI = Optional.empty();
 		}
 	}

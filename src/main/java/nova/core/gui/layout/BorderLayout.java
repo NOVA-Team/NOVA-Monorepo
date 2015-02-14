@@ -45,7 +45,7 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 		Vector2i space = dimension;
 
 		if (cComp != null) {
-			Vector2i pref = new Vector2i(dimension.x - wDim.x - nDim.x, dimension.y - nDim.y - sDim.y);
+			Vector2i pref = new Vector2i(dimension.x - wDim.x - eDim.x, dimension.y - nDim.y - sDim.y);
 			cDim = pref.min(getMaximumSizeOf(cComp));
 			Vector2i cOver = pref.subtract(cDim).divide(2);
 
@@ -62,41 +62,40 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 					sDim = sDim.add(new Vector2i(0, cOver.y));
 			}
 
-			Vector2i v1 = dimension.subtract(cDim);
-			overAllocated = v1.subtract(wDim).subtract(nDim).subtract(eDim).subtract(sDim).inverse().max(Vector2i.zero);
+			overAllocated = new Vector2i(dimension.x - cDim.x - wDim.x - eDim.x, dimension.y - cDim.y - nDim.y - sDim.y).inverse().max(Vector2i.zero);
 			space = space.subtract(cDim);
 
 		} else {
-			overAllocated = dimension.subtract(wDim).subtract(nDim).subtract(eDim).subtract(sDim).inverse().max(Vector2i.zero);
+			overAllocated = new Vector2i(dimension.x - wDim.x - eDim.x, dimension.y - nDim.y - sDim.y).inverse().max(Vector2i.zero);
 		}
 
 		Vector2i v2 = space.divide(2);
 
 		if (overAllocated.x > 0) {
 			Vector2i v3 = wComp != null && eComp != null ? v2 : space;
-			wDim = new Vector2i(v3.x, eDim.y);
-			eDim = new Vector2i(v3.x, wDim.y);
+			wDim = new Vector2i(v3.x, wDim.y);
+			eDim = new Vector2i(v3.x, eDim.y);
 		}
 		if (overAllocated.y > 0) {
 			Vector2i v3 = nComp != null && sComp != null ? v2 : space;
-			wDim = new Vector2i(eDim.x, v3.y);
-			eDim = new Vector2i(wDim.x, v3.y);
+			wDim = new Vector2i(wDim.x, v3.y);
+			eDim = new Vector2i(eDim.x, v3.y);
 		}
 
 		if (cComp != null) {
-			cDim = cDim.min(dimension.subtract(wDim).subtract(nDim).subtract(eDim).subtract(sDim));
+			cDim = cDim.min(new Vector2i(dimension.x - wDim.x - eDim.x, dimension.y - nDim.y - sDim.y));
 		}
 
 		// Centers the border components
-		int wOffset = (int) ((dimension.y + wDim.y) / 2D);
-		int eOffset = (int) ((dimension.y + eDim.y) / 2D);
-		int nOffset = (int) ((dimension.x + nDim.x) / 2D);
-		int sOffset = (int) ((dimension.x + sDim.x) / 2D);
+		int wOffset = (int) ((dimension.y - wDim.y) / 2D);
+		int eOffset = (int) ((dimension.y - eDim.y) / 2D);
+		int nOffset = (int) ((dimension.x - nDim.x) / 2D);
+		int sOffset = (int) ((dimension.x - sDim.x) / 2D);
 
-		setOutlineOf(cComp, new Outline(new Vector2i(wDim.x, nDim.y), dimension));
+		setOutlineOf(cComp, new Outline(new Vector2i(wDim.x, nDim.y), cDim));
 		setOutlineOf(wComp, new Outline(new Vector2i(0, wOffset), wDim));
-		setOutlineOf(eComp, new Outline(new Vector2i(dimension.x - wDim.x, eOffset), wDim));
-		setOutlineOf(nComp, new Outline(new Vector2i(nOffset, 0), eDim));
+		setOutlineOf(eComp, new Outline(new Vector2i(dimension.x - eDim.x, eOffset), eDim));
+		setOutlineOf(nComp, new Outline(new Vector2i(nOffset, 0), nDim));
 		setOutlineOf(sComp, new Outline(new Vector2i(sOffset, dimension.y - sDim.y), sDim));
 	}
 

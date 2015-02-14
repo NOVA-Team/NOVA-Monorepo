@@ -66,7 +66,7 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 				return parameterTypes[index].isInstance(parameters[index]);
 			})) {
 				try {
-					return constructor.newInstance((Object[]) parameterTypes);
+					return constructor.newInstance((Object[]) parameters);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}

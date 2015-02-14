@@ -120,6 +120,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		component.updateQualifiedName();
 		children.put(component.getID(), component);
 		layout.add(component, this, properties);
+		getNative().addElement(component);
 		return (O) this;
 	}
 
@@ -137,6 +138,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		children.remove(component);
 		layout.remove(component);
 		component.updateQualifiedName();
+		getNative().removeElement(component);
 		return (O) this;
 	}
 

@@ -13,7 +13,7 @@ public class Rectangle<T extends Vector2<T>> extends Shape<Rectangle<T>, Rectang
 	public final T max;
 
 	public Rectangle(T min, T max) {
-		this.min = max;
+		this.min = min;
 		this.max = max;
 	}
 
@@ -96,5 +96,10 @@ public class Rectangle<T extends Vector2<T>> extends Shape<Rectangle<T>, Rectang
 	@Override
 	public Rectangle<T> reciprocal() {
 		return new Rectangle<T>(min.reciprocal(), max.reciprocal());
+	}
+
+	@Override
+	public String toString() {
+		return "[Rectangle] " + getMin() + ", " + getMax();
 	}
 }

@@ -66,10 +66,10 @@ public interface NativeGuiComponent {
 	 */
 	public void requestRender();
 
-	public default void render(int mouseX, int mouseY, Model artist) {
+	public default void render(int mouseX, int mouseY, Model model) {
 		if (getComponent().isVisible()) {
-			getComponent().preRender(mouseX, mouseY, artist);
-			getComponent().render(mouseX, mouseY, artist);
+			getComponent().preRender(mouseX, mouseY, model);
+			getComponent().render(mouseX, mouseY, model);
 		}
 	}
 
