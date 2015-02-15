@@ -42,11 +42,10 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 		Vector2i cDim = Vector2i.zero;
 
 		Vector2i overAllocated = Vector2i.zero;
-		Vector2i space = dimension;
 
 		if (cComp != null) {
 			Vector2i pref = new Vector2i(dimension.x - wDim.x - eDim.x, dimension.y - nDim.y - sDim.y);
-			cDim = pref.min(getMaximumSizeOf(cComp));
+			cDim = pref.max(getPreferredSizeOf(cComp)).min(getMaximumSizeOf(cComp));
 			Vector2i cOver = pref.subtract(cDim).divide(2);
 
 			if (cOver.x > 0) {
@@ -63,28 +62,32 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 			}
 
 			overAllocated = new Vector2i(dimension.x - cDim.x - wDim.x - eDim.x, dimension.y - cDim.y - nDim.y - sDim.y).inverse().max(Vector2i.zero);
-			space = space.subtract(cDim);
-
 		} else {
 			overAllocated = new Vector2i(dimension.x - wDim.x - eDim.x, dimension.y - nDim.y - sDim.y).inverse().max(Vector2i.zero);
 		}
 
-		Vector2i v2 = space.divide(2);
-
 		if (overAllocated.x > 0) {
-			Vector2i v3 = wComp != null && eComp != null ? v2 : space;
-			wDim = new Vector2i(v3.x, wDim.y);
-			eDim = new Vector2i(v3.x, eDim.y);
+			Vector2i v3 = wComp != null && eComp != null ? overAllocated.divide(2) : overAllocated;
+			wDim = new Vector2i(wDim.x - v3.x, wDim.y).max(Vector2i.zero);
+			eDim = new Vector2i(eDim.x - v3.x, eDim.y).max(Vector2i.zero);
 		}
 		if (overAllocated.y > 0) {
-			Vector2i v3 = nComp != null && sComp != null ? v2 : space;
-			wDim = new Vector2i(wDim.x, v3.y);
-			eDim = new Vector2i(eDim.x, v3.y);
+			Vector2i v3 = nComp != null && sComp != null ? overAllocated.divide(2) : overAllocated;
+			nDim = new Vector2i(nDim.x, wDim.y - v3.y).max(Vector2i.zero);
+			sDim = new Vector2i(sDim.x, eDim.y - v3.y).max(Vector2i.zero);
 		}
 
 		if (cComp != null) {
 			cDim = cDim.min(new Vector2i(dimension.x - wDim.x - eDim.x, dimension.y - nDim.y - sDim.y));
 		}
+
+		Vector2i v4 = new Vector2i(0, dimension.y - nDim.y - sDim.y);
+		wDim = wDim.max(v4).min(getMaximumSizeOf(wComp));
+		eDim = eDim.max(v4).min(getMaximumSizeOf(eComp));
+
+		Vector2i v5 = new Vector2i(dimension.x, 0);
+		nDim = nDim.max(v5).min(getMaximumSizeOf(nComp));
+		sDim = sDim.max(v5).min(getMaximumSizeOf(sComp));
 
 		// Centers the border components
 		int wOffset = (int) ((dimension.y - wDim.y) / 2D);

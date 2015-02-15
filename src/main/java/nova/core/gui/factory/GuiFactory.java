@@ -15,7 +15,6 @@ import nova.core.util.Registry;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector3i;
 
-// TODO Allow showing GUIs without registering, with plain Gui objects.
 public abstract class GuiFactory {
 
 	protected HashMap<String, Registry<Gui>> guiRegistry = new HashMap<>();
@@ -57,6 +56,8 @@ public abstract class GuiFactory {
 	 * @param identifier Unique identifier for the GUI
 	 * @param entity {@link Entity} which opened the GUI
 	 * @param position The block coordinate on which to open the GUI
+	 * 
+	 * @see #showGui(Gui, Entity, Vector3i)
 	 */
 	public void showGui(String modID, String identifier, Entity entity, Vector3i position) {
 
@@ -67,7 +68,21 @@ public abstract class GuiFactory {
 		if (!optGui.isPresent())
 			throw new NovaException(String.format("No GUI called %s registered for mod %s!", identifier, modID));
 		Gui gui = optGui.get();
-		activeGUI = optGui;
+		showGui(gui, entity, position);
+	}
+
+	/**
+	 * Shows the provided {@link Gui}. It will trigger the {@link BindEvent}, so
+	 * any changes to the instance can be done there.
+	 * 
+	 * @param gui GUI to to display
+	 * @param entity {@link Entity} which opened the GUI
+	 * @param position The block coordinate on which to open the GUI
+	 * 
+	 * @see #showGui(String, String, Entity, Vector3i)
+	 */
+	public void showGui(Gui gui, Entity entity, Vector3i position) {
+		activeGUI = Optional.of(gui);
 		bind(gui, entity, position);
 		gui.bind(entity, position);
 	}
@@ -109,10 +124,20 @@ public abstract class GuiFactory {
 
 	protected abstract void unbind(Gui gui);
 
+	/**
+	 * Returns the active NOVA {@link Gui}, if present.
+	 * 
+	 * @return NOVA {@link Gui}
+	 */
 	public Optional<Gui> getActiveGui() {
 		return activeGUI;
 	}
 
+	/**
+	 * Returns the active {@link GuiType}.
+	 * 
+	 * @return active {@link GuiType}
+	 */
 	public GuiType getActiveGuiType() {
 		return activeGUI.isPresent() ? GuiType.CUSTOM : GuiType.NATIVE;
 	}

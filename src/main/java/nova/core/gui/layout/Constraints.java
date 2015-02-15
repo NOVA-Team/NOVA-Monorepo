@@ -54,8 +54,7 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	 *         the given set of arguments
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Constraints<T>> T createConstraints(Class<T> clazz, Object... parameters) 
-		throws IllegalArgumentException {
+	public static <T extends Constraints<T>> T createConstraints(Class<T> clazz, Object... parameters) throws IllegalArgumentException {
 
 		for (Constructor<T> constructor : (Constructor<T>[]) clazz.getConstructors()) {
 			Class<?>[] parameterTypes = constructor.getParameterTypes();
@@ -66,7 +65,7 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 				return parameterTypes[index].isInstance(parameters[index]);
 			})) {
 				try {
-					return constructor.newInstance((Object[]) parameters);
+					return constructor.newInstance(parameters);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}

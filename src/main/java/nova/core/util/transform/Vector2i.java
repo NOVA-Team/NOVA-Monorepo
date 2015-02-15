@@ -33,12 +33,12 @@ public class Vector2i extends Vector2<Vector2i> {
 
 	@Override
 	public Vector2i multiply(Vector2 other) {
-		return new Vector2i(x * (int) other.xd(), y * (int) other.yd());
+		return new Vector2i((int) (x * other.xd()), (int) (y * other.yd()));
 	}
 
 	@Override
 	public Vector2i multiply(double other) {
-		return new Vector2i(x * (int) other, y * (int) other);
+		return new Vector2i((int) (x * other), (int) (y * other));
 	}
 
 	@Override
