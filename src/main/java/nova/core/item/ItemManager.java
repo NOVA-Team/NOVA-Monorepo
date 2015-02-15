@@ -1,8 +1,5 @@
 package nova.core.item;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
 import nova.core.block.Block;
 import nova.core.block.BlockManager;
 import nova.core.event.EventBus;
@@ -11,6 +8,9 @@ import nova.core.event.EventListenerHandle;
 import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.util.ReflectionUtils;
 import nova.core.util.Registry;
+
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class ItemManager {
 
@@ -31,7 +31,6 @@ public class ItemManager {
 
 	/**
 	 * Register a new item with custom constructor arguments.
-	 *
 	 * @param constructor The lambda expression to create a new constructor.
 	 * @return Dummy item
 	 */
@@ -47,8 +46,12 @@ public class ItemManager {
 		return factory.getDummy();
 	}
 
+	public ItemFactory getItemFactoryFromBlock(Block block) {
+		return registry.get(block.getID()).get();
+	}
+
 	public Item getItemFromBlock(Block block) {
-		return registry.get(block.getID()).get().getDummy();
+		return getItemFactoryFromBlock(block).getDummy();
 	}
 
 	public Optional<Block> getBlockFromItem(Item item) {
@@ -69,8 +72,9 @@ public class ItemManager {
 			ItemIDNotFoundEvent event = new ItemIDNotFoundEvent(name);
 			idNotFoundListeners.publish(event);
 
-			if (event.getRemappedFactory() != null)
+			if (event.getRemappedFactory() != null) {
 				registry.register(event.getRemappedFactory());
+			}
 		}
 
 		return registry.get(name);
