@@ -1,15 +1,19 @@
 package nova.wrapper.mc1710.launcher;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.core.event.EventManager;
 import nova.core.game.Game;
 import nova.internal.NovaLauncher;
 import nova.internal.tick.UpdateTicker;
@@ -25,13 +29,12 @@ import nova.wrapper.mc1710.network.netty.ChannelHandler;
 import nova.wrapper.mc1710.network.netty.MinecraftNetworkManager;
 import nova.wrapper.mc1710.network.netty.PacketHandler;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * The main Nova Minecraft Wrapper loader, using Minecraft Forge.
@@ -119,6 +122,16 @@ public class NovaMinecraft {
 		 */
 		UpdateTicker.ThreadTicker.instance = new UpdateTicker.ThreadTicker(20);
 		UpdateTicker.ThreadTicker.instance.start();
+	}
+
+	@Mod.EventHandler
+	public void serverStarting(FMLServerStartingEvent event) {
+		EventManager.instance.serverStarting.publish(null);
+	}
+
+	@Mod.EventHandler
+	public void serverStopping(FMLServerStoppingEvent event) {
+		EventManager.instance.serverStopping.publish(null);
 	}
 
 }
