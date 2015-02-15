@@ -8,7 +8,6 @@ import java.util.WeakHashMap;
 
 /**
  * The update ticker is responsible for ticking Update objects.
- *
  * @author Calclavia
  */
 public class UpdateTicker {
@@ -24,6 +23,8 @@ public class UpdateTicker {
 	 * The last update time.
 	 */
 	private long last;
+
+	private long deltaTime;
 
 	public UpdateTicker() {
 		last = System.currentTimeMillis();
@@ -43,7 +44,6 @@ public class UpdateTicker {
 
 	/**
 	 * Queues an event to be executed.
-	 *
 	 * @param func Event to be executed.
 	 */
 	public void preQueue(Runnable func) {
@@ -61,12 +61,16 @@ public class UpdateTicker {
 
 		long current = System.currentTimeMillis();
 		//The time in milliseconds between the last update and this one.
-		double deltaTime = (last - current) / 1000;
+		deltaTime = (last - current) / 1000;
 		synchronized (updaters) {
 			updaters.parallelStream().forEach(t -> t.update(deltaTime));
 		}
 		last = current;
 
+	}
+
+	public double getDeltaTime() {
+		return deltaTime;
 	}
 
 	/**
