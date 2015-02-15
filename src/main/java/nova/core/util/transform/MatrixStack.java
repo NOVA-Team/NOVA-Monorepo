@@ -2,7 +2,7 @@ package nova.core.util.transform;
 
 import java.util.Stack;
 
-public class MatrixStack implements Transform{
+public class MatrixStack implements Transform {
 
 	private final Stack<Matrix4x4> stack = new Stack<>();
 	private Matrix4x4 current = Matrix4x4.IDENTITY;
@@ -13,6 +13,7 @@ public class MatrixStack implements Transform{
 	public void loadIdentity() {
 		current = Matrix4x4.IDENTITY;
 	}
+
 	/**
 	 * Replaces current transformation matrix by an identity current.
 	 */
@@ -32,8 +33,9 @@ public class MatrixStack implements Transform{
 	 * Transforms current matrix with give matrix.
 	 * @param matrix to transform current matrix.
 	 */
-	public void transform(Matrix4x4 matrix) {
+	public MatrixStack transform(Matrix4x4 matrix) {
 		current = current.rightMultiply(matrix);
+		return this;
 	}
 
 	/**
@@ -42,16 +44,18 @@ public class MatrixStack implements Transform{
 	 * @param y translation.
 	 * @param z translation.
 	 */
-	public void translate(double x, double y, double z) {
+	public MatrixStack translate(double x, double y, double z) {
 		current = current.rightMultiply(MatrixHelper.translationMatrix(x, y, z));
+		return this;
 	}
 
 	/**
 	 * Translates current transformation matrix.
 	 * @param translateVector vector of translation.
 	 */
-	public void translate(Vector3<?> translateVector){
+	public MatrixStack translate(Vector3<?> translateVector) {
 		translate(translateVector.xd(), translateVector.yd(), translateVector.zd());
+		return this;
 	}
 
 	/**
@@ -59,8 +63,9 @@ public class MatrixStack implements Transform{
 	 * @param rotateVector Vector serving as rotation axis.
 	 * @param angle in radians.
 	 */
-	public void rotate(Vector3<?> rotateVector, double angle) {
+	public MatrixStack rotate(Vector3<?> rotateVector, double angle) {
 		current = current.rightMultiply(MatrixHelper.rotationMatrix(rotateVector, angle));
+		return this;
 	}
 
 	/**
@@ -69,35 +74,38 @@ public class MatrixStack implements Transform{
 	 * @param y scale.
 	 * @param z scale.
 	 */
-	public void scale(double x, double y, double z) {
+	public MatrixStack scale(double x, double y, double z) {
 		current = current.rightMultiply(MatrixHelper.scaleMatrix(x, y, z));
+		return this;
 	}
 
 	/**
 	 * Scales current transformation matrix.
 	 * @param scaleVector scale vector.
 	 */
-	public void scale(Vector3<?> scaleVector) {
+	public MatrixStack scale(Vector3<?> scaleVector) {
 		scale(scaleVector.xd(), scaleVector.yd(), scaleVector.zd());
+		return this;
 	}
 
 	/**
 	 * Pushes matrix onto the stack. Use it to save current state of MatrixStack in case of branching transformations.
 	 */
-	public void pushMatrix() {
+	public MatrixStack pushMatrix() {
 		stack.add(current);
+		return this;
 	}
 
 	/**
 	 * Pops matrix from stack. Use it to restore saved transformation.
 	 */
-	public void popMatrix() {
+	public MatrixStack popMatrix() {
 		current = stack.pop();
+		return this;
 	}
 
 	/**
 	 * Called to transform a vector.
-	 *
 	 * @param vec - The vector being transformed
 	 * @return The transformed vector by current matrix.
 	 */
