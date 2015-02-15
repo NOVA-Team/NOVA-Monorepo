@@ -118,7 +118,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	 * @param other Vector to check
 	 * @return Result of the check
 	 */
-	public boolean intersects(Vector3 other) {
+	public boolean intersects(Vector3<?> other) {
 		return other.xd() > this.min.x && other.xd() < this.max.x ? (other.yd() > this.min.y && other.yd() < this.max.y ? other.zd() > this.min.z && other.zd() < this.max.z : false) : false;
 	}
 
