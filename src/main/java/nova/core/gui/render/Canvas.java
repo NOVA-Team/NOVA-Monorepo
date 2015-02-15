@@ -1,4 +1,6 @@
-package nova.core.gui;
+package nova.core.gui.render;
+
+import nova.core.gui.Outline;
 
 public class Canvas extends Outline {
 
