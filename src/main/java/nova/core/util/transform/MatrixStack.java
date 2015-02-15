@@ -1,5 +1,7 @@
 package nova.core.util.transform;
 
+import nova.core.util.collection.Pair;
+
 import java.util.Stack;
 
 public class MatrixStack implements Transform {
@@ -56,6 +58,11 @@ public class MatrixStack implements Transform {
 	public MatrixStack translate(Vector3<?> translateVector) {
 		translate(translateVector.xd(), translateVector.yd(), translateVector.zd());
 		return this;
+	}
+
+	public MatrixStack rotate(Quaternion quaternion) {
+		Pair<Vector3d, Double> axisAnglePair = quaternion.toAngleAxis();
+		return rotate(axisAnglePair._1, axisAnglePair._2);
 	}
 
 	/**
