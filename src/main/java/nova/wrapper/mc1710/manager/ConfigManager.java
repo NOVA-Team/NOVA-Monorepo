@@ -9,26 +9,30 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * How to use the config Handler
- * <p/>
- * First, mark your field with @Config
- *
- * @author tgame14
- * @Config(key = "a key", category = "a category") public static double aValue = 3.765D;
- * <p/>
+ * <p>
+ * How to use the config Handler:
+ * </p><p>
+ * First, mark your field with &#64;Config
+ * </p>
+ * <code>&#64;Config(key = "a key", category = "a category") public static double aValue = 3.765D;</code>
+ * <p>
  * this is all you need to do for the field itself,
- * <p/>
+ * </p><p>
  * next: Just before you call queueSave for your Configuration file, call this method:
- * <p/>
+ * </p><p>
  * ConfigHandler.sync(Configuration configObject, String namespace);
- * <p/>
+ * </p><p>
  * now do remember, The namespace is your mods namespace. for the ICBM mod it would be "icbm", for
  * Resonant Engine, it would be "calclavia" yet if you want to split config files, you can do that by
  * separating namespaces: for example, ICBM Sentries separate Config file, and ICBM Explosives
  * separate config file
- * <p/>
+ * </p>
+ * <pre>
  * ConfigHandler.sync(icbmSentryConfigObject, "icbm.sentry");
  * ConfigHandler.sync(icbmExplosivesConfigObject, "icbm.explosion");
+ * </pre>
+ * 
+ * @author tgame14
  * @since 09/03/14
  */
 public final class ConfigManager {

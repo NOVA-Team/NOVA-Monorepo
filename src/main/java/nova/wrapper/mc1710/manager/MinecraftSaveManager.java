@@ -51,6 +51,8 @@ public class MinecraftSaveManager extends SaveManager {
 
 	/**
 	 * Saves NBT data in the world folder.
+	 * @param file File to save data to
+	 * @param data Data to save
 	 * @return True on success.
 	 */
 	public boolean saveFile(File file, NBTTagCompound data) {
@@ -96,6 +98,8 @@ public class MinecraftSaveManager extends SaveManager {
 
 	/**
 	 * Reads NBT data from the world folder.
+	 * @param saveDirectory Directory in which the file resides
+	 * @param filename Name of the file
 	 * @return The NBT data
 	 */
 	public NBTTagCompound loadFile(File saveDirectory, String filename) {

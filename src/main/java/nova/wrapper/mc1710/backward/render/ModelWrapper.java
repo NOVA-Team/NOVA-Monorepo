@@ -3,6 +3,7 @@ package nova.wrapper.mc1710.backward.render;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+import nova.core.block.BlockAccess;
 import nova.core.render.model.Model;
 import nova.core.util.transform.MatrixStack;
 import nova.core.util.transform.Vector3d;
@@ -15,6 +16,7 @@ public class ModelWrapper extends Model {
 
 	/**
 	 * Completes this rendering for a block.
+	 * @param blockAccess {@link BlockAccess}
 	 * @param translation Translation
 	 */
 	public void renderWorld(IBlockAccess blockAccess, Vector3d translation) {
