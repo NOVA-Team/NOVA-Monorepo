@@ -26,6 +26,8 @@ package nova.core.util.transform;
 
 import com.google.common.math.DoubleMath;
 import nova.core.util.collection.Pair;
+import nova.core.util.components.Storable;
+import nova.core.util.components.Stored;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -35,14 +37,12 @@ import java.math.RoundingMode;
  * All rotation operations operate in radians.
  * @author Calclavia, ChickenBones
  */
-public class Quaternion implements Transform {
+public class Quaternion implements Transform, Storable {
 
 	public static final Quaternion identity = new Quaternion(0, 0, 0, 1);
 
-	public final double x;
-	public final double y;
-	public final double z;
-	public final double w;
+	@Stored
+	public final double x, y, z, w;
 
 	public Quaternion(double x, double y, double z, double w) {
 		this.x = x;
@@ -62,7 +62,6 @@ public class Quaternion implements Transform {
 	 *
 	 * Pitch: 0 Degrees - Looking straight forward towards the horizon. 90 Degrees - Looking straight up
 	 * to the sky. -90 Degrees - Looking straight down to the void.
-	 *
 	 * @param euler input {@link Vector3}
 	 * @return resulting {@link Quaternion}
 	 * @author Calclavia

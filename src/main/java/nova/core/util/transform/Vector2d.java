@@ -1,17 +1,20 @@
 package nova.core.util.transform;
 
+import nova.core.util.components.Storable;
+import nova.core.util.components.Stored;
+
 /**
  * A double implementation of Vector2. Vector2 is an immutable quantity that holds an x, y and z value.
- *
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
-public class Vector2d extends Vector2<Vector2d> {
+public class Vector2d extends Vector2<Vector2d> implements Storable {
 	public static final Vector2d zero = new Vector2d(0, 0);
 	public static final Vector2d one = new Vector2d(1, 1);
 	public static final Vector2d xAxis = new Vector2d(1, 0);
 	public static final Vector2d yAxis = new Vector2d(0, 1);
 
+	@Stored
 	public final double x, y;
 
 	public Vector2d(double x, double y) {

@@ -1,6 +1,8 @@
 package nova.core.util.transform;
 
 import com.google.common.math.DoubleMath;
+import nova.core.util.components.Storable;
+import nova.core.util.components.Stored;
 
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
@@ -8,13 +10,14 @@ import com.google.common.math.DoubleMath;
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
-public class Vector3d extends Vector3<Vector3d> {
+public class Vector3d extends Vector3<Vector3d> implements Storable {
 	public static final Vector3d zero = new Vector3d(0, 0, 0);
 	public static final Vector3d one = new Vector3d(1, 1, 1);
 	public static final Vector3d xAxis = new Vector3d(1, 0, 0);
 	public static final Vector3d yAxis = new Vector3d(0, 1, 0);
 	public static final Vector3d zAxis = new Vector3d(0, 0, 1);
 
+	@Stored
 	public final double x, y, z;
 
 	public Vector3d(double x, double y, double z) {
