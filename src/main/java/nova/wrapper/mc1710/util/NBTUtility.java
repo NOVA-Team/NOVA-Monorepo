@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
+import nova.core.util.components.Storable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,20 +19,19 @@ import java.util.Set;
 
 /**
  * Utility that manages common NBT queueSave and load methods
- *
  * @author Calclavia
  */
 public class NBTUtility {
 
 	/**
 	 * Converts a Map of objects into NBT.
-	 *
 	 * @param map Map
 	 * @return NBT
 	 */
 	public static NBTTagCompound mapToNBT(Map<String, Object> map) {
-        if (map == null)
-            return null;
+		if (map == null) {
+			return null;
+		}
 
 		return mapToNBT(new NBTTagCompound(), map);
 	}
@@ -52,39 +52,41 @@ public class NBTUtility {
 
 	/**
 	 * Saves an unknown object to NBT
-	 *
 	 * @param tag - NBTTagCompound to queueSave the tag too
 	 * @param key - name to queueSave the object as
 	 * @param value - the actual object
 	 * @return the tag when done saving too i
 	 */
 	public static NBTTagCompound save(NBTTagCompound tag, String key, Object value) {
-		if (value instanceof Float) {
-			tag.setFloat(key, (Float) value);
+		if (value instanceof Map) {
+			NBTTagCompound innerTag = new NBTTagCompound();
+			Map<String, Object> map = (Map) value;
+			map.forEach((k, v) -> save(innerTag, k, v));
+			tag.setTag(key, innerTag);
+		} else if (value instanceof Storable) {
+			HashMap<String, Object> map = new HashMap<>();
+			((Storable) value).save(map);
+			save(tag, key, map);
+		} else if (value instanceof Float) {
+			tag.setFloat(key, (float) value);
 		} else if (value instanceof Double) {
-			tag.setDouble(key, (Double) value);
+			tag.setDouble(key, (double) value);
 		} else if (value instanceof Integer) {
-			tag.setInteger(key, (Integer) value);
+			tag.setInteger(key, (int) value);
 		} else if (value instanceof String) {
 			tag.setString(key, (String) value);
 		} else if (value instanceof Short) {
-			tag.setShort(key, (Short) value);
+			tag.setShort(key, (short) value);
 		} else if (value instanceof Byte) {
-			tag.setByte(key, (Byte) value);
+			tag.setByte(key, (byte) value);
 		} else if (value instanceof Long) {
-			tag.setLong(key, (Long) value);
+			tag.setLong(key, (long) value);
 		} else if (value instanceof Boolean) {
-			tag.setBoolean(key, (Boolean) value);
-		} else if (value instanceof NBTBase) {
-			tag.setTag(key, (NBTBase) value);
-		} else if (value instanceof String) {
-			tag.setString(key, (String) value);
+			tag.setBoolean(key, (boolean) value);
 		} else if (value instanceof byte[]) {
 			tag.setByteArray(key, (byte[]) value);
 		} else if (value instanceof int[]) {
 			tag.setIntArray(key, (int[]) value);
-		} else if (value instanceof NBTTagCompound) {
-			tag.setTag(key, (NBTTagCompound) value);
 		}
 
 		return tag;
@@ -92,7 +94,6 @@ public class NBTUtility {
 
 	/**
 	 * Reads an unknown object with a known name from NBT
-	 *
 	 * @param tag - tag to read the value from
 	 * @param key - name of the value
 	 * @return object or suggestionValue if nothing is found
@@ -120,7 +121,11 @@ public class NBTUtility {
 			} else if (saveTag instanceof NBTTagIntArray) {
 				return tag.getIntArray(key);
 			} else if (saveTag instanceof NBTTagCompound) {
-				return tag.getCompoundTag(key);
+				NBTTagCompound compoundTag = tag.getCompoundTag(key);
+				HashMap<String, Object> map = new HashMap<>();
+				Set<String> keys = compoundTag.func_150296_c();
+				keys.forEach(k -> map.put(k, load(compoundTag, k)));
+				return map;
 			}
 		}
 		return null;
