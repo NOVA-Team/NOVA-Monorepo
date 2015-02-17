@@ -1,7 +1,7 @@
 package nova.core.item;
 
 import nova.core.entity.Entity;
-import nova.core.inventory.Inventory;
+import nova.core.game.Game;
 import nova.core.player.Player;
 import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;
@@ -14,15 +14,86 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Item that can be stacked using {@link ItemStack}
- * @see ItemStack
- * @see Inventory
- */
 public abstract class Item implements Identifiable {
 
-	public int getMaxStackSize() {
+	/**
+	 * The amount of this item that is present.
+	 */
+	private int count = 1;
+
+	/**
+	 * Called to get the ItemFactory that refers to this Block class.
+	 * @return The {@link nova.core.item.ItemFactory} that refers to this Block class.
+	 */
+	public final ItemFactory factory() {
+		return Game.instance.get().itemManager.getItemFactory(this.getID()).get();
+	}
+
+	public int getMaxCount() {
 		return 64;
+	}
+
+	/**
+	 * @return Size of this stack size
+	 */
+	public int count() {
+		return count;
+	}
+
+	/**
+	 * Sets new size of this ItemStack
+	 * @param size New size
+	 */
+	public Item setCount(int size) {
+		count = Math.max(Math.min(getMaxCount(), size), 1);
+		return this;
+	}
+
+	/**
+	 * Adds size to this ItemStack
+	 * @param size Size to add
+	 * @return Size added
+	 */
+	public int addCount(int size) {
+		int original = count();
+		setCount(original + size);
+		return count - original;
+	}
+
+	@Override
+	public Item clone() {
+		return factory().makeItem(factory().saveItem(this));
+	}
+
+	/**
+	 * Returns new ItemStack of the same {@link Item} with specified size
+	 * @param amount Size of cloned ItemStack
+	 * @return new ItemStack
+	 */
+	public Item withAmount(int amount) {
+		Item cloned = clone();
+		cloned.setCount(amount);
+		return cloned;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || !(o instanceof Item)) {
+			return false;
+		}
+		Item item = (Item) o;
+		//Makes sure the stored data and stacksize are the same in items.
+		return sameItemID(item) && factory().saveItem(this).equals(item.factory().saveItem(item)) && item.count == count;
+	}
+
+	/**
+	 * Check if this ItemStack is of type of another ItemStack. Will compare the
+	 * {@link Item#getID()}.
+	 * @param item The another Item
+	 * @return Result
+	 */
+	public boolean sameItemID(Item item) {
+		return getID().equals(item.getID());
 	}
 
 	/**

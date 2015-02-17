@@ -58,6 +58,10 @@ public class ItemManager {
 		return blockManager.get().getBlock(item.getID());
 	}
 
+	/**
+	 * Using this method will only get the dummy item. Use ItemFactory instead!
+	 */
+	@Deprecated
 	public Optional<Item> getItem(String name) {
 		Optional<ItemFactory> factory = getItemFactory(name);
 		if (factory.isPresent()) {

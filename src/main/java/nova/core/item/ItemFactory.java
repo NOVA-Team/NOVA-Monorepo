@@ -18,8 +18,15 @@ public class ItemFactory extends Factory<Item> implements Identifiable {
 	}
 
 	/**
+	 * Makes a new item with no data
+	 * @return Resulting item
+	 */
+	public Item makeItem() {
+		return makeItem(new HashMap<>());
+	}
+
+	/**
 	 * Creates a new instance of the Item.
-	 *
 	 * @param data Item data, used if item is {@link Storable}
 	 * @return Resulting item
 	 */
