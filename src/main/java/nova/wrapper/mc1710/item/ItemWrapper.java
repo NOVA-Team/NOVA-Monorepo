@@ -1,7 +1,13 @@
 package nova.wrapper.mc1710.item;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 import nova.core.item.ItemFactory;
+
+import java.util.List;
 
 /**
  * @author Calclavia
@@ -19,6 +25,31 @@ public class ItemWrapper extends net.minecraft.item.Item implements ItemWrapperM
 	@Override
 	public ItemFactory getItemFactory() {
 		return itemFactory;
+	}
+
+	@Override
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
+		ItemWrapperMethods.super.addInformation(itemStack, player, list, p_77624_4_);
+	}
+
+	@Override
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+		return ItemWrapperMethods.super.onItemUse(itemStack, player, world, x, y, z, side, hitX, hitY, hitZ);
+	}
+
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+		return ItemWrapperMethods.super.onItemRightClick(itemStack, world, player);
+	}
+
+	@Override
+	public IIcon getIconFromDamage(int p_77617_1_) {
+		return ItemWrapperMethods.super.getIconFromDamage(p_77617_1_);
+	}
+
+	@Override
+	public IIcon getIcon(ItemStack itemStack, int pass) {
+		return ItemWrapperMethods.super.getIcon(itemStack, pass);
 	}
 
 	@Override
