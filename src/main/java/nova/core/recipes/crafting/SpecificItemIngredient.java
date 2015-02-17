@@ -2,7 +2,7 @@ package nova.core.recipes.crafting;
 
 import nova.core.game.Game;
 import nova.core.item.Item;
-import nova.core.item.ItemStack;
+import nova.core.item.ItemFactory;
 import nova.core.util.exception.NovaException;
 
 import java.util.Collection;
@@ -11,7 +11,6 @@ import java.util.Optional;
 
 /**
  * Specifies an ingredient identifying a single kind of item.
- *
  * @author Stan Hebben
  */
 public class SpecificItemIngredient implements ItemIngredient {
@@ -37,12 +36,12 @@ public class SpecificItemIngredient implements ItemIngredient {
 
 	@Override
 	public boolean isSubsetOf(ItemIngredient ingredient) {
-		return ingredient.matches(new ItemStack(getItem(itemId), 1));
+		return ingredient.matches(getItem(itemId));
 	}
 
 	@Override
-	public boolean matches(ItemStack item) {
-		return item.getItem().getID().equals(itemId);
+	public boolean matches(Item item) {
+		return item.getID().equals(itemId);
 	}
 
 	@Override
@@ -51,7 +50,7 @@ public class SpecificItemIngredient implements ItemIngredient {
 	}
 
 	@Override
-	public ItemStack consumeOnCrafting(ItemStack original, CraftingGrid craftingGrid) {
+	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
 		return original;
 	}
 
@@ -80,11 +79,12 @@ public class SpecificItemIngredient implements ItemIngredient {
 	}
 
 	private Item getItem(String itemId) {
-		Optional<Item> item = Game.instance.get().itemManager.getItem(itemId);
-		if (!item.isPresent()) {
-			throw new NovaException("Missing item: " + itemId);
+		Optional<ItemFactory> itemFactory = Game.instance.get().itemManager.getItemFactory(itemId);
+
+		if (itemFactory.isPresent()) {
+			return itemFactory.get().makeItem();
 		}
 
-		return item.get();
+		throw new NovaException("Missing item: " + itemId);
 	}
 }

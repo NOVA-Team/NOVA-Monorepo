@@ -1,7 +1,7 @@
 package nova.core.player;
 
 import nova.core.inventory.Inventory;
-import nova.core.item.ItemStack;
+import nova.core.item.Item;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public interface InventoryPlayer extends Inventory {
 	/**
 	 * @return Currently held item instance
 	 */
-	default Optional<ItemStack> getHeldItem() {
+	default Optional<Item> getHeldItem() {
 		return get(getHeldSlot());
 	}
 }

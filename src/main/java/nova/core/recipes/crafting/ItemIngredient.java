@@ -1,7 +1,6 @@
 package nova.core.recipes.crafting;
 
 import nova.core.item.Item;
-import nova.core.item.ItemStack;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -65,7 +64,7 @@ public interface ItemIngredient {
 	 * @param item Item to check
 	 * @return Whether the item matches or not
 	 */
-	public boolean matches(ItemStack item);
+	public boolean matches(Item item);
 
 	/**
 	 * Returns the ingredient tag. Ingredients can be tagged to make them easy to read from recipe functions.
@@ -80,7 +79,7 @@ public interface ItemIngredient {
 	 *
 	 * @param original Ingredient
 	 * @param craftingGrid {@link CraftingGrid} used
-	 * @return Resulting {@link ItemStack}
+	 * @return Resulting {@link Item}
 	 */
-	public ItemStack consumeOnCrafting(ItemStack original, CraftingGrid craftingGrid);
+	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid);
 }

@@ -2,8 +2,8 @@ package nova.core.block;
 
 import nova.core.entity.Entity;
 import nova.core.game.Game;
+import nova.core.item.Item;
 import nova.core.item.ItemFactory;
-import nova.core.item.ItemStack;
 import nova.core.render.model.Model;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
@@ -15,8 +15,8 @@ import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
 import nova.internal.dummy.BlockAccessDummy;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -93,12 +93,10 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called to get the drops of this block.
-	 * @return A collection of {@link nova.core.item.ItemStack}s that this block drops.
+	 * @return A collection of {@link nova.core.item.Item}s that this block drops.
 	 */
-	public Collection<ItemStack> getDrops() {
-		ArrayList<ItemStack> list = new ArrayList<>();
-		list.add(new ItemStack(Game.instance.get().itemManager.getItemFromBlock(this))); // -100 style points.
-		return list;
+	public Collection<Item> getDrops() {
+		return Collections.singleton(Game.instance.get().itemManager.getItemFromBlock(this));
 	}
 
 	/**
