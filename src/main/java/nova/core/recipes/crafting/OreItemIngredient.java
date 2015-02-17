@@ -2,7 +2,6 @@ package nova.core.recipes.crafting;
 
 import nova.core.game.Game;
 import nova.core.item.Item;
-import nova.core.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by Stan on 3/02/2015.
+ * @author Stan
+ * @since 3/02/2015.
  */
 public class OreItemIngredient implements ItemIngredient {
 	private final String name;
@@ -45,8 +45,8 @@ public class OreItemIngredient implements ItemIngredient {
 	}
 
 	@Override
-	public boolean matches(ItemStack item) {
-		return Game.instance.get().itemDictionary.get(name).contains(item.getItem().getID());
+	public boolean matches(Item item) {
+		return Game.instance.get().itemDictionary.get(name).contains(item.getID());
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class OreItemIngredient implements ItemIngredient {
 	}
 
 	@Override
-	public ItemStack consumeOnCrafting(ItemStack original, CraftingGrid craftingGrid) {
+	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
 		return null;
 	}
 }

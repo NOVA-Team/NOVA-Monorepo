@@ -1,6 +1,6 @@
 package nova.core.recipes.crafting;
 
-import nova.core.item.ItemStack;
+import nova.core.item.Item;
 import nova.core.recipes.Recipe;
 
 import java.util.Collection;
@@ -28,14 +28,14 @@ public interface CraftingRecipe extends Recipe {
 	 * @param craftingGrid crafting grid
 	 * @return crafting result, empty if the recipe doesn't match
 	 */
-	public Optional<ItemStack> getCraftingResult(CraftingGrid craftingGrid);
+	public Optional<Item> getCraftingResult(CraftingGrid craftingGrid);
 
 	/**
 	 * Gets a nominal (example) output for this recipe. Used in recipe display.
 	 *
 	 * @return example output
 	 */
-	public Optional<ItemStack> getNominalOutput();
+	public Optional<Item> getNominalOutput();
 
 	/**
 	 * Consumes items for the crafting of a single item. Removes items and

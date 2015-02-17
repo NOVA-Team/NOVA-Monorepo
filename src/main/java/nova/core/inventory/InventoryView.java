@@ -1,6 +1,6 @@
 package nova.core.inventory;
 
-import nova.core.item.ItemStack;
+import nova.core.item.Item;
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class InventoryView implements Inventory {
 	}
 
 	@Override
-	public Optional<ItemStack> get(int slot) {
+	public Optional<Item> get(int slot) {
 		if (slot < 0 || slot >= slots.length) {
 			return null;
 		} else {
@@ -32,7 +32,7 @@ public class InventoryView implements Inventory {
 	}
 
 	@Override
-	public boolean set(int slot, ItemStack stack) {
+	public boolean set(int slot, Item stack) {
 		if (slot < 0 || slot >= slots.length) {
 			return false;
 		} else {

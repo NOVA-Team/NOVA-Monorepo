@@ -25,6 +25,7 @@ public class ItemManager {
 		this.blockManager = blockManager;
 	}
 
+	//TODO: Return an item factory
 	public Item registerItem(Class<? extends Item> item) {
 		return registerItem(() -> ReflectionUtils.newInstance(item));
 	}

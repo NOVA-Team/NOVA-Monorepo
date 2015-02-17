@@ -2,7 +2,7 @@ package nova.core.recipes.crafting;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import nova.core.item.ItemStack;
+import nova.core.item.Item;
 import nova.core.recipes.RecipeAddedEvent;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.RecipeRemovedEvent;
@@ -63,12 +63,12 @@ public class CraftingRecipeManager {
 			}
 		}
 
-		Optional<ItemStack> firstItem = grid.getFirstNonEmptyItem();
+		Optional<Item> firstItem = grid.getFirstNonEmptyItem();
 		if (!firstItem.isPresent()) {
 			return Optional.empty();
 		}
 
-		String firstItemId = firstItem.get().getItem().getID();
+		String firstItemId = firstItem.get().getID();
 		if (!staticRecipes.containsKey(firstItemId)) {
 			return Optional.empty();
 		}

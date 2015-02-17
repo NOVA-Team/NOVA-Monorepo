@@ -1,16 +1,17 @@
 package nova.internal.dummy;
 
-import nova.core.item.ItemStack;
+import nova.core.item.Item;
 import nova.core.player.Player;
 import nova.core.recipes.crafting.CraftingGrid;
 
 import java.util.Optional;
 
 /**
- * Created by Stan on 3/02/2015.
+ * @author Stan
+ * @since 3/02/2015.
  */
 public class CraftingGridDummy implements CraftingGrid {
-	public static final CraftingGrid INSTANCE = new CraftingGridDummy();
+	public static final CraftingGrid instance = new CraftingGridDummy();
 
 	private CraftingGridDummy() {
 	}
@@ -26,12 +27,12 @@ public class CraftingGridDummy implements CraftingGrid {
 	}
 
 	@Override
-	public Optional<ItemStack> getStack(int slot) {
+	public Optional<Item> getStack(int slot) {
 		return Optional.empty();
 	}
 
 	@Override
-	public boolean setStack(int slot, Optional<ItemStack> itemStack) {
+	public boolean setStack(int slot, Optional<Item> Item) {
 		return false;
 	}
 
@@ -46,17 +47,17 @@ public class CraftingGridDummy implements CraftingGrid {
 	}
 
 	@Override
-	public Optional<ItemStack> getStack(int x, int y) {
+	public Optional<Item> getStack(int x, int y) {
 		return Optional.empty();
 	}
 
 	@Override
-	public boolean setStack(int x, int y, Optional<ItemStack> itemStack) {
+	public boolean setStack(int x, int y, Optional<Item> Item) {
 		return false;
 	}
 
 	@Override
-	public void giveBack(ItemStack itemStack) {
+	public void giveBack(Item Item) {
 
 	}
 

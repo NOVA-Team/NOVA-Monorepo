@@ -1,6 +1,6 @@
 package nova.core.recipes.crafting;
 
-import nova.core.item.ItemStack;
+import nova.core.item.Item;
 import nova.core.player.Player;
 import nova.core.util.transform.Vector2i;
 
@@ -13,8 +13,8 @@ import java.util.Optional;
  * @author Stan Hebben
  */
 public interface CraftingGrid {
-	public static final String TOPOLOGY_SQUARE = "square";
-	public static final String TYPE_CRAFTING = "crafting";
+	public static final String topologySquare = "square";
+	public static final String typeCrafting = "crafting";
 
 	/**
 	 * Represents the player that is currently using this crafting grid. Can be null.
@@ -37,7 +37,7 @@ public interface CraftingGrid {
 	 * @param slot slot index
 	 * @return item stack in the given slot
 	 */
-	public Optional<ItemStack> getStack(int slot);
+	public Optional<Item> getStack(int slot);
 
 	/**
 	 * Modifies the stack in the given slot. If the modification is not possible, this method returns null. If modification
@@ -48,10 +48,10 @@ public interface CraftingGrid {
 	 * a corresponding slot.
 	 *
 	 * @param slot slot to be modified
-	 * @param itemStack item stack to be set
+	 * @param Item item stack to be set
 	 * @return true if modification was successful, false otherwise
 	 */
-	public boolean setStack(int slot, Optional<ItemStack> itemStack);
+	public boolean setStack(int slot, Optional<Item> Item);
 
 	/**
 	 * Gets the width of the crafting grid. For a non-square grid,, this should return the highest acceptable x-value + 1.
@@ -74,25 +74,25 @@ public interface CraftingGrid {
 	 * @param y y position
 	 * @return stack at the given position
 	 */
-	public Optional<ItemStack> getStack(int x, int y);
+	public Optional<Item> getStack(int x, int y);
 
 	/**
 	 * Sets the stack at the given (x, y) position.
 	 *
 	 * @param x x position
 	 * @param y y posittion
-	 * @param itemStack stack to be set
+	 * @param Item stack to be set
 	 * @return true if the modification is successful, false otherwise
 	 */
-	public boolean setStack(int x, int y, Optional<ItemStack> itemStack);
+	public boolean setStack(int x, int y, Optional<Item> Item);
 
 	/**
 	 * Gives back a certain item. In the case of a player's crafting grid, this would typically go back to the player's
 	 * inventory. Machines may implement this method differently.
 	 *
-	 * @param itemStack The {@link ItemStack}
+	 * @param Item The {@link Item}
 	 */
-	public void giveBack(ItemStack itemStack);
+	public void giveBack(Item Item);
 
 	/**
 	 * Gets the topology of the crafting grid. For a square grid, this should be CraftingGrid.TOPOLOGY_SQUARE. Other
@@ -131,9 +131,9 @@ public interface CraftingGrid {
 	 *
 	 * @return first non-empty item
 	 */
-	public default Optional<ItemStack> getFirstNonEmptyItem() {
+	public default Optional<Item> getFirstNonEmptyItem() {
 		for (int i = 0; i < size(); i++) {
-			Optional<ItemStack> stackInSlot = getStack(i);
+			Optional<Item> stackInSlot = getStack(i);
 			if (stackInSlot.isPresent()) {
 				return stackInSlot;
 			}
