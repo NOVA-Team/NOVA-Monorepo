@@ -13,7 +13,7 @@ public class ItemWrapper extends net.minecraft.item.Item implements ItemWrapperM
 	public ItemWrapper(ItemFactory item) {
 		this.itemFactory = item;
 		setUnlocalizedName(item.getID());
-		setMaxStackSize(item.getDummy().getMaxStackSize());
+		setMaxStackSize(item.getDummy().getMaxCount());
 	}
 
 	@Override

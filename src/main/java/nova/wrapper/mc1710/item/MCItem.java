@@ -6,7 +6,8 @@ import nova.core.item.Item;
 import nova.core.util.components.Storable;
 
 /**
- * Created by Stan on 3/02/2015.
+ * @author Stan
+ * @since 3/02/2015.
  */
 public class MCItem extends Item implements Storable {
     private final net.minecraft.item.Item item;

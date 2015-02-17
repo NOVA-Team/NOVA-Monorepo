@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
+import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.util.transform.Vector3d;
@@ -26,15 +27,20 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	ItemFactory getItemFactory();
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
-		list.addAll(getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).getTooltips(Optional.of(new BWEntityPlayer(player))));
+		list.addAll(getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTooltips(Optional.of(new BWEntityPlayer(player))));
 	}
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		return getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).onUse(new BWEntityPlayer(player), new BWWorld(world), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
+		Item item = getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize);
+		boolean b = item.onUse(new BWEntityPlayer(player), new BWWorld(world), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
+		ItemWrapperRegistry.instance.updateMCItemStack(itemStack, item);
+		return b;
 	}
 
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).onRightClick(new BWEntityPlayer(player));
+		Item item = getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize);
+		item.onRightClick(new BWEntityPlayer(player));
+		ItemWrapperRegistry.instance.updateMCItemStack(itemStack, item);
 		return itemStack;
 	}
 
@@ -45,9 +51,9 @@ public interface ItemWrapperMethods extends IItemRenderer {
 		return null;
 	}
 
-	default IIcon getIcon(ItemStack stack, int pass) {
-		if (getItemFactory().makeItem(NBTUtility.nbtToMap(stack.getTagCompound())).getTexture().isPresent()) {
-			return RenderUtility.instance.getIcon(getItemFactory().makeItem(NBTUtility.nbtToMap(stack.getTagCompound())).getTexture().get());
+	default IIcon getIcon(ItemStack itemStack, int pass) {
+		if (getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTexture().isPresent()) {
+			return RenderUtility.instance.getIcon(getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTexture().get());
 		}
 		return null;
 	}
@@ -61,7 +67,6 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default void renderItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data) {
-		getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).onRender(type.ordinal(), data);
+		getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).onRender(type.ordinal(), data);
 	}
-
 }
