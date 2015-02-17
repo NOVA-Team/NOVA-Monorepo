@@ -1,6 +1,5 @@
 package nova.core.gui.render;
 
-import java.awt.Color;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
@@ -69,7 +68,7 @@ public class FormattedText implements Iterable<FormattedText> {
 		public boolean underline;
 		public boolean strikethrough;
 
-		public Color color = Color.white;
+		public int color = 0xFFFFFF;
 
 		public TextFormat() {
 
@@ -94,7 +93,7 @@ public class FormattedText implements Iterable<FormattedText> {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + (bold ? 1231 : 1237);
-			result = prime * result + ((color == null) ? 0 : color.hashCode());
+			result = prime * result + color;
 			result = prime * result + (italic ? 1231 : 1237);
 			result = prime * result + (shadow ? 1231 : 1237);
 			result = prime * result + (strikethrough ? 1231 : 1237);
@@ -113,7 +112,12 @@ public class FormattedText implements Iterable<FormattedText> {
 
 			TextFormat other = (TextFormat) obj;
 
-			return this.bold == other.bold && this.italic == other.italic && this.shadow == other.shadow && this.strikethrough == other.strikethrough && this.underline == other.underline && this.color.equals(other.color);
+			return this.bold == other.bold 
+				&& this.italic == other.italic 
+				&& this.shadow == other.shadow 
+				&& this.strikethrough == other.strikethrough 
+				&& this.underline == other.underline 
+				&& this.color == other.color;
 		}
 	}
 

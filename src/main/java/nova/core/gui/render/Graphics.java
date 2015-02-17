@@ -1,18 +1,19 @@
 package nova.core.gui.render;
 
-import nova.core.render.model.Model;
 import nova.core.util.transform.Vector2i;
 
-public class Graphics extends Model implements TextRenderer {
+public class Graphics implements TextRenderer {
 
-	private final Model model;
 	private final TextRenderer textRenderer;
+	private final Canvas canvas;
 
-	private int zIndex = 0;
-
-	public Graphics(Model model, TextRenderer textRenderer) {
-		this.model = model;
+	public Graphics(Canvas canvas, TextRenderer textRenderer) {
 		this.textRenderer = textRenderer;
+		this.canvas = canvas;
+	}
+
+	public void drawRect(int x, int y, int width, int height, Color color) {
+
 	}
 
 	// TODO Add a bunch of 2D drawing methods for textures, for everything. Help
@@ -58,6 +59,6 @@ public class Graphics extends Model implements TextRenderer {
 	@Override
 	public void setZIndex(int zIndex) {
 		textRenderer.setZIndex(zIndex);
-		this.zIndex = zIndex;
+		canvas.setZIndex(zIndex);
 	}
 }

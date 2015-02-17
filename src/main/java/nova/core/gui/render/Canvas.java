@@ -1,13 +1,31 @@
 package nova.core.gui.render;
 
-import nova.core.gui.Outline;
+import nova.core.util.transform.Vector2i;
 
-public class Canvas extends Outline {
+/**
+ * A canvas is an object that can be drawn onto in 2D space. The content might
+ * be back buffered, depends on the context. Use {@link #isBuffered()} to check.
+ * A {@link Graphics} object can be used to draw onto a canvas.
+ * 
+ * @author Vic Nightfall
+ */
+public interface Canvas {
 
-	// TODO Not sure how this is going to get structured yet, it's basically an
-	// icon that can be drawn onto.
-	public Canvas(int x, int y, int width, int height) {
-		super(x, y, width, height);
-	}
+	public Vector2i getDimension();
 
+	public void setZIndex(int zIndex);
+
+	public void getZIndex();
+
+	public void setColor(int color);
+
+	public void startDrawing();
+
+	public void addVertex(int x, int y);
+
+	public void addVertexWithUV(int x, int y, int u, int v);
+
+	public void draw();
+
+	public boolean isBuffered();
 }
