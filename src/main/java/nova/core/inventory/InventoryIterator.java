@@ -1,14 +1,14 @@
 package nova.core.inventory;
 
-import nova.core.item.ItemStack;
+import nova.core.item.Item;
 
 import java.util.Iterator;
 import java.util.Optional;
 
-class InventoryIterator implements Iterator<ItemStack> {
+class InventoryIterator implements Iterator<Item> {
 	private final Inventory inv;
 	private int i;
-	private ItemStack next = null;
+	private Item next = null;
 
 	public InventoryIterator(Inventory inv) {
 		this.inv = inv;
@@ -17,7 +17,7 @@ class InventoryIterator implements Iterator<ItemStack> {
 
 	private void findNext() {
 		while (i < inv.size()) {
-			Optional<ItemStack> o = inv.get(i++);
+			Optional<Item> o = inv.get(i++);
 			if (o.isPresent()) {
 				next = o.get();
 			}
@@ -30,8 +30,8 @@ class InventoryIterator implements Iterator<ItemStack> {
 	}
 
 	@Override
-	public ItemStack next() {
-		ItemStack current = next;
+	public Item next() {
+		Item current = next;
 		findNext();
 		return current;
 	}

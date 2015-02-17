@@ -83,7 +83,7 @@ public abstract class Item implements Identifiable {
 		}
 		Item item = (Item) o;
 		//Makes sure the stored data and stacksize are the same in items.
-		return sameItemID(item) && factory().saveItem(this).equals(item.factory().saveItem(item)) && item.count == count;
+		return sameItemType(item) && factory().saveItem(this).equals(item.factory().saveItem(item)) && item.count == count;
 	}
 
 	/**
@@ -92,7 +92,7 @@ public abstract class Item implements Identifiable {
 	 * @param item The another Item
 	 * @return Result
 	 */
-	public boolean sameItemID(Item item) {
+	public boolean sameItemType(Item item) {
 		return getID().equals(item.getID());
 	}
 

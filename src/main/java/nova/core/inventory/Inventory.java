@@ -1,6 +1,6 @@
 package nova.core.inventory;
 
-import nova.core.item.ItemStack;
+import nova.core.item.Item;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,22 +12,22 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * This interface provides inventory that can hold {@link ItemStack ItemStacks}
+ * This interface provides inventory that can hold {@link Item Items}
  *
  * @see InventorySimple
  * @see InventoryView
  */
-public interface Inventory extends Iterable<ItemStack> {
-	Optional<ItemStack> get(int slot);
+public interface Inventory extends Iterable<Item> {
+	Optional<Item> get(int slot);
 
 	/**
-	 * Sets {@link ItemStack} in slot
+	 * Sets {@link Item} in slot
 	 *
 	 * @param slot Slot number
 	 * @param stack Stack to insert
 	 * @return Whether succeed
 	 */
-	boolean set(int slot, ItemStack stack);
+	boolean set(int slot, Item stack);
 
 	/**
 	 * Gets count of slots
@@ -45,16 +45,16 @@ public interface Inventory extends Iterable<ItemStack> {
 	 * Adds items to this inventory at specified slot
 	 *
 	 * @param slot Slot to add items into
-	 * @param stack {@link ItemStack} containing items
+	 * @param stack {@link Item} containing items
 	 * @return Amount of items left(did not fit inside this inventory)
 	 */
-	default int add(int slot, ItemStack stack) {
-		Optional<ItemStack> o = get(slot);
+	default int add(int slot, Item stack) {
+		Optional<Item> o = get(slot);
 		if (o.isPresent()) {
-			if (stack.sameStackType(o.get())) {
-				return stack.getStackSize() - o.get().addStackSize(stack.getStackSize());
+			if (stack.sameItemType(o.get())) {
+				return stack.count() - o.get().addCount(stack.count());
 			} else {
-				return stack.getStackSize();
+				return stack.count();
 			}
 		} else {
 			set(slot, stack);
@@ -65,16 +65,16 @@ public interface Inventory extends Iterable<ItemStack> {
 	/**
 	 * Adds items to this inventory
 	 *
-	 * @param stack {@link ItemStack} containing items
+	 * @param stack {@link Item} containing items
 	 * @return Amount of items left(did not fit inside this inventory)
 	 */
-	default int add(ItemStack stack) {
-		int itemsLeft = stack.getStackSize();
+	default int add(Item stack) {
+		int itemsLeft = stack.count();
 		for (int i = 0; i < size(); i++) {
 			itemsLeft = add(i, stack.withAmount(itemsLeft));
 		}
 
-		if (itemsLeft != stack.getStackSize()) {
+		if (itemsLeft != stack.count()) {
 			markChanged();
 		}
 
@@ -82,32 +82,32 @@ public interface Inventory extends Iterable<ItemStack> {
 	}
 
 	/**
-	 * Represents this inventory as list of {@link ItemStack ItemStacks}
+	 * Represents this inventory as list of {@link Item Items}
 	 *
-	 * @return This inventory as list of {@link ItemStack ItemStacks}
+	 * @return This inventory as list of {@link Item Items}
 	 */
-	default List<ItemStack> toList() {
-		ArrayList<ItemStack> list = new ArrayList<>();
-		for (ItemStack i : this) {
+	default List<Item> toList() {
+		ArrayList<Item> list = new ArrayList<>();
+		for (Item i : this) {
 			list.add(i);
 		}
 		return list;
 	}
 
-	default Iterator<ItemStack> iterator() {
+	default Iterator<Item> iterator() {
 		return new InventoryIterator(this);
 	}
 
-	default Spliterator<ItemStack> spliterator() {
+	default Spliterator<Item> spliterator() {
 		return Spliterators.spliterator(iterator(), size(), Spliterator.NONNULL | Spliterator.ORDERED | Spliterator.SORTED);
 	}
 
 	/**
-	 * Represents this inventory as {@link ItemStack} {@link Stream}
+	 * Represents this inventory as {@link Item} {@link Stream}
 	 *
-	 * @return This inventory as {@link ItemStack} {@link Stream}
+	 * @return This inventory as {@link Item} {@link Stream}
 	 */
-	default Stream<ItemStack> stream() {
+	default Stream<Item> stream() {
 		return StreamSupport.stream(spliterator(), false);
 	}
 }
