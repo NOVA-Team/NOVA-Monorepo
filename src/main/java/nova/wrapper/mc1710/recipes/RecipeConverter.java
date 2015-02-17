@@ -1,10 +1,5 @@
 package nova.wrapper.mc1710.recipes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
@@ -12,9 +7,19 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import nova.core.item.Item;
-import nova.core.recipes.crafting.*;
+import nova.core.recipes.crafting.CraftingRecipe;
+import nova.core.recipes.crafting.ItemIngredient;
+import nova.core.recipes.crafting.OreItemIngredient;
+import nova.core.recipes.crafting.ShapedCraftingRecipe;
+import nova.core.recipes.crafting.ShapelessCraftingRecipe;
+import nova.core.recipes.crafting.SpecificItemIngredient;
 import nova.wrapper.mc1710.util.ReflectionUtil;
 import nova.wrapper.mc1710.util.WrapUtility;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Wraps Minecraft crafting recipes to NOVA crafting recipes and vice versa.
@@ -29,11 +34,12 @@ import nova.wrapper.mc1710.util.WrapUtility;
  * @author Stan Hebben
  */
 public class RecipeConverter {
-	private RecipeConverter() {}
-	
 	public static final int TYPE_ADVANCED = 0;
 	public static final int TYPE_ORE = 1;
 	public static final int TYPE_BASIC = 2;
+
+	private RecipeConverter() {
+	}
 	
 	private static int getIngredientType(ItemIngredient ingredient) {
         if (ingredient instanceof SpecificItemIngredient) {
@@ -59,8 +65,8 @@ public class RecipeConverter {
         if (ingredient == null) {
             return null;
         } else if (ingredient instanceof ItemStack) {
-            return new SpecificItemIngredient(WrapUtility.unwrapItemStack((ItemStack) ingredient).get().getItem().getID());
-        } else if (ingredient instanceof String) {
+			return new SpecificItemIngredient(WrapUtility.unwrapItemStack((ItemStack) ingredient).get().getID());
+		} else if (ingredient instanceof String) {
             return new OreItemIngredient((String) ingredient);
         } else if (ingredient instanceof List) {
             String oreDictEntry = findOreDictEntryFor((List) ingredient);
@@ -84,8 +90,8 @@ public class RecipeConverter {
 
     private static ItemStack wrapSpecific(SpecificItemIngredient ingredient) {
         for (Item item : ingredient.getExampleItems().get()) {
-            return WrapUtility.wrapItemStack(Optional.of(new nova.core.item.ItemStack(item, 1)));
-        }
+			return WrapUtility.wrapItemStack(Optional.of(item.factory().makeItem()));
+		}
 
         throw new AssertionError("this can't be!");
     }
@@ -184,8 +190,8 @@ public class RecipeConverter {
 	
 	public static CraftingRecipe toNova(IRecipe recipe) {
         net.minecraft.item.ItemStack recipeOutput = recipe.getRecipeOutput();
-		nova.core.item.ItemStack output;
-        if (recipeOutput == null)
+		nova.core.item.Item output;
+		if (recipeOutput == null)
             output = null;
         else
             output = WrapUtility.unwrapItemStack(recipeOutput).get();

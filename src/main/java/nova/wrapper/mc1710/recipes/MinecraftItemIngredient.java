@@ -8,6 +8,6 @@ import nova.wrapper.mc1710.util.WrapUtility;
  */
 public class MinecraftItemIngredient extends SpecificItemIngredient {
     public MinecraftItemIngredient(net.minecraft.item.ItemStack itemStack) {
-        super(WrapUtility.unwrapItemStack(itemStack).get().getItem().getID());
-    }
+		super(WrapUtility.unwrapItemStack(itemStack).get().getID());
+	}
 }

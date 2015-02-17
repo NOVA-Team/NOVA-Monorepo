@@ -2,7 +2,7 @@ package nova.wrapper.mc1710.backward.inventory;
 
 import net.minecraft.inventory.IInventory;
 import nova.core.inventory.Inventory;
-import nova.core.item.ItemStack;
+import nova.core.item.Item;
 
 import java.util.Optional;
 
@@ -14,12 +14,12 @@ public class BWInventory implements Inventory {
 	}
 
 	@Override
-	public Optional<ItemStack> get(int i) {
+	public Optional<Item> get(int i) {
 		return Optional.empty();
 	}
 
 	@Override
-	public boolean set(int i, ItemStack itemStack) {
+	public boolean set(int i, Item Item) {
 		return false;
 	}
 

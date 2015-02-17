@@ -29,7 +29,7 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		Optional<nova.core.item.ItemStack> result = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
-        return WrapUtility.wrapItemStack(result);
+		Optional<nova.core.item.Item> result = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
+		return WrapUtility.wrapItemStack(result);
 	}
 }

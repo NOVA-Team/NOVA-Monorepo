@@ -1,8 +1,5 @@
 package nova.wrapper.mc1710.recipes;
 
-import java.util.List;
-import java.util.Optional;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -12,8 +9,12 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import nova.core.player.Player;
 import nova.core.recipes.crafting.CraftingGrid;
+import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.util.ReflectionUtil;
 import nova.wrapper.mc1710.util.WrapUtility;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -22,48 +23,22 @@ import nova.wrapper.mc1710.util.WrapUtility;
 public class MCCraftingGrid implements CraftingGrid {
 	private static final ThreadLocal<MCCraftingGrid> cache = new ThreadLocal<MCCraftingGrid>();
 	private static final ThreadLocal<MCCraftingGrid> cache2 = new ThreadLocal<MCCraftingGrid>();
-	
-	public static MCCraftingGrid get(InventoryCrafting inventory) {
-		if (cache.get() == null || cache.get().inventory != inventory) {
-			MCCraftingGrid result = new MCCraftingGrid(inventory);
-			cache.set(result);
-			return result;
-		} else {
-			MCCraftingGrid result = cache.get();
-			result.update();
-			return result;
-		}
-	}
-	
-	public static MCCraftingGrid get(IInventory inventory, EntityPlayer player) {
-		if (cache2.get() == null || cache2.get().inventory != inventory || cache2.get().playerOrig != player) {
-			MCCraftingGrid result = new MCCraftingGrid(inventory, player);
-			cache2.set(result);
-			return result;
-		} else {
-			MCCraftingGrid result = cache2.get();
-			result.update();
-			return result;
-		}
-	}
-	
-	private int width;
-	private int height;
 	private final IInventory inventory;
-	private nova.core.item.ItemStack[] stacks;
-	private net.minecraft.item.ItemStack[] original;
-	private int numberOfStacks;
 	private final Optional<Player> player;
 	private final EntityPlayer playerOrig;
-	
+	private int width;
+	private int height;
+	private nova.core.item.Item[] stacks;
+	private net.minecraft.item.ItemStack[] original;
+	private int numberOfStacks;
 	private MCCraftingGrid(InventoryCrafting inventory) {
 		this.inventory = inventory;
 		width = height = (int) Math.sqrt(inventory.getSizeInventory());
-		stacks = new nova.core.item.ItemStack[width * height];
+		stacks = new nova.core.item.Item[width * height];
 		original = new net.minecraft.item.ItemStack[stacks.length];
 		numberOfStacks = 0;
 		update();
-		
+
 		Container container = ReflectionUtil.getCraftingContainer(inventory);
 		if (container != null) {
 			List<Slot> slots = container.inventorySlots;
@@ -80,23 +55,46 @@ public class MCCraftingGrid implements CraftingGrid {
 			player = null;
 		}
 	}
-	
 	public MCCraftingGrid(IInventory inventory, EntityPlayer player) {
 		this.inventory = inventory;
 		width = height = (int) Math.sqrt(inventory.getSizeInventory());
-		stacks = new nova.core.item.ItemStack[width * height];
+		stacks = new nova.core.item.Item[width * height];
 		original = new ItemStack[stacks.length];
 		numberOfStacks = 0;
 		update();
-		
+
 		playerOrig = player;
 		this.player = WrapUtility.getNovaPlayer(player);
+	}
+
+	public static MCCraftingGrid get(InventoryCrafting inventory) {
+		if (cache.get() == null || cache.get().inventory != inventory) {
+			MCCraftingGrid result = new MCCraftingGrid(inventory);
+			cache.set(result);
+			return result;
+		} else {
+			MCCraftingGrid result = cache.get();
+			result.update();
+			return result;
+		}
+	}
+
+	public static MCCraftingGrid get(IInventory inventory, EntityPlayer player) {
+		if (cache2.get() == null || cache2.get().inventory != inventory || cache2.get().playerOrig != player) {
+			MCCraftingGrid result = new MCCraftingGrid(inventory, player);
+			cache2.set(result);
+			return result;
+		} else {
+			MCCraftingGrid result = cache2.get();
+			result.update();
+			return result;
+		}
 	}
 	
 	private void update() {
 		if (inventory.getSizeInventory() != original.length) {
 			width = height = (int) Math.sqrt(inventory.getSizeInventory());
-			stacks = new nova.core.item.ItemStack[inventory.getSizeInventory()];
+			stacks = new nova.core.item.Item[inventory.getSizeInventory()];
 			original = new ItemStack[stacks.length];
 			numberOfStacks = 0;
 		}
@@ -147,17 +145,17 @@ public class MCCraftingGrid implements CraftingGrid {
 	}
 
 	@Override
-	public Optional<nova.core.item.ItemStack> getStack(int i) {
+	public Optional<nova.core.item.Item> getStack(int i) {
 		return Optional.ofNullable(stacks[i]);
 	}
 
 	@Override
-	public Optional<nova.core.item.ItemStack> getStack(int x, int y) {
+	public Optional<nova.core.item.Item> getStack(int x, int y) {
 		return Optional.ofNullable(stacks[y * width + x]);
 	}
 
 	@Override
-	public boolean setStack(int x, int y, Optional<nova.core.item.ItemStack> stack) {
+	public boolean setStack(int x, int y, Optional<nova.core.item.Item> stack) {
 		//System.out.println("SetStack(" + x + ", " + y + ") " + stack);
 		
 		int ix = y * width + x;
@@ -181,7 +179,7 @@ public class MCCraftingGrid implements CraftingGrid {
 	}
 
 	@Override
-	public boolean setStack(int i, Optional<nova.core.item.ItemStack> stack) {
+	public boolean setStack(int i, Optional<nova.core.item.Item> stack) {
 		//System.out.println("SetStack(" + i + ") " + stack);
 
         if (stack == null) {
@@ -203,26 +201,26 @@ public class MCCraftingGrid implements CraftingGrid {
 	}
 
     @Override
-    public void giveBack(nova.core.item.ItemStack itemStack) {
-        playerOrig.inventory.addItemStackToInventory(WrapUtility.wrapItemStack(itemStack));
-    }
+	public void giveBack(nova.core.item.Item itemStack) {
+		playerOrig.inventory.addItemStackToInventory(ItemWrapperRegistry.instance.getMCItemStack(itemStack));
+	}
 
     @Override
     public String getTopology() {
-        return CraftingGrid.TOPOLOGY_SQUARE;
-    }
+		return CraftingGrid.topologySquare;
+	}
 
     @Override
     public String getType() {
-        return CraftingGrid.TYPE_CRAFTING;
-    }
+		return CraftingGrid.typeCrafting;
+	}
 
 	private boolean changed(int i) {
 		if (original[i] != inventory.getStackInSlot(i))
             return true;
 
-		if (original[i] != null && stacks[i].getStackSize() != original[i].stackSize)
-            return true;
+		if (original[i] != null && stacks[i].count() != original[i].stackSize)
+			return true;
 		
 		return false;
 	}
