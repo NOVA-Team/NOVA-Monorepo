@@ -15,20 +15,19 @@ public class Color {
 
 	private final int value;
 	
-    public static final Color white     = rgb(255, 255, 255);
-    public static final Color lightGray = rgb(192, 192, 192);
-    public static final Color gray      = rgb(128, 128, 128);
-    public static final Color darkGray  = rgb( 64,  64,  64);
-    public static final Color black     = rgb(  0,   0,   0);
-    public static final Color red       = rgb(255,   0,   0);
-    public static final Color pink      = rgb(255, 175, 175);
-    public static final Color orange    = rgb(255, 200,   0);
-    public static final Color yellow    = rgb(255, 255,   0);
-    public static final Color green     = rgb(  0, 255,   0);
-    public static final Color magenta   = rgb(255,   0, 255);
-    public static final Color cyan      = rgb(  0, 255, 255);
-    public static final Color blue      = rgb(  0,   0, 255);
-
+	public static final Color white     = rgb(255, 255, 255);
+	public static final Color lightGray = rgb(192, 192, 192);
+	public static final Color gray      = rgb(128, 128, 128);
+	public static final Color darkGray  = rgb( 64,  64,  64);
+	public static final Color black     = rgb(  0,   0,   0);
+	public static final Color red       = rgb(255,   0,   0);
+	public static final Color pink      = rgb(255, 175, 175);
+	public static final Color orange    = rgb(255, 200,   0);
+	public static final Color yellow    = rgb(255, 255,   0);
+	public static final Color green     = rgb(  0, 255,   0);
+	public static final Color magenta   = rgb(255,   0, 255);
+	public static final Color cyan      = rgb(  0, 255, 255);
+	public static final Color blue      = rgb(  0,   0, 255);
 
 	private Color(int argb) {
 		this.value = argb;
@@ -55,7 +54,11 @@ public class Color {
 	}
 
 	public static Color rgbac(int red, int green, int blue, int alpha) {
-		int argb = (red & 0xFF) | (green & 0xFF) << 8 | (blue & 0xFF) << 16 | (alpha & 0xFF) << 24;
+		red = Math.max(Math.min(255, red), 0);
+		green = Math.max(Math.min(255, green), 0);
+		blue = Math.max(Math.min(255, blue), 0);
+		alpha = Math.max(Math.min(255, alpha), 0);
+		int argb = red | green << 8 | blue << 16 | alpha << 24;
 		return argb(argb);
 	}
 
@@ -74,7 +77,8 @@ public class Color {
 	}
 
 	public static Color rgbac(int rgb, int alpha) {
-		int value = rgb & 0xFFFFFF | (alpha & 0xFF) << 24;
+		alpha = Math.max(Math.min(255, alpha), 0);
+		int value = rgb & 0xFFFFFF | alpha << 24;
 		return argb(value);
 	}
 
