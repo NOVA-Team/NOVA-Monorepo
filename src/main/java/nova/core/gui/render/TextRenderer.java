@@ -10,19 +10,114 @@ import nova.core.util.transform.Vector2i;
  */
 public interface TextRenderer {
 
+	/**
+	 * Renders {@link FormattedText} to the screen. Performs a line wrap at
+	 * {@code %n} and {@code \n}.
+	 * 
+	 * @param x x position
+	 * @param y y position
+	 * @param str FormattedText to render
+	 * 
+	 * @see TextRenderer#drawString(int, int, FormattedText, int)
+	 * @see TextRenderer#drawCutString(int, int, FormattedText, int)
+	 */
 	public void drawString(int x, int y, FormattedText str);
 
+	/**
+	 * Renders {@link FormattedText} to the screen. Performs a line wrap at
+	 * {@code %n} and {@code \n}. It also jumps to a new line when the text is
+	 * longer than the provided width, wraps per word.
+	 * 
+	 * @param x x position
+	 * @param y y position
+	 * @param str FormattedText to render
+	 * @param width size on which to wrap the text
+	 */
 	public void drawString(int x, int y, FormattedText str, int width);
 
+	/**
+	 * Renders {@link FormattedText} to the screen. It will fit the text into
+	 * the desired width and fills the center with "{@code ...}
+	 * ". An example would be: "{@code Donaudampfschiff}" - "
+	 * {@code Donau...chiff}". The wrapping substrings should have the same
+	 * amount of characters. This should only be used on small text.
+	 * 
+	 * @param x x position
+	 * @param y y position
+	 * @param str FormattedText to render
+	 * @param width size on which to cut the text
+	 */
 	public void drawCutString(int x, int y, FormattedText str, int width);
 
+	/**
+	 * Works in the same way as {@link #drawString(int, int, FormattedText)}
+	 * except that it takes a String as argument. Keep in mind that the wrapper
+	 * might apply unwanted formatting to the provided text, so using
+	 * {@link FormattedText} is the <i>safe</i> way.
+	 * 
+	 * @param x x position
+	 * @param y y position
+	 * @param str Text to render
+	 * 
+	 * @see #drawString(int, int, FormattedText)
+	 */
 	public void drawString(int x, int y, String str);
 
+	/**
+	 * Works in the same way as
+	 * {@link #drawString(int, int, FormattedText, int)} except that it takes a
+	 * String as argument. Keep in mind that the wrapper might apply unwanted
+	 * formatting to the provided text, so using {@link FormattedText} is the
+	 * <i>safe</i> way.
+	 * 
+	 * @param x x position
+	 * @param y y position
+	 * @param str Text to render
+	 * @param width size on which to wrap the text
+	 * 
+	 * @see #drawString(int, int, FormattedText, int)
+	 */
 	public void drawString(int x, int y, String str, int width);
 
+	/**
+	 * Works in the same way as
+	 * {@link #drawCutString(int, int, FormattedText, int)} except that it takes
+	 * a String as argument. Keep in mind that the wrapper might apply unwanted
+	 * formatting to the provided text, so using {@link FormattedText} is the
+	 * <i>safe</i> way.
+	 * 
+	 * @param x x position
+	 * @param y y position
+	 * @param str Text to render
+	 * @param width size on which to wrap the text
+	 * 
+	 * @see #drawCutString(int, int, FormattedText, int)
+	 */
 	public void drawCutString(int x, int y, String str, int width);
 
+	/**
+	 * Sets the z index on which to render the desired text. This will affect
+	 * the draw order, shapes with a higher z index will draw first. If you
+	 * leave the z index untouched, the shapes will draw in the order they were
+	 * queried, so what gets drawn last will be topmost.
+	 * 
+	 * @param zIndex z index
+	 */
 	public void setZIndex(int zIndex);
 
+	/**
+	 * Returns the computed boundaries of the provided {@link FormattedText}.
+	 * 
+	 * @param text FormattedText
+	 * @return boundaries
+	 */
+	public Vector2i getBounds(FormattedText text);
+
+	/**
+	 * Returns the computed boundaries of the provided String.
+	 * 
+	 * @param str String
+	 * @return boundaries
+	 */
 	public Vector2i getBounds(String str);
 }

@@ -12,7 +12,19 @@ public class Graphics implements TextRenderer {
 		this.canvas = canvas;
 	}
 
-	public void drawRect(int x, int y, int width, int height, Color color) {
+	public void setColor(Color color) {
+		canvas.setColor(color);
+	}
+
+	public Color getColor() {
+		return canvas.getColor();
+	}
+
+	public void drawRect(int x, int y, int width, int height) {
+
+	}
+	
+	public void drawShape(Shape2D shape) {
 
 	}
 
@@ -49,6 +61,11 @@ public class Graphics implements TextRenderer {
 	@Override
 	public void drawCutString(int x, int y, String str, int width) {
 		textRenderer.drawCutString(x, y, str, width);
+	}
+
+	@Override
+	public Vector2i getBounds(FormattedText text) {
+		return textRenderer.getBounds(text);
 	}
 
 	@Override
