@@ -33,26 +33,87 @@ public class Color {
 		this.value = argb;
 	}
 
+	/**
+	 * Factory method for constructing a color using clamped integer values 
+	 * between 0 and 255.
+	 * 
+	 * @param  red   The red color value
+	 * @param  green The green color value
+	 * @param  blue  The blue color value
+	 * @return       The newly constructed color
+	 */
 	public static Color rgbc(int red, int green, int blue) {
 		return rgbac(red, green, blue, 255);
 	}
 
+	/**
+	 * Factory method for constructing a color using integer values between
+	 * 0 and 255.
+	 * 
+	 * @param  red   The red color value
+	 * @param  green The green color value
+	 * @param  blue  The blue color value
+	 * @return       The newly constructed color
+	 * @throws ColorRangeException if any of the parameters are outside the
+	 *         range of 0 to 255.
+	 */
 	public static Color rgb(int red, int green, int blue) {
 		return rgba(red, green, blue, 255);
 	}
 
+	/**
+	 * Factory method for constructing a color using clamped floating point 
+	 * values between 0 and 1.
+	 * 
+	 * @param  red   The red color value
+	 * @param  green The green color value
+	 * @param  blue  The blue color value
+	 * @return       The newly constructed color
+	 */
 	public static Color rgbfc(float red, float green, float blue) {
 		return rgbafc(red, green, blue, 1F);
 	}
 
+	/**
+	 * Factory method for constructing a color using floating point values
+	 * between 0 and 1.
+	 * 
+	 * @param  red   The red color value
+	 * @param  green The green color value
+	 * @param  blue  The blue color value
+	 * @return       The newly constructed color
+	 * @throws ColorRangeException if any of the parameters are outside the
+	 *         range of 0 to 1.
+	 */
 	public static Color rgbf(float red, float green, float blue) {
 		return rgbaf(red, green, blue, 1F);
 	}
 
+	/**
+	 * Factory method for constructing a RGB color using a single 32 bit integer
+	 * value between 0x0 and 0xffffff.
+	 *
+	 * <p>For constructing a color using a integer with alpha including, see 
+	 * {@link #rgba(int, int) rgba(int, int)}.
+	 * 
+	 * @param  rgb The color value, in RGB order
+	 * @return     The newly constructed color
+	 */
 	public static Color rgb(int rgb) {
 		return rgba(rgb, 255);
 	}
 
+
+	/**
+	 * Factory method for constructing a color using clamped integer values 
+	 * between 0 and 255.
+	 * 
+	 * @param  red    The red color value
+	 * @param  green  The green color value
+	 * @param  blue   The blue color value
+	 * @param  alpha  The alpha value
+	 * @return        The newly constructed color
+	 */
 	public static Color rgbac(int red, int green, int blue, int alpha) {
 		red = Math.max(Math.min(255, red), 0);
 		green = Math.max(Math.min(255, green), 0);
@@ -62,36 +123,117 @@ public class Color {
 		return argb(argb);
 	}
 
+	/**
+	 * Factory method for constructing a color using clamped integer values 
+	 * between 0 and 255.
+	 * 
+	 * @param  red    The red color value
+	 * @param  green  The green color value
+	 * @param  blue   The blue color value
+	 * @param  alpha  The alpha value
+	 * @return        The newly constructed color
+	 * @throws ColorRangeException if any of the parameters are outside the
+	 *         range of 0 to 255.
+	 */
 	public static Color rgba(int red, int green, int blue, int alpha) {
 		if (red > 255 || red < 0 || green > 255 || green < 0 || blue > 255 || blue < 0 || alpha > 255 || blue < 0)
 			throw new ColorRangeException(red, green, blue, alpha);
 		return rgbac(red, green, blue, alpha);
 	}
 
+	/**
+	 * Factory method for constructing a color using clamped floating point
+	 * values between 0 and 1.
+	 * 
+	 * @param  red    The red color value
+	 * @param  green  The green color value
+	 * @param  blue   The blue color value
+	 * @param  alpha  The alpha value
+	 * @return        The newly constructed color
+	 */
 	public static Color rgbafc(float red, float green, float blue, float alpha) {
 		return rgbac((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255));
 	}
 
+	/**
+	 * Factory method for constructing a color using floating point values
+	 * between 0 and 1.
+	 * 
+	 * @param  red    The red color value
+	 * @param  green  The green color value
+	 * @param  blue   The blue color value
+	 * @param  alpha  The alpha value
+	 * @return        The newly constructed color
+	 * @throws ColorRangeException if any of the parameters are outside the
+	 *         range of 0 to 1.
+	 */
 	public static Color rgbaf(float red, float green, float blue, float alpha) {
 		return rgba((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255));
 	}
 
+	/**
+	 * Factory method for constructing a RGB color using a alpha value and a 32
+	 * bit integer value between 0x0 and 0xffffff.
+	 *
+	 * <p>For constructing a color using only the RGB components of the integer,
+	 * see {@link #rgb(int) rgba(int)}.
+	 * 
+	 * @param  rgb    The color value, in RGB order
+	 * @param  alpha  The alpha value
+	 * @return        The newly constructed color
+	 */
 	public static Color rgbac(int rgb, int alpha) {
 		alpha = Math.max(Math.min(255, alpha), 0);
 		int value = rgb & 0xFFFFFF | alpha << 24;
 		return argb(value);
 	}
 
+
+	/**
+	 * Factory method for constructing a RGB color using a 32 bit integer value
+	 * and a alpha value.
+	 *
+	 * <p>For constructing a color using only the RGB components of the integer,
+	 * see {@link #rgb(int) rgba(int)}.
+	 * 
+	 * @param  rgb    The color value, in RGB order
+	 * @param  alpha  The alpha value
+	 * @return        The newly constructed color
+	 * @throws ColorRangeException if the alpha value is not between 0 and 255.
+	 */
 	public static Color rgba(int rgb, int alpha) {
 		if (alpha > 255 || alpha < 0)
 			throw new ColorRangeException(alpha);
 		return rgbac(rgb, alpha);
 	}
 
+	/**
+	 * Factory method for constructing a RGB color using a 32 bit integer value
+	 * and a floating point alpha value.
+	 *
+	 * <p>For constructing a color using only the RGB components of the integer,
+	 * see {@link #rgb(int) rgba(int)}.
+	 * 
+	 * @param  rgb    The color value, in RGB order
+	 * @param  alpha  The alpha value
+	 * @return        The newly constructed color
+	 */
 	public static Color rgbafc(int rgb, float alpha) {
 		return rgbac(rgb, (int) (alpha * 255));
 	}
 
+	/**
+	 * Factory method for constructing a RGB color using a 32 bit integer value
+	 * and a floating point alpha value.
+	 *
+	 * <p>For constructing a color using only the RGB components of the integer,
+	 * see {@link #rgb(int) rgba(int)}.
+	 * 
+	 * @param  rgb    The color value, in RGB order
+	 * @param  alpha  The alpha value
+	 * @return        The newly constructed color
+	 * @throws ColorRangeException if the alpha value is not between 0 and 1.
+	 */
 	public static Color rgbaf(int rgb, float alpha) {
 		return rgba(rgb, (int) (alpha * 255));
 	}
