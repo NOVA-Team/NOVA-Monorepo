@@ -16,6 +16,7 @@ public class ModelWrapper extends Model {
 
 	/**
 	 * Completes this rendering for a block.
+	 *
 	 * @param blockAccess {@link BlockAccess}
 	 * @param translation Translation
 	 */
@@ -67,9 +68,15 @@ public class ModelWrapper extends Model {
 
 					if (face.texture.isPresent()) {
 						IIcon icon = RenderUtility.instance.getIcon(face.texture.get());
-						face.vertices.forEach(v -> tessellator.addVertexWithUV(v.vec.x, v.vec.y, v.vec.z, icon.getInterpolatedU(16 * v.uv.x), icon.getInterpolatedV(16 * v.uv.y)));
+						face.vertices.forEach(v -> {
+							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
+							tessellator.addVertexWithUV(v.vec.x, v.vec.y, v.vec.z, icon.getInterpolatedU(16 * v.uv.x), icon.getInterpolatedV(16 * v.uv.y));
+						});
 					} else {
-						face.vertices.forEach(v -> tessellator.addVertex(v.vec.x, v.vec.y, v.vec.z));
+						face.vertices.forEach(v -> {
+							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
+							tessellator.addVertex(v.vec.x, v.vec.y, v.vec.z);
+						});
 					}
 				})
 		);
@@ -97,9 +104,15 @@ public class ModelWrapper extends Model {
 
 					if (face.texture.isPresent()) {
 						IIcon icon = RenderUtility.instance.getIcon(face.texture.get());
-						face.vertices.forEach(v -> tessellator.addVertexWithUV(v.vec.x, v.vec.y, v.vec.z, icon.getInterpolatedU(16 * v.uv.x), icon.getInterpolatedV(16 * v.uv.y)));
+						face.vertices.forEach(v -> {
+							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
+							tessellator.addVertexWithUV(v.vec.x, v.vec.y, v.vec.z, icon.getInterpolatedU(16 * v.uv.x), icon.getInterpolatedV(16 * v.uv.y));
+						});
 					} else {
-						face.vertices.forEach(v -> tessellator.addVertex(v.vec.x, v.vec.y, v.vec.z));
+						face.vertices.forEach(v -> {
+							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
+							tessellator.addVertex(v.vec.x, v.vec.y, v.vec.z);
+						});
 					}
 				})
 		);

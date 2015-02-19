@@ -69,4 +69,8 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	default void renderItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data) {
 		getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).onRender(type.ordinal(), data);
 	}
+
+	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
+		return getItemFactory().makeItem(NBTUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).colorMultiplier().argb();
+	}
 }

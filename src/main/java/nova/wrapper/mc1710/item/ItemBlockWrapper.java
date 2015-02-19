@@ -50,6 +50,11 @@ public class ItemBlockWrapper extends net.minecraft.item.ItemBlock implements It
 	}
 
 	@Override
+	public int getColorFromItemStack(ItemStack p_82790_1_, int p_82790_2_) {
+		return ItemWrapperMethods.super.getColorFromItemStack(p_82790_1_, p_82790_2_);
+	}
+
+	@Override
 	public void registerIcons(IIconRegister ir) {
 
 	}
