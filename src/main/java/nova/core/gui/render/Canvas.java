@@ -33,7 +33,14 @@ public interface Canvas {
 
 	public void addVertex(int x, int y);
 
-	public void addVertexWithUV(int x, int y, int u, int v);
+	public void addVertexWithUV(int x, int y, float u, float v);
+
+	public default void addVertex(Vertex2D v) {
+		if (v.uv)
+			addVertexWithUV(v.x, v.y, v.u, v.v);
+		else
+			addVertex(v.x, v.y);
+	}
 
 	public void draw();
 

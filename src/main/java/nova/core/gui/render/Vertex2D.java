@@ -3,7 +3,8 @@ package nova.core.gui.render;
 public class Vertex2D {
 
 	public final boolean uv;
-	public final int u, v, x, y;
+	public final int x, y;
+	public final float u, v;
 
 	public Vertex2D(int x, int y) {
 		uv = false;
@@ -12,7 +13,7 @@ public class Vertex2D {
 		this.y = y;
 	}
 
-	public Vertex2D(int x, int y, int u, int v) {
+	public Vertex2D(int x, int y, float u, float v) {
 		uv = true;
 		this.x = x;
 		this.y = y;

@@ -57,7 +57,7 @@ public interface Shape2D {
 
 		private final Vertex2D[] vertices;
 
-		public PolygonShape(Vertex2D[] vertices) {
+		public PolygonShape(Vertex2D... vertices) {
 			if (vertices.length < 3)
 				throw new NovaException("A polygon must contain at least 3 vertices!");
 			this.vertices = vertices;
