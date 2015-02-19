@@ -26,6 +26,7 @@ public class Color {
 	public static final Color magenta   = rgb(255,   0, 255);
 	public static final Color cyan      = rgb(  0, 255, 255);
 	public static final Color blue      = rgb(  0,   0, 255);
+
 	private final int value;
 
 	private Color(int argb) {
@@ -369,6 +370,20 @@ public class Color {
 		Vector3d hsl = hsl();
 		float h = hsl.yf() + 180F;
 		return hsl(h, hsl.yf(), hsl.zf()).alpha(alpha());
+	}
+
+	@Override
+	public int hashCode() {
+		return value;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || obj.getClass() != Color.class)
+			return false;
+		return value == ((Color) obj).value;
 	}
 
 	public static class ColorRangeException extends RuntimeException {
