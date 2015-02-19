@@ -4,6 +4,7 @@ import nova.core.entity.Entity;
 import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
+import nova.core.render.Color;
 import nova.core.render.model.Model;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
@@ -32,6 +33,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called to get the BlockFactory that refers to this Block class.
+	 *
 	 * @return The {@link nova.core.block.BlockFactory} that refers to this Block class.
 	 */
 	public final BlockFactory factory() {
@@ -40,6 +42,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Get the BlockAccess that refers to this block.
+	 *
 	 * @return The {@link nova.core.block.BlockAccess} that refers to this block.
 	 */
 	public BlockAccess blockAccess() {
@@ -48,6 +51,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Get the world that the block is in.
+	 *
 	 * @return {@link nova.core.world.World} that the block is in.
 	 * @throws NovaException Attempt to cast blockAccess to world invalidly!
 	 */
@@ -61,6 +65,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Get the position of the block.
+	 *
 	 * @return The position of the block.
 	 */
 	public Vector3i position() {
@@ -69,6 +74,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Get the x co-ordinate of the block.
+	 *
 	 * @return The x co-ordinate of the block.
 	 */
 	public final int x() {
@@ -77,6 +83,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Get the y co-ordinate of the block.
+	 *
 	 * @return The y co-ordinate of the block.
 	 */
 	public final int y() {
@@ -85,6 +92,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Get the z co-ordinate of the block.
+	 *
 	 * @return The z co-ordinate of the block.
 	 */
 	public final int z() {
@@ -93,6 +101,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called to get the drops of this block.
+	 *
 	 * @return A collection of {@link nova.core.item.Item}s that this block drops.
 	 */
 	public Collection<Item> getDrops() {
@@ -101,6 +110,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called to get the bounding box of this block.
+	 *
 	 * @return The bounding box of this block.
 	 */
 	public Cuboid getBoundingBox() {
@@ -109,6 +119,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called to check for collisions.
+	 *
 	 * @param intersect Cuboid that could be colliding.
 	 * @param entity The entity that could be colliding.
 	 * @return Cuboids that represent colliding areas.
@@ -126,6 +137,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called to check if the block is a cube.
+	 *
 	 * @return {@code true} is this block is a cube.
 	 */
 	public boolean isCube() {
@@ -134,6 +146,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called to check if the block is an opaque cube.
+	 *
 	 * @return {@code true}  is this block is a cube that is opaque.
 	 */
 	public boolean isOpaqueCube() {
@@ -142,6 +155,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when a block next to this one changes (removed, placed, etc...).
+	 *
 	 * @param neighborPosition The position of the block that changed.
 	 */
 	public void onNeighborChange(Vector3i neighborPosition) {
@@ -150,6 +164,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the block is placed.
+	 *
 	 * @param changer The BlockChanger that placed the block.
 	 */
 	public void onPlaced(BlockChanger changer) {
@@ -158,6 +173,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the block is removed.
+	 *
 	 * @param changer The BlockChanger that removed the block.
 	 */
 	public void onRemoved(BlockChanger changer) {
@@ -166,6 +182,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the block is left clicked.
+	 *
 	 * @param entity The entity that right clicked this object. Most likely a player.
 	 * @param side The side it was clicked.
 	 * @param hit The position it was clicked.
@@ -177,6 +194,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when the block is right clicked.
+	 *
 	 * @param entity The entity that right clicked this object. Most likely a player.
 	 * @param side The side it was clicked.
 	 * @param hit The position it was clicked.
@@ -189,6 +207,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when an entity collides with this block.
 	 * More specifically, when the entity's block bounds coincide with the block bounds.
+	 *
 	 * @param entity colliding entity
 	 */
 	public void onEntityCollide(Entity entity) {
@@ -197,6 +216,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called when this block is to be rendered.
+	 *
 	 * @param model A {@link nova.core.render.model.Model} to use.
 	 */
 	public void renderStatic(Model model) {
@@ -205,6 +225,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called for a dynamic render.
+	 *
 	 * @param model A {@link nova.core.render.model.Model} to use
 	 */
 	public void renderDynamic(Model model) {
@@ -212,6 +233,7 @@ public abstract class Block implements Identifiable {
 
 	/**
 	 * Called to get the texture of this block for a certain side.
+	 *
 	 * @param side The side of the block that the texture is for.
 	 * @return An optional of the texture.
 	 */
@@ -220,7 +242,18 @@ public abstract class Block implements Identifiable {
 	}
 
 	/**
+	 * Gets the color of a specific face. This is called by the default block renderer.
+	 *
+	 * @param side - The side of the block.
+	 * @return The color
+	 */
+	public Color colorMultiplier(Direction side) {
+		return Color.white;
+	}
+
+	/**
 	 * Called when the item of this block is to be rendered.
+	 *
 	 * @param model A {@link nova.core.render.model.Model} to use.
 	 */
 	public void renderItem(Model model) {

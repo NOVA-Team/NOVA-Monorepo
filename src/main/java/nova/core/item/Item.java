@@ -3,6 +3,7 @@ package nova.core.item;
 import nova.core.entity.Entity;
 import nova.core.game.Game;
 import nova.core.player.Player;
+import nova.core.render.Color;
 import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
@@ -23,6 +24,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Called to get the ItemFactory that refers to this Block class.
+	 *
 	 * @return The {@link nova.core.item.ItemFactory} that refers to this Block class.
 	 */
 	public final ItemFactory factory() {
@@ -42,6 +44,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Sets new size of this ItemStack
+	 *
 	 * @param size New size
 	 */
 	public Item setCount(int size) {
@@ -51,6 +54,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Adds size to this ItemStack
+	 *
 	 * @param size Size to add
 	 * @return Size added
 	 */
@@ -67,6 +71,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Returns new ItemStack of the same {@link Item} with specified size
+	 *
 	 * @param amount Size of cloned ItemStack
 	 * @return new ItemStack
 	 */
@@ -89,6 +94,7 @@ public abstract class Item implements Identifiable {
 	/**
 	 * Check if this ItemStack is of type of another ItemStack. Will compare the
 	 * {@link Item#getID()}.
+	 *
 	 * @param item The another Item
 	 * @return Result
 	 */
@@ -98,6 +104,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Gets a list of tooltips for this item.
+	 *
 	 * @param player {@link Player}
 	 * @return The tooltip strings
 	 */
@@ -107,6 +114,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Called when the entity right clicks the item onto the block.
+	 *
 	 * @param entity - The entity using the item
 	 * @param world - The world of the block
 	 * @param position - The position of the block
@@ -120,6 +128,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Called when an entity right clicks the item.
+	 *
 	 * @param entity - The entity right clicking.
 	 */
 	public void onRightClick(Entity entity) {
@@ -128,6 +137,7 @@ public abstract class Item implements Identifiable {
 
 	/**
 	 * Called when this item is being rendered.
+	 *
 	 * @param type Type
 	 * @param data Data
 	 */
@@ -136,7 +146,16 @@ public abstract class Item implements Identifiable {
 	}
 
 	/**
+	 * Gets the color multiplier for rendering
+	 * @return The color
+	 */
+	public Color colorMultiplier() {
+		return Color.white;
+	}
+
+	/**
 	 * Gets the texture of this item. If there is no texture provided, it will not render any and default to onRender() method for custom item rendering.
+	 *
 	 * @return {@link ItemTexture} instance
 	 */
 	public Optional<ItemTexture> getTexture() {

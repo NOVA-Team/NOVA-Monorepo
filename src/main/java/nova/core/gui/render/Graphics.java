@@ -1,5 +1,6 @@
 package nova.core.gui.render;
 
+import nova.core.render.Color;
 import nova.core.util.transform.Vector2i;
 
 public class Graphics implements TextRenderer {

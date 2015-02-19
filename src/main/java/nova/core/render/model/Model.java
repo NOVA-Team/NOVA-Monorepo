@@ -1,6 +1,7 @@
 package nova.core.render.model;
 
 import nova.core.block.Block;
+import nova.core.render.Color;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.transform.Matrix4x4;
@@ -28,7 +29,6 @@ public class Model implements Cloneable {
 	public final Set<Face> faces = new HashSet<>();
 	public final Set<Model> children = new HashSet<>();
 
-
 	public Matrix4x4 matrix = Matrix4x4.IDENTITY;
 
 	public Vector2d textureOffset = Vector2d.zero;
@@ -43,6 +43,7 @@ public class Model implements Cloneable {
 
 	/**
 	 * Binds all the faces and all child models with this texture.
+	 *
 	 * @param texture The texture
 	 */
 	public void bind(Texture texture) {
@@ -81,96 +82,102 @@ public class Model implements Cloneable {
 		 * Draw down
 		 */
 		Face down = createShape();
+		Color downColor = block.colorMultiplier(Direction.DOWN);
 		down.normal = Direction.DOWN.toVector().toDouble();
 		down.texture = block.getTexture(Direction.DOWN);
 		//Top-left corner
-		down.drawVertex(new Vertex(0.5, -0.5, 0.5, 0, 0));
+		down.drawVertex(new Vertex(0.5, -0.5, 0.5, 0, 0).setColor(downColor));
 		//Top-right corner
-		down.drawVertex(new Vertex(-0.5, -0.5, 0.5, 1, 0));
+		down.drawVertex(new Vertex(-0.5, -0.5, 0.5, 1, 0).setColor(downColor));
 		//Bottom-right corner
-		down.drawVertex(new Vertex(-0.5, -0.5, -0.5, 1, 1));
+		down.drawVertex(new Vertex(-0.5, -0.5, -0.5, 1, 1).setColor(downColor));
 		//Bottom-left corner
-		down.drawVertex(new Vertex(0.5, -0.5, -0.5, 0, 1));
+		down.drawVertex(new Vertex(0.5, -0.5, -0.5, 0, 1).setColor(downColor));
 		drawShape(down);
 
 		/**
 		 * Draw up
 		 */
 		Face up = createShape();
+		Color upColor = block.colorMultiplier(Direction.UP);
 		up.normal = Direction.UP.toVector().toDouble();
 		up.texture = block.getTexture(Direction.UP);
 		//Bottom-left corner
-		up.drawVertex(new Vertex(0.5, 0.5, -0.5, 0, 1));
+		up.drawVertex(new Vertex(0.5, 0.5, -0.5, 0, 1).setColor(upColor));
 		//Bottom-right corner
-		up.drawVertex(new Vertex(-0.5, 0.5, -0.5, 1, 1));
+		up.drawVertex(new Vertex(-0.5, 0.5, -0.5, 1, 1).setColor(upColor));
 		//Top-right corner
-		up.drawVertex(new Vertex(-0.5, 0.5, 0.5, 1, 0));
+		up.drawVertex(new Vertex(-0.5, 0.5, 0.5, 1, 0).setColor(upColor));
 		//Top-left corner
-		up.drawVertex(new Vertex(0.5, 0.5, 0.5, 0, 0));
+		up.drawVertex(new Vertex(0.5, 0.5, 0.5, 0, 0).setColor(upColor));
 		drawShape(up);
 
 		/**
 		 * Draw north
 		 */
 		Face north = createShape();
+		Color northColor = block.colorMultiplier(Direction.NORTH);
 		north.normal = Direction.NORTH.toVector().toDouble();
 		north.texture = block.getTexture(Direction.NORTH);
 		//Top-left corner
-		north.drawVertex(new Vertex(-0.5, 0.5, -0.5, 0, 0));
+		north.drawVertex(new Vertex(-0.5, 0.5, -0.5, 0, 0).setColor(northColor));
 		//Top-right corner
-		north.drawVertex(new Vertex(0.5, 0.5, -0.5, 1, 0));
+		north.drawVertex(new Vertex(0.5, 0.5, -0.5, 1, 0).setColor(northColor));
 		//Bottom-right corner
-		north.drawVertex(new Vertex(0.5, -0.5, -0.5, 1, 1));
+		north.drawVertex(new Vertex(0.5, -0.5, -0.5, 1, 1).setColor(northColor));
 		//Bottom-left corner
-		north.drawVertex(new Vertex(-0.5, -0.5, -0.5, 0, 1));
+		north.drawVertex(new Vertex(-0.5, -0.5, -0.5, 0, 1).setColor(northColor));
 		drawShape(north);
 
 		/**
 		 * Draw south
 		 */
 		Face south = createShape();
+		Color southColor = block.colorMultiplier(Direction.SOUTH);
 		south.normal = Direction.SOUTH.toVector().toDouble();
 		south.texture = block.getTexture(Direction.SOUTH);
 		//Bottom-left corner
-		south.drawVertex(new Vertex(-0.5, -0.5, 0.5, 0, 1));
+		south.drawVertex(new Vertex(-0.5, -0.5, 0.5, 0, 1).setColor(southColor));
 		//Bottom-right corner
-		south.drawVertex(new Vertex(0.5, -0.5, 0.5, 1, 1));
+		south.drawVertex(new Vertex(0.5, -0.5, 0.5, 1, 1).setColor(southColor));
 		//Top-right corner
-		south.drawVertex(new Vertex(0.5, 0.5, 0.5, 1, 0));
+		south.drawVertex(new Vertex(0.5, 0.5, 0.5, 1, 0).setColor(southColor));
 		//Top-left corner
-		south.drawVertex(new Vertex(-0.5, 0.5, 0.5, 0, 0));
+		south.drawVertex(new Vertex(-0.5, 0.5, 0.5, 0, 0).setColor(southColor));
 		drawShape(south);
 
 		/**
 		 * Draw west
 		 */
 		Face west = createShape();
+		Color westColor = block.colorMultiplier(Direction.WEST);
 		west.normal = Direction.WEST.toVector().toDouble();
 		west.texture = block.getTexture(Direction.WEST);
 		//Bottom-left corner
-		west.drawVertex(new Vertex(-0.5, -0.5, -0.5, 0, 1));
+		west.drawVertex(new Vertex(-0.5, -0.5, -0.5, 0, 1).setColor(westColor));
 		//Bottom-right corner
-		west.drawVertex(new Vertex(-0.5, -0.5, 0.5, 1, 1));
+		west.drawVertex(new Vertex(-0.5, -0.5, 0.5, 1, 1).setColor(westColor));
 		//Top-right corner
-		west.drawVertex(new Vertex(-0.5, 0.5, 0.5, 1, 0));
+		west.drawVertex(new Vertex(-0.5, 0.5, 0.5, 1, 0).setColor(westColor));
 		//Top-left corner
-		west.drawVertex(new Vertex(-0.5, 0.5, -0.5, 0, 0));
+		west.drawVertex(new Vertex(-0.5, 0.5, -0.5, 0, 0).setColor(westColor));
 		drawShape(west);
 
 		/**
 		 * Draw east
 		 */
 		Face east = createShape();
+		Color eastColor = block.colorMultiplier(Direction.EAST);
 		east.normal = Direction.EAST.toVector().toDouble();
 		east.texture = block.getTexture(Direction.EAST);
 		//Top-left corner
-		east.drawVertex(new Vertex(0.5, 0.5, -0.5, 0, 0));
+		east.drawVertex(new Vertex(0.5, 0.5, -0.5, 0, 0).setColor(eastColor));
 		//Top-right corner
-		east.drawVertex(new Vertex(0.5, 0.5, 0.5, 1, 0));
+		east.drawVertex(new Vertex(0.5, 0.5, 0.5, 1, 0).setColor(eastColor));
 		//Bottom-right corner
-		east.drawVertex(new Vertex(0.5, -0.5, 0.5, 1, 1));
+		east.drawVertex(new Vertex(0.5, -0.5, 0.5, 1, 1).setColor(eastColor));
 		//Bottom-left corner
-		east.drawVertex(new Vertex(0.5, -0.5, -0.5, 0, 1));
+		east.drawVertex(new Vertex(0.5, -0.5, -0.5, 0, 1).setColor(eastColor));
 		drawShape(east);
 
 		return this;
@@ -284,6 +291,7 @@ public class Model implements Cloneable {
 	/**
 	 * Flattens the model into a set of models with no additional transformations,
 	 * applying all the transformations into the individual vertices.
+	 *
 	 * @param matrixStack transformation matrix.
 	 * @return Resulting set of models
 	 */

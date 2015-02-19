@@ -1,5 +1,6 @@
 package nova.core.render.model;
 
+import nova.core.render.Color;
 import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector3d;
 
@@ -17,18 +18,23 @@ public class Vertex implements Cloneable {
 	public Vector2d uv;
 
 	/**
-	 * A RGC color value from 0 to 1.
+	 * A RGB color value from 0 to 1.
 	 */
-	public Vector3d color;
+	public Color color;
 
 	public Vertex(Vector3d vert, Vector2d uv) {
 		this.vec = vert;
 		this.uv = uv;
-		this.color = Vector3d.one;
+		this.color = Color.white;
 	}
 
 	public Vertex(double x, double y, double z, double u, double v) {
 		this(new Vector3d(x, y, z), new Vector2d(u, v));
+	}
+
+	public Vertex setColor(Color color) {
+		this.color = color;
+		return this;
 	}
 
 	public String toString() {
