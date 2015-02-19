@@ -1,4 +1,4 @@
-package nova.core.gui.render;
+package nova.core.render;
 
 import nova.core.util.transform.Vector3d;
 
@@ -13,8 +13,6 @@ public class Color {
 	// TODO Document me!
 	// TODO Test me!
 
-	private final int value;
-	
 	public static final Color white     = rgb(255, 255, 255);
 	public static final Color lightGray = rgb(192, 192, 192);
 	public static final Color gray      = rgb(128, 128, 128);
@@ -28,6 +26,7 @@ public class Color {
 	public static final Color magenta   = rgb(255,   0, 255);
 	public static final Color cyan      = rgb(  0, 255, 255);
 	public static final Color blue      = rgb(  0,   0, 255);
+	private final int value;
 
 	private Color(int argb) {
 		this.value = argb;

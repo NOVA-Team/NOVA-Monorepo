@@ -1,5 +1,6 @@
 package nova.core.gui.render;
 
+import nova.core.render.Color;
 import nova.core.render.texture.Texture;
 import nova.core.util.transform.Vector2i;
 
@@ -18,9 +19,9 @@ public interface Canvas {
 
 	public void getZIndex();
 
-	public void setColor(Color color);
-
 	public Color getColor();
+
+	public void setColor(Color color);
 
 	public void bindTexture(Texture texture);
 
