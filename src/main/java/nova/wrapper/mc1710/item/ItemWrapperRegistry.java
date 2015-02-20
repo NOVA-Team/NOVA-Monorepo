@@ -212,7 +212,7 @@ public class ItemWrapperRegistry {
 		forwardMap.put(itemFactory, mapping);
 		backwardMap.put(mapping, itemFactory);
 
-		Game.instance.get().itemManager.registerItem(itemFactory);
+		Game.instance.get().itemManager.register(itemFactory);
 
 		return itemFactory;
 	}

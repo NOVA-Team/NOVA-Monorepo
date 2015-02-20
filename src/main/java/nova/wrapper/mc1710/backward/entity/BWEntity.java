@@ -26,12 +26,12 @@ public class BWEntity extends Entity {
 	}
 
 	@Override
-	public World getWorld() {
+	public World world() {
 		return new BWWorld(entity.worldObj);
 	}
 
 	@Override
-	public Vector3d getPosition() {
+	public Vector3d position() {
 		return new Vector3d(entity.posX, entity.posY, entity.posZ);
 	}
 
