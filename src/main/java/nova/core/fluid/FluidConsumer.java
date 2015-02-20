@@ -1,7 +1,5 @@
 package nova.core.fluid;
 
-import java.util.Optional;
-
 /**
  * Objects with this interface declare their ability to consume {@link Fluid FluidStacks}
  *
@@ -13,9 +11,9 @@ public interface FluidConsumer {
 	 *
 	 * @param fluid {@link Fluid} to insert
 	 * @param simulate Whether to simulate the insertion
-	 * @return Left {@link Fluid}
+	 * @return The amount actually filled
 	 */
-	public Optional<Fluid> addFluid(Fluid fluid, boolean simulate);
+	public int addFluid(Fluid fluid, boolean simulate);
 
 	/**
 	 * Attempt to insert fluid into this consumer
@@ -23,7 +21,7 @@ public interface FluidConsumer {
 	 * @param fluid {@link Fluid} to insert
 	 * @return Left {@link Fluid}
 	 */
-	public default Optional<Fluid> addFluid(Fluid fluid) {
+	public default int addFluid(Fluid fluid) {
 		return addFluid(fluid, false);
 	}
 }

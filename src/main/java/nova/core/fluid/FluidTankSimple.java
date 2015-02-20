@@ -11,13 +11,13 @@ public class FluidTankSimple implements Tank {
 	private int maxCapacity;
 
 	@Override
-	public Optional<Fluid> addFluid(Fluid fluid, boolean simulate) {
+	public int addFluid(Fluid fluid, boolean simulate) {
 		int capacity = maxCapacity - containedFluid.orElse(fluid.withAmount(0)).amount();
 		int toPut = Math.min(fluid.amount(), capacity);
 
 		if (containedFluid.isPresent()) {
 			if (!containedFluid.get().sameType(fluid)) {
-				return Optional.of(fluid.clone());
+				return 0;
 			}
 			if (!simulate) {
 				containedFluid.get().add(toPut);
@@ -27,26 +27,29 @@ public class FluidTankSimple implements Tank {
 		}
 
 		if (fluid.amount() - toPut > 0) {
-			return Optional.of(fluid.withAmount(fluid.amount() - toPut));
-		} else
-			return Optional.empty();
+			return toPut;
+		} else {
+			return 0;
+		}
 	}
 
 	@Override
-	public Optional<Fluid> removeFluid(Fluid fluid, boolean simulate) {
-		if (!containedFluid.isPresent() || containedFluid.get() != fluid)
+	public Optional<Fluid> removeFluid(int amount, boolean simulate) {
+		if (!containedFluid.isPresent()) {
 			return Optional.empty();
+		}
 
-		int toGet = Math.min(fluid.amount(), containedFluid.get().amount());
+		int toGet = Math.min(amount, containedFluid.get().amount());
 
 		if (!simulate) {
 			containedFluid.get().remove(toGet);
 		}
 
 		if (toGet > 0) {
-			return Optional.of(fluid.withAmount(toGet));
-		} else
+			return Optional.of(containedFluid.get().withAmount(toGet));
+		} else {
 			return Optional.empty();
+		}
 	}
 
 	@Override
