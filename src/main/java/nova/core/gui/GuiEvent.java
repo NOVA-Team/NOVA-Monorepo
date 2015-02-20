@@ -1,22 +1,24 @@
 package nova.core.gui;
 
+import java.util.Optional;
+
 import nova.core.block.Block;
 import nova.core.entity.Entity;
 import nova.core.event.CancelableEvent;
 import nova.core.gui.KeyStroke.Key;
+import nova.core.gui.render.Graphics;
 import nova.core.player.Player;
 import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
-
-import java.util.Optional;
 
 /**
  * Event for GUI, like mouse click
  */
 public class GuiEvent extends CancelableEvent {
 
-	// TODO Document.
-	// TODO Split this up into multiple events maybe?
+	// TODO Document. Add a reference to the component?
+	
+	// TODO Split this up into multiple events maybe?	
 	@Cancelable
 	public static class MouseEvent extends GuiEvent {
 
@@ -66,6 +68,19 @@ public class GuiEvent extends CancelableEvent {
 
 		public static enum EnumKeyState {
 			UP, DOWN, TYPE;
+		}
+	}
+	
+	public static class RenderEvent extends GuiEvent {
+		
+		public final Graphics graphics;
+		public final int mouseX;
+		public final int mouseY;
+
+		public RenderEvent(Graphics graphics, int mouseX, int mouseY) {
+			this.graphics = graphics;
+			this.mouseX = mouseX;
+			this.mouseY = mouseY;
 		}
 	}
 

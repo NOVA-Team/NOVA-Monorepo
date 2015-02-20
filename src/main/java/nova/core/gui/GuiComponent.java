@@ -257,7 +257,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * @param graphics {@link nova.core.render.model.Model} to use
 	 */
 	public void render(int mouseX, int mouseY, Graphics graphics) {
-
+		onEvent(new GuiEvent.RenderEvent(graphics, mouseX, mouseY));
 	}
 
 	@Override
