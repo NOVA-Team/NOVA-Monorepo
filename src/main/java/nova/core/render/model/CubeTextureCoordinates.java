@@ -1,7 +1,7 @@
 package nova.core.render.model;
 
 /**
- * Created by Stan on 14/02/2015.
+ * @author Stan
  */
 public interface CubeTextureCoordinates {
 	public double getTopMinU();
