@@ -5,6 +5,7 @@ import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.render.Color;
+import nova.core.render.model.BlockModelUtil;
 import nova.core.render.model.Model;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
@@ -220,7 +221,7 @@ public abstract class Block implements Identifiable {
 	 * @param model A {@link nova.core.render.model.Model} to use.
 	 */
 	public void renderStatic(Model model) {
-		model.renderBlock(this);
+		BlockModelUtil.drawBlock(model, this);
 	}
 
 	/**

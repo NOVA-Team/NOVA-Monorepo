@@ -184,7 +184,8 @@ public class TechneModel extends ModelProvider {
 
 				final String modelName = shapeName;
 				Model modelPart = new Model(modelName);
-				modelPart.drawCube(
+				BlockModelUtil.drawCube(
+					modelPart,
 					offsetX,
 					offsetY - sizeY,
 					offsetZ - sizeZ,
