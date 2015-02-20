@@ -26,8 +26,8 @@ public class ItemManager {
 	}
 
 	//TODO: Return an item factory
-	public Item registerItem(Class<? extends Item> item) {
-		return registerItem(() -> ReflectionUtils.newInstance(item));
+	public Item register(Class<? extends Item> item) {
+		return register(() -> ReflectionUtils.newInstance(item));
 	}
 
 	/**
@@ -35,11 +35,11 @@ public class ItemManager {
 	 * @param constructor The lambda expression to create a new constructor.
 	 * @return Dummy item
 	 */
-	public Item registerItem(Supplier<Item> constructor) {
-		return registerItem(new ItemFactory(constructor));
+	public Item register(Supplier<Item> constructor) {
+		return register(new ItemFactory(constructor));
 	}
 
-	public Item registerItem(ItemFactory factory) {
+	public Item register(ItemFactory factory) {
 		registry.register(factory);
 
 		itemRegistryListeners.publish(new ItemRegistrationEvent(factory));

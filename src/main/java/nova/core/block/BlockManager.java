@@ -1,8 +1,5 @@
 package nova.core.block;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
@@ -10,6 +7,9 @@ import nova.core.item.ItemBlock;
 import nova.core.item.ItemManager;
 import nova.core.util.Registry;
 import nova.core.util.exception.NovaException;
+
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class BlockManager {
 
@@ -41,8 +41,8 @@ public class BlockManager {
 	 * @param block Block to register
 	 * @return New block instance
 	 */
-	public Block registerBlock(Class<? extends Block> block) {
-		return registerBlock(new BlockFactory(() -> {
+	public Block register(Class<? extends Block> block) {
+		return register(new BlockFactory(() -> {
 			try {
 				return block.newInstance();
 			} catch (Exception e) {
@@ -58,8 +58,8 @@ public class BlockManager {
 	 * @param constructor Block instance {@link Supplier}
 	 * @return Dummy block
 	 */
-	public Block registerBlock(Supplier<Block> constructor) {
-		return registerBlock(new BlockFactory(constructor));
+	public Block register(Supplier<Block> constructor) {
+		return register(new BlockFactory(constructor));
 	}
 
 	/**
@@ -68,12 +68,12 @@ public class BlockManager {
 	 * @param factory {@link BlockFactory} of registered block
 	 * @return Dummy block
 	 */
-	public Block registerBlock(BlockFactory factory) {
+	public Block register(BlockFactory factory) {
 		registry.register(factory);
 		blockRegisteredListeners.publish(new BlockRegisteredEvent(factory));
 
 		Block dummy = factory.getDummy();
-		itemManager.get().registerItem(() -> new ItemBlock(dummy));
+		itemManager.get().register(() -> new ItemBlock(dummy));
 		return dummy;
 	}
 

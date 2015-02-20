@@ -7,24 +7,15 @@ import nova.core.util.transform.Vector3d;
 import nova.core.world.World;
 
 public abstract class Entity implements Identifiable, Stateful {
-	private final int uniqueId;
+
+	/**
+	 * These values are injected from EntityFactory.
+	 */
+	private int id;
 	private World world;
 	private Vector3d position;
 	private Quaternion rotation;
 	private boolean valid;
-
-	public Entity(int uniqueId, World world, Vector3d position) {
-		this.uniqueId = uniqueId;
-		setWorld(world);
-		setPosition(position);
-	}
-
-	/**
-	 * Initializes this Entity.
-	 */
-	public void awake() {
-
-	}
 
 	/**
 	 * Marks this entity as valid.
@@ -54,8 +45,8 @@ public abstract class Entity implements Identifiable, Stateful {
 	 *
 	 * @return Unique ID of this entity.
 	 */
-	public int getUniqueID() {
-		return uniqueId;
+	public int id() {
+		return id;
 	}
 
 	/**
@@ -63,7 +54,7 @@ public abstract class Entity implements Identifiable, Stateful {
 	 *
 	 * @return The {@link nova.core.world.World} that this entity is in.
 	 */
-	public World getWorld() {
+	public World world() {
 		return world;
 	}
 
@@ -72,11 +63,11 @@ public abstract class Entity implements Identifiable, Stateful {
 	 *
 	 * @return {@link nova.core.util.transform.Vector3d} containing the position in the world of this entity.
 	 */
-	public Vector3d getPosition() {
+	public Vector3d position() {
 		return position;
 	}
 
-	public Quaternion getRotation() {
+	public Quaternion rotation() {
 		return rotation;
 	}
 

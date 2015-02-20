@@ -1,7 +1,5 @@
 package nova.core.gui;
 
-import java.util.Optional;
-
 import nova.core.block.Block;
 import nova.core.entity.Entity;
 import nova.core.event.CancelableEvent;
@@ -9,6 +7,8 @@ import nova.core.gui.KeyStroke.Key;
 import nova.core.player.Player;
 import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
+
+import java.util.Optional;
 
 /**
  * Event for GUI, like mouse click
@@ -92,7 +92,7 @@ public class GuiEvent extends CancelableEvent {
 			this.entity = entity;
 			this.position = position;
 			this.player = (Player) entity;
-			this.world = entity.getWorld();
+			this.world = entity.world();
 			this.block = world.getBlock(position);
 		}
 	}
