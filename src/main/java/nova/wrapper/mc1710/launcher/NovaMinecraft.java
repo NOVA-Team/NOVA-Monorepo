@@ -102,7 +102,7 @@ public class NovaMinecraft {
 		MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
 		FMLCommonHandler.instance().bus().register(new FMLEventHandler());
 		MinecraftForge.EVENT_BUS.register(saveManager);
-		
+
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new MCGuiFactory.GuiHandler());
 	}
 
@@ -126,12 +126,12 @@ public class NovaMinecraft {
 
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
-		EventManager.instance.serverStarting.publish(null);
+		Game.instance.get().eventManager.serverStarting.publish(new EventManager.EmptyEvent());
 	}
 
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent event) {
-		EventManager.instance.serverStopping.publish(null);
+		Game.instance.get().eventManager.serverStopping.publish(new EventManager.EmptyEvent());
 	}
 
 }
