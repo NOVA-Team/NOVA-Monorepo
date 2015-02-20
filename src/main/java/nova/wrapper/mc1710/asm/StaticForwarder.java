@@ -2,8 +2,9 @@ package nova.wrapper.mc1710.asm;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.MinecraftForge;
-import nova.wrapper.mc1710.asm.ChunkModifiedEvent.ChunkSetBlockEvent;
+import nova.core.event.EventManager;
+import nova.core.util.transform.Vector3i;
+import nova.wrapper.mc1710.backward.block.BWBlock;
 
 /**
  * Static forwarder forwards injected methods.
@@ -12,7 +13,8 @@ import nova.wrapper.mc1710.asm.ChunkModifiedEvent.ChunkSetBlockEvent;
  */
 public class StaticForwarder {
 	public static void chunkSetBlockEvent(Chunk chunk, int x, int y, int z, Block block, int blockMetadata) {
-		//TODO: Switch to better event
-		MinecraftForge.EVENT_BUS.post(new ChunkSetBlockEvent(chunk, x, y, z, block, blockMetadata));
+		//Publish the event
+		EventManager.instance.blockChange.publish(new EventManager.BlockChangeEvent(new BWBlock(block), new Vector3i((chunk.xPosition << 4) + x, y, (chunk.zPosition << 4) + z)));
 	}
+
 }
