@@ -17,7 +17,7 @@ public interface Canvas {
 
 	public void setZIndex(int zIndex);
 
-	public void getZIndex();
+	public int getZIndex();
 
 	public Color getColor();
 
@@ -27,9 +27,9 @@ public interface Canvas {
 
 	public void translate(int x, int y);
 
-	public void rotate(double angle);
+	public void rotate(float angle);
 
-	public void startDrawing();
+	public void startDrawing(boolean textured);
 
 	public void addVertex(int x, int y);
 

@@ -15,6 +15,7 @@ import nova.core.render.Color;
 public class FormattedText implements Iterable<FormattedText> {
 
 	private FormattedText child;
+	private FormattedText parent;
 	private TextFormat format = new TextFormat();
 	private String text;
 
@@ -24,6 +25,7 @@ public class FormattedText implements Iterable<FormattedText> {
 
 	public FormattedText(String text, TextFormat format) {
 		this.text = text;
+		this.format = format;
 	}
 
 	public FormattedText add(FormattedText other) {
@@ -31,6 +33,7 @@ public class FormattedText implements Iterable<FormattedText> {
 			return add(other.getText());
 		} else {
 			child = other;
+			other.parent = this;
 			return other;
 		}
 	}
@@ -51,6 +54,7 @@ public class FormattedText implements Iterable<FormattedText> {
 		} else {
 			FormattedText child = new FormattedText(text, format);
 			this.child = child;
+			child.parent = this;
 			return child;
 		}
 	}
@@ -126,18 +130,22 @@ public class FormattedText implements Iterable<FormattedText> {
 		private FormattedText current;
 
 		public FormattedTextIterator(FormattedText first) {
-			this.current = first;
+			current = first;
+			while (current.parent != null) {
+				current = current.parent;
+			}
 		}
 
 		@Override
 		public boolean hasNext() {
-			return current.child != null;
+			return current != null;
 		}
 
 		@Override
 		public FormattedText next() {
+			FormattedText text = current;
 			current = current.child;
-			return current;
+			return text;
 		}
 	}
 }
