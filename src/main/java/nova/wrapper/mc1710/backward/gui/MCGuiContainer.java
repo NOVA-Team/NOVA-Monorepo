@@ -7,7 +7,7 @@ import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.nativeimpl.NativeContainer;
-import nova.core.render.model.Model;
+import nova.core.gui.render.Graphics;
 
 public class MCGuiContainer implements NativeContainer, DrawableGuiComponent {
 	
@@ -50,8 +50,11 @@ public class MCGuiContainer implements NativeContainer, DrawableGuiComponent {
 	}
 
 	@Override
-	public void draw(int mouseX, int mouseY, float partial) {
-		getComponent().render(mouseX, mouseY, new Model());
-		components.forEach((component) -> ((DrawableGuiComponent)component.getNative()).draw(mouseX, mouseY, partial));
+	public void draw(int mouseX, int mouseY, float partial, Graphics graphics) {
+		components.forEach((component) -> ((DrawableGuiComponent)component.getNative()).draw(mouseX, mouseY, partial, graphics));
+		Outline outline = getOutline();
+		graphics.getCanvas().translate(outline.x1i(), outline.y1i());
+		getComponent().render(mouseX, mouseY, graphics);
+		graphics.getCanvas().translate(-outline.x1i(), -outline.y1i());
 	}
 }

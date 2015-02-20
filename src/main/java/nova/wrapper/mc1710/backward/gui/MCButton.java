@@ -8,7 +8,7 @@ import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.components.Button;
 import nova.core.gui.nativeimpl.NativeButton;
-import nova.core.render.model.Model;
+import nova.core.gui.render.Graphics;
 import nova.core.util.transform.Vector2i;
 import cpw.mods.fml.client.config.GuiButtonExt;
 
@@ -72,8 +72,11 @@ public class MCButton extends GuiButtonExt implements NativeButton, DrawableGuiC
 	}
 
 	@Override
-	public void draw(int mouseX, int mouseY, float partial) {
+	public void draw(int mouseX, int mouseY, float partial, Graphics graphics) {
 		drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
-		getComponent().render(mouseX, mouseY, new Model());
+		Outline outline = getOutline();
+		graphics.getCanvas().translate(outline.x1i(), outline.y1i());
+		getComponent().render(mouseX, mouseY, graphics);
+		graphics.getCanvas().translate(-outline.x1i(), -outline.y1i());
 	}
 }
