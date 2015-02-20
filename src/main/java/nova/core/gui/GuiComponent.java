@@ -8,10 +8,10 @@ import nova.core.event.SidedEventBus;
 import nova.core.game.Game;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
+import nova.core.gui.render.Graphics;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
-import nova.core.render.model.Model;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector2i;
 
@@ -148,7 +148,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	/**
 	 * Call this when the component's state has changed and needs to be
 	 * re-rendered. The native component is requested to infer
-	 * {@link #render(int, int, Model)} after.
+	 * {@link #render(int, int, Graphics)} after.
 	 */
 	protected void repaint() {
 		nativeElement.requestRender();
@@ -210,7 +210,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		return isMouseOver;
 	}
 
-	public final void preRender(int mouseX, int mouseY, Model artist) {
+	public final void preRender(int mouseX, int mouseY, Graphics graphics) {
 		isMouseOver = getOutline().contains(mouseX, mouseY);
 	}
 
@@ -254,9 +254,9 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 *
 	 * @param mouseX Mouse position in X-axis on screen
 	 * @param mouseY Mouse position in Y-axis on screen
-	 * @param model {@link nova.core.render.model.Model} to use
+	 * @param graphics {@link nova.core.render.model.Model} to use
 	 */
-	public void render(int mouseX, int mouseY, Model model) {
+	public void render(int mouseX, int mouseY, Graphics graphics) {
 
 	}
 

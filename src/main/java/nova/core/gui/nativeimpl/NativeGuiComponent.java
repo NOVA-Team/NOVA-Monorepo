@@ -11,7 +11,7 @@ import nova.core.gui.GuiEvent.MouseEvent.EnumMouseState;
 import nova.core.gui.GuiEvent.MouseWheelEvent;
 import nova.core.gui.KeyStroke.Key;
 import nova.core.gui.Outline;
-import nova.core.render.model.Model;
+import nova.core.gui.render.Graphics;
 import nova.core.util.transform.Vector2i;
 
 //TODO Make this generic even if it means writing novels when extending.
@@ -66,10 +66,10 @@ public interface NativeGuiComponent {
 	 */
 	public void requestRender();
 
-	public default void render(int mouseX, int mouseY, Model model) {
+	public default void render(int mouseX, int mouseY, Graphics graphics) {
 		if (getComponent().isVisible()) {
-			getComponent().preRender(mouseX, mouseY, model);
-			getComponent().render(mouseX, mouseY, model);
+			getComponent().preRender(mouseX, mouseY, graphics);
+			getComponent().render(mouseX, mouseY, graphics);
 		}
 	}
 

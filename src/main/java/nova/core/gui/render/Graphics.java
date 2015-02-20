@@ -53,7 +53,7 @@ public class Graphics implements TextRenderer {
 		int size = linewidth / 2;
 		int ox = (int) (Math.sin(angle) * size);
 		int oy = (int) (Math.cos(angle) * size);
-		canvas.startDrawing();
+		canvas.startDrawing(false);
 		canvas.addVertex(x + ox, y + oy);
 		canvas.addVertex(x - ox, y - oy);
 		canvas.addVertex(x2 - ox, y2 - oy);
@@ -69,7 +69,7 @@ public class Graphics implements TextRenderer {
 	}
 	
 	public void fillRect(int x, int y, int width, int height) {
-		canvas.startDrawing();
+		canvas.startDrawing(false);
 		canvas.addVertex(x, y);
 		canvas.addVertex(x + width, y);
 		canvas.addVertex(x + width, y + width);
@@ -78,7 +78,7 @@ public class Graphics implements TextRenderer {
 	}
 
 	public void fillRect(int x, int y, int width, int height, Color c1, Color c2) {
-		canvas.startDrawing();
+		canvas.startDrawing(false);
 		canvas.setColor(c1);
 		canvas.addVertex(x, y);
 		canvas.addVertex(x + width, y);
@@ -89,7 +89,7 @@ public class Graphics implements TextRenderer {
 	}
 
 	public void fillRect(int x, int y, int width, int height, Color c1, Color c2, Color c3, Color c4) {
-		canvas.startDrawing();
+		canvas.startDrawing(false);
 		canvas.setColor(c1);
 		canvas.addVertex(x, y);
 		canvas.setColor(c3);
@@ -111,7 +111,11 @@ public class Graphics implements TextRenderer {
 	}
 
 	public void fillShape(Shape2D shape) {
-		canvas.startDrawing();
+		fillShape(shape, false);
+	}
+
+	public void fillShape(Shape2D shape, boolean textured) {
+		canvas.startDrawing(textured);
 		for (Vertex2D vertex : shape.vertices()) {
 			canvas.addVertex(vertex);
 		}
@@ -120,7 +124,7 @@ public class Graphics implements TextRenderer {
 
 	public void drawTexture(int x, int y, int width, int height, Texture texture) {
 		canvas.bindTexture(texture);
-		canvas.startDrawing();
+		canvas.startDrawing(true);
 		canvas.addVertexWithUV(x, y, 0, 0);
 		canvas.addVertexWithUV(x + width, y, 1, 0);
 		canvas.addVertexWithUV(x + width, y + width, 1, 1);

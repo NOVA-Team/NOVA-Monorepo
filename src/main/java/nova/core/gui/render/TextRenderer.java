@@ -12,7 +12,8 @@ public interface TextRenderer {
 
 	/**
 	 * Renders {@link FormattedText} to the screen. Performs a line wrap at
-	 * {@code %n} and {@code \n}.
+	 * {@code %n} and {@code \n}. <b>Any repeating whitespace will not be taken
+	 * into account!</b>
 	 * 
 	 * @param x x position
 	 * @param y y position
@@ -26,7 +27,8 @@ public interface TextRenderer {
 	/**
 	 * Renders {@link FormattedText} to the screen. Performs a line wrap at
 	 * {@code %n} and {@code \n}. It also jumps to a new line when the text is
-	 * longer than the provided width, wraps per word.
+	 * longer than the provided width, wraps per word. <b>Any repeating
+	 * whitespace will not be taken into account!</b>
 	 * 
 	 * @param x x position
 	 * @param y y position
@@ -40,7 +42,8 @@ public interface TextRenderer {
 	 * the desired width and fills the center with "{@code ...}
 	 * ". An example would be: "{@code Donaudampfschiff}" - "
 	 * {@code Donau...chiff}". The wrapping substrings should have the same
-	 * amount of characters. This should only be used on small text.
+	 * amount of characters. This should only be used on small text. <b>Any
+	 * repeating whitespace will not be taken into account!</b>
 	 * 
 	 * @param x x position
 	 * @param y y position
@@ -53,7 +56,8 @@ public interface TextRenderer {
 	 * Works in the same way as {@link #drawString(int, int, FormattedText)}
 	 * except that it takes a String as argument. Keep in mind that the wrapper
 	 * might apply unwanted formatting to the provided text, so using
-	 * {@link FormattedText} is the <i>safe</i> way.
+	 * {@link FormattedText} is the <i>safe</i> way. <b>Any repeating whitespace
+	 * will not be taken into account!</b>
 	 * 
 	 * @param x x position
 	 * @param y y position
@@ -68,7 +72,8 @@ public interface TextRenderer {
 	 * {@link #drawString(int, int, FormattedText, int)} except that it takes a
 	 * String as argument. Keep in mind that the wrapper might apply unwanted
 	 * formatting to the provided text, so using {@link FormattedText} is the
-	 * <i>safe</i> way.
+	 * <i>safe</i> way. <b>Any repeating whitespace will not be taken into
+	 * account!</b>
 	 * 
 	 * @param x x position
 	 * @param y y position
@@ -84,7 +89,8 @@ public interface TextRenderer {
 	 * {@link #drawCutString(int, int, FormattedText, int)} except that it takes
 	 * a String as argument. Keep in mind that the wrapper might apply unwanted
 	 * formatting to the provided text, so using {@link FormattedText} is the
-	 * <i>safe</i> way.
+	 * <i>safe</i> way. <b>Any repeating whitespace will not be taken into
+	 * account!</b>
 	 * 
 	 * @param x x position
 	 * @param y y position
