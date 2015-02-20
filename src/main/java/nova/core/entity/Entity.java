@@ -11,7 +11,6 @@ public abstract class Entity implements Identifiable, Stateful {
 	/**
 	 * These values are injected from EntityFactory.
 	 */
-	private int id;
 	private World world;
 	private Vector3d position;
 	private Quaternion rotation;
@@ -38,15 +37,6 @@ public abstract class Entity implements Identifiable, Stateful {
 	 */
 	public boolean isValid() {
 		return valid;
-	}
-
-	/**
-	 * Gets the unique id of this entity.
-	 *
-	 * @return Unique ID of this entity.
-	 */
-	public int id() {
-		return id;
 	}
 
 	/**
