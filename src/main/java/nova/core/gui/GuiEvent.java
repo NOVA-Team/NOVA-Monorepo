@@ -78,6 +78,24 @@ public class GuiEvent extends CancelableEvent {
 		}
 	}
 
+	public static class AddEvent extends GuiEvent {
+
+		public final AbstractGuiContainer<?, ?> container;
+
+		public AddEvent(AbstractGuiContainer<?, ?> container) {
+			this.container = container;
+		}
+	}
+
+	public static class RemoveEvent extends GuiEvent {
+
+		public final AbstractGuiContainer<?, ?> container;
+
+		public RemoveEvent(AbstractGuiContainer<?, ?> container) {
+			this.container = container;
+		}
+	}
+
 	public static class BindEvent extends GuiEvent {
 
 		public final Gui gui;

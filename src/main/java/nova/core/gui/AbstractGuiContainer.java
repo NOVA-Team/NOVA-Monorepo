@@ -10,6 +10,7 @@ import nova.core.gui.GuiEvent.ResizeEvent;
 import nova.core.gui.layout.BorderLayout;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeContainer;
+import nova.core.util.exception.NovaException;
 
 /**
  * This class provides container for {@link GuiComponent}
@@ -121,6 +122,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		children.put(component.getID(), component);
 		layout.add(component, this, properties);
 		getNative().addElement(component);
+		component.onEvent(new GuiEvent.AddEvent(this));
 		return (O) this;
 	}
 
@@ -135,6 +137,9 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	@SuppressWarnings("unchecked")
 	public O removeElement(GuiComponent<?, ?> component) {
 		Objects.requireNonNull(component);
+		if (!children.containsValue(component))
+			throw new NovaException("Component couldn't be removed from parent container as it wasn't a child.");
+		component.onEvent(new GuiEvent.RemoveEvent(this));
 		children.remove(component);
 		layout.remove(component);
 		component.updateQualifiedName();
