@@ -58,7 +58,7 @@ public class Color {
 		green = Math.max(Math.min(255, green), 0);
 		blue = Math.max(Math.min(255, blue), 0);
 		alpha = Math.max(Math.min(255, alpha), 0);
-		int argb = red | green << 8 | blue << 16 | alpha << 24;
+		int argb = alpha << 24 | red << 16 | green << 8 | blue;
 		return argb(argb);
 	}
 
