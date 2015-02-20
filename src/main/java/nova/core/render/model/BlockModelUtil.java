@@ -3,6 +3,7 @@ package nova.core.render.model;
 import nova.core.block.Block;
 import nova.core.render.Color;
 import nova.core.util.Direction;
+import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Cuboid;
 
 /**
@@ -177,6 +178,30 @@ public class BlockModelUtil {
 		model.drawFace(east);
 
 		return east;
+	}
+
+	public static Face drawDir(Direction dir,
+		Model model,
+		double minX, double minY, double minZ,
+		double maxX, double maxY, double maxZ,
+		CubeTextureCoordinates textureCoordinates) {
+
+		switch (dir) {
+			case DOWN:
+				return drawDown(model, minX, minY, minZ, maxX, maxY, maxZ, textureCoordinates);
+			case UP:
+				return drawUp(model, minX, minY, minZ, maxX, maxY, maxZ, textureCoordinates);
+			case NORTH:
+				return drawNorth(model, minX, minY, minZ, maxX, maxY, maxZ, textureCoordinates);
+			case SOUTH:
+				return drawSouth(model, minX, minY, minZ, maxX, maxY, maxZ, textureCoordinates);
+			case EAST:
+				return drawEast(model, minX, minY, minZ, maxX, maxY, maxZ, textureCoordinates);
+			case WEST:
+				return drawWest(model, minX, minY, minZ, maxX, maxY, maxZ, textureCoordinates);
+		}
+
+		throw new NovaException("Invalid direction!");
 	}
 
 	public static Model drawCube(
