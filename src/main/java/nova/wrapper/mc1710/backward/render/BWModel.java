@@ -12,7 +12,7 @@ import nova.wrapper.mc1710.render.RenderUtility;
 /**
  * @author Calclavia
  */
-public class ModelWrapper extends Model {
+public class BWModel extends Model {
 
 	/**
 	 * Completes this rendering for a block.

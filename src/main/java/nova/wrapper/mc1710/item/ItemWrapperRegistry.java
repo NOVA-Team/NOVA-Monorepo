@@ -147,7 +147,7 @@ public class ItemWrapperRegistry {
 				throw new NovaException("Missing block: " + itemFactory.getID());
 			}
 		} else {
-			itemWrapper = new ItemWrapper(itemFactory);
+			itemWrapper = new FWItem(itemFactory);
 		}
 
 		MinecraftItemMapping minecraftItemMapping = new MinecraftItemMapping(itemWrapper, 0);
@@ -156,7 +156,7 @@ public class ItemWrapperRegistry {
 
 		// don't register ItemBlocks twice
 		if (!(itemFactory.getDummy() instanceof ItemBlock)) {
-			NovaMinecraft.proxy.registerItem((ItemWrapper) itemWrapper);
+			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
 			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
 
 			//TODO: Testing purposes:

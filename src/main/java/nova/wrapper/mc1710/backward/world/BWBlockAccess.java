@@ -5,7 +5,7 @@ import nova.core.block.Block;
 import nova.core.block.BlockAccess;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.block.BWBlock;
-import nova.wrapper.mc1710.forward.block.BlockWrapper;
+import nova.wrapper.mc1710.forward.block.FWBlock;
 
 import java.util.Optional;
 
@@ -24,8 +24,8 @@ public class BWBlockAccess implements BlockAccess {
 		net.minecraft.block.Block mcBlock = access.getBlock(position.x, position.y, position.z);
 		if (mcBlock == null) {
 			return Optional.empty();
-		} else if (mcBlock instanceof BlockWrapper) {
-			return Optional.of(((BlockWrapper) mcBlock).getBlockInstance(this, position));
+		} else if (mcBlock instanceof FWBlock) {
+			return Optional.of(((FWBlock) mcBlock).getBlockInstance(this, position));
 		} else {
 			return Optional.of(new BWBlock(mcBlock));
 		}

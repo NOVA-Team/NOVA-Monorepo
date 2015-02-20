@@ -32,10 +32,10 @@ import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.BackwardProxyUtil;
-import nova.wrapper.mc1710.backward.render.ModelWrapper;
+import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.backward.world.BWBlockAccess;
-import nova.wrapper.mc1710.forward.util.CuboidForwardWrapper;
+import nova.wrapper.mc1710.forward.util.FWCuboid;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.render.RenderUtility;
 import org.lwjgl.opengl.GL11;
@@ -55,7 +55,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
  * A Minecraft to Nova block wrapper
  * @author Calclavia
  */
-public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
+public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
 	public final Block block;
 	/**
 	 * Reference to the wrapped Nova block
@@ -68,7 +68,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
 	//TODO: Resolve unknown material issue
-	public BlockWrapper(BlockFactory factory) {
+	public FWBlock(BlockFactory factory) {
 		super(Material.piston);
 		this.factory = factory;
 		this.block = factory.getDummy();
@@ -86,9 +86,9 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 		 * Otherwise, create a new instance of the block and forward the methods over.
 		 */
 		if (hasTileEntity(0)) {
-			TileWrapper tileWrapper = ((TileWrapper) access.getTileEntity(position.x, position.y, position.z));
+			FWTile tileWrapper = ((FWTile) access.getTileEntity(position.x, position.y, position.z));
 			if (tileWrapper != null && tileWrapper.getBlock() != null) {
-				return ((TileWrapper) access.getTileEntity(position.x, position.y, position.z)).getBlock();
+				return ((FWTile) access.getTileEntity(position.x, position.y, position.z)).getBlock();
 			}
 
 			System.out.println("Error: Block in TileWrapper is null.");
@@ -119,7 +119,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
-		return new TileWrapper(factory.getID());
+		return new FWTile(factory.getID());
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 			boxes
 				.stream()
 				.map(c -> c.add(new Vector3i(x, y, z)))
-				.map(CuboidForwardWrapper::new)
+				.map(FWCuboid::new)
 				.collect(Collectors.toList())
 		);
 	}
@@ -228,7 +228,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-		return new CuboidForwardWrapper(getBlockInstance(world, new Vector3i(x, y, z)).getBoundingBox().add(new Vector3i(x, y, z)));
+		return new FWCuboid(getBlockInstance(world, new Vector3i(x, y, z)).getBoundingBox().add(new Vector3i(x, y, z)));
 	}
 
 	@Override
@@ -256,7 +256,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glPushMatrix();
 		Tessellator.instance.startDrawingQuads();
-		ModelWrapper artist = new ModelWrapper();
+		BWModel artist = new BWModel();
 		this.block.renderItem(artist);
 		artist.renderItem();
 		Tessellator.instance.draw();
@@ -267,7 +267,7 @@ public class BlockWrapper extends net.minecraft.block.Block implements ISimpleBl
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
-		ModelWrapper model = new ModelWrapper();
+		BWModel model = new BWModel();
 		getBlockInstance(world, new Vector3i(x, y, z)).renderStatic(model);
 		model.renderWorld(world, new Vector3d(x + 0.5, y + 0.5, z + 0.5));
 		return false;

@@ -27,7 +27,7 @@ import java.util.concurrent.FutureTask;
  *
  * @author Calclavia
  */
-public class TileWrapper extends TileEntity {
+public class FWTile extends TileEntity {
 
 	private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
@@ -35,11 +35,11 @@ public class TileWrapper extends TileEntity {
 	private Block block;
 	private Map<String, Object> cacheData = null;
 
-	public TileWrapper() {
+	public FWTile() {
 
 	}
 
-	public TileWrapper(String blockID) {
+	public FWTile(String blockID) {
 		this.blockID = blockID;
 	}
 

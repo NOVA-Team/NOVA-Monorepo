@@ -9,10 +9,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
-import nova.wrapper.mc1710.forward.block.BlockWrapper;
-import nova.wrapper.mc1710.forward.block.TESRWrapper;
-import nova.wrapper.mc1710.forward.block.TileWrapper;
-import nova.wrapper.mc1710.item.ItemWrapper;
+import nova.wrapper.mc1710.forward.block.FWBlock;
+import nova.wrapper.mc1710.forward.block.FWTile;
+import nova.wrapper.mc1710.forward.block.FWTileRenderer;
+import nova.wrapper.mc1710.item.FWItem;
 import nova.wrapper.mc1710.render.RenderUtility;
 
 /**
@@ -28,17 +28,17 @@ public class ClientProxy extends CommonProxy {
 		 */
 		RenderUtility.instance.loadModels();
 
-		ClientRegistry.registerTileEntity(TileWrapper.class, "novaTile", TESRWrapper.instance);
+		ClientRegistry.registerTileEntity(FWTile.class, "novaTile", FWTileRenderer.instance);
 	}
 
 	@Override
-	public void registerItem(ItemWrapper item) {
+	public void registerItem(FWItem item) {
 		super.registerItem(item);
 		MinecraftForgeClient.registerItemRenderer(item, item);
 	}
 
 	@Override
-	public void registerBlock(BlockWrapper block) {
+	public void registerBlock(FWBlock block) {
 		super.registerBlock(block);
 
 		/**

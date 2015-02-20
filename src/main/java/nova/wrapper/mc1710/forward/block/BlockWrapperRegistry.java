@@ -6,8 +6,7 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.game.Game;
-import nova.wrapper.mc1710.item.ItemBlockWrapper;
-import nova.wrapper.mc1710.item.MCItem;
+import nova.wrapper.mc1710.item.FWItemBlock;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 
 import java.util.HashMap;
@@ -42,10 +41,10 @@ public class BlockWrapperRegistry {
     }
 
     private void addNOVABlock(BlockFactory blockFactory) {
-        BlockWrapper blockWrapper = new BlockWrapper(blockFactory);
-        blockWrapperMap.put(blockWrapper.block, blockWrapper);
+		FWBlock blockWrapper = new FWBlock(blockFactory);
+		blockWrapperMap.put(blockWrapper.block, blockWrapper);
         NovaMinecraft.proxy.registerBlock(blockWrapper);
-        GameRegistry.registerBlock(blockWrapper, ItemBlockWrapper.class, blockFactory.getID());
+		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
 
         //TODO: Testing purposes:
         blockWrapper.setCreativeTab(CreativeTabs.tabBlock);

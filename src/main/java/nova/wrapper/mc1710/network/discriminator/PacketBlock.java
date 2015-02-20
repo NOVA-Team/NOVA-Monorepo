@@ -8,8 +8,8 @@ import nova.core.block.Block;
 import nova.core.network.PacketReceiver;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
-import nova.wrapper.mc1710.forward.block.BlockWrapper;
-import nova.wrapper.mc1710.forward.block.TileWrapper;
+import nova.wrapper.mc1710.forward.block.FWBlock;
+import nova.wrapper.mc1710.forward.block.FWTile;
 import nova.wrapper.mc1710.network.PacketWrapper;
 
 /**
@@ -65,15 +65,15 @@ public class PacketBlock extends PacketAbstract {
 
 		TileEntity tile = player.getEntityWorld().getTileEntity(x, y, z);
 
-		if (tile instanceof TileWrapper) {
-			block = ((TileWrapper) tile).getBlock();
+		if (tile instanceof FWTile) {
+			block = ((FWTile) tile).getBlock();
 		}
 
 		if (block == null) {
 			net.minecraft.block.Block wrappedBlock = player.getEntityWorld().getBlock(x, y, z);
 
-			if (wrappedBlock instanceof BlockWrapper) {
-				block = ((BlockWrapper) wrappedBlock).getBlockInstance(player.getEntityWorld(), new Vector3i(x, y, z));
+			if (wrappedBlock instanceof FWBlock) {
+				block = ((FWBlock) wrappedBlock).getBlockInstance(player.getEntityWorld(), new Vector3i(x, y, z));
 			}
 		}
 
