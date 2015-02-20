@@ -7,42 +7,45 @@ import java.util.Optional;
  */
 public class FluidTankSimple implements FluidContainer {
 
-	private Optional<FluidStack> containedFluid;
+	private Optional<Fluid> containedFluid;
 	private int maxCapacity;
 
 	@Override
-	public Optional<FluidStack> consumeFluid(FluidStack fluidStack, boolean simulate) {
-		int capacity = maxCapacity - containedFluid.orElse(fluidStack.withAmount(0)).getStackSize();
-		int toPut = Math.min(fluidStack.getStackSize(), capacity);
+	public Optional<Fluid> addFluid(Fluid fluid, boolean simulate) {
+		int capacity = maxCapacity - containedFluid.orElse(fluid.withAmount(0)).amount();
+		int toPut = Math.min(fluid.amount(), capacity);
 
 		if (containedFluid.isPresent()) {
-			if (!containedFluid.get().sameStackType(fluidStack))
-				return Optional.of(fluidStack.clone());
-			if (!simulate)
-				containedFluid.get().addStackSize(toPut);
+			if (!containedFluid.get().sameType(fluid)) {
+				return Optional.of(fluid.clone());
+			}
+			if (!simulate) {
+				containedFluid.get().add(toPut);
+			}
 		} else if (!simulate) {
-			containedFluid = Optional.of(fluidStack.withAmount(toPut));
+			containedFluid = Optional.of(fluid.withAmount(toPut));
 		}
 
-		if (fluidStack.getStackSize() - toPut > 0)
-			return Optional.of(fluidStack.withAmount(fluidStack.getStackSize() - toPut));
-		else
+		if (fluid.amount() - toPut > 0) {
+			return Optional.of(fluid.withAmount(fluid.amount() - toPut));
+		} else
 			return Optional.empty();
 	}
 
 	@Override
-	public Optional<FluidStack> extractFluid(Fluid fluid, int amount, boolean simulate) {
-		if (!containedFluid.isPresent() || containedFluid.get().getFluid() != fluid)
+	public Optional<Fluid> removeFluid(Fluid fluid, boolean simulate) {
+		if (!containedFluid.isPresent() || containedFluid.get() != fluid)
 			return Optional.empty();
 
-		int toGet = Math.min(amount, containedFluid.get().getStackSize());
+		int toGet = Math.min(fluid.amount(), containedFluid.get().amount());
 
-		if (!simulate)
-			containedFluid.get().subStackSize(toGet);
+		if (!simulate) {
+			containedFluid.get().remove(toGet);
+		}
 
-		if (toGet > 0)
-			return Optional.of(new FluidStack(fluid, toGet));
-		else
+		if (toGet > 0) {
+			return Optional.of(fluid.withAmount(toGet));
+		} else
 			return Optional.empty();
 	}
 
@@ -52,7 +55,7 @@ public class FluidTankSimple implements FluidContainer {
 	}
 
 	@Override
-	public Optional<FluidStack> getStoredFluid() {
+	public Optional<Fluid> getStoredFluid() {
 		return containedFluid;
 	}
 

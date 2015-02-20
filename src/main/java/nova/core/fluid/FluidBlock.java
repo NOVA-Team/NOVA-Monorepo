@@ -20,5 +20,5 @@ public interface FluidBlock {
 	 * @param doDrain If false, the drain will only be simulated.
 	 * @return
 	 */
-	FluidStack drain(boolean doDrain);
+	Fluid drain(boolean doDrain);
 }
