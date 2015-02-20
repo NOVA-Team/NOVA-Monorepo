@@ -9,20 +9,15 @@ import nova.core.util.transform.Vector3i;
  * @author Calclavia
  */
 public class EventManager {
-
-	//TODO: Put this inside Game
-	public static final EventManager instance = new EventManager();
-
-	//TODO: Check the eventBus type parameter?
 	/**
 	 * Called when the server starts
 	 */
-	public EventBus<Object> serverStarting = new EventBus<>();
+	public EventBus<EmptyEvent> serverStarting = new EventBus<>();
 
 	/**
 	 * Called when the server stops
 	 */
-	public EventBus<Object> serverStopping = new EventBus<>();
+	public EventBus<EmptyEvent> serverStopping = new EventBus<>();
 
 	/**
 	 * Called when a block is changed (set block).
@@ -39,5 +34,9 @@ public class EventManager {
 			this.block = block;
 			this.position = position;
 		}
+	}
+
+	public static class EmptyEvent {
+
 	}
 }

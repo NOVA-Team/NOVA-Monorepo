@@ -1,9 +1,8 @@
 package nova.core.game;
 
-import java.util.Optional;
-
 import nova.core.block.BlockManager;
 import nova.core.entity.EntityManager;
+import nova.core.event.EventManager;
 import nova.core.fluid.FluidManager;
 import nova.core.gui.factory.GuiComponentFactory;
 import nova.core.gui.factory.GuiFactory;
@@ -13,6 +12,8 @@ import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
 import nova.core.world.WorldManager;
+
+import java.util.Optional;
 
 public class Game {
 
@@ -32,7 +33,8 @@ public class Game {
 	public final RecipeManager recipeManager;
 	public final CraftingRecipeManager craftingRecipeManager;
 	public final ItemDictionary itemDictionary;
-	
+	public final EventManager eventManager;
+
 	// TODO Move somewhere else, also... Optional inconvenient here, it has to exist as required.
 	public final Optional<GuiComponentFactory> guiComponentFactory;
 	public final Optional<GuiFactory> guiFactory;
@@ -47,6 +49,7 @@ public class Game {
 		RecipeManager recipeManager, 
 		CraftingRecipeManager craftingRecipeManager, 
 		ItemDictionary itemDictionary,
+		EventManager eventManager,
 		Optional<GuiComponentFactory> guiComponentFactory,
 		Optional<GuiFactory> guiFactory) {
 		
@@ -59,7 +62,8 @@ public class Game {
 		this.recipeManager = recipeManager;
 		this.craftingRecipeManager = craftingRecipeManager;
 		this.itemDictionary = itemDictionary;
-		
+		this.eventManager = eventManager;
+
 		this.guiComponentFactory = guiComponentFactory;
 		this.guiFactory = guiFactory;
 	}
