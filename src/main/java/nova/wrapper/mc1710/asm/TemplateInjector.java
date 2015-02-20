@@ -34,7 +34,7 @@ public class TemplateInjector {
 
 	private ClassNode getClassNode(String name) {
 		try {
-			return ASMHelper.createClassNode(TemplateTransformer.cl.getClassBytes(name.replace('/', '.')));
+			return ASMHelper.createClassNode(NovaTransformer.cl.getClassBytes(name.replace('/', '.')));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

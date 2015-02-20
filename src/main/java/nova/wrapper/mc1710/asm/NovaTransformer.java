@@ -1,6 +1,7 @@
 package nova.wrapper.mc1710.asm;
 
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.launchwrapper.LaunchClassLoader;
 import nova.wrapper.mc1710.asm.lib.ASMHelper;
 import nova.wrapper.mc1710.asm.lib.ObfMapping;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -22,6 +23,8 @@ import static org.objectweb.asm.Opcodes.INVOKESTATIC;
  * @author Calclavia
  */
 public class NovaTransformer implements IClassTransformer {
+	public static LaunchClassLoader cl = (LaunchClassLoader) NovaTransformer.class.getClassLoader();
+
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes) {
 
