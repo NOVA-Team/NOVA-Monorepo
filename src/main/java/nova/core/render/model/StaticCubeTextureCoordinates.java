@@ -1,10 +1,10 @@
 package nova.core.render.model;
 
 /**
- * Created by Stan on 14/02/2015.
+ * @author Stan
  */
 public final class StaticCubeTextureCoordinates implements CubeTextureCoordinates {
-	public static final StaticCubeTextureCoordinates INSTANCE = new StaticCubeTextureCoordinates();
+	public static final StaticCubeTextureCoordinates instance = new StaticCubeTextureCoordinates();
 
 	private StaticCubeTextureCoordinates() {}
 

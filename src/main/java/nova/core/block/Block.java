@@ -242,6 +242,10 @@ public abstract class Block implements Identifiable {
 		return Optional.empty();
 	}
 
+	public boolean shouldRenderSide(Direction side) {
+		return true;
+	}
+
 	/**
 	 * Gets the color of a specific face. This is called by the default block renderer.
 	 *
