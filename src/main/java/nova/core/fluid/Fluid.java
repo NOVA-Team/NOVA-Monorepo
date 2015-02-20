@@ -7,7 +7,6 @@ import nova.core.util.components.Stored;
 import java.util.Optional;
 
 public class Fluid implements Identifiable, Storable, Cloneable {
-
 	/**
 	 * 1000 liters = 1 cubic meter
 	 */

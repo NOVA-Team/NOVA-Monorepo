@@ -8,9 +8,13 @@ import java.util.function.Supplier;
 
 public class FluidManager {
 	public final Registry<FluidFactory> registry;
+	public final Fluid water;
+	public final Fluid lava;
 
 	private FluidManager(Registry<FluidFactory> fluidRegistry) {
 		this.registry = fluidRegistry;
+		this.water = register(() -> new Fluid("water"));
+		this.lava = register(() -> new Fluid("lava"));
 	}
 
 	/**

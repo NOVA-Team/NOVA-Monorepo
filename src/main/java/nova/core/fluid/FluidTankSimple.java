@@ -3,9 +3,9 @@ package nova.core.fluid;
 import java.util.Optional;
 
 /**
- * This class provides basic implementation of {@link FluidContainer}
+ * This class provides basic implementation of {@link Tank}
  */
-public class FluidTankSimple implements FluidContainer {
+public class FluidTankSimple implements Tank {
 
 	private Optional<Fluid> containedFluid;
 	private int maxCapacity;
@@ -50,12 +50,12 @@ public class FluidTankSimple implements FluidContainer {
 	}
 
 	@Override
-	public int getMaximumCapacity() {
+	public int getFluidCapacity() {
 		return maxCapacity;
 	}
 
 	@Override
-	public Optional<Fluid> getStoredFluid() {
+	public Optional<Fluid> getFluid() {
 		return containedFluid;
 	}
 

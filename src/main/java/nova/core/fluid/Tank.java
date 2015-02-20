@@ -6,25 +6,29 @@ import java.util.Optional;
  * Classes with this interface declare ability to store fluids
  *
  * @see FluidConsumer
- * @see FluidContainer
+ * @see Tank
  */
-public interface FluidContainer extends FluidConsumer, FluidProvider {
+public interface Tank extends FluidConsumer, FluidProvider {
 
 	/**
 	 * @return Maximum capacity of this container
 	 */
-	public int getMaximumCapacity();
+	int getFluidCapacity();
 
 	/**
 	 * @return Fluid stored in this container
 	 */
-	public Optional<Fluid> getStoredFluid();
+	Optional<Fluid> getFluid();
+
+	default int getFluidAmount() {
+		return hasFluid() ? getFluid().get().amount() : 0;
+	}
 
 	/**
 	 * @return Whethet this container is storing a fluid
 	 */
-	public default boolean hasFluid() {
-		return getStoredFluid().isPresent();
+	default boolean hasFluid() {
+		return getFluid().isPresent();
 	}
 
 }
