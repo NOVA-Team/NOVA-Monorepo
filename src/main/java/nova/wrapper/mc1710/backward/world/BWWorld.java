@@ -1,8 +1,10 @@
 package nova.wrapper.mc1710.backward.world;
 
+import net.minecraft.init.Blocks;
 import nova.core.block.Block;
 import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
+import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 
 import java.util.Optional;
 
@@ -35,8 +37,8 @@ public class BWWorld extends World {
 
 	@Override
 	public boolean setBlock(Vector3i position, Block block) {
-		net.minecraft.block.Block mcBlock = net.minecraft.block.Block.getBlockFromName(block.getID());
-		return world.setBlock(position.x, position.y, position.z, mcBlock);
+		net.minecraft.block.Block mcBlock = BlockWrapperRegistry.instance.getMCBlock(block);
+		return world.setBlock(position.x, position.y, position.z, mcBlock != null ? mcBlock : Blocks.air);
 	}
 
 	@Override
