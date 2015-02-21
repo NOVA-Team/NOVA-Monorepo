@@ -3,8 +3,8 @@ package nova.wrapper.mc1710.asm.lib;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import nova.core.util.NovaLogger;
 import org.objectweb.asm.tree.ClassNode;
-import resonantengine.core.Reference;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class ClassHeirachyManager implements IClassTransformer {
 				cache = declareASM(bytes);
 			}
 		} catch (IOException e) {
-			Reference.logger().catching(e);
+			NovaLogger.log(e);
 		}
 
 		if (cache != null) {
@@ -87,7 +87,7 @@ public class ClassHeirachyManager implements IClassTransformer {
 		try {
 			cache = declareReflection(name);
 		} catch (ClassNotFoundException e) {
-			Reference.logger().catching(e);
+			NovaLogger.log(e);
 		}
 
 		return cache;

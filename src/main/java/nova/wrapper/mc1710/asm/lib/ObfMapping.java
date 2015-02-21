@@ -3,6 +3,7 @@ package nova.wrapper.mc1710.asm.lib;
 import com.google.common.base.Objects;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import nova.core.util.NovaLogger;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -11,7 +12,6 @@ import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
-import resonantengine.core.Reference;
 
 import java.io.IOException;
 
@@ -26,7 +26,7 @@ public class ObfMapping {
 		try {
 			obf = ((LaunchClassLoader) ObfMapping.class.getClassLoader()).getClassBytes("net.minecraft.world.World") == null;
 		} catch (IOException iox) {
-			Reference.logger().catching(iox);
+			NovaLogger.log(iox);
 		}
 		obfuscated = obf;
 	}
