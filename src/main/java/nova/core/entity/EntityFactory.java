@@ -11,11 +11,14 @@ import java.util.function.Supplier;
  */
 public class EntityFactory extends Factory<Entity> {
 	public static final Field wrapperField;
+	public static final Field rigidBodyField;
 
 	static {
 		try {
 			wrapperField = Entity.class.getDeclaredField("wrapper");
 			wrapperField.setAccessible(true);
+			rigidBodyField = Entity.class.getDeclaredField("rigidBody");
+			rigidBodyField.setAccessible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NovaException();
@@ -26,11 +29,12 @@ public class EntityFactory extends Factory<Entity> {
 		super(constructor);
 	}
 
-	public Entity makeEntity(EntityWrapper wrapper) {
+	public Entity makeEntity(EntityWrapper wrapper, RigidBody rigidBody) {
 		Entity newEntity = constructor.get();
 
 		try {
 			wrapperField.set(newEntity, wrapper);
+			rigidBodyField.set(newEntity, rigidBody);
 		} catch (Exception e) {
 			throw new NovaException();
 		}

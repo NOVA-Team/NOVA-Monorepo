@@ -7,16 +7,19 @@ import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
 import nova.core.world.World;
 
+import java.util.Optional;
+
 public abstract class Entity implements Identifiable, Stateful {
 
 	/**
 	 * The wrapper is injected from EntityFactory.
 	 */
-	private final EntityWrapper wrapper = null;
+	public final EntityWrapper wrapper = null;
+	protected final RigidBody rigidBody = null;
 
-	public RigidBody rigidBody;
-
-	public Cuboid collider;
+	public Optional<Cuboid> collider() {
+		return Optional.empty();
+	}
 
 	/**
 	 * Check if this entity is valid.
