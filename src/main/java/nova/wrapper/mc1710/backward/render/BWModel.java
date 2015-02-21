@@ -5,8 +5,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import nova.core.block.BlockAccess;
 import nova.core.render.model.Model;
-import nova.core.util.transform.MatrixStack;
-import nova.core.util.transform.Vector3d;
 import nova.wrapper.mc1710.render.RenderUtility;
 
 /**
@@ -20,18 +18,14 @@ public class BWModel extends Model {
 	 * @param blockAccess {@link BlockAccess}
 	 * @param translation Translation
 	 */
-	public void renderWorld(IBlockAccess blockAccess, Vector3d translation) {
+	public void renderWorld(IBlockAccess blockAccess) {
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.setColorRGBA_F(1, 1, 1, 1);
 
-		//Apply transformation to this model for the world
-		MatrixStack stack = new MatrixStack();
-		stack.translate(translation);
-		stack.transform(matrix);
 		/**
 		 * Convert textures and UV into Minecraft equivalent. 
 		 */
-		flatten(stack).forEach(model ->
+		flatten().forEach(model ->
 				model.faces.forEach(face ->
 				{
 					if (face.getBrightness() >= 0) {

@@ -19,7 +19,7 @@ import java.util.HashMap;
  * Entity wrapper
  * @author Calclavia
  */
-public class BWEntity extends net.minecraft.entity.Entity implements EntityWrapper, RigidBody {
+public class FWEntity extends net.minecraft.entity.Entity implements EntityWrapper, RigidBody {
 
 	public final Entity wrapped;
 
@@ -39,7 +39,7 @@ public class BWEntity extends net.minecraft.entity.Entity implements EntityWrapp
 
 	private Vector3d acceleration = Vector3d.zero;
 
-	public BWEntity(World world, EntityFactory factory) {
+	public FWEntity(World world, EntityFactory factory) {
 		super(world);
 		this.wrapped = factory.makeEntity(this, this);
 	}

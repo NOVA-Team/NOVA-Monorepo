@@ -1,7 +1,6 @@
 package nova.wrapper.mc1710.backward.entity;
 
 import nova.core.entity.Entity;
-import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
 import nova.core.world.World;
 import nova.wrapper.mc1710.backward.world.BWWorld;
@@ -17,10 +16,6 @@ public class BWEntity extends Entity {
 	public net.minecraft.entity.Entity entity;
 
 	public BWEntity(net.minecraft.entity.Entity entity) {
-		//TODO: Should this be entity ID?
-		setWorld(new BWWorld(entity.worldObj));
-		setPosition(new Vector3d(entity.posX, entity.posY, entity.posZ));
-		setRotation(Quaternion.fromEuler(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch), 0));
 		this.entity = entity;
 	}
 

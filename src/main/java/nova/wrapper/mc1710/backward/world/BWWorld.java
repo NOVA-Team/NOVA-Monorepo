@@ -7,7 +7,7 @@ import nova.core.entity.EntityFactory;
 import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
-import nova.wrapper.mc1710.forward.entity.BWEntity;
+import nova.wrapper.mc1710.forward.entity.FWEntity;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 
 import java.util.Optional;
@@ -52,7 +52,7 @@ public class BWWorld extends World {
 
 	@Override
 	public Entity createEntity(EntityFactory factory) {
-		BWEntity bwEntity = new BWEntity(world, factory);
+		FWEntity bwEntity = new FWEntity(world, factory);
 		world.spawnEntityInWorld(bwEntity);
 		return bwEntity.wrapped;
 	}
@@ -64,7 +64,7 @@ public class BWWorld extends World {
 
 	@Override
 	public void destroyEntity(Entity entity) {
-		world.removeEntity((BWEntity) entity.wrapper);
+		world.removeEntity((FWEntity) entity.wrapper);
 	}
 
 	@Override

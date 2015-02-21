@@ -1,5 +1,6 @@
 package nova.wrapper.mc1710.launcher;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import nova.core.entity.Entity;
@@ -7,6 +8,7 @@ import nova.core.entity.EntityFactory;
 import nova.core.loader.Loadable;
 import nova.wrapper.mc1710.forward.block.FWBlock;
 import nova.wrapper.mc1710.forward.block.FWTile;
+import nova.wrapper.mc1710.forward.entity.FWEntity;
 import nova.wrapper.mc1710.item.FWItem;
 
 import java.util.Set;
@@ -18,6 +20,7 @@ public class CommonProxy implements Loadable {
 	@Override
 	public void preInit() {
 		GameRegistry.registerTileEntity(FWTile.class, "novaTile");
+		EntityRegistry.registerModEntity(FWEntity.class, "novaEntity", EntityRegistry.findGlobalUniqueEntityId(), NovaMinecraft.instance, 64, 20, true);
 	}
 
 	public void registerResourcePacks(Set<Class<?>> modClasses) {

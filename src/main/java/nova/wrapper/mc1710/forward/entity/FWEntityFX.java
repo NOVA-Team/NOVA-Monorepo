@@ -3,14 +3,17 @@ package nova.wrapper.mc1710.forward.entity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.entity.EntityWrapper;
 import nova.core.entity.RigidBody;
 import nova.core.util.components.Updater;
+import nova.core.util.transform.MatrixStack;
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
+import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.backward.world.BWWorld;
 
 /**
@@ -19,7 +22,7 @@ import nova.wrapper.mc1710.backward.world.BWWorld;
  * @author Calclavia
  */
 @SideOnly(Side.CLIENT)
-public class BWEntityFX extends EntityFX implements EntityWrapper, RigidBody {
+public class FWEntityFX extends EntityFX implements EntityWrapper, RigidBody {
 
 	public final Entity wrapped;
 
@@ -39,10 +42,22 @@ public class BWEntityFX extends EntityFX implements EntityWrapper, RigidBody {
 
 	private Vector3d acceleration = Vector3d.zero;
 
-	public BWEntityFX(World world, EntityFactory factory) {
+	public FWEntityFX(World world, EntityFactory factory) {
 		super(world, 0, 0, 0);
 		this.wrapped = factory.makeEntity(this, this);
 	}
+
+	@Override
+	public void renderParticle(Tessellator tess, float x, float y, float z, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
+		BWModel model = new BWModel();
+		model.matrix = new MatrixStack().translate(x, y, z).rotate(rotation()).getMatrix();
+		wrapped.render(model);
+		model.renderWorld(worldObj);
+	}
+
+	/**
+	 * THE ONLY DIFFERENCE IS THIS METHOD!
+	 */
 
 	@Override
 	protected void entityInit() {

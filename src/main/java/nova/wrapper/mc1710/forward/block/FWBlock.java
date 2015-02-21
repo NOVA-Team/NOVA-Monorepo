@@ -29,6 +29,7 @@ import nova.core.util.Direction;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Cuboid;
+import nova.core.util.transform.MatrixStack;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.BackwardProxyUtil;
@@ -53,6 +54,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
 
 /**
  * A Minecraft to Nova block wrapper
+ *
  * @author Calclavia
  */
 public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
@@ -101,14 +103,13 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		return factory.makeBlock(access, position);
 	}
 
-
 	@Override
-	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
-	{
+	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player) {
 		// HACK: called before block is destroyed by the player prior to the player getting the drops. Determine drops here.
 		// hack is needed because the player sets the block to air *before* getting the drops. woo good logic from mojang.
-		if (!player.capabilities.isCreativeMode)
+		if (!player.capabilities.isCreativeMode) {
 			harvestedBlocks.put(new BlockPosition(world, x, y, z), getBlockInstance(world, new Vector3i(x, y, z)));
+		}
 	}
 
 	@Override
@@ -167,7 +168,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public void registerBlockIcons(IIconRegister ir) {
-		
+
 	}
 
 	@Override
@@ -201,10 +202,11 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		// see onBlockHarvested for why the harvestedBlocks hack exists
 		// this method will be called exactly once after destroying the block
 		BlockPosition position = new BlockPosition(world, x, y, z);
-		if (harvestedBlocks.containsKey(position))
+		if (harvestedBlocks.containsKey(position)) {
 			block = harvestedBlocks.remove(position);
-		else
+		} else {
 			block = getBlockInstance(world, new Vector3i(x, y, z));
+		}
 
 		return block.getDrops()
 			.stream()
@@ -268,8 +270,9 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
 		BWModel model = new BWModel();
+		model.matrix = new MatrixStack().translate(x + 0.5, y + 0.5, z + 0.5).getMatrix();
 		getBlockInstance(world, new Vector3i(x, y, z)).renderStatic(model);
-		model.renderWorld(world, new Vector3d(x + 0.5, y + 0.5, z + 0.5));
+		model.renderWorld(world);
 		return false;
 	}
 

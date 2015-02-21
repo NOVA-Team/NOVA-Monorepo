@@ -46,7 +46,10 @@ public class NovaMinecraft {
 	public static final String name = "NOVA";
 
 	@SidedProxy(clientSide = "nova.wrapper.mc1710.launcher.ClientProxy", serverSide = "nova.wrapper.mc1710.launcher.CommonProxy")
+
 	public static CommonProxy proxy;
+	@Mod.Instance(id)
+	public static NovaMinecraft instance;
 	private static NovaLauncher launcher;
 
 	@Mod.EventHandler

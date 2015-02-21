@@ -2,7 +2,7 @@ package nova.wrapper.mc1710.forward.block;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.MatrixStack;
 import nova.wrapper.mc1710.backward.render.BWModel;
 
 /**
@@ -15,9 +15,10 @@ public class FWTileRenderer extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float p_147500_8_) {
 		if (((FWTile) tile).getBlock() != null) {
-			BWModel artist = new BWModel();
-			((FWTile) tile).getBlock().renderDynamic(artist);
-			artist.renderWorld(tile.getWorldObj(), new Vector3d(x + 0.5, y + 0.5, z + 0.5));
+			BWModel model = new BWModel();
+			model.matrix = new MatrixStack().translate(x + 0.5, y + 0.5, z + 0.5).getMatrix();
+			((FWTile) tile).getBlock().renderDynamic(model);
+			model.renderWorld(tile.getWorldObj());
 		}
 	}
 }

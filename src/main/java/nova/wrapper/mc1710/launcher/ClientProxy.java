@@ -14,7 +14,9 @@ import nova.core.entity.EntityFactory;
 import nova.wrapper.mc1710.forward.block.FWBlock;
 import nova.wrapper.mc1710.forward.block.FWTile;
 import nova.wrapper.mc1710.forward.block.FWTileRenderer;
-import nova.wrapper.mc1710.forward.entity.BWEntityFX;
+import nova.wrapper.mc1710.forward.entity.FWEntity;
+import nova.wrapper.mc1710.forward.entity.FWEntityFX;
+import nova.wrapper.mc1710.forward.entity.FWEntityRenderer;
 import nova.wrapper.mc1710.item.FWItem;
 import nova.wrapper.mc1710.render.RenderUtility;
 
@@ -24,14 +26,11 @@ import nova.wrapper.mc1710.render.RenderUtility;
 public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
+		super.preInit();
 		MinecraftForge.EVENT_BUS.register(RenderUtility.instance);
-
-		/**
-		 * Load models 
-		 */
+		ClientRegistry.bindTileEntitySpecialRenderer(FWTile.class, FWTileRenderer.instance);
+		RenderingRegistry.registerEntityRenderingHandler(FWEntity.class, FWEntityRenderer.instance);
 		RenderUtility.instance.loadModels();
-
-		ClientRegistry.registerTileEntity(FWTile.class, "novaTile", FWTileRenderer.instance);
 	}
 
 	@Override
@@ -66,7 +65,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public Entity spawnParticle(net.minecraft.world.World world, EntityFactory factory) {
-		BWEntityFX bwEntityFX = new BWEntityFX(world, factory);
+		FWEntityFX bwEntityFX = new FWEntityFX(world, factory);
 		FMLClientHandler.instance().getClient().effectRenderer.addEffect(bwEntityFX);
 		return bwEntityFX.wrapped;
 	}
