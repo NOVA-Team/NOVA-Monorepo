@@ -12,7 +12,7 @@ import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.world.BWWorld;
-import nova.wrapper.mc1710.launcher.NovaMinecraft;
+import nova.wrapper.mc1710.network.netty.MCNetworkManager;
 import nova.wrapper.mc1710.util.NBTUtility;
 
 import java.util.HashMap;
@@ -72,7 +72,7 @@ public class FWTile extends TileEntity {
 	@Override
 	public Packet getDescriptionPacket() {
 		if (block instanceof PacketSender) {
-			return NovaMinecraft.networkManager.toMCPacket(NovaMinecraft.networkManager.getBlockPacket(0, (PacketSender) block));
+			return ((MCNetworkManager) Game.instance.get().networkManager).toMCPacket(((MCNetworkManager) Game.instance.get().networkManager).getBlockPacket(0, (PacketSender) block));
 		}
 		return null;
 	}

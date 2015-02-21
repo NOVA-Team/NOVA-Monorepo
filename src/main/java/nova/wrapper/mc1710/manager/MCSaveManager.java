@@ -21,7 +21,7 @@ import java.util.Map;
  * A manager that handles external file saving.
  * @author Calclavia
  */
-public class MinecraftSaveManager extends SaveManager {
+public class MCSaveManager extends SaveManager {
 
 	/**
 	 * Last time that the queueSave manager tried to queueSave a file

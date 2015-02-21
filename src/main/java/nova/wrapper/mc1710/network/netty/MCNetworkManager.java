@@ -15,6 +15,7 @@ import nova.core.network.NetworkManager;
 import nova.core.network.PacketSender;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
+import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.network.PacketWrapper;
 import nova.wrapper.mc1710.network.discriminator.PacketAbstract;
 import nova.wrapper.mc1710.network.discriminator.PacketBlock;
@@ -22,18 +23,14 @@ import nova.wrapper.mc1710.network.discriminator.PacketBlock;
 import java.util.EnumMap;
 
 /**
- * The implementation of NetworkManager
+ * The implementation of NetworkManager that will be injected.
+ *
  * @author Calclavia
  * @since 26/05/14
  */
 public class MCNetworkManager extends NetworkManager {
-	public final String channel;
-	protected final EnumMap<Side, FMLEmbeddedChannel> channelEnumMap;
-
-	public MCNetworkManager(String channel, EnumMap<Side, FMLEmbeddedChannel> channelEnumMap) {
-		this.channel = channel;
-		this.channelEnumMap = channelEnumMap;
-	}
+	public final String channel = NovaMinecraft.id;
+	public final EnumMap<Side, FMLEmbeddedChannel> channelEnumMap = NetworkRegistry.INSTANCE.newChannel(channel, new ChannelHandler(), new PacketHandler());
 
 	public Packet toMCPacket(PacketAbstract packet) {
 		return channelEnumMap.get(FMLCommonHandler.instance().getEffectiveSide()).generatePacketFrom(packet);

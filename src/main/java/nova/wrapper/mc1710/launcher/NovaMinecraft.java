@@ -21,14 +21,11 @@ import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.backward.gui.MCGuiFactory;
 import nova.wrapper.mc1710.depmodules.GuiModule;
 import nova.wrapper.mc1710.depmodules.NetworkModule;
+import nova.wrapper.mc1710.depmodules.SaveModule;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.item.OreDictionaryIntegration;
 import nova.wrapper.mc1710.manager.ConfigManager;
-import nova.wrapper.mc1710.manager.MinecraftSaveManager;
-import nova.wrapper.mc1710.network.netty.ChannelHandler;
-import nova.wrapper.mc1710.network.netty.MCNetworkManager;
-import nova.wrapper.mc1710.network.netty.PacketHandler;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
 
 import java.io.File;
@@ -50,8 +47,6 @@ public class NovaMinecraft {
 
 	@SidedProxy(clientSide = "nova.wrapper.mc1710.launcher.ClientProxy", serverSide = "nova.wrapper.mc1710.launcher.CommonProxy")
 	public static CommonProxy proxy;
-	public static MCNetworkManager networkManager;
-	public static MinecraftSaveManager saveManager;
 	private static NovaLauncher launcher;
 
 	@Mod.EventHandler
@@ -63,6 +58,7 @@ public class NovaMinecraft {
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 		diep.install(GuiModule.class);
 		diep.install(NetworkModule.class);
+		diep.install(SaveModule.class);
 
 		Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
 
@@ -71,6 +67,9 @@ public class NovaMinecraft {
 
 		Game.instance = Optional.of(diep.init());
 
+		/**
+		 * Set network manager parameters
+		 */
 		BlockWrapperRegistry.instance.registerBlocks();
 		ItemWrapperRegistry.instance.registerItems();
 		OreDictionaryIntegration.instance.registerOreDictionary();
@@ -83,14 +82,7 @@ public class NovaMinecraft {
 			Launch.blackboard.put("nova:" + novaMod.id(), novaMap);
 		});
 
-		/**
-		 * Initiate different systems
-		 */
-		//Initiate network manager
-		networkManager = new MCNetworkManager(id, NetworkRegistry.INSTANCE.newChannel(id, new ChannelHandler(), new PacketHandler()));
-		//Initiate save manager
-		saveManager = new MinecraftSaveManager();
-		//Initiate config manager
+		//Initiate config system
 		launcher.getLoadedModMap().forEach((mod, loader) -> {
 			Configuration config = new Configuration(new File(evt.getModConfigurationDirectory(), mod.name()));
 			ConfigManager.instance.sync(config, loader.getClass().getPackage().getName());
@@ -103,7 +95,7 @@ public class NovaMinecraft {
 		 */
 		MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
 		FMLCommonHandler.instance().bus().register(new FMLEventHandler());
-		MinecraftForge.EVENT_BUS.register(saveManager);
+		MinecraftForge.EVENT_BUS.register(Game.instance.get().saveManager);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new MCGuiFactory.GuiHandler());
 	}
