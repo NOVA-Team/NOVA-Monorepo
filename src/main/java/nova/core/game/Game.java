@@ -8,6 +8,7 @@ import nova.core.gui.factory.GuiComponentFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.item.ItemDictionary;
 import nova.core.item.ItemManager;
+import nova.core.network.NetworkManager;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
@@ -34,25 +35,27 @@ public class Game {
 	public final CraftingRecipeManager craftingRecipeManager;
 	public final ItemDictionary itemDictionary;
 	public final EventManager eventManager;
+	public final NetworkManager networkManager;
 
 	// TODO Move somewhere else, also... Optional inconvenient here, it has to exist as required.
 	public final Optional<GuiComponentFactory> guiComponentFactory;
 	public final Optional<GuiFactory> guiFactory;
 
 	private Game(
-		BlockManager blockManager, 
-		EntityManager entityManager, 
-		ItemManager itemManager, 
-		FluidManager fluidManager, 
-		WorldManager worldManager, 
-		RenderManager renderManager, 
-		RecipeManager recipeManager, 
-		CraftingRecipeManager craftingRecipeManager, 
+		BlockManager blockManager,
+		EntityManager entityManager,
+		ItemManager itemManager,
+		FluidManager fluidManager,
+		WorldManager worldManager,
+		RenderManager renderManager,
+		RecipeManager recipeManager,
+		CraftingRecipeManager craftingRecipeManager,
 		ItemDictionary itemDictionary,
 		EventManager eventManager,
+		NetworkManager networkManager,
 		Optional<GuiComponentFactory> guiComponentFactory,
 		Optional<GuiFactory> guiFactory) {
-		
+
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
 		this.itemManager = itemManager;
@@ -63,6 +66,7 @@ public class Game {
 		this.craftingRecipeManager = craftingRecipeManager;
 		this.itemDictionary = itemDictionary;
 		this.eventManager = eventManager;
+		this.networkManager = networkManager;
 
 		this.guiComponentFactory = guiComponentFactory;
 		this.guiFactory = guiFactory;

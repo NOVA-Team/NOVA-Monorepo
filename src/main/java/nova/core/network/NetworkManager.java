@@ -4,19 +4,10 @@ import nova.core.block.Block;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.util.exception.NovaException;
 
-import java.util.Optional;
-
 /**
  * @author Calclavia
  */
 public abstract class NetworkManager {
-
-	// TODO: This is a bit hacky. Maybe we should do DI for this.
-	public static Optional<NetworkManager> instance;
-
-	protected NetworkManager() {
-		instance = Optional.of(this);
-	}
 
 	/**
 	 * Sends a packet.

@@ -1,12 +1,12 @@
 package nova.core.event;
 
-import java.util.HashSet;
-
-import nova.core.network.NetworkManager;
+import nova.core.game.Game;
 import nova.core.network.NetworkTarget;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketReceiver;
 import nova.core.network.PacketSender;
+
+import java.util.HashSet;
 
 /**
  * {@link EventBus} that can differentiate {@link NetworkTarget NetworkTargets}
@@ -67,7 +67,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 	public void publish(T event) {
 		if (event instanceof SidedEventBus.SidedEvent) {
 			SidedEventBus.SidedEvent sidedEvent = (SidedEventBus.SidedEvent) event;
-			Side currentSide = NetworkManager.instance.get().getSide();
+			Side currentSide = Game.instance.get().networkManager.getSide();
 
 			// Check if the event targets the current side.
 			if (sidedEvent.getTarget().targets(currentSide)) {
@@ -101,6 +101,33 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 		}
 	}
 
+	@FunctionalInterface
+	public static interface NetworkEventProcessor {
+
+		/**
+		 * Gets called if the parent {@link nova.core.event.SidedEventBus.SidedEventListener} received an
+		 * event that needs to be sent over the network.
+		 *
+		 * @param event The event
+		 */
+		public void handleEvent(SidedEventBus.SidedEvent event);
+	}
+
+	/**
+	 * An event that specifies a {@link NetworkTarget}. Set the target by either
+	 * overriding {@link #getTarget()} or by using the annotation
+	 * {@link NetworkTarget} on the inherited class.
+	 *
+	 * @author Vic Nightfall
+	 */
+	public static interface SidedEvent extends PacketSender, PacketReceiver {
+
+		public default Side getTarget() {
+			NetworkTarget target = getClass().getAnnotation(NetworkTarget.class);
+			return target != null ? target.side() : Side.BOTH;
+		}
+	}
+
 	protected static class SidedEventListener<E extends T, T> extends SingleEventListener<E, T> {
 
 		public final Side side;
@@ -120,33 +147,6 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 			} else {
 				super.onEvent(event);
 			}
-		}
-	}
-
-	@FunctionalInterface
-	public static interface NetworkEventProcessor {
-		
-		/**
-		 * Gets called if the parent {@link nova.core.event.SidedEventBus.SidedEventListener} received an
-		 * event that needs to be sent over the network.
-		 *
-		 * @param event The event
-		 */
-		public void handleEvent(SidedEventBus.SidedEvent event);
-	}
-
-	/**
-	 * An event that specifies a {@link NetworkTarget}. Set the target by either
-	 * overriding {@link #getTarget()} or by using the annotation
-	 * {@link NetworkTarget} on the inherited class.
-	 * 
-	 * @author Vic Nightfall
-	 */
-	public static interface SidedEvent extends PacketSender, PacketReceiver {
-
-		public default Side getTarget() {
-			NetworkTarget target = getClass().getAnnotation(NetworkTarget.class);
-			return target != null ? target.side() : Side.BOTH;
 		}
 	}
 }
