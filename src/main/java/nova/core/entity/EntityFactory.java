@@ -1,26 +1,40 @@
 package nova.core.entity;
 
 import nova.core.util.Factory;
-import nova.core.util.transform.Quaternion;
-import nova.core.util.transform.Vector3d;
-import nova.core.world.World;
+import nova.core.util.exception.NovaException;
 
+import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
 /**
  * @author Calclavia
  */
 public class EntityFactory extends Factory<Entity> {
+	public static final Field wrapperField;
+
+	static {
+		try {
+			wrapperField = Entity.class.getDeclaredField("wrapper");
+			wrapperField.setAccessible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NovaException();
+		}
+	}
 
 	public EntityFactory(Supplier<Entity> constructor) {
 		super(constructor);
 	}
 
-	public Entity makeEntity(World world, Vector3d position, Quaternion rotation) {
+	public Entity makeEntity(EntityWrapper wrapper) {
 		Entity newEntity = constructor.get();
-		newEntity.setWorld(world);
-		newEntity.setPosition(position);
-		newEntity.setRotation(rotation);
+
+		try {
+			wrapperField.set(newEntity, wrapper);
+		} catch (Exception e) {
+			throw new NovaException();
+		}
+
 		return newEntity;
 	}
 }

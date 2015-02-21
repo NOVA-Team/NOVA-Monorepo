@@ -9,26 +9,9 @@ import nova.core.world.World;
 public abstract class Entity implements Identifiable, Stateful {
 
 	/**
-	 * These values are injected from EntityFactory.
+	 * The wrapper is injected from EntityFactory.
 	 */
-	private World world;
-	private Vector3d position;
-	private Quaternion rotation;
-	private boolean valid;
-
-	/**
-	 * Marks this entity as valid.
-	 */
-	public void load() {
-		valid = true;
-	}
-
-	/**
-	 * Marks this entity as invalid.
-	 */
-	public void unload() {
-		valid = false;
-	}
+	private final EntityWrapper wrapper = null;
 
 	/**
 	 * Check if this entity is valid.
@@ -36,7 +19,7 @@ public abstract class Entity implements Identifiable, Stateful {
 	 * @return Validity state (true or false).
 	 */
 	public boolean isValid() {
-		return valid;
+		return wrapper.isValid();
 	}
 
 	/**
@@ -45,7 +28,7 @@ public abstract class Entity implements Identifiable, Stateful {
 	 * @return The {@link nova.core.world.World} that this entity is in.
 	 */
 	public World world() {
-		return world;
+		return wrapper.world();
 	}
 
 	/**
@@ -54,11 +37,11 @@ public abstract class Entity implements Identifiable, Stateful {
 	 * @return {@link nova.core.util.transform.Vector3d} containing the position in the world of this entity.
 	 */
 	public Vector3d position() {
-		return position;
+		return wrapper.position();
 	}
 
 	public Quaternion rotation() {
-		return rotation;
+		return wrapper.rotation();
 	}
 
 	/**
@@ -67,9 +50,9 @@ public abstract class Entity implements Identifiable, Stateful {
 	 * @param world World to set.
 	 * @return {@code true} if successful.
 	 */
-	public boolean setWorld(World world) {
-		this.world = world;
-		return true;
+	public Entity setWorld(World world) {
+		wrapper.setWorld(world);
+		return this;
 	}
 
 	/**
@@ -78,9 +61,9 @@ public abstract class Entity implements Identifiable, Stateful {
 	 * @param position Position to set.
 	 * @return {@code true} if successful.
 	 */
-	public boolean setPosition(Vector3d position) {
-		this.position = position;
-		return true;
+	public Entity setPosition(Vector3d position) {
+		wrapper.setPosition(position);
+		return this;
 	}
 
 	/**
@@ -89,9 +72,9 @@ public abstract class Entity implements Identifiable, Stateful {
 	 * @param rotation Position to set.
 	 * @return {@code true} if successful.
 	 */
-	public boolean setRotation(Quaternion rotation) {
-		this.rotation = rotation;
-		return true;
+	public Entity setRotation(Quaternion rotation) {
+		wrapper.setRotation(rotation);
+		return this;
 	}
 
 }
