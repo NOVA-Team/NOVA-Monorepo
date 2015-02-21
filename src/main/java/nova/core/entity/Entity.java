@@ -1,6 +1,7 @@
 package nova.core.entity;
 
 import nova.core.block.components.Stateful;
+import nova.core.render.model.Model;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Quaternion;
@@ -17,8 +18,21 @@ public abstract class Entity implements Identifiable, Stateful {
 	public final EntityWrapper wrapper = null;
 	protected final RigidBody rigidBody = null;
 
+	/**
+	 * The collider of this entity used to determine collisions
+	 */
+	//TODO: Should not be limited to only one cuboid.
 	public Optional<Cuboid> collider() {
 		return Optional.empty();
+	}
+
+	/**
+	 * Renders the entity. Translation and rotation are already applied.
+	 *
+	 * @param model - The model object to render.
+	 */
+	public void render(Model model) {
+
 	}
 
 	/**

@@ -19,12 +19,14 @@ public class MatrixStack implements Transform {
 	/**
 	 * Replaces current transformation matrix by an identity current.
 	 */
-	public void loadMatrix(Matrix4x4 matrix) {
+	public MatrixStack loadMatrix(Matrix4x4 matrix) {
 		current = matrix;
+		return this;
 	}
 
 	/**
 	 * Exposes current transformation matrix.
+	 *
 	 * @return current transformation matrix.
 	 */
 	public Matrix4x4 getMatrix() {
@@ -33,6 +35,7 @@ public class MatrixStack implements Transform {
 
 	/**
 	 * Transforms current matrix with give matrix.
+	 *
 	 * @param matrix to transform current matrix.
 	 */
 	public MatrixStack transform(Matrix4x4 matrix) {
@@ -42,6 +45,7 @@ public class MatrixStack implements Transform {
 
 	/**
 	 * Translates current transformation matrix.
+	 *
 	 * @param x translation.
 	 * @param y translation.
 	 * @param z translation.
@@ -53,6 +57,7 @@ public class MatrixStack implements Transform {
 
 	/**
 	 * Translates current transformation matrix.
+	 *
 	 * @param translateVector vector of translation.
 	 */
 	public MatrixStack translate(Vector3<?> translateVector) {
@@ -67,6 +72,7 @@ public class MatrixStack implements Transform {
 
 	/**
 	 * Rotates transformation matrix around rotateVector axis by angle radians.
+	 *
 	 * @param rotateVector Vector serving as rotation axis.
 	 * @param angle in radians.
 	 */
@@ -77,6 +83,7 @@ public class MatrixStack implements Transform {
 
 	/**
 	 * Scales current transformation matrix.
+	 *
 	 * @param x scale.
 	 * @param y scale.
 	 * @param z scale.
@@ -88,6 +95,7 @@ public class MatrixStack implements Transform {
 
 	/**
 	 * Scales current transformation matrix.
+	 *
 	 * @param scaleVector scale vector.
 	 */
 	public MatrixStack scale(Vector3<?> scaleVector) {
@@ -113,6 +121,7 @@ public class MatrixStack implements Transform {
 
 	/**
 	 * Called to transform a vector.
+	 *
 	 * @param vec - The vector being transformed
 	 * @return The transformed vector by current matrix.
 	 */
