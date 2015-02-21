@@ -22,12 +22,12 @@ public class BlockModelUtil {
 	public static Model drawBlock(Model model, Block block) {
 
 		Cuboid boundingBox = block.getBoundingBox();
-		double minX = boundingBox.min.x;
-		double minY = boundingBox.min.y;
-		double minZ = boundingBox.min.z;
-		double maxX = boundingBox.max.x;
-		double maxY = boundingBox.max.y;
-		double maxZ = boundingBox.max.z;
+		double minX = boundingBox.min.x - 0.5;
+		double minY = boundingBox.min.y - 0.5;
+		double minZ = boundingBox.min.z - 0.5;
+		double maxX = boundingBox.max.x - 0.5;
+		double maxY = boundingBox.max.y - 0.5;
+		double maxZ = boundingBox.max.z - 0.5;
 
 		if (block.shouldRenderSide(Direction.DOWN)) {
 			Color downColor = block.colorMultiplier(Direction.DOWN);
