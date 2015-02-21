@@ -2,6 +2,7 @@ package nova.core.entity;
 
 import nova.core.block.components.Stateful;
 import nova.core.util.Identifiable;
+import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
 import nova.core.world.World;
@@ -12,6 +13,10 @@ public abstract class Entity implements Identifiable, Stateful {
 	 * The wrapper is injected from EntityFactory.
 	 */
 	private final EntityWrapper wrapper = null;
+
+	public RigidBody rigidBody;
+
+	public Cuboid collider;
 
 	/**
 	 * Check if this entity is valid.

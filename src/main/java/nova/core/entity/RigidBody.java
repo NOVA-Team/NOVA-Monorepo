@@ -1,6 +1,5 @@
 package nova.core.entity;
 
-import nova.core.util.components.Updater;
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
 
@@ -9,58 +8,53 @@ import nova.core.util.transform.Vector3d;
  *
  * @author Calclavia
  */
-public class RigidBody implements Updater {
+public interface RigidBody {
+	/**
+	 * Mass in kilograms. Default is 1 kg.
+	 */
+	double mass();
 
-	private final Entity entity;
+	void setMass(double mass);
+
 	/**
-	 * Mass in kilograms
+	 * Velocity is how fast the body is moving
 	 */
-	public double mass = 1;
-	/**
-	 * Translation Methods
-	 */
-	public Vector3d velocity = Vector3d.zero;
-	public double drag = 0;
+	Vector3d velocity();
+
+	void setVelocity(Vector3d velocity);
+
+	double drag();
+
+	void setDrag(double drag);
+
 	/**
 	 * Gravity is an acceleration.
 	 */
-	public Vector3d gravity = new Vector3d(0, 9.81, 0);
+	Vector3d gravity();
+
+	void setGravity(Vector3d gravity);
+
 	/**
 	 * Rotation Methods
 	 */
-	public double angularDrag = 0;
-	public Quaternion angularVelocity = Quaternion.identity;
-	public Vector3d centerOfMass = Vector3d.zero;
-	private Vector3d acceleration = Vector3d.zero;
+	double angularDrag();
 
-	public RigidBody(Entity entity) {
-		this.entity = entity;
-	}
+	void setAngularDrag(double angularDrag);
 
-	@Override
-	public void update(double deltaTime) {
-		//Translation
-		velocity.add(acceleration.multiply(deltaTime));
-		entity.setPosition(entity.position().add(velocity.multiply(deltaTime)));
-		velocity = velocity.subtract(velocity.multiply(drag));
+	Quaternion angularVelocity();
 
-		//Rotation
-		//TODO: angularVel should multiply by time.
-		entity.setRotation(entity.rotation().rightMultiply(angularVelocity));
-		//TODO: Simplify this calculation?
-		Vector3d euler = angularVelocity.toEuler();
-		angularVelocity = Quaternion.fromEuler(euler.subtract(euler.multiply(angularDrag)));
-	}
+	void setAngularVelocity(Quaternion angularVelocity);
 
-	public void addForce(Vector3d force) {
-		acceleration = acceleration.add(force.divide(mass));
-	}
+	Vector3d center();
 
-	public void addForce(Vector3d force, Vector3d position) {
+	void setCenter(Vector3d center);
 
-	}
+	/**
+	 * Force methods
+	 */
+	void addForce(Vector3d force);
 
-	public void addTorque(Vector3d torque) {
+	void addForce(Vector3d force, Vector3d position);
 
-	}
+	void addTorque(Vector3d torque);
 }
