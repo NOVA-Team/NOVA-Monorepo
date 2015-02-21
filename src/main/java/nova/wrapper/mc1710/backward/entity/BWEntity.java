@@ -40,12 +40,14 @@ public class BWEntity extends Entity {
 	}
 
 	@Override
-	public boolean setWorld(World world) {
-		return false;
+	public Entity setWorld(World world) {
+		//entity.setWorld(new FWWorld(world));
+		return this;
 	}
 
 	@Override
-	public boolean setPosition(Vector3d position) {
-		return false;
+	public Entity setPosition(Vector3d position) {
+		entity.setPosition(position.x, position.y, position.z);
+		return this;
 	}
 }
