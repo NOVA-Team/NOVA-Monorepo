@@ -20,13 +20,14 @@ import nova.internal.tick.UpdateTicker;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.backward.gui.MCGuiFactory;
 import nova.wrapper.mc1710.depmodules.GuiModule;
+import nova.wrapper.mc1710.depmodules.NetworkModule;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.item.OreDictionaryIntegration;
 import nova.wrapper.mc1710.manager.ConfigManager;
 import nova.wrapper.mc1710.manager.MinecraftSaveManager;
 import nova.wrapper.mc1710.network.netty.ChannelHandler;
-import nova.wrapper.mc1710.network.netty.MinecraftNetworkManager;
+import nova.wrapper.mc1710.network.netty.MCNetworkManager;
 import nova.wrapper.mc1710.network.netty.PacketHandler;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
 
@@ -49,7 +50,7 @@ public class NovaMinecraft {
 
 	@SidedProxy(clientSide = "nova.wrapper.mc1710.launcher.ClientProxy", serverSide = "nova.wrapper.mc1710.launcher.CommonProxy")
 	public static CommonProxy proxy;
-	public static MinecraftNetworkManager networkManager;
+	public static MCNetworkManager networkManager;
 	public static MinecraftSaveManager saveManager;
 	private static NovaLauncher launcher;
 
@@ -61,6 +62,7 @@ public class NovaMinecraft {
 		 */
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 		diep.install(GuiModule.class);
+		diep.install(NetworkModule.class);
 
 		Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
 
@@ -85,7 +87,7 @@ public class NovaMinecraft {
 		 * Initiate different systems
 		 */
 		//Initiate network manager
-		networkManager = new MinecraftNetworkManager(id, NetworkRegistry.INSTANCE.newChannel(id, new ChannelHandler(), new PacketHandler()));
+		networkManager = new MCNetworkManager(id, NetworkRegistry.INSTANCE.newChannel(id, new ChannelHandler(), new PacketHandler()));
 		//Initiate save manager
 		saveManager = new MinecraftSaveManager();
 		//Initiate config manager

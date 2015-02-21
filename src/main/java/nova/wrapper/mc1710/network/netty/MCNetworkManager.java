@@ -22,14 +22,15 @@ import nova.wrapper.mc1710.network.discriminator.PacketBlock;
 import java.util.EnumMap;
 
 /**
+ * The implementation of NetworkManager
  * @author Calclavia
  * @since 26/05/14
  */
-public class MinecraftNetworkManager extends NetworkManager {
+public class MCNetworkManager extends NetworkManager {
 	public final String channel;
 	protected final EnumMap<Side, FMLEmbeddedChannel> channelEnumMap;
 
-	public MinecraftNetworkManager(String channel, EnumMap<Side, FMLEmbeddedChannel> channelEnumMap) {
+	public MCNetworkManager(String channel, EnumMap<Side, FMLEmbeddedChannel> channelEnumMap) {
 		this.channel = channel;
 		this.channelEnumMap = channelEnumMap;
 	}
