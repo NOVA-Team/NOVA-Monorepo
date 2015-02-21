@@ -1,6 +1,9 @@
 package nova.wrapper.mc1710.item;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,9 +18,9 @@ import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.NBTUtility;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.HashBiMap;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * @author Calclavia, Stan Hebben
@@ -29,16 +32,14 @@ public class ItemWrapperRegistry {
 	/**
 	 * A map of all blocks registered
 	 */
-	// TODO: can we use a BiMap for this?
-	private final Map<ItemFactory, MinecraftItemMapping> forwardMap = new HashMap<>();
-	private final Map<MinecraftItemMapping, ItemFactory> backwardMap = new HashMap<>();
+	private final HashBiMap<ItemFactory, MinecraftItemMapping> map = HashBiMap.create();
 
 	public MinecraftItemMapping get(ItemFactory item) {
-		return forwardMap.get(item);
+		return map.get(item);
 	}
 
 	public ItemFactory get(MinecraftItemMapping minecraftItem) {
-		return backwardMap.get(minecraftItem);
+		return map.inverse().get(minecraftItem);
 	}
 
 	public net.minecraft.item.ItemStack getMCItemStack(nova.core.item.Item item) {
@@ -90,7 +91,7 @@ public class ItemWrapperRegistry {
 			return ((LinkedNBTTagCompound) itemStack.getTagCompound()).getItem();
 		} else {
 			MinecraftItemMapping mapping = new MinecraftItemMapping(itemStack);
-			ItemFactory itemFactory = backwardMap.get(mapping);
+			ItemFactory itemFactory = map.inverse().get(mapping);
 			if (itemFactory == null && itemStack.getHasSubtypes())
 			// load subitem
 			{
@@ -131,7 +132,7 @@ public class ItemWrapperRegistry {
 	}
 
 	private void registerNOVAItem(ItemFactory itemFactory) {
-		if (forwardMap.containsKey(itemFactory))
+		if (map.containsKey(itemFactory))
 		// just a safeguard - don't map stuff twice
 		{
 			return;
@@ -151,8 +152,7 @@ public class ItemWrapperRegistry {
 		}
 
 		MinecraftItemMapping minecraftItemMapping = new MinecraftItemMapping(itemWrapper, 0);
-		forwardMap.put(itemFactory, minecraftItemMapping);
-		backwardMap.put(minecraftItemMapping, itemFactory);
+		map.put(itemFactory, minecraftItemMapping);
 
 		// don't register ItemBlocks twice
 		if (!(itemFactory.getDummy() instanceof ItemBlock)) {
@@ -202,15 +202,14 @@ public class ItemWrapperRegistry {
 
 	private ItemFactory registerMinecraftMapping(Item item, int meta) {
 		MinecraftItemMapping mapping = new MinecraftItemMapping(item, meta);
-		if (backwardMap.containsKey(mapping))
+		if (map.inverse().containsKey(mapping))
 		// don't register twice, return the factory instead
 		{
-			return backwardMap.get(mapping);
+			return map.inverse().get(mapping);
 		}
 
 		MCItemFactory itemFactory = new MCItemFactory(item, meta);
-		forwardMap.put(itemFactory, mapping);
-		backwardMap.put(mapping, itemFactory);
+		map.put(itemFactory, mapping);
 
 		Game.instance.get().itemManager.register(itemFactory);
 
