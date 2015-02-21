@@ -12,6 +12,7 @@ import nova.core.network.NetworkManager;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
+import nova.core.util.SaveManager;
 import nova.core.world.WorldManager;
 import org.slf4j.Logger;
 
@@ -39,6 +40,7 @@ public class Game {
 	public final ItemDictionary itemDictionary;
 	public final EventManager eventManager;
 	public final NetworkManager networkManager;
+	public final SaveManager saveManager;
 
 	// TODO Move somewhere else, also... Optional inconvenient here, it has to exist as required.
 	public final Optional<GuiComponentFactory> guiComponentFactory;
@@ -57,6 +59,7 @@ public class Game {
 		ItemDictionary itemDictionary,
 		EventManager eventManager,
 		NetworkManager networkManager,
+		SaveManager saveManager,
 		Optional<GuiComponentFactory> guiComponentFactory,
 		Optional<GuiFactory> guiFactory) {
 
@@ -73,6 +76,7 @@ public class Game {
 		this.itemDictionary = itemDictionary;
 		this.eventManager = eventManager;
 		this.networkManager = networkManager;
+		this.saveManager = saveManager;
 
 		this.guiComponentFactory = guiComponentFactory;
 		this.guiFactory = guiFactory;

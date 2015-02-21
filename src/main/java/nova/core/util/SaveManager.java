@@ -4,7 +4,6 @@ import nova.core.util.components.Storable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * A manager that handles external file saving.
@@ -13,18 +12,9 @@ import java.util.Optional;
 public abstract class SaveManager {
 
 	/**
-	 * Instance of this class
-	 */
-	public static Optional<SaveManager> instance;
-
-	/**
 	 * A map of objects to be saved to disk.
 	 */
 	protected Map<String, Storable> saveQueue = new HashMap<>();
-
-	protected SaveManager() {
-		instance = Optional.of(this);
-	}
 
 	/**
 	 * Saves a storable into the appropriate directory.
