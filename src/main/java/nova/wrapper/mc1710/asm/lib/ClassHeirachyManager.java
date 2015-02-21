@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.asm.lib;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import nova.core.util.NovaLogger;
+import nova.core.game.Game;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.IOException;
@@ -77,7 +77,7 @@ public class ClassHeirachyManager implements IClassTransformer {
 				cache = declareASM(bytes);
 			}
 		} catch (IOException e) {
-			NovaLogger.log(e);
+			Game.instance.get().logger.error(e.getMessage());
 		}
 
 		if (cache != null) {
@@ -87,7 +87,7 @@ public class ClassHeirachyManager implements IClassTransformer {
 		try {
 			cache = declareReflection(name);
 		} catch (ClassNotFoundException e) {
-			NovaLogger.log(e);
+			Game.instance.get().logger.error(e.getMessage());
 		}
 
 		return cache;

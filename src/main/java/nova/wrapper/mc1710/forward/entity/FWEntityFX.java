@@ -47,6 +47,9 @@ public class FWEntityFX extends EntityFX implements EntityWrapper, RigidBody {
 		this.wrapped = factory.makeEntity(this, this);
 	}
 
+	/**
+	 * THE ONLY DIFFERENCE IS THIS METHOD!
+	 */
 	@Override
 	public void renderParticle(Tessellator tess, float x, float y, float z, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
 		BWModel model = new BWModel();
@@ -54,10 +57,6 @@ public class FWEntityFX extends EntityFX implements EntityWrapper, RigidBody {
 		wrapped.render(model);
 		model.renderWorld(worldObj);
 	}
-
-	/**
-	 * THE ONLY DIFFERENCE IS THIS METHOD!
-	 */
 
 	@Override
 	protected void entityInit() {

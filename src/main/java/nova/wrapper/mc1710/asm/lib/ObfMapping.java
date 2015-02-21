@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.asm.lib;
 import com.google.common.base.Objects;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import nova.core.util.NovaLogger;
+import nova.core.game.Game;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -26,7 +26,7 @@ public class ObfMapping {
 		try {
 			obf = ((LaunchClassLoader) ObfMapping.class.getClassLoader()).getClassBytes("net.minecraft.world.World") == null;
 		} catch (IOException iox) {
-			NovaLogger.log(iox);
+			Game.instance.get().logger.error(iox.getMessage());
 		}
 		obfuscated = obf;
 	}
