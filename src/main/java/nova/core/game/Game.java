@@ -13,6 +13,7 @@ import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
 import nova.core.world.WorldManager;
+import org.slf4j.Logger;
 
 import java.util.Optional;
 
@@ -24,6 +25,8 @@ public class Game {
 	 * handling launch and dependency injection entry point.
 	 */
 	public static Optional<Game> instance = Optional.empty();
+
+	public final Logger logger;
 
 	public final BlockManager blockManager;
 	public final EntityManager entityManager;
@@ -42,6 +45,7 @@ public class Game {
 	public final Optional<GuiFactory> guiFactory;
 
 	private Game(
+		Logger logger,
 		BlockManager blockManager,
 		EntityManager entityManager,
 		ItemManager itemManager,
@@ -55,6 +59,8 @@ public class Game {
 		NetworkManager networkManager,
 		Optional<GuiComponentFactory> guiComponentFactory,
 		Optional<GuiFactory> guiFactory) {
+
+		this.logger = logger;
 
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
@@ -70,5 +76,7 @@ public class Game {
 
 		this.guiComponentFactory = guiComponentFactory;
 		this.guiFactory = guiFactory;
+
+		logger.info("Game instance created.");
 	}
 }

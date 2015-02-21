@@ -2,6 +2,7 @@ package nova.core.depmodules;
 
 import com.google.common.collect.Sets;
 import nova.core.di.DICoreModule;
+import nova.core.di.LoggerModule;
 import nova.core.di.OptionalModule;
 import se.jbee.inject.bootstrap.BootstrapperBundle;
 import se.jbee.inject.bootstrap.Bundle;
@@ -47,6 +48,7 @@ public class CoreBundle extends BootstrapperBundle {
 		 */
 		add(OptionalModule.class);
 		add(DICoreModule.class);
+		add(LoggerModule.class);
 	}
 
 	@Override
