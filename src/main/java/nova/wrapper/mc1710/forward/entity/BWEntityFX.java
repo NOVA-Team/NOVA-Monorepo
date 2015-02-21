@@ -1,46 +1,47 @@
 package nova.wrapper.mc1710.forward.entity;
 
-import net.minecraft.nbt.NBTTagCompound;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.particle.EntityFX;
 import net.minecraft.world.World;
 import nova.core.entity.Entity;
+import nova.core.entity.EntityFactory;
 import nova.core.entity.EntityWrapper;
 import nova.core.entity.RigidBody;
-import nova.core.util.components.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
 import nova.wrapper.mc1710.backward.world.BWWorld;
-import nova.wrapper.mc1710.util.NBTUtility;
-
-import java.util.HashMap;
 
 /**
+ * A copy of BWEntity that extends EntityFX
+ *
  * @author Calclavia
  */
-public class FWEntity extends net.minecraft.entity.Entity implements EntityWrapper, RigidBody {
+@SideOnly(Side.CLIENT)
+public class BWEntityFX extends EntityFX implements EntityWrapper, RigidBody {
 
-	private final Entity wrapped;
+	public final Entity wrapped;
 
-	public double mass = 1;
+	private double mass = 1;
 
-	public double drag = 0;
+	private double drag = 0;
 
-	public Vector3d gravity = new Vector3d(0, 9.81, 0);
+	private Vector3d gravity = new Vector3d(0, 9.81, 0);
 
-	public double angularDrag = 0;
+	private double angularDrag = 0;
 
-	public Quaternion angularVelocity = Quaternion.identity;
+	private Quaternion angularVelocity = Quaternion.identity;
 
-	public Quaternion angularAcceleration = Quaternion.identity;
+	private Quaternion angularAcceleration = Quaternion.identity;
 
-	public Vector3d center = Vector3d.zero;
+	private Vector3d center = Vector3d.zero;
 
-	public Vector3d acceleration = Vector3d.zero;
+	private Vector3d acceleration = Vector3d.zero;
 
-	public FWEntity(World world, Entity entity) {
-		super(world);
-		this.wrapped = entity;
-		entity.rigidBody = this;
+	public BWEntityFX(World world, EntityFactory factory) {
+		super(world, 0, 0, 0);
+		this.wrapped = factory.makeEntity(this, this);
 	}
 
 	@Override
@@ -83,23 +84,6 @@ public class FWEntity extends net.minecraft.entity.Entity implements EntityWrapp
 		//Apply drag
 		Vector3d eulerAngularVel = angularVelocity.toEuler();
 		setAngularVelocity(Quaternion.fromEuler(eulerAngularVel.subtract(eulerAngularVel.multiply(angularDrag))));
-	}
-
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		if (wrapped instanceof Storable) {
-			((Storable) wrapped).load(NBTUtility.nbtToMap(nbt));
-		}
-	}
-
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-
-		if (wrapped instanceof Storable) {
-			HashMap<String, Object> data = new HashMap<>();
-			((Storable) wrapped).save(data);
-			NBTUtility.mapToNBT(nbt, data);
-		}
 	}
 
 	/**

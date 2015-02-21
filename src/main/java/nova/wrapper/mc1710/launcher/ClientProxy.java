@@ -9,9 +9,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import nova.core.entity.Entity;
+import nova.core.entity.EntityFactory;
 import nova.wrapper.mc1710.forward.block.FWBlock;
 import nova.wrapper.mc1710.forward.block.FWTile;
 import nova.wrapper.mc1710.forward.block.FWTileRenderer;
+import nova.wrapper.mc1710.forward.entity.BWEntityFX;
 import nova.wrapper.mc1710.item.FWItem;
 import nova.wrapper.mc1710.render.RenderUtility;
 
@@ -59,6 +62,13 @@ public class ClientProxy extends CommonProxy {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Entity spawnParticle(net.minecraft.world.World world, EntityFactory factory) {
+		BWEntityFX bwEntityFX = new BWEntityFX(world, factory);
+		FMLClientHandler.instance().getClient().effectRenderer.addEffect(bwEntityFX);
+		return bwEntityFX.wrapped;
 	}
 
 	@Override

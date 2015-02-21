@@ -58,7 +58,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
 public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
 	public final Block block;
 	/**
-	 * Reference to the wrapped Nova block
+	 * Reference to the wrapper Nova block
 	 */
 	private final BlockFactory factory;
 	private final Class<? extends Block> blockClass;
