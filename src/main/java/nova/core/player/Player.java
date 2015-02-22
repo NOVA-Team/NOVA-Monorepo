@@ -7,7 +7,7 @@ public interface Player {
 	/**
 	 * @return Returns player name that can be used to identify this player
 	 */
-	String getUserName();
+	String getUsername();
 
 	/**
 	 * @return Inventory of the player
@@ -18,6 +18,6 @@ public interface Player {
 	 * @return Returns non-identifying player name
 	 */
 	default String getDisplayName() {
-		return getUserName();
+		return getUsername();
 	}
 }

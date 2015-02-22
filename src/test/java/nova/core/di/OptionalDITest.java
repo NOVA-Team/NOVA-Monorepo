@@ -42,6 +42,7 @@ public class OptionalDITest {
 
 	public static class TestManager {
 		Optional<Map<Integer, Integer>> map;
+		Optional<Map<Integer, Integer>> map;
 
 		Optional<Registry<MockIdentifiable>> set;
 		Optional<Map<Integer, Integer>> map2;
