@@ -33,6 +33,8 @@ public interface Packet {
 			writeDouble((double) data);
 		} else if (data instanceof String) {
 			writeString((String) data);
+		} else if (data instanceof Enum) {
+			writeString(((Enum) data).name());
 		} else {
 			throw new IllegalArgumentException("Packet attempt to write an invalid object: " + data);
 		}

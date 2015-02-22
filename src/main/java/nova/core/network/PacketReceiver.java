@@ -35,6 +35,8 @@ public interface PacketReceiver {
 						field.set(this, packet.readDouble());
 					} else if (field.getType() == String.class) {
 						field.set(this, packet.readString());
+					} else if (Enum.class.isAssignableFrom(field.getType())) {
+						field.set(this, Enum.valueOf((Class<? extends Enum>) field.getType(), packet.readString()));
 					}
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
