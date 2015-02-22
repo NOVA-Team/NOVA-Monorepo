@@ -49,17 +49,17 @@ public class MCCanvas implements Canvas {
 
 	@Override
 	public void bindTexture(Texture texture) {
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(texture.resource));
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(texture.getResource()));
 	}
 
 	@Override
-	public void translate(int x, int y) {
-		GL11.glTranslatef(x, y, 0);
+	public void translate(double x, double y) {
+		GL11.glTranslated(x, y, 0);
 	}
 
 	@Override
-	public void rotate(float angle) {
-		GL11.glRotatef(angle, 0, 0, 1);
+	public void rotate(double angle) {
+		GL11.glRotated(angle, 0, 0, 1);
 	}
 
 	@Override
@@ -72,12 +72,12 @@ public class MCCanvas implements Canvas {
 	}
 
 	@Override
-	public void addVertex(int x, int y) {
+	public void addVertex(double x, double y) {
 		tessellator.addVertex(x, y, zIndex);
 	}
 
 	@Override
-	public void addVertexWithUV(int x, int y, float u, float v) {
+	public void addVertexWithUV(double x, double y, double u, double v) {
 		tessellator.addVertexWithUV(x, y, zIndex, u, v);
 	}
 

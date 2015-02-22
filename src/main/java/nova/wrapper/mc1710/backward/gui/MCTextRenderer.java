@@ -171,7 +171,7 @@ public class MCTextRenderer implements TextRenderer {
 	@Override
 	public void drawString(int x, int y, String str, int width) {
 		GL11.glTranslatef(0, 0, zIndex);
-		fontrenderer.drawSplitString(str.replaceAll("\u00A7", "").replaceAll("%n", "\n"), x, y, Color.white.argb(), width);
+		fontrenderer.drawSplitString(str.replaceAll("\u00A7", "").replaceAll("%n", "\n"), x, y, width, Color.white.argb());
 		GL11.glTranslatef(0, 0, -zIndex);
 	}
 
