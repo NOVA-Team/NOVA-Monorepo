@@ -15,12 +15,12 @@ import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.event.EventManager;
 import nova.core.game.Game;
 import nova.internal.NovaLauncher;
-import nova.internal.tick.UpdateTicker;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.backward.gui.MCGuiFactory;
 import nova.wrapper.mc1710.depmodules.GuiModule;
 import nova.wrapper.mc1710.depmodules.NetworkModule;
 import nova.wrapper.mc1710.depmodules.SaveModule;
+import nova.wrapper.mc1710.depmodules.TickerModule;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.item.OreDictionaryIntegration;
@@ -59,6 +59,7 @@ public class NovaMinecraft {
 		diep.install(GuiModule.class);
 		diep.install(NetworkModule.class);
 		diep.install(SaveModule.class);
+		diep.install(TickerModule.class);
 
 		Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
 
@@ -105,12 +106,6 @@ public class NovaMinecraft {
 	public void postInit(FMLPostInitializationEvent evt) {
 		proxy.postInit();
 		launcher.postInit();
-
-		/**
-		 * Initiated threaded ticker
-		 */
-		UpdateTicker.ThreadTicker.instance = new UpdateTicker.ThreadTicker(20);
-		UpdateTicker.ThreadTicker.instance.start();
 	}
 
 	@Mod.EventHandler
