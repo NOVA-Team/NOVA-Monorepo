@@ -59,4 +59,8 @@ public abstract class Operator<I extends Operator<I, O>, O extends I> {
 	public O $div(double d) {
 		return multiply(1 / d);
 	}
+
+	public O unary_$minus() {
+		return inverse();
+	}
 }
