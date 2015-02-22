@@ -4,6 +4,7 @@ import nova.core.block.BlockManager;
 import nova.core.entity.EntityManager;
 import nova.core.event.EventManager;
 import nova.core.fluid.FluidManager;
+import nova.core.gui.KeyManager;
 import nova.core.gui.factory.GuiComponentFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.item.ItemDictionary;
@@ -44,6 +45,7 @@ public class Game {
 	public final NetworkManager networkManager;
 	public final SaveManager saveManager;
 	public final LanguageManager languageManager;
+	public final KeyManager keyManager;
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
@@ -73,6 +75,7 @@ public class Game {
 		NetworkManager networkManager,
 		SaveManager saveManager,
 		LanguageManager languageManager,
+		KeyManager keyManager,
 		UpdateTicker.SynchronizedTicker syncTicker,
 		UpdateTicker.ThreadTicker threadTicker,
 		Optional<GuiComponentFactory> guiComponentFactory,
@@ -93,6 +96,7 @@ public class Game {
 		this.networkManager = networkManager;
 		this.saveManager = saveManager;
 		this.languageManager = languageManager;
+		this.keyManager = keyManager;
 
 		this.syncTicker = syncTicker;
 		this.threadTicker = threadTicker;

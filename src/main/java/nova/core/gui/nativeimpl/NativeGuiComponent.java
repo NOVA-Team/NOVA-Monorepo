@@ -1,7 +1,5 @@
 package nova.core.gui.nativeimpl;
 
-import java.util.Optional;
-
 import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.KeyEvent;
 import nova.core.gui.GuiEvent.KeyEvent.EnumKeyState;
@@ -9,10 +7,12 @@ import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseButton;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseState;
 import nova.core.gui.GuiEvent.MouseWheelEvent;
-import nova.core.gui.KeyStroke.Key;
+import nova.core.gui.KeyManager.Key;
 import nova.core.gui.Outline;
 import nova.core.gui.render.Graphics;
 import nova.core.util.transform.Vector2i;
+
+import java.util.Optional;
 
 //TODO Make this generic even if it means writing novels when extending.
 

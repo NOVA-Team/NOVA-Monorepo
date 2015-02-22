@@ -2,18 +2,13 @@ package nova.core.gui;
 
 import com.google.common.collect.HashBiMap;
 
-// TODO Make this a module.
-
 /**
  * Maps native key strokes to the internal NOVA key enum.
  *
  * @author Vic Nightfall
- * @see nova.core.gui.KeyStroke.Key
+ * @see KeyManager.Key
  */
-public class KeyStroke {
-
-	// TODO Hi there, NPE.
-	public static KeyStroke instance;
+public class KeyManager {
 
 	protected HashBiMap<Integer, Key> keys = HashBiMap.create(Key.values().length);
 
