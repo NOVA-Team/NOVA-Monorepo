@@ -13,7 +13,6 @@ import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.resources.IResourcePack;
-import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
 import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.manager.ConfigManager;
@@ -41,6 +40,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		md.name = "NOVA Preloader";
 		md.version = version;
 	}
+
 	public static Set<Class<?>> modClasses;
 
 	public NovaMinecraftPreloader() {
@@ -96,10 +96,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	}
 
 	public void registerResourcePacks() {
-		// TODO TODO TODO - combine with identical snippet in NovaLauncher
-		Map<NovaMod, Class<? extends Loadable>> classesMap = modClasses.stream()
-			.filter(Loadable.class::isAssignableFrom)
-			.map(clazz -> (Class<? extends Loadable>) clazz.asSubclass(Loadable.class))
+		Map<NovaMod, Class<?>> classesMap = modClasses.stream()
 			.filter(clazz -> clazz.getAnnotation(NovaMod.class) != null)
 			.collect(Collectors.toMap((clazz) -> clazz.getAnnotation(NovaMod.class), Function.identity()));
 
@@ -113,7 +110,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			Set<String> addedPacks = new HashSet<>();
 
 			classesMap.keySet().forEach(novaMod -> {
-				Class<? extends Loadable> c = classesMap.get(novaMod);
+				Class<?> c = classesMap.get(novaMod);
 
 				//Add jar resource pack
 				String fn = c.getProtectionDomain().getCodeSource().getLocation().getPath();
