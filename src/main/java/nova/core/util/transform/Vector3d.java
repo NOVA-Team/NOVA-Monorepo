@@ -4,6 +4,8 @@ import com.google.common.math.DoubleMath;
 import nova.core.util.components.Storable;
 import nova.core.util.components.Stored;
 
+import java.util.Map;
+
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
  *
@@ -24,6 +26,11 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+
+	@Override
+	public void load(Map<String, Object> data) {
+		//TODO: Implement a load method
 	}
 
 	@Override
