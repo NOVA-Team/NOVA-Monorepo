@@ -156,14 +156,14 @@ public class ItemWrapperRegistry {
 		MinecraftItemMapping minecraftItemMapping = new MinecraftItemMapping(itemWrapper, 0);
 		map.put(itemFactory, minecraftItemMapping);
 
-		// don't register ItemBlocks twice
+		// Don't register ItemBlocks twice
 		if (!(itemFactory.getDummy() instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
 			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
 
-			if (((FWItem) itemWrapper).itemFactory.getDummy() instanceof Category) {
+			if (itemFactory.getDummy() instanceof Category) {
 				//Add into creative tab
-				Category category = (Category) ((FWItem) itemWrapper).itemFactory.getDummy();
+				Category category = (Category) itemFactory.getDummy();
 				Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
 					.filter(tab -> tab.getTabLabel().equals(category.getCategory()))
 					.findFirst();
@@ -175,6 +175,7 @@ public class ItemWrapperRegistry {
 					tab.item = itemWrapper;
 				}
 			}
+
 			System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
 		}
 	}
