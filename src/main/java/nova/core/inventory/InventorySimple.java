@@ -1,19 +1,26 @@
 package nova.core.inventory;
 
 import nova.core.item.Item;
+import nova.core.network.Packet;
+import nova.core.network.PacketReceiver;
+import nova.core.network.PacketSender;
+import nova.core.util.components.Storable;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * This class provides implementation of {@link Inventory}
  */
-public class InventorySimple implements Inventory {
+public class InventorySimple implements Inventory, Storable, PacketReceiver, PacketSender {
 
-	private final Item[] stacks;
+	private final Item[] items;
 	private boolean changed = false;
 
 	public InventorySimple(int size) {
-		stacks = new Item[size];
+		items = new Item[size];
 	}
 
 	/**
@@ -40,26 +47,59 @@ public class InventorySimple implements Inventory {
 
 	@Override
 	public int size() {
-		return stacks.length;
+		return items.length;
 	}
 
 	@Override
 	public Optional<Item> get(int slot) {
-		if (slot < 0 || slot >= stacks.length) {
+		if (slot < 0 || slot >= items.length) {
 			return Optional.empty();
 		} else {
-			return Optional.ofNullable(stacks[slot]);
+			return Optional.ofNullable(items[slot]);
 		}
 	}
 
 	@Override
 	public boolean set(int slot, Item stack) {
-		if (slot < 0 || slot >= stacks.length) {
+		if (slot < 0 || slot >= items.length) {
 			return false;
 		} else {
-			stacks[slot] = stack;
+			items[slot] = stack;
 			changed = true;
 			return true;
 		}
+	}
+
+	@Override
+	public void save(Map<String, Object> data) {
+		data.putAll(IntStream.range(0, size()).boxed().collect(Collectors.toMap(i -> i + "", i -> items[i])));
+	}
+
+	@Override
+	public void load(Map<String, Object> data) {
+		IntStream.range(0, size()).forEach(i -> items[i] = (Item) data.get(i + ""));
+	}
+
+	@Override
+	public void read(int id, Packet packet) {
+		IntStream.range(0, size()).forEach(i -> {
+
+			if (packet.readBoolean()) {
+				//items[i] = packet
+				//TODO: Handle item packet reading?
+			}
+		});
+	}
+
+	@Override
+	public void write(int id, Packet packet) {
+		IntStream.range(0, size()).forEach(i -> {
+			if (get(i).isPresent()) {
+				packet.writeBoolean(true);
+				packet.write(items[i]);
+			} else {
+				packet.writeBoolean(false);
+			}
+		});
 	}
 }
