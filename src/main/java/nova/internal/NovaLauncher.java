@@ -2,6 +2,7 @@ package nova.internal;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.deps.DependencyRepoProvider;
+import nova.core.game.Game;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
 import se.jbee.inject.Dependency;
@@ -133,11 +134,12 @@ public class NovaLauncher implements Loadable {
 				.collect(Collectors.toList())
 		);
 
+		Game.instance.get().logger.debug("NOVA Mods Loaded: " + mods.size());
+
 		/**
 		 * Initialize all the NOVA mods.
 		 */
 		orderedMods.stream().forEachOrdered(Loadable::preInit);
-		System.out.println("NOVA Mods Loaded: " + mods.size());
 	}
 
 	@Override
