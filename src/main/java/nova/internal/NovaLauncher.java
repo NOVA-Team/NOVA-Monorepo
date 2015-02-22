@@ -101,7 +101,6 @@ public class NovaLauncher implements Loadable {
 				c -> {
 					try {
 						String appName = c.getCanonicalName() + "$";
-						System.out.println("Trying class: " + appName);
 						Class singletonClass = Class.forName(appName);
 						Field field = singletonClass.getField("MODULE$");
 						return (Loadable) field.get(null);
