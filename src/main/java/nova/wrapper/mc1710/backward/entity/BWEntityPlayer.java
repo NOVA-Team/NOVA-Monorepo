@@ -18,7 +18,7 @@ public class BWEntityPlayer extends BWEntity implements Player {
 	}
 
 	@Override
-	public String getUserName() {
+	public String getUsername() {
 		return entity.getGameProfile().getName();
 	}
 
