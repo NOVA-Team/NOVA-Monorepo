@@ -28,7 +28,6 @@ import nova.wrapper.mc1710.manager.ConfigManager;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
 
 import java.io.File;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -66,7 +65,7 @@ public class NovaMinecraft {
 		proxy.registerResourcePacks(modClasses);
 		launcher = new NovaLauncher(diep, modClasses);
 
-		Game.instance = Optional.of(diep.init());
+		Game.instance = diep.init();
 
 		/**
 		 * Set network manager parameters
