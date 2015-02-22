@@ -1,9 +1,7 @@
 package nova.wrapper.mc1710.item;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.collect.HashBiMap;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,14 +11,18 @@ import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.item.ItemManager;
 import nova.core.item.event.ItemIDNotFoundEvent;
+import nova.core.util.Category;
 import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
+import nova.wrapper.mc1710.util.ModCreativeTab;
 import nova.wrapper.mc1710.util.NBTUtility;
 
-import com.google.common.collect.HashBiMap;
-
-import cpw.mods.fml.common.registry.GameRegistry;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Calclavia, Stan Hebben
@@ -159,8 +161,20 @@ public class ItemWrapperRegistry {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
 			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
 
-			//TODO: Testing purposes:
-			itemWrapper.setCreativeTab(CreativeTabs.tabBlock);
+			if (((FWItem) itemWrapper).itemFactory.getDummy() instanceof Category) {
+				//Add into creative tab
+				Category category = (Category) ((FWItem) itemWrapper).itemFactory.getDummy();
+				Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
+					.filter(tab -> tab.getTabLabel().equals(category.getCategory()))
+					.findFirst();
+				if (first.isPresent()) {
+					itemWrapper.setCreativeTab(first.get());
+				} else {
+					ModCreativeTab tab = new ModCreativeTab(category.getCategory());
+					itemWrapper.setCreativeTab(tab);
+					tab.item = itemWrapper;
+				}
+			}
 			System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
 		}
 	}
