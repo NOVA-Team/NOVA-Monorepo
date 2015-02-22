@@ -133,7 +133,7 @@ public class NovaLauncher implements Loadable {
 				.collect(Collectors.toList())
 		);
 
-		Game.instance.get().logger.debug("NOVA Mods Loaded: " + mods.size());
+		Game.instance.get().logger.info("NOVA Mods Loaded: " + mods.size());
 
 		/**
 		 * Initialize all the NOVA mods.
@@ -143,12 +143,12 @@ public class NovaLauncher implements Loadable {
 
 	@Override
 	public void init() {
-		orderedMods.stream().forEach(Loadable::init);
+		orderedMods.stream().forEachOrdered(Loadable::init);
 	}
 
 	@Override
 	public void postInit() {
-		orderedMods.stream().forEach(Loadable::postInit);
+		orderedMods.stream().forEachOrdered(Loadable::postInit);
 	}
 
 	public Set<NovaMod> getLoadedMods() {
