@@ -7,6 +7,7 @@ import nova.core.loader.NovaMod;
 import se.jbee.inject.Dependency;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -89,6 +90,27 @@ public class NovaLauncher implements Loadable {
 					throw new ExceptionInInitializerError(e);
 				}
 			})));
+
+		/**
+		 * Handle Scala singleton mods
+		 */
+		Map<NovaMod, Loadable> scalaModsMap = modClasses.stream()
+			.filter(c -> !Loadable.class.isAssignableFrom(c))
+			.collect(Collectors.toMap(c -> c.getAnnotation(NovaMod.class),
+				c -> {
+					try {
+						String appName = c.getCanonicalName() + "$";
+						System.out.println("Trying class: " + appName);
+						Class singletonClass = Class.forName(appName);
+						Field field = singletonClass.getField("MODULE$");
+						return (Loadable) field.get(null);
+					} catch (Exception e) {
+						throw new ExceptionInInitializerError(e);
+					}
+				}
+			));
+
+		mods.putAll(scalaModsMap);
 
 		/**
 		 * Re-order mods based on dependencies
