@@ -27,7 +27,7 @@ public class Game {
 	 * is a concern. Treat as -100 style points. Must be initialized by code
 	 * handling launch and dependency injection entry point.
 	 */
-	public static Optional<Game> instance = Optional.empty();
+	public static Game instance;
 
 	public final Logger logger;
 

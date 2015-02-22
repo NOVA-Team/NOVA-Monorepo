@@ -133,7 +133,7 @@ public class NovaLauncher implements Loadable {
 				.collect(Collectors.toList())
 		);
 
-		Game.instance.get().logger.info("NOVA Mods Loaded: " + mods.size());
+		Game.instance.logger.info("NOVA Mods Loaded: " + mods.size());
 
 		/**
 		 * Initialize all the NOVA mods.

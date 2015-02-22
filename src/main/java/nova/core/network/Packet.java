@@ -42,6 +42,10 @@ public interface Packet {
 		return this;
 	}
 
+	default Packet $less$less$less(Object data) {
+		return write(data);
+	}
+
 	/**
 	 * Sets the specified boolean at the current {@code writerIndex}
 	 * and increases the {@code writerIndex} by {@code 1} in this buffer.

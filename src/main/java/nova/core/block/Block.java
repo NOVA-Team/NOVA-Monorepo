@@ -29,7 +29,7 @@ public abstract class Block implements Identifiable {
 	private final Vector3i position = Vector3i.ZERO;
 
 	public ItemFactory getItemFactory() {
-		return Game.instance.get().itemManager.getItemFactoryFromBlock(this);
+		return Game.instance.itemManager.getItemFactoryFromBlock(this);
 	}
 
 	/**
@@ -38,7 +38,7 @@ public abstract class Block implements Identifiable {
 	 * @return The {@link nova.core.block.BlockFactory} that refers to this Block class.
 	 */
 	public final BlockFactory factory() {
-		return Game.instance.get().blockManager.getBlockFactory(this.getID()).get();
+		return Game.instance.blockManager.getBlockFactory(this.getID()).get();
 	}
 
 	/**
@@ -106,7 +106,7 @@ public abstract class Block implements Identifiable {
 	 * @return A collection of {@link nova.core.item.Item}s that this block drops.
 	 */
 	public Collection<Item> getDrops() {
-		return Collections.singleton(Game.instance.get().itemManager.getItemFromBlock(this));
+		return Collections.singleton(Game.instance.itemManager.getItemFromBlock(this));
 	}
 
 	/**

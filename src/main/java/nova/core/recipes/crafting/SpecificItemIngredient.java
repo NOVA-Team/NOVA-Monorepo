@@ -79,7 +79,7 @@ public class SpecificItemIngredient implements ItemIngredient {
 	}
 
 	private Item getItem(String itemId) {
-		Optional<ItemFactory> itemFactory = Game.instance.get().itemManager.getItemFactory(itemId);
+		Optional<ItemFactory> itemFactory = Game.instance.itemManager.getItemFactory(itemId);
 
 		if (itemFactory.isPresent()) {
 			return itemFactory.get().makeItem();

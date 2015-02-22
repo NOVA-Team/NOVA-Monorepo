@@ -67,7 +67,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 	public void publish(T event) {
 		if (event instanceof SidedEventBus.SidedEvent) {
 			SidedEventBus.SidedEvent sidedEvent = (SidedEventBus.SidedEvent) event;
-			Side currentSide = Game.instance.get().networkManager.getSide();
+			Side currentSide = Game.instance.networkManager.getSide();
 
 			// Check if the event targets the current side.
 			if (sidedEvent.getTarget().targets(currentSide)) {
