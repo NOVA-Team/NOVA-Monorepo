@@ -34,7 +34,7 @@ public interface Packet {
 		} else if (data instanceof String) {
 			writeString((String) data);
 		} else {
-			throw new IllegalArgumentException("Packet attempt to write an invalid object: " + data + "]");
+			throw new IllegalArgumentException("Packet attempt to write an invalid object: " + data);
 		}
 
 		return this;
