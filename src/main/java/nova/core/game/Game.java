@@ -12,6 +12,7 @@ import nova.core.network.NetworkManager;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
+import nova.core.util.LanguageManager;
 import nova.core.util.SaveManager;
 import nova.core.world.WorldManager;
 import nova.internal.tick.UpdateTicker;
@@ -42,6 +43,7 @@ public class Game {
 	public final EventManager eventManager;
 	public final NetworkManager networkManager;
 	public final SaveManager saveManager;
+	public final LanguageManager languageManager;
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
@@ -70,6 +72,7 @@ public class Game {
 		EventManager eventManager,
 		NetworkManager networkManager,
 		SaveManager saveManager,
+		LanguageManager languageManager,
 		UpdateTicker.SynchronizedTicker syncTicker,
 		UpdateTicker.ThreadTicker threadTicker,
 		Optional<GuiComponentFactory> guiComponentFactory,
@@ -89,6 +92,7 @@ public class Game {
 		this.eventManager = eventManager;
 		this.networkManager = networkManager;
 		this.saveManager = saveManager;
+		this.languageManager = languageManager;
 
 		this.syncTicker = syncTicker;
 		this.threadTicker = threadTicker;
