@@ -25,15 +25,15 @@ public interface Canvas {
 
 	public void bindTexture(Texture texture);
 
-	public void translate(int x, int y);
+	public void translate(double x, double y);
 
-	public void rotate(float angle);
+	public void rotate(double angle);
 
 	public void startDrawing(boolean textured);
 
-	public void addVertex(int x, int y);
+	public void addVertex(double x, double y);
 
-	public void addVertexWithUV(int x, int y, float u, float v);
+	public void addVertexWithUV(double x, double y, double u, double v);
 
 	public default void addVertex(Vertex2D v) {
 		if (v.uv)
