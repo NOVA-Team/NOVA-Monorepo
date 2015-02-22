@@ -52,7 +52,7 @@ public class ItemWrapperRegistry {
 		if (item instanceof MCItem) {
 			return ((MCItem) item).makeItemStack(item.count());
 		} else {
-			ItemFactory itemFactory = Game.instance.get().itemManager.getItemFactory(item.getID()).get();
+			ItemFactory itemFactory = Game.instance.itemManager.getItemFactory(item.getID()).get();
 			LinkedNBTTagCompound tag = new LinkedNBTTagCompound(item);
 
 			MinecraftItemMapping mapping = get(itemFactory);
@@ -76,7 +76,7 @@ public class ItemWrapperRegistry {
 	}
 
 	public net.minecraft.item.ItemStack getMCItemStack(String id) {
-		return getMCItemStack(Game.instance.get().itemManager.getItemFactory(id).get().makeItem().setCount(1));
+		return getMCItemStack(Game.instance.itemManager.getItemFactory(id).get().makeItem().setCount(1));
 	}
 
 	public nova.core.item.Item getNovaItemStack(net.minecraft.item.ItemStack itemStack) {
@@ -123,7 +123,7 @@ public class ItemWrapperRegistry {
 	}
 
 	private void registerNOVAItemsToMinecraft() {
-		ItemManager itemManager = Game.instance.get().itemManager;
+		ItemManager itemManager = Game.instance.itemManager;
 
 		itemManager.registry.forEach(this::registerNOVAItem);
 		itemManager.whenItemRegistered(this::onItemRegistered);
@@ -189,7 +189,7 @@ public class ItemWrapperRegistry {
 	}
 
 	private void registerSubtypeResolution() {
-		Game.instance.get().itemManager.whenIDNotFound(this::onIDNotFound);
+		Game.instance.itemManager.whenIDNotFound(this::onIDNotFound);
 	}
 
 	private void onIDNotFound(ItemIDNotFoundEvent event) {
@@ -226,7 +226,7 @@ public class ItemWrapperRegistry {
 		MCItemFactory itemFactory = new MCItemFactory(item, meta);
 		map.put(itemFactory, mapping);
 
-		Game.instance.get().itemManager.register(itemFactory);
+		Game.instance.itemManager.register(itemFactory);
 
 		return itemFactory;
 	}

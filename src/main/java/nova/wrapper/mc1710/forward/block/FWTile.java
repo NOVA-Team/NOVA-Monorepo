@@ -50,7 +50,7 @@ public class FWTile extends TileEntity {
 		if (block == null) {
 			waitForWorld(() ->
 			{
-				Optional<BlockFactory> blockFactory = Game.instance.get().blockManager.getBlockFactory(blockID);
+				Optional<BlockFactory> blockFactory = Game.instance.blockManager.getBlockFactory(blockID);
 				if (blockFactory.isPresent()) {
 					block = blockFactory.get().makeBlock(new BWWorld(getWorldObj()), new Vector3i(xCoord, yCoord, zCoord));
 
@@ -72,7 +72,7 @@ public class FWTile extends TileEntity {
 	@Override
 	public Packet getDescriptionPacket() {
 		if (block instanceof PacketSender) {
-			return ((MCNetworkManager) Game.instance.get().networkManager).toMCPacket(((MCNetworkManager) Game.instance.get().networkManager).getBlockPacket(0, (PacketSender) block));
+			return ((MCNetworkManager) Game.instance.networkManager).toMCPacket(((MCNetworkManager) Game.instance.networkManager).getBlockPacket(0, (PacketSender) block));
 		}
 		return null;
 	}

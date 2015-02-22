@@ -15,7 +15,7 @@ import nova.wrapper.mc1710.backward.block.BWBlock;
 public class StaticForwarder {
 	public static void chunkSetBlockEvent(Chunk chunk, int x, int y, int z, Block block, int blockMetadata) {
 		//Publish the event
-		Game.instance.get().eventManager.blockChange.publish(new EventManager.BlockChangeEvent(new BWBlock(block), new Vector3i((chunk.xPosition << 4) + x, y, (chunk.zPosition << 4) + z)));
+		Game.instance.eventManager.blockChange.publish(new EventManager.BlockChangeEvent(new BWBlock(block), new Vector3i((chunk.xPosition << 4) + x, y, (chunk.zPosition << 4) + z)));
 	}
 
 }

@@ -77,7 +77,7 @@ public class ClassHeirachyManager implements IClassTransformer {
 				cache = declareASM(bytes);
 			}
 		} catch (IOException e) {
-			Game.instance.get().logger.error(e.getMessage());
+			Game.instance.logger.error(e.getMessage());
 		}
 
 		if (cache != null) {
@@ -87,7 +87,7 @@ public class ClassHeirachyManager implements IClassTransformer {
 		try {
 			cache = declareReflection(name);
 		} catch (ClassNotFoundException e) {
-			Game.instance.get().logger.error(e.getMessage());
+			Game.instance.logger.error(e.getMessage());
 		}
 
 		return cache;

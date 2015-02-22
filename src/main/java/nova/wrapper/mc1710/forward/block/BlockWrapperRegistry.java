@@ -31,7 +31,7 @@ public class BlockWrapperRegistry {
 	 * Register all Nova blocks
 	 */
 	public void registerBlocks() {
-		BlockManager blockManager = Game.instance.get().blockManager;
+		BlockManager blockManager = Game.instance.blockManager;
 
 		blockManager.registry.forEach(this::addNOVABlock);
 		blockManager.whenBlockRegistered(this::onBlockRegistered);

@@ -12,7 +12,7 @@ import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 public class ForgeEventHandler {
 	@SubscribeEvent
 	public void onOreRegister(OreDictionary.OreRegisterEvent event) {
-		ItemDictionary novaItemDictionary = Game.instance.get().itemDictionary;
+		ItemDictionary novaItemDictionary = Game.instance.itemDictionary;
 
 		String id = ItemWrapperRegistry.instance.getNovaItem(event.Ore).getID();
 		if (!novaItemDictionary.get(event.Name).contains(id))

@@ -9,7 +9,15 @@ import nova.core.recipes.RecipeRemovedEvent;
 import nova.core.recipes.crafting.CraftingRecipe;
 import nova.wrapper.mc1710.util.ReflectionUtil;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -27,7 +35,7 @@ public class MinecraftRecipeRegistry {
     public void registerRecipes() {
         long startTime = System.currentTimeMillis();
 
-        RecipeManager recipeManager = Game.instance.get().recipeManager;
+		RecipeManager recipeManager = Game.instance.recipeManager;
 
         List<IRecipe> recipes = (List<IRecipe>) CraftingManager.getInstance().getRecipeList();
         for (IRecipe recipe : recipes) {
@@ -86,8 +94,8 @@ public class MinecraftRecipeRegistry {
         backwardWrappers.put(recipe, novaRecipe);
         forwardWrappers.put(novaRecipe, recipe);
 
-        Game.instance.get().recipeManager.addRecipe(novaRecipe);
-    }
+		Game.instance.recipeManager.addRecipe(novaRecipe);
+	}
 
     private void onMinecraftRecipeRemoved(IRecipe recipe) {
         CraftingRecipe novaRecipe = backwardWrappers.get(recipe);
@@ -95,8 +103,8 @@ public class MinecraftRecipeRegistry {
         forwardWrappers.remove(novaRecipe);
         backwardWrappers.remove(recipe);
 
-        Game.instance.get().recipeManager.removeRecipe(novaRecipe);
-    }
+		Game.instance.recipeManager.removeRecipe(novaRecipe);
+	}
 
     private class RecipeListWrapper extends AbstractList<IRecipe> {
         private final List<IRecipe> original;
