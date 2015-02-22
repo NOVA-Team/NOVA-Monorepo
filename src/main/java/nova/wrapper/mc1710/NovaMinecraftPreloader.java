@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 public class NovaMinecraftPreloader extends DummyModContainer {
 	private static final ModMetadata md;
+
 	static {
 		md = new ModMetadata();
 		md.modId = "novapreloader";
@@ -51,6 +52,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	public void load(FMLConstructionEvent event) {
 		// Scan mod classes
 		ASMDataTable asmData = event.getASMHarvestedData();
+
 		modClasses = asmData
 			.getAll(NovaMod.class.getName())
 			.stream()
@@ -63,7 +65,12 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 				}
 			})
 			.collect(Collectors.toSet());
-
+		/*
+		//Inject fake mod containers into FML
+		List<ModContainer> mods = ReflectionUtil.getPrivateObject(Loader.instance(), "mods");
+		modClasses.forEach(mod -> mods.add(new DummyNovaMod(mod)));
+		ReflectionUtil.setPrivateObject(Loader.instance(), mods, "mods");
+		*/
 		// Register resource packs
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
 			registerResourcePacks();
@@ -128,4 +135,12 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		}
 	}
 
+	/**
+	 * A fake NovaMod to inject into FML.
+	 */
+	private static class DummyNovaMod extends DummyModContainer {
+		public DummyNovaMod(Class modClass) {
+			super(new ModMetadata());
+		}
+	}
 }

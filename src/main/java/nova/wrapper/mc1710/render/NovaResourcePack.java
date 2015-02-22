@@ -36,7 +36,6 @@ public class NovaResourcePack extends FileResourcePack {
 	@Override
 	protected InputStream getInputStreamByName(String path) throws IOException {
 		try {
-			System.out.println("[" + modid + "] Loading " + path);
 			return super.getInputStreamByName(transform(path));
 		} catch(IOException e) {
 			if (path.equals("pack.mcmeta")) {

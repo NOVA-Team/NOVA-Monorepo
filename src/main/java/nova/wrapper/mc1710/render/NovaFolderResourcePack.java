@@ -40,7 +40,6 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 	@Override
 	protected InputStream getInputStreamByName(String path) throws IOException {
 		try {
-			System.out.println("[" + modid + "] Loading " + new File(this.resourcePackFile, transform(path)));
 			return new BufferedInputStream(new FileInputStream(new File(this.resourcePackFile, transform(path))));
 		} catch (IOException e) {
 			if (path.equals("pack.mcmeta")) {
