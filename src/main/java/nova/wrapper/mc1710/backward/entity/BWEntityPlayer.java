@@ -5,6 +5,7 @@ import nova.core.player.Player;
 
 /**
  * A Nova to Minecraft entity wrapper
+ *
  * @author Calclavia
  */
 public class BWEntityPlayer extends BWEntity implements Player {
@@ -20,6 +21,11 @@ public class BWEntityPlayer extends BWEntity implements Player {
 	@Override
 	public String getUsername() {
 		return entity.getGameProfile().getName();
+	}
+
+	@Override
+	public String getID() {
+		return entity.getGameProfile().getId().toString();
 	}
 
 	@Override
