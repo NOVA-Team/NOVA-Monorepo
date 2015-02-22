@@ -9,7 +9,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import nova.bootstrap.DependencyInjectionEntryPoint;
@@ -29,8 +28,6 @@ import nova.wrapper.mc1710.manager.ConfigManager;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -39,7 +36,7 @@ import java.util.Set;
  *
  * @author Calclavia
  */
-@Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name)
+@Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name, version = NovaMinecraftPreloader.version)
 public class NovaMinecraft {
 
 	public static final String id = "nova";
@@ -79,11 +76,6 @@ public class NovaMinecraft {
 		MinecraftRecipeRegistry.instance.registerRecipes();
 
 		launcher.preInit();
-
-		launcher.getLoadedMods().forEach(novaMod -> {
-			Map<String, String> novaMap = new HashMap<>();
-			Launch.blackboard.put("nova:" + novaMod.id(), novaMap);
-		});
 
 		//Initiate config system
 		launcher.getLoadedModMap().forEach((mod, loader) -> {

@@ -6,6 +6,8 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.LoadController;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
@@ -17,9 +19,11 @@ import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.manager.ConfigManager;
 import nova.wrapper.mc1710.render.NovaFolderResourcePack;
 import nova.wrapper.mc1710.render.NovaResourcePack;
+import nova.wrapper.mc1710.util.ReflectionUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +32,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class NovaMinecraftPreloader extends DummyModContainer {
+	public static final String version = "0.0.1";
 	private static final ModMetadata md;
 
 	static {
 		md = new ModMetadata();
 		md.modId = "novapreloader";
 		md.name = "NOVA Preloader";
+		md.version = version;
 	}
-
 	public static Set<Class<?>> modClasses;
 
 	public NovaMinecraftPreloader() {
@@ -65,12 +70,22 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 				}
 			})
 			.collect(Collectors.toSet());
-		/*
+
 		//Inject fake mod containers into FML
-		List<ModContainer> mods = ReflectionUtil.getPrivateObject(Loader.instance(), "mods");
-		modClasses.forEach(mod -> mods.add(new DummyNovaMod(mod)));
-		ReflectionUtil.setPrivateObject(Loader.instance(), mods, "mods");
-		*/
+		List<ModContainer> fmlMods = ReflectionUtil.getPrivateObject(Loader.instance(), "mods");
+		List<ModContainer> newMods = new ArrayList<>();
+		newMods.addAll(fmlMods);
+		modClasses.forEach(mod -> {
+			ModMetadata fakeMeta = new ModMetadata();
+			NovaMod annotation = mod.getAnnotation(NovaMod.class);
+			fakeMeta.modId = annotation.id();
+			fakeMeta.name = annotation.name();
+			fakeMeta.version = annotation.version();
+			fakeMeta.description = annotation.name() + " is a NOVA mod.";
+			newMods.add(new DummyNovaMod(fakeMeta));
+		});
+		ReflectionUtil.setPrivateObject(Loader.instance(), newMods, "mods");
+
 		// Register resource packs
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
 			registerResourcePacks();
@@ -139,8 +154,8 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	 * A fake NovaMod to inject into FML.
 	 */
 	private static class DummyNovaMod extends DummyModContainer {
-		public DummyNovaMod(Class modClass) {
-			super(new ModMetadata());
+		public DummyNovaMod(ModMetadata meta) {
+			super(meta);
 		}
 	}
 }
