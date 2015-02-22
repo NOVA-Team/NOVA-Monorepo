@@ -10,6 +10,14 @@ public interface Player {
 	String getUsername();
 
 	/**
+	 * @return Returns the ID representing the player.
+	 * For many games, the username is the ID.
+	 */
+	default String getID() {
+		return getUsername();
+	}
+
+	/**
 	 * @return Inventory of the player
 	 */
 	InventoryPlayer getInventory();
