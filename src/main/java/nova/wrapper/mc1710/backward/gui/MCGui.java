@@ -12,7 +12,7 @@ import nova.core.gui.nativeimpl.NativeGui;
 import nova.core.gui.render.Graphics;
 import nova.core.gui.render.TextRenderer;
 import nova.core.network.Packet;
-import nova.wrapper.mc1710.network.PacketWrapper;
+import nova.wrapper.mc1710.network.MCPacket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public class MCGui extends GuiScreen implements NativeGui, DrawableGuiComponent 
 
 	@Override
 	public Packet createPacket() {
-		return new PacketWrapper(Unpooled.buffer());
+		return new MCPacket(Unpooled.buffer());
 	}
 
 	@Override

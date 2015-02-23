@@ -10,7 +10,7 @@ import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.forward.block.FWBlock;
 import nova.wrapper.mc1710.forward.block.FWTile;
-import nova.wrapper.mc1710.network.PacketWrapper;
+import nova.wrapper.mc1710.network.MCPacket;
 
 /**
  * Packet type designed to be used with Blocks
@@ -80,7 +80,7 @@ public class PacketBlock extends PacketAbstract {
 		if (block instanceof PacketHandler) {
 			try {
 				PacketHandler receiver = (PacketHandler) block;
-				receiver.read(data.readInt(), new PacketWrapper(data.slice()));
+				receiver.read(data.readInt(), new MCPacket(data.slice()));
 			} catch (IndexOutOfBoundsException e) {
 				System.out.println("Packet sent to a block and received IndexOutOfBoundsException: [" + tile + "] in " + new Vector3d(x, y, z));
 				e.printStackTrace();

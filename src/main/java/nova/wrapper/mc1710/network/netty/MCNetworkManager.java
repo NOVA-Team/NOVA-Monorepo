@@ -15,7 +15,7 @@ import nova.core.network.NetworkManager;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
-import nova.wrapper.mc1710.network.PacketWrapper;
+import nova.wrapper.mc1710.network.MCPacket;
 import nova.wrapper.mc1710.network.discriminator.PacketAbstract;
 import nova.wrapper.mc1710.network.discriminator.PacketBlock;
 
@@ -29,10 +29,15 @@ import java.util.EnumMap;
  */
 public class MCNetworkManager extends NetworkManager {
 	public final String channel = NovaMinecraft.id;
-	public final EnumMap<Side, FMLEmbeddedChannel> channelEnumMap = NetworkRegistry.INSTANCE.newChannel(channel, new ChannelHandler(), new PacketHandler());
+	public final EnumMap<Side, FMLEmbeddedChannel> channelEnumMap = NetworkRegistry.INSTANCE.newChannel(channel, new ChannelHandler(), new MCPacketHandler());
 
 	public Packet toMCPacket(PacketAbstract packet) {
 		return channelEnumMap.get(FMLCommonHandler.instance().getEffectiveSide()).generatePacketFrom(packet);
+	}
+
+	@Override
+	public nova.core.network.Packet getEmptyPacket() {
+
 	}
 
 	/**
@@ -46,8 +51,9 @@ public class MCNetworkManager extends NetworkManager {
 	public PacketBlock getBlockPacket(int id, nova.core.network.PacketHandler sender) {
 		Vector3i position = ((Block) sender).position();
 		PacketBlock discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
-		PacketWrapper wrappedPacket = new PacketWrapper(discriminator.data);
-		sender.write(id, wrappedPacket);
+		MCPacket wrappedPacket = new MCPacket(discriminator.data);
+		wrappedPacket.id = id;
+		sender.write(wrappedPacket);
 		return discriminator;
 	}
 

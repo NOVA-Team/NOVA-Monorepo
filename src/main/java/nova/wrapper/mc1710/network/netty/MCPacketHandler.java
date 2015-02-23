@@ -15,7 +15,7 @@ import nova.wrapper.mc1710.network.discriminator.PacketAbstract;
  * @since 31/05/14
  */
 @ChannelHandler.Sharable
-public class PacketHandler extends SimpleChannelInboundHandler<PacketAbstract> {
+public class MCPacketHandler extends SimpleChannelInboundHandler<PacketAbstract> {
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, PacketAbstract packet) throws Exception {
 		INetHandler netHandler = ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();

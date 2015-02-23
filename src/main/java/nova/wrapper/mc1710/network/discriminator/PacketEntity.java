@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import nova.core.network.PacketHandler;
-import nova.wrapper.mc1710.network.PacketWrapper;
+import nova.wrapper.mc1710.network.MCPacket;
 
 /**
  * @author tgame14
@@ -35,7 +35,7 @@ public class PacketEntity extends PacketAbstract {
 		Entity entity = player.getEntityWorld().getEntityByID(entityId);
 
 		if (entity instanceof PacketHandler) {
-			((PacketHandler) entity).read(data.readInt(), new PacketWrapper(data));
+			((PacketHandler) entity).read(data.readInt(), new MCPacket(data));
 		}
 	}
 
@@ -44,7 +44,7 @@ public class PacketEntity extends PacketAbstract {
 		Entity entity = player.getEntityWorld().getEntityByID(entityId);
 
 		if (entity instanceof PacketHandler) {
-			((PacketHandler) entity).read(data.readInt(), new PacketWrapper(data));
+			((PacketHandler) entity).read(data.readInt(), new MCPacket(data));
 		}
 	}
 }

@@ -6,14 +6,27 @@ import nova.core.network.Packet;
 
 /**
  * Wraps ByteBuf into a NOVA Packet.
+ *
  * @author Calclavia
  */
-public class PacketWrapper implements Packet {
+public class MCPacket implements Packet {
 
 	private final ByteBuf buf;
+	private int id = 0;
 
-	public PacketWrapper(ByteBuf buf) {
+	public MCPacket(ByteBuf buf) {
 		this.buf = buf;
+	}
+
+	@Override
+	public int getID() {
+		return id;
+	}
+
+	@Override
+	public Packet setID(int id) {
+		this.id = id;
+		return this;
 	}
 
 	@Override

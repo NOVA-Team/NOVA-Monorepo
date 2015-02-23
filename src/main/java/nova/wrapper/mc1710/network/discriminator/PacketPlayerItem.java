@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import nova.core.network.PacketHandler;
-import nova.wrapper.mc1710.network.PacketWrapper;
+import nova.wrapper.mc1710.network.MCPacket;
 
 /**
  * A packet handler for players who are currently holding their item.
@@ -44,7 +44,7 @@ public class PacketPlayerItem extends PacketAbstract {
 		ItemStack stack = player.inventory.getStackInSlot(this.slotId);
 
 		if (stack != null && stack.getItem() instanceof PacketHandler) {
-			((PacketHandler) stack.getItem()).read(data.readInt(), new PacketWrapper(data));
+			((PacketHandler) stack.getItem()).read(data.readInt(), new MCPacket(data));
 		}
 	}
 
@@ -53,7 +53,7 @@ public class PacketPlayerItem extends PacketAbstract {
 		ItemStack stack = player.inventory.getStackInSlot(this.slotId);
 
 		if (stack != null && stack.getItem() instanceof PacketHandler) {
-			((PacketHandler) stack.getItem()).read(data.readInt(), new PacketWrapper(data));
+			((PacketHandler) stack.getItem()).read(data.readInt(), new MCPacket(data));
 		}
 	}
 }
