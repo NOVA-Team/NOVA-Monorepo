@@ -18,6 +18,7 @@ import nova.internal.NovaLauncher;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.backward.gui.MCGuiFactory;
 import nova.wrapper.mc1710.depmodules.GuiModule;
+import nova.wrapper.mc1710.depmodules.LanguageModule;
 import nova.wrapper.mc1710.depmodules.NetworkModule;
 import nova.wrapper.mc1710.depmodules.SaveModule;
 import nova.wrapper.mc1710.depmodules.TickerModule;
@@ -59,6 +60,7 @@ public class NovaMinecraft {
 		diep.install(NetworkModule.class);
 		diep.install(SaveModule.class);
 		diep.install(TickerModule.class);
+		diep.install(LanguageModule.class);
 
 		Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
 
