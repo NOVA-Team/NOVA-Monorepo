@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 /**
  * The main class that launches NOVA mods.
- *
  * @author Calclavia, Kubuxu
  */
 public class NovaLauncher implements Loadable {
@@ -47,7 +46,6 @@ public class NovaLauncher implements Loadable {
 
 	/**
 	 * Creates NovaLauncher.
-	 *
 	 * @param modClasses mods to instantialize.
 	 * @param diep is required as we are installing additional modules to it.
 	 */
@@ -97,15 +95,22 @@ public class NovaLauncher implements Loadable {
 		 */
 		Map<NovaMod, Loadable> scalaModsMap = modClasses.stream()
 			.filter(c -> !Loadable.class.isAssignableFrom(c))
+			.filter(c -> {
+				try {
+					Class.forName((c.getCanonicalName() + "$"));
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
+			})
 			.collect(Collectors.toMap(c -> c.getAnnotation(NovaMod.class),
 				c -> {
 					try {
-						String appName = c.getCanonicalName() + "$";
-						Class singletonClass = Class.forName(appName);
+						Class singletonClass = Class.forName(c.getCanonicalName() + "$");
 						Field field = singletonClass.getField("MODULE$");
 						return (Loadable) field.get(null);
 					} catch (Exception e) {
-						throw new ExceptionInInitializerError(e);
+						throw new ExceptionInInitializerError("Failed to load NOVA mod: " + c);
 					}
 				}
 			));

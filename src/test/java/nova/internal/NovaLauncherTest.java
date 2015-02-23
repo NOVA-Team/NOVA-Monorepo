@@ -1,6 +1,7 @@
 package nova.internal;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.core.game.Game;
 import nova.test.mod.NoLoadableTestMod;
 import nova.test.mod.NonAnnotatedTestMod;
 import nova.test.mod.TestMod;
@@ -13,7 +14,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.spy;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NovaLauncherTest {
@@ -29,7 +29,7 @@ public class NovaLauncherTest {
 
 	@Test
 	public void testLaunchingDoesNotCrash() {
-		DependencyInjectionEntryPoint diepSpy = spy(DependencyInjectionEntryPoint.class);
+		Game.instance = diepMock.init();
 
 		NovaLauncher launcher = new NovaLauncher(diepMock, testModClasses);
 
