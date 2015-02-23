@@ -88,11 +88,8 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * account, only lowercase characters are permitted for tags.
 	 * </p>
 	 * 
-	 * <p>
-	 * <b>The formatting codes applied are as follows:</b>
-	 * </p>
-	 * 
 	 * <table>
+	 * <caption><b>The formatting codes applied are as follows:</b></caption>
 	 * <tr>
 	 * <th>Code:</th>
 	 * <th>Description:</th>
@@ -122,7 +119,7 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * <tr>
 	 * <td>{@code &st;}</td>
 	 * <td>Toggles the flag for strikethrough</td>
-	 * <td><s>"The quick brown fox jumps over the lazy dog"</s></td>
+	 * <td style="text-decoration: strikethrough">"The quick brown fox jumps over the lazy dog"</td>
 	 * </tr>
 	 * <tr>
 	 * <td>{@code &rt;}</td>
