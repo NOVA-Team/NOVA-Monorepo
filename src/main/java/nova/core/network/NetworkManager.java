@@ -1,6 +1,8 @@
 package nova.core.network;
 
 import nova.core.block.Block;
+import nova.core.entity.Entity;
+import nova.core.item.Item;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.util.exception.NovaException;
 
@@ -10,7 +12,20 @@ import nova.core.util.exception.NovaException;
 public abstract class NetworkManager {
 
 	/**
-	 * Sends a packet.
+	 * @return A new empty packet
+	 */
+	public abstract Packet getEmptyPacket();
+
+	/**
+	 * Sends a packet to a specific target.
+	 *
+	 * @param packet
+	 * @param target
+	 */
+	public abstract void send(Packet packet, NetworkTarget target);
+
+	/**
+	 * Syncs a PacketHandler between server and client.
 	 *
 	 * @param sender {@link PacketHandler}
 	 */
@@ -18,8 +33,19 @@ public abstract class NetworkManager {
 		sync(0, sender);
 	}
 
+	/**
+	 * Syncs a PacketHandler between server and client, with a specific packet ID
+	 * @param id The packet ID
+	 * @param sender sender {@link nova.core.network.PacketHandler}
+	 */
 	public final void sync(int id, PacketHandler sender) {
 		if (sender instanceof Block) {
+			syncBlock(id, sender);
+			return;
+		} else if (sender instanceof Item) {
+			syncBlock(id, sender);
+			return;
+		} else if (sender instanceof Entity) {
 			syncBlock(id, sender);
 			return;
 		}
@@ -28,6 +54,10 @@ public abstract class NetworkManager {
 	}
 
 	protected abstract void syncBlock(int id, PacketHandler sender);
+
+	protected abstract void syncItem(int id, PacketHandler sender);
+
+	protected abstract void syncEntity(int id, PacketHandler sender);
 
 	public final Side getSide() {
 		return isClient() ? Side.CLIENT : Side.SERVER;

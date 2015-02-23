@@ -10,12 +10,11 @@ public interface PacketHandler {
 	/**
 	 * Reads a packet.
 	 *
-	 * @param id - An ID to indicate the type of packet receiving. An ID of 0 indicates the default packet containing basic information.
 	 * @param packet - data encoded into the packet.
 	 */
-	default void read(int id, Packet packet) {
+	default void read(Packet packet) {
 		ReflectionUtils.forEachAnnotatedField(Sync.class, this, (field, annotation) -> {
-			if (annotation.id() == id) {
+			if (annotation.id() == packet.getID()) {
 				try {
 					field.set(this, packet.read(field.getType()));
 				} catch (IllegalAccessException e) {
@@ -28,13 +27,11 @@ public interface PacketHandler {
 	/**
 	 * Writes a packet based on the arguments.
 	 *
-	 * @param id - The ID of the packet. An ID of 0 indicates the default packet containing basic information.
 	 * @param packet - data encoded into the packet
 	 */
-	default void write(int id, Packet packet) {
-		packet.writeInt(id);
+	default void write(Packet packet) {
 		ReflectionUtils.forEachAnnotatedField(Sync.class, this, (field, annotation) -> {
-			if (annotation.id() == id) {
+			if (annotation.id() == packet.getID()) {
 				try {
 					packet.write(field.get(this));
 				} catch (IllegalAccessException e) {

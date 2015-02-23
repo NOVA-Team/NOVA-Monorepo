@@ -14,6 +14,18 @@ import java.util.stream.IntStream;
 public interface Packet {
 
 	/**
+	 * @return Gets the ID of this packet, used to determine what this packet is about.
+	 */
+	int getID();
+
+	/**
+	 * Sets the ID of this packet, allowing it to be sent accordingly.
+	 *
+	 * @return The packet itself.
+	 */
+	Packet setID(int id);
+
+	/**
 	 * Writes an arbitrary object, automatically finding the relevant class.
 	 *
 	 * @param data Object to write
