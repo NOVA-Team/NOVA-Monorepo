@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import nova.core.network.PacketReceiver;
+import nova.core.network.PacketHandler;
 import nova.wrapper.mc1710.network.PacketWrapper;
 
 /**
@@ -34,8 +34,8 @@ public class PacketEntity extends PacketAbstract {
 	public void handleClientSide(EntityPlayer player) {
 		Entity entity = player.getEntityWorld().getEntityByID(entityId);
 
-		if (entity instanceof PacketReceiver) {
-			((PacketReceiver) entity).read(data.readInt(), new PacketWrapper(data));
+		if (entity instanceof PacketHandler) {
+			((PacketHandler) entity).read(data.readInt(), new PacketWrapper(data));
 		}
 	}
 
@@ -43,8 +43,8 @@ public class PacketEntity extends PacketAbstract {
 	public void handleServerSide(EntityPlayer player) {
 		Entity entity = player.getEntityWorld().getEntityByID(entityId);
 
-		if (entity instanceof PacketReceiver) {
-			((PacketReceiver) entity).read(data.readInt(), new PacketWrapper(data));
+		if (entity instanceof PacketHandler) {
+			((PacketHandler) entity).read(data.readInt(), new PacketWrapper(data));
 		}
 	}
 }

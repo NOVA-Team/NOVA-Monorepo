@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
-import nova.core.network.PacketReceiver;
+import nova.core.network.PacketHandler;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.forward.block.FWBlock;
@@ -77,9 +77,9 @@ public class PacketBlock extends PacketAbstract {
 			}
 		}
 
-		if (block instanceof PacketReceiver) {
+		if (block instanceof PacketHandler) {
 			try {
-				PacketReceiver receiver = (PacketReceiver) block;
+				PacketHandler receiver = (PacketHandler) block;
 				receiver.read(data.readInt(), new PacketWrapper(data.slice()));
 			} catch (IndexOutOfBoundsException e) {
 				System.out.println("Packet sent to a block and received IndexOutOfBoundsException: [" + tile + "] in " + new Vector3d(x, y, z));
