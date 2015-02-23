@@ -8,11 +8,11 @@ import nova.core.retention.Stored;
  */
 @SuppressWarnings("rawtypes")
 public class Vector3i extends Vector3<Vector3i> implements Storable {
-	public static final Vector3i ZERO = new Vector3i(0, 0, 0);
-	public static final Vector3i ONE = new Vector3i(1, 1, 1);
-	public static final Vector3i AXIS_X = new Vector3i(1, 0, 0);
-	public static final Vector3i AXIS_Y = new Vector3i(0, 1, 0);
-	public static final Vector3i AXIS_Z = new Vector3i(0, 0, 1);
+	public static final Vector3i zero = new Vector3i(0, 0, 0);
+	public static final Vector3i one = new Vector3i(1, 1, 1);
+	public static final Vector3i xAxis = new Vector3i(1, 0, 0);
+	public static final Vector3i yAxis = new Vector3i(0, 1, 0);
+	public static final Vector3i zAxis = new Vector3i(0, 0, 1);
 
 	@Stored
 	public final int x, y, z;
@@ -25,11 +25,6 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-	}
-
-	@Override
-	public void load(Data data) {
-		//TODO: Implement a load method
 	}
 
 	@Override

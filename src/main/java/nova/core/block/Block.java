@@ -26,7 +26,7 @@ import java.util.Set;
 public abstract class Block implements Identifiable {
 
 	private final BlockAccess blockAccess = BlockAccessDummy.INSTANCE;
-	private final Vector3i position = Vector3i.ZERO;
+	private final Vector3i position = Vector3i.zero;
 
 	public ItemFactory getItemFactory() {
 		return Game.instance.itemManager.getItemFactoryFromBlock(this);

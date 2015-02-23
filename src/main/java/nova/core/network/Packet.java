@@ -1,5 +1,10 @@
 package nova.core.network;
 
+import nova.core.retention.Data;
+import nova.core.util.exception.NovaException;
+
+import java.util.stream.IntStream;
+
 /**
  * A packet of data that is writable or readable.
  *
@@ -35,6 +40,8 @@ public interface Packet {
 			writeString((String) data);
 		} else if (data instanceof Enum) {
 			writeString(((Enum) data).name());
+		} else if (data instanceof Data) {
+			writeData((Data) data);
 		} else {
 			throw new IllegalArgumentException("Packet attempt to write an invalid object: " + data);
 		}
@@ -134,6 +141,30 @@ public interface Packet {
 
 	Packet writeString(String value);
 
+	default Packet writeData(Data data) {
+		//Write the data size
+		writeInt(data.size());
+		//Write the data class
+		writeString(data.className);
+
+		data.forEach((k, v) -> {
+				int typeID = IntStream.range(0, Data.dataTypes.length)
+					.filter(i -> Data.dataTypes[i].isAssignableFrom(v.getClass()))
+					.findFirst()
+					.getAsInt();
+
+				//Write key
+				writeString(k);
+				//Write data type
+				writeShort(typeID);
+				//Write value
+				write(v);
+			}
+		);
+
+		return this;
+	}
+
 	/**
 	 * Gets a boolean at the current {@code readerIndex} and increases
 	 * the {@code readerIndex} by {@code 1} in this buffer.
@@ -225,4 +256,55 @@ public interface Packet {
 	double readDouble();
 
 	String readString();
+
+	default Enum readEnum(Class<? extends Enum> type) {
+		return Enum.valueOf(type, readString());
+	}
+
+	/**
+	 * Reads a {@link Data} type.
+	 */
+	default Data readData() {
+		Data readData = new Data();
+		int size = readInt();
+		readData.className = readString();
+		IntStream.range(0, size)
+			.forEach(i -> {
+				String key = readString();
+				short type = readShort();
+				Object value = read(Data.dataTypes[type]);
+				readData.put(key, value);
+			});
+		return readData;
+	}
+
+	default <T> T read(Class<T> clazz) {
+		if (clazz == Boolean.class && clazz == Boolean.TYPE) {
+			return (T) Boolean.valueOf(readBoolean());
+		} else if (clazz == Byte.class && clazz == Byte.TYPE) {
+			return (T) Byte.valueOf(readByte());
+		} else if (clazz == Short.class && clazz == Short.TYPE) {
+			return (T) Short.valueOf(readShort());
+		} else if (clazz == Integer.class && clazz == Integer.TYPE) {
+			return (T) Integer.valueOf(readInt());
+		} else if (clazz == Long.class && clazz == Long.TYPE) {
+			return (T) Long.valueOf(readLong());
+		} else if (clazz == Character.class && clazz == Character.TYPE) {
+			return (T) Character.valueOf(readChar());
+		} else if (clazz == Float.class && clazz == Float.TYPE) {
+			return (T) Float.valueOf(readFloat());
+		} else if (clazz == Double.class && clazz == Double.TYPE) {
+			return (T) Double.valueOf(readDouble());
+		} else if (clazz == String.class) {
+			return (T) readString();
+		}
+		//Special data types that all convert into Data.
+		else if (clazz == Enum.class) {
+			return (T) readEnum((Class) clazz);
+		} else if (clazz == Data.class) {
+			return (T) readData();
+		}
+
+		throw new NovaException("Attempt to read an invalid type");
+	}
 }

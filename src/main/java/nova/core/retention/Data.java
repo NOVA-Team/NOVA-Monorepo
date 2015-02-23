@@ -2,6 +2,7 @@ package nova.core.retention;
 
 import nova.core.util.exception.NovaException;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,22 @@ import java.util.Map;
  */
 public class Data extends HashMap<String, Object> {
 
-	private String className;
+	public static Class[] dataTypes = {
+		Boolean.class,
+		Byte.class,
+		Short.class,
+		Integer.class,
+		Long.class,
+		Character.class,
+		Float.class,
+		Double.class,
+		String.class,
+		//Special data types that all convert into Data.
+		Enum.class,
+		Storable.class,
+		Data.class };
+
+	public String className;
 
 	/**
 	 * Saves an object, serializing its data.
@@ -83,20 +99,8 @@ public class Data extends HashMap<String, Object> {
 	public Object put(String key, Object value) {
 		assert key != null && value != null;
 		assert !key.equals("class");
-
-		assert value instanceof Boolean
-			|| value instanceof Byte
-			|| value instanceof Short
-			|| value instanceof Integer
-			|| value instanceof Long
-			|| value instanceof Character
-			|| value instanceof Float
-			|| value instanceof Double
-			|| value instanceof String
-			//Special data types that all convert into Data.
-			|| value instanceof Enum
-			|| value instanceof Storable
-			|| value instanceof Data;
+		final Object check = value;
+		assert Arrays.stream(dataTypes).anyMatch(clazz -> clazz.isAssignableFrom(check.getClass()));
 
 		if (value instanceof Enum) {
 			Data enumData = new Data();

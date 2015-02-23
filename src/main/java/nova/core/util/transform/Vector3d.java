@@ -20,15 +20,14 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 	@Stored
 	public final double x, y, z;
 
+	public Vector3d() {
+		this(0, 0, 0);
+	}
+
 	public Vector3d(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-	}
-
-	@Override
-	public void load(Data data) {
-		//TODO: Implement a load method
 	}
 
 	@Override
@@ -144,7 +143,7 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 	public boolean equals(Object obj) {
 		if (obj instanceof Vector3) {
 			Vector3 other = ((Vector3) obj);
-			return DoubleMath.fuzzyEquals(this.xd(), other.xd(), 0.000001) &&DoubleMath.fuzzyEquals(this.yd(),other.yd(),0.000001) && DoubleMath.fuzzyEquals(this.zd(),other.zd(),0.000001);
+			return DoubleMath.fuzzyEquals(this.xd(), other.xd(), 0.000001) && DoubleMath.fuzzyEquals(this.yd(), other.yd(), 0.000001) && DoubleMath.fuzzyEquals(this.zd(), other.zd(), 0.000001);
 		}
 		return this == obj;
 	}
