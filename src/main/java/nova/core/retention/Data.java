@@ -4,7 +4,6 @@ import nova.core.util.exception.NovaException;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The data class is capable of storing named data.
@@ -21,11 +20,12 @@ import java.util.Map;
  * - String
  *
  * - Enumerator
- * - Storable
+ * - Storable (Converted into Data)
  * - Data
  *
  * @author Calclavia
  */
+//TODO: Add collection and array support
 public class Data extends HashMap<String, Object> {
 
 	public static Class[] dataTypes = {
@@ -52,7 +52,7 @@ public class Data extends HashMap<String, Object> {
 	 * @param obj The object to store.
 	 * @return The data of the object with
 	 */
-	public static Map<String, Object> serialize(Storable obj) {
+	public static Data serialize(Storable obj) {
 		Data data = new Data();
 		data.className = obj.getClass().getName();
 		obj.save(data);

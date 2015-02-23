@@ -1,6 +1,7 @@
 package nova.core.network;
 
 import nova.core.retention.Data;
+import nova.core.retention.Storable;
 import nova.core.util.exception.NovaException;
 
 import java.util.stream.IntStream;
@@ -19,7 +20,6 @@ public interface Packet {
 	 * @return This packet
 	 */
 	default Packet write(Object data) {
-		//TODO: Add collection and array support
 		if (data instanceof Boolean) {
 			writeBoolean((boolean) data);
 		} else if (data instanceof Byte) {
@@ -39,9 +39,11 @@ public interface Packet {
 		} else if (data instanceof String) {
 			writeString((String) data);
 		} else if (data instanceof Enum) {
-			writeString(((Enum) data).name());
+			writeEnum((Enum) data);
 		} else if (data instanceof Data) {
 			writeData((Data) data);
+		} else if (data instanceof Storable) {
+			writeStorable((Storable) data);
 		} else {
 			throw new IllegalArgumentException("Packet attempt to write an invalid object: " + data);
 		}
@@ -141,6 +143,12 @@ public interface Packet {
 
 	Packet writeString(String value);
 
+	default Packet writeEnum(Enum data) {
+		writeString(data.getClass().getName());
+		writeString(data.name());
+		return this;
+	}
+
 	default Packet writeData(Data data) {
 		//Write the data size
 		writeInt(data.size());
@@ -162,6 +170,11 @@ public interface Packet {
 			}
 		);
 
+		return this;
+	}
+
+	default Packet writeStorable(Storable storable) {
+		writeData(Data.serialize(storable));
 		return this;
 	}
 
@@ -257,6 +270,15 @@ public interface Packet {
 
 	String readString();
 
+	default Enum readEnum() {
+		try {
+			Class<? extends Enum> className = (Class) Class.forName(readString());
+			return readEnum(className);
+		} catch (Exception e) {
+			throw new NovaException("Failed to read enum.", e);
+		}
+	}
+
 	default Enum readEnum(Class<? extends Enum> type) {
 		return Enum.valueOf(type, readString());
 	}
@@ -276,6 +298,11 @@ public interface Packet {
 				readData.put(key, value);
 			});
 		return readData;
+	}
+
+	default <T extends Storable> T readStorable() {
+		Data data = readData();
+		return Data.unserialize(data);
 	}
 
 	default <T> T read(Class<T> clazz) {
