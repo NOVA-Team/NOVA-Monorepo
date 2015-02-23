@@ -1,7 +1,7 @@
 package nova.core.util.transform;
 
-import nova.core.util.components.Storable;
-import nova.core.util.components.Stored;
+import nova.core.retention.Storable;
+import nova.core.retention.Stored;
 
 /**
  * A double implementation of Vector2. Vector2 is an immutable quantity that holds an x, y and z value.

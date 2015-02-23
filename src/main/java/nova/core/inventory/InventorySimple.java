@@ -4,9 +4,8 @@ import nova.core.item.Item;
 import nova.core.network.Packet;
 import nova.core.network.PacketHandler;
 import nova.core.network.PacketSender;
-import nova.core.util.components.Storable;
+import nova.core.retention.Storable;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -71,12 +70,12 @@ public class InventorySimple implements Inventory, Storable, PacketHandler, Pack
 	}
 
 	@Override
-	public void save(Map<String, Object> data) {
+	public void save(Data data) {
 		data.putAll(IntStream.range(0, size()).boxed().collect(Collectors.toMap(i -> i + "", i -> items[i])));
 	}
 
 	@Override
-	public void load(Map<String, Object> data) {
+	public void load(Data data) {
 		IntStream.range(0, size()).forEach(i -> items[i] = (Item) data.get(i + ""));
 	}
 

@@ -1,6 +1,6 @@
 package nova.core.util;
 
-import nova.core.util.components.Stored;
+import nova.core.retention.Stored;
 import nova.core.util.exception.NovaException;
 
 import java.lang.annotation.Annotation;
@@ -20,7 +20,7 @@ public class ReflectionUtils {
 	}
 
 	/**
-	 * Invokes action for each field in source object annotated with {@link nova.core.util.components.Stored}
+	 * Invokes action for each field in source object annotated with {@link nova.core.retention.Stored}
 	 *
 	 * @param source Object to iterate over
 	 * @param action Action to do

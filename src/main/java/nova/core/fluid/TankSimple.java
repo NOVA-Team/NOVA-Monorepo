@@ -2,16 +2,15 @@ package nova.core.fluid;
 
 import nova.core.network.Packet;
 import nova.core.network.PacketHandler;
-import nova.core.network.PacketSender;
-import nova.core.util.components.Storable;
+import nova.core.retention.Data;
+import nova.core.retention.Storable;
 
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * This class provides basic implementation of {@link Tank}
  */
-public class TankSimple implements Tank, Storable, PacketHandler, PacketSender {
+public class TankSimple implements Tank, Storable, PacketHandler {
 
 	private Optional<Fluid> containedFluid;
 	private int maxCapacity;
@@ -73,16 +72,16 @@ public class TankSimple implements Tank, Storable, PacketHandler, PacketSender {
 	}
 
 	@Override
-	public void save(Map<String, Object> data) {
+	public void save(Data data) {
 		if (containedFluid.isPresent()) {
-			data.put("fluid", containedFluid.get());
+			data.put("fluid", containedFluid);
 		}
 	}
 
 	@Override
-	public void load(Map<String, Object> data) {
+	public void load(Data data) {
 		if (data.containsKey("fluid")) {
-			containedFluid = Optional.of(Storable.loadObj((Map) data.get("fluid")));
+			containedFluid = Optional.of(data.getStorable(data.get("fluid")));
 		} else {
 			containedFluid = Optional.empty();
 		}
