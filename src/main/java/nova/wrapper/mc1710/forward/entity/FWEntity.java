@@ -5,7 +5,7 @@ import net.minecraft.world.World;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.entity.EntityWrapper;
-import nova.core.util.components.Storable;
+import nova.core.retention.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;

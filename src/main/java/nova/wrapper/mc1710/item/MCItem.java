@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.item.Item;
-import nova.core.util.components.Storable;
+import nova.core.retention.Storable;
 
 /**
  * @author Stan

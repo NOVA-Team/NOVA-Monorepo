@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
-import nova.core.util.components.Storable;
+import nova.core.retention.Storable;
 
 import java.util.HashMap;
 import java.util.Map;

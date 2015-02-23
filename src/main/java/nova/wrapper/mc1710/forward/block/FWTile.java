@@ -8,7 +8,7 @@ import nova.core.block.BlockFactory;
 import nova.core.block.components.Stateful;
 import nova.core.game.Game;
 import nova.core.network.PacketSender;
-import nova.core.util.components.Storable;
+import nova.core.retention.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.world.BWWorld;
