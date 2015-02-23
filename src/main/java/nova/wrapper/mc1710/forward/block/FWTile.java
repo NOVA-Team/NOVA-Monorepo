@@ -167,7 +167,7 @@ public class FWTile extends TileEntity {
 			if (block instanceof Storable) {
 				Data data = new Data();
 				((Storable) block).save(data);
-				nbt.setTag("nova", StoreUtility.mapToNBT(data));
+				nbt.setTag("nova", StoreUtility.dataToNBT(data));
 			}
 		}
 	}
@@ -181,6 +181,6 @@ public class FWTile extends TileEntity {
 		 * we must wait until the block is injected with World and Position data using Future.
 		 */
 		blockID = nbt.getString("novaID");
-		cacheData = StoreUtility.nbtToMap(nbt.getCompoundTag("nova"));
+		cacheData = StoreUtility.nbtToData(nbt.getCompoundTag("nova"));
 	}
 }

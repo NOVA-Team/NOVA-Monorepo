@@ -27,18 +27,18 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	ItemFactory getItemFactory();
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
-		list.addAll(getItemFactory().makeItem(StoreUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTooltips(Optional.of(new BWEntityPlayer(player))));
+		list.addAll(getItemFactory().makeItem(StoreUtility.nbtToData(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTooltips(Optional.of(new BWEntityPlayer(player))));
 	}
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		Item item = getItemFactory().makeItem(StoreUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize);
+		Item item = getItemFactory().makeItem(StoreUtility.nbtToData(itemStack.getTagCompound())).setCount(itemStack.stackSize);
 		boolean b = item.onUse(new BWEntityPlayer(player), new BWWorld(world), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
 		ItemWrapperRegistry.instance.updateMCItemStack(itemStack, item);
 		return b;
 	}
 
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		Item item = getItemFactory().makeItem(StoreUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize);
+		Item item = getItemFactory().makeItem(StoreUtility.nbtToData(itemStack.getTagCompound())).setCount(itemStack.stackSize);
 		item.onRightClick(new BWEntityPlayer(player));
 		ItemWrapperRegistry.instance.updateMCItemStack(itemStack, item);
 		return itemStack;
@@ -52,8 +52,8 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default IIcon getIcon(ItemStack itemStack, int pass) {
-		if (getItemFactory().makeItem(StoreUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTexture().isPresent()) {
-			return RenderUtility.instance.getIcon(getItemFactory().makeItem(StoreUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTexture().get());
+		if (getItemFactory().makeItem(StoreUtility.nbtToData(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTexture().isPresent()) {
+			return RenderUtility.instance.getIcon(getItemFactory().makeItem(StoreUtility.nbtToData(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTexture().get());
 		}
 		return null;
 	}
@@ -67,10 +67,10 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default void renderItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data) {
-		getItemFactory().makeItem(StoreUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).onRender(type.ordinal(), data);
+		getItemFactory().makeItem(StoreUtility.nbtToData(itemStack.getTagCompound())).setCount(itemStack.stackSize).onRender(type.ordinal(), data);
 	}
 
 	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
-		return getItemFactory().makeItem(StoreUtility.nbtToMap(itemStack.getTagCompound())).setCount(itemStack.stackSize).colorMultiplier().argb();
+		return getItemFactory().makeItem(StoreUtility.nbtToData(itemStack.getTagCompound())).setCount(itemStack.stackSize).colorMultiplier().argb();
 	}
 }

@@ -70,7 +70,7 @@ public class ItemWrapperRegistry {
 	 */
 	public net.minecraft.item.ItemStack updateMCItemStack(ItemStack itemStack, nova.core.item.Item item) {
 		itemStack.stackSize = item.count();
-		itemStack.setTagCompound(StoreUtility.mapToNBT(item.factory().saveItem(item)));
+		itemStack.setTagCompound(StoreUtility.dataToNBT(item.factory().saveItem(item)));
 		return itemStack;
 	}
 
@@ -99,7 +99,7 @@ public class ItemWrapperRegistry {
 				itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
 			}
 
-			Data data = StoreUtility.nbtToMap(itemStack.getTagCompound());
+			Data data = StoreUtility.nbtToData(itemStack.getTagCompound());
 			if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
 				if (data == null) {
 					data = new Data();

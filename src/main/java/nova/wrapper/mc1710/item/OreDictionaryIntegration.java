@@ -3,6 +3,7 @@ package nova.wrapper.mc1710.item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import nova.core.game.Game;
+import nova.core.item.Item;
 import nova.core.item.ItemDictionary;
 import nova.core.util.Dictionary;
 import nova.wrapper.mc1710.util.ReflectionUtil;
@@ -30,7 +31,8 @@ public class OreDictionaryIntegration {
 
 		for (String oredictEntry : OreDictionary.getOreNames()) {
 			for (ItemStack oreValue : OreDictionary.getOres(oredictEntry)) {
-				String id = ItemWrapperRegistry.instance.getNovaItem(oreValue).getID();
+				Item novaItem = ItemWrapperRegistry.instance.getNovaItem(oreValue);
+				String id = novaItem.getID();
 				if (!novaItemDictionary.get(oredictEntry).contains(id))
 					novaItemDictionary.add(oredictEntry, id);
 			}

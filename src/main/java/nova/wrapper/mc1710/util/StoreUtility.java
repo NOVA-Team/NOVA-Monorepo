@@ -25,18 +25,18 @@ public class StoreUtility {
 	/**
 	 * Converts a Map of objects into NBT.
 	 *
-	 * @param map Map
+	 * @param data Map
 	 * @return NBT
 	 */
-	public static NBTTagCompound mapToNBT(Data map) {
-		if (map == null) {
+	public static NBTTagCompound dataToNBT(Data data) {
+		if (data == null) {
 			return null;
 		}
 
-		return mapToNBT(new NBTTagCompound(), map);
+		return dataToNBT(new NBTTagCompound(), data);
 	}
 
-	public static NBTTagCompound mapToNBT(NBTTagCompound nbt, Data data) {
+	public static NBTTagCompound dataToNBT(NBTTagCompound nbt, Data data) {
 		if (data.className != null) {
 			nbt.setString("class", data.className);
 		}
@@ -44,14 +44,14 @@ public class StoreUtility {
 		return nbt;
 	}
 
-	public static Data nbtToMap(NBTTagCompound nbt) {
-		Data map = new Data();
-		map.className = nbt.getString("class");
+	public static Data nbtToData(NBTTagCompound nbt) {
+		Data data = new Data();
 		if (nbt != null) {
+			data.className = nbt.getString("class");
 			Set<String> keys = nbt.func_150296_c();
-			keys.forEach(k -> map.put(k, load(nbt, k)));
+			keys.forEach(k -> data.put(k, load(nbt, k)));
 		}
-		return map;
+		return data;
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class StoreUtility {
 			tag.setString(key, (String) value);
 		} else if (value instanceof Data) {
 			NBTTagCompound innerTag = new NBTTagCompound();
-			mapToNBT(innerTag, (Data) value);
+			dataToNBT(innerTag, (Data) value);
 			tag.setTag(key, innerTag);
 		}
 		return tag;
@@ -120,7 +120,7 @@ public class StoreUtility {
 				return tag.getIntArray(key);
 			} else if (saveTag instanceof NBTTagCompound) {
 				NBTTagCompound innerTag = tag.getCompoundTag(key);
-				return nbtToMap(innerTag);
+				return nbtToData(innerTag);
 			}
 		}
 		return null;

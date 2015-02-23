@@ -39,13 +39,13 @@ public class MCSaveManager extends SaveManager {
 	public void save(String filename, Storable storable) {
 		Data saveMap = new Data();
 		storable.save(saveMap);
-		saveFile(filename, StoreUtility.mapToNBT(saveMap));
+		saveFile(filename, StoreUtility.dataToNBT(saveMap));
 	}
 
 	@Override
 	public void load(String filename, Storable storable) {
 		NBTTagCompound nbt = loadFile(filename);
-		storable.load(StoreUtility.nbtToMap(nbt));
+		storable.load(StoreUtility.nbtToData(nbt));
 	}
 
 	/**

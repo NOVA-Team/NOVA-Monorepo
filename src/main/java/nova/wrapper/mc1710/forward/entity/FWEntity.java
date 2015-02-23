@@ -49,7 +49,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements EntityWrapp
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		if (wrapped instanceof Storable) {
-			((Storable) wrapped).load(StoreUtility.nbtToMap(nbt));
+			((Storable) wrapped).load(StoreUtility.nbtToData(nbt));
 		}
 	}
 
@@ -59,7 +59,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements EntityWrapp
 		if (wrapped instanceof Storable) {
 			Data data = new Data();
 			((Storable) wrapped).save(data);
-			StoreUtility.mapToNBT(nbt, data);
+			StoreUtility.dataToNBT(nbt, data);
 		}
 	}
 
