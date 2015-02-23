@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.world.WorldEvent;
+import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.SaveManager;
 import nova.wrapper.mc1710.util.StoreUtility;
@@ -14,8 +15,6 @@ import nova.wrapper.mc1710.util.StoreUtility;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A manager that handles external file saving.
@@ -38,7 +37,7 @@ public class MCSaveManager extends SaveManager {
 
 	@Override
 	public void save(String filename, Storable storable) {
-		Map<String, Object> saveMap = new HashMap<>();
+		Data saveMap = new Data();
 		storable.save(saveMap);
 		saveFile(filename, StoreUtility.mapToNBT(saveMap));
 	}

@@ -7,7 +7,7 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.components.Stateful;
 import nova.core.game.Game;
-import nova.core.network.PacketSender;
+import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Vector3i;
@@ -15,8 +15,6 @@ import nova.wrapper.mc1710.backward.world.BWWorld;
 import nova.wrapper.mc1710.network.netty.MCNetworkManager;
 import nova.wrapper.mc1710.util.StoreUtility;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,7 +31,7 @@ public class FWTile extends TileEntity {
 
 	private String blockID;
 	private Block block;
-	private Map<String, Object> cacheData = null;
+	private Data cacheData = null;
 
 	public FWTile() {
 
@@ -71,8 +69,8 @@ public class FWTile extends TileEntity {
 
 	@Override
 	public Packet getDescriptionPacket() {
-		if (block instanceof PacketSender) {
-			return ((MCNetworkManager) Game.instance.networkManager).toMCPacket(((MCNetworkManager) Game.instance.networkManager).getBlockPacket(0, (PacketSender) block));
+		if (block instanceof nova.core.network.PacketHandler) {
+			return ((MCNetworkManager) Game.instance.networkManager).toMCPacket(((MCNetworkManager) Game.instance.networkManager).getBlockPacket(0, (nova.core.network.PacketHandler) block));
 		}
 		return null;
 	}
@@ -167,7 +165,7 @@ public class FWTile extends TileEntity {
 
 		if (block != null) {
 			if (block instanceof Storable) {
-				Map<String, Object> data = new HashMap<>();
+				Data data = new Data();
 				((Storable) block).save(data);
 				nbt.setTag("nova", StoreUtility.mapToNBT(data));
 			}

@@ -11,6 +11,7 @@ import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.item.ItemManager;
 import nova.core.item.event.ItemIDNotFoundEvent;
+import nova.core.retention.Data;
 import nova.core.util.Category;
 import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
@@ -19,8 +20,6 @@ import nova.wrapper.mc1710.util.ModCreativeTab;
 import nova.wrapper.mc1710.util.StoreUtility;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -100,10 +99,10 @@ public class ItemWrapperRegistry {
 				itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
 			}
 
-			Map<String, Object> data = StoreUtility.nbtToMap(itemStack.getTagCompound());
+			Data data = StoreUtility.nbtToMap(itemStack.getTagCompound());
 			if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
 				if (data == null) {
-					data = new HashMap<>();
+					data = new Data();
 				}
 
 				data.put("damage", itemStack.getItemDamage());

@@ -12,7 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import nova.core.block.Block;
 import nova.core.network.NetworkManager;
-import nova.core.network.PacketSender;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
@@ -40,11 +39,11 @@ public class MCNetworkManager extends NetworkManager {
 	 * Syncs a block's packet data.
 	 */
 	@Override
-	protected void syncBlock(int id, PacketSender sender) {
+	protected void syncBlock(int id, nova.core.network.PacketHandler sender) {
 		sendToAll(getBlockPacket(id, sender));
 	}
 
-	public PacketBlock getBlockPacket(int id, PacketSender sender) {
+	public PacketBlock getBlockPacket(int id, nova.core.network.PacketHandler sender) {
 		Vector3i position = ((Block) sender).position();
 		PacketBlock discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
 		PacketWrapper wrappedPacket = new PacketWrapper(discriminator.data);

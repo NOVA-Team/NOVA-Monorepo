@@ -5,14 +5,13 @@ import net.minecraft.world.World;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.entity.EntityWrapper;
+import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.components.Updater;
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
 import nova.wrapper.mc1710.backward.world.BWWorld;
 import nova.wrapper.mc1710.util.StoreUtility;
-
-import java.util.HashMap;
 
 /**
  * Entity wrapper
@@ -58,7 +57,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements EntityWrapp
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 
 		if (wrapped instanceof Storable) {
-			HashMap<String, Object> data = new HashMap<>();
+			Data data = new Data();
 			((Storable) wrapped).save(data);
 			StoreUtility.mapToNBT(nbt, data);
 		}
