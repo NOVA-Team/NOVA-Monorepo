@@ -88,14 +88,14 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 	}
 
 	@Override
-	public void read(int id, Packet packet) {
+	public void read(Packet packet) {
 		if (containedFluid.isPresent()) {
 			packet.write(containedFluid.get());
 		}
 	}
 
 	@Override
-	public void write(int id, Packet packet) {
+	public void write(Packet packet) {
 		containedFluid = Optional.of(packet.readStorable());
 	}
 }

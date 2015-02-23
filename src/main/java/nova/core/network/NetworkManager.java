@@ -7,6 +7,7 @@ import nova.core.network.NetworkTarget.Side;
 import nova.core.util.exception.NovaException;
 
 /**
+ * A central network manager. 
  * @author Calclavia
  */
 public abstract class NetworkManager {
@@ -14,15 +15,7 @@ public abstract class NetworkManager {
 	/**
 	 * @return A new empty packet
 	 */
-	public abstract Packet getEmptyPacket();
-
-	/**
-	 * Sends a packet to a specific target.
-	 *
-	 * @param packet
-	 * @param target
-	 */
-	public abstract void send(Packet packet, NetworkTarget target);
+	public abstract Packet newPacket();
 
 	/**
 	 * Syncs a PacketHandler between server and client.
@@ -49,6 +42,8 @@ public abstract class NetworkManager {
 			syncBlock(id, sender);
 			return;
 		}
+
+		//TODO: Add custom packet object syncing.
 
 		throw new NovaException("Packet type not supported!");
 	}

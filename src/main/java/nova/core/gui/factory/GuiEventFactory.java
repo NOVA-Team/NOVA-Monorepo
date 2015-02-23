@@ -1,15 +1,15 @@
 package nova.core.gui.factory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.function.Function;
-
 import nova.core.gui.ComponentEvent;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiComponent;
 import nova.core.network.Packet;
 import nova.core.util.exception.NovaException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class GuiEventFactory {
 
@@ -41,7 +41,8 @@ public class GuiEventFactory {
 			throw new NovaException(String.format("Recieved an event for a non-existent component \"%s\" at GUI %s", qualifiedName, parentGui));
 
 		E event = (E) networkEvents.get(eventID).apply(component.get());
-		event.read(eventSubID, packet);
+		packet.setID(eventSubID);
+		event.read(packet);
 		return event;
 	}
 
@@ -51,6 +52,7 @@ public class GuiEventFactory {
 		packet.writeInt(networkEventsReverse.get(event.getClass()));
 		packet.writeString(event.component.getQualifiedName());
 		packet.writeInt(subID);
-		event.write(subID, packet);
+		packet.setID(subID);
+		event.write(packet);
 	}
 }

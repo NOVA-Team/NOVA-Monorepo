@@ -25,7 +25,6 @@ public class InventorySimple implements Inventory, Storable, PacketHandler {
 	/**
 	 * Tells if this inventory has changed since last
 	 * invocation of {@link #clearChanged()}
-	 *
 	 * @return Whether the inventory has changed
 	 */
 	public boolean hasChanged() {
@@ -80,7 +79,7 @@ public class InventorySimple implements Inventory, Storable, PacketHandler {
 	}
 
 	@Override
-	public void read(int id, Packet packet) {
+	public void read(Packet packet) {
 		IntStream.range(0, size()).forEach(i -> {
 
 			if (packet.readBoolean()) {
@@ -91,7 +90,7 @@ public class InventorySimple implements Inventory, Storable, PacketHandler {
 	}
 
 	@Override
-	public void write(int id, Packet packet) {
+	public void write(Packet packet) {
 		IntStream.range(0, size()).forEach(i -> {
 			if (get(i).isPresent()) {
 				packet.writeBoolean(true);
