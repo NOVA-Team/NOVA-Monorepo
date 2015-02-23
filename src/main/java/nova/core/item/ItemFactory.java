@@ -1,11 +1,10 @@
 package nova.core.item;
 
+import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.Factory;
 import nova.core.util.Identifiable;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -19,18 +18,22 @@ public class ItemFactory extends Factory<Item> implements Identifiable {
 
 	/**
 	 * Makes a new item with no data
+	 *
 	 * @return Resulting item
 	 */
 	public Item makeItem() {
-		return makeItem(new HashMap<>());
+		Data data = new Data();
+		data.className = getDummy().getClass().getName();
+		return makeItem(data);
 	}
 
 	/**
 	 * Creates a new instance of the Item.
+	 *
 	 * @param data Item data, used if item is {@link Storable}
 	 * @return Resulting item
 	 */
-	public Item makeItem(Map<String, Object> data) {
+	public Item makeItem(Data data) {
 		Item newItem = constructor.get();
 		if (newItem instanceof Storable) {
 			((Storable) newItem).load(data);
@@ -38,8 +41,8 @@ public class ItemFactory extends Factory<Item> implements Identifiable {
 		return newItem;
 	}
 
-	public Map<String, Object> saveItem(Item item) {
-		Map<String, Object> data = new HashMap<>();
+	public Data saveItem(Item item) {
+		Data data = new Data();
 		if (item instanceof Storable) {
 			((Storable) item).save(data);
 		}

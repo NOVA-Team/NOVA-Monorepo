@@ -4,7 +4,6 @@ import nova.core.game.Game;
 import nova.core.network.NetworkTarget;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketHandler;
-import nova.core.network.PacketSender;
 
 import java.util.HashSet;
 
@@ -120,7 +119,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 	 *
 	 * @author Vic Nightfall
 	 */
-	public static interface SidedEvent extends PacketSender, PacketHandler {
+	public static interface SidedEvent extends PacketHandler {
 
 		public default Side getTarget() {
 			NetworkTarget target = getClass().getAnnotation(NetworkTarget.class);

@@ -4,6 +4,7 @@ import nova.core.util.exception.NovaException;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The data class is capable of storing named data.
@@ -45,6 +46,14 @@ public class Data extends HashMap<String, Object> {
 
 	public String className;
 
+	public Data() {
+
+	}
+
+	public Data(Class clazz) {
+		className = clazz.getName();
+	}
+
 	/**
 	 * Saves an object, serializing its data.
 	 * This map can be reloaded and its class with be reconstructed.
@@ -53,8 +62,7 @@ public class Data extends HashMap<String, Object> {
 	 * @return The data of the object with
 	 */
 	public static Data serialize(Storable obj) {
-		Data data = new Data();
-		data.className = obj.getClass().getName();
+		Data data = new Data(obj.getClass());
 		obj.save(data);
 		data.put("class", obj.getClass().getName());
 		obj.save(data);
@@ -96,6 +104,16 @@ public class Data extends HashMap<String, Object> {
 	}
 
 	@Override
+	public void putAll(Map<? extends String, ?> m) {
+		//TODO: More efficient way to do this?
+		m.forEach((k, v) -> put(k, v));
+	}
+
+	public void putAll(Data m) {
+		putAll(m);
+	}
+
+	@Override
 	public Object put(String key, Object value) {
 		assert key != null && value != null;
 		assert !key.equals("class");
@@ -124,7 +142,7 @@ public class Data extends HashMap<String, Object> {
 		return (T) super.get(key);
 	}
 
-	public <T extends Enum> T getEnum(String key) {
+	public <T extends Enum<T>> T getEnum(String key) {
 		Data enumData = get(key);
 		try {
 			Class<T> enumClass = (Class) Class.forName(enumData.className);
