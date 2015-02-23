@@ -12,23 +12,22 @@ public abstract class NetworkManager {
 	/**
 	 * Sends a packet.
 	 *
-	 * @param sender {@link PacketSender}
+	 * @param sender {@link PacketHandler}
 	 */
-	public final void sync(PacketSender sender) {
+	public final void sync(PacketHandler sender) {
 		sync(0, sender);
 	}
 
-	public final void sync(int id, PacketSender sender) {
+	public final void sync(int id, PacketHandler sender) {
 		if (sender instanceof Block) {
 			syncBlock(id, sender);
 			return;
 		}
 
-		System.out.println("Packet sender type not supported!");
-		throw new NovaException();
+		throw new NovaException("Packet type not supported!");
 	}
 
-	protected abstract void syncBlock(int id, PacketSender sender);
+	protected abstract void syncBlock(int id, PacketHandler sender);
 
 	public final Side getSide() {
 		return isClient() ? Side.CLIENT : Side.SERVER;

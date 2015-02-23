@@ -2,7 +2,7 @@ package nova.core.inventory;
 
 import nova.core.item.Item;
 import nova.core.network.Packet;
-import nova.core.network.PacketReceiver;
+import nova.core.network.PacketHandler;
 import nova.core.network.PacketSender;
 import nova.core.util.components.Storable;
 
@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 /**
  * This class provides implementation of {@link Inventory}
  */
-public class InventorySimple implements Inventory, Storable, PacketReceiver, PacketSender {
+public class InventorySimple implements Inventory, Storable, PacketHandler, PacketSender {
 
 	private final Item[] items;
 	private boolean changed = false;

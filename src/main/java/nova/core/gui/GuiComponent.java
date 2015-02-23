@@ -8,7 +8,7 @@ import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.gui.render.Graphics;
 import nova.core.network.NetworkTarget.Side;
-import nova.core.network.PacketReceiver;
+import nova.core.network.PacketHandler;
 import nova.core.network.PacketSender;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector2i;
@@ -23,7 +23,7 @@ import java.util.Optional;
  * @param <T> {@link NativeGuiComponent} type
  */
 @SuppressWarnings("unchecked")
-public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
+public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketHandler {
 
 	protected String qualifiedName;
 	protected Optional<Vector2i> preferredSize = Optional.empty();
