@@ -97,12 +97,21 @@ shadowJar {
 	}
 }
 
+task wrapperTestJar(type: Jar) {
+	from(sourceSets.test.java) {
+		include "nova/wrappertests/**"
+		include "nova/testutils/**"
+	}
+	classifier = "wrappertests"
+}
+
 artifacts {
 	archives apiJar
 	archives jar
 	archives javadocJar
 	archives shadowJar
 	archives sourceJar
+	archives wrapperTestJar
 }
 
 publishing {
@@ -114,6 +123,7 @@ publishing {
 			artifact javadocJar
 			artifact shadowJar
 			artifact sourceJar
+			artifact wrapperTestJar
 
 			pom.withXml(writePom())
 		}
@@ -136,6 +146,11 @@ sublimeText {
 }
 
 test {
+	forkEvery = 1
+	maxParallelForks = 4
+
+	exclude "nova/wrappertests/**"
+
 	testLogging {
 		exceptionFormat = 'full'
 	}

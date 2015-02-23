@@ -1,18 +1,15 @@
 package nova.core.util;
 
-import nova.core.di.WithInjector;
 import org.junit.Test;
-import se.jbee.inject.Dependency;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RegistryTest extends WithInjector {
+public class RegistryTest {
 
 	@Test
 	public void testRegistry() throws Exception {
 
-		@SuppressWarnings("unchecked")
-		Registry<Identifiable> registry = injector.resolve(Dependency.dependency(Registry.class));
+		Registry<Identifiable> registry = new Registry<>();
 
 		Identifiable id1 = new MockIdentifiable("ID1");
 		Identifiable id2 = new MockIdentifiable("ID2");

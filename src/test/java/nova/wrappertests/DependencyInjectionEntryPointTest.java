@@ -1,6 +1,8 @@
-package nova.bootstrap;
+package nova.wrappertests;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
 
 import org.junit.Test;
@@ -9,9 +11,8 @@ public class DependencyInjectionEntryPointTest {
 
 	@Test
 	public void startingInjectionShouldNotCrash() {
-		DependencyInjectionEntryPoint ep = new DependencyInjectionEntryPoint();
-
-		Game game = ep.init();
+		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
+		Game game = diep.init();
 
 		assertThat(game).isNotNull();
 		assertThat(game.blockManager).isNotNull();
