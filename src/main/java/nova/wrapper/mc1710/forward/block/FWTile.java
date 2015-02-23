@@ -13,7 +13,7 @@ import nova.core.util.components.Updater;
 import nova.core.util.transform.Vector3i;
 import nova.wrapper.mc1710.backward.world.BWWorld;
 import nova.wrapper.mc1710.network.netty.MCNetworkManager;
-import nova.wrapper.mc1710.util.NBTUtility;
+import nova.wrapper.mc1710.util.StoreUtility;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -169,7 +169,7 @@ public class FWTile extends TileEntity {
 			if (block instanceof Storable) {
 				Map<String, Object> data = new HashMap<>();
 				((Storable) block).save(data);
-				nbt.setTag("nova", NBTUtility.mapToNBT(data));
+				nbt.setTag("nova", StoreUtility.mapToNBT(data));
 			}
 		}
 	}
@@ -183,6 +183,6 @@ public class FWTile extends TileEntity {
 		 * we must wait until the block is injected with World and Position data using Future.
 		 */
 		blockID = nbt.getString("novaID");
-		cacheData = NBTUtility.nbtToMap(nbt.getCompoundTag("nova"));
+		cacheData = StoreUtility.nbtToMap(nbt.getCompoundTag("nova"));
 	}
 }

@@ -16,7 +16,7 @@ import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
-import nova.wrapper.mc1710.util.NBTUtility;
+import nova.wrapper.mc1710.util.StoreUtility;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -71,7 +71,7 @@ public class ItemWrapperRegistry {
 	 */
 	public net.minecraft.item.ItemStack updateMCItemStack(ItemStack itemStack, nova.core.item.Item item) {
 		itemStack.stackSize = item.count();
-		itemStack.setTagCompound(NBTUtility.mapToNBT(item.factory().saveItem(item)));
+		itemStack.setTagCompound(StoreUtility.mapToNBT(item.factory().saveItem(item)));
 		return itemStack;
 	}
 
@@ -100,7 +100,7 @@ public class ItemWrapperRegistry {
 				itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
 			}
 
-			Map<String, Object> data = NBTUtility.nbtToMap(itemStack.getTagCompound());
+			Map<String, Object> data = StoreUtility.nbtToMap(itemStack.getTagCompound());
 			if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
 				if (data == null) {
 					data = new HashMap<>();

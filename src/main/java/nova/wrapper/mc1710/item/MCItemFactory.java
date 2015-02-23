@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.item;
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
-import nova.wrapper.mc1710.util.NBTUtility;
+import nova.wrapper.mc1710.util.StoreUtility;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +33,8 @@ public class MCItemFactory extends ItemFactory {
     @Override
     public Item makeItem(Map<String, Object> data) {
         int meta = (Integer) data.getOrDefault("damage", this.meta);
-        NBTTagCompound nbtData = NBTUtility.mapToNBT(data);
-        return new MCItem(item, meta, nbtData);
+		NBTTagCompound nbtData = StoreUtility.mapToNBT(data);
+		return new MCItem(item, meta, nbtData);
     }
 
     @Override
@@ -44,8 +44,8 @@ public class MCItemFactory extends ItemFactory {
 
         MCItem mcItem = (MCItem) item;
 
-        Map<String, Object> result = NBTUtility.nbtToMap(mcItem.getTag());
-        if (result == null)
+		Map<String, Object> result = StoreUtility.nbtToMap(mcItem.getTag());
+		if (result == null)
             result = new HashMap<String, Object>();
 
         if (mcItem.getMeta() != meta)

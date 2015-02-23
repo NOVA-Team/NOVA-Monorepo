@@ -11,24 +11,24 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
-import nova.core.retention.Storable;
+import nova.core.retention.Data;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * Utility that manages common NBT queueSave and load methods
+ *
  * @author Calclavia
  */
-public class NBTUtility {
+public class StoreUtility {
 
 	/**
 	 * Converts a Map of objects into NBT.
+	 *
 	 * @param map Map
 	 * @return NBT
 	 */
-	public static NBTTagCompound mapToNBT(Map<String, Object> map) {
+	public static NBTTagCompound mapToNBT(Data map) {
 		if (map == null) {
 			return null;
 		}
@@ -36,13 +36,17 @@ public class NBTUtility {
 		return mapToNBT(new NBTTagCompound(), map);
 	}
 
-	public static NBTTagCompound mapToNBT(NBTTagCompound nbt, Map<String, Object> map) {
-		map.forEach((k, v) -> save(nbt, k, v));
+	public static NBTTagCompound mapToNBT(NBTTagCompound nbt, Data data) {
+		if (data.className != null) {
+			nbt.setString("class", data.className);
+		}
+		data.forEach((k, v) -> save(nbt, k, v));
 		return nbt;
 	}
 
-	public static Map<String, Object> nbtToMap(NBTTagCompound nbt) {
-		Map<String, Object> map = new HashMap<>();
+	public static Data nbtToMap(NBTTagCompound nbt) {
+		Data map = new Data();
+		map.className = nbt.getString("class");
 		if (nbt != null) {
 			Set<String> keys = nbt.func_150296_c();
 			keys.forEach(k -> map.put(k, load(nbt, k)));
@@ -52,48 +56,42 @@ public class NBTUtility {
 
 	/**
 	 * Saves an unknown object to NBT
+	 *
 	 * @param tag - NBTTagCompound to queueSave the tag too
 	 * @param key - name to queueSave the object as
 	 * @param value - the actual object
 	 * @return the tag when done saving too i
 	 */
 	public static NBTTagCompound save(NBTTagCompound tag, String key, Object value) {
-		if (value instanceof Map) {
-			NBTTagCompound innerTag = new NBTTagCompound();
-			Map<String, Object> map = (Map) value;
-			map.forEach((k, v) -> save(innerTag, k, v));
-			tag.setTag(key, innerTag);
-		} else if (value instanceof Storable) {
-			HashMap<String, Object> map = new HashMap<>();
-			((Storable) value).save(map);
-			save(tag, key, map);
+		if (value instanceof Boolean) {
+			tag.setBoolean(key, (boolean) value);
+		} else if (value instanceof Byte) {
+			tag.setByte(key, (byte) value);
+		} else if (value instanceof Short) {
+			tag.setShort(key, (short) value);
+		} else if (value instanceof Integer) {
+			tag.setInteger(key, (int) value);
+		} else if (value instanceof Long) {
+			tag.setLong(key, (long) value);
+		} else if (value instanceof Character) {
+			tag.setInteger(key, (Character) value);
 		} else if (value instanceof Float) {
 			tag.setFloat(key, (float) value);
 		} else if (value instanceof Double) {
 			tag.setDouble(key, (double) value);
-		} else if (value instanceof Integer) {
-			tag.setInteger(key, (int) value);
 		} else if (value instanceof String) {
 			tag.setString(key, (String) value);
-		} else if (value instanceof Short) {
-			tag.setShort(key, (short) value);
-		} else if (value instanceof Byte) {
-			tag.setByte(key, (byte) value);
-		} else if (value instanceof Long) {
-			tag.setLong(key, (long) value);
-		} else if (value instanceof Boolean) {
-			tag.setBoolean(key, (boolean) value);
-		} else if (value instanceof byte[]) {
-			tag.setByteArray(key, (byte[]) value);
-		} else if (value instanceof int[]) {
-			tag.setIntArray(key, (int[]) value);
+		} else if (value instanceof Data) {
+			NBTTagCompound innerTag = new NBTTagCompound();
+			mapToNBT(innerTag, (Data) value);
+			tag.setTag(key, innerTag);
 		}
-
 		return tag;
 	}
 
 	/**
 	 * Reads an unknown object with a known name from NBT
+	 *
 	 * @param tag - tag to read the value from
 	 * @param key - name of the value
 	 * @return object or suggestionValue if nothing is found
@@ -121,11 +119,8 @@ public class NBTUtility {
 			} else if (saveTag instanceof NBTTagIntArray) {
 				return tag.getIntArray(key);
 			} else if (saveTag instanceof NBTTagCompound) {
-				NBTTagCompound compoundTag = tag.getCompoundTag(key);
-				HashMap<String, Object> map = new HashMap<>();
-				Set<String> keys = compoundTag.func_150296_c();
-				keys.forEach(k -> map.put(k, load(compoundTag, k)));
-				return map;
+				NBTTagCompound innerTag = tag.getCompoundTag(key);
+				return nbtToMap(innerTag);
 			}
 		}
 		return null;

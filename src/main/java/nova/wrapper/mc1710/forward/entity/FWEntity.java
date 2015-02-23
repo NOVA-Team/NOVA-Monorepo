@@ -10,7 +10,7 @@ import nova.core.util.components.Updater;
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
 import nova.wrapper.mc1710.backward.world.BWWorld;
-import nova.wrapper.mc1710.util.NBTUtility;
+import nova.wrapper.mc1710.util.StoreUtility;
 
 import java.util.HashMap;
 
@@ -50,7 +50,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements EntityWrapp
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		if (wrapped instanceof Storable) {
-			((Storable) wrapped).load(NBTUtility.nbtToMap(nbt));
+			((Storable) wrapped).load(StoreUtility.nbtToMap(nbt));
 		}
 	}
 
@@ -60,7 +60,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements EntityWrapp
 		if (wrapped instanceof Storable) {
 			HashMap<String, Object> data = new HashMap<>();
 			((Storable) wrapped).save(data);
-			NBTUtility.mapToNBT(nbt, data);
+			StoreUtility.mapToNBT(nbt, data);
 		}
 	}
 
