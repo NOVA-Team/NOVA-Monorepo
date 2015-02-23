@@ -35,7 +35,9 @@ public class PacketEntity extends PacketAbstract {
 		Entity entity = player.getEntityWorld().getEntityByID(entityId);
 
 		if (entity instanceof PacketHandler) {
-			((PacketHandler) entity).read(data.readInt(), new MCPacket(data));
+			MCPacket mcPacket = new MCPacket(data);
+			mcPacket.setID(data.readInt());
+			((PacketHandler) entity).read(mcPacket);
 		}
 	}
 
@@ -44,7 +46,9 @@ public class PacketEntity extends PacketAbstract {
 		Entity entity = player.getEntityWorld().getEntityByID(entityId);
 
 		if (entity instanceof PacketHandler) {
-			((PacketHandler) entity).read(data.readInt(), new MCPacket(data));
+			MCPacket mcPacket = new MCPacket(data);
+			mcPacket.setID(data.readInt());
+			((PacketHandler) entity).read(mcPacket);
 		}
 	}
 }

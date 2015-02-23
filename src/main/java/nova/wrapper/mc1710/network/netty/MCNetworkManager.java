@@ -6,24 +6,28 @@ import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import nova.core.block.Block;
+import nova.core.entity.Entity;
 import nova.core.network.NetworkManager;
+import nova.core.network.PacketHandler;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
+import nova.wrapper.mc1710.forward.entity.FWEntity;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.network.MCPacket;
 import nova.wrapper.mc1710.network.discriminator.PacketAbstract;
 import nova.wrapper.mc1710.network.discriminator.PacketBlock;
+import nova.wrapper.mc1710.network.discriminator.PacketEntity;
 
 import java.util.EnumMap;
 
 /**
  * The implementation of NetworkManager that will be injected.
- *
  * @author Calclavia
  * @since 26/05/14
  */
@@ -36,8 +40,8 @@ public class MCNetworkManager extends NetworkManager {
 	}
 
 	@Override
-	public nova.core.network.Packet getEmptyPacket() {
-
+	public nova.core.network.Packet newPacket() {
+		return new MCPacket(Unpooled.buffer());
 	}
 
 	/**
@@ -48,12 +52,32 @@ public class MCNetworkManager extends NetworkManager {
 		sendToAll(getBlockPacket(id, sender));
 	}
 
-	public PacketBlock getBlockPacket(int id, nova.core.network.PacketHandler sender) {
+	@Override
+	protected void syncItem(int id, PacketHandler sender) {
+		//TODO: Handle item sync
+	}
+
+	@Override
+	protected void syncEntity(int id, PacketHandler sender) {
+		sendToAll(getEntityPacket(id, sender));
+	}
+
+	public PacketEntity getEntityPacket(int id, PacketHandler sender) {
+		Entity entity = (Entity) sender;
+		PacketEntity discriminator = new PacketEntity((FWEntity) entity.wrapper);
+		MCPacket mcPacket = new MCPacket(discriminator.data);
+		mcPacket.setID(id);
+		sender.write(mcPacket);
+		return discriminator;
+
+	}
+
+	public PacketBlock getBlockPacket(int id, PacketHandler sender) {
 		Vector3i position = ((Block) sender).position();
 		PacketBlock discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
-		MCPacket wrappedPacket = new MCPacket(discriminator.data);
-		wrappedPacket.id = id;
-		sender.write(wrappedPacket);
+		MCPacket mcPacket = new MCPacket(discriminator.data);
+		mcPacket.setID(id);
+		sender.write(mcPacket);
 		return discriminator;
 	}
 
@@ -88,7 +112,6 @@ public class MCNetworkManager extends NetworkManager {
 
 	/**
 	 * sends to all clients connected to the server
-	 *
 	 * @param packet the packet to send.
 	 */
 	public void sendToAll(PacketAbstract packet) {

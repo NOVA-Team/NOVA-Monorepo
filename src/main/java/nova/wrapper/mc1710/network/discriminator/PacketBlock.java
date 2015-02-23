@@ -14,7 +14,6 @@ import nova.wrapper.mc1710.network.MCPacket;
 
 /**
  * Packet type designed to be used with Blocks
- *
  * @author Calclavia
  */
 public class PacketBlock extends PacketAbstract {
@@ -80,7 +79,10 @@ public class PacketBlock extends PacketAbstract {
 		if (block instanceof PacketHandler) {
 			try {
 				PacketHandler receiver = (PacketHandler) block;
-				receiver.read(data.readInt(), new MCPacket(data.slice()));
+				int subID = data.readInt();
+				MCPacket packet = new MCPacket(data.slice());
+				packet.setID(subID);
+				receiver.read(packet);
 			} catch (IndexOutOfBoundsException e) {
 				System.out.println("Packet sent to a block and received IndexOutOfBoundsException: [" + tile + "] in " + new Vector3d(x, y, z));
 				e.printStackTrace();
