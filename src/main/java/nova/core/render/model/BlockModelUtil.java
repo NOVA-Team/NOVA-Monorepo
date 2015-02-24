@@ -236,7 +236,7 @@ public class BlockModelUtil {
 		return drawCube(model, cuboid.min.x, cuboid.min.y, cuboid.min.z, cuboid.max.x, cuboid.max.y, cuboid.max.z, textureCoordinates);
 	}
 
-	public Model drawCube(Model model) {
+	public static Model drawCube(Model model) {
 		return drawCube(model, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, StaticCubeTextureCoordinates.instance);
 	}
 
