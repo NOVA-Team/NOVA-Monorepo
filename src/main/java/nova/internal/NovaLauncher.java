@@ -86,7 +86,7 @@ public class NovaLauncher implements Loadable {
 
 					Constructor<?> cons = ocons.get();
 					Object[] parameters = Arrays.stream(cons.getParameterTypes())
-						.map(clazz -> diep.getInjector().get().resolve(Dependency.dependency(clazz)))
+						.map(clazz -> (Object) diep.getInjector().get().resolve(Dependency.dependency(clazz)))
 						.collect(Collectors.toList()).toArray();
 					return (Loadable) cons.newInstance(parameters);
 				} catch (Exception e) {
