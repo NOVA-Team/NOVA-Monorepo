@@ -27,7 +27,13 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	ItemFactory getItemFactory();
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
-		list.addAll(getItemFactory().makeItem(StoreUtility.nbtToData(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTooltips(Optional.of(new BWEntityPlayer(player))));
+		Item item = getItemFactory()
+			.makeItem(StoreUtility.nbtToData(itemStack.getTagCompound()));
+
+		item.setCount(itemStack.stackSize)
+			.getTooltips(Optional.of(new BWEntityPlayer(player)), list);
+
+		getItemFactory().saveItem(item);
 	}
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
