@@ -16,7 +16,7 @@ public class Graphics implements TextRenderer {
 	private final TextRenderer textRenderer;
 	private final Canvas canvas;
 
-	private int linewidth;
+	private int linewidth = 1;
 
 	public Graphics(Canvas canvas, TextRenderer textRenderer) {
 		this.textRenderer = textRenderer;

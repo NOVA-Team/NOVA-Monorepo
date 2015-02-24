@@ -17,9 +17,8 @@ import nova.core.util.LanguageManager;
 import nova.core.util.SaveManager;
 import nova.core.world.WorldManager;
 import nova.internal.tick.UpdateTicker;
-import org.slf4j.Logger;
 
-import java.util.Optional;
+import org.slf4j.Logger;
 
 public class Game {
 
@@ -56,9 +55,9 @@ public class Game {
 	 */
 	public final UpdateTicker.ThreadTicker threadTicker;
 
-	// TODO Move somewhere else, also... Optional inconvenient here, it has to exist as required.
-	public final Optional<GuiComponentFactory> guiComponentFactory;
-	public final Optional<GuiFactory> guiFactory;
+	// TODO Move somewhere else
+	public final GuiComponentFactory guiComponentFactory;
+	public final GuiFactory guiFactory;
 
 	private Game(
 		Logger logger,
@@ -78,8 +77,7 @@ public class Game {
 		KeyManager keyManager,
 		UpdateTicker.SynchronizedTicker syncTicker,
 		UpdateTicker.ThreadTicker threadTicker,
-		Optional<GuiComponentFactory> guiComponentFactory,
-		Optional<GuiFactory> guiFactory) {
+ GuiComponentFactory guiComponentFactory, GuiFactory guiFactory) {
 
 		this.logger = logger;
 

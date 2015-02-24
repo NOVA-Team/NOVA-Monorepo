@@ -74,9 +74,8 @@ public class FormattedText implements Iterable<FormattedText> {
 		return text;
 	}
 
-	public static Pattern pattern = Pattern.compile("(?<!\\)(?:\\\\)*&([^;]{2});|&cr([-+]?\\d+);");
+	public static Pattern pattern = Pattern.compile("(?<!\\\\)(?:\\\\\\\\)*(&([^;]{2});|&cr([-+]?\\d+);)");
 
-	// TODO untested
 	/**
 	 * <p>
 	 * Parses an arbitrary String to {@link FormattedText}. The format applied
@@ -146,33 +145,49 @@ public class FormattedText implements Iterable<FormattedText> {
 		while (matcher.find()) {
 			int end = matcher.end();
 			int start = matcher.start(1);
-			if (matcher.group(2) != null) {
-				format = format.clone();
-				switch (matcher.group(2)) {
-					case "sh":
-						format.shadow = !format.shadow;
-					case "it":
-						format.italic = !format.italic;
-					case "bd":
-						format.bold = !format.bold;
-					case "ul":
-						format.underline = !format.underline;
-					case "st":
-						format.strikethrough = !format.strikethrough;
-					case "rt":
-						format.reset();
-				}
-			} else {
-				format.color = Color.argb(Integer.parseInt(matcher.group(3)));
-			}
+
 			if (start - index > 0) {
 				String substr = string.substring(index, start);
 				FormattedText append = new FormattedText(substr);
 				append.format = format;
 				text = text.add(append);
 			}
+
+			if (matcher.group(2) != null) {
+				format = format.clone();
+				switch (matcher.group(2)) {
+					case "sh":
+						format.shadow = !format.shadow;
+						break;
+					case "it":
+						format.italic = !format.italic;
+						break;
+					case "bd":
+						format.bold = !format.bold;
+						break;
+					case "ul":
+						format.underline = !format.underline;
+						break;
+					case "st":
+						format.strikethrough = !format.strikethrough;
+						break;
+					case "rt":
+						format.reset();
+						break;
+				}
+			} else {
+				format = format.clone();
+				format.color = Color.argb(Integer.parseInt(matcher.group(3)));
+			}
 			index = end;
 		}
+		if (string.length() - index > 0) {
+			String trail = string.substring(index, string.length());
+			FormattedText append = new FormattedText(trail);
+			append.format = format;
+			text = text.add(append);
+		}
+
 		return text;
 	}
 

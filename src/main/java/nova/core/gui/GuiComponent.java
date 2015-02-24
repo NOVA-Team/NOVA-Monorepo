@@ -1,5 +1,7 @@
 package nova.core.gui;
 
+import java.util.Optional;
+
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.SidedEventBus;
@@ -11,8 +13,6 @@ import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketHandler;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector2i;
-
-import java.util.Optional;
 
 /**
  * Defines a basic gui component. A component can be added to
@@ -44,7 +44,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	public GuiComponent(String uniqueID, Class<T> nativeClass) {
 		this.uniqueID = uniqueID;
 		this.qualifiedName = uniqueID;
-		Game.instance.guiComponentFactory.ifPresent((cf) -> cf.applyNativeComponent(this, nativeClass));
+		Game.instance.guiComponentFactory.applyNativeComponent(this, nativeClass);
 	}
 
 	private void dispatchNetworkEvent(SidedEventBus.SidedEvent event) {
