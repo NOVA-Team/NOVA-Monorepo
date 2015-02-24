@@ -6,7 +6,7 @@ import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
 import nova.core.item.event.ItemIDNotFoundEvent;
-import nova.core.util.ReflectionUtils;
+import nova.core.util.ReflectionUtil;
 import nova.core.util.Registry;
 
 import java.util.Optional;
@@ -27,7 +27,7 @@ public class ItemManager {
 
 	//TODO: Return an item factory
 	public Item register(Class<? extends Item> item) {
-		return register(() -> ReflectionUtils.newInstance(item));
+		return register(() -> ReflectionUtil.newInstance(item));
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package nova.core.entity;
 
-import nova.core.util.ReflectionUtils;
+import nova.core.util.ReflectionUtil;
 import nova.core.util.Registry;
 
 import java.util.Optional;
@@ -14,7 +14,7 @@ public class EntityManager {
 	}
 
 	public Entity register(Class<? extends Entity> item) {
-		return register(() -> ReflectionUtils.newInstance(item));
+		return register(() -> ReflectionUtil.newInstance(item));
 	}
 
 	/**

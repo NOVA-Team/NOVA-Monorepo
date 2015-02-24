@@ -1,6 +1,6 @@
 package nova.core.retention;
 
-import nova.core.util.ReflectionUtils;
+import nova.core.util.ReflectionUtil;
 
 /**
  * Classes with this interface declare ability to store and load itself.
@@ -8,21 +8,18 @@ import nova.core.util.ReflectionUtils;
  */
 public interface Storable {
 
-	//TODO: Store inherited classes.
-
 	/**
 	 * Saves all the data of this object.
 	 * See {@link Data} for what data is storable.
 	 *
 	 * The default implementation saves all fields tagged with @Storable.
-	 *
 	 * @param data The data object to put values in.
 	 */
 	default void save(Data data) {
-		ReflectionUtils.forEachStoredField(this, (field, key) -> {
+		ReflectionUtil.forEachRecursiveAnnotatedField(Stored.class, getClass(), (field, annotation) -> {
 			try {
 				field.setAccessible(true);
-				data.put(key, field.get(this));
+				data.put(annotation.key(), field.get(this));
 				field.setAccessible(false);
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
@@ -31,11 +28,11 @@ public interface Storable {
 	}
 
 	default void load(Data data) {
-		ReflectionUtils.forEachStoredField(this, (field, key) -> {
-			if (data.containsKey(key)) {
+		ReflectionUtil.forEachRecursiveAnnotatedField(Stored.class, getClass(), (field, annotation) -> {
+			if (data.containsKey(annotation.key())) {
 				try {
 					field.setAccessible(true);
-					field.set(this, data.get(key));
+					field.set(this, data.get(annotation.key()));
 					field.setAccessible(false);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();

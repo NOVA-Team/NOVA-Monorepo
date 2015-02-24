@@ -8,11 +8,10 @@ import java.lang.annotation.Target;
 /**
  * An annotation applied to fields that can be synchronized between server and
  * client.
- * 
  * @author Calclavia
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Sync {
-	int id() default 0;
+	int[] ids() default { 0 };
 }
