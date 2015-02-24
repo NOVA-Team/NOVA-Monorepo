@@ -8,7 +8,7 @@ import com.google.common.collect.HashBiMap;
  * @author Vic Nightfall
  * @see KeyManager.Key
  */
-public class KeyManager {
+public abstract class KeyManager {
 
 	protected HashBiMap<Integer, Key> keys = HashBiMap.create(Key.values().length);
 
@@ -29,6 +29,12 @@ public class KeyManager {
 	public int getNativeKeyCode(Key key) {
 		return keys.inverse().getOrDefault(key, 0);
 	}
+
+	/**
+	 * Is the key current down?
+	 * @return
+	 */
+	public abstract boolean isKeyDown(Key key);
 
 	public static enum Key {
 
