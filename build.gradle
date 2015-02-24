@@ -1,3 +1,5 @@
+import org.gradle.plugins.ide.eclipse.model.SourceFolder 
+
 buildscript {
 	repositories {
 		mavenCentral()
@@ -160,5 +162,11 @@ test {
 	beforeTest { descriptor ->
 		def classPadded = String.format("%-50s", descriptor.className)
 		logger.lifecycle("Running test ${classPadded} ${descriptor.name}()")
+	}
+}
+
+eclipse.classpath.file {
+	whenMerged {  cp -> 
+		cp.entries.removeAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }
 	}
 }
