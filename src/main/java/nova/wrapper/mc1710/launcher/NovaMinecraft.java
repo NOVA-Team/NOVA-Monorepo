@@ -18,6 +18,7 @@ import nova.internal.NovaLauncher;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.backward.gui.MCGuiFactory;
 import nova.wrapper.mc1710.depmodules.GuiModule;
+import nova.wrapper.mc1710.depmodules.KeyModule;
 import nova.wrapper.mc1710.depmodules.LanguageModule;
 import nova.wrapper.mc1710.depmodules.NetworkModule;
 import nova.wrapper.mc1710.depmodules.SaveModule;
@@ -33,7 +34,6 @@ import java.util.Set;
 
 /**
  * The main Nova Minecraft Wrapper loader, using Minecraft Forge.
- *
  * @author Calclavia
  */
 @Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name, version = NovaMinecraftPreloader.version)
@@ -61,6 +61,7 @@ public class NovaMinecraft {
 		diep.install(SaveModule.class);
 		diep.install(TickerModule.class);
 		diep.install(LanguageModule.class);
+		diep.install(KeyModule.class);
 
 		Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
 
