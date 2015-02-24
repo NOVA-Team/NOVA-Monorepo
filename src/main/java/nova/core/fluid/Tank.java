@@ -4,7 +4,6 @@ import java.util.Optional;
 
 /**
  * Classes with this interface declare ability to store fluids
- *
  * @see FluidConsumer
  * @see Tank
  */
@@ -29,6 +28,14 @@ public interface Tank extends FluidConsumer, FluidProvider {
 	 */
 	default boolean hasFluid() {
 		return getFluid().isPresent();
+	}
+
+	default boolean hasFluidType(Fluid sample) {
+		if (hasFluid()) {
+			return getFluid().get().sameType(sample);
+		}
+
+		return false;
 	}
 
 }
