@@ -75,16 +75,16 @@ public class InventorySimple implements Inventory, Storable, PacketHandler {
 
 	@Override
 	public void load(Data data) {
-		IntStream.range(0, size()).forEach(i -> items[i] = (Item) data.get(i + ""));
+		IntStream.range(0, size()).forEach(i -> items[i] = data.get(i + ""));
 	}
 
 	@Override
 	public void read(Packet packet) {
 		IntStream.range(0, size()).forEach(i -> {
-
 			if (packet.readBoolean()) {
-				//items[i] = packet
-				//TODO: Handle item packet reading?
+				items[i] = packet.readStorable();
+			} else {
+				items[i] = null;
 			}
 		});
 	}
