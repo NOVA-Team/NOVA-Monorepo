@@ -16,7 +16,6 @@ public class BWModel extends Model {
 	 * Completes this rendering for a block.
 	 *
 	 * @param blockAccess {@link BlockAccess}
-	 * @param translation Translation
 	 */
 	public void renderWorld(IBlockAccess blockAccess) {
 		Tessellator tessellator = Tessellator.instance;
