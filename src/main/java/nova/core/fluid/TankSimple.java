@@ -25,14 +25,6 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 		return this;
 	}
 
-	public TankSimple setFluid(Optional<Fluid> fluid) {
-		this.containedFluid = fluid;
-		if (containedFluid.isPresent()) {
-			containedFluid.get().setAmount(Math.max(Math.min(containedFluid.get().amount(), capacity), 0));
-		}
-		return this;
-	}
-
 	@Override
 	public int addFluid(Fluid fluid, boolean simulate) {
 		int capacity = this.capacity - containedFluid.orElse(fluid.withAmount(0)).amount();
@@ -80,17 +72,17 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 		return capacity;
 	}
 
+	@Override
+	public Optional<Fluid> getFluid() {
+		return containedFluid;
+	}
+
 	public TankSimple setFluid(Optional<Fluid> fluid) {
 		this.containedFluid = fluid;
 		if (containedFluid.isPresent()) {
 			containedFluid.get().setAmount(Math.max(Math.min(containedFluid.get().amount(), capacity), 0));
 		}
 		return this;
-	}
-
-	@Override
-	public Optional<Fluid> getFluid() {
-		return containedFluid;
 	}
 
 	@Override
