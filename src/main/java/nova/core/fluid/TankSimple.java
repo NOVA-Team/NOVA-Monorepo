@@ -13,15 +13,29 @@ import java.util.Optional;
 public class TankSimple implements Tank, Storable, PacketHandler {
 
 	private Optional<Fluid> containedFluid;
-	private int maxCapacity;
+	private int capacity;
 
 	public TankSimple(int maxCapacity) {
-		this.maxCapacity = maxCapacity;
+		this.capacity = maxCapacity;
+	}
+
+	public TankSimple setCapacity(int capacity) {
+		this.capacity = capacity;
+		setFluid(containedFluid);
+		return this;
+	}
+
+	public TankSimple setFluid(Optional<Fluid> fluid) {
+		this.containedFluid = fluid;
+		if (containedFluid.isPresent()) {
+			containedFluid.get().setAmount(Math.max(Math.min(containedFluid.get().amount(), capacity), 0));
+		}
+		return this;
 	}
 
 	@Override
 	public int addFluid(Fluid fluid, boolean simulate) {
-		int capacity = maxCapacity - containedFluid.orElse(fluid.withAmount(0)).amount();
+		int capacity = this.capacity - containedFluid.orElse(fluid.withAmount(0)).amount();
 		int toPut = Math.min(fluid.amount(), capacity);
 
 		if (containedFluid.isPresent()) {
@@ -63,7 +77,15 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 
 	@Override
 	public int getFluidCapacity() {
-		return maxCapacity;
+		return capacity;
+	}
+
+	public TankSimple setFluid(Optional<Fluid> fluid) {
+		this.containedFluid = fluid;
+		if (containedFluid.isPresent()) {
+			containedFluid.get().setAmount(Math.max(Math.min(containedFluid.get().amount(), capacity), 0));
+		}
+		return this;
 	}
 
 	@Override
