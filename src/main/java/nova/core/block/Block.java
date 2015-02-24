@@ -264,4 +264,5 @@ public abstract class Block implements Identifiable {
 	public void renderItem(Model model) {
 		renderStatic(model);
 	}
+
 }

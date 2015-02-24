@@ -11,4 +11,8 @@ public interface Identifiable {
 	 * @return the ID
 	 */
 	String getID();
+
+	default boolean sameType(Identifiable other) {
+		return getID().equals(other.getID());
+	}
 }
