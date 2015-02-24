@@ -76,7 +76,7 @@ public class BWModel extends Model {
 		);
 	}
 
-	public void renderItem() {
+	public void render() {
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.setColorRGBA_F(1, 1, 1, 1);
 

@@ -260,7 +260,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Tessellator.instance.startDrawingQuads();
 		BWModel artist = new BWModel();
 		this.block.renderItem(artist);
-		artist.renderItem();
+		artist.render();
 		Tessellator.instance.draw();
 		GL11.glPopMatrix();
 		GL11.glPopAttrib();
