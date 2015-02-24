@@ -92,4 +92,19 @@ public class MCCanvas implements Canvas {
 	public boolean isBuffered() {
 		return false;
 	}
+
+	@Override
+	public void setScissor(int x, int y, int width, int height) {
+		GL11.glScissor(x, y, width, height);
+	}
+
+	@Override
+	public void enableScissor() {
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+	}
+
+	@Override
+	public void disableScissor() {
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+	}
 }

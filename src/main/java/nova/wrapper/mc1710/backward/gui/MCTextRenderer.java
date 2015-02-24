@@ -148,7 +148,7 @@ public class MCTextRenderer implements TextRenderer {
 				}
 
 				fontrenderer.drawString(word, x + xOffset, y + yOffset, format.color.argb(), format.shadow);
-				xOffset += wordWidth + spaceWidth;
+				xOffset += wordWidth > 0 ? wordWidth + spaceWidth : 0;
 			}
 		}
 

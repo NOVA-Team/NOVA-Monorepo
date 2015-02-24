@@ -1,6 +1,10 @@
 package nova.wrapper.mc1710.backward.gui;
 
 import io.netty.buffer.Unpooled;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,9 +17,6 @@ import nova.core.gui.render.Graphics;
 import nova.core.gui.render.TextRenderer;
 import nova.core.network.Packet;
 import nova.wrapper.mc1710.network.MCPacket;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MCGui extends GuiScreen implements NativeGui, DrawableGuiComponent {
 
@@ -97,7 +98,7 @@ public class MCGui extends GuiScreen implements NativeGui, DrawableGuiComponent 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onGuiClosed() {
-		Game.instance.guiFactory.get().unbindCurrentGui();
+		Game.instance.guiFactory.unbindCurrentGui();
 	}
 
 	@Override
