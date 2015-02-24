@@ -6,7 +6,6 @@ import java.math.RoundingMode;
 
 /**
  * A cuboid is a shape that represents a cube.
- *
  * @author Calclavia
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -20,8 +19,11 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	}
 
 	public Cuboid(Vector3i min, Vector3i max) {
-		this.min = min.toDouble();
-		this.max = max.toDouble();
+		this(min.toDouble(), max.toDouble());
+	}
+
+	public Cuboid(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+		this(new Vector3d(minX, minY, minZ), new Vector3d(maxX, maxY, maxZ));
 	}
 
 	@Override
@@ -59,7 +61,6 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Expands the cuboid by a certain vector.
-	 *
 	 * @param other Given vector
 	 * @return New cuboid
 	 */
@@ -69,7 +70,6 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Expands the cuboid by a certain amount.
-	 *
 	 * @param other The amount
 	 * @return New cuboid
 	 */
@@ -79,7 +79,6 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Returns if this cuboid is a cube.
-	 *
 	 * @return If this cuboid is a cube.
 	 */
 	public boolean isCube() {
@@ -104,7 +103,6 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Checks if another cuboid is within this cuboid
-	 *
 	 * @param other Cuboid to check
 	 * @return Result of the check
 	 */
@@ -114,7 +112,6 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Checks if a vector is within this cuboid.
-	 *
 	 * @param other Vector to check
 	 * @return Result of the check
 	 */
