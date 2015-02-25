@@ -1,19 +1,23 @@
 package nova.wrapper.mc1710.backward.world;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.util.AxisAlignedBB;
 import nova.core.block.Block;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
+import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.forward.entity.FWEntity;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
- * The backwards world wrapper. 
+ * The backwards world wrapper.
  * @author Calclavia
  */
 //TODO: Consider Blocks.air compatibility?
@@ -67,6 +71,11 @@ public class BWWorld extends World {
 	@Override
 	public void destroyEntity(Entity entity) {
 		world.removeEntity((FWEntity) entity.wrapper);
+	}
+
+	@Override
+	public Set<Entity> getEntities(Cuboid bound) {
+		return new HashSet(world.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(bound.min.x, bound.min.y, bound.min.z, bound.max.x, bound.max.y, bound.max.z)));
 	}
 
 	@Override
