@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -16,11 +15,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.core.deps.DependencyRepoProvider;
+import nova.core.deps.Dependency;
+import nova.core.deps.DependencyProvider;
 import nova.core.game.Game;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
-import se.jbee.inject.Dependency;
 
 /**
  * The main class that launches NOVA mods.
@@ -34,9 +33,7 @@ public class NovaLauncher implements Loadable {
 	private Map<NovaMod, Loadable> mods;
 
 	private Map<NovaMod, ArrayList<String[]>> dependencies;
-	private Map<String, String> dependencyVersion;
-	private Map<String, String[]> dependencyRepos;
-	private Set<String> dependencyIds;
+	private Map<NovaMod, Dependency[]> neededDeps;
 
 	private ArrayList<Loadable> orderedMods;
 	private Map<NovaMod, Class<? extends Loadable>> classesMap;
@@ -86,7 +83,7 @@ public class NovaLauncher implements Loadable {
 
 					Constructor<?> cons = ocons.get();
 					Object[] parameters = Arrays.stream(cons.getParameterTypes())
-						.map(clazz -> (Object) diep.getInjector().get().resolve(Dependency.dependency(clazz)))
+						.map(clazz -> (Object) diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(clazz)))
 						.collect(Collectors.toList()).toArray();
 					return (Loadable) cons.newInstance(parameters);
 				} catch (Exception e) {
@@ -168,28 +165,12 @@ public class NovaLauncher implements Loadable {
 		return mods;
 	}
 
-	public Map<String, String> getDependencyVersions() {
-		return this.dependencyVersion;
-	}
-
-	public Map<NovaMod, ArrayList<String[]>> getDependencyRepos() {
-		return this.dependencies;
-	}
-
-	public String getDependencyVersion(String modid) {
-		return this.dependencyVersion.keySet().contains(modid) ? this.dependencyVersion.get(modid) : null;
-	}
-
-	public String[] getDependencyRepo(String modid) {
-		return this.dependencyRepos.keySet().contains(modid) ? this.dependencyRepos.get(modid) : null;
-	}
-
-	public Set<String> getDependencyIds() {
-		return this.dependencyIds;
-	}
-
 	public Map<NovaMod, Class<? extends Loadable>> getModClasses() {
 		return classesMap;
+	}
+
+	public Map<NovaMod, Dependency[]> getNeededDeps() {
+		return this.neededDeps;
 	}
 
 	/**
@@ -200,46 +181,22 @@ public class NovaLauncher implements Loadable {
 
 		if (dependencies == null) {
 			dependencies = new HashMap<>();
-			dependencyVersion = new HashMap<>();
-			dependencyIds = new HashSet<>();
+			neededDeps = new HashMap<>();
 		}
 
 		classesMap.keySet().stream()
 			.forEach(this::generateAndAddDependencies);
 	}
 
+
 	private void generateAndAddDependencies(NovaMod mod) {
-
-		if (mod.getClass().isAssignableFrom(DependencyRepoProvider.class)) {
-
-			ArrayList<String[]> dependencyLocations = new ArrayList<>();
-			Map<String, String[]> dependencyRepos = new HashMap<>();
-
-			DependencyRepoProvider provider = (DependencyRepoProvider) mod;
-
-			for (String modid : mod.dependencies()) {
-				if (modid.contains("?")) {
-					String modWORequired = modid.replace('?', ' ').replaceAll(" ", "");
-					if (modid.contains("@")) {
-						if (provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)) != null) {
-							dependencyLocations.add(provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
-							dependencyVersion.put(modWORequired.substring(0, modid.indexOf("@") - 1), modWORequired.substring(modWORequired.indexOf("@")));
-							dependencyRepos.put(modWORequired.substring(0, modid.indexOf("@") - 1), provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
-							dependencyIds.add(modWORequired.substring(0, modid.indexOf("@") - 1));
-						}
-					} else {
-						if (provider.getModRepo(modWORequired) != null) {
-							dependencyLocations.add(provider.getModRepo(modWORequired));
-							dependencyRepos.put(modWORequired, provider.getModRepo(modWORequired));
-							dependencyIds.add(modWORequired);
-						}
-					}
-				}
+		if (mod.getClass().isAssignableFrom(DependencyProvider.class)) {
+			// TODO: Fix this up. I mean, it *should* work atm, idk.
+			try {
+				neededDeps.put(mod, (Dependency[])mod.getClass().getMethod("getDependencies").getDefaultValue());
+			} catch (NoSuchMethodException ex) {
+				ex.printStackTrace();
 			}
-
-			dependencies.put(mod, dependencyLocations);
-			this.dependencyRepos = dependencyRepos;
-
 		}
 	}
 
