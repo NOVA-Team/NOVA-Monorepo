@@ -13,8 +13,10 @@ import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import java.util.Optional;
 
 /**
+ * The backwards world wrapper. 
  * @author Calclavia
  */
+//TODO: Consider Blocks.air compatibility?
 public class BWWorld extends World {
 	private final BWBlockAccess blockAccess;
 	private final net.minecraft.world.World world;

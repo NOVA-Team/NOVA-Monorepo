@@ -29,7 +29,7 @@ public class NovaTransformer implements IClassTransformer {
 	public byte[] transform(String name, String transformedName, byte[] bytes) {
 
 		/**
-		 * Transform chunk to call chunk events
+		 * Transform chunk to call block change events
 		 */
 		if (transformedName.equals("net.minecraft.world.chunk.Chunk")) {
 			System.out.println("[NOVA] Transforming Chunk class for chunkModified event.");
@@ -39,6 +39,7 @@ public class NovaTransformer implements IClassTransformer {
 			for (MethodNode method : cnode.methods) {
 				ObfMapping m = new ObfMapping(cnode.name, method.name, method.desc).toRuntime();
 
+				//TODO: Use obfuscation name reference
 				if (m.s_name.equals("func_150807_a")) {
 					System.out.println("[NOVA] Found method " + m.s_name);
 					InsnList list = new InsnList();
@@ -46,9 +47,11 @@ public class NovaTransformer implements IClassTransformer {
 					list.add(new VarInsnNode(ILOAD, 1));
 					list.add(new VarInsnNode(ILOAD, 2));
 					list.add(new VarInsnNode(ILOAD, 3));
+					list.add(new VarInsnNode(ALOAD, 8));
+					list.add(new VarInsnNode(ILOAD, 9));
 					list.add(new VarInsnNode(ALOAD, 4));
 					list.add(new VarInsnNode(ILOAD, 5));
-					list.add(new MethodInsnNode(INVOKESTATIC, "nova/wrapper/mc1710/asm/StaticForwarder", "chunkSetBlockEvent", "(Lnet/minecraft/world/chunk/Chunk;IIILnet/minecraft/block/Block;I)V"));
+					list.add(new MethodInsnNode(INVOKESTATIC, "nova/wrapper/mc1710/asm/StaticForwarder", "chunkSetBlockEvent", "(Lnet/minecraft/world/chunk/Chunk;IIILnet/minecraft/block/Block;Inet/minecraft/block/Block;I)V"));
 
 					AbstractInsnNode lastInsn = method.instructions.getLast();
 					while (lastInsn instanceof LabelNode || lastInsn instanceof LineNumberNode) {
@@ -62,6 +65,7 @@ public class NovaTransformer implements IClassTransformer {
 					}
 
 					System.out.println("[NOVA] Injected instruction to method: " + m.s_name);
+					break;
 				}
 			}
 
