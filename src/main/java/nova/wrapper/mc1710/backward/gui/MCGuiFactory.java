@@ -45,7 +45,7 @@ public class MCGuiFactory extends GuiFactory {
 			if(guiToOpen.isPresent()) {
 				Gui gui = guiToOpen.get();
 				guiToOpen = Optional.empty();
-				return gui.getNative();
+				return ((MCGui) gui.getNative()).getGuiScreen();
 			}
 			return null;
 		}	

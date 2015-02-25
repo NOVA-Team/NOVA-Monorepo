@@ -11,14 +11,23 @@ import nova.core.gui.nativeimpl.NativeButton;
 import nova.core.gui.render.Graphics;
 import nova.core.util.transform.Vector2i;
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class MCButton extends GuiButtonExt implements NativeButton, DrawableGuiComponent {
+public class MCButton implements NativeButton, DrawableGuiComponent {
 
 	private Button component;
 	
+	@SideOnly(Side.CLIENT)
+	private MCGuiButton button;
+
 	public MCButton(Button component) {
-		super(0, 0, 0, "");
 		this.component = component;
+
+		if (FMLCommonHandler.instance().getSide().isClient()) {
+			button = new MCGuiButton();
+		}
 	}
 
 	@Override
@@ -28,15 +37,15 @@ public class MCButton extends GuiButtonExt implements NativeButton, DrawableGuiC
 
 	@Override
 	public Outline getOutline() {
-		return new Outline(xPosition, yPosition, width, height);
+		return new Outline(button.xPosition, button.yPosition, button.width, button.height);
 	}
 
 	@Override
 	public void setOutline(Outline outline) {
-		xPosition = outline.x1i();
-		yPosition = outline.y1i();
-		width = outline.getWidth();
-		height = outline.getHeight();
+		button.xPosition = outline.x1i();
+		button.yPosition = outline.y1i();
+		button.width = outline.getWidth();
+		button.height = outline.getHeight();
 	}
 
 	@Override
@@ -46,18 +55,20 @@ public class MCButton extends GuiButtonExt implements NativeButton, DrawableGuiC
 
 	@Override
 	public String getText() {
-		return displayString;
+		return button.displayString;
 	}
 	
 	@Override
 	public Optional<Vector2i> getMinimumSize() {
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-		return Optional.of(new Vector2i(fontRenderer.getStringWidth(displayString) + 10, fontRenderer.FONT_HEIGHT + 10));
+		return Optional.of(new Vector2i(fontRenderer.getStringWidth(button.displayString) + 10, fontRenderer.FONT_HEIGHT + 10));
 	}
 
 	@Override
 	public void setText(String text) {
-		this.displayString = text;
+		if (FMLCommonHandler.instance().getSide().isClient()) {
+			button.displayString = text;
+		}
 	}
 
 	@Override
@@ -73,10 +84,18 @@ public class MCButton extends GuiButtonExt implements NativeButton, DrawableGuiC
 
 	@Override
 	public void draw(int mouseX, int mouseY, float partial, Graphics graphics) {
-		drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
+		button.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
 		Outline outline = getOutline();
 		graphics.getCanvas().translate(outline.x1i(), outline.y1i());
 		getComponent().render(mouseX, mouseY, graphics);
 		graphics.getCanvas().translate(-outline.x1i(), -outline.y1i());
+	}
+
+	@SideOnly(Side.CLIENT)
+	public class MCGuiButton extends GuiButtonExt {
+
+		public MCGuiButton() {
+			super(0, 0, 0, "");
+		}
 	}
 }
