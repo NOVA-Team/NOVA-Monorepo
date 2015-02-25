@@ -12,12 +12,27 @@ import java.net.URL;
  */
 public abstract class DepDownloader {
 
+	public File locationName;
+
+	public DepDownloader(File location) {
+		this.locationName = location;
+	}
+
+	public DepDownloader(String location) {
+		this.locationName = new File(location);
+	}
+
 	public void downloadDepdency(URL versionURL, String locationToDownloadTo) {
 		try {
 
-			InputStream stream = versionURL.openStream();
-
 			File dependencyLocation = new File(locationToDownloadTo);
+
+			/**
+			 * This should make sure that if we already have
+			 */
+			if (dependencyLocation.exists()) { return; }
+
+			InputStream stream = versionURL.openStream();
 
 			byte[] buffer = new byte[4096];
 			int n = -1;
