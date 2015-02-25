@@ -33,7 +33,6 @@ public class NovaLauncher implements Loadable {
 
 	private Map<NovaMod, Loadable> mods;
 
-	private Map<NovaMod, ArrayList<String[]>> dependencies;
 	private Map<NovaMod, Dependency[]> neededDeps;
 
 	private ArrayList<Loadable> orderedMods;
@@ -200,11 +199,7 @@ public class NovaLauncher implements Loadable {
 	 * The wrapper just needs to call this method right before it downloads the dependencies.
 	 */
 	public void generateDependencies() {
-
-		if (dependencies == null) {
-			dependencies = new HashMap<>();
-			neededDeps = new HashMap<>();
-		}
+		neededDeps = new HashMap<>(); // This should be cleaned every time this method is run.
 
 		classesMap.keySet().stream()
 			.forEach(this::generateAndAddDependencies);
