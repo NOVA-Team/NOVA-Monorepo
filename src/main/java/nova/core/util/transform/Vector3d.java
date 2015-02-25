@@ -6,7 +6,6 @@ import nova.core.retention.Stored;
 
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
- *
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
@@ -76,9 +75,17 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 		return new Vector3d(-y, x, 0);
 	}
 
+	public Vector3d max(Vector3d other) {
+		return max(other);
+	}
+
 	@Override
 	public Vector3d max(Vector3 other) {
 		return new Vector3d(Math.max(xd(), other.xd()), Math.max(yd(), other.yd()), Math.max(zd(), other.zd()));
+	}
+
+	public Vector3d min(Vector3d other) {
+		return min(other);
 	}
 
 	@Override
@@ -137,6 +144,10 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 
 	public Vector3i toInt() {
 		return new Vector3i(xi(), yi(), zi());
+	}
+
+	public Vector3d abs() {
+		return new Vector3d(Math.abs(x), Math.abs(y), Math.abs(z));
 	}
 
 	@Override
