@@ -1,14 +1,11 @@
 package nova.core.deps;
 
-/**
- * Created by Mitchellbrine on 2015.
- */
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * @author RX14-chibi (original author) & Mitchellbrine (implemented it)
+ * @author RX14-chibi (original author) and Mitchellbrine (implemented it)
  */
 public interface Dependency {
 
