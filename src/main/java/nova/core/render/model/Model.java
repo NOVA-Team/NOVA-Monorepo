@@ -45,7 +45,15 @@ public class Model implements Cloneable {
 	 */
 	public void bind(Texture texture) {
 		faces.forEach(f -> f.texture = Optional.of(texture));
-		children.forEach(m -> m.bind(texture));
+	}
+
+	/**
+	 * Binds the texture to the model, and all its children.
+	 * @param texture
+	 */
+	public void bindAll(Texture texture) {
+		bind(texture);
+		children.forEach(m -> m.bindAll(texture));
 	}
 
 	/**
