@@ -13,7 +13,7 @@ public abstract class Entity implements Identifiable, Stateful {
 	 * The wrapper is injected from EntityFactory.
 	 */
 	public final EntityWrapper wrapper = null;
-	protected final RigidBody rigidBody = null;
+	public final RigidBody rigidBody = null;
 
 	/**
 	 * Renders the entity. Translation and rotation are already applied.

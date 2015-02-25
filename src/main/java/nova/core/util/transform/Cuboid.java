@@ -40,6 +40,18 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 		return new Cuboid(min.add(other), max.add(other));
 	}
 
+	public Cuboid $plus(Vector3<?> other) {
+		return add(other);
+	}
+
+	public Cuboid subtract(Vector3 other) {
+		return new Cuboid(min.subtract(other), max.subtract(other));
+	}
+
+	public Cuboid $minus(Vector3<?> other) {
+		return subtract(other);
+	}
+
 	@Override
 	public Cuboid multiply(Cuboid other) {
 		return new Cuboid(min.multiply(other.min), max.multiply(other.max));
