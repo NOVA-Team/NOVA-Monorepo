@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.core.deps.Dependency;
+import nova.core.deps.MavenDependency;
 import nova.core.deps.DependencyProvider;
 import nova.core.game.Game;
 import nova.core.loader.Loadable;
@@ -33,7 +33,7 @@ public class NovaLauncher implements Loadable {
 
 	private Map<NovaMod, Loadable> mods;
 
-	private Map<NovaMod, Dependency[]> neededDeps;
+	private Map<NovaMod, MavenDependency[]> neededDeps;
 
 	private ArrayList<Loadable> orderedMods;
 	private Map<NovaMod, Class<? extends Loadable>> classesMap;
@@ -190,7 +190,7 @@ public class NovaLauncher implements Loadable {
 		return classesMap;
 	}
 
-	public Map<NovaMod, Dependency[]> getNeededDeps() {
+	public Map<NovaMod, MavenDependency[]> getNeededDeps() {
 		return this.neededDeps;
 	}
 
@@ -210,7 +210,7 @@ public class NovaLauncher implements Loadable {
 		if (mod.getClass().isAssignableFrom(DependencyProvider.class)) {
 			// TODO: Fix this up. I mean, it *should* work atm, idk.
 			try {
-				neededDeps.put(mod, (Dependency[])mod.getClass().getMethod("getDependencies").getDefaultValue());
+				neededDeps.put(mod, (MavenDependency[])mod.getClass().getMethod("getDependencies").getDefaultValue());
 			} catch (NoSuchMethodException ex) {
 				ex.printStackTrace();
 			}

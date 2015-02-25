@@ -1,40 +1,71 @@
 package nova.core.deps;
 
+import nova.core.util.exception.NovaException;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 
 /**
- * Created by Mitchellbrine on 2015.
+ * @author rx14
  */
-public class MavenDependency implements Dependency{
+public class MavenDependency {
 
-	private String repo, dependencyID, groupID, artifactID, version;
+	final URL repoURL;
+	final String groupID;
+	final String artifactID;
+	final String version;
+	final String classifier;
+	final String ext;
 
-	public MavenDependency(String mavenRepo, String groupId, String artifactId, String version) {
-		this.repo = mavenRepo;
-		this.dependencyID = groupId + "." + artifactID;
+	public MavenDependency(URL mavenRepo,
+	                       String groupId,
+	                       String artifactId,
+	                       String version,
+	                       String classifier,
+	                       String ext) {
+		this.repoURL = mavenRepo;
+
 		this.groupID = groupId;
 		this.artifactID = artifactId;
 		this.version = version;
+
+		this.classifier = classifier;
+		this.ext = ext;
 	}
 
-	@Override
-	public String getDependencyTypeID() {
-		return "maven";
+	public MavenDependency(URL mavenRepo,
+	                       String version,
+	                       String artifactID,
+	                       String groupID) {
+		this.repoURL = mavenRepo;
+
+		this.version = version;
+		this.artifactID = artifactID;
+		this.groupID = groupID;
+
+		this.classifier = "";
+		this.ext = "jar";
 	}
 
-	@Override
-	public String getDependencyID() {
-		return this.dependencyID;
+	public String getDir() {
+		return this.groupID.replaceAll(".", "/") + "/" + this.artifactID;
 	}
 
-	@Override
-	public String getVersionID() {
-		return this.version;
+	public String getPath() {
+		return MessageFormat.format("{0}/{1}-{2}{3}.{4}",
+		                    /*{0}*/ getDir(),
+							/*{1}*/ this.artifactID,
+		                    /*{2}*/ this.version,
+		                    /*{3}*/ this.classifier.isEmpty() ? "" : "-" + this.classifier,
+		                    /*{4}*/ ext);
 	}
 
-	@Override
-	public URL getDownloadURL() throws MalformedURLException{
-		return new URL(this.repo + this.groupID.replaceAll(".","/") + "/" + this.artifactID + "-" + this.version + ".jar");
+	public URL getDownloadURL() {
+		try {
+			return new URL(this.repoURL, getPath());
+		} catch (MalformedURLException e) {
+			throw new NovaException(e);
+		}
 	}
 }
