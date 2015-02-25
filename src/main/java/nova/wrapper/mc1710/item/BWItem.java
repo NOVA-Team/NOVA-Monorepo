@@ -9,19 +9,19 @@ import nova.core.retention.Storable;
  * @author Stan
  * @since 3/02/2015.
  */
-public class MCItem extends Item implements Storable {
-    private final net.minecraft.item.Item item;
+public class BWItem extends Item implements Storable {
+	private final net.minecraft.item.Item item;
     private final int meta;
     private final NBTTagCompound tag;
 
     private final String id;
 
-    public MCItem(ItemStack itemStack) {
-        this(itemStack.getItem(), itemStack.getHasSubtypes() ? itemStack.getItemDamage() : 0, itemStack.getTagCompound());
+	public BWItem(ItemStack itemStack) {
+		this(itemStack.getItem(), itemStack.getHasSubtypes() ? itemStack.getItemDamage() : 0, itemStack.getTagCompound());
     }
 
-    public MCItem(net.minecraft.item.Item item, int meta, NBTTagCompound tag) {
-        this.item = item;
+	public BWItem(net.minecraft.item.Item item, int meta, NBTTagCompound tag) {
+		this.item = item;
         this.meta = meta;
         this.tag = tag;
 

@@ -15,7 +15,7 @@ public class MCItemFactory extends ItemFactory {
 	private final int meta;
 
 	public MCItemFactory(net.minecraft.item.Item item, int meta) {
-		super(() -> new MCItem(item, meta, null));
+		super(() -> new BWItem(item, meta, null));
 
 		this.item = item;
 		this.meta = meta;
@@ -33,16 +33,16 @@ public class MCItemFactory extends ItemFactory {
 	public Item makeItem(Data data) {
 		int meta = (Integer) data.getOrDefault("damage", this.meta);
 		NBTTagCompound nbtData = StoreUtility.dataToNBT(data);
-		return new MCItem(item, meta, nbtData);
+		return new BWItem(item, meta, nbtData);
 	}
 
 	@Override
 	public Data saveItem(Item item) {
-		if (!(item instanceof MCItem)) {
+		if (!(item instanceof BWItem)) {
 			throw new IllegalArgumentException("This factory can only handle MCItems");
 		}
 
-		MCItem mcItem = (MCItem) item;
+		BWItem mcItem = (BWItem) item;
 
 		Data result = StoreUtility.nbtToData(mcItem.getTag());
 		if (result == null) {

@@ -51,8 +51,8 @@ public class ItemWrapperRegistry {
 			return null;
 		}
 
-		if (item instanceof MCItem) {
-			return ((MCItem) item).makeItemStack(item.count());
+		if (item instanceof BWItem) {
+			return ((BWItem) item).makeItemStack(item.count());
 		} else {
 			ItemFactory itemFactory = Game.instance.itemManager.getItemFactory(item.getID()).get();
 			LinkedNBTTagCompound tag = new LinkedNBTTagCompound(item);
