@@ -1,11 +1,9 @@
 package nova.core.deps;
 
-
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * @author RX14-chibi (original author) and Mitchellbrine (implemented it)
+ * @author RX14
  */
 public interface Dependency {
 
@@ -40,8 +38,8 @@ public interface Dependency {
 	/**
 	 * Gets a URL to download the dependency from.
 	 *
-	 * @return the URL to download the dependency from.
+	 * @return the URL to download the dependency from, or {@code null} to cancel.
 	 */
-	URL getDownloadURL() throws MalformedURLException;
+	URL getDownloadURL();
 
 }
