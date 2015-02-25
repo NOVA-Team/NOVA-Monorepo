@@ -1,4 +1,4 @@
-package nova.core.entity;
+package nova.core.entity.components;
 
 import nova.core.util.Identifiable;
 
@@ -6,7 +6,7 @@ import nova.core.util.Identifiable;
  * Applied to entities that can take damage.
  * @author Calclavia
  */
-public interface Damage {
+public interface Damageable {
 
 	void damage(double amount, DamageType type);
 
