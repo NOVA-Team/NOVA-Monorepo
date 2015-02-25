@@ -20,6 +20,7 @@ import nova.core.deps.DependencyProvider;
 import nova.core.game.Game;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
+import nova.core.util.exception.NovaException;
 
 /**
  * The main class that launches NOVA mods.
@@ -144,17 +145,38 @@ public class NovaLauncher implements Loadable {
 		/**
 		 * Initialize all the NOVA mods.
 		 */
-		orderedMods.stream().forEachOrdered(Loadable::preInit);
+		orderedMods.stream().forEachOrdered((mod) -> {
+			try {
+				mod.preInit();
+			} catch (Throwable t) {
+				Game.instance.logger.error("Critical error caught during pre initalization phase", t);
+				throw new NovaException(t);
+			}
+		});
 	}
 
 	@Override
 	public void init() {
-		orderedMods.stream().forEachOrdered(Loadable::init);
+		orderedMods.stream().forEachOrdered((mod) -> {
+			try {
+				mod.init();
+			} catch (Throwable t) {
+				Game.instance.logger.error("Critical error caught during initalization phase", t);
+				throw new NovaException(t);
+			}
+		});
 	}
 
 	@Override
 	public void postInit() {
-		orderedMods.stream().forEachOrdered(Loadable::postInit);
+		orderedMods.stream().forEachOrdered((mod) -> {
+			try {
+				mod.postInit();
+			} catch (Throwable t) {
+				Game.instance.logger.error("Critical error caught during post initalization phase", t);
+				throw new NovaException(t);
+			}
+		});
 	}
 
 	public Set<NovaMod> getLoadedMods() {
