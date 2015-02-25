@@ -1,7 +1,26 @@
 package nova.wrapper.mc1710;
 
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import net.minecraft.client.resources.IResourcePack;
+import nova.core.loader.NovaMod;
+import nova.core.util.exception.NovaException;
+import nova.wrapper.mc1710.manager.ConfigManager;
+import nova.wrapper.mc1710.render.NovaFolderResourcePack;
+import nova.wrapper.mc1710.render.NovaResourcePack;
+import nova.wrapper.mc1710.util.ReflectionUtil;
+
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -12,23 +31,6 @@ import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.client.resources.IResourcePack;
-import nova.core.loader.NovaMod;
-import nova.core.util.exception.NovaException;
-import nova.wrapper.mc1710.manager.ConfigManager;
-import nova.wrapper.mc1710.render.NovaFolderResourcePack;
-import nova.wrapper.mc1710.render.NovaResourcePack;
-import nova.wrapper.mc1710.util.ReflectionUtil;
-
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class NovaMinecraftPreloader extends DummyModContainer {
 	public static final String version = "0.0.1";

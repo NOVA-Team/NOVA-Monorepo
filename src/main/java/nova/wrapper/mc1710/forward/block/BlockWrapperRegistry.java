@@ -1,6 +1,9 @@
 package nova.wrapper.mc1710.forward.block;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Optional;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import nova.core.block.Block;
@@ -11,10 +14,8 @@ import nova.core.util.Category;
 import nova.wrapper.mc1710.item.FWItemBlock;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Optional;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * @author Calclavia
@@ -51,7 +52,7 @@ public class BlockWrapperRegistry {
 		NovaMinecraft.proxy.registerBlock(blockWrapper);
 		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
 
-		if (blockWrapper.block instanceof Category) {
+		if (blockWrapper.block instanceof Category && FMLCommonHandler.instance().getSide().isClient()) {
 			//Add into creative tab
 			Category category = (Category) blockWrapper.block;
 			Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)

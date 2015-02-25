@@ -1,9 +1,15 @@
 package nova.wrapper.mc1710.forward.block;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -39,18 +45,15 @@ import nova.wrapper.mc1710.backward.world.BWBlockAccess;
 import nova.wrapper.mc1710.forward.util.FWCuboid;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.render.RenderUtility;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A Minecraft to Nova block wrapper
@@ -64,8 +67,9 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	 */
 	private final BlockFactory factory;
 	private final Class<? extends Block> blockClass;
+
 	@SideOnly(Side.CLIENT)
-	private final int blockRenderingID = RenderingRegistry.getNextAvailableRenderId();
+	private int blockRenderingID;
 
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
@@ -80,6 +84,10 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		// Recalculate super constructor things after loading the block properly
 		this.opaque = isOpaqueCube();
 		this.lightOpacity = isOpaqueCube() ? 255 : 0;
+
+		if (FMLCommonHandler.instance().getSide().isClient()) {
+			blockRenderingID = RenderingRegistry.getNextAvailableRenderId();
+		}
 	}
 
 	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3i position) {
