@@ -13,28 +13,26 @@ public class EntityManager {
 		this.registry = registry;
 	}
 
-	public Entity register(Class<? extends Entity> item) {
+	public EntityFactory register(Class<? extends Entity> item) {
 		return register(() -> ReflectionUtil.newInstance(item));
 	}
 
 	/**
 	 * Register a new item with custom constructor arguments.
-	 *
 	 * @param constructor The lambda expression to create a new constructor.
 	 * @return Dummy item
 	 */
-	public Entity register(Supplier<Entity> constructor) {
+	public EntityFactory register(Supplier<Entity> constructor) {
 		return register(new EntityFactory(constructor));
 	}
 
-	public Entity register(EntityFactory factory) {
+	public EntityFactory register(EntityFactory factory) {
 		registry.register(factory);
-		return factory.getDummy();
+		return factory;
 	}
 
 	/**
 	 * Returns entity by its name.
-	 *
 	 * @param name Name of entity to search for.
 	 * @return {@link nova.core.entity.Entity} that was searched for·
 	 */
