@@ -26,7 +26,7 @@ import nova.wrapper.mc1710.depmodules.TickerModule;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.item.OreDictionaryIntegration;
-import nova.wrapper.mc1710.manager.ConfigManager;
+import nova.wrapper.mc1710.manager.config.ConfigManager;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.manager;
+package nova.wrapper.mc1710.manager.config;
 
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.common.config.Configuration;
