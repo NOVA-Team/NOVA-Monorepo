@@ -9,8 +9,8 @@ import nova.core.gui.factory.GuiComponentFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.item.ItemDictionary;
 import nova.core.item.ItemManager;
-import nova.core.network.NetworkManager;
 import nova.core.nativewrapper.NativeManager;
+import nova.core.network.NetworkManager;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
@@ -18,7 +18,6 @@ import nova.core.util.LanguageManager;
 import nova.core.util.SaveManager;
 import nova.core.world.WorldManager;
 import nova.internal.tick.UpdateTicker;
-
 import org.slf4j.Logger;
 
 public class Game {
@@ -46,7 +45,7 @@ public class Game {
 	public final SaveManager saveManager;
 	public final LanguageManager languageManager;
 	public final KeyManager keyManager;
-    public final NativeManager nativeManager;
+	public final NativeManager nativeManager;
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
@@ -77,10 +76,10 @@ public class Game {
 		SaveManager saveManager,
 		LanguageManager languageManager,
 		KeyManager keyManager,
-        NativeManager nativeManager,
+		NativeManager nativeManager,
 		UpdateTicker.SynchronizedTicker syncTicker,
 		UpdateTicker.ThreadTicker threadTicker,
- GuiComponentFactory guiComponentFactory, GuiFactory guiFactory) {
+		GuiComponentFactory guiComponentFactory, GuiFactory guiFactory) {
 
 		this.logger = logger;
 
@@ -98,7 +97,7 @@ public class Game {
 		this.saveManager = saveManager;
 		this.languageManager = languageManager;
 		this.keyManager = keyManager;
-        this.nativeManager = nativeManager;
+		this.nativeManager = nativeManager;
 
 		this.syncTicker = syncTicker;
 		this.threadTicker = threadTicker;
