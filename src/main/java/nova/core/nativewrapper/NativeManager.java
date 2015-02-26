@@ -37,7 +37,7 @@ public class NativeManager {
         try {
             return nativeConverterNative.get(nativeObject.getClass()).convertToNova(nativeObject);
         }
-        catch (Exception e)
+        catch (NullPointerException e)
         {
             return null;
         }
@@ -46,7 +46,7 @@ public class NativeManager {
         try {
             return nativeConverterNova.get(novaObject.getClass()).convertToNative(novaObject);
         }
-        catch (Exception e)
+        catch (NullPointerException e)
         {
             return null;
         }
