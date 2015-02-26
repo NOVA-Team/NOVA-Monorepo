@@ -14,7 +14,7 @@ public class MathUtil {
 	 * @param b
 	 * @return min
 	 */
-	public int min(int a, int b) {
+	public static int min(int a, int b) {
 		return a < b ? a : b;
 	}
 
@@ -24,7 +24,7 @@ public class MathUtil {
 	 * @param numbers Array of numbers
 	 * @return min
 	 */
-	public int min(int... numbers) {
+	public static int min(int... numbers) {
 		if (numbers.length < 1)
 			throw new IllegalArgumentException();
 		int min = numbers[0];
@@ -42,7 +42,7 @@ public class MathUtil {
 	 * @param b
 	 * @return max
 	 */
-	public int max(int a, int b) {
+	public static int max(int a, int b) {
 		return a > b ? a : b;
 	}
 
@@ -52,7 +52,7 @@ public class MathUtil {
 	 * @param numbers Array of numbers
 	 * @return max
 	 */
-	public int max(int... numbers) {
+	public static int max(int... numbers) {
 		if (numbers.length < 1)
 			throw new IllegalArgumentException();
 		int max = numbers[0];
@@ -70,7 +70,7 @@ public class MathUtil {
 	 * @param b
 	 * @return min
 	 */
-	public double min(double a, double b) {
+	public static double min(double a, double b) {
 		return a < b ? a : b;
 	}
 
@@ -80,7 +80,7 @@ public class MathUtil {
 	 * @param numbers Array of numbers
 	 * @return min
 	 */
-	public double min(double... numbers) {
+	public static double min(double... numbers) {
 		if (numbers.length < 1)
 			throw new IllegalArgumentException();
 		double min = numbers[0];
@@ -98,7 +98,7 @@ public class MathUtil {
 	 * @param b
 	 * @return max
 	 */
-	public double max(double a, double b) {
+	public static double max(double a, double b) {
 		return a > b ? a : b;
 	}
 
@@ -108,7 +108,7 @@ public class MathUtil {
 	 * @param numbers Array of numbers
 	 * @return max
 	 */
-	public double max(double... numbers) {
+	public static double max(double... numbers) {
 		if (numbers.length < 1)
 			throw new IllegalArgumentException();
 		double max = numbers[0];
@@ -127,7 +127,7 @@ public class MathUtil {
 	 * @param max upper limit
 	 * @return {@code min <= a <= max}
 	 */
-	public int clamp(int a, int min, int max) {
+	public static int clamp(int a, int min, int max) {
 		return min(max(a, min), max);
 	}
 
@@ -139,7 +139,7 @@ public class MathUtil {
 	 * @param max upper limit
 	 * @return {@code min <= a <= max}
 	 */
-	public double clamp(double a, double min, double max) {
+	public static double clamp(double a, double min, double max) {
 		return min(max(a, min), max);
 	}
 }
