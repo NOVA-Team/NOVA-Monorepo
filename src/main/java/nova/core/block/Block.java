@@ -265,4 +265,20 @@ public abstract class Block implements Identifiable {
 		renderStatic(model);
 	}
 
+	/**
+	 * Gets the breaking difficulty for the block. 1 is the average hardness of the game.
+	 * @return The breaking difficulty.
+	 */
+	public double getHardness() {
+		return 1;
+	}
+
+	/**
+	 * Gets the explosion resistance for the block. 1 is the average resistance of the game.
+	 * @return The resistance.
+	 */
+	public double getResistance() {
+		return 1;
+	}
+
 }
