@@ -1,17 +1,11 @@
 package nova.internal;
 
-import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.core.deps.DependencyRepoProvider;
-import nova.core.loader.Loadable;
-import nova.core.loader.NovaMod;
-import se.jbee.inject.Dependency;
-
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -20,9 +14,16 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.core.deps.MavenDependency;
+import nova.core.deps.DependencyProvider;
+import nova.core.game.Game;
+import nova.core.loader.Loadable;
+import nova.core.loader.NovaMod;
+import nova.core.util.exception.NovaException;
+
 /**
  * The main class that launches NOVA mods.
- *
  * @author Calclavia, Kubuxu
  */
 public class NovaLauncher implements Loadable {
@@ -32,10 +33,7 @@ public class NovaLauncher implements Loadable {
 
 	private Map<NovaMod, Loadable> mods;
 
-	private Map<NovaMod, ArrayList<String[]>> dependencies;
-	private Map<String, String> dependencyVersion;
-	private Map<String, String[]> dependencyRepos;
-	private Set<String> dependencyIds;
+	private Map<NovaMod, MavenDependency[]> neededDeps;
 
 	private ArrayList<Loadable> orderedMods;
 	private Map<NovaMod, Class<? extends Loadable>> classesMap;
@@ -45,7 +43,6 @@ public class NovaLauncher implements Loadable {
 
 	/**
 	 * Creates NovaLauncher.
-	 *
 	 * @param modClasses mods to instantialize.
 	 * @param diep is required as we are installing additional modules to it.
 	 */
@@ -67,6 +64,10 @@ public class NovaLauncher implements Loadable {
 
 	@Override
 	public void preInit() {
+
+		// Test integrity of the GuiFactory
+		Game.instance.guiComponentFactory.validate();
+
 		/**
 		 * Create instances.
 		 */
@@ -82,13 +83,40 @@ public class NovaLauncher implements Loadable {
 
 					Constructor<?> cons = ocons.get();
 					Object[] parameters = Arrays.stream(cons.getParameterTypes())
-						.map(clazz -> (Object) diep.getInjector().get().resolve(Dependency.dependency(clazz)))
+						.map(clazz -> (Object) diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(clazz)))
 						.collect(Collectors.toList()).toArray();
 					return (Loadable) cons.newInstance(parameters);
 				} catch (Exception e) {
 					throw new ExceptionInInitializerError(e);
 				}
 			})));
+
+		/**
+		 * Handle Scala singleton mods
+		 */
+		Map<NovaMod, Loadable> scalaModsMap = modClasses.stream()
+			.filter(c -> !Loadable.class.isAssignableFrom(c))
+			.filter(c -> {
+				try {
+					Class.forName((c.getCanonicalName() + "$"));
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
+			})
+			.collect(Collectors.toMap(c -> c.getAnnotation(NovaMod.class),
+				c -> {
+					try {
+						Class singletonClass = Class.forName(c.getCanonicalName() + "$");
+						Field field = singletonClass.getField("MODULE$");
+						return (Loadable) field.get(null);
+					} catch (Exception e) {
+						throw new ExceptionInInitializerError("Failed to load NOVA mod: " + c);
+					}
+				}
+			));
+
+		mods.putAll(scalaModsMap);
 
 		/**
 		 * Re-order mods based on dependencies
@@ -111,21 +139,43 @@ public class NovaLauncher implements Loadable {
 				.collect(Collectors.toList())
 		);
 
+		Game.instance.logger.info("NOVA Mods Loaded: " + mods.size());
+
 		/**
 		 * Initialize all the NOVA mods.
 		 */
-		orderedMods.stream().forEachOrdered(Loadable::preInit);
-		System.out.println("NOVA Mods Loaded: " + mods.size());
+		orderedMods.stream().forEachOrdered((mod) -> {
+			try {
+				mod.preInit();
+			} catch (Throwable t) {
+				Game.instance.logger.error("Critical error caught during pre initalization phase", t);
+				throw new NovaException(t);
+			}
+		});
 	}
 
 	@Override
 	public void init() {
-		orderedMods.stream().forEach(Loadable::init);
+		orderedMods.stream().forEachOrdered((mod) -> {
+			try {
+				mod.init();
+			} catch (Throwable t) {
+				Game.instance.logger.error("Critical error caught during initalization phase", t);
+				throw new NovaException(t);
+			}
+		});
 	}
 
 	@Override
 	public void postInit() {
-		orderedMods.stream().forEach(Loadable::postInit);
+		orderedMods.stream().forEachOrdered((mod) -> {
+			try {
+				mod.postInit();
+			} catch (Throwable t) {
+				Game.instance.logger.error("Critical error caught during post initalization phase", t);
+				throw new NovaException(t);
+			}
+		});
 	}
 
 	public Set<NovaMod> getLoadedMods() {
@@ -136,28 +186,12 @@ public class NovaLauncher implements Loadable {
 		return mods;
 	}
 
-	public Map<String, String> getDependencyVersions() {
-		return this.dependencyVersion;
-	}
-
-	public Map<NovaMod, ArrayList<String[]>> getDependencyRepos() {
-		return this.dependencies;
-	}
-
-	public String getDependencyVersion(String modid) {
-		return this.dependencyVersion.keySet().contains(modid) ? this.dependencyVersion.get(modid) : null;
-	}
-
-	public String[] getDependencyRepo(String modid) {
-		return this.dependencyRepos.keySet().contains(modid) ? this.dependencyRepos.get(modid) : null;
-	}
-
-	public Set<String> getDependencyIds() {
-		return this.dependencyIds;
-	}
-
 	public Map<NovaMod, Class<? extends Loadable>> getModClasses() {
 		return classesMap;
+	}
+
+	public Map<NovaMod, MavenDependency[]> getNeededDeps() {
+		return this.neededDeps;
 	}
 
 	/**
@@ -165,49 +199,21 @@ public class NovaLauncher implements Loadable {
 	 * The wrapper just needs to call this method right before it downloads the dependencies.
 	 */
 	public void generateDependencies() {
-
-		if (dependencies == null) {
-			dependencies = new HashMap<>();
-			dependencyVersion = new HashMap<>();
-			dependencyIds = new HashSet<>();
-		}
+		neededDeps = new HashMap<>(); // This should be cleaned every time this method is run.
 
 		classesMap.keySet().stream()
 			.forEach(this::generateAndAddDependencies);
 	}
 
+
 	private void generateAndAddDependencies(NovaMod mod) {
-
-		if (mod.getClass().isAssignableFrom(DependencyRepoProvider.class)) {
-
-			ArrayList<String[]> dependencyLocations = new ArrayList<>();
-			Map<String, String[]> dependencyRepos = new HashMap<>();
-
-			DependencyRepoProvider provider = (DependencyRepoProvider) mod;
-
-			for (String modid : mod.dependencies()) {
-				if (modid.contains("?")) {
-					String modWORequired = modid.replace('?', ' ').replaceAll(" ", "");
-					if (modid.contains("@")) {
-						if (provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)) != null) {
-							dependencyLocations.add(provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
-							dependencyVersion.put(modWORequired.substring(0, modid.indexOf("@") - 1), modWORequired.substring(modWORequired.indexOf("@")));
-							dependencyRepos.put(modWORequired.substring(0, modid.indexOf("@") - 1), provider.getModRepo(modid.substring(0, modid.indexOf("@") - 1)));
-							dependencyIds.add(modWORequired.substring(0, modid.indexOf("@") - 1));
-						}
-					} else {
-						if (provider.getModRepo(modWORequired) != null) {
-							dependencyLocations.add(provider.getModRepo(modWORequired));
-							dependencyRepos.put(modWORequired, provider.getModRepo(modWORequired));
-							dependencyIds.add(modWORequired);
-						}
-					}
-				}
+		if (mod.getClass().isAssignableFrom(DependencyProvider.class)) {
+			// TODO: Fix this up. I mean, it *should* work atm, idk.
+			try {
+				neededDeps.put(mod, (MavenDependency[])mod.getClass().getMethod("getDependencies").getDefaultValue());
+			} catch (NoSuchMethodException ex) {
+				ex.printStackTrace();
 			}
-
-			dependencies.put(mod, dependencyLocations);
-			this.dependencyRepos = dependencyRepos;
-
 		}
 	}
 

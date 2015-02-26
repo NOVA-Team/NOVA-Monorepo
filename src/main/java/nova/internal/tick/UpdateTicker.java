@@ -8,6 +8,7 @@ import java.util.WeakHashMap;
 
 /**
  * The update ticker is responsible for ticking Update objects.
+ *
  * @author Calclavia
  */
 public class UpdateTicker {
@@ -44,6 +45,7 @@ public class UpdateTicker {
 
 	/**
 	 * Queues an event to be executed.
+	 *
 	 * @param func Event to be executed.
 	 */
 	public void preQueue(Runnable func) {
@@ -77,23 +79,27 @@ public class UpdateTicker {
 	 * A synchronized ticker ticks using the game's update loop.
 	 */
 	public static class SynchronizedTicker extends UpdateTicker {
-		public static final SynchronizedTicker instance = new SynchronizedTicker();
+	}
+
+	/**
+	 * A thread ticker ticks using the NOVA's update loop.
+	 */
+	public static class ThreadTicker extends UpdateTicker {
 	}
 
 	/**
 	 * A thread ticker ticks independent on the game's update loop.
 	 */
-	public static class ThreadTicker extends Thread {
-		public static final UpdateTicker ticker = new UpdateTicker();
-		public static ThreadTicker instance;
+	public static class TickingThread extends Thread {
+		public final UpdateTicker ticker;
 		public final int tps;
 		public final long sleepMillis;
 		public boolean pause = false;
 
-		public ThreadTicker(int tps) {
+		public TickingThread(UpdateTicker ticker, int tps) {
 			setName("Nova Thread");
 			setPriority(Thread.MIN_PRIORITY);
-
+			this.ticker = ticker;
 			this.tps = tps;
 			this.sleepMillis = 1 / tps * 1000;
 		}

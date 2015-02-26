@@ -4,6 +4,7 @@ import nova.core.block.BlockManager;
 import nova.core.entity.EntityManager;
 import nova.core.event.EventManager;
 import nova.core.fluid.FluidManager;
+import nova.core.gui.KeyManager;
 import nova.core.gui.factory.GuiComponentFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.item.ItemDictionary;
@@ -12,11 +13,12 @@ import nova.core.network.NetworkManager;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
+import nova.core.util.LanguageManager;
 import nova.core.util.SaveManager;
 import nova.core.world.WorldManager;
-import org.slf4j.Logger;
+import nova.internal.tick.UpdateTicker;
 
-import java.util.Optional;
+import org.slf4j.Logger;
 
 public class Game {
 
@@ -25,7 +27,7 @@ public class Game {
 	 * is a concern. Treat as -100 style points. Must be initialized by code
 	 * handling launch and dependency injection entry point.
 	 */
-	public static Optional<Game> instance = Optional.empty();
+	public static Game instance;
 
 	public final Logger logger;
 
@@ -41,10 +43,21 @@ public class Game {
 	public final EventManager eventManager;
 	public final NetworkManager networkManager;
 	public final SaveManager saveManager;
+	public final LanguageManager languageManager;
+	public final KeyManager keyManager;
 
-	// TODO Move somewhere else, also... Optional inconvenient here, it has to exist as required.
-	public final Optional<GuiComponentFactory> guiComponentFactory;
-	public final Optional<GuiFactory> guiFactory;
+	/**
+	 * The synchronized ticker that uses the same thread as the game.
+	 */
+	public final UpdateTicker.SynchronizedTicker syncTicker;
+	/**
+	 * The thread ticker that runs on NOVA's thread.
+	 */
+	public final UpdateTicker.ThreadTicker threadTicker;
+
+	// TODO Move somewhere else
+	public final GuiComponentFactory guiComponentFactory;
+	public final GuiFactory guiFactory;
 
 	private Game(
 		Logger logger,
@@ -60,8 +73,11 @@ public class Game {
 		EventManager eventManager,
 		NetworkManager networkManager,
 		SaveManager saveManager,
-		Optional<GuiComponentFactory> guiComponentFactory,
-		Optional<GuiFactory> guiFactory) {
+		LanguageManager languageManager,
+		KeyManager keyManager,
+		UpdateTicker.SynchronizedTicker syncTicker,
+		UpdateTicker.ThreadTicker threadTicker,
+ GuiComponentFactory guiComponentFactory, GuiFactory guiFactory) {
 
 		this.logger = logger;
 
@@ -77,6 +93,11 @@ public class Game {
 		this.eventManager = eventManager;
 		this.networkManager = networkManager;
 		this.saveManager = saveManager;
+		this.languageManager = languageManager;
+		this.keyManager = keyManager;
+
+		this.syncTicker = syncTicker;
+		this.threadTicker = threadTicker;
 
 		this.guiComponentFactory = guiComponentFactory;
 		this.guiFactory = guiFactory;

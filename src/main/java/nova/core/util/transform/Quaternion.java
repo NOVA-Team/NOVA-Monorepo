@@ -25,9 +25,9 @@
 package nova.core.util.transform;
 
 import com.google.common.math.DoubleMath;
+import nova.core.retention.Storable;
+import nova.core.retention.Stored;
 import nova.core.util.collection.Pair;
-import nova.core.util.components.Storable;
-import nova.core.util.components.Stored;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -35,6 +35,7 @@ import java.math.RoundingMode;
 
 /**
  * All rotation operations operate in radians.
+ *
  * @author Calclavia, ChickenBones
  */
 public class Quaternion implements Transform, Storable {
@@ -62,6 +63,7 @@ public class Quaternion implements Transform, Storable {
 	 *
 	 * Pitch: 0 Degrees - Looking straight forward towards the horizon. 90 Degrees - Looking straight up
 	 * to the sky. -90 Degrees - Looking straight down to the void.
+	 *
 	 * @param euler input {@link Vector3}
 	 * @return resulting {@link Quaternion}
 	 * @author Calclavia
@@ -93,6 +95,7 @@ public class Quaternion implements Transform, Storable {
 
 	/**
 	 * Returns a quaternion from Angle Axis rotation.
+	 *
 	 * @param axis Axis {@link Vector3}
 	 * @param angle Angle
 	 * @return The Quaternion representation of the angle axis rotation.
@@ -129,6 +132,7 @@ public class Quaternion implements Transform, Storable {
 	 * using the associative property of quaternions and the fact that (q2*q1)'=q1'* q2' (see conjugate function) then we get:
 	 *
 	 * x3 = (q2*q1) * x * (q2*q1)'
+	 *
 	 * @param q - The quaternion to multiply with
 	 * @return The new Quaternion
 	 */
@@ -146,6 +150,10 @@ public class Quaternion implements Transform, Storable {
 
 	public double magnitude() {
 		return Math.sqrt(x * x + y * y + z * z + w * w);
+	}
+
+	public Quaternion scale(double factor) {
+		return new Quaternion(x * factor, y * factor, z * factor, w * factor);
 	}
 
 	public Quaternion normalize() {

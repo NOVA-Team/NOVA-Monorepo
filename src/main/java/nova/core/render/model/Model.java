@@ -3,7 +3,9 @@ package nova.core.render.model;
 import nova.core.render.texture.Texture;
 import nova.core.util.transform.Matrix4x4;
 import nova.core.util.transform.MatrixStack;
+import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector2d;
+import nova.core.util.transform.Vector3;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -13,7 +15,6 @@ import java.util.stream.Collectors;
 
 /**
  * A model is capable of containing multiple faces.
- *
  * @author Calclavia
  */
 public class Model implements Cloneable {
@@ -40,18 +41,24 @@ public class Model implements Cloneable {
 
 	/**
 	 * Binds all the faces and all child models with this texture.
-	 *
 	 * @param texture The texture
 	 */
 	public void bind(Texture texture) {
 		faces.forEach(f -> f.texture = Optional.of(texture));
-		children.forEach(m -> m.bind(texture));
+	}
+
+	/**
+	 * Binds the texture to the model, and all its children.
+	 * @param texture
+	 */
+	public void bindAll(Texture texture) {
+		bind(texture);
+		children.forEach(m -> m.bindAll(texture));
 	}
 
 	/**
 	 * Starts drawing, by returning an Face for the Model to work on.
 	 * Add vertices to this Face and finish it by calling drawFace()
-	 *
 	 * @return new {@link Face}
 	 */
 	public Face createFace() {
@@ -60,7 +67,6 @@ public class Model implements Cloneable {
 
 	/**
 	 * Finish drawing the Face by adding it into the list of Faces.
-	 *
 	 * @param Face - The finished masterpiece.
 	 */
 	public void drawFace(Face Face) {
@@ -71,10 +77,37 @@ public class Model implements Cloneable {
 		return flatten(new MatrixStack());
 	}
 
+	public Model translate(Vector3<?> vec) {
+		return translate(vec.xd(), vec.yd(), vec.zd());
+	}
+
+	public Model translate(double x, double y, double z) {
+		matrix = new MatrixStack().loadMatrix(matrix).translate(x, y, z).getMatrix();
+		return this;
+	}
+
+	public Model scale(Vector3<?> vec) {
+		return scale(vec.xd(), vec.yd(), vec.zd());
+	}
+
+	public Model scale(double x, double y, double z) {
+		matrix = new MatrixStack().loadMatrix(matrix).scale(x, y, z).getMatrix();
+		return this;
+	}
+
+	public Model rotate(Quaternion quat) {
+		matrix = new MatrixStack().loadMatrix(matrix).rotate(quat).getMatrix();
+		return this;
+	}
+
+	public Model rotate(Vector3<?> vec, double angle) {
+		matrix = new MatrixStack().loadMatrix(matrix).rotate(vec, angle).getMatrix();
+		return this;
+	}
+
 	/**
 	 * Flattens the model into a set of models with no additional transformations,
 	 * applying all the transformations into the individual vertices.
-	 *
 	 * @param matrixStack transformation matrix.
 	 * @return Resulting set of models
 	 */

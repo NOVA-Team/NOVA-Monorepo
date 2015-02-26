@@ -1,4 +1,4 @@
-package nova.test.mod;
+package nova.testutils.mod;
 
 import nova.core.loader.Loadable;
 

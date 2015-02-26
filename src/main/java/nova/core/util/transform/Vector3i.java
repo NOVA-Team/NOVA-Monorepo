@@ -1,18 +1,18 @@
 package nova.core.util.transform;
 
-import nova.core.util.components.Storable;
-import nova.core.util.components.Stored;
+import nova.core.retention.Storable;
+import nova.core.retention.Stored;
 
 /**
  * An integer implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
  */
 @SuppressWarnings("rawtypes")
 public class Vector3i extends Vector3<Vector3i> implements Storable {
-	public static final Vector3i ZERO = new Vector3i(0, 0, 0);
-	public static final Vector3i ONE = new Vector3i(1, 1, 1);
-	public static final Vector3i AXIS_X = new Vector3i(1, 0, 0);
-	public static final Vector3i AXIS_Y = new Vector3i(0, 1, 0);
-	public static final Vector3i AXIS_Z = new Vector3i(0, 0, 1);
+	public static final Vector3i zero = new Vector3i(0, 0, 0);
+	public static final Vector3i one = new Vector3i(1, 1, 1);
+	public static final Vector3i xAxis = new Vector3i(1, 0, 0);
+	public static final Vector3i yAxis = new Vector3i(0, 1, 0);
+	public static final Vector3i zAxis = new Vector3i(0, 0, 1);
 
 	@Stored
 	public final int x, y, z;
@@ -55,7 +55,6 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 	/**
 	 * Returns the cross product between this vector and the other.
 	 * Calculated by finding the determinant of a 3x3 matrix.
-	 *
 	 * @return A vector representing the normal, perpendicular to these two vectors
 	 */
 	@Override
@@ -87,6 +86,14 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 	@Override
 	public Vector3i min(Vector3 other) {
 		return new Vector3i(Math.min(xi(), other.xi()), Math.min(yi(), other.yi()), Math.min(zi(), other.zi()));
+	}
+
+	public Vector3i max(Vector3i other) {
+		return max(other);
+	}
+
+	public Vector3i min(Vector3i other) {
+		return min(other);
 	}
 
 	@Override
@@ -121,6 +128,10 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 
 	public Vector3d toDouble() {
 		return new Vector3d(xd(), yd(), zd());
+	}
+
+	public Vector3i abs() {
+		return new Vector3i(Math.abs(x), Math.abs(y), Math.abs(z));
 	}
 
 	@Override

@@ -1,14 +1,12 @@
 package nova.core.fluid;
 
-import nova.core.util.Direction;
-
-import java.util.Optional;
+import java.util.Set;
 
 /**
  * An object that provides a fluid container.
- *
+ * Items will implement this as they are not direction sensitive.
  * @author Calclavia
  */
 public interface TankProvider {
-	Optional<Tank> getTank(Direction dir);
+	Set<Tank> getTanks();
 }

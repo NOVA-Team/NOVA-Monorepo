@@ -2,7 +2,6 @@ package nova.core.util.transform;
 
 /**
  * Applied to any object that can do mathematical operations.
- *
  * @param <I> -describeme-
  * @param <O> -describeme-
  * @author Calclavia
@@ -35,7 +34,6 @@ public abstract class Operator<I extends Operator<I, O>, O extends I> {
 	/**
 	 * Gets the reciprocal of this vector.
 	 * Any value of zero will cause a division by zero error.
-	 *
 	 * @return -describeme-
 	 */
 	public abstract O reciprocal();
@@ -48,7 +46,15 @@ public abstract class Operator<I extends Operator<I, O>, O extends I> {
 		return add(v);
 	}
 
+	public O $plus(double v) {
+		return add(v);
+	}
+
 	public O $minus(I v) {
+		return subtract(v);
+	}
+
+	public O $minus(double v) {
 		return subtract(v);
 	}
 
@@ -58,5 +64,9 @@ public abstract class Operator<I extends Operator<I, O>, O extends I> {
 
 	public O $div(double d) {
 		return multiply(1 / d);
+	}
+
+	public O unary_$minus() {
+		return inverse();
 	}
 }

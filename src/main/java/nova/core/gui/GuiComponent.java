@@ -10,41 +10,42 @@ import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.gui.render.Graphics;
 import nova.core.network.NetworkTarget.Side;
-import nova.core.network.PacketReceiver;
-import nova.core.network.PacketSender;
+import nova.core.network.PacketHandler;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Vector2i;
 
 /**
  * Defines a basic gui component. A component can be added to
  * {@link AbstractGuiContainer}, the root container is a {@link Gui}.
- * 
+ *
  * @param <O> -describe me-
  * @param <T> {@link NativeGuiComponent} type
  */
 @SuppressWarnings("unchecked")
-public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketSender, PacketReceiver {
+public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketHandler {
 
-	private String uniqueID;
 	protected String qualifiedName;
-
-	private T nativeElement;
-	private SidedEventBus<ComponentEvent<?>> eventListenerList = new SidedEventBus<ComponentEvent<?>>(this::dispatchNetworkEvent);
-	private EventBus<GuiEvent> listenerList = new EventBus<GuiEvent>();
-
 	protected Optional<Vector2i> preferredSize = Optional.empty();
 	protected Optional<Vector2i> minimumSize = Optional.empty();
 	protected Optional<Vector2i> maximumSize = Optional.empty();
-
-	private boolean isActive = true;
-	private boolean isVisible = true;
-	private boolean isMouseOver = false;
-
 	/**
 	 * Parent container instance. The instance will be populated once added to a
 	 * {@link AbstractGuiContainer}.
 	 */
 	protected Optional<AbstractGuiContainer<?, ?>> parentContainer = Optional.empty();
+	private String uniqueID;
+	private T nativeElement;
+	private SidedEventBus<ComponentEvent<?>> eventListenerList = new SidedEventBus<ComponentEvent<?>>(this::dispatchNetworkEvent);
+	private EventBus<GuiEvent> listenerList = new EventBus<GuiEvent>();
+	private boolean isActive = true;
+	private boolean isVisible = true;
+	private boolean isMouseOver = false;
+
+	public GuiComponent(String uniqueID, Class<T> nativeClass) {
+		this.uniqueID = uniqueID;
+		this.qualifiedName = uniqueID;
+		Game.instance.guiComponentFactory.applyNativeComponent(this, nativeClass);
+	}
 
 	private void dispatchNetworkEvent(SidedEventBus.SidedEvent event) {
 		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((ComponentEvent<?>) event, this));
@@ -53,12 +54,6 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	// TODO Recursive call or field? Same goes for the qualified name.
 	protected Optional<Gui> getParentGui() {
 		return parentContainer.isPresent() ? parentContainer.get().getParentGui() : Optional.empty();
-	}
-
-	public GuiComponent(String uniqueID, Class<T> nativeClass) {
-		this.uniqueID = uniqueID;
-		this.qualifiedName = uniqueID;
-		Game.instance.get().guiComponentFactory.ifPresent((cf) -> cf.applyNativeComponent(this, nativeClass));
 	}
 
 	public Optional<AbstractGuiContainer<?, ?>> getParentContainer() {
@@ -85,6 +80,22 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		nativeElement.setOutline(outline);
 	}
 
+	public O setPreferredSize(int width, int height) {
+		return setPreferredSize(new Vector2i(width, height));
+	}
+
+	public O setMinimumSize(int width, int height) {
+		return setMinimumSize(new Vector2i(width, height));
+	}
+
+	public O setMaximumSize(int width, int height) {
+		return setMaximumSize(new Vector2i(width, height));
+	}
+
+	public Optional<Vector2i> getPreferredSize() {
+		return preferredSize.isPresent() ? preferredSize : nativeElement.getPreferredSize();
+	}
+
 	/**
 	 * Sets the requested size for this component. Only works if the parent
 	 * container's {@link GuiLayout} makes use of it.
@@ -97,8 +108,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		return (O) this;
 	}
 
-	public O setPreferredSize(int width, int height) {
-		return setPreferredSize(new Vector2i(width, height));
+	public Optional<Vector2i> getMinimumSize() {
+		return minimumSize.isPresent() ? minimumSize : nativeElement.getMinimumSize();
 	}
 
 	/**
@@ -113,8 +124,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		return (O) this;
 	}
 
-	public O setMinimumSize(int width, int height) {
-		return setMinimumSize(new Vector2i(width, height));
+	public Optional<Vector2i> getMaximumSize() {
+		return maximumSize.isPresent() ? maximumSize : nativeElement.getMaximumSize();
 	}
 
 	/**
@@ -127,22 +138,6 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	public O setMaximumSize(Vector2i size) {
 		maximumSize = Optional.of(size);
 		return (O) this;
-	}
-
-	public O setMaximumSize(int width, int height) {
-		return setMaximumSize(new Vector2i(width, height));
-	}
-
-	public Optional<Vector2i> getPreferredSize() {
-		return preferredSize.isPresent() ? preferredSize : nativeElement.getPreferredSize();
-	}
-
-	public Optional<Vector2i> getMinimumSize() {
-		return minimumSize.isPresent() ? minimumSize : nativeElement.getMinimumSize();
-	}
-
-	public Optional<Vector2i> getMaximumSize() {
-		return maximumSize.isPresent() ? maximumSize : nativeElement.getMaximumSize();
 	}
 
 	/**
@@ -222,7 +217,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	/**
 	 * Triggers an event for the external listeners registered with
 	 * registerEventListener
-	 * 
+	 *
 	 * @param event ComponentEvent to trigger
 	 */
 	public void triggerEvent(ComponentEvent<?> event) {

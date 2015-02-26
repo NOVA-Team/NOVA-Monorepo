@@ -3,7 +3,6 @@ package nova.core.util.transform;
 /**
  * Represents an abstract vector with its mathematical operators.
  * Vector3 and Vector2 may extend this. Requires the Vector self type as a generic parameter.
- *
  * @param <I> -describeme-
  * @param <O> -describeme-
  * @author Calclavia
@@ -12,14 +11,17 @@ package nova.core.util.transform;
 public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operator<I, O> {
 	/**
 	 * Returns the dot product between this vector and the other.
-	 *
 	 * @param other The other vector
 	 * @return The dot product
 	 */
 	public abstract double dot(I other);
 
 	public final double distance(I other) {
-		return other.subtract((I) this).magnitude();
+		return Math.sqrt(distanceSquared(other));
+	}
+
+	public final double distanceSquared(I other) {
+		return other.subtract((I) this).magnitudeSquared();
 	}
 
 	public final O normalize() {
@@ -36,7 +38,6 @@ public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operat
 
 	/**
 	 * Gets the angle between this vector and the other.
-	 *
 	 * @param other The other vector
 	 * @return Angle
 	 */
@@ -46,7 +47,6 @@ public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operat
 
 	/**
 	 * Finds the midpoint between this vector and another.
-	 *
 	 * @param other The other vector
 	 * @return The midpoint
 	 */
@@ -56,7 +56,6 @@ public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operat
 
 	/**
 	 * Returns the maximum vector of this vector and the other vector.
-	 *
 	 * @param other The other vector
 	 * @return The maximum vector
 	 */
@@ -64,7 +63,6 @@ public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operat
 
 	/**
 	 * Returns the minimum vector of this vector and the other vector.
-	 *
 	 * @param other The other vector
 	 * @return The minimum vector
 	 */

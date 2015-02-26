@@ -3,6 +3,7 @@ package nova.core.block;
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
+import nova.core.game.Game;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemManager;
 import nova.core.util.Registry;
@@ -26,6 +27,14 @@ public class BlockManager {
 		return registry.get(name);
 	}
 
+	/**
+	 * Gets the block registered that represents air.
+	 * @return
+	 */
+	public Block getAirBlock() {
+		return Game.instance.blockManager.getBlock("air").get();
+	}
+
 	public Optional<Block> getBlock(String name) {
 		Optional<BlockFactory> blockFactory = getBlockFactory(name);
 		if (blockFactory.isPresent()) {
@@ -37,7 +46,6 @@ public class BlockManager {
 
 	/**
 	 * Registers a block with no constructor arguments
-	 *
 	 * @param block Block to register
 	 * @return New block instance
 	 */
@@ -54,7 +62,6 @@ public class BlockManager {
 
 	/**
 	 * Register a new block with custom constructor arguments.
-	 *
 	 * @param constructor Block instance {@link Supplier}
 	 * @return Dummy block
 	 */
@@ -64,7 +71,6 @@ public class BlockManager {
 
 	/**
 	 * Register a new block with custom constructor arguments.
-	 *
 	 * @param factory {@link BlockFactory} of registered block
 	 * @return Dummy block
 	 */

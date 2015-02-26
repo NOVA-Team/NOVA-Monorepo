@@ -1,5 +1,6 @@
 package nova.core.gui.render;
 
+import nova.core.gui.render.Shape2D.PolygonShape;
 import nova.core.render.Color;
 import nova.core.render.texture.Texture;
 import nova.core.util.transform.Vector2i;
@@ -15,7 +16,7 @@ public class Graphics implements TextRenderer {
 	private final TextRenderer textRenderer;
 	private final Canvas canvas;
 
-	private int linewidth;
+	private int linewidth = 1;
 
 	public Graphics(Canvas canvas, TextRenderer textRenderer) {
 		this.textRenderer = textRenderer;
@@ -46,67 +47,127 @@ public class Graphics implements TextRenderer {
 		this.linewidth = linewidth;
 	}
 
-	public void drawLine(int x, int y, int x2, int y2) {
-		int g = Math.abs(y2 - y);
-		int a = Math.abs(x2 - x);
-		double angle = Math.atan(g / (double) a);
-		int size = linewidth / 2;
-		int ox = (int) (Math.sin(angle) * size);
-		int oy = (int) (Math.cos(angle) * size);
+	public void drawLine(double x, double y, double x2, double y2) {
+		double g = y2 - y;
+		double a = x2 - x;
+		double angle = Math.atan(g / a);
+		double size = linewidth / 2D;
+		double ox = Math.sin(angle) * size;
+		double oy = Math.cos(angle) * size;
+
 		canvas.startDrawing(false);
-		canvas.addVertex(x + ox, y + oy);
-		canvas.addVertex(x - ox, y - oy);
-		canvas.addVertex(x2 - ox, y2 - oy);
-		canvas.addVertex(x2 + ox, y2 + oy);
+		canvas.addVertex(x + ox, y - oy);
+		canvas.addVertex(x - ox, y + oy);
+		canvas.addVertex(x2 - ox, y2 + oy);
+		canvas.addVertex(x2 + ox, y2 - oy);
 		canvas.draw();
 	}
 
-	public void drawRect(int x, int y, int width, int height) {
-		fillRect(x, y - linewidth / 2, width, linewidth);
-		fillRect(x + height - linewidth / 2, y, width, linewidth);
-		fillRect(x - linewidth / 2, y, linewidth, height);
-		fillRect(x + width - linewidth / 2, y, linewidth, height);
+	public void drawRect(double x, double y, double width, double height) {
+		fillRect(x, y, width, linewidth);
+		fillRect(x, y + height - linewidth, width, linewidth);
+		fillRect(x, y, linewidth, height);
+		fillRect(x + width - linewidth, y, linewidth, height);
 	}
 	
-	public void fillRect(int x, int y, int width, int height) {
+	public void fillRect(double x, double y, double width, double height) {
 		canvas.startDrawing(false);
 		canvas.addVertex(x, y);
 		canvas.addVertex(x + width, y);
-		canvas.addVertex(x + width, y + width);
-		canvas.addVertex(x, y + width);
+		canvas.addVertex(x + width, y + height);
+		canvas.addVertex(x, y + height);
 		canvas.draw();
 	}
 
-	public void fillRect(int x, int y, int width, int height, Color c1, Color c2) {
+	public void fillRect(double x, double y, double width, double height, Color c1, Color c2) {
 		canvas.startDrawing(false);
 		canvas.setColor(c1);
 		canvas.addVertex(x, y);
 		canvas.addVertex(x + width, y);
 		canvas.setColor(c2);
-		canvas.addVertex(x + width, y + width);
-		canvas.addVertex(x, y + width);
+		canvas.addVertex(x + width, y + height);
+		canvas.addVertex(x, y + height);
 		canvas.draw();
 	}
 
-	public void fillRect(int x, int y, int width, int height, Color c1, Color c2, Color c3, Color c4) {
+	public void fillRect(double x, double y, double width, double height, Color c1, Color c2, Color c3, Color c4) {
 		canvas.startDrawing(false);
 		canvas.setColor(c1);
 		canvas.addVertex(x, y);
 		canvas.setColor(c3);
 		canvas.addVertex(x + width, y);
 		canvas.setColor(c2);
-		canvas.addVertex(x + width, y + width);
+		canvas.addVertex(x + width, y + height);
 		canvas.setColor(c4);
-		canvas.addVertex(x, y + width);
+		canvas.addVertex(x, y + height);
 		canvas.draw();
 	}
 
+	public void fillEllipse(double x, double y, double width, double height) {
+		double rX = width / 2D;
+		double rY = height / 2D;
+		canvas.startDrawing(false);
+		for (int i = 0; i < 360; i++) {
+			double rad = Math.toRadians(i);
+			canvas.addVertex(Math.cos(rad) * rX + x, Math.sin(rad) * rY + y);
+		}
+		canvas.draw();
+	}
+
+	public void drawEllipse(double x, double y, double width, double height) {
+		Vertex2D[] vertices = new Vertex2D[360];
+		double rX = width / 2D;
+		double rY = height / 2D;
+		for (int i = 0; i < 360; i++) {
+			double rad = Math.toRadians(i);
+			vertices[i] = new Vertex2D(Math.cos(rad) * rX + x, Math.sin(rad) * rY + y);
+		}
+		drawShape(new PolygonShape(vertices));
+	}
+
 	public void drawShape(Shape2D shape) {
+		int shapeSize = shape.size();
 		Vertex2D[] vertices = shape.vertices();
-		for (int i = 0; i < shape.size(); i++) {
+		Vertex2D[] outline = new Vertex2D[shapeSize * 4];
+
+		for (int i = 0; i < shapeSize; i++) {
 			Vertex2D v1 = vertices[i];
-			Vertex2D v2 = vertices[(i + 1) % shape.size()];
-			drawLine(v1.x, v1.y, v2.x, v2.y);
+			Vertex2D v2 = vertices[(i + 1) % shapeSize];
+			
+			double g = v2.y - v1.y;
+			double a = v2.x - v1.x;
+			double angle = Math.atan(g / a);
+			double size = linewidth / 2D;
+
+			double ox = Math.sin(angle) * size;
+			double oy = Math.cos(angle) * size;
+
+			int j = i * 4;
+			outline[j] = v1.offset(ox, -oy);
+			outline[j + 1] = v1.offset(-ox, oy);
+			outline[j + 2] = v2.offset(-ox, oy);
+			outline[j + 3] = v2.offset(ox, -oy);
+		}
+
+		for (int i = 0; i < shapeSize; i++) {
+			int j = i * 4;
+			canvas.startDrawing(false);
+			canvas.addVertex(outline[j]);
+			canvas.addVertex(outline[j + 1]);
+			canvas.addVertex(outline[j + 2]);
+			canvas.addVertex(outline[j + 3]);
+			canvas.draw();
+
+			canvas.startDrawing(false);
+			canvas.addVertex(outline[j + 2]);
+			canvas.addVertex(outline[j + 3]);
+			canvas.addVertex(outline[(j + 4) % (shapeSize * 4)]);
+			canvas.addVertex(outline[(j + 5) % (shapeSize * 4)]);
+
+			// Add the first two points again...
+			canvas.addVertex(outline[j + 3]);
+			canvas.addVertex(outline[j + 2]);
+			canvas.draw();
 		}
 	}
 
@@ -122,13 +183,18 @@ public class Graphics implements TextRenderer {
 		canvas.draw();
 	}
 
-	public void drawTexture(int x, int y, int width, int height, Texture texture) {
+	public void drawTexture(double x, double y, double width, double height, Texture texture) {
+		drawTexture(x, y, width, height, texture, Color.white);
+	}
+
+	public void drawTexture(double x, double y, double width, double height, Texture texture, Color color) {
+		canvas.setColor(color);
 		canvas.bindTexture(texture);
 		canvas.startDrawing(true);
 		canvas.addVertexWithUV(x, y, 0, 0);
 		canvas.addVertexWithUV(x + width, y, 1, 0);
-		canvas.addVertexWithUV(x + width, y + width, 1, 1);
-		canvas.addVertexWithUV(x, y + width, 0, 1);
+		canvas.addVertexWithUV(x + width, y + height, 1, 1);
+		canvas.addVertexWithUV(x, y + height, 0, 1);
 		canvas.draw();
 	}
 

@@ -1,4 +1,4 @@
-package nova.core.di;
+package nova.testutils;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import org.junit.Before;

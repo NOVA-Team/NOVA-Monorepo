@@ -1,12 +1,11 @@
 package nova.core.util.transform;
 
 import com.google.common.math.DoubleMath;
-import nova.core.util.components.Storable;
-import nova.core.util.components.Stored;
+import nova.core.retention.Storable;
+import nova.core.retention.Stored;
 
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
- *
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
@@ -19,6 +18,10 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 
 	@Stored
 	public final double x, y, z;
+
+	public Vector3d() {
+		this(0, 0, 0);
+	}
 
 	public Vector3d(double x, double y, double z) {
 		this.x = x;
@@ -72,9 +75,17 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 		return new Vector3d(-y, x, 0);
 	}
 
+	public Vector3d max(Vector3d other) {
+		return max(other);
+	}
+
 	@Override
 	public Vector3d max(Vector3 other) {
 		return new Vector3d(Math.max(xd(), other.xd()), Math.max(yd(), other.yd()), Math.max(zd(), other.zd()));
+	}
+
+	public Vector3d min(Vector3d other) {
+		return min(other);
 	}
 
 	@Override
@@ -135,11 +146,15 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 		return new Vector3i(xi(), yi(), zi());
 	}
 
+	public Vector3d abs() {
+		return new Vector3d(Math.abs(x), Math.abs(y), Math.abs(z));
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Vector3) {
 			Vector3 other = ((Vector3) obj);
-			return DoubleMath.fuzzyEquals(this.xd(), other.xd(), 0.000001) &&DoubleMath.fuzzyEquals(this.yd(),other.yd(),0.000001) && DoubleMath.fuzzyEquals(this.zd(),other.zd(),0.000001);
+			return DoubleMath.fuzzyEquals(this.xd(), other.xd(), 0.000001) && DoubleMath.fuzzyEquals(this.yd(), other.yd(), 0.000001) && DoubleMath.fuzzyEquals(this.zd(), other.zd(), 0.000001);
 		}
 		return this == obj;
 	}

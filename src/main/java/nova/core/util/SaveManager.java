@@ -1,7 +1,8 @@
 package nova.core.util;
 
-import nova.core.util.components.Storable;
+import nova.core.retention.Storable;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,4 +39,9 @@ public abstract class SaveManager {
 	public void queueSave(String filename, Storable storable) {
 		saveQueue.put(filename, storable);
 	}
+
+	/**
+	 * @return Gets the default directory in where game files are saved.
+	 */
+	public abstract File getSaveDirectory();
 }

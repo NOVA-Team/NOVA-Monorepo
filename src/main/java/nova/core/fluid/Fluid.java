@@ -1,8 +1,8 @@
 package nova.core.fluid;
 
+import nova.core.retention.Storable;
+import nova.core.retention.Stored;
 import nova.core.util.Identifiable;
-import nova.core.util.components.Storable;
-import nova.core.util.components.Stored;
 
 import java.util.Optional;
 

@@ -1,5 +1,6 @@
 package nova.core.gui.render;
 
+import nova.core.gui.Outline;
 import nova.core.render.Color;
 import nova.core.render.texture.Texture;
 import nova.core.util.transform.Vector2i;
@@ -25,15 +26,26 @@ public interface Canvas {
 
 	public void bindTexture(Texture texture);
 
-	public void translate(int x, int y);
+	public void translate(double x, double y);
 
-	public void rotate(float angle);
+	public void rotate(double angle);
+
+	public default void setScissor(Outline outline) {
+		setScissor(outline.x1i(), outline.y1i(), outline.getWidth(), outline.getHeight());
+		enableScissor();
+	}
+
+	public void setScissor(int x, int y, int width, int height);
+
+	public void enableScissor();
+
+	public void disableScissor();
 
 	public void startDrawing(boolean textured);
 
-	public void addVertex(int x, int y);
+	public void addVertex(double x, double y);
 
-	public void addVertexWithUV(int x, int y, float u, float v);
+	public void addVertexWithUV(double x, double y, double u, double v);
 
 	public default void addVertex(Vertex2D v) {
 		if (v.uv)

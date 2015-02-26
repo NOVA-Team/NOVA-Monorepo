@@ -7,7 +7,15 @@ public interface Player {
 	/**
 	 * @return Returns player name that can be used to identify this player
 	 */
-	String getUserName();
+	String getUsername();
+
+	/**
+	 * @return Returns the ID representing the player.
+	 * For many games, the username is the ID.
+	 */
+	default String getID() {
+		return getUsername();
+	}
 
 	/**
 	 * @return Inventory of the player
@@ -18,6 +26,6 @@ public interface Player {
 	 * @return Returns non-identifying player name
 	 */
 	default String getDisplayName() {
-		return getUserName();
+		return getUsername();
 	}
 }

@@ -2,7 +2,7 @@ package nova.core.gui.render;
 
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Rectangle;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.Vector2d;
 
 /**
  * A Shape2D is a polygon mesh in 2D space. It defines an array of
@@ -17,7 +17,7 @@ public interface Shape2D {
 	
 	public Vertex2D[] vertices();
 
-	public default Vector2i centroid() {
+	public default Vector2d centroid() {
 		Vertex2D[] vertices = vertices();
 		int n = size();
 
@@ -35,7 +35,7 @@ public interface Shape2D {
 		cx *= f;
 		cy *= f;
 
-		return new Vector2i((int) cx, (int) cy);
+		return new Vector2d(cx, cy);
 	}
 
 	public default double area() {
@@ -95,8 +95,8 @@ public interface Shape2D {
 		}
 
 		@Override
-		public Vector2i centroid() {
-			return new Vector2i((vertices[0].x + vertices[1].x) / 2, (vertices[1].y + vertices[2].y) / 2);
+		public Vector2d centroid() {
+			return new Vector2d((vertices[0].x + vertices[1].x) / 2, (vertices[1].y + vertices[2].y) / 2);
 		}
 
 		@Override
