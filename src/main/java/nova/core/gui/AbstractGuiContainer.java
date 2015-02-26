@@ -11,6 +11,7 @@ import nova.core.gui.layout.BorderLayout;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeContainer;
 import nova.core.util.exception.NovaException;
+import nova.core.util.transform.Vector2i;
 
 /**
  * This class provides container for {@link GuiComponent}
@@ -149,6 +150,11 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	public void onResized(ResizeEvent event) {
 		layout.revalidate(this);
+	}
+
+	@Override
+	public Optional<Vector2i> getMinimumSize() {
+		return minimumSize = Optional.of(layout.getMinimumSize(this));
 	}
 
 	@Override

@@ -50,6 +50,10 @@ public abstract class AbstractGuiLayout<T extends Constraints<T>> implements Gui
 		return component != null ? component.getPreferredSize().orElse(component.getMaximumSize().orElse(Vector2i.max)) : Vector2i.max;
 	}
 
+	protected final Vector2i getMiniumSizeOf(GuiComponent<?, ?> component) {
+		return component != null ? component.getMinimumSize().orElse(Vector2i.zero) : Vector2i.zero;
+	}
+
 	@SuppressWarnings("deprecation")
 	protected final void setSizeOf(GuiComponent<?, ?> component, Vector2i size) {
 		if (component != null) {

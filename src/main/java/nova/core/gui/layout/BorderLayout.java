@@ -6,6 +6,7 @@ import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.layout.Constraints.BorderConstraints;
+import nova.core.util.math.MathUtil;
 import nova.core.util.transform.Vector2i;
 
 /**
@@ -17,13 +18,14 @@ import nova.core.util.transform.Vector2i;
  */
 public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 
+	private Vector2i minimumSize;
+
 	public BorderLayout() {
 		super(BorderConstraints.class);
 	}
 
 	private final EnumMap<Anchor, GuiComponent<?, ?>> components = new EnumMap<>(Anchor.class);
 
-	// TODO HIGHLY untested
 	@Override
 	public void revalidate(AbstractGuiContainer<?, ?> parent) {
 		Outline outline = parent.getOutline();
@@ -100,6 +102,17 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 		setOutlineOf(eComp, new Outline(new Vector2i(dimension.x - eDim.x, eOffset), eDim));
 		setOutlineOf(nComp, new Outline(new Vector2i(nOffset, 0), nDim));
 		setOutlineOf(sComp, new Outline(new Vector2i(sOffset, dimension.y - sDim.y), sDim));
+	}
+
+	@Override
+	public Vector2i getMinimumSize(GuiComponent<?, ?> component) {
+		Vector2i wDim = getMiniumSizeOf(components.get(Anchor.WEST));
+		Vector2i eDim = getMiniumSizeOf(components.get(Anchor.EAST));
+		Vector2i nDim = getMiniumSizeOf(components.get(Anchor.NORTH));
+		Vector2i sDim = getMiniumSizeOf(components.get(Anchor.SOUTH));
+		Vector2i cDim = getMiniumSizeOf(components.get(Anchor.CENTER));
+
+		return new Vector2i(MathUtil.max(nDim.x, wDim.x + cDim.x + eDim.x, sDim.x), nDim.y + MathUtil.max(cDim.y, wDim.y, eDim.y) + sDim.y);
 	}
 
 	@Override
