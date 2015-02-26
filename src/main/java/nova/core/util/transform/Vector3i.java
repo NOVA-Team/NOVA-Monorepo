@@ -88,6 +88,14 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 		return new Vector3i(Math.min(xi(), other.xi()), Math.min(yi(), other.yi()), Math.min(zi(), other.zi()));
 	}
 
+	public Vector3i max(Vector3i other) {
+		return max(other);
+	}
+
+	public Vector3i min(Vector3i other) {
+		return min(other);
+	}
+
 	@Override
 	public int xi() {
 		return x;
