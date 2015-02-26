@@ -37,6 +37,7 @@ public class CoreBundle extends BootstrapperBundle {
 		add(RecipesModule.class);
 		add(CraftingModule.class);
 		add(GuiModule.class);
+        add(NativeModule.class);
 
 		/**
 		 * General
