@@ -11,8 +11,13 @@ public abstract class Entity implements Identifiable, Stateful {
 
 	/**
 	 * The wrapper is injected from EntityFactory.
+	 * The wrapper may be null in cases where a backward wrapper is created for native entities. 
 	 */
 	public final EntityWrapper wrapper = null;
+
+	/**
+	 * The rigid body handler. This will never be null.
+	 */
 	public final RigidBody rigidBody = null;
 
 	/**
