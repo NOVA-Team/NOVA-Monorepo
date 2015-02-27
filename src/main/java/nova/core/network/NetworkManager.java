@@ -1,6 +1,7 @@
 package nova.core.network;
 
 import nova.core.network.NetworkTarget.Side;
+import nova.core.player.Player;
 
 /**
  * A central network manager.
@@ -34,6 +35,8 @@ public abstract class NetworkManager {
 	 * @param sender sender {@link nova.core.network.PacketHandler}
 	 */
 	public abstract void sync(int id, PacketHandler sender);
+
+	public abstract void sendChat(Player player, String message);
 
 	public final Side getSide() {
 		return isClient() ? Side.CLIENT : Side.SERVER;
