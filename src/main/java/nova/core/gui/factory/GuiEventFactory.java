@@ -1,23 +1,27 @@
 package nova.core.gui.factory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.function.Function;
+
 import nova.core.gui.ComponentEvent;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiComponent;
 import nova.core.network.Packet;
 import nova.core.util.exception.NovaException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.function.Function;
-
 public class GuiEventFactory {
 
-	public static Optional<GuiEventFactory> instance = Optional.empty();
+	public static GuiEventFactory instance = new GuiEventFactory();
 
 	private final ArrayList<Function<GuiComponent<?, ?>, ?>> networkEvents = new ArrayList<>();
 	private final HashMap<Class<?>, Integer> networkEventsReverse = new HashMap<>();
 
+	private GuiEventFactory() {
+		registerNetworkEvents();
+	}
+	
 	public void registerNetworkEvents() {
 		registerNetworkEvent((component) -> new ComponentEvent.ActionEvent<>(component));
 	}

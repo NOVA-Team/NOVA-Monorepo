@@ -9,8 +9,10 @@ import java.util.Optional;
 import nova.core.entity.Entity;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiEvent.BindEvent;
-import nova.core.gui.GuiEvent.UnBindEvent;
 import nova.core.loader.NovaMod;
+import nova.core.network.NetworkTarget.IllegalSideException;
+import nova.core.network.NetworkTarget.Side;
+import nova.core.network.Sided;
 import nova.core.util.Registry;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector3i;
@@ -19,8 +21,6 @@ public abstract class GuiFactory {
 
 	protected HashMap<String, Registry<Gui>> guiRegistry = new HashMap<>();
 	protected EnumMap<GuiType, List<Gui>> overlayRegistry = new EnumMap<>(GuiType.class);
-
-	protected Optional<Gui> activeGUI = Optional.empty();
 
 	public static enum GuiType {
 		INGAME, TITLE, OPTIONS, INGAME_OPTIONS, CRAFTING, NATIVE, CUSTOM
@@ -75,19 +75,25 @@ public abstract class GuiFactory {
 	 * Shows the provided {@link Gui}. It will trigger the {@link BindEvent}, so
 	 * any changes to the instance can be done there.
 	 * 
+	 * @param modID Id of the {@link NovaMod} that wants to show the GUI
 	 * @param gui GUI to to display
 	 * @param entity {@link Entity} which opened the GUI
 	 * @param position The block coordinate on which to open the GUI
 	 * 
 	 * @see #showGui(String, String, Entity, Vector3i)
 	 */
-	public void showGui(Gui gui, Entity entity, Vector3i position) {
-		activeGUI = Optional.of(gui);
-		bind(gui, entity, position);
-		gui.bind(entity, position);
+	public void showGui(String modID, Gui gui, Entity entity, Vector3i position) {
+		gui.setModID(modID);
+		showGui(gui, entity, position);
 	}
 
-	public abstract void bind(Gui gui, Entity entity, Vector3i position);
+	private void showGui(Gui gui, Entity entity, Vector3i position) {
+		if (bind(gui, entity, position)) {
+			gui.bind(entity, position);
+		}
+	}
+
+	protected abstract boolean bind(Gui gui, Entity entity, Vector3i position);
 
 	/**
 	 * Closes the currently open NOVA {@link Gui}, if present, and returns to
@@ -95,43 +101,42 @@ public abstract class GuiFactory {
 	 * along with NOVA.
 	 */
 	public void closeGui() {
-		if (activeGUI.isPresent()) {
-			activeGUI.get().unbind();
-			unbind(activeGUI.get());
-			activeGUI = Optional.empty();
-		}
-	}
-
-	/**
-	 * <p>
-	 * Triggers the {@link UnBindEvent} for the currently active NOVA
-	 * {@link Gui}, if present, and resets the currently open GUI to
-	 * {@code null}.
-	 * </p>
-	 * <p>
-	 * <b>This won't close the active GUI, it keeps displaying!</b>
-	 * </p>
-	 * 
-	 * @see #closeGui()
-	 */
-	@Deprecated
-	public void unbindCurrentGui() {
-		if (activeGUI.isPresent()) {
-			activeGUI.get().unbind();
-			activeGUI = Optional.empty();
-		}
+		getActiveGui().ifPresent((gui) -> {
+			gui.unbind();
+			unbind(gui);
+		});
 	}
 
 	protected abstract void unbind(Gui gui);
 
 	/**
-	 * Returns the active NOVA {@link Gui}, if present.
+	 * Returns the active NOVA {@link Gui} on the client side, if present.
 	 * 
 	 * @return NOVA {@link Gui}
+	 * @throws IllegalSideException if called on the server side
 	 */
+	@Sided(Side.CLIENT)
 	public Optional<Gui> getActiveGui() {
-		return activeGUI;
+		Side.assertSide(Side.CLIENT);
+		return getActiveGuiImpl();
 	}
+
+	protected abstract Optional<Gui> getActiveGuiImpl();
+
+	/**
+	 * Returns the active NOVA {@link Gui} of the supplied player on the client
+	 * side, if present.
+	 * 
+	 * @param player Player to check for
+	 * @return NOVA {@link Gui}
+	 */
+	public Optional<Gui> getActiveGui(Entity player) {
+		if (Side.get().isClient())
+			return getActiveGuiImpl();
+		return getActiveGuiImpl(player);
+	}
+
+	protected abstract Optional<Gui> getActiveGuiImpl(Entity player);
 
 	/**
 	 * Returns the active {@link GuiType}.
@@ -139,6 +144,6 @@ public abstract class GuiFactory {
 	 * @return active {@link GuiType}
 	 */
 	public GuiType getActiveGuiType() {
-		return activeGUI.isPresent() ? GuiType.CUSTOM : GuiType.NATIVE;
+		return getActiveGui().isPresent() ? GuiType.CUSTOM : GuiType.NATIVE;
 	}
 }

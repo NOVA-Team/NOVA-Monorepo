@@ -70,7 +70,7 @@ public class Rectangle<T extends Vector2<T>> extends Shape<Rectangle<T>, Rectang
 	}
 
 	public boolean contains(double x, double y) {
-		return x >= x1d() && x <= x2d() && y >= y1d() && y >= y2d();
+		return x >= x1d() && x <= x2d() && y >= y1d() && y <= y2d();
 	}
 
 	@Override

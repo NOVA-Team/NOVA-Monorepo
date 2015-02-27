@@ -18,8 +18,6 @@ import nova.core.util.transform.Vector2i;
  */
 public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 
-	private Vector2i minimumSize;
-
 	public BorderLayout() {
 		super(BorderConstraints.class);
 	}

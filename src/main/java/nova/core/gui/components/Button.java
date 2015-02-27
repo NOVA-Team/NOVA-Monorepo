@@ -15,7 +15,9 @@ public class Button extends GuiComponent<Button, NativeButton> {
 
 	private void onMousePressed(MouseEvent event) {
 		switch (event.state) {
-			case CLICK:
+			case DOWN:
+				// TODO Handle overlapping components etc, check if the
+				// component is visible at the given position.
 				if (getOutline().contains(event.mouseX, event.mouseY)) {
 					triggerEvent(new ComponentEvent.ActionEvent<Button>(this));
 				}

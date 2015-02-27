@@ -1,5 +1,7 @@
 package nova.core.gui.nativeimpl;
 
+import java.util.Optional;
+
 import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.KeyEvent;
 import nova.core.gui.GuiEvent.KeyEvent.EnumKeyState;
@@ -11,8 +13,6 @@ import nova.core.gui.KeyManager.Key;
 import nova.core.gui.Outline;
 import nova.core.gui.render.Graphics;
 import nova.core.util.transform.Vector2i;
-
-import java.util.Optional;
 
 //TODO Make this generic even if it means writing novels when extending.
 
@@ -73,9 +73,10 @@ public interface NativeGuiComponent {
 		}
 	}
 
-	public default void onMousePressed(int mouseX, int mouseY, EnumMouseButton button, EnumMouseState state) {
+	public default void onMousePressed(int mouseX, int mouseY, EnumMouseButton button, boolean state) {
+		// TODO Post events for CLICK and DOUBLECLICK
 		if (getComponent().isActive()) {
-			getComponent().onEvent(new MouseEvent(mouseX, mouseY, button, state));
+			getComponent().onEvent(new MouseEvent(mouseX, mouseY, button, state ? EnumMouseState.DOWN : EnumMouseState.UP));
 		}
 	}
 
@@ -85,9 +86,10 @@ public interface NativeGuiComponent {
 		}
 	}
 
-	public default void onKeyPressed(Key key, char character, EnumKeyState state) {
+	public default void onKeyPressed(Key key, char character, boolean state) {
+		// TODO Post events for TYPE
 		if (getComponent().isActive()) {
-			getComponent().onEvent(new KeyEvent(key, character, state));
+			getComponent().onEvent(new KeyEvent(key, character, state ? EnumKeyState.DOWN : EnumKeyState.UP));
 		}
 	}
 }
