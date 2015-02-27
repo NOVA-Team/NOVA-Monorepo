@@ -17,7 +17,6 @@ import nova.core.util.transform.Vector3i;
 import nova.core.world.World;
 import nova.internal.dummy.BlockAccessDummy;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -105,7 +104,7 @@ public abstract class Block implements Identifiable {
 	 *
 	 * @return A collection of {@link nova.core.item.Item}s that this block drops.
 	 */
-	public Collection<Item> getDrops() {
+	public Set<Item> getDrops() {
 		return Collections.singleton(Game.instance.itemManager.getItemFromBlock(this));
 	}
 
