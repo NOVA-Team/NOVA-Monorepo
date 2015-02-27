@@ -38,13 +38,31 @@ public abstract class NetworkManager {
 
 	public abstract void sendChat(Player player, String message);
 
+	/**
+	 * Use {@link Side#get()} instead.
+	 * 
+	 * @return active side
+	 */
+	@Deprecated
 	public final Side getSide() {
 		return isClient() ? Side.CLIENT : Side.SERVER;
 	}
 
+	/**
+	 * Use {@link Side#get()}{@link Side#isClient() .isClient()} instead.
+	 * 
+	 * @return true if the active side is {@link Side#CLIENT}
+	 */
+	@Deprecated
 	public final boolean isClient() {
 		return !isServer();
 	}
 
+	/**
+	 * Use {@link Side#get()}{@link Side#isServer() .isServer()} instead.
+	 * 
+	 * @return true if the active side is {@link Side#SERVER}
+	 */
+	@Deprecated
 	public abstract boolean isServer();
 }

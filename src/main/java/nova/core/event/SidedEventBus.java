@@ -1,11 +1,10 @@
 package nova.core.event;
 
-import nova.core.game.Game;
+import java.util.HashSet;
+
 import nova.core.network.NetworkTarget;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketHandler;
-
-import java.util.HashSet;
 
 /**
  * {@link EventBus} that can differentiate {@link NetworkTarget NetworkTargets}
@@ -66,7 +65,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 	public void publish(T event) {
 		if (event instanceof SidedEventBus.SidedEvent) {
 			SidedEventBus.SidedEvent sidedEvent = (SidedEventBus.SidedEvent) event;
-			Side currentSide = Game.instance.networkManager.getSide();
+			Side currentSide = Side.get();
 
 			// Check if the event targets the current side.
 			if (sidedEvent.getTarget().targets(currentSide)) {
@@ -123,7 +122,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 
 		public default Side getTarget() {
 			NetworkTarget target = getClass().getAnnotation(NetworkTarget.class);
-			return target != null ? target.side() : Side.BOTH;
+			return target != null ? target.value() : Side.BOTH;
 		}
 	}
 
