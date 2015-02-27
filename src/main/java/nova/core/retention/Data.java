@@ -3,6 +3,7 @@ package nova.core.retention;
 import nova.core.util.exception.NovaException;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,6 @@ import java.util.Map;
  * - Enumerator
  * - Storable (Converted into Data)
  * - Data
- *
  * @author Calclavia
  */
 //TODO: Add collection and array support
@@ -42,7 +42,8 @@ public class Data extends HashMap<String, Object> {
 		//Special data types that all convert into Data.
 		Enum.class,
 		Storable.class,
-		Data.class };
+		Data.class,
+		Collection.class };
 
 	public String className;
 
@@ -57,7 +58,6 @@ public class Data extends HashMap<String, Object> {
 	/**
 	 * Saves an object, serializing its data.
 	 * This map can be reloaded and its class with be reconstructed.
-	 *
 	 * @param obj The object to store.
 	 * @return The data of the object with
 	 */
@@ -72,7 +72,6 @@ public class Data extends HashMap<String, Object> {
 	/**
 	 * Loads an object from its stored data, with an unknown class.
 	 * The class of the object must be stored within the data.
-	 *
 	 * @param data The data
 	 * @return The object loaded with given data.
 	 */
@@ -88,7 +87,6 @@ public class Data extends HashMap<String, Object> {
 
 	/**
 	 * Loads an object from its stored data, given its class.
-	 *
 	 * @param clazz - The class to load
 	 * @param data - The data
 	 * @return The object loaded with given data.
