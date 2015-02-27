@@ -48,9 +48,16 @@ public abstract class GuiFactory {
 	}
 
 	/**
+	 * <p>
 	 * Shows the provided {@link Gui} previously registered over the factory
 	 * instance. It will trigger the {@link BindEvent}, so any changes to the
 	 * instance can be done there.
+	 * </p>
+	 * 
+	 * <p>
+	 * Calling this is <i>safe</i>, you will always get a valid GUI for both
+	 * sides no matter on which side you call it.
+	 * </p>
 	 * 
 	 * @param modID Id of the {@link NovaMod} that registered the GUI
 	 * @param identifier Unique identifier for the GUI
@@ -72,8 +79,19 @@ public abstract class GuiFactory {
 	}
 
 	/**
+	 * <p>
 	 * Shows the provided {@link Gui}. It will trigger the {@link BindEvent}, so
 	 * any changes to the instance can be done there.
+	 * </p>
+	 * 
+	 * <p>
+	 * Calling this is <i>unsafe</i>, if you need a server side backend you
+	 * <b>have</b> to call this on <i>both</i> sides on order create a matching
+	 * GUI on the server side if the provided GUI wasn't registered with
+	 * {@link #registerGui(Gui, String)}. This should only be used for client
+	 * side GUIs, the usage of {@link #showGui(String, Gui, Entity, Vector3i)}
+	 * is recommended.
+	 * </p>
 	 * 
 	 * @param modID Id of the {@link NovaMod} that wants to show the GUI
 	 * @param gui GUI to to display
