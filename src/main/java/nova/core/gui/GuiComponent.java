@@ -225,7 +225,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	// Internal listener
-	public <EVENT extends GuiEvent> O registerListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
+	public <EVENT extends GuiEvent> O onGuiEvent(EventListener<EVENT> listener, Class<EVENT> clazz) {
 		listenerList.add(listener, clazz);
 		return (O) this;
 	}
@@ -234,22 +234,21 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	// TODO Should be <EVENT extends ComponentEvent<O>> but that somehow
 	// destroys everything.
-	public <EVENT extends ComponentEvent<?>> O registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
+	public <EVENT extends ComponentEvent<?>> O onEvent(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
 		eventListenerList.add(listener, clazz, side);
 		return (O) this;
 	}
 
-	public <EVENT extends ComponentEvent<?>> O registerEventListener(EventListener<EVENT> listener, Class<EVENT> clazz) {
-		eventListenerList.add(listener, clazz);
-		return (O) this;
+	public <EVENT extends ComponentEvent<?>> O onEvent(EventListener<EVENT> listener, Class<EVENT> clazz) {
+		return onEvent(listener, clazz, Side.CLIENT);
 	}
 
 	/**
-	 * Does rendering logic
+	 * Does rendering logic.
 	 *
 	 * @param mouseX Mouse position in X-axis on screen
 	 * @param mouseY Mouse position in Y-axis on screen
-	 * @param graphics {@link nova.core.render.model.Model} to use
+	 * @param graphics {@link Graphics} object used to draw on screen
 	 */
 	public void render(int mouseX, int mouseY, Graphics graphics) {
 		onEvent(new GuiEvent.RenderEvent(graphics, mouseX, mouseY));
@@ -263,12 +262,12 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	/**
 	 * <p>
 	 * Will return the fully qualified name for this component used to pull from
-	 * the parent GUI. Every component is indexed via "parent.child.subchild",
-	 * it will find the element recursive. The qualified name is always relative
-	 * to the GUI, thus using {@code parent.child.subchild} will also return the
-	 * proper component when getting pulled from {@code parent.child}. If this
-	 * component isn't added to a parent container, the qualified name will
-	 * equal {@link #getID()}.
+	 * the parent GUI. Every component is indexed via
+	 * {@code parent.child.subchild}, it will find the element recursive. The
+	 * qualified name is always relative to the GUI, thus using
+	 * {@code parent.child.subchild} will also return the proper component when
+	 * getting pulled from {@code parent.child}. If this component isn't added
+	 * to a parent container, the qualified name will equal {@link #getID()}.
 	 * </p>
 	 *
 	 * <p>

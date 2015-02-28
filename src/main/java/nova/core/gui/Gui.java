@@ -24,7 +24,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	/**
 	 * Creates a nwe GUI instance with a {@link Side#SERVER server} side
 	 * backend. You can register events with
-	 * {@link #registerEventListener(EventListener, Class, Side)} specifying on
+	 * {@link #onEvent(EventListener, Class, Side)} specifying on
 	 * which side the event gets processed. Keep the client side restrictions in
 	 * mind.
 	 * 

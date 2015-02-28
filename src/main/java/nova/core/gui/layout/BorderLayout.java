@@ -1,11 +1,13 @@
 package nova.core.gui.layout;
 
 import java.util.EnumMap;
+import java.util.Optional;
 
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.layout.Constraints.BorderConstraints;
+import nova.core.util.exception.NovaException;
 import nova.core.util.math.MathUtil;
 import nova.core.util.transform.Vector2i;
 
@@ -90,10 +92,10 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 		sDim = sDim.max(v5).min(getMaximumSizeOf(sComp));
 
 		// Centers the border components
-		int wOffset = (int) ((dimension.y - wDim.y) / 2D);
-		int eOffset = (int) ((dimension.y - eDim.y) / 2D);
-		int nOffset = (int) ((dimension.x - nDim.x) / 2D);
-		int sOffset = (int) ((dimension.x - sDim.x) / 2D);
+		int wOffset = nDim.y + (dimension.y - nDim.y - sDim.y) / 2 - wDim.y / 2;
+		int eOffset = nDim.y + (dimension.y - nDim.y - sDim.y) / 2 - eDim.y / 2;
+		int nOffset = (dimension.x - nDim.x) / 2;
+		int sOffset = (dimension.x - sDim.x) / 2;
 
 		setOutlineOf(cComp, new Outline(new Vector2i(wDim.x, nDim.y), cDim));
 		setOutlineOf(wComp, new Outline(new Vector2i(0, wOffset), wDim));
@@ -103,7 +105,7 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 	}
 
 	@Override
-	public Vector2i getMinimumSize(GuiComponent<?, ?> component) {
+	public Vector2i getMinimumSize(Optional<AbstractGuiContainer<?, ?>> parent, GuiComponent<?, ?> component) {
 		Vector2i wDim = getMiniumSizeOf(components.get(Anchor.WEST));
 		Vector2i eDim = getMiniumSizeOf(components.get(Anchor.EAST));
 		Vector2i nDim = getMiniumSizeOf(components.get(Anchor.NORTH));
@@ -116,17 +118,12 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 	@Override
 	protected void addImpl(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, BorderConstraints constraints) {
 		if (components.containsKey(constraints))
-			throw new RuntimeException("BorderLayout doesn't allow multiple elements taking up the same region!");
+			throw new NovaException("BorderLayout doesn't allow multiple elements taking up the same region!");
 		components.put(constraints.region, component);
 	}
 
 	@Override
 	public void remove(GuiComponent<?, ?> component) {
 		components.remove(component);
-	}
-
-	@Override
-	public BorderConstraints constraints() {
-		return new BorderConstraints();
 	}
 }

@@ -27,7 +27,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	public AbstractGuiContainer(String uniqueID, Class<T> nativeClass) {
 		super(uniqueID, nativeClass);
-		this.registerListener(this::onResized, ResizeEvent.class);
+		this.onGuiEvent(this::onResized, ResizeEvent.class);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * @see GuiLayout#add(GuiComponent, AbstractGuiContainer, Object[])
 	 */
 	@SuppressWarnings("unchecked")
-	public O addElement(GuiComponent<?, ?> component, Object... properties) {
+	public O add(GuiComponent<?, ?> component, Object... properties) {
 		Objects.requireNonNull(component);
 		component.parentContainer = Optional.of(this);
 		component.updateQualifiedName();
@@ -154,7 +154,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	@Override
 	public Optional<Vector2i> getMinimumSize() {
-		return minimumSize = Optional.of(layout.getMinimumSize(this));
+		return Optional.of(super.getMinimumSize().orElse(layout.getMinimumSize(getParentContainer(), this)));
 	}
 
 	@Override

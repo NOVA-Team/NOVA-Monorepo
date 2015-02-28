@@ -41,6 +41,10 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 		}
 	}
 
+	public static class FlowLayoutConstraints extends Constraints<FlowLayoutConstraints> {
+
+	}
+
 	/**
 	 * Creates a new constraint based on an array of properties. It will try to
 	 * choose a valid constructor for the passed arguments and invoke it.

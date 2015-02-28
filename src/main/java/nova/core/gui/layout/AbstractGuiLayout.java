@@ -3,6 +3,7 @@ package nova.core.gui.layout;
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
+import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector2i;
 
 public abstract class AbstractGuiLayout<T extends Constraints<T>> implements GuiLayout {
@@ -75,5 +76,11 @@ public abstract class AbstractGuiLayout<T extends Constraints<T>> implements Gui
 		}
 	}
 
-	public abstract T constraints();
+	public T constraints() {
+		try {
+			return constraintsClass.newInstance();
+		} catch (Exception e) {
+			throw new NovaException(e);
+		}
+	}
 }
