@@ -348,21 +348,21 @@ public interface Packet {
 	}
 
 	default <T> T read(Class<T> clazz) {
-		if (clazz == Boolean.class && clazz == Boolean.TYPE) {
+		if (clazz == Boolean.class || clazz == boolean.class) {
 			return (T) Boolean.valueOf(readBoolean());
-		} else if (clazz == Byte.class && clazz == Byte.TYPE) {
+		} else if (clazz == Byte.class || clazz == byte.class) {
 			return (T) Byte.valueOf(readByte());
-		} else if (clazz == Short.class && clazz == Short.TYPE) {
+		} else if (clazz == Short.class || clazz == short.class) {
 			return (T) Short.valueOf(readShort());
-		} else if (clazz == Integer.class && clazz == Integer.TYPE) {
+		} else if (clazz == Integer.class || clazz == int.class) {
 			return (T) Integer.valueOf(readInt());
-		} else if (clazz == Long.class && clazz == Long.TYPE) {
+		} else if (clazz == Long.class || clazz == long.class) {
 			return (T) Long.valueOf(readLong());
-		} else if (clazz == Character.class && clazz == Character.TYPE) {
+		} else if (clazz == Character.class || clazz == char.class) {
 			return (T) Character.valueOf(readChar());
-		} else if (clazz == Float.class && clazz == Float.TYPE) {
+		} else if (clazz == Float.class || clazz == float.class) {
 			return (T) Float.valueOf(readFloat());
-		} else if (clazz == Double.class && clazz == Double.TYPE) {
+		} else if (clazz == Double.class || clazz == double.class) {
 			return (T) Double.valueOf(readDouble());
 		} else if (clazz == String.class) {
 			return (T) readString();
@@ -378,6 +378,6 @@ public interface Packet {
 			return (T) readSet();
 		}
 
-		throw new NovaException("Attempt to read an invalid type");
+		throw new NovaException("Attempt to read an invalid packet type: " + clazz);
 	}
 }
