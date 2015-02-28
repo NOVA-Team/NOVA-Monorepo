@@ -4,7 +4,8 @@ import com.google.common.math.DoubleMath;
 
 public class MatrixHelper {
 
-	private MatrixHelper() {}
+	private MatrixHelper() {
+	}
 
 	/**
 	 * Creates translation matrix.
@@ -50,7 +51,7 @@ public class MatrixHelper {
 	 * @param scaleVector which components are scale parameters.
 	 * @return scale matrix.
 	 */
-	public static Matrix4x4 scaleMatrix(Vector3<?>  scaleVector) {
+	public static Matrix4x4 scaleMatrix(Vector3<?> scaleVector) {
 		return scaleMatrix(scaleVector.xd(), scaleVector.yd(), scaleVector.zd());
 	}
 
@@ -63,7 +64,12 @@ public class MatrixHelper {
 	public static Matrix4x4 rotationMatrix(Vector3<?> rotationVector, double angle) {
 		double c = Math.cos(angle);
 		double s = Math.sin(angle);
-		if (!DoubleMath.fuzzyEquals(rotationVector.magnitudeSquared(), 1,0.000001)) {
+
+		if (rotationVector.equals(Vector3d.zero)) {
+			return Matrix4x4.IDENTITY;
+		}
+
+		if (!DoubleMath.fuzzyEquals(rotationVector.magnitudeSquared(), 1, 0.000001)) {
 			rotationVector = rotationVector.normalize();
 		}
 		double x = rotationVector.xd();
