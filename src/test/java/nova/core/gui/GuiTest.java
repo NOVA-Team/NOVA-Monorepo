@@ -17,21 +17,21 @@ public class GuiTest {
 		BorderLayout layout = new BorderLayout();
 		BorderConstraints constraints = layout.constraints();
 		GuiContainer container = new GuiContainer("test").setLayout(layout)
-			.addElement(new Button("testButton1", "Test Button 1")
-					.registerEventListener(e -> {
+			.add(new Button("testButton1", "Test Button 1")
+					.onEvent(e -> {
 						// TODO Still needs a cast unfortunately
 						((Button) e.component).setActive(false);
 					}, ActionEvent.class, Side.SERVER),
 				constraints.of(e -> e.region = Anchor.WEST))
-			.addElement(new Button("testButton2", "Test Button 2"), constraints.of(e -> e.region = Anchor.CENTER))
-			.addElement(new Button("testButton3", "Test Button 3"), constraints.of(e -> e.region = Anchor.EAST));
+			.add(new Button("testButton2", "Test Button 2"), constraints.of(e -> e.region = Anchor.CENTER))
+			.add(new Button("testButton3", "Test Button 3"), constraints.of(e -> e.region = Anchor.EAST));
 
 		// Container 2 is the exact equivalent of container 1, without using any constraints. It's the more error prone way.
 		GuiContainer container2 = new GuiContainer("test")
-			.addElement(new Button("testButton1", "Test Button 1")
-				.registerEventListener(this::onButton1Pressed, ActionEvent.class, Side.SERVER), Anchor.WEST)
-			.addElement(new Button("testButton2", "Test Button 2"))
-			.addElement(new Button("testButton3", "Test Button 3"), Anchor.EAST);
+			.add(new Button("testButton1", "Test Button 1")
+				.onEvent(this::onButton1Pressed, ActionEvent.class, Side.SERVER), Anchor.WEST)
+			.add(new Button("testButton2", "Test Button 2"))
+			.add(new Button("testButton3", "Test Button 3"), Anchor.EAST);
 	}
 
 	private void onButton1Pressed(ActionEvent<Button> event) {
