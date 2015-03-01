@@ -10,19 +10,9 @@ import java.net.URL;
 /**
  * @author Mitchellbrine
  */
-public abstract class DepDownloader {
+public class DepDownloader {
 
-	public File locationName;
-
-	public DepDownloader(File location) {
-		this.locationName = location;
-	}
-
-	public DepDownloader(String location) {
-		this.locationName = new File(location);
-	}
-
-	public void downloadDepdency(URL versionURL, String locationToDownloadTo) {
+	public static void downloadDepdency(URL versionURL, String locationToDownloadTo) {
 		try {
 
 			File dependencyLocation = new File(locationToDownloadTo);
