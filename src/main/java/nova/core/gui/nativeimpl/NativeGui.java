@@ -10,9 +10,6 @@ import nova.core.util.transform.Vector3i;
 
 public interface NativeGui extends NativeContainer {
 
-	// TODO This is a little bit inconvenient
-	public Packet createPacket();
-
 	public void dispatchNetworkEvent(Packet packet);
 
 	public default void bind(Entity entity, Vector3i pos) {
@@ -33,8 +30,8 @@ public interface NativeGui extends NativeContainer {
 		getComponent().onEvent(new GuiEvent.ResizeEvent(oldOutline));
 	}
 
-	public default void recieveNetworkEvent(Packet packet) {
+	public default void onNetworkEvent(Packet packet) {
 		Gui gui = (Gui) getComponent();
-		gui.triggerEvent(GuiEventFactory.instance.get().constructEvent(packet, gui));
+		gui.triggerEvent(GuiEventFactory.instance.constructEvent(packet, gui));
 	}
 }

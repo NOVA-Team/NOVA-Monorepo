@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.net.URL;
 
 /**
- * Created by Mitchellbrine on 2015.
+ * @author Mitchellbrine
  */
 public abstract class DepDownloader {
 

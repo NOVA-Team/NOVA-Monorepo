@@ -15,7 +15,7 @@ public interface PacketHandler {
 	 */
 	default void read(Packet packet) {
 		ReflectionUtil.forEachRecursiveAnnotatedField(Sync.class, getClass(), (field, annotation) -> {
-			if (Arrays.asList(annotation.ids()).contains(packet.getID())) {
+			if (Arrays.stream(annotation.ids()).anyMatch(i -> i == packet.getID())) {
 				try {
 					field.setAccessible(true);
 					field.set(this, packet.read(field.getType()));
@@ -33,7 +33,7 @@ public interface PacketHandler {
 	 */
 	default void write(Packet packet) {
 		ReflectionUtil.forEachRecursiveAnnotatedField(Sync.class, getClass(), (field, annotation) -> {
-			if (Arrays.asList(annotation.ids()).contains(packet.getID())) {
+			if (Arrays.stream(annotation.ids()).anyMatch(i -> i == packet.getID())) {
 				try {
 					field.setAccessible(true);
 					packet.write(field.get(this));

@@ -7,17 +7,21 @@ import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector3;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
  * A model is capable of containing multiple faces.
  * @author Calclavia
  */
-public class Model implements Cloneable {
+public class Model implements Iterable<Model>, Cloneable {
 
 	//The name of the model
 	public final String name;
@@ -106,6 +110,36 @@ public class Model implements Cloneable {
 	}
 
 	/**
+	 * Combines child models with names into one model with its children being the children selected.
+	 * @param newModelName The new name for the model
+	 * @param names The names of the child models
+	 * @return The new model containing all the children.
+	 */
+	public Model combineChildren(String newModelName, String... names) {
+		return combineChildren(newModelName, m -> Arrays.asList(names).contains(m.name));
+	}
+
+	/**
+	 * Combines child models with names into one model with its children being the children selected.
+	 * @param newModelName The new name for the model
+	 * @param predicate The condition to select children
+	 * @return The new model containing all the children.
+	 */
+	public Model combineChildren(String newModelName, Predicate<Model> predicate) {
+		Model newModel = new Model(newModelName);
+
+		Set<Model> combineChildren = children
+			.stream()
+			.filter(predicate)
+			.collect(Collectors.toSet());
+
+		newModel.children.addAll(combineChildren);
+		children.removeAll(combineChildren);
+		children.add(newModel);
+		return newModel;
+	}
+
+	/**
 	 * Flattens the model into a set of models with no additional transformations,
 	 * applying all the transformations into the individual vertices.
 	 * @param matrixStack transformation matrix.
@@ -139,5 +173,20 @@ public class Model implements Cloneable {
 		model.matrix = matrix;
 		model.textureOffset = textureOffset;
 		return model;
+	}
+
+	@Override
+	public Iterator<Model> iterator() {
+		return children.iterator();
+	}
+
+	@Override
+	public Spliterator<Model> spliterator() {
+		return children.spliterator();
+	}
+
+	@Override
+	public String toString() {
+		return "Model['" + name + "', " + faces.size() + " faces, " + children.size() + " children]";
 	}
 }

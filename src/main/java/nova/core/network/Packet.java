@@ -4,11 +4,15 @@ import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.exception.NovaException;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 /**
  * A packet of data that is writable or readable.
- *
  * @author Calclavia
  */
 public interface Packet {
@@ -20,14 +24,12 @@ public interface Packet {
 
 	/**
 	 * Sets the ID of this packet, allowing it to be sent accordingly.
-	 *
 	 * @return The packet itself.
 	 */
 	Packet setID(int id);
 
 	/**
 	 * Writes an arbitrary object, automatically finding the relevant class.
-	 *
 	 * @param data Object to write
 	 * @return This packet
 	 */
@@ -56,6 +58,8 @@ public interface Packet {
 			writeData((Data) data);
 		} else if (data instanceof Storable) {
 			writeStorable((Storable) data);
+		} else if (data instanceof Collection) {
+			writeCollection((Collection) data);
 		} else {
 			throw new IllegalArgumentException("Packet attempt to write an invalid object: " + data);
 		}
@@ -70,7 +74,6 @@ public interface Packet {
 	/**
 	 * Sets the specified boolean at the current {@code writerIndex}
 	 * and increases the {@code writerIndex} by {@code 1} in this buffer.
-	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 1}
@@ -81,7 +84,6 @@ public interface Packet {
 	 * Sets the specified byte at the current {@code writerIndex}
 	 * and increases the {@code writerIndex} by {@code 1} in this buffer.
 	 * The 24 high-order bits of the specified value are ignored.
-	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 1}
@@ -92,7 +94,6 @@ public interface Packet {
 	 * Sets the specified 16-bit short integer at the current
 	 * {@code writerIndex} and increases the {@code writerIndex} by {@code 2}
 	 * in this buffer.  The 16 high-order bits of the specified value are ignored.
-	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 2}
@@ -102,7 +103,6 @@ public interface Packet {
 	/**
 	 * Sets the specified 32-bit integer at the current {@code writerIndex}
 	 * and increases the {@code writerIndex} by {@code 4} in this buffer.
-	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 4}
@@ -113,7 +113,6 @@ public interface Packet {
 	 * Sets the specified 64-bit long integer at the current
 	 * {@code writerIndex} and increases the {@code writerIndex} by {@code 8}
 	 * in this buffer.
-	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 8}
@@ -124,7 +123,6 @@ public interface Packet {
 	 * Sets the specified 2-byte UTF-16 character at the current
 	 * {@code writerIndex} and increases the {@code writerIndex} by {@code 2}
 	 * in this buffer.  The 16 high-order bits of the specified value are ignored.
-	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 2}
@@ -135,7 +133,6 @@ public interface Packet {
 	 * Sets the specified 32-bit floating point number at the current
 	 * {@code writerIndex} and increases the {@code writerIndex} by {@code 4}
 	 * in this buffer.
-	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 4}
@@ -146,7 +143,6 @@ public interface Packet {
 	 * Sets the specified 64-bit floating point number at the current
 	 * {@code writerIndex} and increases the {@code writerIndex} by {@code 8}
 	 * in this buffer.
-	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 8}
@@ -161,6 +157,14 @@ public interface Packet {
 		return this;
 	}
 
+	default int getType(Class<?> compare) {
+		return IntStream
+			.range(0, Data.dataTypes.length)
+			.filter(i -> Data.dataTypes[i].isAssignableFrom(compare))
+			.findFirst()
+			.getAsInt();
+	}
+
 	default Packet writeData(Data data) {
 		//Write the data size
 		writeInt(data.size());
@@ -168,11 +172,7 @@ public interface Packet {
 		writeString(data.className);
 
 		data.forEach((k, v) -> {
-				int typeID = IntStream.range(0, Data.dataTypes.length)
-					.filter(i -> Data.dataTypes[i].isAssignableFrom(v.getClass()))
-					.findFirst()
-					.getAsInt();
-
+				int typeID = getType(v.getClass());
 				//Write key
 				writeString(k);
 				//Write data type
@@ -190,10 +190,18 @@ public interface Packet {
 		return this;
 	}
 
+	default Packet writeCollection(Collection col) {
+		writeInt(col.size());
+		col.forEach(obj -> {
+			writeShort(getType(obj.getClass()));
+			write(obj);
+		});
+		return this;
+	}
+
 	/**
 	 * Gets a boolean at the current {@code readerIndex} and increases
 	 * the {@code readerIndex} by {@code 1} in this buffer.
-	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 1}
 	 */
@@ -202,7 +210,6 @@ public interface Packet {
 	/**
 	 * Gets a byte at the current {@code readerIndex} and increases
 	 * the {@code readerIndex} by {@code 1} in this buffer.
-	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 1}
 	 */
@@ -211,7 +218,6 @@ public interface Packet {
 	/**
 	 * Gets an unsigned byte at the current {@code readerIndex} and increases
 	 * the {@code readerIndex} by {@code 1} in this buffer.
-	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 1}
 	 */
@@ -220,7 +226,6 @@ public interface Packet {
 	/**
 	 * Gets a 16-bit short integer at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 2} in this buffer.
-	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 2}
 	 */
@@ -229,7 +234,6 @@ public interface Packet {
 	/**
 	 * Gets a 32-bit integer at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 4} in this buffer.
-	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 4}
 	 */
@@ -238,7 +242,6 @@ public interface Packet {
 	/**
 	 * Gets an unsigned 32-bit integer at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 4} in this buffer.
-	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 4}
 	 */
@@ -247,7 +250,6 @@ public interface Packet {
 	/**
 	 * Gets a 64-bit integer at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 8} in this buffer.
-	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 8}
 	 */
@@ -256,7 +258,6 @@ public interface Packet {
 	/**
 	 * Gets a 2-byte UTF-16 character at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 2} in this buffer.
-	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 2}
 	 */
@@ -265,7 +266,6 @@ public interface Packet {
 	/**
 	 * Gets a 32-bit floating point number at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 4} in this buffer.
-	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 4}
 	 */
@@ -274,7 +274,6 @@ public interface Packet {
 	/**
 	 * Gets a 64-bit floating point number at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 8} in this buffer.
-	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 8}
 	 */
@@ -302,7 +301,8 @@ public interface Packet {
 		Data readData = new Data();
 		int size = readInt();
 		readData.className = readString();
-		IntStream.range(0, size)
+		IntStream
+			.range(0, size)
 			.forEach(i -> {
 				String key = readString();
 				short type = readShort();
@@ -317,22 +317,52 @@ public interface Packet {
 		return Data.unserialize(data);
 	}
 
+	default List readList() {
+		ArrayList arrayList = new ArrayList();
+		int size = readInt();
+
+		IntStream
+			.range(0, size)
+			.forEach(i -> {
+				short type = readShort();
+				Object value = read(Data.dataTypes[type]);
+				arrayList.add(value);
+			});
+
+		return arrayList;
+	}
+
+	default Set readSet() {
+		Set set = new HashSet<>();
+		int size = readInt();
+
+		IntStream
+			.range(0, size)
+			.forEach(i -> {
+				short type = readShort();
+				Object value = read(Data.dataTypes[type]);
+				set.add(value);
+			});
+
+		return set;
+	}
+
 	default <T> T read(Class<T> clazz) {
-		if (clazz == Boolean.class && clazz == Boolean.TYPE) {
+		if (clazz == Boolean.class || clazz == boolean.class) {
 			return (T) Boolean.valueOf(readBoolean());
-		} else if (clazz == Byte.class && clazz == Byte.TYPE) {
+		} else if (clazz == Byte.class || clazz == byte.class) {
 			return (T) Byte.valueOf(readByte());
-		} else if (clazz == Short.class && clazz == Short.TYPE) {
+		} else if (clazz == Short.class || clazz == short.class) {
 			return (T) Short.valueOf(readShort());
-		} else if (clazz == Integer.class && clazz == Integer.TYPE) {
+		} else if (clazz == Integer.class || clazz == int.class) {
 			return (T) Integer.valueOf(readInt());
-		} else if (clazz == Long.class && clazz == Long.TYPE) {
+		} else if (clazz == Long.class || clazz == long.class) {
 			return (T) Long.valueOf(readLong());
-		} else if (clazz == Character.class && clazz == Character.TYPE) {
+		} else if (clazz == Character.class || clazz == char.class) {
 			return (T) Character.valueOf(readChar());
-		} else if (clazz == Float.class && clazz == Float.TYPE) {
+		} else if (clazz == Float.class || clazz == float.class) {
 			return (T) Float.valueOf(readFloat());
-		} else if (clazz == Double.class && clazz == Double.TYPE) {
+		} else if (clazz == Double.class || clazz == double.class) {
 			return (T) Double.valueOf(readDouble());
 		} else if (clazz == String.class) {
 			return (T) readString();
@@ -342,8 +372,12 @@ public interface Packet {
 			return (T) readEnum((Class) clazz);
 		} else if (clazz == Data.class) {
 			return (T) readData();
+		} else if (List.class.isAssignableFrom(clazz)) {
+			return (T) readList();
+		} else if (Set.class.isAssignableFrom(clazz)) {
+			return (T) readSet();
 		}
 
-		throw new NovaException("Attempt to read an invalid type");
+		throw new NovaException("Attempt to read an invalid packet type: " + clazz);
 	}
 }

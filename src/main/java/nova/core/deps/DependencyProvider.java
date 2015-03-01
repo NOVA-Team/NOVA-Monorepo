@@ -5,6 +5,6 @@ package nova.core.deps;
  */
 public interface DependencyProvider {
 
-	public Dependency[] getDependencies();
+	public MavenDependency[] getDependencies();
 
 }

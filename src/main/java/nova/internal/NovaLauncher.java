@@ -15,11 +15,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.core.deps.Dependency;
+import nova.core.deps.MavenDependency;
 import nova.core.deps.DependencyProvider;
 import nova.core.game.Game;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
+import nova.core.util.exception.NovaException;
 
 /**
  * The main class that launches NOVA mods.
@@ -32,8 +33,7 @@ public class NovaLauncher implements Loadable {
 
 	private Map<NovaMod, Loadable> mods;
 
-	private Map<NovaMod, ArrayList<String[]>> dependencies;
-	private Map<NovaMod, Dependency[]> neededDeps;
+	private Map<NovaMod, MavenDependency[]> neededDeps;
 
 	private ArrayList<Loadable> orderedMods;
 	private Map<NovaMod, Class<? extends Loadable>> classesMap;
@@ -144,17 +144,38 @@ public class NovaLauncher implements Loadable {
 		/**
 		 * Initialize all the NOVA mods.
 		 */
-		orderedMods.stream().forEachOrdered(Loadable::preInit);
+		orderedMods.stream().forEachOrdered((mod) -> {
+			try {
+				mod.preInit();
+			} catch (Throwable t) {
+				Game.instance.logger.error("Critical error caught during pre initalization phase", t);
+				throw new NovaException(t);
+			}
+		});
 	}
 
 	@Override
 	public void init() {
-		orderedMods.stream().forEachOrdered(Loadable::init);
+		orderedMods.stream().forEachOrdered((mod) -> {
+			try {
+				mod.init();
+			} catch (Throwable t) {
+				Game.instance.logger.error("Critical error caught during initalization phase", t);
+				throw new NovaException(t);
+			}
+		});
 	}
 
 	@Override
 	public void postInit() {
-		orderedMods.stream().forEachOrdered(Loadable::postInit);
+		orderedMods.stream().forEachOrdered((mod) -> {
+			try {
+				mod.postInit();
+			} catch (Throwable t) {
+				Game.instance.logger.error("Critical error caught during post initalization phase", t);
+				throw new NovaException(t);
+			}
+		});
 	}
 
 	public Set<NovaMod> getLoadedMods() {
@@ -169,7 +190,7 @@ public class NovaLauncher implements Loadable {
 		return classesMap;
 	}
 
-	public Map<NovaMod, Dependency[]> getNeededDeps() {
+	public Map<NovaMod, MavenDependency[]> getNeededDeps() {
 		return this.neededDeps;
 	}
 
@@ -178,11 +199,7 @@ public class NovaLauncher implements Loadable {
 	 * The wrapper just needs to call this method right before it downloads the dependencies.
 	 */
 	public void generateDependencies() {
-
-		if (dependencies == null) {
-			dependencies = new HashMap<>();
-			neededDeps = new HashMap<>();
-		}
+		neededDeps = new HashMap<>(); // This should be cleaned every time this method is run.
 
 		classesMap.keySet().stream()
 			.forEach(this::generateAndAddDependencies);
@@ -193,7 +210,7 @@ public class NovaLauncher implements Loadable {
 		if (mod.getClass().isAssignableFrom(DependencyProvider.class)) {
 			// TODO: Fix this up. I mean, it *should* work atm, idk.
 			try {
-				neededDeps.put(mod, (Dependency[])mod.getClass().getMethod("getDependencies").getDefaultValue());
+				neededDeps.put(mod, (MavenDependency[])mod.getClass().getMethod("getDependencies").getDefaultValue());
 			} catch (NoSuchMethodException ex) {
 				ex.printStackTrace();
 			}

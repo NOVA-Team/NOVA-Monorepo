@@ -9,13 +9,15 @@ public class Button extends GuiComponent<Button, NativeButton> {
 
 	public Button(String uniqueID, final String text) {
 		super(uniqueID, NativeButton.class);
-		registerListener(this::onMousePressed, MouseEvent.class);
+		onGuiEvent(this::onMousePressed, MouseEvent.class);
 		getNative().setText(text);
 	}
 
 	private void onMousePressed(MouseEvent event) {
 		switch (event.state) {
-			case CLICK:
+			case DOWN:
+				// TODO Handle overlapping components etc, check if the
+				// component is visible at the given position.
 				if (getOutline().contains(event.mouseX, event.mouseY)) {
 					triggerEvent(new ComponentEvent.ActionEvent<Button>(this));
 				}

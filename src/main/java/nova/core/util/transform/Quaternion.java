@@ -35,7 +35,6 @@ import java.math.RoundingMode;
 
 /**
  * All rotation operations operate in radians.
- *
  * @author Calclavia, ChickenBones
  */
 public class Quaternion implements Transform, Storable {
@@ -63,7 +62,6 @@ public class Quaternion implements Transform, Storable {
 	 *
 	 * Pitch: 0 Degrees - Looking straight forward towards the horizon. 90 Degrees - Looking straight up
 	 * to the sky. -90 Degrees - Looking straight down to the void.
-	 *
 	 * @param euler input {@link Vector3}
 	 * @return resulting {@link Quaternion}
 	 * @author Calclavia
@@ -95,7 +93,6 @@ public class Quaternion implements Transform, Storable {
 
 	/**
 	 * Returns a quaternion from Angle Axis rotation.
-	 *
 	 * @param axis Axis {@link Vector3}
 	 * @param angle Angle
 	 * @return The Quaternion representation of the angle axis rotation.
@@ -132,7 +129,6 @@ public class Quaternion implements Transform, Storable {
 	 * using the associative property of quaternions and the fact that (q2*q1)'=q1'* q2' (see conjugate function) then we get:
 	 *
 	 * x3 = (q2*q1) * x * (q2*q1)'
-	 *
 	 * @param q - The quaternion to multiply with
 	 * @return The new Quaternion
 	 */
@@ -190,7 +186,26 @@ public class Quaternion implements Transform, Storable {
 	}
 
 	public Pair<Vector3d, Double> toAngleAxis() {
-		return new Pair<>(new Vector3d(x / Math.sqrt(1 - w * w), y / Math.sqrt(1 - w * w), z / Math.sqrt(1 - w * w)), 2 * Math.acos(w));
+		Quaternion normalQuat = this;
+
+		// if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalised
+		if (normalQuat.w > 1) {
+			normalQuat = normalize();
+		}
+
+		double angle = 2 * Math.acos(normalQuat.w);
+
+		// Assuming quaternion normalised then w is less than 1, so term always positive.
+		double s = Math.sqrt(1 - normalQuat.w * normalQuat.w);
+		if (s < 0.001) {
+			// test to avoid divide by zero, s is always positive due to sqrt
+			// if s close to zero then direction of axis not important
+			// if it is important that axis is normalised then replace with x=1; y=z=0;
+			return new Pair<>(new Vector3d(normalQuat.x, normalQuat.y, normalQuat.z), 2 * Math.acos(w));
+		} else {
+			return new Pair<>(new Vector3d(normalQuat.x / s, normalQuat.y / s, normalQuat.z / s), 2 * Math.acos(w));
+		}
+
 	}
 
 	@Override

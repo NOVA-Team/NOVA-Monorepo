@@ -55,7 +55,6 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 	/**
 	 * Returns the cross product between this vector and the other.
 	 * Calculated by finding the determinant of a 3x3 matrix.
-	 *
 	 * @return A vector representing the normal, perpendicular to these two vectors
 	 */
 	@Override
@@ -87,6 +86,14 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 	@Override
 	public Vector3i min(Vector3 other) {
 		return new Vector3i(Math.min(xi(), other.xi()), Math.min(yi(), other.yi()), Math.min(zi(), other.zi()));
+	}
+
+	public Vector3i max(Vector3i other) {
+		return max(other);
+	}
+
+	public Vector3i min(Vector3i other) {
+		return min(other);
 	}
 
 	@Override
@@ -121,6 +128,10 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 
 	public Vector3d toDouble() {
 		return new Vector3d(xd(), yd(), zd());
+	}
+
+	public Vector3i abs() {
+		return new Vector3i(Math.abs(x), Math.abs(y), Math.abs(z));
 	}
 
 	@Override
