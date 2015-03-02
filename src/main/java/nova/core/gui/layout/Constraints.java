@@ -122,7 +122,7 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected O clone() {
+	public O clone() {
 		try {
 			return (O) super.clone();
 		} catch (CloneNotSupportedException e) {

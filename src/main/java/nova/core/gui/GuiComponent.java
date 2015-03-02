@@ -25,21 +25,26 @@ import nova.core.util.transform.Vector2i;
 public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketHandler {
 
 	protected String qualifiedName;
+	private String uniqueID;
+	private T nativeElement;
+
 	protected Optional<Vector2i> preferredSize = Optional.empty();
 	protected Optional<Vector2i> minimumSize = Optional.empty();
 	protected Optional<Vector2i> maximumSize = Optional.empty();
+	protected Optional<Background> background = Optional.empty();
+
+	private boolean isActive = true;
+	private boolean isVisible = true;
+	private boolean isMouseOver = false;
+
+	private SidedEventBus<ComponentEvent<?>> eventListenerList = new SidedEventBus<ComponentEvent<?>>(this::dispatchNetworkEvent);
+	private EventBus<GuiEvent> listenerList = new EventBus<GuiEvent>();
+
 	/**
 	 * Parent container instance. The instance will be populated once added to a
 	 * {@link AbstractGuiContainer}.
 	 */
 	protected Optional<AbstractGuiContainer<?, ?>> parentContainer = Optional.empty();
-	private String uniqueID;
-	private T nativeElement;
-	private SidedEventBus<ComponentEvent<?>> eventListenerList = new SidedEventBus<ComponentEvent<?>>(this::dispatchNetworkEvent);
-	private EventBus<GuiEvent> listenerList = new EventBus<GuiEvent>();
-	private boolean isActive = true;
-	private boolean isVisible = true;
-	private boolean isMouseOver = false;
 
 	public GuiComponent(String uniqueID, Class<T> nativeClass) {
 		this.uniqueID = uniqueID;
@@ -141,6 +146,21 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	/**
+	 * Sets the {@link Background} of this component.
+	 * 
+	 * @param background Background to use
+	 * @return This component
+	 */
+	public O setBackground(Background background) {
+		this.background = Optional.of(background.clone());
+		return (O) this;
+	}
+
+	public Optional<Background> getBackground() {
+		return background;
+	}
+
+	/**
 	 * Call this when the component's state has changed and needs to be
 	 * re-rendered. The native component is requested to infer
 	 * {@link #render(int, int, Graphics)} after.
@@ -207,6 +227,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	public final void preRender(int mouseX, int mouseY, Graphics graphics) {
 		isMouseOver = getOutline().contains(mouseX, mouseY);
+		if (background.isPresent())
+			background.get().draw(graphics, getOutline().getDimension());
 	}
 
 	@Override

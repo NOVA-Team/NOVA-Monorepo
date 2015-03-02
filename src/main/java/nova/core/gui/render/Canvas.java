@@ -5,6 +5,7 @@ import nova.core.render.Color;
 import nova.core.render.texture.Texture;
 import nova.core.util.transform.Vector2i;
 
+// TODO Stateful implementation, push & pop
 /**
  * A canvas is an object that can be drawn onto in 2D space. The content might
  * be back buffered, depends on the context. Use {@link #isBuffered()} to check.
