@@ -1,8 +1,11 @@
 package nova.core.gui.layout;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -18,7 +21,7 @@ import java.util.stream.IntStream;
  * </p>
  * 
  * @author Vic Nightfall
- * @param <O> -Describe me-
+ * @param <O> Self reference
  */
 public abstract class Constraints<O extends Constraints<O>> implements Cloneable {
 
@@ -79,6 +82,19 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	}
 
 	/**
+	 * Checks if all public fields of the given constraints object are provided
+	 * at runtime, e.g none of the fields have a {@code null} pointer.
+	 * 
+	 * @param constraints
+	 * @throws NullPointerException if any of the fields are not supplied
+	 */
+	public static void assertNonNull(Object constraints) {
+		Stream.of(constraints.getClass().getDeclaredFields())
+			.filter((field) -> Modifier.isPublic(field.getModifiers()))
+			.forEach(Objects::requireNonNull);
+	}
+
+	/**
 	 * Allows to modify this constraints object from a passed lambda consumer,
 	 * inline.
 	 * 
@@ -94,9 +110,13 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	 * 
 	 * @param consumer consumer that accepts this constrains object
 	 * @return modified constraints.
+	 * @throws NullPointerException if the Constraints object contains any null
+	 *         value after completion.
 	 */
 	@SuppressWarnings("unchecked")
 	public O of(Consumer<O> consumer) {
+		consumer.accept((O) this);
+		assertNonNull(this);
 		return (O) this;
 	}
 

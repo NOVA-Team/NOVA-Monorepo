@@ -118,7 +118,8 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * <tr>
 	 * <td>{@code &st;}</td>
 	 * <td>Toggles the flag for strikethrough</td>
-	 * <td style="text-decoration: strikethrough">"The quick brown fox jumps over the lazy dog"</td>
+	 * <td style="text-decoration: strikethrough">
+	 * "The quick brown fox jumps over the lazy dog"</td>
 	 * </tr>
 	 * <tr>
 	 * <td>{@code &rt;}</td>
@@ -207,6 +208,8 @@ public class FormattedText implements Iterable<FormattedText> {
 
 		public TextFormat(Consumer<TextFormat> consumer) {
 			consumer.accept(this);
+			if (color == null)
+				throw new NullPointerException("Color not supplied!");
 		}
 
 		@Override
@@ -235,12 +238,12 @@ public class FormattedText implements Iterable<FormattedText> {
 
 			TextFormat other = (TextFormat) obj;
 
-			return this.bold == other.bold 
-				&& this.italic == other.italic 
-				&& this.shadow == other.shadow 
-				&& this.strikethrough == other.strikethrough 
-				&& this.underline == other.underline 
-				&& this.color.equals(other.color);
+			return this.bold == other.bold
+					&& this.italic == other.italic
+					&& this.shadow == other.shadow
+					&& this.strikethrough == other.strikethrough
+					&& this.underline == other.underline
+					&& this.color.equals(other.color);
 		}
 
 		/**
