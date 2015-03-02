@@ -1,6 +1,5 @@
 package nova.core.gui.render;
 
-import nova.core.util.transform.Vector2i;
 
 /**
  * Generic interface for a TextRenderer. A TextRenderer can draw text to the
@@ -8,7 +7,7 @@ import nova.core.util.transform.Vector2i;
  * 
  * @author Vic Nightfall
  */
-public interface TextRenderer {
+public interface TextRenderer extends TextMetrics {
 
 	/**
 	 * Renders {@link FormattedText} to the screen. Performs a line wrap at
@@ -110,20 +109,4 @@ public interface TextRenderer {
 	 * @param zIndex z index
 	 */
 	public void setZIndex(int zIndex);
-
-	/**
-	 * Returns the computed boundaries of the provided {@link FormattedText}.
-	 * 
-	 * @param text FormattedText
-	 * @return boundaries
-	 */
-	public Vector2i getBounds(FormattedText text);
-
-	/**
-	 * Returns the computed boundaries of the provided String.
-	 * 
-	 * @param str String
-	 * @return boundaries
-	 */
-	public Vector2i getBounds(String str);
 }
