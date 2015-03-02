@@ -8,6 +8,7 @@ import nova.core.game.Game;
 import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.nativeimpl.NativeGui;
+import nova.core.gui.render.TextMetrics;
 import nova.core.loader.NovaMod;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;
@@ -24,9 +25,8 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	/**
 	 * Creates a nwe GUI instance with a {@link Side#SERVER server} side
 	 * backend. You can register events with
-	 * {@link #onEvent(EventListener, Class, Side)} specifying on
-	 * which side the event gets processed. Keep the client side restrictions in
-	 * mind.
+	 * {@link #onEvent(EventListener, Class, Side)} specifying on which side the
+	 * event gets processed. Keep the client side restrictions in mind.
 	 * 
 	 * @param uniqueID Unique ID of this GUI
 	 * @see #Gui(String, boolean)
@@ -100,6 +100,10 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	public void unbind() {
 		onEvent(new GuiEvent.UnBindEvent(this));
 		getNative().unbind();
+	}
+
+	public TextMetrics getTextMetrics() {
+		return getNative().getTextMetrics();
 	}
 
 	@Override

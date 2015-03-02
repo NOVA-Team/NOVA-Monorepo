@@ -3,13 +3,6 @@ package nova.core.gui.nativeimpl;
 import java.util.Optional;
 
 import nova.core.gui.GuiComponent;
-import nova.core.gui.GuiEvent.KeyEvent;
-import nova.core.gui.GuiEvent.KeyEvent.EnumKeyState;
-import nova.core.gui.GuiEvent.MouseEvent;
-import nova.core.gui.GuiEvent.MouseEvent.EnumMouseButton;
-import nova.core.gui.GuiEvent.MouseEvent.EnumMouseState;
-import nova.core.gui.GuiEvent.MouseWheelEvent;
-import nova.core.gui.KeyManager.Key;
 import nova.core.gui.Outline;
 import nova.core.gui.render.Graphics;
 import nova.core.util.transform.Vector2i;
@@ -70,26 +63,6 @@ public interface NativeGuiComponent {
 		if (getComponent().isVisible()) {
 			getComponent().preRender(mouseX, mouseY, graphics);
 			getComponent().render(mouseX, mouseY, graphics);
-		}
-	}
-
-	public default void onMousePressed(int mouseX, int mouseY, EnumMouseButton button, boolean state) {
-		// TODO Post events for CLICK and DOUBLECLICK
-		if (getComponent().isActive()) {
-			getComponent().onEvent(new MouseEvent(mouseX, mouseY, button, state ? EnumMouseState.DOWN : EnumMouseState.UP));
-		}
-	}
-
-	public default void onMouseWheelTurned(int scrollAmount) {
-		if (getComponent().isActive()) {
-			getComponent().onEvent(new MouseWheelEvent(scrollAmount));
-		}
-	}
-
-	public default void onKeyPressed(Key key, char character, boolean state) {
-		// TODO Post events for TYPE
-		if (getComponent().isActive()) {
-			getComponent().onEvent(new KeyEvent(key, character, state ? EnumKeyState.DOWN : EnumKeyState.UP));
 		}
 	}
 }

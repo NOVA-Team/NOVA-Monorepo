@@ -266,13 +266,17 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	/**
-	 * Does rendering logic.
+	 * Renders the component. A super call to this method ensures that the draw
+	 * event is passed to subsequent event listeners.
 	 *
 	 * @param mouseX Mouse position in X-axis on screen
 	 * @param mouseY Mouse position in Y-axis on screen
 	 * @param graphics {@link Graphics} object used to draw on screen
 	 */
 	public void render(int mouseX, int mouseY, Graphics graphics) {
+		if (getBackground().isPresent()) {
+			getBackground().get().draw(graphics, getOutline().getDimension());
+		}
 		onEvent(new GuiEvent.RenderEvent(graphics, mouseX, mouseY));
 	}
 

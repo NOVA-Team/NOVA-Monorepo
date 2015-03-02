@@ -200,7 +200,7 @@ public class FormattedText implements Iterable<FormattedText> {
 		public boolean underline;
 		public boolean strikethrough;
 
-		public Color color = Color.white;
+		public Color color = Color.black;
 
 		public TextFormat() {
 
