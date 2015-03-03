@@ -13,6 +13,15 @@ public class Button extends GuiComponent<Button, NativeButton> {
 		getNative().setText(text);
 	}
 
+	public String getText() {
+		return getNative().getText();
+	}
+
+	public Button setText(String text) {
+		getNative().setText(text);
+		return this;
+	}
+
 	private void onMousePressed(MouseEvent event) {
 		switch (event.state) {
 			case DOWN:

@@ -25,6 +25,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 	}
 
 	@Override
+	@Deprecated
 	public EventListenerHandle<T> add(EventListener<T> listener) {
 		// Disables the checking mechanism as now there is a listener that
 		// listens for everything on every side. Whoever called this clearly
@@ -34,6 +35,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 	}
 
 	@Override
+	@Deprecated
 	public EventListenerHandle<T> add(EventListener<T> listener, int priority) {
 		checkListenedBeforeSend = false;
 		return super.add(listener, priority);
@@ -103,9 +105,8 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 	public static interface NetworkEventProcessor {
 
 		/**
-		 * Gets called if the parent
-		 * {@link nova.core.event.SidedEventBus.SidedEventListener} received an
-		 * event that needs to be sent over the network.
+		 * Gets called if the parent {@link SidedEventBus.SidedEventListener}
+		 * received an event that needs to be sent over the network.
 		 *
 		 * @param event The event
 		 */

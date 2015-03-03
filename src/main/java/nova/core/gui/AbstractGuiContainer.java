@@ -49,7 +49,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	public Optional<GuiComponent<?, ?>> getChildElement(String qualifiedName) {
 		// TODO untested.
 		if (qualifiedName.startsWith(getQualifiedName())) {
-			qualifiedName = qualifiedName.substring(getQualifiedName().length());
+			qualifiedName = qualifiedName.substring(getQualifiedName().length() + 1);
 		}
 		int dot = qualifiedName.indexOf(".");
 		if (dot == -1) {

@@ -1,6 +1,7 @@
 package nova.core.gui.nativeimpl;
 
 import nova.core.entity.Entity;
+import nova.core.gui.ComponentEvent;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiEvent;
 import nova.core.gui.GuiEvent.KeyEvent;
@@ -40,9 +41,11 @@ public interface NativeGui extends NativeContainer {
 		getComponent().onEvent(new GuiEvent.ResizeEvent(oldOutline));
 	}
 
+	@SuppressWarnings("deprecation")
 	public default void onNetworkEvent(Packet packet) {
 		Gui gui = (Gui) getComponent();
-		gui.triggerEvent(GuiEventFactory.instance.constructEvent(packet, gui));
+		ComponentEvent event = GuiEventFactory.instance.constructEvent(packet, gui);
+		event.component.triggerEvent(event);
 	}
 
 	public default void onMousePressed(int mouseX, int mouseY, EnumMouseButton button, boolean state) {

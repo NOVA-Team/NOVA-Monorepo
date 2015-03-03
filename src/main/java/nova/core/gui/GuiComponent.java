@@ -55,6 +55,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	private void dispatchNetworkEvent(SidedEvent event) {
+		// TODO Causes an infinite loop, has to remove the NetworkTarget it
+		// reached.
 		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((ComponentEvent) event, this));
 	}
 
