@@ -76,7 +76,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 		return modID;
 	}
 
-	protected void dispatchNetworkEvent(ComponentEvent<?> event, GuiComponent<?, ?> sender) {
+	protected void dispatchNetworkEvent(ComponentEvent event, GuiComponent<?, ?> sender) {
 		Packet packet = Game.instance.networkManager.newPacket();
 		GuiEventFactory.instance.constructPacket(event, this, packet, event.getSyncID());
 		getNative().dispatchNetworkEvent(packet);

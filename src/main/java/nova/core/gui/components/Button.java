@@ -19,7 +19,7 @@ public class Button extends GuiComponent<Button, NativeButton> {
 				// TODO Handle overlapping components etc, check if the
 				// component is visible at the given position.
 				if (getOutline().contains(event.mouseX, event.mouseY)) {
-					triggerEvent(new ComponentEvent.ActionEvent<Button>(this));
+					triggerEvent(new ComponentEvent.ActionEvent(this));
 				}
 			default:
 				break;

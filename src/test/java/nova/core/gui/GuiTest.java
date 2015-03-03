@@ -18,9 +18,9 @@ public class GuiTest {
 		BorderConstraints constraints = layout.constraints();
 		GuiContainer container = new GuiContainer("test").setLayout(layout)
 			.add(new Button("testButton1", "Test Button 1")
-					.onEvent(e -> {
+					.onEvent((e, button) -> {
 						// TODO Still needs a cast unfortunately
-						((Button) e.component).setActive(false);
+						button.setActive(false);
 					}, ActionEvent.class, Side.SERVER),
 				constraints.of(e -> e.region = Anchor.WEST))
 			.add(new Button("testButton2", "Test Button 2"), constraints.of(e -> e.region = Anchor.CENTER))
@@ -34,7 +34,7 @@ public class GuiTest {
 			.add(new Button("testButton3", "Test Button 3"), Anchor.EAST);
 	}
 
-	private void onButton1Pressed(ActionEvent<Button> event) {
+	private void onButton1Pressed(ActionEvent event, Button button) {
 
 	}
 }

@@ -21,18 +21,18 @@ public class GuiEventFactory {
 	private GuiEventFactory() {
 		registerNetworkEvents();
 	}
-	
+
 	public void registerNetworkEvents() {
-		registerNetworkEvent((component) -> new ComponentEvent.ActionEvent<>(component));
+		registerNetworkEvent((component) -> new ComponentEvent.ActionEvent(component));
 	}
 
-	public <E extends ComponentEvent<?>> void registerNetworkEvent(Function<GuiComponent<?, ?>, E> supplier) {
+	public <E extends ComponentEvent> void registerNetworkEvent(Function<GuiComponent<?, ?>, E> supplier) {
 		networkEvents.add(supplier);
 		networkEventsReverse.put(supplier.apply(null).getClass(), networkEvents.size() - 1);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <E extends ComponentEvent<?>> E constructEvent(Packet packet, Gui parentGui) {
+	public <E extends ComponentEvent> E constructEvent(Packet packet, Gui parentGui) {
 		int eventID = packet.readInt();
 		String qualifiedName = packet.readString();
 		int eventSubID = packet.readInt();
@@ -50,7 +50,8 @@ public class GuiEventFactory {
 		return event;
 	}
 
-	public void constructPacket(ComponentEvent<?> event, Gui parentGui, Packet packet, int subID) {
+	@SuppressWarnings("deprecation")
+	public void constructPacket(ComponentEvent event, Gui parentGui, Packet packet, int subID) {
 		if (!networkEventsReverse.containsKey(event.getClass()))
 			throw new NovaException(String.format("Unknown event %s at GUI %s. Register with registerNetworkEvent!", event.getClass(), packet));
 		packet.writeInt(networkEventsReverse.get(event.getClass()));

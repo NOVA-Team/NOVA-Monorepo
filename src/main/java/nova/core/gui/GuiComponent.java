@@ -6,6 +6,7 @@ import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.SidedEventBus;
 import nova.core.game.Game;
+import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.gui.render.Graphics;
@@ -37,7 +38,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	private boolean isVisible = true;
 	private boolean isMouseOver = false;
 
-	private SidedEventBus<ComponentEvent<?>> eventListenerList = new SidedEventBus<ComponentEvent<?>>(this::dispatchNetworkEvent);
+	private SidedEventBus<ComponentEvent> eventListenerList = new SidedEventBus<ComponentEvent>(this::dispatchNetworkEvent);
 	private EventBus<GuiEvent> listenerList = new EventBus<GuiEvent>();
 
 	/**
@@ -52,8 +53,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		Game.instance.guiComponentFactory.applyNativeComponent(this, nativeClass);
 	}
 
-	private void dispatchNetworkEvent(SidedEventBus.SidedEvent event) {
-		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((ComponentEvent<?>) event, this));
+	private void dispatchNetworkEvent(ComponentEvent event) {
+		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((ComponentEvent) event, this));
 	}
 
 	public Optional<Gui> getParentGui() {
@@ -241,7 +242,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 *
 	 * @param event ComponentEvent to trigger
 	 */
-	public void triggerEvent(ComponentEvent<?> event) {
+	public void triggerEvent(ComponentEvent event) {
 		eventListenerList.publish(event);
 	}
 
@@ -255,12 +256,12 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	// TODO Should be <EVENT extends ComponentEvent<O>> but that somehow
 	// destroys everything.
-	public <EVENT extends ComponentEvent<?>> O onEvent(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
+	public <EVENT extends ComponentEvent> O onEvent(ComponentEventListener<EVENT, O> listener, Class<EVENT> clazz, Side side) {
 		eventListenerList.add(listener, clazz, side);
 		return (O) this;
 	}
 
-	public <EVENT extends ComponentEvent<?>> O onEvent(EventListener<EVENT> listener, Class<EVENT> clazz) {
+	public <EVENT extends ComponentEvent> O onEvent(ComponentEventListener<EVENT, O> listener, Class<EVENT> clazz) {
 		return onEvent(listener, clazz, Side.CLIENT);
 	}
 
