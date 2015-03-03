@@ -105,13 +105,9 @@ public abstract class GuiFactory {
 		showGui(gui, entity, position);
 	}
 
-	private void showGui(Gui gui, Entity entity, Vector3i position) {
-		if (bind(gui, entity, position)) {
-			gui.bind(entity, position);
-		}
+	protected void showGui(Gui gui, Entity entity, Vector3i position) {
+		gui.bind(entity, position);
 	}
-
-	protected abstract boolean bind(Gui gui, Entity entity, Vector3i position);
 
 	/**
 	 * Closes the currently open NOVA {@link Gui}, if present, and returns to
@@ -119,13 +115,15 @@ public abstract class GuiFactory {
 	 * along with NOVA.
 	 */
 	public void closeGui() {
-		getActiveGui().ifPresent((gui) -> {
-			gui.unbind();
-			unbind(gui);
-		});
+		Optional<Gui> active = getActiveGui();
+		if (active.isPresent()) {
+			closeGui(active.get());
+		}
 	}
 
-	protected abstract void unbind(Gui gui);
+	protected void closeGui(Gui gui) {
+		gui.unbind();
+	}
 
 	/**
 	 * Returns the active NOVA {@link Gui} on the client side, if present.

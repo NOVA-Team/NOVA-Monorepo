@@ -107,7 +107,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	}
 
 	@Override
-	protected Optional<Gui> getParentGui() {
+	public Optional<Gui> getParentGui() {
 		// TODO Parented GUIs?
 		return Optional.of(this);
 	}

@@ -18,7 +18,7 @@ import nova.core.util.transform.Vector2i;
  * Defines a basic gui component. A component can be added to
  * {@link AbstractGuiContainer}, the root container is a {@link Gui}.
  *
- * @param <O> -describe me-
+ * @param <O> Self reference
  * @param <T> {@link NativeGuiComponent} type
  */
 @SuppressWarnings("unchecked")
@@ -56,8 +56,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((ComponentEvent<?>) event, this));
 	}
 
-	// TODO Recursive call or field? Same goes for the qualified name.
-	protected Optional<Gui> getParentGui() {
+	public Optional<Gui> getParentGui() {
 		return parentContainer.isPresent() ? parentContainer.get().getParentGui() : Optional.empty();
 	}
 
