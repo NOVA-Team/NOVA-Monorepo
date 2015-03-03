@@ -5,6 +5,7 @@ import java.util.Optional;
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.SidedEventBus;
+import nova.core.event.SidedEventBus.SidedEvent;
 import nova.core.game.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.layout.GuiLayout;
@@ -53,7 +54,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		Game.instance.guiComponentFactory.applyNativeComponent(this, nativeClass);
 	}
 
-	private void dispatchNetworkEvent(ComponentEvent event) {
+	private void dispatchNetworkEvent(SidedEvent event) {
 		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((ComponentEvent) event, this));
 	}
 

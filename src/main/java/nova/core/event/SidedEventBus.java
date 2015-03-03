@@ -16,11 +16,11 @@ import nova.core.network.PacketHandler;
  */
 public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 
-	private NetworkEventProcessor<T> eventProcessor;
+	private NetworkEventProcessor eventProcessor;
 	private boolean checkListenedBeforeSend = true;
 	private HashSet<Class<?>> listenedNetworkEvents = new HashSet<Class<?>>();
 
-	public SidedEventBus(NetworkEventProcessor<T> eventProcessor) {
+	public SidedEventBus(NetworkEventProcessor eventProcessor) {
 		this.eventProcessor = eventProcessor;
 	}
 
@@ -91,7 +91,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 				}
 
 				if (send) {
-					eventProcessor.handleEvent(event);
+					eventProcessor.handleEvent(sidedEvent);
 				}
 			}
 		} else {
@@ -100,7 +100,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 	}
 
 	@FunctionalInterface
-	public static interface NetworkEventProcessor<T extends Cancelable> {
+	public static interface NetworkEventProcessor {
 
 		/**
 		 * Gets called if the parent
@@ -109,7 +109,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 		 *
 		 * @param event The event
 		 */
-		public void handleEvent(T event);
+		public void handleEvent(SidedEvent event);
 	}
 
 	/**
