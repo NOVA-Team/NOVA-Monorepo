@@ -3,8 +3,8 @@ package nova.core.gui;
 import java.util.Optional;
 
 import nova.core.entity.Entity;
-import nova.core.event.EventListener;
 import nova.core.game.Game;
+import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.nativeimpl.NativeGui;
@@ -25,8 +25,8 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	/**
 	 * Creates a nwe GUI instance with a {@link Side#SERVER server} side
 	 * backend. You can register events with
-	 * {@link #onEvent(EventListener, Class, Side)} specifying on which side the
-	 * event gets processed. Keep the client side restrictions in mind.
+	 * {@link #onEvent(ComponentEventListener, Class, Side)} specifying on which
+	 * side the event gets processed. Keep the client side restrictions in mind.
 	 * 
 	 * @param uniqueID Unique ID of this GUI
 	 * @see #Gui(String, boolean)
