@@ -13,7 +13,7 @@ import nova.core.util.exception.NovaException;
 
 public class GuiEventFactory {
 
-	public static GuiEventFactory instance = new GuiEventFactory();
+	public static final GuiEventFactory instance = new GuiEventFactory();
 
 	private final ArrayList<Function<GuiComponent<?, ?>, ?>> networkEvents = new ArrayList<>();
 	private final HashMap<Class<?>, Integer> networkEventsReverse = new HashMap<>();

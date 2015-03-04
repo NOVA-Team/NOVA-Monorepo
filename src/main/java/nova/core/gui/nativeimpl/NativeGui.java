@@ -45,6 +45,7 @@ public interface NativeGui extends NativeContainer {
 	public default void onNetworkEvent(Packet packet) {
 		Gui gui = (Gui) getComponent();
 		ComponentEvent event = GuiEventFactory.instance.constructEvent(packet, gui);
+		event.reduceTarget();
 		event.component.triggerEvent(event);
 	}
 

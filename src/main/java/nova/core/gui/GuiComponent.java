@@ -39,8 +39,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	private boolean isVisible = true;
 	private boolean isMouseOver = false;
 
-	private SidedEventBus<ComponentEvent> eventListenerList = new SidedEventBus<ComponentEvent>(this::dispatchNetworkEvent);
-	private EventBus<GuiEvent> listenerList = new EventBus<GuiEvent>();
+	private SidedEventBus<ComponentEvent> componentEventBus = new SidedEventBus<ComponentEvent>(this::dispatchNetworkEvent);
+	private EventBus<GuiEvent> guiEventBus = new EventBus<GuiEvent>();
 
 	/**
 	 * Parent container instance. The instance will be populated once added to a
@@ -55,8 +55,6 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	private void dispatchNetworkEvent(SidedEvent event) {
-		// TODO Causes an infinite loop, has to remove the NetworkTarget it
-		// reached.
 		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((ComponentEvent) event, this));
 	}
 
@@ -236,7 +234,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	@Override
 	public void onEvent(GuiEvent event) {
-		listenerList.publish(event);
+		guiEventBus.publish(event);
 	}
 
 	/**
@@ -246,21 +244,19 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * @param event ComponentEvent to trigger
 	 */
 	public void triggerEvent(ComponentEvent event) {
-		eventListenerList.publish(event);
+		componentEventBus.publish(event);
 	}
 
 	// Internal listener
 	public <EVENT extends GuiEvent> O onGuiEvent(EventListener<EVENT> listener, Class<EVENT> clazz) {
-		listenerList.add(listener, clazz);
+		guiEventBus.add(listener, clazz);
 		return (O) this;
 	}
 
 	// External listener
 
-	// TODO Should be <EVENT extends ComponentEvent<O>> but that somehow
-	// destroys everything.
 	public <EVENT extends ComponentEvent> O onEvent(ComponentEventListener<EVENT, O> listener, Class<EVENT> clazz, Side side) {
-		eventListenerList.add(listener, clazz, side);
+		componentEventBus.add(listener, clazz, side);
 		return (O) this;
 	}
 

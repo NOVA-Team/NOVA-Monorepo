@@ -9,7 +9,8 @@ import nova.core.network.PacketHandler;
 /**
  * {@link EventBus} that can differentiate {@link NetworkTarget NetworkTargets}
  * and allows registration of handlers that only listen on a specific
- * {@link Side}.
+ * {@link Side}. <b>Remember to {@link Side#reduce() reduce} the scope of any
+ * {@link SidedEvent} that was sent over the network!</b>
  *
  * @param <T> -Describe me-
  * @author Vic Nightfall
@@ -69,8 +70,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 			SidedEventBus.SidedEvent sidedEvent = (SidedEventBus.SidedEvent) event;
 			Side currentSide = Side.get();
 
-			// Check if the event targets the current side.
-			if (sidedEvent.getTarget().targets(currentSide)) {
+			if (sidedEvent.getTarget().opposite().targets(currentSide)) {
 				super.publish(event);
 			}
 

@@ -3,12 +3,15 @@ package nova.core.gui;
 import nova.core.event.CancelableEvent;
 import nova.core.event.EventListener;
 import nova.core.event.SidedEventBus.SidedEvent;
-import nova.core.gui.factory.GuiFactory;
+import nova.core.gui.factory.GuiEventFactory;
+import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Sync;
 
 /**
  * Event created by {@link GuiComponent}, is also a {@link SidedEvent}. Needs to
- * be registered with the {@link GuiFactory}.
+ * be registered with the {@link GuiEventFactory}.
+ * 
+ * @see GuiEventFactory#registerNetworkEvent(java.util.function.Function)
  */
 public abstract class ComponentEvent extends CancelableEvent implements SidedEvent {
 
@@ -17,9 +20,19 @@ public abstract class ComponentEvent extends CancelableEvent implements SidedEve
 	 */
 	@Deprecated
 	public final GuiComponent<?, ?> component;
+	private Side target = SidedEvent.super.getTarget();
 
 	public ComponentEvent(GuiComponent<?, ?> component) {
 		this.component = component;
+	}
+
+	@Override
+	public Side getTarget() {
+		return target;
+	}
+
+	public void reduceTarget() {
+		target = target.reduce();
 	}
 
 	/**

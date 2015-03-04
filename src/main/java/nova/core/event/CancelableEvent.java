@@ -20,7 +20,7 @@ public abstract class CancelableEvent implements Cancelable {
 	@Override
 	public void cancel() {
 		if (!isCancelable)
-			throw new NovaException("Attempted to cancel an uncancable event " + getClass() + " !");
+			throw new NovaException("Attempted to cancel an uncancelable event " + getClass() + " !");
 		canceled = true;
 	}
 

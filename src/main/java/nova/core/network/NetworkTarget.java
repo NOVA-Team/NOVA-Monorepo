@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import nova.core.entity.Entity;
+import nova.core.event.SidedEventBus;
 import nova.core.game.Game;
 import nova.core.gui.Gui;
 import nova.core.util.exception.NovaException;
@@ -83,7 +84,13 @@ public @interface NetworkTarget {
 		 * BOTH is used by {@link NetworkTarget} to specify that an object has
 		 * to be processed by both sides, {@link #SERVER} and {@link #CLIENT}.
 		 */
-		BOTH;
+		BOTH,
+
+		/**
+		 * NONE is used by {@link NetworkTarget} to specify that an object has
+		 * been processed, and finished its queue.
+		 */
+		NONE;
 
 		/**
 		 * Check if the given side is a valid target for this side. This is
@@ -94,7 +101,7 @@ public @interface NetworkTarget {
 		 * @return {@code true} if otherSide is a valid target.
 		 */
 		public boolean targets(Side otherSide) {
-			return otherSide == BOTH || this != otherSide;
+			return otherSide != NONE && this != NONE && (otherSide == BOTH || this != otherSide);
 		}
 
 		/**
@@ -118,6 +125,42 @@ public @interface NetworkTarget {
 		}
 
 		/**
+		 * Returns the opposite side, {@link #SERVER} for {@link #CLIENT} and
+		 * vice-visa. {@link #BOTH} and {@link #NONE} remain unchanged.
+		 * 
+		 * @return Opposite side
+		 */
+		public Side opposite() {
+			if (this == BOTH || this == NONE)
+				return this;
+			return this == CLIENT ? SERVER : CLIENT;
+		}
+
+		/**
+		 * Reduce is used to mark an object that was sent over the network as
+		 * already processed from the opposing side. Especially used for
+		 * {@link #BOTH}.
+		 * 
+		 * @return reduced scope, without the opposite side
+		 * @see SidedEventBus
+		 */
+		public Side reduce() {
+			Side current = get();
+			return this == BOTH ? current : this == current ? NONE : this;
+		}
+
+		/**
+		 * Shorthand for {@code Side.assertSide(this)}
+		 * 
+		 * @see #assertSide(Side)
+		 */
+		public void assertSide() {
+			Side current = get();
+			if (this != current)
+				throw new IllegalSideException(this, Thread.currentThread().getStackTrace()[2]);
+		}
+
+		/**
 		 * Checks if the current execution environment is of the desired side.
 		 * 
 		 * @param side desired {@link Side}
@@ -126,7 +169,7 @@ public @interface NetworkTarget {
 		public static void assertSide(Side side) {
 			Side current = get();
 			if (side != current)
-				throw new IllegalSideException(side, Thread.currentThread().getStackTrace()[2]);
+				throw new IllegalSideException(current, Thread.currentThread().getStackTrace()[2]);
 		}
 
 		/**
@@ -140,7 +183,7 @@ public @interface NetworkTarget {
 			return Game.instance.networkManager.getSide();
 		}
 	}
-	
+
 	/**
 	 * An IllegalSideException indicates that a piece of code was called from
 	 * the wrong {@link Side}.
@@ -152,7 +195,7 @@ public @interface NetworkTarget {
 	public static class IllegalSideException extends NovaException {
 
 		private static final long serialVersionUID = -2732640693411842097L;
-		
+
 		public IllegalSideException(Side target) {
 			this(target, Thread.currentThread().getStackTrace()[2]);
 		}
