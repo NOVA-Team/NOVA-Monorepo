@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
 
-import nova.core.gui.GuiEvent.ResizeEvent;
+import nova.core.gui.ComponentEvent.ResizeEvent;
 import nova.core.gui.layout.BorderLayout;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeContainer;
@@ -27,7 +27,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	public AbstractGuiContainer(String uniqueID, Class<T> nativeClass) {
 		super(uniqueID, nativeClass);
-		this.onGuiEvent(this::onResized, ResizeEvent.class);
+		this.onEvent(this::onResized, ResizeEvent.class);
 	}
 
 	/**
@@ -47,10 +47,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * @see AbstractGuiContainer#getChildElement(String, Class)
 	 */
 	public Optional<GuiComponent<?, ?>> getChildElement(String qualifiedName) {
-		// TODO untested.
-		if (qualifiedName.startsWith(getQualifiedName())) {
-			qualifiedName = qualifiedName.substring(getQualifiedName().length() + 1);
-		}
 		int dot = qualifiedName.indexOf(".");
 		if (dot == -1) {
 			return Optional.of(children.get(qualifiedName));
@@ -123,7 +119,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		children.put(component.getID(), component);
 		layout.add(component, this, properties);
 		getNative().addElement(component);
-		component.onEvent(new GuiEvent.AddEvent(this));
+		component.triggerEvent(new ComponentEvent.AddEvent(component, this));
 		return (O) this;
 	}
 
@@ -140,7 +136,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		Objects.requireNonNull(component);
 		if (!children.containsValue(component))
 			throw new NovaException("Component couldn't be removed from parent container as it wasn't a child.");
-		component.onEvent(new GuiEvent.RemoveEvent(this));
+		component.triggerEvent(new ComponentEvent.RemoveEvent(component, this));
 		children.remove(component);
 		layout.remove(component);
 		component.updateQualifiedName();
@@ -154,7 +150,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	@Override
 	public Optional<Vector2i> getMinimumSize() {
-		return Optional.of(super.getMinimumSize().orElse(layout.getMinimumSize(getParentContainer(), this)));
+		return Optional.of(super.getMinimumSize().orElse(layout.getMinimumSize(this)));
 	}
 
 	@Override

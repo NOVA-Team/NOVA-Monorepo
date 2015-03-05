@@ -1,7 +1,6 @@
 package nova.core.gui.layout;
 
 import java.util.EnumMap;
-import java.util.Optional;
 
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
@@ -37,51 +36,26 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 		GuiComponent<?, ?> nComp = components.get(Anchor.NORTH);
 		GuiComponent<?, ?> sComp = components.get(Anchor.SOUTH);
 
-		Vector2i wDim = getPreferredSizeOf(wComp);
-		Vector2i eDim = getPreferredSizeOf(eComp);
+		if (nComp != null) {
+			setSizeOf(nComp, new Vector2i(dimension.x, nComp.getOutline().getHeight()));
+		}
+		if (sComp != null) {
+			setSizeOf(sComp, new Vector2i(dimension.x, sComp.getOutline().getHeight()));
+		}
+
 		Vector2i nDim = getPreferredSizeOf(nComp);
 		Vector2i sDim = getPreferredSizeOf(sComp);
-		Vector2i cDim = Vector2i.zero;
 
-		Vector2i overAllocated = Vector2i.zero;
-
-		if (cComp != null) {
-			Vector2i pref = new Vector2i(dimension.x - wDim.x - eDim.x, dimension.y - nDim.y - sDim.y);
-			cDim = pref.max(getPreferredSizeOf(cComp)).min(getMaximumSizeOf(cComp));
-			Vector2i cOver = pref.subtract(cDim).divide(2);
-
-			if (cOver.x > 0) {
-				if (wComp != null)
-					wDim = wDim.add(new Vector2i(cOver.x, 0));
-				if (eComp != null)
-					eDim = eDim.add(new Vector2i(cOver.x, 0));
-			}
-			if (cOver.y > 0) {
-				if (nComp != null)
-					nDim = nDim.add(new Vector2i(0, cOver.y));
-				if (sComp != null)
-					sDim = sDim.add(new Vector2i(0, cOver.y));
-			}
-
-			overAllocated = new Vector2i(dimension.x - cDim.x - wDim.x - eDim.x, dimension.y - cDim.y - nDim.y - sDim.y).inverse().max(Vector2i.zero);
-		} else {
-			overAllocated = new Vector2i(dimension.x - wDim.x - eDim.x, dimension.y - nDim.y - sDim.y).inverse().max(Vector2i.zero);
+		if (wComp != null) {
+			setSizeOf(wComp, new Vector2i(wComp.getOutline().getWidth(), dimension.y - nDim.y - sDim.y));
+		}
+		if (wComp != null) {
+			setSizeOf(eComp, new Vector2i(eComp.getOutline().getWidth(), dimension.y - nDim.y - sDim.y));
 		}
 
-		if (overAllocated.x > 0) {
-			Vector2i v3 = wComp != null && eComp != null ? overAllocated.divide(2) : overAllocated;
-			wDim = new Vector2i(wDim.x - v3.x, wDim.y).max(Vector2i.zero);
-			eDim = new Vector2i(eDim.x - v3.x, eDim.y).max(Vector2i.zero);
-		}
-		if (overAllocated.y > 0) {
-			Vector2i v3 = nComp != null && sComp != null ? overAllocated.divide(2) : overAllocated;
-			nDim = new Vector2i(nDim.x, wDim.y - v3.y).max(Vector2i.zero);
-			sDim = new Vector2i(sDim.x, eDim.y - v3.y).max(Vector2i.zero);
-		}
-
-		if (cComp != null) {
-			cDim = cDim.min(new Vector2i(dimension.x - wDim.x - eDim.x, dimension.y - nDim.y - sDim.y));
-		}
+		Vector2i wDim = getPreferredSizeOf(wComp);
+		Vector2i eDim = getPreferredSizeOf(eComp);
+		Vector2i cDim = new Vector2i(dimension.x - wDim.x - eDim.x, dimension.y - nDim.y - sDim.y).min(getMaximumSizeOf(cComp));
 
 		Vector2i v4 = new Vector2i(0, dimension.y - nDim.y - sDim.y);
 		wDim = wDim.max(v4).min(getMaximumSizeOf(wComp));
@@ -97,7 +71,11 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 		int nOffset = (dimension.x - nDim.x) / 2;
 		int sOffset = (dimension.x - sDim.x) / 2;
 
-		setOutlineOf(cComp, new Outline(new Vector2i(wDim.x, nDim.y), cDim));
+		// Center the center component
+		int cOffsetX = (dimension.x - wDim.x - eDim.x) / 2 - cDim.x / 2;
+		int cOffsetY = (dimension.y - nDim.y - sDim.y) / 2 - cDim.y / 2;
+
+		setOutlineOf(cComp, new Outline(new Vector2i(wDim.x + cOffsetX, nDim.y + cOffsetY), cDim));
 		setOutlineOf(wComp, new Outline(new Vector2i(0, wOffset), wDim));
 		setOutlineOf(eComp, new Outline(new Vector2i(dimension.x - eDim.x, eOffset), eDim));
 		setOutlineOf(nComp, new Outline(new Vector2i(nOffset, 0), nDim));
@@ -105,7 +83,7 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 	}
 
 	@Override
-	public Vector2i getMinimumSize(Optional<AbstractGuiContainer<?, ?>> parent, GuiComponent<?, ?> component) {
+	public Vector2i getMinimumSize(GuiComponent<?, ?> component) {
 		Vector2i wDim = getMiniumSizeOf(components.get(Anchor.WEST));
 		Vector2i eDim = getMiniumSizeOf(components.get(Anchor.EAST));
 		Vector2i nDim = getMiniumSizeOf(components.get(Anchor.NORTH));

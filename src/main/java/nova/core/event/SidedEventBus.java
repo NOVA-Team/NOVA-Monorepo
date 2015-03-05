@@ -1,6 +1,6 @@
 package nova.core.event;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 import nova.core.network.NetworkTarget;
 import nova.core.network.NetworkTarget.Side;
@@ -19,10 +19,39 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 
 	private NetworkEventProcessor eventProcessor;
 	private boolean checkListenedBeforeSend = true;
-	private HashSet<Class<?>> listenedNetworkEvents = new HashSet<Class<?>>();
+	private HashMap<Class<?>, Side> listenedNetworkEvents = new HashMap<>();
 
 	public SidedEventBus(NetworkEventProcessor eventProcessor) {
 		this.eventProcessor = eventProcessor;
+	}
+
+	private void add(Class<?> clazz, Side side) {
+		if (side == Side.NONE)
+			throw new IllegalArgumentException("Can't specify a sided event without a scope!");
+		Side side2 = listenedNetworkEvents.get(clazz);
+		if (side2 != null) {
+			if (side2 != Side.BOTH && side2 != side) {
+				listenedNetworkEvents.put(clazz, Side.BOTH);
+			}
+		} else {
+			listenedNetworkEvents.put(clazz, side);
+		}
+	}
+
+	private boolean contains(Class<?> clazz, Side side) {
+		Class<?> clazz2 = clazz;
+		while (true) {
+			Side side2 = listenedNetworkEvents.get(clazz2);
+			if (side2 == side || side2 == Side.BOTH) {
+				listenedNetworkEvents.put(clazz, side2);
+				return true;
+			}
+			if (clazz2 == Object.class) {
+				break;
+			}
+			clazz2 = clazz2.getSuperclass();
+		}
+		return false;
 	}
 
 	@Override
@@ -44,24 +73,24 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 
 	@Override
 	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz) {
-		listenedNetworkEvents.add(clazz);
+		add(clazz, Side.BOTH);
 		return super.add(listener, clazz);
 	}
 
 	@Override
 	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, int priority) {
-		listenedNetworkEvents.add(clazz);
+		add(clazz, Side.BOTH);
 		return super.add(listener, clazz, priority);
 	}
 
 	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, Side sideToListen) {
-		listenedNetworkEvents.add(clazz);
-		return add(new SidedEventListener<E, T>(listener, clazz, sideToListen));
+		add(clazz, sideToListen);
+		return super.add(new SidedEventListener<E, T>(listener, clazz, sideToListen), PRIORITY_DEFAULT);
 	}
 
 	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, Side sideToListen, int priority) {
-		listenedNetworkEvents.add(clazz);
-		return add(new SidedEventListener<E, T>(listener, clazz, sideToListen), priority);
+		add(clazz, sideToListen);
+		return super.add(new SidedEventListener<E, T>(listener, clazz, sideToListen), priority);
 	}
 
 	@Override
@@ -77,21 +106,9 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 			// Check if the event needs to be sent over the network.
 			if (currentSide.targets(sidedEvent.getTarget())) {
 				boolean send = !checkListenedBeforeSend;
-				Class<?> clazz = event.getClass();
 				if (!send) {
-					while (true) {
-						if (listenedNetworkEvents.contains(clazz)) {
-							send = true;
-							listenedNetworkEvents.add(event.getClass());
-							break;
-						}
-						if (clazz == Object.class) {
-							break;
-						}
-						clazz = clazz.getSuperclass();
-					}
+					send = contains(event.getClass(), currentSide.opposite());
 				}
-
 				if (send) {
 					eventProcessor.handleEvent(sidedEvent);
 				}
@@ -141,7 +158,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 		public void onEvent(T event) {
 			if (event instanceof SidedEventBus.SidedEvent) {
 				SidedEventBus.SidedEvent sidedEvent = (SidedEventBus.SidedEvent) event;
-				if (sidedEvent.getTarget().targets(side)) {
+				if (sidedEvent.getTarget().opposite().targets(side)) {
 					super.onEvent(event);
 				}
 			} else {

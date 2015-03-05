@@ -8,31 +8,21 @@ import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Sync;
 
 /**
- * Event created by {@link GuiComponent}, is also a {@link SidedEvent}. Needs to
- * be registered with the {@link GuiEventFactory}.
+ * Event created by {@link GuiComponent}. Needs to be registered with the
+ * {@link GuiEventFactory}.
  * 
  * @see GuiEventFactory#registerNetworkEvent(java.util.function.Function)
  */
-public abstract class ComponentEvent extends CancelableEvent implements SidedEvent {
+public abstract class ComponentEvent extends CancelableEvent {
 
 	/**
 	 * Not type-safe, use {@link ComponentEventListener} instead.
 	 */
 	@Deprecated
 	public final GuiComponent<?, ?> component;
-	private Side target = SidedEvent.super.getTarget();
 
 	public ComponentEvent(GuiComponent<?, ?> component) {
 		this.component = component;
-	}
-
-	@Override
-	public Side getTarget() {
-		return target;
-	}
-
-	public void reduceTarget() {
-		target = target.reduce();
 	}
 
 	/**
@@ -69,11 +59,66 @@ public abstract class ComponentEvent extends CancelableEvent implements SidedEve
 		}
 	}
 
+	/**
+	 * {@link ComponentEvent} which can be sent over the network. Has to be
+	 * registered with
+	 * {@link GuiEventFactory#registerNetworkEvent(java.util.function.Function)}
+	 * 
+	 * @author Vic Nightfall
+	 */
+	public static class SidedComponentEvent extends ComponentEvent implements SidedEvent {
+
+		public SidedComponentEvent(GuiComponent<?, ?> component) {
+			super(component);
+		}
+
+		private Side target = SidedEvent.super.getTarget();
+
+		@Override
+		public Side getTarget() {
+			return target;
+		}
+
+		public void reduceTarget() {
+			target = target.reduce();
+		}
+	}
+
 	@Cancelable
-	public static class ActionEvent extends ComponentEvent {
+	public static class ActionEvent extends SidedComponentEvent {
 
 		public ActionEvent(GuiComponent<?, ?> component) {
 			super(component);
+		}
+	}
+
+	public static class ResizeEvent extends ComponentEvent {
+
+		public final Outline oldOutline;
+
+		public ResizeEvent(GuiComponent<?, ?> component, Outline oldOutline) {
+			super(component);
+			this.oldOutline = oldOutline;
+		}
+	}
+
+	public static class AddEvent extends ComponentEvent {
+
+		public final AbstractGuiContainer<?, ?> container;
+
+		public AddEvent(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> container) {
+			super(component);
+			this.container = container;
+		}
+	}
+
+	public static class RemoveEvent extends ComponentEvent {
+
+		public final AbstractGuiContainer<?, ?> container;
+
+		public RemoveEvent(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> container) {
+			super(component);
+			this.container = container;
 		}
 	}
 }

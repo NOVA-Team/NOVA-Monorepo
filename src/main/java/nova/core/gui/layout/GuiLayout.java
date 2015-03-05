@@ -1,7 +1,5 @@
 package nova.core.gui.layout;
 
-import java.util.Optional;
-
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.util.transform.Vector2i;
@@ -27,7 +25,7 @@ public interface GuiLayout {
 
 	public void remove(GuiComponent<?, ?> component);
 
-	public default Vector2i getMinimumSize(Optional<AbstractGuiContainer<?, ?>> parent, GuiComponent<?, ?> component) {
+	public default Vector2i getMinimumSize(GuiComponent<?, ?> component) {
 		return Vector2i.zero;
 	}
 }

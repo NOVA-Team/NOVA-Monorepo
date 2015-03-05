@@ -2,7 +2,6 @@ package nova.core.gui.layout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
@@ -50,10 +49,8 @@ public class FlowLayout extends AbstractGuiLayout<FlowLayoutConstraints> {
 	}
 
 	@Override
-	public Vector2i getMinimumSize(Optional<AbstractGuiContainer<?, ?>> parent, GuiComponent<?, ?> component) {
-		if (!parent.isPresent())
-			return Vector2i.zero;
-		return revalidate(parent.get().getOutline(), false);
+	public Vector2i getMinimumSize(GuiComponent<?, ?> component) {
+		return revalidate(component.getOutline(), false);
 	}
 
 	private Vector2i revalidate(Outline outline, boolean apply) {

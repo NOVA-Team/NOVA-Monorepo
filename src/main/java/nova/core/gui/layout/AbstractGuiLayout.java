@@ -25,9 +25,9 @@ public abstract class AbstractGuiLayout<T extends Constraints<T>> implements Gui
 	 * @param component The component to add to this layout.
 	 * @param parent The parent container of this layout.
 	 * @param parameters arguments passed to the {@link Constraints} or a
-	 * fitting instance of &lt;T&gt;
+	 *        fitting instance of &lt;T&gt;
 	 * @throws IllegalArgumentException if the Object array couldn't be
-	 * converted to the required constraint type.
+	 *         converted to the required constraint type.
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -48,7 +48,7 @@ public abstract class AbstractGuiLayout<T extends Constraints<T>> implements Gui
 	}
 
 	protected final Vector2i getMaximumSizeOf(GuiComponent<?, ?> component) {
-		return component != null ? component.getPreferredSize().orElse(component.getMaximumSize().orElse(Vector2i.max)) : Vector2i.max;
+		return component != null ? component.getPreferredSize().orElse(component.getMaximumSize().orElse(Vector2i.max)) : Vector2i.zero;
 	}
 
 	protected final Vector2i getMiniumSizeOf(GuiComponent<?, ?> component) {

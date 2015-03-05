@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import nova.core.gui.ComponentEvent;
+import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiComponent;
 import nova.core.network.Packet;
@@ -26,23 +27,26 @@ public class GuiEventFactory {
 		registerNetworkEvent((component) -> new ComponentEvent.ActionEvent(component));
 	}
 
-	public <E extends ComponentEvent> void registerNetworkEvent(Function<GuiComponent<?, ?>, E> supplier) {
+	public <E extends SidedComponentEvent> void registerNetworkEvent(Function<GuiComponent<?, ?>, E> supplier) {
 		networkEvents.add(supplier);
 		networkEventsReverse.put(supplier.apply(null).getClass(), networkEvents.size() - 1);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <E extends ComponentEvent> E constructEvent(Packet packet, Gui parentGui) {
+	public <E extends SidedComponentEvent> E constructEvent(Packet packet, Gui parentGui) {
 		int eventID = packet.readInt();
 		String qualifiedName = packet.readString();
 		int eventSubID = packet.readInt();
 
 		if (eventID < 0 || eventID >= networkEvents.size())
 			throw new NovaException(String.format("Illegal event type %s at GUI %s", eventID, parentGui));
+		if (!qualifiedName.startsWith(parentGui.getID()))
+			throw new NovaException(String.format("Component \"%s\" does not specify an applicable qualified name for GUI \"%s\"", qualifiedName, parentGui));
 
+		qualifiedName = qualifiedName.substring(parentGui.getID().length() + 1);
 		Optional<GuiComponent<?, ?>> component = parentGui.getChildElement(qualifiedName);
 		if (!component.isPresent())
-			throw new NovaException(String.format("Recieved an event for a non-existent component \"%s\" at GUI %s", qualifiedName, parentGui));
+			throw new NovaException(String.format("Recieved an event for a non-existent component \"%s\" at GUI \"%s\"", qualifiedName, parentGui));
 
 		E event = (E) networkEvents.get(eventID).apply(component.get());
 		packet.setID(eventSubID);
@@ -51,9 +55,9 @@ public class GuiEventFactory {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void constructPacket(ComponentEvent event, Gui parentGui, Packet packet, int subID) {
+	public void constructPacket(SidedComponentEvent event, Gui parentGui, Packet packet, int subID) {
 		if (!networkEventsReverse.containsKey(event.getClass()))
-			throw new NovaException(String.format("Unknown event %s at GUI %s. Register with registerNetworkEvent!", event.getClass(), packet));
+			throw new NovaException(String.format("Unknown event %s at GUI \"%s\". Register with registerNetworkEvent!", event.getClass(), packet));
 		packet.writeInt(networkEventsReverse.get(event.getClass()));
 		packet.writeString(event.component.getQualifiedName());
 		packet.writeInt(subID);

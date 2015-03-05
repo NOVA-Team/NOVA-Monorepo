@@ -5,6 +5,7 @@ import java.util.Optional;
 import nova.core.entity.Entity;
 import nova.core.game.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
+import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.nativeimpl.NativeGui;
@@ -76,7 +77,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 		return modID;
 	}
 
-	protected void dispatchNetworkEvent(ComponentEvent event, GuiComponent<?, ?> sender) {
+	protected void dispatchNetworkEvent(SidedComponentEvent event, GuiComponent<?, ?> sender) {
 		Packet packet = Game.instance.networkManager.newPacket();
 		GuiEventFactory.instance.constructPacket(event, this, packet, event.getSyncID());
 		getNative().dispatchNetworkEvent(packet);

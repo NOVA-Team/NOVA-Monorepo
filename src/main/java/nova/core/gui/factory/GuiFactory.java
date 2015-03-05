@@ -110,11 +110,15 @@ public abstract class GuiFactory {
 	}
 
 	/**
-	 * Closes the currently open NOVA {@link Gui}, if present, and returns to
-	 * the in-game GUI. It will not affect any native GUIs that might exist
-	 * along with NOVA.
+	 * Closes the currently open NOVA {@link Gui} on the client side, if
+	 * present, and returns to the in-game GUI. It will not affect any native
+	 * GUIs that might exist along with NOVA.
+	 * 
+	 * @throws IllegalSideException if called on the server side
 	 */
+	@Sided(Side.CLIENT)
 	public void closeGui() {
+		Side.assertSide(Side.CLIENT);
 		Optional<Gui> active = getActiveGui();
 		if (active.isPresent()) {
 			closeGui(active.get());

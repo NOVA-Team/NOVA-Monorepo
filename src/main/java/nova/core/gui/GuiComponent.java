@@ -8,6 +8,8 @@ import nova.core.event.SidedEventBus;
 import nova.core.event.SidedEventBus.SidedEvent;
 import nova.core.game.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
+import nova.core.gui.ComponentEvent.ResizeEvent;
+import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.gui.render.Graphics;
@@ -55,7 +57,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	private void dispatchNetworkEvent(SidedEvent event) {
-		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((ComponentEvent) event, this));
+		getParentGui().ifPresent((e) -> e.dispatchNetworkEvent((SidedComponentEvent) event, this));
 	}
 
 	public Optional<Gui> getParentGui() {
@@ -83,7 +85,11 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 */
 	@Deprecated
 	public void setOutlineNative(Outline outline) {
+		Outline oldOutline = getNative().getOutline();
 		nativeElement.setOutline(outline);
+		if (!oldOutline.getDimension().equals(outline.getDimension())) {
+			triggerEvent(new ResizeEvent(this, oldOutline));
+		}
 	}
 
 	public O setPreferredSize(int width, int height) {
@@ -261,6 +267,15 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	public <EVENT extends ComponentEvent> O onEvent(ComponentEventListener<EVENT, O> listener, Class<EVENT> clazz) {
+		return onEvent(listener, clazz, Side.CLIENT);
+	}
+
+	public <EVENT extends ComponentEvent> O onEvent(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
+		componentEventBus.add(listener, clazz, side);
+		return (O) this;
+	}
+
+	public <EVENT extends ComponentEvent> O onEvent(EventListener<EVENT> listener, Class<EVENT> clazz) {
 		return onEvent(listener, clazz, Side.CLIENT);
 	}
 
