@@ -52,7 +52,7 @@ public class Spacing extends Rectangle<Vector2i> {
 	 * solid; border-color: blue red orange;'></div>
 	 * 
 	 * @param top distance on top
-	 * @param x distance on the left & right
+	 * @param x distance on the left &amp; right
 	 * @param bottom distance on bottom
 	 */
 	public Spacing(int top, int x, int bottom) {
@@ -71,8 +71,8 @@ public class Spacing extends Rectangle<Vector2i> {
 	 * <div style='width: 100px; height: 50px; display: block; border: 5px
 	 * solid; border-color: blue red;'></div>
 	 * 
-	 * @param x distance on the left & right
-	 * @param y distance on top & bottom
+	 * @param x distance on the left &amp; right
+	 * @param y distance on top &amp; bottom
 	 */
 	public Spacing(int x, int y) {
 		this(x, y, x, y);
