@@ -177,6 +177,9 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	/**
+	 * Returns the native component element for this component. <b>This should
+	 * only be used by the wrapper!</b>
+	 * 
 	 * @return Native component element
 	 */
 	public T getNative() {

@@ -192,6 +192,7 @@ public class FormattedText implements Iterable<FormattedText> {
 		return text;
 	}
 
+	// TODO Different text sizes
 	public static class TextFormat implements Cloneable {
 
 		public boolean shadow;

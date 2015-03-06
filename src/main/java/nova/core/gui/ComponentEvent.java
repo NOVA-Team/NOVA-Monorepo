@@ -8,17 +8,19 @@ import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Sync;
 
 /**
- * Event created by {@link GuiComponent}. Needs to be registered with the
- * {@link GuiEventFactory}.
+ * Event created by {@link GuiComponent}. These events, opposed to
+ * {@link GuiEvent}, aren't propagated to the child components.
  * 
- * @see GuiEventFactory#registerNetworkEvent(java.util.function.Function)
+ * @see SidedComponentEvent
+ * @see ComponentEventListener
+ * @see GuiComponent#triggerEvent(ComponentEvent)
+ * @see GuiComponent#onEvent(ComponentEventListener, Class)
  */
 public abstract class ComponentEvent extends CancelableEvent {
 
 	/**
 	 * Not type-safe, use {@link ComponentEventListener} instead.
 	 */
-	@Deprecated
 	public final GuiComponent<?, ?> component;
 
 	public ComponentEvent(GuiComponent<?, ?> component) {

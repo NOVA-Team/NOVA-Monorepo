@@ -15,6 +15,8 @@ import nova.core.util.transform.Vector2i;
  */
 public class Spacing extends Rectangle<Vector2i> {
 
+	public static final Spacing empty = new Spacing(0);
+
 	/**
 	 * <p>
 	 * Defines a new spacing:

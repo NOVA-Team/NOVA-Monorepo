@@ -1,6 +1,5 @@
 package nova.core.gui.nativeimpl;
 
-import nova.core.entity.Entity;
 import nova.core.gui.ComponentEvent;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.Gui;
@@ -15,21 +14,12 @@ import nova.core.gui.Outline;
 import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.render.TextMetrics;
 import nova.core.network.Packet;
-import nova.core.util.transform.Vector3i;
 
 public interface NativeGui extends NativeContainer {
 
 	public void dispatchNetworkEvent(Packet packet);
 
 	public TextMetrics getTextMetrics();
-
-	public default void bind(Entity entity, Vector3i pos) {
-
-	}
-
-	public default void unbind() {
-
-	}
 
 	/**
 	 * Called when the GUI was resized and the child components need to
@@ -41,7 +31,6 @@ public interface NativeGui extends NativeContainer {
 		getComponent().triggerEvent(new ComponentEvent.ResizeEvent(getComponent(), oldOutline));
 	}
 
-	@SuppressWarnings("deprecation")
 	public default void onNetworkEvent(Packet packet) {
 		Gui gui = (Gui) getComponent();
 		SidedComponentEvent event = GuiEventFactory.instance.constructEvent(packet, gui);

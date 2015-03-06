@@ -54,7 +54,6 @@ public class GuiEventFactory {
 		return event;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void constructPacket(SidedComponentEvent event, Gui parentGui, Packet packet, int subID) {
 		if (!networkEventsReverse.containsKey(event.getClass()))
 			throw new NovaException(String.format("Unknown event %s at GUI \"%s\". Register with registerNetworkEvent!", event.getClass(), packet));

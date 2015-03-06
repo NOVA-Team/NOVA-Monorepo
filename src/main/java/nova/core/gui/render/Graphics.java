@@ -69,7 +69,7 @@ public class Graphics implements TextRenderer {
 		fillRect(x, y, linewidth, height);
 		fillRect(x + width - linewidth, y, linewidth, height);
 	}
-	
+
 	public void fillRect(double x, double y, double width, double height) {
 		canvas.startDrawing(false);
 		canvas.addVertex(x, y);
@@ -125,6 +125,11 @@ public class Graphics implements TextRenderer {
 		drawShape(new PolygonShape(vertices));
 	}
 
+	public void drawPath(Shape2D shape) {
+		// TODO
+		throw new UnsupportedOperationException();
+	}
+
 	public void drawShape(Shape2D shape) {
 		int shapeSize = shape.size();
 		Vertex2D[] vertices = shape.vertices();
@@ -133,7 +138,7 @@ public class Graphics implements TextRenderer {
 		for (int i = 0; i < shapeSize; i++) {
 			Vertex2D v1 = vertices[i];
 			Vertex2D v2 = vertices[(i + 1) % shapeSize];
-			
+
 			double g = v2.y - v1.y;
 			double a = v2.x - v1.x;
 			double angle = Math.atan(g / a);
@@ -165,6 +170,7 @@ public class Graphics implements TextRenderer {
 			canvas.addVertex(outline[(j + 5) % (shapeSize * 4)]);
 
 			// Add the first two points again...
+			// TODO There might be better ways
 			canvas.addVertex(outline[j + 3]);
 			canvas.addVertex(outline[j + 2]);
 			canvas.draw();

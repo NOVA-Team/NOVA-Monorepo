@@ -16,7 +16,7 @@ import nova.core.util.transform.Vector2i;
 /**
  * This class provides container for {@link GuiComponent}
  * 
- * @param <O> -describe me-
+ * @param <O> Self reference
  * @param <T> {@link NativeContainer} type
  */
 public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>, T extends NativeContainer> extends GuiComponent<O, T> {

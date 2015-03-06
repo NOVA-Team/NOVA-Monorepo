@@ -91,7 +91,6 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 */
 	public void bind(Entity entity, Vector3i position) {
 		onEvent(new GuiEvent.BindEvent(this, entity, position));
-		getNative().bind(entity, position);
 		repaint();
 	}
 
@@ -100,7 +99,6 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 */
 	public void unbind() {
 		onEvent(new GuiEvent.UnBindEvent(this));
-		getNative().unbind();
 	}
 
 	public TextMetrics getTextMetrics() {
