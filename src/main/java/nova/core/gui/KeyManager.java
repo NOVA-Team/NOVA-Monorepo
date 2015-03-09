@@ -12,6 +12,10 @@ public abstract class KeyManager {
 
 	protected HashBiMap<Integer, Key> keys = HashBiMap.create(Key.values().length);
 
+	protected KeyManager() {
+		mapKeys();
+	}
+
 	/**
 	 * Extend this in order to map native key codes to NOVA's key enum.
 	 */
@@ -32,6 +36,7 @@ public abstract class KeyManager {
 
 	/**
 	 * Is the key current down?
+	 * 
 	 * @return
 	 */
 	public abstract boolean isKeyDown(Key key);
@@ -55,7 +60,7 @@ public abstract class KeyManager {
 		KEY_F11, KEY_F12,
 
 		KEY_NUMPAD7, KEY_NUMPAD8, KEY_NUMPAD9,
-		KEY_NUMPAD4, LEY_NUMPAD5, KEY_NUMPAD6,
+		KEY_NUMPAD4, KEY_NUMPAD5, KEY_NUMPAD6,
 		KEY_NUMPAD1, KEY_NUMPAD2, KEY_NUMPAD3,
 
 		KEY_LEFT, KEY_UP, KEY_DOWN, KEY_RIGHT,
@@ -92,6 +97,6 @@ public abstract class KeyManager {
 		KEY_SEMICOLON, KEY_APOSTROPHE, KEY_GRAVE,
 		KEY_BACKSLASH, KEY_SLASH,
 		KEY_MULTIPLY, KEY_NUMLOCK,
-		KEY_SCROLL, KEY_ADD, KEY_SUBSTRACT
+		KEY_SCROLL, KEY_ADD, KEY_SUBTRACT
 	}
 }
