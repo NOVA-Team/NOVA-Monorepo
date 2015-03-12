@@ -30,15 +30,12 @@ public class FormattedText implements Iterable<FormattedText> {
 	}
 
 	public FormattedText(String text) {
-		Objects.requireNonNull(text);
-		this.text = text;
+		this.text = Objects.requireNonNull(text);
 	}
 
 	public FormattedText(String text, TextFormat format) {
-		Objects.requireNonNull(text);
-		Objects.requireNonNull(format);
-		this.text = text;
-		this.format = format.clone();
+		this.text = Objects.requireNonNull(text);
+		this.format = Objects.requireNonNull(format);
 	}
 
 	public FormattedText add(FormattedText other) {
@@ -53,8 +50,7 @@ public class FormattedText implements Iterable<FormattedText> {
 	}
 
 	public FormattedText add(String text) {
-		Objects.requireNonNull(text);
-		this.text += text;
+		this.text += Objects.requireNonNull(text);
 		return this;
 	}
 
@@ -143,6 +139,7 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * <td style='color: blue;'>
 	 * "The quick brown fox jumps over the lazy dog"</td>
 	 * </tr>
+	 * <tr>
 	 * <td>{@code &sz[size];}</td>
 	 * <td>Sets the text size to the given size in pixels. See
 	 * {@link TextFormat#DEFAULT_SIZE}</td>
