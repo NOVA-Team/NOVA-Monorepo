@@ -2,9 +2,13 @@ package nova.core.gui.render;
 
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import nova.core.render.Color;
 
@@ -17,7 +21,7 @@ import nova.core.render.Color;
 public class FormattedText implements Iterable<FormattedText> {
 
 	private FormattedText child;
-	private FormattedText parent;
+	private FormattedText first = this;
 	private TextFormat format = new TextFormat();
 	private String text;
 
@@ -26,31 +30,37 @@ public class FormattedText implements Iterable<FormattedText> {
 	}
 
 	public FormattedText(String text) {
+		Objects.requireNonNull(text);
 		this.text = text;
 	}
 
 	public FormattedText(String text, TextFormat format) {
+		Objects.requireNonNull(text);
+		Objects.requireNonNull(format);
 		this.text = text;
 		this.format = format.clone();
 	}
 
 	public FormattedText add(FormattedText other) {
+		Objects.requireNonNull(other);
 		if (format.equals(other.format)) {
 			return add(other.getText());
 		} else {
 			child = other;
-			other.parent = this;
+			other.first = this.first;
 			return other;
 		}
 	}
 
 	public FormattedText add(String text) {
+		Objects.requireNonNull(text);
 		this.text += text;
 		return this;
 	}
 
 	public FormattedText add(String text, Consumer<TextFormat> consumer) {
 
+		Objects.requireNonNull(text);
 		TextFormat format = this.format.clone();
 		consumer.accept(format);
 
@@ -61,7 +71,7 @@ public class FormattedText implements Iterable<FormattedText> {
 			FormattedText child = new FormattedText(text);
 			this.child = child;
 			child.format = format;
-			child.parent = this;
+			child.first = this.first;
 			return child;
 		}
 	}
@@ -74,7 +84,7 @@ public class FormattedText implements Iterable<FormattedText> {
 		return text;
 	}
 
-	public static Pattern pattern = Pattern.compile("(?<!\\\\)(?:\\\\\\\\)*(&([^;]{2});|&cr([-+]?\\d+);)");
+	public static Pattern pattern = Pattern.compile("(?<!\\\\)(?:\\\\\\\\)*(&([^;]{2});|&cr([-+]?\\d+);|&sz(\\d+);)");
 
 	/**
 	 * <p>
@@ -82,9 +92,9 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * has the following syntax: {@code &<tag>[data];} There are two types of
 	 * tags, tags without additional data are flags, i.e they are toggled each
 	 * time. {@code &rt;} turns all flags back to {@code false}. Tags with
-	 * additional data (color only currently) are not affected by {@code &rt;}.
-	 * Tags can be escaped with an {@code \} character. The case is taken into
-	 * account, only lowercase characters are permitted for tags.
+	 * additional data are not affected by {@code &rt;}. Tags can be escaped
+	 * with an {@code \} character. The case is taken into account, only
+	 * lowercase characters are permitted for tags.
 	 * </p>
 	 * 
 	 * <table>
@@ -133,12 +143,19 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * <td style='color: blue;'>
 	 * "The quick brown fox jumps over the lazy dog"</td>
 	 * </tr>
+	 * <td>{@code &sz[size];}</td>
+	 * <td>Sets the text size to the given size in pixels. See
+	 * {@link TextFormat#DEFAULT_SIZE}</td>
+	 * <td style='font-size: 15px;'>
+	 * "The quick brown fox jumps over the lazy dog"</td>
+	 * </tr>
 	 * </table>
 	 * 
 	 * @param string String to parse
 	 * @return FormattedText instance
 	 */
 	public static FormattedText parse(String string) {
+		Objects.requireNonNull(string);
 		Matcher matcher = pattern.matcher(string);
 		TextFormat format = new TextFormat();
 		FormattedText text = new FormattedText();
@@ -176,9 +193,12 @@ public class FormattedText implements Iterable<FormattedText> {
 						format.reset();
 						break;
 				}
-			} else {
+			} else if (matcher.group(3) != null) {
 				format = format.clone();
 				format.color = Color.argb(Integer.parseInt(matcher.group(3)));
+			} else if (matcher.group(4) != null) {
+				format = format.clone();
+				format.size = Integer.parseInt(matcher.group(4));
 			}
 			index = end;
 		}
@@ -195,13 +215,17 @@ public class FormattedText implements Iterable<FormattedText> {
 	// TODO Different text sizes
 	public static class TextFormat implements Cloneable {
 
+		public static int DEFAULT_SIZE = 9;
+		public static Color DEFAULT_COLOR = Color.black;
+
 		public boolean shadow;
 		public boolean italic;
 		public boolean bold;
 		public boolean underline;
 		public boolean strikethrough;
 
-		public Color color = Color.black;
+		public Color color = DEFAULT_COLOR;
+		public int size = DEFAULT_SIZE;
 
 		public TextFormat() {
 
@@ -225,7 +249,7 @@ public class FormattedText implements Iterable<FormattedText> {
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(shadow, italic, bold, underline, strikethrough, color);
+			return Objects.hash(shadow, italic, bold, underline, strikethrough, color, size);
 		}
 
 		@Override
@@ -244,6 +268,7 @@ public class FormattedText implements Iterable<FormattedText> {
 					&& this.shadow == other.shadow
 					&& this.strikethrough == other.strikethrough
 					&& this.underline == other.underline
+					&& this.size == other.size
 					&& this.color.equals(other.color);
 		}
 
@@ -260,15 +285,16 @@ public class FormattedText implements Iterable<FormattedText> {
 		return new FormattedTextIterator(this);
 	}
 
+	public Stream<FormattedText> stream() {
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator(), Spliterator.ORDERED | Spliterator.NONNULL), false);
+	}
+
 	private static class FormattedTextIterator implements Iterator<FormattedText> {
 
 		private FormattedText current;
 
-		public FormattedTextIterator(FormattedText first) {
-			current = first;
-			while (current.parent != null) {
-				current = current.parent;
-			}
+		public FormattedTextIterator(FormattedText text) {
+			current = text.first;
 		}
 
 		@Override
