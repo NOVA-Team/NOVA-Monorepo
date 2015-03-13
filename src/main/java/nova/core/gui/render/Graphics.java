@@ -1,6 +1,8 @@
 package nova.core.gui.render;
 
 import nova.core.gui.render.Shape2D.PolygonShape;
+import nova.core.gui.render.text.FormattedText;
+import nova.core.gui.render.text.TextRenderer;
 import nova.core.render.Color;
 import nova.core.render.texture.Texture;
 import nova.core.util.transform.Vector2i;

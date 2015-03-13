@@ -1,5 +1,6 @@
-package nova.core.gui.render;
+package nova.core.gui.render.text;
 
+import nova.core.util.transform.Vector2d;
 
 /**
  * Generic interface for a TextRenderer. A TextRenderer can draw text to the
@@ -11,8 +12,7 @@ public interface TextRenderer extends TextMetrics {
 
 	/**
 	 * Renders {@link FormattedText} to the screen. Performs a line wrap at
-	 * {@code %n} and {@code \n}. <b>Any repeating whitespace will not be taken
-	 * into account!</b>
+	 * {@code %n} and {@code \n}.
 	 * 
 	 * @param x x position
 	 * @param y y position
@@ -41,8 +41,7 @@ public interface TextRenderer extends TextMetrics {
 	 * the desired width and fills the center with "{@code ...}
 	 * ". An example would be: "{@code Donaudampfschiff}" - "
 	 * {@code Donau...chiff}". The wrapping substrings should have the same
-	 * amount of characters. This should only be used on small text. <b>Any
-	 * repeating whitespace will not be taken into account!</b>
+	 * amount of characters. This should only be used on small text.
 	 * 
 	 * @param x x position
 	 * @param y y position
@@ -55,8 +54,7 @@ public interface TextRenderer extends TextMetrics {
 	 * Works in the same way as {@link #drawString(int, int, FormattedText)}
 	 * except that it takes a String as argument. Keep in mind that the wrapper
 	 * might apply unwanted formatting to the provided text, so using
-	 * {@link FormattedText} is the <i>safe</i> way. <b>Any repeating whitespace
-	 * will not be taken into account!</b>
+	 * {@link FormattedText} is the <i>safe</i> way.
 	 * 
 	 * @param x x position
 	 * @param y y position
@@ -88,8 +86,7 @@ public interface TextRenderer extends TextMetrics {
 	 * {@link #drawCutString(int, int, FormattedText, int)} except that it takes
 	 * a String as argument. Keep in mind that the wrapper might apply unwanted
 	 * formatting to the provided text, so using {@link FormattedText} is the
-	 * <i>safe</i> way. <b>Any repeating whitespace will not be taken into
-	 * account!</b>
+	 * <i>safe</i> way.
 	 * 
 	 * @param x x position
 	 * @param y y position
@@ -109,4 +106,13 @@ public interface TextRenderer extends TextMetrics {
 	 * @param zIndex z index
 	 */
 	public void setZIndex(int zIndex);
+
+	/**
+	 * Interface to provide information for cached {@link FormattedText}.
+	 * 
+	 * @author Vic Nightfall
+	 */
+	interface RenderedText {
+		Vector2d getDimensions();
+	}
 }

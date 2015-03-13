@@ -1,4 +1,4 @@
-package nova.core.gui.render;
+package nova.core.gui.render.text;
 
 import nova.core.util.transform.Vector2i;
 

@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import nova.core.gui.GuiComponent;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
-import nova.core.gui.render.FormattedText;
 import nova.core.gui.render.Graphics;
+import nova.core.gui.render.text.FormattedText;
 import nova.core.util.transform.Vector2i;
 
 /**

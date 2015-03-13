@@ -1,7 +1,8 @@
-package nova.core.gui.render;
+package nova.core.gui.render.text;
 
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Consumer;
@@ -10,11 +11,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import nova.core.gui.render.text.TextRenderer.RenderedText;
 import nova.core.render.Color;
+import nova.core.util.exception.NovaException;
 
 /**
  * An object that holds text and the format to apply to it. A
- * {@link TextRenderer} can be used to draw formatted text.
+ * {@link TextRenderer} can be used to draw formatted text. It is <i>highly</i>
+ * recommended to store the instance of Formatted text so that the wrapper can
+ * cache it.
  * 
  * @author Vic Nightfall
  */
@@ -24,6 +29,9 @@ public class FormattedText implements Iterable<FormattedText> {
 	private FormattedText first = this;
 	private TextFormat format = new TextFormat();
 	private String text;
+
+	// Cache, used by the wrapper.
+	private Optional<RenderedText> cache = Optional.empty();
 
 	public FormattedText() {
 		this.text = "";
@@ -39,6 +47,7 @@ public class FormattedText implements Iterable<FormattedText> {
 	}
 
 	public FormattedText add(FormattedText other) {
+		cache = Optional.empty();
 		Objects.requireNonNull(other);
 		if (format.equals(other.format)) {
 			return add(other.getText());
@@ -50,11 +59,13 @@ public class FormattedText implements Iterable<FormattedText> {
 	}
 
 	public FormattedText add(String text) {
+		cache = Optional.empty();
 		this.text += Objects.requireNonNull(text);
 		return this;
 	}
 
 	public FormattedText add(String text, Consumer<TextFormat> consumer) {
+		cache = Optional.empty();
 
 		Objects.requireNonNull(text);
 		TextFormat format = this.format.clone();
@@ -73,6 +84,7 @@ public class FormattedText implements Iterable<FormattedText> {
 	}
 
 	public TextFormat getFormat() {
+		// TODO Could interfere with the cache when modified.
 		return format;
 	}
 
@@ -80,7 +92,15 @@ public class FormattedText implements Iterable<FormattedText> {
 		return text;
 	}
 
-	public static Pattern pattern = Pattern.compile("(?<!\\\\)(?:\\\\\\\\)*(&([^;]{2});|&cr([-+]?\\d+);|&sz(\\d+);)");
+	public Optional<RenderedText> getCached() {
+		return cache;
+	}
+
+	public void setCached(RenderedText text) {
+		this.cache = Optional.of(text);
+	}
+
+	public static Pattern pattern = Pattern.compile("(?<!\\\\)(?:\\\\\\\\)*(&([^;]{2});|&cr(([-+]?\\d+)|(\\#[0-F0-f]+));|&sz(\\d+);)");
 
 	/**
 	 * <p>
@@ -135,7 +155,8 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * <tr>
 	 * <td>{@code &cr[ARGB];}</td>
 	 * <td>Sets the text color to the given color, you can use
-	 * {@link Color#argb()}.</td>
+	 * {@link Color#argb()}. Colors prefixed with {@code #} are interpreted as
+	 * hexadecimal.</td>
 	 * <td style='color: blue;'>
 	 * "The quick brown fox jumps over the lazy dog"</td>
 	 * </tr>
@@ -192,10 +213,25 @@ public class FormattedText implements Iterable<FormattedText> {
 				}
 			} else if (matcher.group(3) != null) {
 				format = format.clone();
-				format.color = Color.argb(Integer.parseInt(matcher.group(3)));
-			} else if (matcher.group(4) != null) {
+				try {
+					if (matcher.group(4) != null) {
+						format.color = Color.argb(Integer.parseInt(matcher.group(4)));
+					} else {
+						// Parse hex string, needs to be a long as
+						// Integer.parseInt doesn't deal with the sign here.
+						format.color = Color.argb((int) Long.parseLong(matcher.group(5).substring(1), 16));
+					}
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+					throw new NovaException("Failed to parse color at index " + matcher.start() + ": '" + matcher.group(3) + "'.");
+				}
+			} else if (matcher.group(6) != null) {
 				format = format.clone();
-				format.size = Integer.parseInt(matcher.group(4));
+				try {
+					format.size = Integer.parseInt(matcher.group(6));
+				} catch (NumberFormatException e) {
+					throw new NovaException("Failed to parse size at index " + matcher.start() + ": '" + matcher.group(6) + "'.");
+				}
 			}
 			index = end;
 		}
@@ -282,8 +318,13 @@ public class FormattedText implements Iterable<FormattedText> {
 		return new FormattedTextIterator(this);
 	}
 
+	@Override
+	public Spliterator<FormattedText> spliterator() {
+		return Spliterators.spliteratorUnknownSize(iterator(), Spliterator.ORDERED | Spliterator.NONNULL);
+	}
+
 	public Stream<FormattedText> stream() {
-		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator(), Spliterator.ORDERED | Spliterator.NONNULL), false);
+		return StreamSupport.stream(spliterator(), false);
 	}
 
 	private static class FormattedTextIterator implements Iterator<FormattedText> {

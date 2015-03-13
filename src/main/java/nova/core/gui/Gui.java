@@ -9,7 +9,7 @@ import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.nativeimpl.NativeGui;
-import nova.core.gui.render.TextMetrics;
+import nova.core.gui.render.text.TextMetrics;
 import nova.core.loader.NovaMod;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;

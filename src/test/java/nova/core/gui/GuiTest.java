@@ -9,7 +9,7 @@ import nova.core.gui.layout.Constraints.BorderConstraints;
 import nova.core.network.NetworkTarget.Side;
 
 public class GuiTest {
-
+	
 	// TODO Make this a test case, for now it's just to test generics and stuffs
 	// until the core is functional.
 	public void testGui() {

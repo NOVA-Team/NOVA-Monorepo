@@ -12,7 +12,7 @@ import nova.core.gui.GuiEvent.MouseWheelEvent;
 import nova.core.gui.KeyManager.Key;
 import nova.core.gui.Outline;
 import nova.core.gui.factory.GuiEventFactory;
-import nova.core.gui.render.TextMetrics;
+import nova.core.gui.render.text.TextMetrics;
 import nova.core.network.Packet;
 
 public interface NativeGui extends NativeContainer {
