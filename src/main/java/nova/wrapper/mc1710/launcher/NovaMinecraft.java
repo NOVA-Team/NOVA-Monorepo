@@ -9,11 +9,15 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.core.deps.DepDownloader;
+import nova.core.deps.MavenDependency;
 import nova.core.event.EventManager;
 import nova.core.game.Game;
+import nova.core.loader.NovaMod;
 import nova.internal.NovaLauncher;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.backward.gui.MCGuiFactory;
@@ -77,6 +81,13 @@ public class NovaMinecraft {
 		ItemWrapperRegistry.instance.registerItems();
 		OreDictionaryIntegration.instance.registerOreDictionary();
 		MinecraftRecipeRegistry.instance.registerRecipes();
+
+		for (NovaMod mod : launcher.getNeededDeps().keySet()) {
+			MavenDependency[] dependency = launcher.getNeededDeps().get(mod);
+			for (MavenDependency dep : dependency) {
+				DepDownloader.downloadDepdency(dep.getDownloadURL(),FMLInjectionData.data()[6] + "/mods/" + dep.getDownloadURL().getFile().substring(dep.getDownloadURL().getFile().lastIndexOf("/")));
+			}
+		}
 
 		launcher.preInit();
 
