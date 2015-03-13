@@ -24,7 +24,11 @@ public class MavenDependency {
 	                       String version,
 	                       String classifier,
 	                       String ext) {
-		this.repoURL = mavenRepo;
+		try {
+			this.repoURL = mavenRepo == null ? new URL("http://maven.novaapi.net/") : mavenRepo;
+		} catch (MalformedURLException e) {
+			throw new NovaException("HOLY WTF THIS IS SO TOTALLY BROKEN AND YOU SHOULD FORCE EVERY NOVACORE DEV TO COMMIT SEPPUKU", e);
+		}
 
 		this.groupID = groupId;
 		this.artifactID = artifactId;
@@ -35,9 +39,9 @@ public class MavenDependency {
 	}
 
 	public MavenDependency(URL mavenRepo,
-	                       String version,
+	                       String groupID,
 	                       String artifactID,
-	                       String groupID) {
+	                       String version) {
 		this.repoURL = mavenRepo;
 
 		this.version = version;
