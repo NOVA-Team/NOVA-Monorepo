@@ -108,7 +108,7 @@ public abstract class Canvas {
 	protected static class CanvasState implements Cloneable {
 
 		public int zIndex;
-		public Color color;
+		public Color color = Color.white;
 		public double tx, ty;
 		public double angle;
 		public Spacing scissor = Spacing.empty;

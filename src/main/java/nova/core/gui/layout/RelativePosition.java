@@ -7,7 +7,7 @@ import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector2i;
 
 /**
- * {@link Constraints} for relative positioning
+ * {@link Constraints} for relative positioning.
  * 
  * @author Vic Nightfall
  */
@@ -48,28 +48,17 @@ public class RelativePosition extends Constraints<RelativePosition> {
 		this.yOffset = yOffset;
 	}
 
-	public Vector2i getPositionOf(Vector2i parentSize) {
-		int x = xRelative ? (int) (parentSize.x * (xOffset / 100F)) : xOffset;
-		int y = yRelative ? (int) (parentSize.y * (yOffset / 100F)) : yOffset;
-
-		if (xAnchor == Anchor.EAST)
-			xOffset = parentSize.x - xOffset;
-		if (yAnchor == Anchor.SOUTH)
-			yOffset = parentSize.y - yOffset;
-
-		return new Vector2i(x, y);
-	}
-
-	public static final Pattern pattern = Pattern.compile("(west|east|north|south):([-+]?\\d+)(%){0,1}}[\\s]*", Pattern.CASE_INSENSITIVE);
+	public static final Pattern pattern = Pattern.compile("(west|east|north|south):\\s?([-+]?\\d+)(%)?[\\s]?", Pattern.CASE_INSENSITIVE);
 
 	public RelativePosition(String str) {
 		try {
+			int size = 0;
 			Matcher matcher = pattern.matcher(str);
 			while (matcher.find()) {
-				Anchor anchor = Anchor.valueOf(matcher.group(1));
+				size += matcher.end() - matcher.start();
+				Anchor anchor = Anchor.valueOf(matcher.group(1).toUpperCase());
 				int offset = Integer.valueOf(matcher.group(2));
 				boolean relative = matcher.group(3) != null;
-				str = str.substring(0, matcher.start()) + str.substring(matcher.end(), str.length() - 1);
 				if (anchor.axis == 1) {
 					xAnchor = anchor;
 					xOffset = offset;
@@ -80,10 +69,51 @@ public class RelativePosition extends Constraints<RelativePosition> {
 					yRelative = relative;
 				}
 			}
-			if (str.length() > 0)
+			if (str.length() - size > 0)
 				throw new IllegalArgumentException();
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new NovaException("Invalid relative position \"" + str + "\"");
 		}
+	}
+
+	public RelativePosition setX(Anchor anchor, int offset) {
+		this.xAnchor = anchor;
+		this.xOffset = offset;
+		this.xRelative = false;
+		return this;
+	}
+
+	public RelativePosition setY(Anchor anchor, int offset) {
+		this.yAnchor = anchor;
+		this.yOffset = offset;
+		this.yRelative = false;
+		return this;
+	}
+
+	public RelativePosition setX(Anchor anchor, float offset) {
+		this.xAnchor = anchor;
+		this.xOffset = (int) (offset * 100);
+		this.xRelative = true;
+		return this;
+	}
+
+	public RelativePosition setY(Anchor anchor, float offset) {
+		this.yAnchor = anchor;
+		this.yOffset = (int) (offset * 100);
+		this.yRelative = true;
+		return this;
+	}
+
+	public Vector2i getPositionOf(Vector2i parentSize) {
+		int x = xRelative ? (int) (parentSize.x * (xOffset / 100F)) : xOffset;
+		int y = yRelative ? (int) (parentSize.y * (yOffset / 100F)) : yOffset;
+
+		if (xAnchor == Anchor.EAST)
+			x = parentSize.x - x;
+		if (yAnchor == Anchor.SOUTH)
+			y = parentSize.y - y;
+
+		return new Vector2i(x, y);
 	}
 }

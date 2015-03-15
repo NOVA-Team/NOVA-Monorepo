@@ -92,6 +92,7 @@ public class FormattedText implements Iterable<FormattedText> {
 		return text;
 	}
 
+
 	public Optional<RenderedText> getCached() {
 		return cache;
 	}

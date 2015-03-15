@@ -1,5 +1,7 @@
 package nova.core.gui.layout;
 
+import java.util.Objects;
+
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
@@ -32,6 +34,7 @@ public abstract class AbstractGuiLayout<T extends Constraints<T>> implements Gui
 	@SuppressWarnings("unchecked")
 	@Override
 	public final void add(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, Object... parameters) {
+		Objects.requireNonNull(component);
 		if (parameters.length == 1) {
 			if (constraintsClass.isInstance(parameters[0])) {
 				addImpl(component, parent, ((T) parameters[0]).clone());

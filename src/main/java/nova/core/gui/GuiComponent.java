@@ -294,7 +294,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		if (getBackground().isPresent()) {
 			getBackground().get().draw(graphics, getOutline().getDimension());
 		}
-		onEvent(new GuiEvent.RenderEvent(graphics, mouseX, mouseY));
+		guiEventBus.publish(new GuiEvent.RenderEvent(graphics, mouseX, mouseY));
 	}
 
 	@Override
