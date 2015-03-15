@@ -1,15 +1,19 @@
 package nova.core.gui;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 import nova.core.entity.Entity;
 import nova.core.game.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
+import nova.core.gui.GuiEvent.BindEvent;
+import nova.core.gui.components.inventory.Slot;
 import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.nativeimpl.NativeGui;
 import nova.core.gui.render.text.TextMetrics;
+import nova.core.inventory.Inventory;
 import nova.core.loader.NovaMod;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;
@@ -22,6 +26,11 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 
 	protected Optional<String> modID = Optional.empty();
 	protected final boolean hasServerSide;
+
+	/**
+	 * List of {@link Inventory Inventories} associated with this GUI.
+	 */
+	protected final HashMap<String, Inventory> inventoryMap = new HashMap<>();
 
 	/**
 	 * Creates a nwe GUI instance with a {@link Side#SERVER server} side
@@ -90,6 +99,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 * @param position block position
 	 */
 	public void bind(Entity entity, Vector3i position) {
+		inventoryMap.clear();
 		onEvent(new GuiEvent.BindEvent(this, entity, position));
 		repaint();
 	}
@@ -109,5 +119,20 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	public Optional<Gui> getParentGui() {
 		// TODO Parented GUIs?
 		return Optional.of(this);
+	}
+
+	/**
+	 * Associates an {@link Inventory} with this GUI. Has to be called from the
+	 * {@link BindEvent} in order to supply it to {@link Slot}.
+	 * 
+	 * @param id Id used to indentify the inventory
+	 * @param inventory inventory to bind
+	 */
+	public void addInventory(String id, Inventory inventory) {
+		inventoryMap.put(id, inventory);
+	}
+
+	public Inventory getInventory(String id) {
+		return inventoryMap.get(id);
 	}
 }
