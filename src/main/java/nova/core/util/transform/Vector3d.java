@@ -150,6 +150,10 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 		return new Vector3d(Math.abs(x), Math.abs(y), Math.abs(z));
 	}
 
+	public double distance(Vector3i other) {
+		return distance(other.toDouble());
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Vector3) {

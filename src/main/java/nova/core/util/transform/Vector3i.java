@@ -134,6 +134,10 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 		return new Vector3i(Math.abs(x), Math.abs(y), Math.abs(z));
 	}
 
+	public double distance(Vector3d other) {
+		return toDouble().distance(other);
+	}
+
 	@Override
 	public int hashCode() {
 		long hash = x;
