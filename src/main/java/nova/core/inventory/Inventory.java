@@ -3,9 +3,11 @@ package nova.core.inventory;
 import nova.core.item.Item;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -128,6 +130,14 @@ public interface Inventory extends Iterable<Item> {
 	 */
 	default List<Item> toList() {
 		ArrayList<Item> list = new ArrayList<>();
+		for (Item i : this) {
+			list.add(i);
+		}
+		return list;
+	}
+
+	default Set<Item> toSet() {
+		Set<Item> list = new HashSet<>();
 		for (Item i : this) {
 			list.add(i);
 		}
