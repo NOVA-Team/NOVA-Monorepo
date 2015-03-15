@@ -31,6 +31,7 @@ public class Game {
 
 	public final Logger logger;
 
+	public final ClientManager clientManager;
 	public final BlockManager blockManager;
 	public final EntityManager entityManager;
 	public final ItemManager itemManager;
@@ -62,6 +63,7 @@ public class Game {
 
 	private Game(
 		Logger logger,
+		ClientManager clientManager,
 		BlockManager blockManager,
 		EntityManager entityManager,
 		ItemManager itemManager,
@@ -83,6 +85,7 @@ public class Game {
 
 		this.logger = logger;
 
+		this.clientManager = clientManager;
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
 		this.itemManager = itemManager;
