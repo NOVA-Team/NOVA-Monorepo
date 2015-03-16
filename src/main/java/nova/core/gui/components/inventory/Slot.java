@@ -38,15 +38,37 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 
 		onGuiEvent(this::onBind, BindEvent.class);
 	}
-	
+
 	public Optional<Item> getItem() {
-		if(inventory == null) return Optional.empty();
+		if (inventory == null)
+			return Optional.empty();
 		return inventory.get(slotID);
 	}
-	
+
+	public Optional<Item> removeItem(int amount) {
+		if (inventory == null)
+			return Optional.empty();
+		return inventory.remove(slotID, amount);
+	}
+
 	public boolean setItem(Item item) {
-		if(inventory == null) return false;
+		if (inventory == null)
+			return false;
 		return inventory.set(slotID, item);
+	}
+
+	public int addItem(Item item) {
+		if (inventory == null)
+			return item.count();
+		return inventory.add(slotID, item);
+	}
+
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	public int getSlotID() {
+		return slotID;
 	}
 
 	protected void onBind(BindEvent event) {

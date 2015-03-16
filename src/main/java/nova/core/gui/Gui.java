@@ -17,6 +17,8 @@ import nova.core.inventory.Inventory;
 import nova.core.loader.NovaMod;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;
+import nova.core.player.InventoryPlayer;
+import nova.core.player.Player;
 import nova.core.util.transform.Vector3i;
 
 /**
@@ -31,6 +33,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 * List of {@link Inventory Inventories} associated with this GUI.
 	 */
 	protected final HashMap<String, Inventory> inventoryMap = new HashMap<>();
+	protected InventoryPlayer playerInventory;
 
 	/**
 	 * Creates a nwe GUI instance with a {@link Side#SERVER server} side
@@ -100,6 +103,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 */
 	public void bind(Entity entity, Vector3i position) {
 		inventoryMap.clear();
+		playerInventory = ((Player) entity).getInventory();
 		onEvent(new GuiEvent.BindEvent(this, entity, position));
 		repaint();
 	}
@@ -108,6 +112,8 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 * Unbind the GUI, called after getting replaced by another GUI.
 	 */
 	public void unbind() {
+		inventoryMap.clear();
+		playerInventory = null;
 		onEvent(new GuiEvent.UnBindEvent(this));
 	}
 
@@ -134,5 +140,9 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 
 	public Inventory getInventory(String id) {
 		return inventoryMap.get(id);
+	}
+
+	public InventoryPlayer getPlayerInventory() {
+		return playerInventory;
 	}
 }

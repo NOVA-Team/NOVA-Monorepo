@@ -1,5 +1,5 @@
 package nova.core.gui.nativeimpl;
 
-public interface NativePlayerInventory extends NativeSlot {
+public interface NativePlayerInventory extends NativeGuiComponent {
 
 }
