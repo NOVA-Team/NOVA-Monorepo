@@ -21,7 +21,9 @@ public interface TextRenderer extends TextMetrics {
 	 * @see TextRenderer#drawString(int, int, FormattedText, int)
 	 * @see TextRenderer#drawCutString(int, int, FormattedText, int)
 	 */
-	public void drawString(int x, int y, FormattedText str);
+	public default void drawString(int x, int y, FormattedText str) {
+		cacheString(str).draw(x, y, this);
+	}
 
 	/**
 	 * Renders {@link FormattedText} to the screen. Performs a line wrap at
@@ -34,7 +36,9 @@ public interface TextRenderer extends TextMetrics {
 	 * @param str FormattedText to render
 	 * @param width size on which to wrap the text
 	 */
-	public void drawString(int x, int y, FormattedText str, int width);
+	public default void drawString(int x, int y, FormattedText str, int width) {
+		cacheString(str, width).draw(x, y, this);
+	}
 
 	/**
 	 * Renders {@link FormattedText} to the screen. It will fit the text into
@@ -48,7 +52,9 @@ public interface TextRenderer extends TextMetrics {
 	 * @param str FormattedText to render
 	 * @param width size on which to cut the text
 	 */
-	public void drawCutString(int x, int y, FormattedText str, int width);
+	public default void drawCutString(int x, int y, FormattedText str, int width) {
+		cacheCutString(str, width).draw(x, y, this);
+	}
 
 	/**
 	 * Works in the same way as {@link #drawString(int, int, FormattedText)}
@@ -112,7 +118,10 @@ public interface TextRenderer extends TextMetrics {
 	 * 
 	 * @author Vic Nightfall
 	 */
-	interface RenderedText {
-		Vector2d getDimensions();
+	public static interface RenderedText {
+
+		public Vector2d getDimensions();
+
+		public void draw(int x, int y, TextRenderer renderer);
 	}
 }

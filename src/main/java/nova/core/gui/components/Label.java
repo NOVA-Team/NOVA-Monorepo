@@ -6,6 +6,7 @@ import nova.core.gui.GuiComponent;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.gui.render.Graphics;
 import nova.core.gui.render.text.FormattedText;
+import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector2i;
 
 /**
@@ -47,7 +48,8 @@ public class Label extends GuiComponent<Label, NativeGuiComponent> {
 		if (inherited.isPresent())
 			return inherited;
 		if (getParentGui().isPresent()) {
-			return Optional.of(getParentGui().get().getTextMetrics().getBounds(getText()));
+			Vector2d dimensions = getParentGui().get().getTextMetrics().getBounds(getText());
+			return Optional.of(new Vector2i(dimensions.xi(), dimensions.yi()));
 		}
 		return inherited;
 	}

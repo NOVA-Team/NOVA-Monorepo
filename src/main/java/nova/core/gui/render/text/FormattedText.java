@@ -2,7 +2,6 @@ package nova.core.gui.render.text;
 
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Consumer;
@@ -11,7 +10,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import nova.core.gui.render.text.TextRenderer.RenderedText;
 import nova.core.render.Color;
 import nova.core.util.exception.NovaException;
 
@@ -30,9 +28,6 @@ public class FormattedText implements Iterable<FormattedText> {
 	private TextFormat format = new TextFormat();
 	private String text;
 
-	// Cache, used by the wrapper.
-	private Optional<RenderedText> cache = Optional.empty();
-
 	public FormattedText() {
 		this.text = "";
 	}
@@ -47,7 +42,6 @@ public class FormattedText implements Iterable<FormattedText> {
 	}
 
 	public FormattedText add(FormattedText other) {
-		cache = Optional.empty();
 		Objects.requireNonNull(other);
 		if (format.equals(other.format)) {
 			return add(other.getText());
@@ -59,14 +53,11 @@ public class FormattedText implements Iterable<FormattedText> {
 	}
 
 	public FormattedText add(String text) {
-		cache = Optional.empty();
 		this.text += Objects.requireNonNull(text);
 		return this;
 	}
 
 	public FormattedText add(String text, Consumer<TextFormat> consumer) {
-		cache = Optional.empty();
-
 		Objects.requireNonNull(text);
 		TextFormat format = this.format.clone();
 		consumer.accept(format);
@@ -90,15 +81,6 @@ public class FormattedText implements Iterable<FormattedText> {
 
 	public String getText() {
 		return text;
-	}
-
-
-	public Optional<RenderedText> getCached() {
-		return cache;
-	}
-
-	public void setCached(RenderedText text) {
-		this.cache = Optional.of(text);
 	}
 
 	public static Pattern pattern = Pattern.compile("(?<!\\\\)(?:\\\\\\\\)*(&([^;]{2});|&cr(([-+]?\\d+)|(\\#[0-F0-f]+));|&sz(\\d+);)");

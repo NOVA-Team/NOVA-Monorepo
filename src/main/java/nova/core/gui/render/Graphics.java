@@ -5,7 +5,7 @@ import nova.core.gui.render.text.FormattedText;
 import nova.core.gui.render.text.TextRenderer;
 import nova.core.render.Color;
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.Vector2d;
 
 /**
  * 
@@ -241,12 +241,12 @@ public class Graphics implements TextRenderer {
 	}
 
 	@Override
-	public Vector2i getBounds(FormattedText text) {
+	public Vector2d getBounds(FormattedText text) {
 		return textRenderer.getBounds(text);
 	}
 
 	@Override
-	public Vector2i getBounds(String str) {
+	public Vector2d getBounds(String str) {
 		return textRenderer.getBounds(str);
 	}
 
@@ -254,5 +254,20 @@ public class Graphics implements TextRenderer {
 	public void setZIndex(int zIndex) {
 		textRenderer.setZIndex(zIndex);
 		canvas.setZIndex(zIndex);
+	}
+
+	@Override
+	public RenderedText cacheString(FormattedText str) {
+		return textRenderer.cacheString(str);
+	}
+
+	@Override
+	public RenderedText cacheString(FormattedText str, int width) {
+		return textRenderer.cacheString(str, width);
+	}
+
+	@Override
+	public RenderedText cacheCutString(FormattedText str, int width) {
+		return textRenderer.cacheCutString(str, width);
 	}
 }
