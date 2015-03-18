@@ -10,6 +10,7 @@ import nova.core.game.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.ComponentEvent.ResizeEvent;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
+import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.gui.render.Graphics;
@@ -236,13 +237,23 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	public final void preRender(int mouseX, int mouseY, Graphics graphics) {
-		isMouseOver = getOutline().contains(mouseX, mouseY);
+		isMouseOver = mouseX >= 0 && mouseY >= 0 && mouseX < getOutline().getWidth() && mouseY < getOutline().getHeight();
 		if (background.isPresent())
 			background.get().draw(graphics, getOutline().getDimension());
 	}
 
 	@Override
 	public void onEvent(GuiEvent event) {
+		guiEventBus.publish(event);
+	}
+
+	/**
+	 * Special handling for mouse events, the position has to be relative to the
+	 * parent component.
+	 * 
+	 * @param event {@link MouseEvent}
+	 */
+	public void onMouseEvent(MouseEvent event) {
 		guiEventBus.publish(event);
 	}
 
@@ -286,14 +297,11 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * Renders the component. A super call to this method ensures that the draw
 	 * event is passed to subsequent event listeners.
 	 *
-	 * @param mouseX Mouse position in X-axis on screen
-	 * @param mouseY Mouse position in Y-axis on screen
+	 * @param mouseX Mouse position in X-axis relative to this component
+	 * @param mouseY Mouse position in Y-axis relative to this component
 	 * @param graphics {@link Graphics} object used to draw on screen
 	 */
 	public void render(int mouseX, int mouseY, Graphics graphics) {
-		if (getBackground().isPresent()) {
-			getBackground().get().draw(graphics, getOutline().getDimension());
-		}
 		guiEventBus.publish(new GuiEvent.RenderEvent(graphics, mouseX, mouseY));
 	}
 

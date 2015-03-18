@@ -41,7 +41,7 @@ public interface NativeGui extends NativeContainer {
 	public default void onMousePressed(int mouseX, int mouseY, EnumMouseButton button, boolean state) {
 		// TODO Post events for CLICK and DOUBLECLICK
 		if (getComponent().isActive()) {
-			getComponent().onEvent(new MouseEvent(mouseX, mouseY, button, state ? EnumMouseState.DOWN : EnumMouseState.UP));
+			getComponent().onMouseEvent(new MouseEvent(mouseX, mouseY, button, state ? EnumMouseState.DOWN : EnumMouseState.UP));
 		}
 	}
 

@@ -19,6 +19,11 @@ public class GuiEvent extends CancelableEvent {
 	// TODO Document. Add a reference to the component?
 
 	// TODO Split this up into multiple events maybe?
+	/**
+	 * Generic mouse event. The mouse position is relative to the component.
+	 * 
+	 * @author Vic Nightfall
+	 */
 	@Cancelable
 	public static class MouseEvent extends GuiEvent {
 

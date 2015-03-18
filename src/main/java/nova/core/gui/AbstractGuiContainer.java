@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import nova.core.gui.ComponentEvent.ResizeEvent;
+import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.layout.BorderLayout;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeContainer;
@@ -98,9 +99,20 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	@Override
 	public void onEvent(GuiEvent event) {
 		super.onEvent(event);
-		getChildComponents().stream().forEach((e) -> {
-			e.onEvent(event);
-		});
+		for (GuiComponent<?, ?> component : getChildComponents()) {
+			component.onEvent(event);
+		}
+	}
+
+	@Override
+	public void onMouseEvent(MouseEvent event) {
+		super.onMouseEvent(event);
+		for (GuiComponent<?, ?> component : getChildComponents()) {
+			// Change the mouse position to be relative to the child component's
+			// outline.
+			Vector2i position = component.getOutline().getPosition();
+			component.onMouseEvent(new MouseEvent(event.mouseX - position.x, event.mouseY - position.y, event.button, event.state));
+		}
 	}
 
 	/**
@@ -145,6 +157,16 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	}
 
 	public void onResized(ResizeEvent event) {
+		revalidate();
+	}
+
+	/**
+	 * Called when the size changed to update the positions of the child
+	 * components.
+	 * 
+	 * @see GuiLayout#revalidate(AbstractGuiContainer)
+	 */
+	public void revalidate() {
 		layout.revalidate(this);
 	}
 

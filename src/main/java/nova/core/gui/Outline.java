@@ -49,7 +49,7 @@ public class Outline extends Rectangle<Vector2i> {
 	}
 
 	public Outline setDimension(Vector2i dimension) {
-		return new Outline(min, min.add(dimension));
+		return new Outline(min, dimension);
 	}
 
 	public Vector2i getPosition() {
