@@ -13,31 +13,33 @@ import java.util.Set;
 
 /**
  * A in-game world
- *
  * @see BlockAccess
  */
 public abstract class World implements Identifiable, BlockAccess {
 
 	/**
 	 * Marks a position to render static.
-	 *
 	 * @param position The position to perform the static re-rendering.
 	 */
 	public abstract void markStaticRender(Vector3i position);
 
 	/**
 	 * Marks a specific block to indicate it changed.
-	 *
 	 * @param position The position being changed.
 	 */
 	public abstract void markChange(Vector3i position);
 
 	/**
 	 * Creates an entity
-	 *
 	 * @param factory The entity factory
 	 */
 	public abstract Entity createEntity(EntityFactory factory);
+
+	/**
+	 * Creates an entity
+	 * @param entity The entity object
+	 */
+	public abstract Entity createEntity(Entity entity);
 
 	/**
 	 * Creates an entity that represents an item
@@ -50,6 +52,12 @@ public abstract class World implements Identifiable, BlockAccess {
 	 * For example, particle effects.
 	 */
 	public abstract Entity createClientEntity(EntityFactory factory);
+
+	/**
+	 * Creates an entity only on the client side.
+	 * For example, particle effects.
+	 */
+	public abstract Entity createClientEntity(Entity entity);
 
 	/**
 	 * Destroys an entity, removing it from the world.
