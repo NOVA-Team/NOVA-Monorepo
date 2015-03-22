@@ -39,7 +39,7 @@ public abstract class World implements Identifiable, BlockAccess {
 	 * Creates an entity
 	 * @param entity The entity object
 	 */
-	public abstract Entity createEntity(Entity entity);
+	public abstract <T extends Entity> T createEntity(T entity);
 
 	/**
 	 * Creates an entity that represents an item
@@ -57,7 +57,7 @@ public abstract class World implements Identifiable, BlockAccess {
 	 * Creates an entity only on the client side.
 	 * For example, particle effects.
 	 */
-	public abstract Entity createClientEntity(Entity entity);
+	public abstract <T extends Entity> T createClientEntity(T entity);
 
 	/**
 	 * Destroys an entity, removing it from the world.
