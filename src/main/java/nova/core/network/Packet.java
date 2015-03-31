@@ -317,7 +317,7 @@ public interface Packet {
 		return Data.unserialize(data);
 	}
 
-	default List readList() {
+	default <T> List<T> readList() {
 		ArrayList arrayList = new ArrayList();
 		int size = readInt();
 
@@ -325,22 +325,22 @@ public interface Packet {
 			.range(0, size)
 			.forEach(i -> {
 				short type = readShort();
-				Object value = read(Data.dataTypes[type]);
+				T value = (T) read(Data.dataTypes[type]);
 				arrayList.add(value);
 			});
 
 		return arrayList;
 	}
 
-	default Set readSet() {
-		Set set = new HashSet<>();
+	default <T> Set<T> readSet() {
+		Set<T> set = new HashSet<>();
 		int size = readInt();
 
 		IntStream
 			.range(0, size)
 			.forEach(i -> {
 				short type = readShort();
-				Object value = read(Data.dataTypes[type]);
+				T value = (T) read(Data.dataTypes[type]);
 				set.add(value);
 			});
 
