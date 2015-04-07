@@ -4,9 +4,14 @@ import nova.core.util.Identifiable;
 
 /**
  * Applied to entities that can take damage.
+ *
  * @author Calclavia
  */
 public interface Damageable {
+
+	default void damage(double amount) {
+		damage(amount, DamageType.generic);
+	}
 
 	void damage(double amount, DamageType type);
 

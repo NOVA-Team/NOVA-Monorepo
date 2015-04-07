@@ -15,6 +15,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * This interface provides inventory that can hold {@link Item Items}
+ *
  * @see InventorySimple
  * @see InventoryView
  */
@@ -23,6 +24,7 @@ public interface Inventory extends Iterable<Item> {
 
 	/**
 	 * Sets {@link Item} in slot
+	 *
 	 * @param slot Slot number
 	 * @param stack Stack to insert
 	 * @return Whether succeed
@@ -31,6 +33,7 @@ public interface Inventory extends Iterable<Item> {
 
 	/**
 	 * Gets count of slots
+	 *
 	 * @return Number of slots in this inventory
 	 */
 	int size();
@@ -42,6 +45,7 @@ public interface Inventory extends Iterable<Item> {
 
 	/**
 	 * Adds items to this inventory at specified slot
+	 *
 	 * @param slot Slot to add items into
 	 * @param stack {@link Item} containing items
 	 * @return Amount of items left(did not fit inside this inventory)
@@ -62,6 +66,7 @@ public interface Inventory extends Iterable<Item> {
 
 	/**
 	 * Adds items to this inventory
+	 *
 	 * @param stack {@link Item} containing items
 	 * @return Amount of items left(did not fit inside this inventory)
 	 */
@@ -79,7 +84,18 @@ public interface Inventory extends Iterable<Item> {
 	}
 
 	/**
+	 * Removes a one count of the item from a slot.
+	 *
+	 * @param slot The slot index to remove
+	 * @return The items removed
+	 */
+	default Optional<Item> remove(int slot) {
+		return remove(slot, 1);
+	}
+
+	/**
 	 * Removes a certain amount of items from a slot.
+	 *
 	 * @param slot The slot index to remove
 	 * @param amount The amount of items to remove
 	 * @return The items removed
@@ -96,6 +112,7 @@ public interface Inventory extends Iterable<Item> {
 
 	/**
 	 * Removes a certain item from a slot.
+	 *
 	 * @param check The item type to check with
 	 * @return The items removed
 	 */
@@ -126,6 +143,7 @@ public interface Inventory extends Iterable<Item> {
 
 	/**
 	 * Represents this inventory as list of {@link Item Items}
+	 *
 	 * @return This inventory as list of {@link Item Items}
 	 */
 	default List<Item> toList() {
@@ -154,6 +172,7 @@ public interface Inventory extends Iterable<Item> {
 
 	/**
 	 * Represents this inventory as {@link Item} {@link Stream}
+	 *
 	 * @return This inventory as {@link Item} {@link Stream}
 	 */
 	default Stream<Item> stream() {
