@@ -1,11 +1,14 @@
 package nova.core.util.transform;
 
-import com.google.common.math.DoubleMath;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
 
+import com.google.common.math.DoubleMath;
+
 /**
- * A double implementation of Vector3. Vector3 is an immutable quantity that holds an x, y and z value.
+ * A double implementation of Vector3. Vector3 is an immutable quantity that
+ * holds an x, y and z value.
+ * 
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
@@ -140,6 +143,10 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 
 	public Vector3i ceil() {
 		return new Vector3i((int) Math.ceil(x), (int) Math.ceil(y), (int) Math.ceil(z));
+	}
+
+	public Vector3i floor() {
+		return new Vector3i((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
 	}
 
 	public Vector3i toInt() {
