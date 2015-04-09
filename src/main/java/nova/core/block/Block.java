@@ -34,7 +34,8 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called to get the BlockFactory that refers to this Block class.
 	 *
-	 * @return The {@link nova.core.block.BlockFactory} that refers to this Block class.
+	 * @return The {@link nova.core.block.BlockFactory} that refers to this
+	 *         Block class.
 	 */
 	public final BlockFactory factory() {
 		return Game.instance.blockManager.getBlockFactory(this.getID()).get();
@@ -43,7 +44,8 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Get the BlockAccess that refers to this block.
 	 *
-	 * @return The {@link nova.core.block.BlockAccess} that refers to this block.
+	 * @return The {@link nova.core.block.BlockAccess} that refers to this
+	 *         block.
 	 */
 	public BlockAccess blockAccess() {
 		return blockAccess;
@@ -102,7 +104,8 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called to get the drops of this block.
 	 *
-	 * @return A collection of {@link nova.core.item.Item}s that this block drops.
+	 * @return A collection of {@link nova.core.item.Item}s that this block
+	 *         drops.
 	 */
 	public Set<Item> getDrops() {
 		return Collections.singleton(Game.instance.itemManager.getItemFromBlock(this));
@@ -147,7 +150,7 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called to check if the block is an opaque cube.
 	 *
-	 * @return {@code true}  is this block is a cube that is opaque.
+	 * @return {@code true} is this block is a cube that is opaque.
 	 */
 	public boolean isOpaqueCube() {
 		return isCube();
@@ -183,7 +186,8 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when the block is left clicked.
 	 *
-	 * @param entity The entity that right clicked this object. Most likely a player.
+	 * @param entity The entity that right clicked this object. Most likely a
+	 *        player.
 	 * @param side The side it was clicked.
 	 * @param hit The position it was clicked.
 	 * @return {@code true} if the right click action does something.
@@ -195,42 +199,26 @@ public abstract class Block implements Identifiable {
 	/**
 	 * Called when the block is right clicked.
 	 *
-	 * @param entity The entity that right clicked this object. Most likely a player.
+	 * @param entity The entity that right clicked this object. Most likely a
+	 *        player.
 	 * @param side The side it was clicked.
 	 * @param hit The position it was clicked.
-	 * @return {@code true}  if the right click action does something.
+	 * @return {@code true} if the right click action does something.
 	 */
 	public boolean onRightClick(Entity entity, int side, Vector3d hit) {
 		return false;
 	}
 
 	/**
-	 * Called when an entity collides with this block.
-	 * More specifically, when the entity's block bounds coincide with the block bounds.
+	 * Called when an entity collides with this block. More specifically, when
+	 * the entity's block bounds coincide with the block bounds.
 	 *
 	 * @param entity colliding entity
 	 */
 	public void onEntityCollide(Entity entity) {
 
 	}
-
-	/**
-	 * Called when this block is to be rendered.
-	 *
-	 * @param model A {@link nova.core.render.model.Model} to use.
-	 */
-	public void renderStatic(Model model) {
-		BlockModelUtil.drawBlock(model, this);
-	}
-
-	/**
-	 * Called for a dynamic render.
-	 *
-	 * @param model A {@link nova.core.render.model.Model} to use
-	 */
-	public void renderDynamic(Model model) {
-	}
-
+	
 	/**
 	 * Called to get the texture of this block for a certain side.
 	 *
@@ -246,7 +234,8 @@ public abstract class Block implements Identifiable {
 	}
 
 	/**
-	 * Gets the color of a specific face. This is called by the default block renderer.
+	 * Gets the color of a specific face. This is called by the default block
+	 * renderer.
 	 *
 	 * @param side - The side of the block.
 	 * @return The color
@@ -256,16 +245,9 @@ public abstract class Block implements Identifiable {
 	}
 
 	/**
-	 * Called when the item of this block is to be rendered.
-	 *
-	 * @param model A {@link nova.core.render.model.Model} to use.
-	 */
-	public void renderItem(Model model) {
-		renderStatic(model);
-	}
-
-	/**
-	 * Gets the breaking difficulty for the block. 1 is the standard, regular block hardness of the game. {@code Double.infinity} is unbreakable.
+	 * Gets the breaking difficulty for the block. 1 is the standard, regular
+	 * block hardness of the game. {@code Double.infinity} is unbreakable.
+	 * 
 	 * @return The breaking difficulty.
 	 */
 	public double getHardness() {
@@ -273,7 +255,9 @@ public abstract class Block implements Identifiable {
 	}
 
 	/**
-	 * Gets the explosion resistance for the block. 1 is the standard, regular resistance of the game. {@code Double.infinity} is unexplodeable.
+	 * Gets the explosion resistance for the block. 1 is the standard, regular
+	 * resistance of the game. {@code Double.infinity} is unexplodeable.
+	 * 
 	 * @return The resistance.
 	 */
 	public double getResistance() {
