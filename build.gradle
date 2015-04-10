@@ -85,7 +85,7 @@ task apiJar(type: Jar) {
 }
 
 javadoc {
-	include 'nova/core/**'
+	include 'nova/**'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
