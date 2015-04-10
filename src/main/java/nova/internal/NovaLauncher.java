@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.deps.MavenDependency;
-import nova.core.deps.DependencyProvider;
 import nova.core.game.Game;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
@@ -203,14 +202,14 @@ public class NovaLauncher implements Loadable {
 
 
 	private void generateAndAddDependencies(NovaMod mod) {
-		if (mod.getClass().isAssignableFrom(DependencyProvider.class)) {
+		/*if (mod.getClass().isAssignableFrom(DependencyProvider.class)) {
 			// TODO: Fix this up. I mean, it *should* work atm, idk.
 			try {
 				neededDeps.put(mod, (MavenDependency[])mod.getClass().getMethod("getDependencies").getDefaultValue());
 			} catch (NoSuchMethodException ex) {
 				ex.printStackTrace();
 			}
-		}
+		}*/
 	}
 
 }

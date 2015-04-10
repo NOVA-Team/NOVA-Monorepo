@@ -38,18 +38,19 @@ public class MavenDependency {
 		this.ext = ext;
 	}
 
-	public MavenDependency(URL mavenRepo,
-	                       String groupID,
-	                       String artifactID,
-	                       String version) {
-		this.repoURL = mavenRepo;
+	public MavenDependency(Dependency annotation) {
+		try {
+			this.repoURL = new URL(annotation.mavenRepo());
+		} catch (MalformedURLException e) {
+			throw new NovaException(e);
+		}
 
-		this.version = version;
-		this.artifactID = artifactID;
-		this.groupID = groupID;
+		this.groupID = annotation.groupId();
+		this.artifactID = annotation.artifactId();
+		this.version = annotation.version();
 
-		this.classifier = "";
-		this.ext = "jar";
+		this.classifier = annotation.classifier();
+		this.ext = annotation.ext();
 	}
 
 	public String getDir() {
