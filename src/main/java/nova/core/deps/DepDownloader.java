@@ -12,17 +12,25 @@ import java.nio.file.StandardCopyOption;
  */
 public class DepDownloader {
 
-	public static void downloadDepdency(URL downloadURL, String locationToDownloadTo) {
+	/**
+	 * Downloads the URL to the file if the file does not exist.
+	 * This provides extremely basic caching based on the assumption
+	 * that each version of the file has a unique output path.
+	 *
+	 * @param in the URL to download from
+	 * @param out the file to download to
+	 */
+	public static void downloadDepdency(URL in, String out) {
 		try {
 
-			Path dependencyLocation = Paths.get(locationToDownloadTo);
+			Path outPath = Paths.get(out);
 
 			/**
 			 * Do not overwrite previous files, this effectively is caching
 			 */
-			if (dependencyLocation.toFile().exists()) { return; }
+			if (outPath.toFile().exists()) { return; }
 
-			Files.copy(downloadURL.openStream(), dependencyLocation, StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(in.openStream(), outPath, StandardCopyOption.REPLACE_EXISTING);
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
