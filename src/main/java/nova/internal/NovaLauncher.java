@@ -71,9 +71,7 @@ public class NovaLauncher implements Loadable {
 		/**
 		 * Create instances.
 		 */
-		mods = classesMap
-			.entrySet()
-			.stream()
+		mods = classesMap.entrySet().stream()
 			.collect(Collectors.toMap(Entry::getKey, ((entry) -> {
 				try {
 					Stream<Constructor<?>> candidates = Arrays.stream(entry.getValue().getConstructors());
@@ -123,19 +121,17 @@ public class NovaLauncher implements Loadable {
 		 */
 		orderedMods = new ArrayList<>();
 		orderedMods.addAll(
-			mods.entrySet()
-				.stream()
+			mods.entrySet().stream()
 				.sorted((o1, o2) -> {
 					// Split string by @ and versions
-					Map<String, String> loadAfter = Arrays.asList(o1.getKey().dependencies())
-						.stream()
+					Map<String, String> loadAfter = Arrays.stream(o1.getKey().dependencies())
 						.map(s -> s.split("@", 1))
 						.collect(Collectors.toMap(s -> s[0], s -> s[1]));
 
 					// TODO: Compare version requirements.
 					return loadAfter.containsKey(o2.getKey().id()) ? 1 : 0;
 				})
-				.map(entry -> entry.getValue())
+				.map(Entry::getValue)
 				.collect(Collectors.toList())
 		);
 
