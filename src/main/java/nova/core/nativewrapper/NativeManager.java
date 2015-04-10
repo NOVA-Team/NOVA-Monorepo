@@ -37,9 +37,23 @@ public class NativeManager {
 		return passthroughInterfaceNovaToNative.get(novaInterface);
 	}
 
+	private NativeConverter findNativeConverter(Map<Class<?>, NativeConverter> map, Object obj)
+	{
+		Class<?> clazz = obj.getClass();
+		NativeConverter nc = map.get(clazz);
+		while (nc == null)
+		{
+			clazz = clazz.getSuperclass();
+			if (clazz == Object.class)
+				return null;
+			nc = map.get(clazz);
+		}
+		return nc;
+	}
+	
 	public Optional<Object> convertToNova(Object nativeObject) {
 		try {
-			return Optional.of(nativeConverterNative.get(nativeObject.getClass()).convertToNova(nativeObject));
+			return Optional.of(findNativeConverter(nativeConverterNative,nativeObject).convertToNova(nativeObject));
 		} catch (NullPointerException e) {
 			return Optional.empty();
 		}
@@ -47,7 +61,7 @@ public class NativeManager {
 
 	public Optional<Object> convertToNative(Object novaObject) {
 		try {
-			return Optional.of(nativeConverterNova.get(novaObject.getClass()).convertToNative(novaObject));
+			return Optional.of(findNativeConverter(nativeConverterNova,novaObject).convertToNative(novaObject));
 		} catch (NullPointerException e) {
 			return Optional.empty();
 		}
