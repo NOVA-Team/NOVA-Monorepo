@@ -1,19 +1,21 @@
 package nova.core.ai;
 
 @FunctionalInterface
-public interface Condition {
-
-	public boolean evaluate(AI<?> ai);
+public interface Condition extends Value<Boolean> {
 
 	public default Condition and(Condition other) {
-		return ai -> evaluate(ai) && other.evaluate(ai);
+		return ai -> get(ai) && other.get(ai);
 	}
 
 	public default Condition or(Condition other) {
-		return ai -> evaluate(ai) || other.evaluate(ai);
+		return ai -> get(ai) || other.get(ai);
 	}
 
 	public default Condition not() {
-		return ai -> !evaluate(ai);
+		return ai -> !get(ai);
+	}
+
+	public static Condition of(Condition cd) {
+		return cd;
 	}
 }

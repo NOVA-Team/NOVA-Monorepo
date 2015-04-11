@@ -11,12 +11,12 @@ public class AI<T extends Entity> {
 		this.entity = entity;
 	}
 
-	public Cancelable start(TaskList list) {
-		return null;
+	boolean isEventQueued(Event event) {
+		return false;
 	}
 
-	public static Condition of(Condition cd) {
-		return cd;
+	public Cancelable start(TaskList list) {
+		return null;
 	}
 
 	public static CTaskBuilder on(Event event) {

@@ -3,13 +3,11 @@ package nova.core.ai;
 import java.util.LinkedList;
 import java.util.List;
 
-public final class TaskList {
+import nova.core.event.EventListener;
+
+public final class TaskList implements EventListener<Event> {
 
 	private List<Task> taskList = new LinkedList<>();
-
-	public void execute(AI<?> ai) {
-
-	}
 
 	public static void ret() {
 		throw new ReturnException();
@@ -59,5 +57,10 @@ public final class TaskList {
 		public TaskException(String message, Throwable cause) {
 			super(message, cause);
 		}
+	}
+
+	@Override
+	public void onEvent(Event event) {
+
 	}
 }
