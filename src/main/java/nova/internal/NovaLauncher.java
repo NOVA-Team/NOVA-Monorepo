@@ -4,8 +4,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -15,8 +17,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.core.deps.Dependencies;
+import nova.core.deps.Dependency;
 import nova.core.deps.MavenDependency;
-import nova.core.deps.DependencyProvider;
 import nova.core.game.Game;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
@@ -24,19 +27,28 @@ import nova.core.util.exception.NovaException;
 
 /**
  * The main class that launches NOVA mods.
+ *
+ * Correct order to call the methods is this:
+ * <ol>
+ *     <li>{@link #generateDependencies()}</li>
+ *     <li>{@link #preInit()}</li>
+ *     <li>{@link #init()}</li>
+ *     <li>{@link #postInit()}</li>
+ * </ol>
+ *
  * @author Calclavia, Kubuxu
  */
 public class NovaLauncher implements Loadable {
 
-	private final Set<Class<?>> modClasses;
 	private final DependencyInjectionEntryPoint diep;
 
 	private Map<NovaMod, Loadable> mods;
 
-	private Map<NovaMod, MavenDependency[]> neededDeps;
+	private Map<NovaMod, List<MavenDependency>> neededDeps;
 
 	private ArrayList<Loadable> orderedMods;
 	private Map<NovaMod, Class<? extends Loadable>> classesMap;
+	private Map<NovaMod, Class<?>> scalaClassesMap;
 	// TODO: A lot of work and clean up has to be done to ensure this class is
 	// not susceptible to
 	// other classes touching it.
@@ -48,7 +60,6 @@ public class NovaLauncher implements Loadable {
 	 */
 	public NovaLauncher(DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
 		this.diep = diep;
-		this.modClasses = modClasses;
 
 		classesMap = modClasses.stream()
 			.filter(Loadable.class::isAssignableFrom)
@@ -59,6 +70,29 @@ public class NovaLauncher implements Loadable {
 		classesMap.keySet().stream()
 			.flatMap(mod -> Arrays.stream(mod.modules()))
 			.forEach(diep::install);
+
+		/**
+		 * Find scala singleton classes
+		 */
+		scalaClassesMap = modClasses.stream()
+			.filter(c -> !Loadable.class.isAssignableFrom(c))
+			.filter(c -> {
+				try {
+					Class.forName((c.getCanonicalName() + "$"));
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
+			})
+			.collect(Collectors.toMap(c -> c.getAnnotation(NovaMod.class),
+				c -> {
+					try {
+						return Class.forName(c.getCanonicalName() + "$");
+					} catch (Exception e) {
+						throw new ExceptionInInitializerError("Failed to load NOVA mod: " + c);
+					}
+				}
+			));
 
 	}
 
@@ -90,29 +124,18 @@ public class NovaLauncher implements Loadable {
 			})));
 
 		/**
-		 * Handle Scala singleton mods
+		 * Get scala singleton mods
 		 */
-		Map<NovaMod, Loadable> scalaModsMap = modClasses.stream()
-			.filter(c -> !Loadable.class.isAssignableFrom(c))
-			.filter(c -> {
+		Map<NovaMod, Loadable> scalaModsMap = scalaClassesMap.entrySet().stream()
+			.collect(Collectors.toMap(Entry::getKey, e -> {
 				try {
-					Class.forName((c.getCanonicalName() + "$"));
-					return true;
-				} catch (Exception e) {
-					return false;
+					Field field = e.getValue().getField("MODULE$");
+					return (Loadable) field.get(null);
+				} catch (Exception ex) {
+					System.out.println("Failed to load NOVA mod: " + e.getValue());
+					throw new ExceptionInInitializerError(ex);
 				}
-			})
-			.collect(Collectors.toMap(c -> c.getAnnotation(NovaMod.class),
-				c -> {
-					try {
-						Class singletonClass = Class.forName(c.getCanonicalName() + "$");
-						Field field = singletonClass.getField("MODULE$");
-						return (Loadable) field.get(null);
-					} catch (Exception e) {
-						throw new ExceptionInInitializerError("Failed to load NOVA mod: " + c);
-					}
-				}
-			));
+			}));
 
 		mods.putAll(scalaModsMap);
 
@@ -186,8 +209,13 @@ public class NovaLauncher implements Loadable {
 		return classesMap;
 	}
 
-	public Map<NovaMod, MavenDependency[]> getNeededDeps() {
-		return this.neededDeps;
+	public Map<NovaMod, Class<?>> getScalaClassesMap() {
+		return scalaClassesMap;
+	}
+
+	public Map<NovaMod, List<MavenDependency>> getNeededDeps() {
+		if (neededDeps == null) throw new IllegalStateException("Dependencies have not been generated");
+		return neededDeps;
 	}
 
 	/**
@@ -197,20 +225,22 @@ public class NovaLauncher implements Loadable {
 	public void generateDependencies() {
 		neededDeps = new HashMap<>(); // This should be cleaned every time this method is run.
 
-		classesMap.keySet().stream()
+		Stream.concat(classesMap.values().stream(), scalaClassesMap.values().stream())
 			.forEach(this::generateAndAddDependencies);
 	}
 
 
-	private void generateAndAddDependencies(NovaMod mod) {
-		if (mod.getClass().isAssignableFrom(DependencyProvider.class)) {
-			// TODO: Fix this up. I mean, it *should* work atm, idk.
-			try {
-				neededDeps.put(mod, (MavenDependency[])mod.getClass().getMethod("getDependencies").getDefaultValue());
-			} catch (NoSuchMethodException ex) {
-				ex.printStackTrace();
-			}
-		}
+	private void generateAndAddDependencies(Class<?> mod) {
+		List<MavenDependency> deps;
+		if (mod.isAnnotationPresent(Dependency.class)) {
+			Dependency dependency = mod.getAnnotation(Dependency.class);
+			deps = Collections.singletonList(new MavenDependency(dependency));
+		} else if (mod.isAnnotationPresent(Dependencies.class)) {
+			Dependency[] dependencies = mod.getAnnotation(Dependencies.class).value();
+			deps = Arrays.stream(dependencies).map(MavenDependency::new).collect(Collectors.toList());
+		} else return;
+
+		neededDeps.put(mod.getAnnotation(NovaMod.class), deps);
 	}
 
 }
