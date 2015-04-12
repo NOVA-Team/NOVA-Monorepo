@@ -1,5 +1,14 @@
 package nova.internal;
 
+import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.core.deps.Dependencies;
+import nova.core.deps.Dependency;
+import nova.core.deps.MavenDependency;
+import nova.core.game.Game;
+import nova.core.loader.Loadable;
+import nova.core.loader.NovaMod;
+import nova.core.util.exception.NovaException;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -15,15 +24,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.core.deps.Dependencies;
-import nova.core.deps.Dependency;
-import nova.core.deps.MavenDependency;
-import nova.core.game.Game;
-import nova.core.loader.Loadable;
-import nova.core.loader.NovaMod;
-import nova.core.util.exception.NovaException;
 
 /**
  * The main class that launches NOVA mods.
@@ -149,7 +149,7 @@ public class NovaLauncher implements Loadable {
 					// Split string by @ and versions
 					Map<String, String> loadAfter = Arrays.stream(o1.getKey().dependencies())
 						.map(s -> s.split("@", 1))
-						.collect(Collectors.toMap(s -> s[0], s -> s[1]));
+														  .collect(Collectors.toMap(s -> s[0], s -> s.length > 1 ? s[1] : ""));
 
 					// TODO: Compare version requirements.
 					return loadAfter.containsKey(o2.getKey().id()) ? 1 : 0;
