@@ -41,6 +41,7 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 	public Vector3i multiply(Vector3 other) {
 		return new Vector3i(y * other.zi() - z * other.yi(), z * other.xi() - x * other.zi(), x * other.yi() - y * other.xi());
 	}
+
 	public Vector3i scale(Vector3 other) {
 		return new Vector3i(x * other.xi(), y * other.yi(), z * other.zi());
 	}
@@ -146,6 +147,10 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 			return xi() == v.xi() && yi() == v.yi() && zi() == v.zi();
 		}
 		return this == obj;
+	}
+
+	public Matrix toMatrix() {
+		return new Matrix(new double[][] { { x }, { y }, { z } });
 	}
 
 	@Override

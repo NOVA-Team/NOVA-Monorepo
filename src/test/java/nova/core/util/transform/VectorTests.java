@@ -15,7 +15,7 @@ public class VectorTests {
 		Vector3d v2 = new Vector3d(random.nextDouble(), random.nextDouble(), random.nextDouble());
 
 		assertThat(v1.add(v2)).isEqualTo(new Vector3d(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z));
-		assertThat(v1.multiply(v2)).isEqualTo(new Vector3d(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z));
+		assertThat(v1.scale(v2)).isEqualTo(new Vector3d(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z));
 
 		assertThat(v1.reciprocal()).isEqualTo(new Vector3d(1 / v1.x, 1 / v1.y, 1 / v1.z));
 
@@ -34,7 +34,7 @@ public class VectorTests {
 		Vector3i v2 = new Vector3i(random.nextInt(), random.nextInt(), random.nextInt());
 
 		assertThat(v1.add(v2)).isEqualTo(new Vector3i(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z));
-		assertThat(v1.multiply(v2)).isEqualTo(new Vector3i(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z));
+		assertThat(v1.scale(v2)).isEqualTo(new Vector3i(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z));
 
 		assertThat(v1.reciprocal()).isEqualTo(new Vector3i(1 / v1.x, 1 / v1.y, 1 / v1.z));
 

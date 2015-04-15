@@ -99,6 +99,10 @@ public class Vector2d extends Vector2<Vector2d> implements Storable {
 		return this == obj;
 	}
 
+	public Matrix toMatrix() {
+		return new Matrix(new double[][] { { x }, { y } });
+	}
+
 	@Override
 	public String toString() {
 		return "[Vector2d] " + x + ", " + y;

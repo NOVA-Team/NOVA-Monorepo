@@ -7,7 +7,6 @@ import nova.core.retention.Stored;
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that
  * holds an x, y and z value.
- * 
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
@@ -166,6 +165,10 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 			return DoubleMath.fuzzyEquals(this.xd(), other.xd(), 0.000001) && DoubleMath.fuzzyEquals(this.yd(), other.yd(), 0.000001) && DoubleMath.fuzzyEquals(this.zd(), other.zd(), 0.000001);
 		}
 		return this == obj;
+	}
+
+	public Matrix toMatrix() {
+		return new Matrix(new double[][] { { x }, { y }, { z } });
 	}
 
 	@Override
