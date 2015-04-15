@@ -2,7 +2,6 @@ package nova.core.util.transform;
 
 /**
  * An abstract Vector3 class that is extended by both Vector3i and Vector3d
- *
  * @param <O> -describeme-
  * @author Calclavia
  */
@@ -10,7 +9,6 @@ package nova.core.util.transform;
 public abstract class Vector3<O extends Vector3<O>> extends Vector<Vector3<O>, O> implements Comparable {
 	/**
 	 * Integer coordinate values
-	 *
 	 * @return -describeme-
 	 */
 	public abstract int xi();
@@ -33,7 +31,6 @@ public abstract class Vector3<O extends Vector3<O>> extends Vector<Vector3<O>, O
 
 	/**
 	 * Double coordinate values
-	 *
 	 * @return -describeme-
 	 */
 	public abstract double xd();
@@ -50,14 +47,12 @@ public abstract class Vector3<O extends Vector3<O>> extends Vector<Vector3<O>, O
 	/**
 	 * Returns the cross product between this vector and the other.
 	 * Calculated by finding the determinant of a 3x3 matrix.
-	 *
 	 * @param other Other vector
 	 * @return A vector representing the normal, perpendicular to these two vectors
 	 */
-	public abstract O cross(Vector3<?> other);
-
-	public O $times(Vector3<?> v) {
-		return cross(v);
+	@Deprecated
+	public O cross(Vector3 other) {
+		return (O) multiply(other);
 	}
 
 	public O transform(Transform transform) {

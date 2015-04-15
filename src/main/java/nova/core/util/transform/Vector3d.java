@@ -1,9 +1,8 @@
 package nova.core.util.transform;
 
+import com.google.common.math.DoubleMath;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
-
-import com.google.common.math.DoubleMath;
 
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that
@@ -44,6 +43,10 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 
 	@Override
 	public Vector3d multiply(Vector3 other) {
+		return new Vector3d(y * other.zd() - z * other.yd(), z * other.xd() - x * other.zd(), x * other.yd() - y * other.xd());
+	}
+
+	public Vector3d scale(Vector3 other) {
 		return new Vector3d(x * other.xd(), y * other.yd(), z * other.zd());
 	}
 
@@ -55,11 +58,6 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 	@Override
 	public Vector3d reciprocal() {
 		return new Vector3d(1 / x, 1 / y, 1 / z);
-	}
-
-	@Override
-	public Vector3d cross(Vector3 other) {
-		return new Vector3d(y * other.zd() - z * other.yd(), z * other.xd() - x * other.zd(), x * other.yd() - y * other.xd());
 	}
 
 	public Vector3d perpendicular() {

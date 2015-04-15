@@ -39,6 +39,9 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 
 	@Override
 	public Vector3i multiply(Vector3 other) {
+		return new Vector3i(y * other.zi() - z * other.yi(), z * other.xi() - x * other.zi(), x * other.yi() - y * other.xi());
+	}
+	public Vector3i scale(Vector3 other) {
 		return new Vector3i(x * other.xi(), y * other.yi(), z * other.zi());
 	}
 
@@ -50,16 +53,6 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 	@Override
 	public Vector3i reciprocal() {
 		return new Vector3i(1 / x, 1 / y, 1 / z);
-	}
-
-	/**
-	 * Returns the cross product between this vector and the other.
-	 * Calculated by finding the determinant of a 3x3 matrix.
-	 * @return A vector representing the normal, perpendicular to these two vectors
-	 */
-	@Override
-	public Vector3i cross(Vector3 other) {
-		return new Vector3i(y * other.zi() - z * other.yi(), z * other.xi() - x * other.zi(), x * other.yi() - y * other.xi());
 	}
 
 	public Vector3i perpendicular() {
