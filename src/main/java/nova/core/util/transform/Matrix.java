@@ -25,6 +25,10 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 		mat = new double[M][N];
 	}
 
+	public Matrix(int M) {
+		this(M, M);
+	}
+
 	// create matrix based on 2d array
 	public Matrix(double[][] data) {
 		m = data.length;
@@ -50,6 +54,14 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 		for (int i = 0; i < size; i++)
 			I.mat[i][i] = 1;
 		return I;
+	}
+
+	public double apply(int i, int j) {
+		return mat[i][j];
+	}
+
+	public void update(int i, int j, double value) {
+		mat[i][j] = value;
 	}
 
 	/**
