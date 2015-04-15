@@ -9,6 +9,7 @@ import java.util.Arrays;
 /**
  *  Matrix4x4 for 3D Vector transforms. It is immutable.
  */
+@Deprecated
 public class Matrix4x4 implements Cloneable, Transform{
 
 	/**

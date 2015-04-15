@@ -1,6 +1,16 @@
 package nova.core.util.transform;
 
-final public class Matrix {
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
+
+import java.util.Arrays;
+
+/**
+ * A class that represents a matrix.
+ */
+
+//TODO: Add unit testing
+public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 	// number of rows
 	private final int m;
 	// number of columns
@@ -25,11 +35,6 @@ final public class Matrix {
 				this.mat[i][j] = data[i][j];
 	}
 
-	// copy constructor
-	private Matrix(Matrix A) {
-		this(A.mat);
-	}
-
 	// create and return a random m-by-n matrix with values between 0 and 1
 	public static Matrix random(int M, int N) {
 		Matrix A = new Matrix(M, N);
@@ -47,14 +52,18 @@ final public class Matrix {
 		return I;
 	}
 
-	// swap rows i and j
+	/**
+	 * Swap rows i and j
+	 */
 	private void swap(int i, int j) {
 		double[] temp = mat[i];
 		mat[i] = mat[j];
 		mat[j] = temp;
 	}
 
-	// create and return the transpose of the invoking matrix
+	/**
+	 * Create and return the transpose of the invoking matrix
+	 */
 	public Matrix transpose() {
 		Matrix A = new Matrix(n, m);
 		for (int i = 0; i < m; i++)
@@ -63,14 +72,23 @@ final public class Matrix {
 		return A;
 	}
 
+	@Override
+	public Matrix add(double other) {
+		Matrix A = new Matrix(n, m);
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < n; j++)
+				A.mat[i][j] = mat[i][j] + other;
+		return A;
+	}
+
 	/**
 	 * @return C = A + B
 	 */
+	@Override
 	public Matrix add(Matrix B) {
 		Matrix A = this;
-		if (B.m != A.m || B.n != A.n) {
-			throw new RuntimeException("Illegal matrix dimensions.");
-		}
+		assert B.m == A.m && B.n == A.n;
+
 		Matrix C = new Matrix(m, n);
 		for (int i = 0; i < m; i++)
 			for (int j = 0; j < n; j++)
@@ -78,42 +96,24 @@ final public class Matrix {
 		return C;
 	}
 
+	@Override
+	public Matrix multiply(double other) {
+		Matrix A = new Matrix(n, m);
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < n; j++)
+				A.mat[i][j] = mat[i][j] * other;
+		return A;
+	}
+
 	/**
-	 * @param B
-	 * @return C = A - B
+	 * Matrix-matrix multiplication
+	 * @return C = A * B
 	 */
-	public Matrix subtract(Matrix B) {
-		Matrix A = this;
-		if (B.m != A.m || B.n != A.n) {
-			throw new RuntimeException("Illegal matrix dimensions.");
-		}
-		Matrix C = new Matrix(m, n);
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
-				C.mat[i][j] = A.mat[i][j] - B.mat[i][j];
-		return C;
-	}
-
-	// does A = B exactly?
-	public boolean eq(Matrix B) {
-		Matrix A = this;
-		if (B.m != A.m || B.n != A.n) {
-			throw new RuntimeException("Illegal matrix dimensions.");
-		}
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
-				if (A.mat[i][j] != B.mat[i][j]) {
-					return false;
-				}
-		return true;
-	}
-
-	// return C = A * B
+	@Override
 	public Matrix multiply(Matrix B) {
 		Matrix A = this;
-		if (A.n != B.m) {
-			throw new RuntimeException("Illegal matrix dimensions.");
-		}
+		assert A.n == B.m;
+
 		Matrix C = new Matrix(A.m, B.n);
 		for (int i = 0; i < C.m; i++)
 			for (int j = 0; j < C.n; j++)
@@ -122,15 +122,34 @@ final public class Matrix {
 		return C;
 	}
 
-	// return x = A^-1 b, assuming A is square and has full rank
+	/**
+	 * Finds the inverse of the matrix
+	 * @return The inverse of the matrix
+	 */
+	@Override
+	public Matrix reciprocal() {
+		//TODO: Implement matrix inverse
+		return null;
+	}
+
+	public boolean isRowVector() {
+		return m == 1;
+	}
+
+	public boolean isColumnVector() {
+		return n == 1;
+	}
+
+	/**
+	 * Solves a matrix-vector equation, Ax = b.
+	 * @return x = A^-1 b, assuming A is square and has full rank
+	 */
 	public Matrix solve(Matrix rhs) {
-		if (m != n || rhs.m != n || rhs.n != 1) {
-			throw new RuntimeException("Illegal matrix dimensions.");
-		}
+		assert m == n && rhs.m == n && rhs.n == 1;
 
 		// create copies of the mat
-		Matrix A = new Matrix(this);
-		Matrix b = new Matrix(rhs);
+		Matrix A = this.clone();
+		Matrix b = rhs.clone();
 
 		// Gaussian elimination with partial pivoting
 		for (int i = 0; i < n; i++) {
@@ -175,12 +194,44 @@ final public class Matrix {
 
 	}
 
-	// print matrix to standard output
-	public void print() {
-		for (int i = 0; i < m; i++) {
-			for (int j = 0; j < n; j++)
-				System.out.printf("%9.4f ", mat[i][j]);
-			System.out.println();
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Matrix) {
+			Matrix B = (Matrix) obj;
+			Matrix A = this;
+			assert B.m == A.m && B.n == A.n;
+
+			for (int i = 0; i < m; i++)
+				for (int j = 0; j < n; j++)
+					if (A.mat[i][j] != B.mat[i][j]) {
+						return false;
+					}
+			return true;
 		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		Hasher hasher = Hashing.goodFastHash(32).newHasher();
+		for (double[] array : mat)
+			for (double d : array)
+				hasher.putDouble(d);
+
+		return hasher.hash().asInt();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Matrix[" + m + "," + n + "]\n");
+		for (int i = 0; i < m; i++)
+			sb.append(Arrays.toString(mat[i])).append("\n");
+		return sb.toString();
+	}
+
+	@Override
+	public Matrix clone() {
+		return new Matrix(mat);
 	}
 }
