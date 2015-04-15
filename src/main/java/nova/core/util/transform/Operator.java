@@ -12,7 +12,7 @@ public abstract class Operator<I extends Operator<I, O>, O extends I> {
 	public abstract O add(double other);
 
 	public final O subtract(I other) {
-		return add(other.inverse());
+		return add(other.negate());
 	}
 
 	public final O subtract(double other) {
@@ -38,7 +38,7 @@ public abstract class Operator<I extends Operator<I, O>, O extends I> {
 	 */
 	public abstract O reciprocal();
 
-	public final O inverse() {
+	public final O negate() {
 		return multiply(-1);
 	}
 
@@ -58,8 +58,16 @@ public abstract class Operator<I extends Operator<I, O>, O extends I> {
 		return subtract(v);
 	}
 
+	public O $times(I d) {
+		return multiply(d);
+	}
+
 	public O $times(double d) {
 		return multiply(d);
+	}
+
+	public O $div(I d) {
+		return divide(d);
 	}
 
 	public O $div(double d) {
@@ -67,6 +75,6 @@ public abstract class Operator<I extends Operator<I, O>, O extends I> {
 	}
 
 	public O unary_$minus() {
-		return inverse();
+		return negate();
 	}
 }
