@@ -10,11 +10,11 @@ import java.util.Arrays;
  */
 
 //TODO: Add unit testing
-public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
+public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Transform {
 	// number of rows
-	private final int rows;
+	public final int rows;
 	// number of columns
-	private final int columns;
+	public final int columns;
 	// rows-by-columns array
 	private final double[][] mat;
 
@@ -69,10 +69,12 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 	/**
 	 * Swap rows i and j
 	 */
-	private void swap(int i, int j) {
+	public Matrix swap(int i, int j) {
 		double[] temp = mat[i];
-		mat[i] = mat[j];
-		mat[j] = temp;
+		Matrix C = clone();
+		C.mat[i] = mat[j];
+		C.mat[j] = temp;
+		return C;
 	}
 
 	/**
@@ -255,8 +257,8 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 				if (Math.abs(A.mat[j][i]) > Math.abs(A.mat[max][i])) {
 					max = j;
 				}
-			A.swap(i, max);
-			b.swap(i, max);
+			A = A.swap(i, max);
+			b = b.swap(i, max);
 
 			// singular
 			if (A.mat[i][i] == 0.0) {
@@ -323,6 +325,24 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 		for (int i = 0; i < rows; i++)
 			sb.append(Arrays.toString(mat[i])).append("\n");
 		return sb.toString();
+	}
+
+	/**
+	 * Transform vector by this matrix. This method is only valid if it is a 4x4 matrix.
+	 *
+	 * @param vector to be transformed.
+	 * @return transformed vector.
+	 */
+	@Override
+	public Vector3d transform(Vector3<?> vector) {
+		assert isSquare() && rows == 4;
+
+		double x, y, z, w;
+		x = mat[0][0] * vector.xd() + mat[1][0] * vector.yd() + mat[2][0] * vector.zd() + mat[3][0];
+		y = mat[0][1] * vector.xd() + mat[1][1] * vector.yd() + mat[2][1] * vector.zd() + mat[3][1];
+		z = mat[0][2] * vector.xd() + mat[1][2] * vector.yd() + mat[2][2] * vector.zd() + mat[3][2];
+		w = mat[0][3] * vector.xd() + mat[1][3] * vector.yd() + mat[2][3] * vector.zd() + mat[3][3];
+		return new Vector3d(x / w, y / w, z / w);
 	}
 
 	@Override
