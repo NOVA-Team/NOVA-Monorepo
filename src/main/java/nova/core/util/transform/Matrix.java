@@ -188,19 +188,23 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 		//Retrieve the agumented part of the matrix
 		return augment(identity(rows))
 			.rref()
-			.submatrix(0, rows, columns, 2 * columns);
+			.submatrix(0, rows - 1, columns - 1, 2 * columns - 1);
 	}
 
 	/**
 	 * @return A submatrix that is within this matrix.
+	 * @x1 - The min x bound
+	 * @x2 - The max x bound
+	 * @y1 - The min y bound
+	 * @y2 - The max y bound
 	 */
-	public Matrix submatrix(int x1, int x2, int y1, int y2) {
+	public Matrix submatrix(int y1, int y2, int x1, int x2) {
 		assert x1 < x2 && y1 < y2 && x2 <= columns && y2 <= rows;
 
 		Matrix C = new Matrix(x2 - x1, y2 - y1);
 
-		for (int x = x1; x < x2; x++) {
-			for (int y = y1; y < y2; y++) {
+		for (int x = x1; x <= x2; x++) {
+			for (int y = y1; y <= y2; y++) {
 				C.mat[x - x1][y - y1] = mat[x][y];
 			}
 		}
@@ -346,6 +350,15 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 		z = mat[0][2] * vector.xd() + mat[1][2] * vector.yd() + mat[2][2] * vector.zd() + mat[3][2];
 		w = mat[0][3] * vector.xd() + mat[1][3] * vector.yd() + mat[2][3] * vector.zd() + mat[3][3];
 		return new Vector3d(x / w, y / w, z / w);
+	}
+
+	public boolean isAlmostZero() {
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
+				if (mat[i][j] > 0.0000001) {
+					return false;
+				}
+		return true;
 	}
 
 	@Override

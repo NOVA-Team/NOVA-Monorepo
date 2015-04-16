@@ -90,7 +90,7 @@ public class MatrixTest {
 				{ 5, 6 } }
 		);
 
-		assertEquals(start.submatrix(0, 1, 0, 1), sub);
+		assertEquals(sub, start.submatrix(0, 1, 0, 1));
 	}
 
 	@Test
@@ -117,7 +117,7 @@ public class MatrixTest {
 				{ 1 / 3, 1 / 15 } }
 		);
 
-		assertEquals(start.reciprocal(), inverse);
+		assertEquals(inverse, start.reciprocal());
 	}
 
 	@Test
@@ -136,11 +136,12 @@ public class MatrixTest {
 		});
 
 		Matrix x = A.solve(B);
-		assertEquals(x, new Matrix(new double[][] {
+		Matrix expectedX = new Matrix(new double[][] {
 			{ 4 },
 			{ 1 },
 			{ -2 }
-		}));
+		});
+		assertTrue(x.subtract(expectedX).isAlmostZero());
 	}
 
 	@Test
@@ -219,7 +220,7 @@ public class MatrixTest {
 		));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void testIllegalArgument1() {
 		new Matrix(new double[][] { { 1, 1, 2 }, { 1, 1 } });
 	}
