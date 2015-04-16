@@ -33,7 +33,11 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	public Matrix(double[][] data) {
 		rows = data.length;
 		columns = data[0].length;
-		this.mat = data.clone();
+		mat = new double[rows][columns];
+
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < rows; j++)
+				mat[i][j] = data[i][j];
 	}
 
 	// create and return a random rows-by-columns matrix with values between 0 and 1
@@ -61,7 +65,6 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 		return mat[i][j];
 	}
 
-	//TODO: Should we make it immutable, and return a new matrix instead?
 	public void update(int i, int j, double value) {
 		mat[i][j] = value;
 	}
@@ -192,7 +195,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	 * @return A submatrix that is within this matrix.
 	 */
 	public Matrix submatrix(int x1, int x2, int y1, int y2) {
-		assert x1 < x2 && y1 < y2 && x2 <= rows && y2 <= columns;
+		assert x1 < x2 && y1 < y2 && x2 <= columns && y2 <= rows;
 
 		Matrix C = new Matrix(x2 - x1, y2 - y1);
 
@@ -321,7 +324,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Matrix[" + rows + "," + columns + "]\n");
+		sb.append("Matrix[" + rows + "x" + columns + "]\n");
 		for (int i = 0; i < rows; i++)
 			sb.append(Arrays.toString(mat[i])).append("\n");
 		return sb.toString();

@@ -81,17 +81,16 @@ public class MatrixTest {
 	public void testSubmatrix() {
 		Matrix start = new Matrix(
 			new double[][] {
+				{ 1, 2, 3 },
+				{ 5, 6, 3 } }
+		);
+		Matrix sub = new Matrix(
+			new double[][] {
 				{ 1, 2 },
 				{ 5, 6 } }
 		);
 
-		Matrix end = new Matrix(
-			new double[][] {
-				{ 1, 2, 3 },
-				{ 5, 6, 3 } }
-		);
-
-		assertEquals(end.submatrix(0, 1, 0, 1), start);
+		assertEquals(start.submatrix(0, 1, 0, 1), sub);
 	}
 
 	@Test
@@ -119,6 +118,30 @@ public class MatrixTest {
 		);
 
 		assertEquals(start.reciprocal(), inverse);
+	}
+
+	@Test
+	public void testSolve() {
+		Matrix A = new Matrix(
+			new double[][] {
+				{ 1, 2, 3, 4 },
+				{ 5, 6, 7, 8 },
+				{ 9, 0, 0, 0 },
+				{ 0, 0, 0, 0 } }
+		);
+
+		Matrix B = new Matrix(new double[][] {
+			{ 0 },
+			{ 2 },
+			{ 11 },
+		});
+
+		Matrix x = A.solve(B);
+		assertEquals(x, new Matrix(new double[][] {
+			{ 4 },
+			{ 1 },
+			{ -2 }
+		}));
 	}
 
 	@Test
@@ -166,23 +189,35 @@ public class MatrixTest {
 
 	@Test
 	public void testTransform() {
-		assertEquals(new Vector3d(2, 3, 4).toMatrix(), Matrix.identity(4).transform(new Vector3d(2, 3, 4)));
+		assertEquals(new Vector3d(2, 3, 4), Matrix.identity(4).transform(new Vector3d(2, 3, 4)));
 	}
 
 	@Test
 	public void testClone() {
 		for (int i = 1; i < 10; i++)
 			assertEquals(Matrix.identity(i), Matrix.identity(i).clone());
+	}
 
-		double[][] start = {
-			{ 1, 2, 3, 4 },
-			{ 5, 6, 7, 8 },
-			{ 9, 0, 0, 0 },
-			{ 0, 0, 0, 0 } };
-		Matrix startMatrix = new Matrix(start);
+	@Test
+	public void testUpdate() {
+		Matrix startMatrix = new Matrix(
+			new double[][] {
+				{ 1, 2, 3, 4 },
+				{ 5, 6, 7, 8 },
+				{ 9, 0, 0, 0 },
+				{ 0, 0, 0, 0 } }
+		);
 		Matrix endMatrix = startMatrix.clone();
 		endMatrix.update(0, 0, 7);
 		assertNotEquals(startMatrix, endMatrix);
+
+		assertEquals(endMatrix, new Matrix(
+			new double[][] {
+				{ 7, 2, 3, 4 },
+				{ 5, 6, 7, 8 },
+				{ 9, 0, 0, 0 },
+				{ 0, 0, 0, 0 } }
+		));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
