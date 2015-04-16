@@ -12,34 +12,31 @@ import java.util.Arrays;
 //TODO: Add unit testing
 public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 	// number of rows
-	private final int m;
+	private final int rows;
 	// number of columns
-	private final int n;
-	// m-by-n array
+	private final int columns;
+	// rows-by-columns array
 	private final double[][] mat;
 
-	// create m-by-n matrix of 0's
-	public Matrix(int M, int N) {
-		this.m = M;
-		this.n = N;
-		mat = new double[M][N];
+	// create rows-by-columns matrix of 0's
+	public Matrix(int rows, int columns) {
+		this.rows = rows;
+		this.columns = columns;
+		mat = new double[rows][columns];
 	}
 
-	public Matrix(int M) {
-		this(M, M);
+	public Matrix(int size) {
+		this(size, size);
 	}
 
 	// create matrix based on 2d array
 	public Matrix(double[][] data) {
-		m = data.length;
-		n = data[0].length;
-		this.mat = new double[m][n];
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
-				this.mat[i][j] = data[i][j];
+		rows = data.length;
+		columns = data[0].length;
+		this.mat = data.clone();
 	}
 
-	// create and return a random m-by-n matrix with values between 0 and 1
+	// create and return a random rows-by-columns matrix with values between 0 and 1
 	public static Matrix random(int M, int N) {
 		Matrix A = new Matrix(M, N);
 		for (int i = 0; i < M; i++)
@@ -48,7 +45,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 		return A;
 	}
 
-	// create and return the n-by-n identity matrix
+	// create and return the columns-by-columns identity matrix
 	public static Matrix identity(int size) {
 		Matrix I = new Matrix(size, size);
 		for (int i = 0; i < size; i++)
@@ -56,10 +53,15 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 		return I;
 	}
 
+	public double get(int i, int j) {
+		return apply(i, j);
+	}
+
 	public double apply(int i, int j) {
 		return mat[i][j];
 	}
 
+	//TODO: Should we make it immutable, and return a new matrix instead?
 	public void update(int i, int j, double value) {
 		mat[i][j] = value;
 	}
@@ -77,18 +79,18 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 	 * Create and return the transpose of the invoking matrix
 	 */
 	public Matrix transpose() {
-		Matrix A = new Matrix(n, m);
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
+		Matrix A = new Matrix(columns, rows);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
 				A.mat[j][i] = this.mat[i][j];
 		return A;
 	}
 
 	@Override
 	public Matrix add(double other) {
-		Matrix A = new Matrix(n, m);
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
+		Matrix A = new Matrix(columns, rows);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
 				A.mat[i][j] = mat[i][j] + other;
 		return A;
 	}
@@ -99,76 +101,103 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 	@Override
 	public Matrix add(Matrix B) {
 		Matrix A = this;
-		assert B.m == A.m && B.n == A.n;
+		assert B.rows == A.rows && B.columns == A.columns;
 
-		Matrix C = new Matrix(m, n);
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
+		Matrix C = new Matrix(rows, columns);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
 				C.mat[i][j] = A.mat[i][j] + B.mat[i][j];
 		return C;
 	}
 
 	@Override
 	public Matrix multiply(double other) {
-		Matrix A = new Matrix(n, m);
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
+		Matrix A = new Matrix(columns, rows);
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
 				A.mat[i][j] = mat[i][j] * other;
 		return A;
 	}
 
 	/**
 	 * Matrix-matrix multiplication
+	 *
 	 * @return C = A * B
 	 */
 	@Override
 	public Matrix multiply(Matrix B) {
 		Matrix A = this;
-		assert A.n == B.m;
+		assert A.columns == B.rows;
 
-		Matrix C = new Matrix(A.m, B.n);
-		for (int i = 0; i < C.m; i++)
-			for (int j = 0; j < C.n; j++)
-				for (int k = 0; k < A.n; k++)
+		Matrix C = new Matrix(A.rows, B.columns);
+		for (int i = 0; i < C.rows; i++)
+			for (int j = 0; j < C.columns; j++)
+				for (int k = 0; k < A.columns; k++)
 					C.mat[i][j] += (A.mat[i][k] * B.mat[k][j]);
 		return C;
 	}
 
+	public boolean isRowVector() {
+		return rows == 1;
+	}
+
+	public boolean isColumnVector() {
+		return columns == 1;
+	}
+
+	public boolean isSquare() {
+		return columns == rows;
+	}
+
 	/**
-	 * Finds the inverse of the matrix
+	 * Augments this matrix with another, appending B's columns on the right side of this matrix.
+	 *
+	 * @param B The matrix to augment
+	 * @return The augmented matrix
+	 */
+	public Matrix augment(Matrix B) {
+		assert rows == B.rows;
+		Matrix C = new Matrix(rows, columns + B.columns);
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++)
+				C.mat[i][j] = mat[i][j];
+
+			for (int j = columns; j < C.columns; j++)
+				C.mat[i][j] = B.mat[i][j - columns];
+		}
+		return C;
+	}
+
+	/**
+	 * Finds the inverse of the matrix using Gaussian elimination.
+	 *
 	 * @return The inverse of the matrix
 	 */
 	@Override
 	public Matrix reciprocal() {
-		//TODO: Implement matrix inverse
+		assert isSquare();
 		return null;
-	}
-
-	public boolean isRowVector() {
-		return m == 1;
-	}
-
-	public boolean isColumnVector() {
-		return n == 1;
 	}
 
 	/**
 	 * Solves a matrix-vector equation, Ax = b.
+	 *
 	 * @return x = A^-1 b, assuming A is square and has full rank
 	 */
 	public Matrix solve(Matrix rhs) {
-		assert m == n && rhs.m == n && rhs.n == 1;
+		assert rows == columns && rhs.rows == columns && rhs.columns == 1;
 
 		// create copies of the mat
 		Matrix A = this.clone();
 		Matrix b = rhs.clone();
 
 		// Gaussian elimination with partial pivoting
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < columns; i++) {
 
 			// find pivot row and swap
 			int max = i;
-			for (int j = i + 1; j < n; j++)
+			for (int j = i + 1; j < columns; j++)
 				if (Math.abs(A.mat[j][i]) > Math.abs(A.mat[max][i])) {
 					max = j;
 				}
@@ -181,13 +210,13 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 			}
 
 			// pivot within b
-			for (int j = i + 1; j < n; j++)
+			for (int j = i + 1; j < columns; j++)
 				b.mat[j][0] -= b.mat[i][0] * A.mat[j][i] / A.mat[i][i];
 
 			// pivot within A
-			for (int j = i + 1; j < n; j++) {
+			for (int j = i + 1; j < columns; j++) {
 				double m = A.mat[j][i] / A.mat[i][i];
-				for (int k = i + 1; k < n; k++) {
+				for (int k = i + 1; k < columns; k++) {
 					A.mat[j][k] -= A.mat[i][k] * m;
 				}
 				A.mat[j][i] = 0.0;
@@ -195,10 +224,10 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 		}
 
 		// back substitution
-		Matrix x = new Matrix(n, 1);
-		for (int j = n - 1; j >= 0; j--) {
+		Matrix x = new Matrix(columns, 1);
+		for (int j = columns - 1; j >= 0; j--) {
 			double t = 0.0;
-			for (int k = j + 1; k < n; k++)
+			for (int k = j + 1; k < columns; k++)
 				t += A.mat[j][k] * x.mat[k][0];
 			x.mat[j][0] = (b.mat[j][0] - t) / A.mat[j][j];
 		}
@@ -211,10 +240,10 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 		if (obj instanceof Matrix) {
 			Matrix B = (Matrix) obj;
 			Matrix A = this;
-			assert B.m == A.m && B.n == A.n;
+			assert B.rows == A.rows && B.columns == A.columns;
 
-			for (int i = 0; i < m; i++)
-				for (int j = 0; j < n; j++)
+			for (int i = 0; i < rows; i++)
+				for (int j = 0; j < columns; j++)
 					if (A.mat[i][j] != B.mat[i][j]) {
 						return false;
 					}
@@ -236,8 +265,8 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Matrix[" + m + "," + n + "]\n");
-		for (int i = 0; i < m; i++)
+		sb.append("Matrix[" + rows + "," + columns + "]\n");
+		for (int i = 0; i < rows; i++)
 			sb.append(Arrays.toString(mat[i])).append("\n");
 		return sb.toString();
 	}
