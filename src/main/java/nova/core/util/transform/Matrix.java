@@ -36,7 +36,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 		mat = new double[rows][columns];
 
 		for (int i = 0; i < rows; i++)
-			for (int j = 0; j < rows; j++)
+			for (int j = 0; j < columns; j++)
 				mat[i][j] = data[i][j];
 	}
 
