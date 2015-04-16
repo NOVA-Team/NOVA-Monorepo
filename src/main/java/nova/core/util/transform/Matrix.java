@@ -299,14 +299,14 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 		if (obj instanceof Matrix) {
 			Matrix B = (Matrix) obj;
 			Matrix A = this;
-			assert B.rows == A.rows && B.columns == A.columns;
-
-			for (int i = 0; i < rows; i++)
-				for (int j = 0; j < columns; j++)
-					if (A.mat[i][j] != B.mat[i][j]) {
-						return false;
-					}
-			return true;
+			if (B.rows == A.rows && B.columns == A.columns) {
+				for (int i = 0; i < rows; i++)
+					for (int j = 0; j < columns; j++)
+						if (A.mat[i][j] != B.mat[i][j]) {
+							return false;
+						}
+				return true;
+			}
 		}
 		return false;
 	}

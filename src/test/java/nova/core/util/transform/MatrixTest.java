@@ -124,10 +124,9 @@ public class MatrixTest {
 	public void testSolve() {
 		Matrix A = new Matrix(
 			new double[][] {
-				{ 1, 2, 3, 4 },
-				{ 5, 6, 7, 8 },
-				{ 9, 0, 0, 0 },
-				{ 0, 0, 0, 0 } }
+				{ 1, 2, 3 },
+				{ 3, 4, 7 },
+				{ 6, 5, 9 } }
 		);
 
 		Matrix B = new Matrix(new double[][] {
@@ -222,14 +221,10 @@ public class MatrixTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testIllegalArgument1() {
-		new Matrix(new double[][] { { 1, 1 }, { 1, 1 } });
+		new Matrix(new double[][] { { 1, 1, 2 }, { 1, 1 } });
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testIllegalArgument2() {
-		new Matrix(new double[][] { { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } });
-	}
-
+	@Test
 	public void testEquals() {
 		double[][] start = {
 			{ 1, 2, 3, 4 },
