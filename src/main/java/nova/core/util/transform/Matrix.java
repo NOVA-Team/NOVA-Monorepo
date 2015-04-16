@@ -117,7 +117,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 
 	@Override
 	public Matrix multiply(double other) {
-		Matrix A = new Matrix(columns, rows);
+		Matrix A = new Matrix(rows, columns);
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++)
 				A.mat[i][j] = mat[i][j] * other;
@@ -201,7 +201,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	public Matrix submatrix(int y1, int y2, int x1, int x2) {
 		assert x1 < x2 && y1 < y2 && x2 <= columns && y2 <= rows;
 
-		Matrix C = new Matrix(x2 - x1, y2 - y1);
+		Matrix C = new Matrix(x2 - x1 + 1, y2 - y1 + 1);
 
 		for (int x = x1; x <= x2; x++) {
 			for (int y = y1; y <= y2; y++) {
