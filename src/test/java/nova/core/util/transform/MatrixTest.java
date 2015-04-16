@@ -117,7 +117,7 @@ public class MatrixTest {
 				{ 1 / 3, 1 / 15 } }
 		);
 
-		assertEquals(inverse, start.reciprocal());
+		assertTrue(inverse.subtract(start.reciprocal()).isAlmostZero());
 	}
 
 	@Test

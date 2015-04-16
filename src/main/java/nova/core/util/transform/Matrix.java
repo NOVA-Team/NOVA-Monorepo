@@ -188,7 +188,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 		//Retrieve the agumented part of the matrix
 		return augment(identity(rows))
 			.rref()
-			.submatrix(0, rows - 1, columns - 1, 2 * columns - 1);
+			.submatrix(0, rows - 1, columns, 2 * columns - 1);
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	public Matrix submatrix(int y1, int y2, int x1, int x2) {
 		assert x1 < x2 && y1 < y2 && x2 <= columns && y2 <= rows;
 
-		Matrix C = new Matrix(x2 - x1 + 1, y2 - y1 + 1);
+		Matrix C = new Matrix(y2 - y1 + 1, x2 - x1 + 1);
 
 		for (int x = x1; x <= x2; x++) {
 			for (int y = y1; y <= y2; y++) {
