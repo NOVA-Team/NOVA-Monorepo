@@ -177,7 +177,61 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable {
 	@Override
 	public Matrix reciprocal() {
 		assert isSquare();
-		return null;
+
+		//Augment the matrix with the identity matrix
+		//Reduce it to echelon form
+		//Retrieve the agumented part of the matrix
+		return augment(identity(rows))
+			.rref()
+			.submatrix(0, rows, columns, 2 * columns);
+	}
+
+	/**
+	 * @return A submatrix that is within this matrix.
+	 */
+	public Matrix submatrix(int x1, int x2, int y1, int y2) {
+		assert x1 < x2 && y1 < y2 && x2 <= rows && y2 <= columns;
+
+		Matrix C = new Matrix(x2 - x1, y2 - y1);
+
+		for (int x = x1; x < x2; x++) {
+			for (int y = y1; y < y2; y++) {
+				C.mat[x - x1][y - y1] = mat[x][y];
+			}
+		}
+
+		return C;
+	}
+
+	/**
+	 * Performs Gaussian elimnation to transform a matrix to echelon form.
+	 *
+	 * @return The matrix in row reduced echelon form
+	 */
+	public Matrix rref() {
+		double[][] rref = mat.clone();
+
+		for (int p = 0; p < rows; ++p) {
+			// Make this pivot 1
+			double pv = rref[p][p];
+			if (pv != 0) {
+				for (int i = 0; i < columns; ++i) {
+					rref[p][i] /= pv;
+				}
+			}
+
+			// Make other rows zero
+			for (int r = 0; r < rows; ++r) {
+				if (r != p) {
+					double f = rref[r][p];
+					for (int i = 0; i < columns; ++i) {
+						rref[r][i] -= f * rref[p][i];
+					}
+				}
+			}
+		}
+
+		return new Matrix(rref);
 	}
 
 	/**
