@@ -77,12 +77,12 @@ public class Matrix4x4Test {
 		assertEquals(Matrix4x4.IDENTITY, Matrix4x4.IDENTITY.clone());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = AssertionError.class)
 	public void testIllegalArgument1() {
 		new Matrix4x4(new double[][]{{1,1},{1,1}});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = AssertionError.class)
 	public void testIllegalArgument2() {
 		new Matrix4x4(new double[][]{{1,1},{1,1},{1,1},{1,1}});
 	}

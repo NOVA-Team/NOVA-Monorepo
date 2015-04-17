@@ -2,6 +2,7 @@ package nova.core.util.transform;
 
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
+import com.google.common.math.DoubleMath;
 
 import java.util.Arrays;
 
@@ -16,7 +17,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	// number of columns
 	public final int columns;
 	// rows-by-columns array
-	private final double[][] mat;
+	protected final double[][] mat;
 
 	// create rows-by-columns matrix of 0's
 	public Matrix(int rows, int columns) {
@@ -311,7 +312,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 			if (B.rows == A.rows && B.columns == A.columns) {
 				for (int i = 0; i < rows; i++)
 					for (int j = 0; j < columns; j++)
-						if (A.mat[i][j] != B.mat[i][j]) {
+						if (!DoubleMath.fuzzyEquals(A.mat[i][j], B.mat[i][j],0.00001)) {
 							return false;
 						}
 				return true;

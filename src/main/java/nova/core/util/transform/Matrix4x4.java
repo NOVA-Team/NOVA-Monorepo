@@ -22,7 +22,6 @@ public class Matrix4x4 extends Matrix implements Cloneable, Transform{
 	/**
 	 * 4x4 array [row][column]
 	 */
-	private double[][] mat;
 
 	/**
 	 * Creates Matrix4x4 form 2D double array creating defensive copy of it.
@@ -30,6 +29,10 @@ public class Matrix4x4 extends Matrix implements Cloneable, Transform{
 	 */
 	public Matrix4x4(double[][] mat) {
 		super(mat);
+		assert mat.length == 4;
+		for (int i = 0; i < mat.length; i++) {
+			assert mat[i].length == 4;
+		}
 	}
 
 	/**
