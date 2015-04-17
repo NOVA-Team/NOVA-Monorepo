@@ -197,11 +197,11 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	}
 
 	/**
+	 * @param x1 The min x bound
+	 * @param x2 The max x bound
+	 * @param y1 The min y bound
+	 * @param y2 The max y bound
 	 * @return A submatrix that is within this matrix.
-	 * @x1 - The min x bound
-	 * @x2 - The max x bound
-	 * @y1 - The min y bound
-	 * @y2 - The max y bound
 	 */
 	public Matrix submatrix(int y1, int y2, int x1, int x2) {
 		assert x1 < x2 && y1 < y2 && x2 <= columns && y2 <= rows;
