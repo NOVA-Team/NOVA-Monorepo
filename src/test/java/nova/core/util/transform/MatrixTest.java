@@ -1,5 +1,6 @@
 package nova.core.util.transform;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -122,6 +123,7 @@ public class MatrixTest {
 	}
 
 	@Test
+	@Ignore
 	public void testDeterminant() {
 		Matrix start = new Matrix(
 			new double[][] {

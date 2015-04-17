@@ -86,7 +86,7 @@ public class Matrix4x4Test {
 	public void testIllegalArgument2() {
 		new Matrix4x4(new double[][]{{1,1},{1,1},{1,1},{1,1}});
 	}
-
+	@Test
 	public void testEquals() {
 		double[][] start = {
 			{ 1, 2, 3, 4 },
