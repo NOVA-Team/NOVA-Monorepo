@@ -193,9 +193,9 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 			.submatrix(0, rows - 1, columns, 2 * columns - 1);
 	}
 
-	public double determinant() {
+/*	public double determinant() {
 		return rref().mat[rows - 1][columns - 1];
-	}
+	}*/
 
 	/**
 	 * @param x1 The min x bound

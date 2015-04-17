@@ -103,6 +103,9 @@ public class MatrixTest {
 		);
 
 		assertEquals(start.rref(), Matrix.identity(2));
+
+		start = new Matrix(new double[][]{{0,3,4},{5,2,3},{1,5,1}});
+		assertEquals(start.rref(), Matrix.identity(3));
 	}
 
 	@Test
@@ -122,7 +125,7 @@ public class MatrixTest {
 		assertTrue(inverse.subtract(reciprocal).isAlmostZero());
 	}
 
-	@Test
+/*	@Test
 	@Ignore
 	public void testDeterminant() {
 		Matrix start = new Matrix(
@@ -133,7 +136,7 @@ public class MatrixTest {
 		);
 
 		assertEquals(-17, start.determinant(), 0.0001);
-	}
+	}*/
 
 	@Test
 	public void testSolve() {
