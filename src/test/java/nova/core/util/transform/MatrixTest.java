@@ -129,7 +129,7 @@ public class MatrixTest {
 				{ 5, -2, 2 } }
 		);
 
-		assertEquals(-17, start.determinant());
+		assertEquals(-17, start.determinant(), 0.0001);
 	}
 
 	@Test

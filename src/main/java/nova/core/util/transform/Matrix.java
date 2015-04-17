@@ -208,9 +208,9 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 
 		Matrix C = new Matrix(y2 - y1 + 1, x2 - x1 + 1);
 
-		for (int x = x1; x <= x2; x++) {
-			for (int y = y1; y <= y2; y++) {
-				C.mat[x - x1][y - y1] = mat[x][y];
+		for (int c = x1; c <= x2; c++) {
+			for (int r = y1; r <= y2; r++) {
+				C.mat[r - y1][c - x1] = mat[r][c];
 			}
 		}
 
