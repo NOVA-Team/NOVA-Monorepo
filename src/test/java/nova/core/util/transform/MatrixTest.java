@@ -113,11 +113,12 @@ public class MatrixTest {
 		);
 		Matrix inverse = new Matrix(
 			new double[][] {
-				{ 0, -1 / 5 },
-				{ 1 / 3, 1 / 15 } }
+				{ 0, -1 / 5d },
+				{ 1 / 3d, 1 / 15d } }
 		);
 
-		assertTrue(inverse.subtract(start.reciprocal()).isAlmostZero());
+		Matrix reciprocal = start.reciprocal();
+		assertTrue(inverse.subtract(reciprocal).isAlmostZero());
 	}
 
 	@Test
