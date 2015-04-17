@@ -121,6 +121,18 @@ public class MatrixTest {
 	}
 
 	@Test
+	public void testDeterminant() {
+		Matrix start = new Matrix(
+			new double[][] {
+				{ 1, -3, 0 },
+				{ -2, 4, 1 },
+				{ 5, -2, 2 } }
+		);
+
+		assertEquals(-17, start.determinant());
+	}
+
+	@Test
 	public void testSolve() {
 		Matrix A = new Matrix(
 			new double[][] {

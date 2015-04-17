@@ -61,6 +61,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 		return apply(i, j);
 	}
 
+	//Use curring function
 	public double apply(int i, int j) {
 		return mat[i][j];
 	}
@@ -185,10 +186,14 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 
 		//Augment the matrix with the identity matrix
 		//Reduce it to echelon form
-		//Retrieve the agumented part of the matrix
+		//Retrieve the augmented part of the matrix
 		return augment(identity(rows))
 			.rref()
 			.submatrix(0, rows - 1, columns, 2 * columns - 1);
+	}
+
+	public double determinant() {
+		return rref().mat[rows - 1][columns - 1];
 	}
 
 	/**
@@ -218,29 +223,29 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	 * @return The matrix in row reduced echelon form
 	 */
 	public Matrix rref() {
-		double[][] rref = mat.clone();
+		Matrix rref = clone();
 
 		for (int p = 0; p < rows; ++p) {
 			// Make this pivot 1
-			double pv = rref[p][p];
+			double pv = rref.mat[p][p];
 			if (pv != 0) {
 				for (int i = 0; i < columns; ++i) {
-					rref[p][i] /= pv;
+					rref.mat[p][i] /= pv;
 				}
 			}
 
 			// Make other rows zero
 			for (int r = 0; r < rows; ++r) {
 				if (r != p) {
-					double f = rref[r][p];
+					double f = rref.mat[r][p];
 					for (int i = 0; i < columns; ++i) {
-						rref[r][i] -= f * rref[p][i];
+						rref.mat[r][i] -= f * rref.mat[p][i];
 					}
 				}
 			}
 		}
 
-		return new Matrix(rref);
+		return rref;
 	}
 
 	/**
