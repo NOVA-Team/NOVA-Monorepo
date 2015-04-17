@@ -13,6 +13,7 @@ buildscript {
 	dependencies {
 		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
 		classpath 'us.phildop:gradle-sublimetext-plugin:0.5.3'
+		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.3.1'
 	}
 }
 
@@ -26,6 +27,9 @@ apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'sublimeText'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 
 ext.config = parseConfig("build.properties")
 
@@ -169,4 +173,11 @@ eclipse.classpath.file {
 	whenMerged {  cp -> 
 		cp.entries.removeAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }
 	}
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
 }

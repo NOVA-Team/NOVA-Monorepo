@@ -6,7 +6,7 @@ before_install: chmod +x gradlew
 install:
   - ""
 script:
-  - ./gradlew check javadoc
+  - ./gradlew check javadoc jacocoTestReport coveralls
   - rm ~/.gradle/caches/modules-2/modules-2.lock
 
 cache:
