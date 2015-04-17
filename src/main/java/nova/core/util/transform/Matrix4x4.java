@@ -9,8 +9,7 @@ import java.util.Arrays;
 /**
  *  Matrix4x4 for 3D Vector transforms. It is immutable.
  */
-@Deprecated
-public class Matrix4x4 implements Cloneable, Transform{
+public class Matrix4x4 extends Matrix implements Cloneable, Transform{
 
 	/**
 	 * Identity matrix.
@@ -30,14 +29,7 @@ public class Matrix4x4 implements Cloneable, Transform{
 	 * @param mat 4x4 array to create Matrix4x4 form.
 	 */
 	public Matrix4x4(double[][] mat) {
-		if (mat.length != 4)
-			throw new IllegalArgumentException("Template array has to bye 4x4");
-		this.mat = new double[4][];
-		for (int i = 0; i < 4; i++) {
-			if (mat[i].length != 4)
-				throw new IllegalArgumentException("Template array has to bye 4x4");
-			this.mat[i] = Arrays.copyOf(mat[i],4);
-		}
+		super(mat);
 	}
 
 	/**
@@ -112,40 +104,7 @@ public class Matrix4x4 implements Cloneable, Transform{
 		w = mat[0][3]*vector.xd() + mat[1][3]*vector.yd() + mat[2][3]*vector.zd() + mat[3][3];
 		return new Vector3d(x / w, y / w, z / w);
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-
-		if (this == obj) {
-			return true;
-		} else if (obj instanceof Matrix4x4) {
-			Matrix4x4 other = (Matrix4x4) obj;
-			boolean res = true;
-			outer:
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					res = DoubleMath.fuzzyEquals(this.mat[i][j], other.mat[i][j], 0.00001);
-					if (!res) {
-						break outer;
-					}
-				}
-			}
-			return res;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		Hasher hasher = Hashing.goodFastHash(32).newHasher();
-		for(double[] array : mat)
-			for(double d : array)
-				hasher.putDouble(d);
-
-		return  hasher.hash().asInt();
-	}
-
+	
 	@Override
 	public Matrix4x4 clone() {
 		return new Matrix4x4(this);
