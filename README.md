@@ -1,5 +1,6 @@
 [![Build Status](https://img.shields.io/travis/NOVAAPI/NovaCore.svg?style=flat-square)](https://travis-ci.org/NOVAAPI/NovaCore)
 [![Coverage](https://img.shields.io/coveralls/NOVAAPI/NovaCore.svg?style=flat-square)](https://coveralls.io/r/NOVAAPI/NovaCore)
+[![Tests](https://img.shields.io/jenkins/t/http/jenkins.magik6k.net/NovaAPI.svg?style=flat-square)](http://jenkins.magik6k.net/job/NovaAPI/lastCompletedBuild/testReport/)
 
 Nova API
 ========
