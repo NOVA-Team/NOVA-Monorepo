@@ -1,3 +1,6 @@
+[![Build Status](https://img.shields.io/travis/NOVAAPI/NovaCore.svg?style=flat-square)](https://travis-ci.org/NOVAAPI/NovaCore)
+[![Coverage](https://img.shields.io/coveralls/NOVAAPI/NovaCore.svg?style=flat-square)](https://coveralls.io/r/NOVAAPI/NovaCore)
+
 Nova API
 ========
 NOVA is a voxel game modding framework designed to allow mods to be run across different voxel games.
@@ -8,9 +11,6 @@ http://opensource.org/licenses/lgpl-3.0.html
 ###Important links
 * Issue tracker [YouTrack](http://tracker.calclavia.com/issues/nova)
 * Project main page (http://novaapi.net)
-
-###Build
-[![Build Status](https://travis-ci.org/NOVAAPI/NovaCore.svg?branch=master)](https://travis-ci.org/NOVAAPI/NovaCore)
 
 ### Dependencies
 

@@ -2,14 +2,12 @@ package nova.core.util.transform;
 
 import org.junit.Test;
 
-import org.junit.Ignore;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
-@Ignore
 public class MatrixTest {
 
 	@Test
