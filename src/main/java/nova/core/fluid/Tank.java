@@ -24,7 +24,7 @@ public interface Tank extends FluidConsumer, FluidProvider {
 	}
 
 	/**
-	 * @return Whethet this container is storing a fluid
+	 * @return Whether this container is storing a fluid
 	 */
 	default boolean hasFluid() {
 		return getFluid().isPresent();

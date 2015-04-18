@@ -78,7 +78,7 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 
 	@Override
 	public Fluid clone() {
-		Fluid cloned = new Fluid(getID());
+		Fluid cloned = new Fluid(getID()).setAmount(amount());
 		return cloned;
 	}
 
@@ -115,7 +115,7 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	/**
 	 * Check if this FluidStack is of type of another FluidStack
 	 *
-	 * @param stack The another FluidStack
+	 * @param stack The another Fluid
 	 * @return Result
 	 */
 	public boolean sameType(Fluid stack) {

@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 public class TankSimple implements Tank, Storable, PacketHandler {
 
-	private Optional<Fluid> containedFluid;
+	private Optional<Fluid> containedFluid = Optional.empty();
 	private int capacity;
 
 	public TankSimple(int maxCapacity) {
@@ -44,7 +44,7 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 		if (fluid.amount() - toPut > 0) {
 			return toPut;
 		} else {
-			return 0;
+			return fluid.amount();
 		}
 	}
 
@@ -56,12 +56,17 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 
 		int toGet = Math.min(amount, containedFluid.get().amount());
 
+		Optional<Fluid> fluid = containedFluid;
 		if (!simulate) {
-			containedFluid.get().remove(toGet);
+			if(containedFluid.get().amount() > toGet) {
+				containedFluid.get().remove(toGet);
+			} else {
+				containedFluid = Optional.empty();
+			}
 		}
 
 		if (toGet > 0) {
-			return Optional.of(containedFluid.get().withAmount(toGet));
+			return Optional.of(fluid.get().withAmount(toGet));
 		} else {
 			return Optional.empty();
 		}
@@ -88,14 +93,14 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 	@Override
 	public void save(Data data) {
 		if (containedFluid.isPresent()) {
-			data.put("fluid", containedFluid);
+			data.put("fluid", containedFluid.get());
 		}
 	}
 
 	@Override
 	public void load(Data data) {
 		if (data.containsKey("fluid")) {
-			containedFluid = Optional.of(data.getStorable(data.get("fluid")));
+			containedFluid = Optional.of(data.getStorable("fluid"));
 		} else {
 			containedFluid = Optional.empty();
 		}
