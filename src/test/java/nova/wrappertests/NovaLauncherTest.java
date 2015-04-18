@@ -38,6 +38,8 @@ public abstract class NovaLauncherTest {
 			.hasSize(1)
 			.containsValue(TestMod.class);
 
+		Game.instance = diep.init();
+
 		launcher.generateDependencies();
 		launcher.preInit();
 		launcher.init();
