@@ -14,11 +14,12 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	/**
 	 * The ID of the fluid. Optional string for auxiliary constructor.
 	 */
-	private final String id;
+	@Stored(key = "id")
+	private String id;
 	/**
 	 * Fluid amount is measured in liters.
 	 */
-	@Stored
+	@Stored(key = "amount")
 	private int amount = 1;
 
 	/**

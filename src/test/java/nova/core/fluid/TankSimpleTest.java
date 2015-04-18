@@ -47,7 +47,7 @@ public class TankSimpleTest {
 
         assertThat(tank.hasFluid()).isTrue();
         assertThat(tank.hasFluidType(new Fluid("water"))).isTrue();
-        assertThat(tank.getFluid().equals(new Fluid("water").setAmount(100))).isTrue();
+        assertThat(tank.getFluid().get().equals(new Fluid("water").setAmount(100))).isTrue();
     }
 
 }
