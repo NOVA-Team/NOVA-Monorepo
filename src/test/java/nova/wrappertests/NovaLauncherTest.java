@@ -24,7 +24,7 @@ public abstract class NovaLauncherTest {
 		NoLoadableTestMod.class
 	);
 
-	abstract List<Class<? extends Bundle>> getModules();
+	public abstract List<Class<? extends Bundle>> getModules();
 
 	@Test
 	public void testLaunching() {
