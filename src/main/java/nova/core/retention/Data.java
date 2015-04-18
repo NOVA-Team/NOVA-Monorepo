@@ -64,7 +64,7 @@ public class Data extends HashMap<String, Object> {
 	public static Data serialize(Storable obj) {
 		Data data = new Data(obj.getClass());
 		obj.save(data);
-		data.put("class", obj.getClass().getName());
+		data.putIfAbsent("class", obj.getClass().getName());
 		obj.save(data);
 		return data;
 	}
@@ -124,9 +124,7 @@ public class Data extends HashMap<String, Object> {
 			enumData.put("value", ((Enum) value).name());
 			value = enumData;
 		} else if (value instanceof Storable) {
-			Data storableData = new Data();
-			storableData.className = value.getClass().getName();
-			((Storable) value).save(storableData);
+			Data storableData = serialize((Storable) value);
 			value = storableData;
 		}
 
