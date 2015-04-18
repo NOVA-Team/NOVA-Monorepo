@@ -104,7 +104,7 @@ public class Data extends HashMap<String, Object> {
 	@Override
 	public void putAll(Map<? extends String, ?> m) {
 		//TODO: More efficient way to do this?
-		m.forEach((k, v) -> put(k, v));
+		m.forEach(this::put);
 	}
 
 	public void putAll(Data m) {
