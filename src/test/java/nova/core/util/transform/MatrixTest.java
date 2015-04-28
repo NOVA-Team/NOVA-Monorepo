@@ -257,4 +257,20 @@ public class MatrixTest {
 		assertTrue(firstMatrix.equals(firstMatrix));
 		assertFalse(firstMatrix.equals("test"));
 	}
+	
+	@Test
+	public void testFuzzyEquals() {
+		double[][] start = {
+			{ 1, 2, 3 },
+			{ 5, 6, 7 },
+			{ 8, 0, 1 } };
+		Matrix firstMatrix = new Matrix(start);
+		start[1][2] += 0.0000001;
+		Matrix secondMatrix = new Matrix(start);
+		start[0][1] += 0.001;
+		Matrix thirdMatrix = new Matrix(start);
+		assertTrue(firstMatrix.fuzzyEquals(secondMatrix));
+		assertFalse(firstMatrix.fuzzyEquals(thirdMatrix));
+		assertFalse(firstMatrix.equals(secondMatrix));
+	}
 }

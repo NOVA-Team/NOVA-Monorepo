@@ -304,6 +304,30 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 
 	}
 
+	/**
+	 * Compares two matrices with an error tolerance.
+	 * 
+	 * @param B the matrix to compare to
+	 * @param tolerance the error tolerance
+	 * @return true if the matrix components are within {@code tolerance} of each other
+	 */
+	public boolean fuzzyEquals(Matrix B, double tolerance) {
+		Matrix A = this;
+		if (B.rows == A.rows && B.columns == A.columns) {
+			for (int i = 0; i < rows; i++)
+				for (int j = 0; j < columns; j++)
+					if (!DoubleMath.fuzzyEquals(A.mat[i][j], B.mat[i][j], tolerance)) {
+						return false;
+					}
+			return true;
+		}
+		return false;
+	}
+
+	public boolean fuzzyEquals(Matrix B) {
+		return fuzzyEquals(B, 0.00001);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Matrix) {
