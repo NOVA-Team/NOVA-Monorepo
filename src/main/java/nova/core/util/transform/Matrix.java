@@ -330,13 +330,13 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof Matrix) {
+		if (obj.getClass() == this.getClass()) {
 			Matrix B = (Matrix) obj;
 			Matrix A = this;
 			if (B.rows == A.rows && B.columns == A.columns) {
 				for (int i = 0; i < rows; i++)
 					for (int j = 0; j < columns; j++)
-						if (!DoubleMath.fuzzyEquals(A.mat[i][j], B.mat[i][j],0.00001)) {
+						if (A.mat[i][j] != B.mat[i][j]) {
 							return false;
 						}
 				return true;
