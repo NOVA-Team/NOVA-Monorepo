@@ -325,7 +325,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	}
 
 	public boolean fuzzyEquals(Matrix B) {
-		return fuzzyEquals(B, 0.00001);
+		return fuzzyEquals(B, 0.0000001);
 	}
 
 	@Override
@@ -382,13 +382,17 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 		return new Vector3d(x / w, y / w, z / w);
 	}
 
-	public boolean isAlmostZero() {
+	public boolean isAlmostZero(double tolerance) {
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++)
-				if (mat[i][j] > 0.0000001) {
+				if (Math.abs(mat[i][j]) > tolerance) {
 					return false;
 				}
 		return true;
+	}
+	
+	public boolean isAlmostZero() {
+		return isAlmostZero(0.0000001);
 	}
 
 	@Override

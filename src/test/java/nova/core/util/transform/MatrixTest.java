@@ -1,5 +1,7 @@
 package nova.core.util.transform;
 
+import nova.core.util.transform.Matrix;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -272,5 +274,17 @@ public class MatrixTest {
 		assertTrue(firstMatrix.fuzzyEquals(secondMatrix));
 		assertFalse(firstMatrix.fuzzyEquals(thirdMatrix));
 		assertFalse(firstMatrix.equals(secondMatrix));
+	}
+
+	@Test
+	public void testIsAlmostZero() {
+		double[][] start = {
+			{ 0, -0.00000001, 0 },
+			{ 0, 0, 0.000000001 } };
+		Matrix firstMatrix = new Matrix(start);
+		start[0][0] = -0.01;
+		Matrix secondMatrix = new Matrix(start);
+		assertTrue(firstMatrix.isAlmostZero());
+		assertFalse(secondMatrix.isAlmostZero());
 	}
 }
