@@ -271,7 +271,7 @@ public class MatrixTest {
 		Matrix secondMatrix = new Matrix(start);
 		start[0][1] += 0.001;
 		Matrix thirdMatrix = new Matrix(start);
-		assertTrue(firstMatrix.fuzzyEquals(secondMatrix));
+		assertTrue(firstMatrix.fuzzyEquals(secondMatrix, 0.00001));
 		assertFalse(firstMatrix.fuzzyEquals(thirdMatrix));
 		assertFalse(firstMatrix.equals(secondMatrix));
 	}
