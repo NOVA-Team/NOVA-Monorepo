@@ -1,19 +1,9 @@
 package nova.core.di;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import nova.core.util.MockIdentifiable;
 import nova.core.util.Registry;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
 import se.jbee.inject.Parameter;
@@ -21,6 +11,12 @@ import se.jbee.inject.bind.BinderModule;
 import se.jbee.inject.bootstrap.Bootstrap;
 import se.jbee.inject.bootstrap.BootstrapperBundle;
 import se.jbee.inject.util.Scoped;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class OptionalDITest {
 	Injector injector;
@@ -36,10 +32,10 @@ public class OptionalDITest {
 		TestManager m = injector.resolve(Dependency
 			.dependency(TestManager.class));
 
-		assertTrue(m.map.isPresent());
-		assertFalse(m.set.isPresent());
-		assertNotSame(m.map, m.map2);
-		assertNotSame(m.map.get(), m.map2.get());
+		assertThat(m.map).isPresent();
+		assertThat(m.set).isEmpty();
+		assertThat(m.map2).isNotSameAs(m.map);
+		assertThat(m.map2.get()).isNotSameAs(m.map.get());
 	}
 
 	public static class TestManager {
@@ -67,7 +63,7 @@ public class OptionalDITest {
 			bind(TestManager.class).toConstructor();
 			try {
 				starbind(Map.class).to(
-					HashMap.class.getConstructor(new Class[] { }), (Parameter[]) null);
+					HashMap.class.getConstructor(new Class[] {}), (Parameter[]) null);
 			} catch (NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 			}

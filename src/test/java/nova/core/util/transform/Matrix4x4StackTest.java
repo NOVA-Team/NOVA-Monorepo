@@ -5,10 +5,11 @@ import org.junit.Test;
 
 import java.util.EmptyStackException;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class Matrix4x4StackTest {
 	MatrixStack ms;
+
 	@Before
 	public void setUp() {
 		ms = new MatrixStack();
@@ -21,9 +22,9 @@ public class Matrix4x4StackTest {
 
 	@Test
 	public void testStack() {
-		Matrix4x4 one = MatrixHelper.translationMatrix(1,0,0);
-		Matrix4x4 two = MatrixHelper.translationMatrix(0,1,0);
-		Matrix4x4 three = MatrixHelper.translationMatrix(0,0,1);
+		Matrix4x4 one = MatrixHelper.translationMatrix(1, 0, 0);
+		Matrix4x4 two = MatrixHelper.translationMatrix(0, 1, 0);
+		Matrix4x4 three = MatrixHelper.translationMatrix(0, 0, 1);
 		ms.loadMatrix(one);
 		ms.pushMatrix();
 		ms.loadMatrix(two);
@@ -34,29 +35,30 @@ public class Matrix4x4StackTest {
 		ms.pushMatrix();
 		ms.loadIdentity();
 
-		assertEquals(Matrix4x4.IDENTITY,ms.getMatrix());
+		assertThat(ms.getMatrix()).isEqualTo(Matrix4x4.IDENTITY);
 		ms.popMatrix();
-		assertEquals(three, ms.getMatrix());
+		assertThat(ms.getMatrix()).isEqualTo(three);
 		ms.popMatrix();
-		assertEquals(Matrix4x4.IDENTITY, ms.getMatrix());
+		assertThat(ms.getMatrix()).isEqualTo(Matrix4x4.IDENTITY);
 		ms.popMatrix();
-		assertEquals(two,ms.getMatrix());
+		assertThat(ms.getMatrix()).isEqualTo(two);
 		ms.popMatrix();
-		assertEquals(one,ms.getMatrix());
+		assertThat(ms.getMatrix()).isEqualTo(one);
 	}
+
 	@Test
 	public void testTransforms() {
 		ms.translate(Vector3d.one);
 		ms.scale(Vector3d.one.multiply(2));
 		ms.pushMatrix();
-		ms.rotate(Vector3d.yAxis, Math.PI/2);
-		assertEquals(new Vector3d(-1,1,1),ms.transform(Vector3d.zAxis));
+		ms.rotate(Vector3d.yAxis, Math.PI / 2);
+		assertThat(ms.transform(Vector3d.zAxis)).isEqualTo(new Vector3d(-1, 1, 1));
 
 		ms.popMatrix();
 		ms.transform(MatrixHelper.rotationMatrix(Vector3d.yAxis, Math.PI / 2));
-		assertEquals(new Vector3d(-1,1,1),ms.transform(Vector3d.zAxis));
+		assertThat(ms.transform(Vector3d.zAxis)).isEqualTo(new Vector3d(-1, 1, 1));
 
-		assertEquals(ms.getMatrix().transform(Vector3d.one), ms.transform(Vector3d.one));
+		assertThat(ms.transform(Vector3d.one)).isEqualTo(ms.getMatrix().transform(Vector3d.one));
 
 	}
 
