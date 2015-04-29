@@ -102,10 +102,10 @@ public class MatrixTest {
 				{ -5, 0 } }
 		);
 
-		assertEquals(start.rref(), Matrix.identity(2));
+		assertTrue(start.rref().fuzzyEquals(Matrix.identity(2)));
 
 		start = new Matrix(new double[][]{{0,3,4},{5,2,3},{1,5,1}});
-		assertEquals(start.rref(), Matrix.identity(3));
+		assertTrue(start.rref().fuzzyEquals(Matrix.identity(3)));
 	}
 
 	@Test
@@ -122,7 +122,7 @@ public class MatrixTest {
 		);
 
 		Matrix reciprocal = start.reciprocal();
-		assertTrue(inverse.subtract(reciprocal).isAlmostZero());
+		assertTrue(reciprocal.fuzzyEquals(inverse));
 	}
 
 /*	@Test
@@ -159,7 +159,7 @@ public class MatrixTest {
 			{ 1 },
 			{ -2 }
 		});
-		assertTrue(x.subtract(expectedX).isAlmostZero());
+		assertTrue(x.fuzzyEquals(expectedX));
 	}
 
 	@Test
