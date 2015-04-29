@@ -1,5 +1,8 @@
 package nova.core.util.transform;
 
+import nova.core.util.transform.Matrix;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -99,10 +102,10 @@ public class MatrixTest {
 				{ -5, 0 } }
 		);
 
-		assertThat(Matrix.identity(2)).isEqualTo(start.rref());
+		assertThat(start.rref().fuzzyEquals(Matrix.identity(2))).isTrue();
 
 		start = new Matrix(new double[][] { { 0, 3, 4 }, { 5, 2, 3 }, { 1, 5, 1 } });
-		assertThat(Matrix.identity(3)).isEqualTo(start.rref());
+		assertThat(start.rref().fuzzyEquals(Matrix.identity(3))).isTrue();
 	}
 
 	@Test
@@ -119,7 +122,7 @@ public class MatrixTest {
 		);
 
 		Matrix reciprocal = start.reciprocal();
-		assertThat(inverse.subtract(reciprocal).isAlmostZero()).isTrue();
+		assertThat(reciprocal.fuzzyEquals(inverse)).isTrue();
 	}
 
 /*	@Test
@@ -156,7 +159,7 @@ public class MatrixTest {
 			{ 1 },
 			{ -2 }
 		});
-		assertThat(x.subtract(expectedX).isAlmostZero()).isTrue();
+		assertThat(x.fuzzyEquals(expectedX)).isTrue();
 	}
 
 	@Test
@@ -254,5 +257,33 @@ public class MatrixTest {
 		assertThat(firstMatrix.equals(secondMatrix)).isFalse();
 		assertThat(firstMatrix.equals(firstMatrix)).isTrue();
 		assertThat(firstMatrix.equals("test")).isFalse();
+	}
+
+	@Test
+	public void testFuzzyEquals() {
+		double[][] start = {
+			{ 1, 2, 3 },
+			{ 5, 6, 7 },
+			{ 8, 0, 1 } };
+		Matrix firstMatrix = new Matrix(start);
+		start[1][2] += 0.0000001;
+		Matrix secondMatrix = new Matrix(start);
+		start[0][1] += 0.001;
+		Matrix thirdMatrix = new Matrix(start);
+		assertThat(firstMatrix.fuzzyEquals(secondMatrix, 0.00001)).isTrue();
+		assertThat(firstMatrix.fuzzyEquals(thirdMatrix)).isFalse();
+		assertThat(firstMatrix.equals(secondMatrix)).isFalse();
+	}
+
+	@Test
+	public void testIsAlmostZero() {
+		double[][] start = {
+			{ 0, -0.00000001, 0 },
+			{ 0, 0, 0.000000001 } };
+		Matrix firstMatrix = new Matrix(start);
+		start[0][0] = -0.01;
+		Matrix secondMatrix = new Matrix(start);
+		assertThat(firstMatrix.isAlmostZero()).isTrue();
+		assertThat(secondMatrix.isAlmostZero()).isFalse();
 	}
 }

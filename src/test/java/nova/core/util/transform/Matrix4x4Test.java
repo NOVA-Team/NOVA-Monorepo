@@ -86,6 +86,7 @@ public class Matrix4x4Test {
 	public void testIllegalArgument2() {
 		new Matrix4x4(new double[][]{{1,1},{1,1},{1,1},{1,1}});
 	}
+
 	@Test
 	public void testEquals() {
 		double[][] start = {
@@ -96,8 +97,11 @@ public class Matrix4x4Test {
 		Matrix4x4 firstMatrix = new Matrix4x4(start);
 		start[2][3] = 17;
 		Matrix4x4 secondMatrix = new Matrix4x4(start);
+		Matrix thirdMatrix = new Matrix(start);
 		assertThat(firstMatrix.equals(secondMatrix)).isFalse();
 		assertThat(firstMatrix.equals(firstMatrix)).isTrue();
 		assertThat(firstMatrix.equals("test")).isFalse();
+		assertThat(thirdMatrix.equals(secondMatrix)).isFalse();
+		assertThat(thirdMatrix.fuzzyEquals(secondMatrix, 0.0)).isTrue();
 	}
 }
