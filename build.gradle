@@ -1,4 +1,7 @@
-import org.gradle.plugins.ide.eclipse.model.SourceFolder 
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+import org.apache.commons.io.IOUtils
+
+import java.nio.charset.Charset
 
 buildscript {
 	repositories {
@@ -68,7 +71,7 @@ dependencies {
 	compile 'org.slf4j:slf4j-api:1.7.10'
 
 	testCompile "junit:junit:4.12"
-	testCompile 'org.assertj:assertj-core:1.+'
+	testCompile 'org.assertj:assertj-core:3.0.0'
 	testCompile "org.mockito:mockito-core:1.+"
 	testRuntime 'org.slf4j:slf4j-simple:1.7.10'
 
@@ -124,7 +127,7 @@ publishing {
 	publications {
 		main(MavenPublication) {
 			from components.java
-			
+
 			artifact apiJar
 			artifact javadocJar
 			artifact shadowJar
@@ -170,7 +173,7 @@ test {
 }
 
 eclipse.classpath.file {
-	whenMerged {  cp -> 
+	whenMerged {  cp ->
 		cp.entries.removeAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }
 	}
 }
@@ -181,3 +184,16 @@ jacocoTestReport {
         html.enabled = true
     }
 }
+
+task checkTestStyle << {
+	sourceSets.test.java.visit { f ->
+		if (!f.isDirectory()) {
+			String file = IOUtils.toString(f.open(), Charset.forName("UTF-8"))
+			if (file.contains("import static org.junit.Assert")) {
+				throw new GradleException("File $f.name uses junit assertions, please use assertj assertions! See https://joel-costigliola.github.io/assertj/ to learn about assertj.")
+			}
+		}
+	}
+}
+
+test.dependsOn checkTestStyle

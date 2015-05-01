@@ -1,13 +1,11 @@
 package nova.core.util.transform;
 
+import nova.core.util.transform.Matrix;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MatrixTest {
 
@@ -21,7 +19,7 @@ public class MatrixTest {
 		Matrix startMatrix = new Matrix(start);
 		start[3][3] = 15;
 		Matrix endMatrix = new Matrix(start);
-		assertNotSame(startMatrix, endMatrix);
+		assertThat(endMatrix).isNotSameAs(startMatrix);
 	}
 
 	@Test
@@ -40,7 +38,8 @@ public class MatrixTest {
 
 		Matrix startMatrix = new Matrix(start);
 		Matrix endMatrix = new Matrix(end);
-		assertEquals(startMatrix.swap(0, 1), endMatrix);
+
+		assertThat(startMatrix.swap(0, 1)).isEqualTo(endMatrix);
 	}
 
 	@Test
@@ -57,8 +56,9 @@ public class MatrixTest {
 				{ 10, 12 } }
 		);
 
-		assertEquals(start.add(start), end);
-		assertEquals(start.multiply(2), end);
+		assertThat(end)
+			.isEqualTo(start.add(start))
+			.isEqualTo(start.multiply(2));
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class MatrixTest {
 				{ 5, 6, 3 } }
 		);
 
-		assertEquals(start.augment(new Vector2d(3, 3).toMatrix()), end);
+		assertThat(start.augment(new Vector2d(3, 3).toMatrix())).isEqualTo(end);
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class MatrixTest {
 				{ 5, 6 } }
 		);
 
-		assertEquals(sub, start.submatrix(0, 1, 0, 1));
+		assertThat(start.submatrix(0, 1, 0, 1)).isEqualTo(sub);
 	}
 
 	@Test
@@ -102,10 +102,10 @@ public class MatrixTest {
 				{ -5, 0 } }
 		);
 
-		assertEquals(start.rref(), Matrix.identity(2));
+		assertThat(start.rref().fuzzyEquals(Matrix.identity(2))).isTrue();
 
-		start = new Matrix(new double[][]{{0,3,4},{5,2,3},{1,5,1}});
-		assertEquals(start.rref(), Matrix.identity(3));
+		start = new Matrix(new double[][] { { 0, 3, 4 }, { 5, 2, 3 }, { 1, 5, 1 } });
+		assertThat(start.rref().fuzzyEquals(Matrix.identity(3))).isTrue();
 	}
 
 	@Test
@@ -122,7 +122,7 @@ public class MatrixTest {
 		);
 
 		Matrix reciprocal = start.reciprocal();
-		assertTrue(inverse.subtract(reciprocal).isAlmostZero());
+		assertThat(reciprocal.fuzzyEquals(inverse)).isTrue();
 	}
 
 /*	@Test
@@ -135,7 +135,7 @@ public class MatrixTest {
 				{ 5, -2, 2 } }
 		);
 
-		assertEquals(-17, start.determinant(), 0.0001);
+		assertThat(start.determinant()).isCloseTo(-17, within(0.0001));
 	}*/
 
 	@Test
@@ -159,13 +159,13 @@ public class MatrixTest {
 			{ 1 },
 			{ -2 }
 		});
-		assertTrue(x.subtract(expectedX).isAlmostZero());
+		assertThat(x.fuzzyEquals(expectedX)).isTrue();
 	}
 
 	@Test
 	public void testMultiply() {
 		for (int i = 1; i < 10; i++)
-			assertEquals(Matrix.identity(i), Matrix.identity(i).multiply(Matrix.identity(i)));
+			assertThat(Matrix.identity(i).multiply(Matrix.identity(i))).isEqualTo(Matrix.identity(i));
 
 		double[][] start = {
 			{ 1, 2, 3, 4 },
@@ -174,15 +174,15 @@ public class MatrixTest {
 			{ 0, 0, 0, 0 } };
 
 		Matrix startMatrix = new Matrix(start);
-		assertEquals(startMatrix, Matrix.identity(startMatrix.rows).multiply(startMatrix));
-		assertEquals(startMatrix, startMatrix.multiply(Matrix.identity(startMatrix.rows)));
+		assertThat(Matrix.identity(startMatrix.rows).multiply(startMatrix)).isEqualTo(startMatrix);
+		assertThat(startMatrix.multiply(Matrix.identity(startMatrix.rows))).isEqualTo(startMatrix);
 
 		double[][] res = {
 			{ 38, 14, 17, 20 },
 			{ 98, 46, 57, 68 },
 			{ 9, 18, 27, 36 },
 			{ 0, 0, 0, 0 } };
-		assertEquals(new Matrix(res), startMatrix.multiply(startMatrix));
+		assertThat(startMatrix.multiply(startMatrix)).isEqualTo(new Matrix(res));
 	}
 
 	@Test
@@ -199,21 +199,21 @@ public class MatrixTest {
 			{ 3, 7, 0, 0 },
 			{ 4, 8, 0, 0 } };
 		Matrix endMatrix = new Matrix(end);
-		assertEquals(startMatrix, endMatrix.transpose());
+		assertThat(endMatrix.transpose()).isEqualTo(startMatrix);
 
 		for (int i = 1; i < 10; i++)
-			assertEquals(Matrix.identity(i), Matrix.identity(i).transpose());
+			assertThat(Matrix.identity(i).transpose()).isEqualTo(Matrix.identity(i));
 	}
 
 	@Test
 	public void testTransform() {
-		assertEquals(new Vector3d(2, 3, 4), Matrix.identity(4).transform(new Vector3d(2, 3, 4)));
+		assertThat(Matrix.identity(4).transform(new Vector3d(2, 3, 4))).isEqualTo(new Vector3d(2, 3, 4));
 	}
 
 	@Test
 	public void testClone() {
 		for (int i = 1; i < 10; i++)
-			assertEquals(Matrix.identity(i), Matrix.identity(i).clone());
+			assertThat(Matrix.identity(i).clone()).isEqualTo(Matrix.identity(i));
 	}
 
 	@Test
@@ -227,15 +227,16 @@ public class MatrixTest {
 		);
 		Matrix endMatrix = startMatrix.clone();
 		endMatrix.update(0, 0, 7);
-		assertNotEquals(startMatrix, endMatrix);
+		assertThat(startMatrix).isNotEqualTo(endMatrix);
 
-		assertEquals(endMatrix, new Matrix(
+		assertThat(endMatrix).isEqualTo(new Matrix(
 			new double[][] {
 				{ 7, 2, 3, 4 },
 				{ 5, 6, 7, 8 },
 				{ 9, 0, 0, 0 },
 				{ 0, 0, 0, 0 } }
 		));
+
 	}
 
 	@Test(expected = ArrayIndexOutOfBoundsException.class)
@@ -253,8 +254,36 @@ public class MatrixTest {
 		Matrix firstMatrix = new Matrix(start);
 		start[2][3] = 17;
 		Matrix secondMatrix = new Matrix(start);
-		assertFalse(firstMatrix.equals(secondMatrix));
-		assertTrue(firstMatrix.equals(firstMatrix));
-		assertFalse(firstMatrix.equals("test"));
+		assertThat(firstMatrix.equals(secondMatrix)).isFalse();
+		assertThat(firstMatrix.equals(firstMatrix)).isTrue();
+		assertThat(firstMatrix.equals("test")).isFalse();
+	}
+
+	@Test
+	public void testFuzzyEquals() {
+		double[][] start = {
+			{ 1, 2, 3 },
+			{ 5, 6, 7 },
+			{ 8, 0, 1 } };
+		Matrix firstMatrix = new Matrix(start);
+		start[1][2] += 0.0000001;
+		Matrix secondMatrix = new Matrix(start);
+		start[0][1] += 0.001;
+		Matrix thirdMatrix = new Matrix(start);
+		assertThat(firstMatrix.fuzzyEquals(secondMatrix, 0.00001)).isTrue();
+		assertThat(firstMatrix.fuzzyEquals(thirdMatrix)).isFalse();
+		assertThat(firstMatrix.equals(secondMatrix)).isFalse();
+	}
+
+	@Test
+	public void testIsAlmostZero() {
+		double[][] start = {
+			{ 0, -0.00000001, 0 },
+			{ 0, 0, 0.000000001 } };
+		Matrix firstMatrix = new Matrix(start);
+		start[0][0] = -0.01;
+		Matrix secondMatrix = new Matrix(start);
+		assertThat(firstMatrix.isAlmostZero()).isTrue();
+		assertThat(secondMatrix.isAlmostZero()).isFalse();
 	}
 }
