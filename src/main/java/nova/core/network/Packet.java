@@ -312,7 +312,7 @@ public interface Packet {
 		return readData;
 	}
 
-	default <T extends Storable> T readStorable() {
+	default Object readStorable() {
 		Data data = readData();
 		return Data.unserialize(data);
 	}

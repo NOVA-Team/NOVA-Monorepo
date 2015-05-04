@@ -82,7 +82,7 @@ public class InventorySimple implements Inventory, Storable, PacketHandler {
 	public void read(Packet packet) {
 		IntStream.range(0, size()).forEach(i -> {
 			if (packet.readBoolean()) {
-				items[i] = packet.readStorable();
+				items[i] = (Item) packet.readStorable();
 			} else {
 				items[i] = null;
 			}

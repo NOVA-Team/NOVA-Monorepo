@@ -75,10 +75,14 @@ public class Data extends HashMap<String, Object> {
 	 * @param data The data
 	 * @return The object loaded with given data.
 	 */
-	public static <T extends Storable> T unserialize(Data data) {
+	public static Object unserialize(Data data) {
 		try {
-			Class<T> clazz = (Class) Class.forName((String) data.get("class"));
-			return unserialize(clazz, data);
+			Class clazz = (Class) Class.forName((String) data.get("class"));
+			if (Enum.class.isAssignableFrom(clazz)) {
+				return Enum.valueOf((Class<Enum>) clazz, data.get("value"));
+			} else {
+				return unserialize(clazz, data);
+			}
 		} catch (Exception e) {
 			throw new NovaException(e);
 		}

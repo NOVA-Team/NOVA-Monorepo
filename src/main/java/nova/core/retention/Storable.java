@@ -1,6 +1,5 @@
 package nova.core.retention;
 
-import nova.core.util.ClassLoaderUtil;
 import nova.core.util.ReflectionUtil;
 
 /**
@@ -21,8 +20,9 @@ public interface Storable {
 			try {
 				field.setAccessible(true);
 				String name = annotation.key();
-				if(name.isEmpty())
+				if (name.isEmpty()) {
 					name = field.getName();
+				}
 				data.put(name, field.get(this));
 				field.setAccessible(false);
 			} catch (IllegalAccessException e) {
@@ -34,16 +34,18 @@ public interface Storable {
 	default void load(Data data) {
 		ReflectionUtil.forEachRecursiveAnnotatedField(Stored.class, getClass(), (field, annotation) -> {
 			String name = annotation.key();
-			if(name.isEmpty())
+			if (name.isEmpty()) {
 				name = field.getName();
+			}
 			if (data.containsKey(name)) {
 				try {
 					field.setAccessible(true);
 					Class<?> type = field.getType();
-					if(Storable.class.isAssignableFrom(type)) {
-						field.set(this, Data.unserialize(data.get(name)));
+					Object value = data.get(name);
+					if (Storable.class.isAssignableFrom(type) || value instanceof Data) {
+						field.set(this, Data.unserialize((Data) value));
 					} else {
-						field.set(this, data.get(name));
+						field.set(this, value);
 					}
 					field.setAccessible(false);
 				} catch (IllegalAccessException e) {

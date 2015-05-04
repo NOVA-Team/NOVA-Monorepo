@@ -58,7 +58,7 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 
 		Optional<Fluid> fluid = containedFluid;
 		if (!simulate) {
-			if(containedFluid.get().amount() > toGet) {
+			if (containedFluid.get().amount() > toGet) {
 				containedFluid.get().remove(toGet);
 			} else {
 				containedFluid = Optional.empty();
@@ -115,6 +115,6 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 
 	@Override
 	public void write(Packet packet) {
-		containedFluid = Optional.of(packet.readStorable());
+		containedFluid = Optional.of((Fluid) packet.readStorable());
 	}
 }
