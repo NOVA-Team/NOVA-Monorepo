@@ -369,15 +369,15 @@ public interface Packet {
 		}
 		//Special data types that all convert into Data.
 		else if (Enum.class.isAssignableFrom(clazz)) {
-			return (T) readEnum((Class) clazz);
+			return (T) readEnum();
 		} else if (Data.class.isAssignableFrom(clazz)) {
 			return (T) readData();
 		} else if (List.class.isAssignableFrom(clazz)) {
 			return (T) readList();
 		} else if (Set.class.isAssignableFrom(clazz)) {
 			return (T) readSet();
+		} else {
+			return (T) readStorable();
 		}
-
-		throw new NovaException("Attempt to read an invalid packet type: " + clazz);
 	}
 }

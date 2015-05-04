@@ -15,6 +15,10 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 	private Optional<Fluid> containedFluid = Optional.empty();
 	private int capacity;
 
+	public TankSimple() {
+		this(Fluid.bucketVolume);
+	}
+
 	public TankSimple(int maxCapacity) {
 		this.capacity = maxCapacity;
 	}
@@ -92,6 +96,8 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 
 	@Override
 	public void save(Data data) {
+		data.put("capacity", capacity);
+
 		if (containedFluid.isPresent()) {
 			data.put("fluid", containedFluid.get());
 		}
@@ -99,6 +105,8 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 
 	@Override
 	public void load(Data data) {
+		setCapacity(data.get("capacity"));
+
 		if (data.containsKey("fluid")) {
 			containedFluid = Optional.of(data.getStorable("fluid"));
 		} else {
