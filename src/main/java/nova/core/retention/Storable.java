@@ -25,7 +25,7 @@ public interface Storable {
 				}
 				data.put(name, field.get(this));
 				field.setAccessible(false);
-			} catch (IllegalAccessException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
@@ -48,7 +48,7 @@ public interface Storable {
 						field.set(this, value);
 					}
 					field.setAccessible(false);
-				} catch (IllegalAccessException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
