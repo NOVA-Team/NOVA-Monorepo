@@ -32,8 +32,8 @@ public class OptionalDITest {
 		TestManager m = injector.resolve(Dependency
 			.dependency(TestManager.class));
 
-		assertThat(m.map).isPresent();
-		assertThat(m.set).isEmpty();
+		assertThat(m.map).isNotNull();
+		assertThat(m.set).isNull();
 		assertThat(m.map2).isNotSameAs(m.map);
 		assertThat(m.map2.get()).isNotSameAs(m.map.get());
 	}
