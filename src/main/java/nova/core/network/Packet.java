@@ -368,9 +368,9 @@ public interface Packet {
 			return (T) readString();
 		}
 		//Special data types that all convert into Data.
-		else if (clazz == Enum.class) {
+		else if (Enum.class.isAssignableFrom(clazz)) {
 			return (T) readEnum((Class) clazz);
-		} else if (clazz == Data.class) {
+		} else if (Data.class.isAssignableFrom(clazz)) {
 			return (T) readData();
 		} else if (List.class.isAssignableFrom(clazz)) {
 			return (T) readList();
