@@ -1,5 +1,7 @@
 package nova.core.block.components;
 
+import nova.core.block.Block;
+import nova.core.render.model.BlockModelUtil;
 import nova.core.render.model.Model;
 
 /**
@@ -12,5 +14,7 @@ public interface StaticRenderer {
 	 * Called when this block is to be rendered.
 	 * @param model A {@link nova.core.render.model.Model} to use.
 	 */
-	void renderStatic(Model model);
+	default void renderStatic(Model model) {
+		BlockModelUtil.drawBlock(model, (Block) this);
+	}
 }
