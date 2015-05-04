@@ -1,16 +1,16 @@
 package nova.core.util.transform;
 
+import java.util.Arrays;
+
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.math.DoubleMath;
-
-import java.util.Arrays;
 
 /**
  * A class that represents a matrix.
  */
 
-//TODO: Add unit testing
+// TODO: Add unit testing
 public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Transform {
 	// number of rows
 	public final int rows;
@@ -41,7 +41,8 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 				mat[i][j] = data[i][j];
 	}
 
-	// create and return a random rows-by-columns matrix with values between 0 and 1
+	// create and return a random rows-by-columns matrix with values between 0
+	// and 1
 	public static Matrix random(int M, int N) {
 		Matrix A = new Matrix(M, N);
 		for (int i = 0; i < M; i++)
@@ -62,7 +63,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 		return apply(i, j);
 	}
 
-	//Use curring function
+	// Use curring function
 	public double apply(int i, int j) {
 		return mat[i][j];
 	}
@@ -157,7 +158,8 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	}
 
 	/**
-	 * Augments this matrix with another, appending B's columns on the right side of this matrix.
+	 * Augments this matrix with another, appending B's columns on the right
+	 * side of this matrix.
 	 *
 	 * @param B The matrix to augment
 	 * @return The augmented matrix
@@ -185,17 +187,17 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	public Matrix reciprocal() {
 		assert isSquare();
 
-		//Augment the matrix with the identity matrix
-		//Reduce it to echelon form
-		//Retrieve the augmented part of the matrix
+		// Augment the matrix with the identity matrix
+		// Reduce it to echelon form
+		// Retrieve the augmented part of the matrix
 		return augment(identity(rows))
 			.rref()
 			.submatrix(0, rows - 1, columns, 2 * columns - 1);
 	}
 
-/*	public double determinant() {
-		return rref().mat[rows - 1][columns - 1];
-	}*/
+	/*	public double determinant() {
+			return rref().mat[rows - 1][columns - 1];
+		}*/
 
 	/**
 	 * @param x1 The min x bound
@@ -219,31 +221,50 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	}
 
 	/**
-	 * Performs Gaussian elimnation to transform a matrix to echelon form.
+	 * Performs the Gauss-Jordan elimination to transform a matrix to reduced
+	 * echelon form.
 	 *
 	 * @return The matrix in row reduced echelon form
 	 */
 	public Matrix rref() {
 		Matrix rref = clone();
 
-		for (int p = 0; p < rows; ++p) {
-			// Make this pivot 1
-			double pv = rref.mat[p][p];
-			if (pv != 0) {
-				for (int i = 0; i < columns; ++i) {
-					rref.mat[p][i] /= pv;
+		int lead = 0;
+		int i, j, r;
+		outer: for (r = 0; r < rows; r++) {
+			if (columns <= lead)
+				break;
+			i = r;
+			while (rref.mat[i][lead] == 0) {
+				i++;
+				if (rows == i) {
+					i = r;
+					lead++;
+					if (columns == lead)
+						break outer;
+				}
+			}
+			// Swap rows i and r
+			double[] rowI = rref.mat[i];
+			rref.mat[i] = rref.mat[r];
+			rref.mat[r] = rowI;
+
+			double val = rref.mat[r][lead];
+			if (val != 0) {
+				for (j = 0; j < columns; j++) {
+					rref.mat[r][j] /= val;
 				}
 			}
 
-			// Make other rows zero
-			for (int r = 0; r < rows; ++r) {
-				if (r != p) {
-					double f = rref.mat[r][p];
-					for (int i = 0; i < columns; ++i) {
-						rref.mat[r][i] -= f * rref.mat[p][i];
-					}
+			for (i = 0; i < rows; i++) {
+				if (i == r)
+					continue;
+				val = rref.mat[i][lead];
+				for (j = 0; j < columns; j++) {
+					rref.mat[i][j] -= val * rref.mat[r][j];
 				}
 			}
+			lead++;
 		}
 
 		return rref;
@@ -309,7 +330,8 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	 * 
 	 * @param B the matrix to compare to
 	 * @param tolerance the error tolerance
-	 * @return true if the matrix components are within {@code tolerance} of each other
+	 * @return true if the matrix components are within {@code tolerance} of
+	 *         each other
 	 */
 	public boolean fuzzyEquals(Matrix B, double tolerance) {
 		Matrix A = this;
@@ -365,7 +387,8 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	}
 
 	/**
-	 * Transform vector by this matrix. This method is only valid if it is a 4x4 matrix.
+	 * Transform vector by this matrix. This method is only valid if it is a 4x4
+	 * matrix.
 	 *
 	 * @param vector to be transformed.
 	 * @return transformed vector.
@@ -390,7 +413,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 				}
 		return true;
 	}
-	
+
 	public boolean isAlmostZero() {
 		return isAlmostZero(0.0000001);
 	}
