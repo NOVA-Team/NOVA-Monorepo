@@ -70,7 +70,7 @@ public class InventorySimple implements Inventory, Storable, PacketHandler {
 
 	@Override
 	public void save(Data data) {
-		data.putAll(IntStream.range(0, size()).boxed().collect(Collectors.toMap(i -> i + "", i -> items[i])));
+		data.putAll(IntStream.range(0, size()).filter(i -> items[i] != null).boxed().collect(Collectors.toMap(i -> i + "", i -> items[i])));
 	}
 
 	@Override
