@@ -13,8 +13,13 @@ public class ReflectionUtil {
 	private ReflectionUtil() {
 	}
 
-	public static <T> T newInstance(Class<T> clazz) {
+	public static <T> T newInstance(Class<T> clazz, Object... args) {
 		try {
+			if (args != null && args.length > 0) {
+				return clazz
+					.getConstructor(Arrays.stream(args).map(arg -> arg.getClass()).toArray(size -> new Class[size]))
+					.newInstance(args);
+			}
 			return clazz.newInstance();
 		} catch (Exception e) {
 			throw new NovaException();
@@ -30,8 +35,8 @@ public class ReflectionUtil {
 	 */
 	public static <T extends Annotation> void forEachAnnotatedField(Class<? extends T> annotation, Class clazz, BiConsumer<Field, T> action) {
 		Arrays.stream(clazz.getDeclaredFields())
-			.filter(f -> f.isAnnotationPresent(annotation))
-			.forEachOrdered(f -> action.accept(f, f.getAnnotation(annotation)));
+			  .filter(f -> f.isAnnotationPresent(annotation))
+			  .forEachOrdered(f -> action.accept(f, f.getAnnotation(annotation)));
 	}
 
 	/**
@@ -47,8 +52,8 @@ public class ReflectionUtil {
 	//TODO: Cache this?
 	public static <T extends Annotation> void forEachRecursiveAnnotatedField(Class<T> annotation, Class clazz, BiConsumer<Field, T> action) {
 		Arrays.stream(clazz.getDeclaredFields())
-			.filter(f -> f.isAnnotationPresent(annotation))
-			.forEachOrdered(f -> action.accept(f, f.getAnnotation(annotation)));
+			  .filter(f -> f.isAnnotationPresent(annotation))
+			  .forEachOrdered(f -> action.accept(f, f.getAnnotation(annotation)));
 
 		Class superClass = clazz.getSuperclass();
 
