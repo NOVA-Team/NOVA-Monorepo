@@ -30,6 +30,14 @@ public interface Tank extends FluidConsumer, FluidProvider {
 		return getFluid().isPresent();
 	}
 
+	default boolean hasFluidType(String fluidID) {
+		if (hasFluid()) {
+			return getFluid().get().getID().equals(fluidID);
+		}
+
+		return false;
+	}
+
 	default boolean hasFluidType(Fluid sample) {
 		if (hasFluid()) {
 			return getFluid().get().sameType(sample);

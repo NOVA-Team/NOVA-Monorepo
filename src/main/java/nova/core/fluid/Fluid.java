@@ -120,7 +120,7 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	 * @return Result
 	 */
 	public boolean sameType(Fluid stack) {
-		return stack.getID() == getID();
+		return stack.getID().equals(getID());
 	}
 
 	@Override
