@@ -15,8 +15,12 @@ import java.util.stream.IntStream;
  */
 public class InventorySimple implements Inventory, Storable, PacketHandler {
 
-	private final Item[] items;
+	private Item[] items;
 	private boolean changed = false;
+
+	public InventorySimple() {
+		this(0);
+	}
 
 	public InventorySimple(int size) {
 		items = new Item[size];
@@ -70,16 +74,19 @@ public class InventorySimple implements Inventory, Storable, PacketHandler {
 
 	@Override
 	public void save(Data data) {
+		data.put("size", size());
 		data.putAll(IntStream.range(0, size()).filter(i -> items[i] != null).boxed().collect(Collectors.toMap(i -> i + "", i -> items[i])));
 	}
 
 	@Override
 	public void load(Data data) {
+		items = new Item[(int) data.get("size")];
 		IntStream.range(0, size()).forEach(i -> items[i] = data.get(i + ""));
 	}
 
 	@Override
 	public void read(Packet packet) {
+		packet.write(size());
 		IntStream.range(0, size()).forEach(i -> {
 			if (packet.readBoolean()) {
 				items[i] = (Item) packet.readStorable();
@@ -91,6 +98,7 @@ public class InventorySimple implements Inventory, Storable, PacketHandler {
 
 	@Override
 	public void write(Packet packet) {
+		items = new Item[packet.readInt()];
 		IntStream.range(0, size()).forEach(i -> {
 			if (get(i).isPresent()) {
 				packet.writeBoolean(true);
