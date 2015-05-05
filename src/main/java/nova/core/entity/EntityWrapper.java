@@ -2,26 +2,18 @@ package nova.core.entity;
 
 import nova.core.util.transform.Quaternion;
 import nova.core.util.transform.Vector3d;
-import nova.core.world.World;
+import nova.core.world.PositionedWrapper;
 
 /**
  * Used only by wrappers. Entity method calls will forward to this wrapper.
  *
  * @author Calclavia
  */
-public interface EntityWrapper {
+public interface EntityWrapper extends PositionedWrapper<Vector3d> {
 
 	boolean isValid();
 
-	World world();
-
-	Vector3d position();
+	void setRotation(Quaternion rotation);
 
 	Quaternion rotation();
-
-	void setWorld(World world);
-
-	void setPosition(Vector3d position);
-
-	void setRotation(Quaternion rotation);
 }

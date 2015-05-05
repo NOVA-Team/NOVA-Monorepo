@@ -2,6 +2,7 @@ package nova.core.entity;
 
 import nova.core.util.Factory;
 import nova.core.util.exception.NovaException;
+import nova.core.world.Positioned;
 
 import java.lang.reflect.Field;
 import java.util.function.Supplier;
@@ -15,7 +16,7 @@ public class EntityFactory extends Factory<Entity> {
 
 	static {
 		try {
-			wrapperField = Entity.class.getDeclaredField("wrapper");
+			wrapperField = Positioned.class.getDeclaredField("wrapper");
 			wrapperField.setAccessible(true);
 			rigidBodyField = Entity.class.getDeclaredField("rigidBody");
 			rigidBodyField.setAccessible(true);
@@ -25,6 +26,7 @@ public class EntityFactory extends Factory<Entity> {
 		}
 	}
 
+	//TODO: This is not the optimal way, especially when we have more arguments to pass...
 	public EntityFactory(Supplier<Entity> constructor) {
 		super(constructor);
 	}

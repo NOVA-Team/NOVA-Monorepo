@@ -1,6 +1,7 @@
 package nova.core.block;
 
 import nova.core.player.Player;
+import nova.core.world.World;
 
 import java.util.Optional;
 
@@ -24,14 +25,14 @@ public abstract class BlockChanger {
 		/**
 		 * The BlockAccess used to access the block.
 		 */
-		public final BlockAccess blockAccess;
+		public final World world;
 		/**
 		 * The block which changed the block.
 		 */
 		public final Block block;
 
-		public Block(BlockAccess blockAccess, Block block) {
-			this.blockAccess = blockAccess;
+		public Block(World world, Block block) {
+			this.world = world;
 			this.block = block;
 		}
 	}

@@ -1,21 +1,23 @@
 package nova.core.world;
 
-import nova.core.block.BlockAccess;
+import nova.core.block.Block;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
+import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
- * A in-game world
- * @see BlockAccess
+ * An in-game world
+ * @author Calclavia
  */
-public abstract class World implements Identifiable, BlockAccess {
+public abstract class World implements Identifiable {
 
 	/**
 	 * Marks a position to render static.
@@ -28,6 +30,30 @@ public abstract class World implements Identifiable, BlockAccess {
 	 * @param position The position being changed.
 	 */
 	public abstract void markChange(Vector3i position);
+
+	/**
+	 * Gets the block which occupies the given position.
+	 * @param position The position to query.
+	 * @return The block at the position. If the block is air, it will return the air block. If no block is present (the void), it will return an empty optional.
+	 */
+	public abstract Optional<Block> getBlock(Vector3i position);
+
+	/**
+	 * Sets the block occupying a given position.
+	 * @param position The position of the block to set.
+	 * @param block The block.
+	 * @return {@code true} if the replace was successful.
+	 */
+	public abstract boolean setBlock(Vector3i position, Block block);
+
+	/**
+	 * Removes the block in the specified position.
+	 * @param position the position of the block to remove.
+	 * @return {@code true} if the block was removed.
+	 */
+	public boolean removeBlock(Vector3i position) {
+		return setBlock(position, Game.instance.blockManager.getAirBlock());
+	}
 
 	/**
 	 * Creates an entity

@@ -3,7 +3,7 @@ package nova.core.block;
 import nova.core.util.Factory;
 import nova.core.util.Identifiable;
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Vector3i;
+import nova.core.world.Positioned;
 
 import java.lang.reflect.Field;
 import java.util.function.Supplier;
@@ -13,15 +13,12 @@ import java.util.function.Supplier;
  */
 public class BlockFactory extends Factory<Block> implements Identifiable {
 
-	public static final Field blockAccessField;
-	public static final Field posField;
+	public static final Field wrapperField;
 
 	static {
 		try {
-			blockAccessField = Block.class.getDeclaredField("blockAccess");
-			blockAccessField.setAccessible(true);
-			posField = Block.class.getDeclaredField("position");
-			posField.setAccessible(true);
+			wrapperField = Positioned.class.getDeclaredField("wrapper");
+			wrapperField.setAccessible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NovaException();
@@ -35,16 +32,14 @@ public class BlockFactory extends Factory<Block> implements Identifiable {
 	/**
 	 * Creates a new instance of this block with blockAccess and position parameters.
 	 *
-	 * @param blockAccess {@link BlockAccess}
-	 * @param position Position of the block
+	 * @param wrapper The block wrapper
 	 * @return A new block instance with these parameters.
 	 */
-	public Block makeBlock(BlockAccess blockAccess, Vector3i position) {
+	public Block makeBlock(BlockWrapper wrapper) {
 		Block newBlock = constructor.get();
 
 		try {
-			blockAccessField.set(newBlock, blockAccess);
-			posField.set(newBlock, position);
+			wrapperField.set(newBlock, wrapper);
 		} catch (Exception e) {
 			throw new NovaException();
 		}
