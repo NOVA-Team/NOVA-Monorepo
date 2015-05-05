@@ -6,12 +6,9 @@ import nova.core.world.PositionedWrapper;
 
 /**
  * Used only by wrappers. Entity method calls will forward to this wrapper.
- *
  * @author Calclavia
  */
 public interface EntityWrapper extends PositionedWrapper<Vector3d> {
-
-	boolean isValid();
 
 	void setRotation(Quaternion rotation);
 
