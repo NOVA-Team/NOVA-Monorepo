@@ -43,9 +43,10 @@ public abstract class World implements Identifiable {
 	 * Sets the block occupying a given position.
 	 * @param position The position of the block to set.
 	 * @param blockFactory The block factory.
+	 * @param args The block constructor arguments.
 	 * @return {@code true} if the replace was successful.
 	 */
-	public abstract boolean setBlock(Vector3i position, BlockFactory blockFactory);
+	public abstract boolean setBlock(Vector3i position, BlockFactory blockFactory, Object... args);
 
 	/**
 	 * Removes the block in the specified position.
@@ -60,36 +61,30 @@ public abstract class World implements Identifiable {
 	 * Creates an entity
 	 * @param factory The entity factory
 	 */
-	public abstract Entity createEntity(EntityFactory factory);
+	public abstract Entity addEntity(EntityFactory factory, Object... args);
 
 	/**
-	 * Creates an entity
-	 * @param entity The entity object
-	 */
-	public abstract <T extends Entity> T createEntity(T entity);
-
-	/**
-	 * Creates an entity that represents an item
+	 * Creates an entity that holds an item
 	 * @param item The item
 	 */
-	public abstract Entity createEntity(Vector3d position, Item item);
+	public abstract Entity addEntity(Vector3d position, Item item);
 
 	/**
 	 * Creates an entity only on the client side.
 	 * For example, particle effects.
 	 */
-	public abstract Entity createClientEntity(EntityFactory factory);
+	public abstract Entity addClientEntity(EntityFactory factory);
 
 	/**
 	 * Creates an entity only on the client side.
 	 * For example, particle effects.
 	 */
-	public abstract <T extends Entity> T createClientEntity(T entity);
+	public abstract <T extends Entity> T addClientEntity(T entity);
 
 	/**
 	 * Destroys an entity, removing it from the world.
 	 */
-	public abstract void destroyEntity(Entity entity);
+	public abstract void removeEntity(Entity entity);
 
 	/**
 	 * Gets a set of entities within a certain bound
