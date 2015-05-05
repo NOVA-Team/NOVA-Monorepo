@@ -1,6 +1,5 @@
 package nova.core.item;
 
-import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.event.EventBus;
@@ -43,11 +42,11 @@ public class ItemManager extends Manager<Item, ItemFactory> {
 		return factory;
 	}
 
-	public ItemFactory getItemFactoryFromBlock(Block block) {
+	public ItemFactory getItemFactoryFromBlock(BlockFactory block) {
 		return registry.get(block.getID()).get();
 	}
 
-	public ItemFactory getItemFromBlock(Block block) {
+	public ItemFactory getItemFromBlock(BlockFactory block) {
 		return getItemFactoryFromBlock(block);
 	}
 

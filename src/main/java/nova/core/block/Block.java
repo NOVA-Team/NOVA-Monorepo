@@ -21,7 +21,7 @@ import java.util.Set;
 public abstract class Block extends Positioned<BlockWrapper, Vector3i> implements Identifiable, BlockWrapper {
 
 	public ItemFactory getItemFactory() {
-		return Game.instance.itemManager.getItemFactoryFromBlock(this);
+		return Game.instance.itemManager.getItemFactoryFromBlock(factory());
 	}
 
 	/**
@@ -63,7 +63,7 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 	 * drops.
 	 */
 	public Set<Item> getDrops() {
-		return Collections.singleton(Game.instance.itemManager.getItemFromBlock(this).makeItem());
+		return Collections.singleton(Game.instance.itemManager.getItemFromBlock(factory()).makeItem());
 	}
 
 	/**

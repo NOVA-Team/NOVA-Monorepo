@@ -1,5 +1,6 @@
 package nova.core.fluid;
 
+import nova.core.block.BlockFactory;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
 import nova.core.util.Identifiable;
@@ -100,7 +101,7 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	 *
 	 * @return The block. There may be no block associated with this fluid.
 	 */
-	public Optional<FluidBlock> getBlock() {
+	public Optional<BlockFactory> getBlockFactory() {
 		return Optional.empty();
 	}
 

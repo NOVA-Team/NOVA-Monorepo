@@ -56,6 +56,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	 * @param format Format
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
 	 */
+	//TODO: Crafting should take factories, not instances itself
 	public ShapedCraftingRecipe(Item output, String format, ItemIngredient... ingredients) {
 		this(output, format, false, ingredients);
 	}
