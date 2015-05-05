@@ -3,6 +3,7 @@ package nova.core.item;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
+import nova.core.game.Game;
 import nova.core.util.Direction;
 import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
@@ -36,7 +37,7 @@ public class ItemBlock extends Item {
 
 	protected boolean onPrePlace(World world, Vector3i placePos) {
 		Optional<Block> checkBlock = world.getBlock(placePos);
-		if (!checkBlock.isPresent()) {
+		if (checkBlock.isPresent() && checkBlock.get().factory().equals(Game.instance.blockManager.getAirBlockFactory())) {
 			return world.setBlock(placePos, blockFactory);
 		}
 		return false;
