@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public abstract class Block extends Positioned<BlockWrapper, Vector3i> implements Identifiable {
+public abstract class Block extends Positioned<BlockWrapper, Vector3i> implements Identifiable, BlockWrapper {
 
 	public ItemFactory getItemFactory() {
 		return Game.instance.itemManager.getItemFactoryFromBlock(this);

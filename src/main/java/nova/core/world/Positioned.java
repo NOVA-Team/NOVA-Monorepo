@@ -7,7 +7,7 @@ import nova.core.util.transform.Vector3d;
  * Applied to any object that can have a position in the world.
  * @author Calclavia
  */
-public class Positioned<W extends PositionedWrapper<V>, V extends Vector3> {
+public class Positioned<W extends PositionedWrapper<V>, V extends Vector3> implements PositionedWrapper<V> {
 	/**
 	 * The wrapper is injected from positioned objectFactory.
 	 * The wrapper may be null in cases where a backward wrapper is created for native entities.
@@ -35,9 +35,8 @@ public class Positioned<W extends PositionedWrapper<V>, V extends Vector3> {
 	 * @param world World to set.
 	 * @return {@code true} if successful.
 	 */
-	public Positioned<W, V> setWorld(World world) {
+	public void setWorld(World world) {
 		wrapper.setWorld(world);
-		return this;
 	}
 
 	/**
@@ -45,8 +44,7 @@ public class Positioned<W extends PositionedWrapper<V>, V extends Vector3> {
 	 * @param position Position to set.
 	 * @return {@code true} if successful.
 	 */
-	public Positioned<W, V> setPosition(Vector3d position) {
+	public void setPosition(Vector3d position) {
 		wrapper.setPosition(position);
-		return this;
 	}
 }
