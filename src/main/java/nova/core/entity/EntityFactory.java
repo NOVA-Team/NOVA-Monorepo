@@ -5,7 +5,7 @@ import nova.core.util.exception.NovaException;
 import nova.core.world.Positioned;
 
 import java.lang.reflect.Field;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * @author Calclavia
@@ -24,12 +24,12 @@ public class EntityFactory extends Factory<Entity> {
 	}
 
 	//TODO: This is not the optimal way, especially when we have more arguments to pass...
-	public EntityFactory(Supplier<Entity> constructor) {
+	public EntityFactory(Function<Object[], Entity> constructor) {
 		super(constructor);
 	}
 
-	public Entity makeEntity(EntityWrapper wrapper) {
-		Entity newEntity = constructor.get();
+	public Entity makeEntity(EntityWrapper wrapper, Object... args) {
+		Entity newEntity = constructor.apply(args);
 
 		try {
 			wrapperField.set(newEntity, wrapper);

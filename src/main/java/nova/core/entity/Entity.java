@@ -102,7 +102,6 @@ public abstract class Entity extends Positioned<EntityWrapper, Vector3d> impleme
 	/**
 	 * Sets the rotation of this entity.
 	 * @param rotation Position to set.
-	 * @return {@code true} if successful.
 	 */
 	public void setRotation(Quaternion rotation) {
 		wrapper.setRotation(rotation);

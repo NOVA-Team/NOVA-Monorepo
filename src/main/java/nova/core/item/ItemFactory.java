@@ -5,14 +5,14 @@ import nova.core.retention.Storable;
 import nova.core.util.Factory;
 import nova.core.util.Identifiable;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * @author Calclavia
  */
 public class ItemFactory extends Factory<Item> implements Identifiable {
 
-	public ItemFactory(Supplier<Item> constructor) {
+	public ItemFactory(Function<Object[], Item> constructor) {
 		super(constructor);
 	}
 
@@ -21,10 +21,10 @@ public class ItemFactory extends Factory<Item> implements Identifiable {
 	 *
 	 * @return Resulting item
 	 */
-	public Item makeItem() {
+	public Item makeItem(Object... args) {
 		Data data = new Data();
 		data.className = getDummy().getClass().getName();
-		return makeItem(data);
+		return makeItem(data, args);
 	}
 
 	/**
@@ -33,8 +33,8 @@ public class ItemFactory extends Factory<Item> implements Identifiable {
 	 * @param data Item data, used if item is {@link Storable}
 	 * @return Resulting item
 	 */
-	public Item makeItem(Data data) {
-		Item newItem = constructor.get();
+	public Item makeItem(Data data, Object... args) {
+		Item newItem = constructor.apply(args);
 		if (newItem instanceof Storable) {
 			((Storable) newItem).load(data);
 		}

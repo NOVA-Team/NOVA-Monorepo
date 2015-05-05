@@ -1,6 +1,7 @@
 package nova.core.world;
 
 import nova.core.block.Block;
+import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.game.Game;
@@ -41,10 +42,10 @@ public abstract class World implements Identifiable {
 	/**
 	 * Sets the block occupying a given position.
 	 * @param position The position of the block to set.
-	 * @param block The block.
+	 * @param blockFactory The block factory.
 	 * @return {@code true} if the replace was successful.
 	 */
-	public abstract boolean setBlock(Vector3i position, Block block);
+	public abstract boolean setBlock(Vector3i position, BlockFactory blockFactory);
 
 	/**
 	 * Removes the block in the specified position.
@@ -52,7 +53,7 @@ public abstract class World implements Identifiable {
 	 * @return {@code true} if the block was removed.
 	 */
 	public boolean removeBlock(Vector3i position) {
-		return setBlock(position, Game.instance.blockManager.getAirBlock());
+		return setBlock(position, Game.instance.blockManager.getAirBlockFactory());
 	}
 
 	/**

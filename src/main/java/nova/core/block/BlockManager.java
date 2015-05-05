@@ -6,25 +6,20 @@ import nova.core.event.EventListenerHandle;
 import nova.core.game.Game;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemManager;
+import nova.core.util.Manager;
 import nova.core.util.Registry;
-import nova.core.util.exception.NovaException;
 
-import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class BlockManager {
+public class BlockManager extends Manager<Block, BlockFactory> {
 
-	public final Registry<BlockFactory> registry;
 	private final Supplier<ItemManager> itemManager;
 	private final EventBus<BlockRegisteredEvent> blockRegisteredListeners = new EventBus<>();
 
 	private BlockManager(Registry<BlockFactory> registry, Supplier<ItemManager> itemManager) {
-		this.registry = registry;
+		super(registry);
 		this.itemManager = itemManager;
-	}
-
-	public Optional<BlockFactory> getBlockFactory(String name) {
-		return registry.get(name);
 	}
 
 	/**
@@ -32,32 +27,11 @@ public class BlockManager {
 	 * @return
 	 */
 	public Block getAirBlock() {
-		return Game.instance.blockManager.getBlock("air").get();
+		return Game.instance.blockManager.get("air").get();
 	}
 
-	public Optional<Block> getBlock(String name) {
-		Optional<BlockFactory> blockFactory = getBlockFactory(name);
-		if (blockFactory.isPresent()) {
-			return Optional.of(blockFactory.get().getDummy());
-		} else {
-			return Optional.empty();
-		}
-	}
-
-	/**
-	 * Registers a block with no constructor arguments
-	 * @param block Block to register
-	 * @return New block instance
-	 */
-	public Block register(Class<? extends Block> block) {
-		return register(new BlockFactory(() -> {
-			try {
-				return block.newInstance();
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new NovaException();
-			}
-		}));
+	public BlockFactory getAirBlockFactory() {
+		return Game.instance.blockManager.getFactory("air").get();
 	}
 
 	/**
@@ -65,7 +39,8 @@ public class BlockManager {
 	 * @param constructor Block instance {@link Supplier}
 	 * @return Dummy block
 	 */
-	public Block register(Supplier<Block> constructor) {
+	@Override
+	public BlockFactory register(Function<Object[], Block> constructor) {
 		return register(new BlockFactory(constructor));
 	}
 
@@ -74,13 +49,12 @@ public class BlockManager {
 	 * @param factory {@link BlockFactory} of registered block
 	 * @return Dummy block
 	 */
-	public Block register(BlockFactory factory) {
+	@Override
+	public BlockFactory register(BlockFactory factory) {
 		registry.register(factory);
 		blockRegisteredListeners.publish(new BlockRegisteredEvent(factory));
-
-		Block dummy = factory.getDummy();
-		itemManager.get().register(() -> new ItemBlock(dummy));
-		return dummy;
+		itemManager.get().register((args) -> new ItemBlock(factory));
+		return factory;
 	}
 
 	public EventListenerHandle<BlockRegisteredEvent> whenBlockRegistered(EventListener<BlockRegisteredEvent> listener) {

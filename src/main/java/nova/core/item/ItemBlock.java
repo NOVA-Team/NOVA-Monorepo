@@ -1,6 +1,7 @@
 package nova.core.item;
 
 import nova.core.block.Block;
+import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
 import nova.core.util.Direction;
 import nova.core.util.transform.Vector3d;
@@ -16,10 +17,10 @@ import java.util.Optional;
  */
 public class ItemBlock extends Item {
 
-	public final Block block;
+	public final BlockFactory blockFactory;
 
-	public ItemBlock(Block block) {
-		this.block = block;
+	public ItemBlock(BlockFactory blockFactory) {
+		this.blockFactory = blockFactory;
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class ItemBlock extends Item {
 	protected boolean onPrePlace(World world, Vector3i placePos) {
 		Optional<Block> checkBlock = world.getBlock(placePos);
 		if (!checkBlock.isPresent()) {
-			return world.setBlock(placePos, block);
+			return world.setBlock(placePos, blockFactory);
 		}
 		return false;
 	}
@@ -47,6 +48,6 @@ public class ItemBlock extends Item {
 
 	@Override
 	public String getID() {
-		return block.getID();
+		return blockFactory.getID();
 	}
 }

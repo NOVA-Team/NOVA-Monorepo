@@ -34,7 +34,7 @@ public class OreItemIngredient implements ItemIngredient {
 
 		List<Item> result = new ArrayList<Item>();
 		for (String itemId : game.itemDictionary.get(name)) {
-			result.add(game.itemManager.getItem(itemId).get());
+			result.add(game.itemManager.get(itemId).get());
 		}
 		return Optional.of(result);
 	}

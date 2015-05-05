@@ -4,7 +4,7 @@ import nova.core.util.ReflectionUtil;
 import nova.core.util.Registry;
 
 import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class EntityManager {
 	public final Registry<EntityFactory> registry;
@@ -13,8 +13,8 @@ public class EntityManager {
 		this.registry = registry;
 	}
 
-	public EntityFactory register(Class<? extends Entity> item) {
-		return register(() -> ReflectionUtil.newInstance(item));
+	public EntityFactory register(Class<? extends Entity> entity) {
+		return register((args) -> ReflectionUtil.newInstance(entity, args));
 	}
 
 	/**
@@ -22,7 +22,7 @@ public class EntityManager {
 	 * @param constructor The lambda expression to create a new constructor.
 	 * @return Dummy item
 	 */
-	public EntityFactory register(Supplier<Entity> constructor) {
+	public EntityFactory register(Function<Object[], Entity> constructor) {
 		return register(new EntityFactory(constructor));
 	}
 

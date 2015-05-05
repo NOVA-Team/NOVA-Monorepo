@@ -30,7 +30,7 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 	 * Block class.
 	 */
 	public final BlockFactory factory() {
-		return Game.instance.blockManager.getBlockFactory(getID()).get();
+		return Game.instance.blockManager.getFactory(getID()).get();
 	}
 
 	/**
@@ -63,7 +63,7 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 	 * drops.
 	 */
 	public Set<Item> getDrops() {
-		return Collections.singleton(Game.instance.itemManager.getItemFromBlock(this));
+		return Collections.singleton(Game.instance.itemManager.getItemFromBlock(this).makeItem());
 	}
 
 	/**

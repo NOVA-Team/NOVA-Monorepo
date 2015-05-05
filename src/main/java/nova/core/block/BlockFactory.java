@@ -6,7 +6,7 @@ import nova.core.util.exception.NovaException;
 import nova.core.world.Positioned;
 
 import java.lang.reflect.Field;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * @author Stan Hebben
@@ -25,7 +25,7 @@ public class BlockFactory extends Factory<Block> implements Identifiable {
 		}
 	}
 
-	public BlockFactory(Supplier<Block> constructor) {
+	public BlockFactory(Function<Object[], Block> constructor) {
 		super(constructor);
 	}
 
@@ -35,8 +35,8 @@ public class BlockFactory extends Factory<Block> implements Identifiable {
 	 * @param wrapper The block wrapper
 	 * @return A new block instance with these parameters.
 	 */
-	public Block makeBlock(BlockWrapper wrapper) {
-		Block newBlock = constructor.get();
+	public Block makeBlock(BlockWrapper wrapper, Object... args) {
+		Block newBlock = constructor.apply(args);
 
 		try {
 			wrapperField.set(newBlock, wrapper);

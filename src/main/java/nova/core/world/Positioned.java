@@ -33,7 +33,6 @@ public class Positioned<W extends PositionedWrapper<V>, V extends Vector3> imple
 	/**
 	 * Sets the world of this positioned object.
 	 * @param world World to set.
-	 * @return {@code true} if successful.
 	 */
 	public void setWorld(World world) {
 		wrapper.setWorld(world);
@@ -42,7 +41,6 @@ public class Positioned<W extends PositionedWrapper<V>, V extends Vector3> imple
 	/**
 	 * Sets the position of this positioned object.
 	 * @param position Position to set.
-	 * @return {@code true} if successful.
 	 */
 	public void setPosition(Vector3d position) {
 		wrapper.setPosition(position);
