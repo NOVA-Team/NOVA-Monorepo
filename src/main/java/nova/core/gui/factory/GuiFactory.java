@@ -1,11 +1,5 @@
 package nova.core.gui.factory;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
 import nova.core.entity.Entity;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiEvent.BindEvent;
@@ -16,6 +10,12 @@ import nova.core.network.Sided;
 import nova.core.util.Registry;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector3i;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class GuiFactory {
 
@@ -36,7 +36,7 @@ public abstract class GuiFactory {
 
 		// TODO verify mod id? Register with the mod instance rather?
 		gui.setModID(modID);
-		if (!guiRegistry.containsKey(modID))
+		//if (!guiRegistry.containsKey(modID))
 			guiRegistry.put(modID, new Registry<>());
 		guiRegistry.get(modID).register(gui);
 	}
