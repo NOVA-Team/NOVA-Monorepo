@@ -48,6 +48,61 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 
 	}
 
+	public static class GridLayoutConstraints extends Constraints<GridLayoutConstraints> {
+
+		public Anchor anchor;
+		public Fill fill;
+		public int x;
+		public int y;
+		public int sizeX;
+		public int sizeY;
+		public int weightX;
+		public int weightY;
+
+		public GridLayoutConstraints(int x, int y) {
+			this(x, y, Anchor.CENTER);
+		}
+
+		public GridLayoutConstraints(int x, int y, Anchor anchor) {
+			this(x, y, anchor, Fill.NONE);
+		}
+
+		public GridLayoutConstraints(int x, int y, Anchor anchor, Fill fill) {
+			this(x, y, 0, 0, anchor, fill);
+		}
+
+		public GridLayoutConstraints(int x, int y, int sizeX, int sizeY) {
+			this(x, y, sizeX, sizeY, Anchor.CENTER);
+		}
+
+		public GridLayoutConstraints(int x, int y, int sizeX, int sizeY, Anchor anchor) {
+			this(x, y, sizeX, sizeY, anchor, Fill.NONE);
+		}
+
+		public GridLayoutConstraints(int x, int y, int sizeX, int sizeY, Anchor anchor, Fill fill) {
+			this(x, y, sizeX, sizeY, 0, 0, anchor, fill);
+		}
+
+		public GridLayoutConstraints(int x, int y, int sizeX, int sizeY, int weightX, int weightY) {
+			this(x, y, sizeX, sizeY, weightX, weightY, Anchor.CENTER);
+		}
+
+		public GridLayoutConstraints(int x, int y, int sizeX, int sizeY, int weightX, int weightY, Anchor anchor) {
+			this(x, y, sizeX, sizeY, weightX, weightY, anchor, Fill.NONE);
+		}
+
+		public GridLayoutConstraints(int x, int y, int sizeX, int sizeY, int weightX, int weightY, Anchor anchor, Fill fill) {
+			this.x = x;
+			this.y = y;
+			this.sizeX = sizeX;
+			this.sizeY = sizeY;
+			this.weightX = weightX;
+			this.weightY = weightY;
+			this.anchor = anchor;
+			this.fill = fill;
+		}
+	}
+
 	/**
 	 * Creates a new constraint based on an array of properties. It will try to
 	 * choose a valid constructor for the passed arguments and invoke it.
