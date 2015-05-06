@@ -1,6 +1,7 @@
 package nova.core.gui;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
 
 import nova.core.entity.Entity;
@@ -135,6 +136,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 * @param inventory inventory to bind
 	 */
 	public void addInventory(String id, Inventory inventory) {
+		Objects.requireNonNull(inventory);
 		inventoryMap.put(id, inventory);
 	}
 
