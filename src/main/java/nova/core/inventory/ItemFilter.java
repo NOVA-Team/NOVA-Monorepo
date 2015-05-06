@@ -41,7 +41,7 @@ public interface ItemFilter extends Predicate<Item> {
 	}
 
 	/**
-	 * Accepts any {@link Item} that has a >= stack size than provided.
+	 * Accepts any {@link Item} that has a &gt;= stack size than provided.
 	 * 
 	 * @param amount
 	 * @return
