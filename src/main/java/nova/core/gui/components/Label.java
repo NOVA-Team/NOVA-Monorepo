@@ -57,6 +57,6 @@ public class Label extends GuiComponent<Label, NativeGuiComponent> {
 	@Override
 	public void render(int mouseX, int mouseY, Graphics graphics) {
 		super.render(mouseX, mouseY, graphics);
-		graphics.drawString(0, 0, text);
+		graphics.drawCenteredString(0, 0, text, getOutline().getDimension());
 	}
 }

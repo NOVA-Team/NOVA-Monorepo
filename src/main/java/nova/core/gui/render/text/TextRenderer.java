@@ -1,6 +1,7 @@
 package nova.core.gui.render.text;
 
 import nova.core.util.transform.Vector2d;
+import nova.core.util.transform.Vector2i;
 
 /**
  * Generic interface for a TextRenderer. A TextRenderer can draw text to the
@@ -9,6 +10,16 @@ import nova.core.util.transform.Vector2d;
  * @author Vic Nightfall
  */
 public interface TextRenderer extends TextMetrics {
+
+	public default void drawCenteredString(int x, int y, FormattedText text, Vector2i dim) {
+		Vector2d tdim = getBounds(text);
+		drawString(dim.x / 2 - tdim.xi() / 2, dim.y / 2 - tdim.yi() / 2, text);
+	}
+
+	public default void drawCenteredString(int x, int y, String text, Vector2i dim) {
+		Vector2d tdim = getBounds(text);
+		drawString(dim.x / 2 - tdim.xi() / 2, dim.y / 2 - tdim.yi() / 2, text);
+	}
 
 	/**
 	 * Renders {@link FormattedText} to the screen. Performs a line wrap at
