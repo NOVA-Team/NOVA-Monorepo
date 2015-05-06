@@ -7,6 +7,7 @@ import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.BindEvent;
 import nova.core.gui.nativeimpl.NativeSlot;
 import nova.core.inventory.Inventory;
+import nova.core.inventory.ItemFilter;
 import nova.core.item.Item;
 import nova.core.util.exception.NovaException;
 
@@ -20,6 +21,7 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 	private final String inventoryID;
 	private final int slotID;
 	protected Inventory inventory;
+	private Optional<ItemFilter> filter;
 
 	/**
 	 * Creates a new Slot instance. The inventory id specifies which
@@ -39,6 +41,21 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 		onGuiEvent(this::onBind, BindEvent.class);
 	}
 
+	/**
+	 * Sets the {@link ItemFilter} of this slot. May be null.
+	 * 
+	 * @param filter
+	 * @return this
+	 */
+	public Slot setFilter(ItemFilter filter) {
+		this.filter = Optional.ofNullable(filter);
+		return this;
+	}
+
+	public Optional<ItemFilter> getFilter() {
+		return filter;
+	}
+
 	public Optional<Item> getItem() {
 		if (inventory == null)
 			return Optional.empty();
@@ -51,14 +68,18 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 		return inventory.remove(slotID, amount);
 	}
 
+	public boolean accept(Item item) {
+		return filter.isPresent() ? filter.get().test(item) : true;
+	}
+
 	public boolean setItem(Item item) {
-		if (inventory == null)
+		if (inventory == null || !accept(item))
 			return false;
 		return inventory.set(slotID, item);
 	}
 
 	public int addItem(Item item) {
-		if (inventory == null)
+		if (inventory == null || !accept(item))
 			return item.count();
 		return inventory.add(slotID, item);
 	}
