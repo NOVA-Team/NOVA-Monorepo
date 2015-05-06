@@ -22,6 +22,7 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 	private final int slotID;
 	protected Inventory inventory;
 	private Optional<ItemFilter> filter;
+	private boolean readonly;
 
 	/**
 	 * Creates a new Slot instance. The inventory id specifies which
@@ -54,6 +55,21 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 
 	public Optional<ItemFilter> getFilter() {
 		return filter;
+	}
+
+	/**
+	 * Sets weather this slot should be accessible by players.
+	 * 
+	 * @param readonly
+	 * @return readonly flag
+	 */
+	public Slot setReadOnly(boolean readonly) {
+		this.readonly = readonly;
+		return this;
+	}
+
+	public boolean isReadOnly() {
+		return readonly;
 	}
 
 	public Optional<Item> getItem() {
