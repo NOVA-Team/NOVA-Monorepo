@@ -3,12 +3,15 @@ package nova.core.gui;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import nova.core.gui.ComponentEvent.ResizeEvent;
 import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.layout.BorderLayout;
+import nova.core.gui.layout.Constraints;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeContainer;
 import nova.core.util.exception.NovaException;
@@ -125,11 +128,50 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	}
 
 	/**
+	 * Adds every component from the given {@link Iterable} to this container,
+	 * applying the given parameters.
+	 * 
+	 * @see #add(GuiComponent, Object...)
+	 * @param components
+	 * @param properties
+	 * @return this
+	 */
+	@SuppressWarnings("unchecked")
+	public O add(Iterable<? extends GuiComponent<?, ?>> components, Object... properties) {
+		components.forEach(component -> add(component, properties));
+		return (O) this;
+	}
+
+	/**
+	 * Adds every component from the given {@link Iterable} to this container,
+	 * The given {@link Constraints} object will be passed to the supplied
+	 * consumer for every component, in sequence.
+	 * 
+	 * @param components
+	 * @param constraint
+	 * @param consumer
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <S extends Constraints<S>, U extends GuiComponent<?, ?>> O add(Iterable<U> components, S constraint, BiConsumer<S, Integer> consumer) {
+		Iterator<U> iterator = components.iterator();
+		for (int i = 0; iterator.hasNext(); i++) {
+			U component = iterator.next();
+			consumer.accept(constraint, i);
+			add(component, constraint);
+		}
+		return (O) this;
+	}
+
+	/**
 	 * Adds {@link GuiComponent} to this container.
 	 *
 	 * @param component {@link GuiCanvas} to add
 	 * @param properties Properties for the Layout
-	 * @return This GuiContainer
+	 * @return this
+	 * 
+	 * @see #add(Iterable, Object...)
+	 * @see #add(Iterable, Constraints, BiConsumer)
 	 * @see GuiLayout#add(GuiComponent, AbstractGuiContainer, Object[])
 	 */
 	@SuppressWarnings("unchecked")
