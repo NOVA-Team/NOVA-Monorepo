@@ -43,7 +43,7 @@ public class FlowLayout extends AbstractGuiLayout<FlowLayoutConstraints> {
 
 	@Override
 	protected void addImpl(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, FlowLayoutConstraints constraints) {
-		if (components.contains(parent))
+		if (components.contains(component))
 			throw new NovaException("Tried to add " + component.getID() + " which was already present.");
 		components.add(component);
 	}
@@ -57,7 +57,7 @@ public class FlowLayout extends AbstractGuiLayout<FlowLayoutConstraints> {
 		int minX = 0, minY = 0, size = 0, offset = 0;
 		int width = outline.getWidth();
 		int height = outline.getHeight();
-		Vector2i start = anchor.getStart(outline);
+		Vector2i start = anchor.getStart(outline.setPosition(Vector2i.zero));
 
 		if (anchor.axis == 1) {
 			for (GuiComponent<?, ?> child : components) {
