@@ -1,6 +1,7 @@
 package nova.core.gui;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
@@ -17,11 +18,16 @@ import nova.core.gui.render.Graphics;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketHandler;
 import nova.core.util.Identifiable;
+import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector2i;
 
 /**
  * Defines a basic gui component. A component can be added to
  * {@link AbstractGuiContainer}, the root container is a {@link Gui}.
+ * 
+ * A component may or may not specify a unique identifier, but keep in mind that
+ * they won't be able to receive any events on the {@link Side#SERVER server}
+ * side if none is present.
  *
  * @param <O> Self reference
  * @param <T> {@link NativeGuiComponent} type
@@ -29,8 +35,9 @@ import nova.core.util.transform.Vector2i;
 @SuppressWarnings("unchecked")
 public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketHandler {
 
-	protected String qualifiedName;
-	private String uniqueID;
+	private String qualifiedName;
+	private final boolean hasIdentifier;
+	private final String uniqueID;
 	private T nativeElement;
 
 	protected Optional<Vector2i> preferredSize = Optional.empty();
@@ -52,9 +59,30 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	protected Optional<AbstractGuiContainer<?, ?>> parentContainer = Optional.empty();
 
 	public GuiComponent(String uniqueID, Class<T> nativeClass) {
-		this.uniqueID = uniqueID;
+		if (uniqueID.length() > 0) {
+			this.uniqueID = uniqueID;
+			this.hasIdentifier = true;
+		} else {
+			this.uniqueID = UUID.randomUUID().toString();
+			this.hasIdentifier = false;
+		}
 		this.qualifiedName = uniqueID;
 		Game.instance.guiComponentFactory.applyNativeComponent(this, nativeClass);
+	}
+
+	/**
+	 * <p>
+	 * Creates a new component without provided id. Every implementor should
+	 * specify a constructor without id parameter.
+	 * </p>
+	 * <p>
+	 * Implement this or use an empty string.
+	 * </p>
+	 * 
+	 * @param nativeClass
+	 */
+	public GuiComponent(Class<T> nativeClass) {
+		this("", nativeClass);
 	}
 
 	private void dispatchNetworkEvent(SidedEvent event) {
@@ -276,6 +304,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	// External listener
 
 	public <EVENT extends ComponentEvent> O onEvent(ComponentEventListener<EVENT, O> listener, Class<EVENT> clazz, Side side) {
+		if (side == Side.SERVER && !hasIdentifer())
+			throw new NovaException("Components without unique identifier can't recieve events on the server side!");
 		componentEventBus.add(listener, clazz, side);
 		return (O) this;
 	}
@@ -285,6 +315,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	public <EVENT extends ComponentEvent> O onEvent(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
+		if (side == Side.SERVER && !hasIdentifer())
+			throw new NovaException("Components without unique identifier can't recieve events on the server side!");
 		componentEventBus.add(listener, clazz, side);
 		return (O) this;
 	}
@@ -305,6 +337,10 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		guiEventBus.publish(new GuiEvent.RenderEvent(graphics, mouseX, mouseY));
 	}
 
+	/**
+	 * Returns the unique ID of this component. Might be an empty string if not
+	 * specified.
+	 */
 	@Override
 	public final String getID() {
 		return uniqueID;
@@ -333,13 +369,17 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		return qualifiedName;
 	}
 
+	protected final boolean hasIdentifer() {
+		return hasIdentifier;
+	}
+
 	/**
 	 * Called to recreate the qualified name when added to a component or
 	 * removed.
 	 */
 	protected void updateQualifiedName() {
 		if (parentContainer.isPresent()) {
-			qualifiedName = parentContainer.get().getQualifiedName() + "." + getID();
+			qualifiedName = parentContainer.get().getQualifiedName() + "." + (hasIdentifer() ? getID() : "<>");
 		} else {
 			qualifiedName = getID();
 		}

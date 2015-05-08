@@ -22,6 +22,10 @@ public class PlayerInventory extends GuiComponent<PlayerInventory, NativePlayerI
 		onGuiEvent(this::onBind, BindEvent.class);
 	}
 
+	public PlayerInventory() {
+		this("");
+	}
+
 	public void onBind(BindEvent event) {
 		playerInventory = event.gui.getPlayerInventory();
 	}

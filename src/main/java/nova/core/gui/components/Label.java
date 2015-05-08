@@ -28,6 +28,14 @@ public class Label extends GuiComponent<Label, NativeGuiComponent> {
 		this(uniqueID, FormattedText.parse(text));
 	}
 
+	public Label(FormattedText text) {
+		this("", text);
+	}
+
+	public Label(String text) {
+		this("", text);
+	}
+
 	public Label setText(String text) {
 		this.text = FormattedText.parse(text);
 		return this;

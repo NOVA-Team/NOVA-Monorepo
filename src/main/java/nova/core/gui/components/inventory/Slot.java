@@ -43,6 +43,19 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 	}
 
 	/**
+	 * Creates a new Slot instance. The inventory id specifies which
+	 * {@link Inventory} the slot will apply to, has to be specified on the
+	 * parent GUI with the {@link BindEvent} and
+	 * {@link Gui#addInventory(String, Inventory)}
+	 * 
+	 * @param inventoryID
+	 * @param slotID
+	 */
+	public Slot(String inventoryID, int slotID) {
+		this("", inventoryID, slotID);
+	}
+
+	/**
 	 * Sets the {@link ItemFilter} of this slot. May be null.
 	 * 
 	 * @param filter

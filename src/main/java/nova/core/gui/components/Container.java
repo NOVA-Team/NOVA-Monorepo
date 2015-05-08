@@ -8,4 +8,8 @@ public class Container extends AbstractGuiContainer<Container, NativeContainer> 
 	public Container(String uniqueID) {
 		super(uniqueID, NativeContainer.class);
 	}
+
+	public Container() {
+		super(NativeContainer.class);
+	}
 }

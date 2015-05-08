@@ -91,6 +91,10 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	}
 
 	protected void dispatchNetworkEvent(SidedComponentEvent event, GuiComponent<?, ?> sender) {
+		// Block outgoing packets from components without identifier. Has to
+		// silently catch them.
+		if (!sender.hasIdentifer())
+			return;
 		Packet packet = Game.instance.networkManager.newPacket();
 		GuiEventFactory.instance.constructPacket(event, this, packet, event.getSyncID());
 		getNative().dispatchNetworkEvent(packet);

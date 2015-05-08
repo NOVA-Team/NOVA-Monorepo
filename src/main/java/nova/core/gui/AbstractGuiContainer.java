@@ -31,6 +31,10 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		this.onEvent(this::onResized, ResizeEvent.class);
 	}
 
+	public AbstractGuiContainer(Class<T> nativeClass) {
+		this("", nativeClass);
+	}
+
 	/**
 	 * @return Immutable collection of components inside this container
 	 */
@@ -50,7 +54,12 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	public Optional<GuiComponent<?, ?>> getChildElement(String qualifiedName) {
 		int dot = qualifiedName.indexOf(".");
 		if (dot == -1) {
-			return Optional.of(children.get(qualifiedName));
+			GuiComponent<?, ?> child = children.get(qualifiedName);
+			if (child != null && !child.hasIdentifer()) {
+				// Not funny. No you won't get that one.
+				return Optional.empty();
+			}
+			return Optional.of(child);
 		}
 		GuiComponent<?, ?> subContainer = children.get(qualifiedName.substring(0, dot - 1));
 		if (subContainer instanceof AbstractGuiContainer) {
@@ -127,7 +136,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	public O add(GuiComponent<?, ?> component, Object... properties) {
 		Objects.requireNonNull(component);
 		component.parentContainer = Optional.of(this);
-		component.updateQualifiedName();
 		children.put(component.getID(), component);
 		layout.add(component, this, properties);
 		getNative().addElement(component);

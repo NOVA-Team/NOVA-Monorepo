@@ -13,6 +13,10 @@ public class Button extends GuiComponent<Button, NativeButton> {
 		getNative().setText(text);
 	}
 
+	public Button(final String text) {
+		this("", text);
+	}
+
 	public String getText() {
 		return getNative().getText();
 	}
