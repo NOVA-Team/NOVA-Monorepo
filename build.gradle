@@ -110,6 +110,10 @@ task wrapperTestJar(type: Jar) {
 	classifier = "wrappertests"
 }
 
+configurations {
+	wrapperTests
+}
+
 artifacts {
 	archives apiJar
 	archives jar
@@ -117,7 +121,10 @@ artifacts {
 	archives shadowJar
 	archives sourceJar
 	archives wrapperTestJar
+
+	wrapperTests wrapperTestJar
 }
+
 
 publishing {
 	publications {
