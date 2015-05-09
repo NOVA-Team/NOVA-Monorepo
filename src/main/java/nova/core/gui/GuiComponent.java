@@ -265,7 +265,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	public final void preRender(int mouseX, int mouseY, Graphics graphics) {
-		isMouseOver = mouseX >= 0 && mouseY >= 0 && mouseX < getOutline().getWidth() && mouseY < getOutline().getHeight();
+		isMouseOver = getOutline().setPosition(Vector2i.zero).contains(mouseX, mouseY);
 		if (background.isPresent())
 			background.get().draw(graphics, getOutline().getDimension());
 	}

@@ -98,6 +98,14 @@ public class Spacing extends Rectangle<Vector2i> {
 		this(spacing, spacing, spacing, spacing);
 	}
 
+	public Spacing combine(Spacing second) {
+		return new Spacing(
+				Math.max(second.top(), top()),
+				Math.max(second.right(), right()),
+				Math.max(second.bottom(), bottom()),
+				Math.max(second.left(), left()));
+	}
+
 	public int left() {
 		return min.x;
 	}

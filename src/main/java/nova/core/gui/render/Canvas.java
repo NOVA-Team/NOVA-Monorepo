@@ -6,6 +6,7 @@ import nova.core.gui.Outline;
 import nova.core.gui.Spacing;
 import nova.core.render.Color;
 import nova.core.render.texture.Texture;
+import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector2i;
 
 /**
@@ -17,6 +18,8 @@ import nova.core.util.transform.Vector2i;
  */
 public abstract class Canvas {
 
+	private static final int MAX_STACK_DEPTH = Short.MAX_VALUE;
+
 	protected Vector2i dimension;
 	protected boolean isBuffered;
 	protected CanvasState state = new CanvasState();
@@ -26,6 +29,10 @@ public abstract class Canvas {
 	public Canvas(Vector2i dimension, boolean isBuffered) {
 		this.dimension = dimension;
 		this.isBuffered = isBuffered;
+	}
+
+	public CanvasState getState() {
+		return state;
 	}
 
 	public Vector2i getDimension() {
@@ -72,6 +79,11 @@ public abstract class Canvas {
 		enableScissor();
 	}
 
+	public void addScissor(int top, int right, int bottom, int left) {
+		state.scissor = state.scissor.combine(new Spacing(top, right, bottom, left));
+		enableScissor();
+	}
+
 	public void enableScissor() {
 		state.isScissor = true;
 	}
@@ -81,10 +93,14 @@ public abstract class Canvas {
 	}
 
 	public void push() {
+		if (stack.size() >= MAX_STACK_DEPTH)
+			throw new NovaException("Canvas stack overflow! Max: " + MAX_STACK_DEPTH);
 		stack.push(state.clone());
 	}
 
 	public void pop() {
+		if (stack.size() == 0)
+			throw new NovaException("Canvas stack underflow!");
 		state = stack.pop();
 	}
 
@@ -105,14 +121,42 @@ public abstract class Canvas {
 
 	public abstract void draw();
 
-	protected static class CanvasState implements Cloneable {
+	public static final class CanvasState implements Cloneable {
 
-		public int zIndex;
-		public Color color = Color.white;
-		public double tx, ty;
-		public double angle;
-		public Spacing scissor = Spacing.empty;
-		public boolean isScissor;
+		protected int zIndex;
+		protected Color color = Color.white;
+		protected double tx, ty;
+		protected double angle;
+		protected Spacing scissor = Spacing.empty;
+		protected boolean isScissor;
+
+		public int zIndex() {
+			return zIndex;
+		}
+
+		public Color color() {
+			return color;
+		}
+
+		public double tx() {
+			return tx;
+		}
+
+		public double ty() {
+			return ty;
+		}
+
+		public double angle() {
+			return angle;
+		}
+
+		public Spacing scissor() {
+			return scissor;
+		}
+
+		public boolean isScissor() {
+			return isScissor;
+		}
 
 		@Override
 		protected CanvasState clone() {
