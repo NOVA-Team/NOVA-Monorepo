@@ -91,7 +91,9 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	}
 
 	/**
-	 * Sets layout of this container
+	 * Sets layout of this container. Changing the layout while any sub
+	 * components are already added to the container might lead to unexpected
+	 * behavior.
 	 * 
 	 * @param layout {@link GuiLayout} to set
 	 * @return This GuiContainer
@@ -100,6 +102,9 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	@SuppressWarnings("unchecked")
 	public O setLayout(GuiLayout layout) {
 		this.layout = Objects.requireNonNull(layout);
+		if (children.size() > 0) {
+			children.forEach((key, component) -> layout.add(component, this));
+		}
 		layout.revalidate(this);
 		return (O) this;
 	}

@@ -86,6 +86,7 @@ public class FormattedText implements Iterable<FormattedText> {
 
 	public static Pattern pattern = Pattern.compile("(?<!\\\\)(?:\\\\\\\\)*(&([^;]{2});|&cr(([-+]?\\d+)|(\\#[0-F0-f]+));|&sz(\\d+);)");
 
+	// TODO Support for localization
 	/**
 	 * <p>
 	 * Parses an arbitrary String to {@link FormattedText}. The format applied
