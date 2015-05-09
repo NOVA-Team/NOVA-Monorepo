@@ -34,10 +34,6 @@ apply plugin: 'idea'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 
-ext.config = parseConfig("build.properties")
-
-version = config.nova.version
-group = "nova.core"
 
 /*checkstyle {
     configFile = file('checkstyle.xml')
@@ -134,7 +130,7 @@ publishing {
 			artifact sourceJar
 			artifact wrapperTestJar
 
-			pom.withXml(writePom())
+			pom.withXml(writePom(project.properties))
 		}
 	}
 	repositories {
