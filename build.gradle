@@ -103,7 +103,7 @@ shadowJar {
 }
 
 task wrapperTestJar(type: Jar) {
-	from(sourceSets.test.java) {
+	from(sourceSets.test.output) {
 		include "nova/wrappertests/**"
 		include "nova/testutils/**"
 	}
