@@ -31,16 +31,14 @@ public abstract class GuiFactory {
 	 * @param gui The GUI you want to register
 	 * @param modID Your mod's ID
 	 */
-	public boolean registerGui(Gui gui, String modID) {
+	public void registerGui(Gui gui, String modID) {
 		// TODO verify mod id? Register with the mod instance rather?
 		gui.setModID(modID);
 		if (!guiRegistry.containsKey(modID)) {
 			guiRegistry.put(modID, new Registry<>());
-		} else {
-			return false;
 		}
+
 		guiRegistry.get(modID).register(gui);
-		return true;
 	}
 
 	public void registerOverlay(Gui gui, GuiType guiType) {
