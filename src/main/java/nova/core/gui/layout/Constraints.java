@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import com.google.common.primitives.Primitives;
+
 /**
  * <p>
  * Constraints are mutable objects that represent a set of properties. Every
@@ -122,9 +124,12 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 			Class<?>[] parameterTypes = constructor.getParameterTypes();
 			if (parameterTypes.length != parameters.length)
 				continue;
-
 			if (IntStream.range(0, parameters.length).allMatch((index) -> {
-				return parameterTypes[index].isInstance(parameters[index]);
+				if (parameterTypes[index].isPrimitive()) {
+					return Primitives.wrap(parameterTypes[index]).isInstance(parameters[index]);
+				} else {
+					return parameterTypes[index].isInstance(parameters[index]);
+				}
 			})) {
 				try {
 					return constructor.newInstance(parameters);
