@@ -23,10 +23,10 @@ import nova.core.util.exception.NovaException;
  */
 public class FormattedText implements Iterable<FormattedText> {
 
-	private FormattedText child;
-	private FormattedText first = this;
-	private TextFormat format = new TextFormat();
-	private String text;
+	protected FormattedText child;
+	protected FormattedText first = this;
+	protected TextFormat format = new TextFormat();
+	protected String text;
 
 	public FormattedText() {
 		this.text = "";
@@ -43,7 +43,8 @@ public class FormattedText implements Iterable<FormattedText> {
 
 	public FormattedText add(FormattedText other) {
 		Objects.requireNonNull(other);
-		if (format.equals(other.format)) {
+		// Suppress for TranslatedText, they can't merge.
+		if (!(other instanceof TranslatedText) && format.equals(other.format)) {
 			return add(other.getText());
 		} else {
 			child = other;
@@ -228,7 +229,6 @@ public class FormattedText implements Iterable<FormattedText> {
 		return text;
 	}
 
-	// TODO Different text sizes
 	public static class TextFormat implements Cloneable {
 
 		public static int DEFAULT_SIZE = 9;
