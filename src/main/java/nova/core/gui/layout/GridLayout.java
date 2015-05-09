@@ -6,7 +6,7 @@ import nova.core.gui.layout.Constraints.GridLayoutConstraints;
 
 public class GridLayout extends AbstractGuiLayout<GridLayoutConstraints> {
 
-	public GridLayout(Class<GridLayoutConstraints> constraintClass) {
+	public GridLayout() {
 		super(GridLayoutConstraints.class);
 	}
 
