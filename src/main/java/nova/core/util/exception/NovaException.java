@@ -6,11 +6,29 @@ package nova.core.util.exception;
 public class NovaException extends RuntimeException {
 	private static final long serialVersionUID = -2692979724920608046L;
 
-	public NovaException() { super(); }
+	public NovaException() {
+		super();
+	}
 
-	public NovaException(String message) { super(message); }
+	/**
+	 * Formatted with {@link String#format(String, Object...)}
+	 * 
+	 * @param message
+	 * @param parameters
+	 */
+	public NovaException(String message, Object... parameters) {
+		this(String.format(message, parameters));
+	}
 
-	public NovaException(String message, Throwable cause) { super(message, cause); }
+	public NovaException(String message) {
+		super(message);
+	}
 
-	public NovaException(Throwable cause) { super(cause); }
+	public NovaException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public NovaException(Throwable cause) {
+		super(cause);
+	}
 }
