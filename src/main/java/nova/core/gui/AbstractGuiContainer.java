@@ -1,13 +1,5 @@
 package nova.core.gui;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-
 import nova.core.gui.ComponentEvent.ResizeEvent;
 import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.layout.BorderLayout;
@@ -17,9 +9,16 @@ import nova.core.gui.nativeimpl.NativeContainer;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector2i;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiConsumer;
+
 /**
  * This class provides container for {@link GuiComponent}
- * 
  * @param <O> Self reference
  * @param <T> {@link NativeContainer} type
  */
@@ -47,10 +46,9 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	/**
 	 * Returns a child {@link GuiComponent} based on its qualified name.
-	 *
 	 * @param qualifiedName qualified name of the sub component
 	 * @return The requested {@link GuiComponent} or {@code null} if not
-	 *         present.
+	 * present.
 	 * @see GuiComponent#getQualifiedName()
 	 * @see AbstractGuiContainer#getChildElement(String, Class)
 	 */
@@ -74,24 +72,23 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	/**
 	 * Will return a child component that matches the provided subclass of
 	 * {@link GuiComponent}.
-	 * 
 	 * @param <E> type of the requested {@link GuiComponent}
 	 * @param qualifiedName qualified name of the sub component
 	 * @param clazz class of the requested {@link GuiComponent}
 	 * @return The requested {@link GuiComponent} or {@code null} if not present
-	 *         / the type doesn't match.
+	 * / the type doesn't match.
 	 */
 	@SuppressWarnings("unchecked")
 	public <E extends GuiComponent<?, ?>> Optional<E> getChildElement(String qualifiedName, Class<E> clazz) {
 		GuiComponent<?, ?> component = getChildElement(qualifiedName).get();
-		if (clazz.isInstance(component))
+		if (clazz.isInstance(component)) {
 			return Optional.of((E) component);
+		}
 		return Optional.empty();
 	}
 
 	/**
 	 * Sets layout of this container
-	 *
 	 * @param layout {@link GuiLayout} to set
 	 * @return This GuiContainer
 	 * @throws NullPointerException if the provided layout is {@code null}.
@@ -105,7 +102,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	/**
 	 * Processes an event, i.e. sends it to each children
-	 *
 	 * @param event {@link GuiEvent} to process
 	 */
 	@Override
@@ -130,11 +126,10 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	/**
 	 * Adds every component from the given {@link Iterable} to this container,
 	 * applying the given parameters.
-	 * 
-	 * @see #add(GuiComponent, Object...)
 	 * @param components
 	 * @param properties
 	 * @return this
+	 * @see #add(GuiComponent, Object...)
 	 */
 	@SuppressWarnings("unchecked")
 	public O add(Iterable<? extends GuiComponent<?, ?>> components, Object... properties) {
@@ -146,7 +141,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * Adds every component from the given {@link Iterable} to this container,
 	 * The given {@link Constraints} object will be passed to the supplied
 	 * consumer for every component, in sequence.
-	 * 
 	 * @param components
 	 * @param constraint
 	 * @param consumer
@@ -165,11 +159,9 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	/**
 	 * Adds {@link GuiComponent} to this container.
-	 *
 	 * @param component {@link GuiCanvas} to add
 	 * @param properties Properties for the Layout
 	 * @return this
-	 * 
 	 * @see #add(Iterable, Object...)
 	 * @see #add(Iterable, Constraints, BiConsumer)
 	 * @see GuiLayout#add(GuiComponent, AbstractGuiContainer, Object[])
@@ -186,18 +178,25 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	}
 
 	/**
+	 * Resets the GuiContainer, removing all the components and layouts
+	 */
+	public void reset() {
+		((HashMap<String, GuiComponent<?, ?>>) children.clone()).values().forEach(this::removeElement);
+	}
+
+	/**
 	 * Removes {@link GuiComponent}. Shouldn't be used unless really needed as
 	 * it requires the sub component to update its qualified name using
 	 * updateQualifiedName().
-	 *
 	 * @param component {@link GuiComponent} to remove
 	 * @return This GuiContainer
 	 */
 	@SuppressWarnings("unchecked")
 	public O removeElement(GuiComponent<?, ?> component) {
 		Objects.requireNonNull(component);
-		if (!children.containsValue(component))
+		if (!children.containsValue(component)) {
 			throw new NovaException("Component couldn't be removed from parent container as it wasn't a child.");
+		}
 		component.triggerEvent(new ComponentEvent.RemoveEvent(component, this));
 		children.remove(component);
 		layout.remove(component);
@@ -213,7 +212,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	/**
 	 * Called when the size changed to update the positions of the child
 	 * components.
-	 * 
 	 * @see GuiLayout#revalidate(AbstractGuiContainer)
 	 */
 	public void revalidate() {

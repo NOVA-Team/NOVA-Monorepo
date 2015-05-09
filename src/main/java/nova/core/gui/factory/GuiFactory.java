@@ -28,22 +28,25 @@ public abstract class GuiFactory {
 
 	/**
 	 * Register a NOVA {@link Gui}.
-	 * 
 	 * @param gui The GUI you want to register
 	 * @param modID Your mod's ID
 	 */
-	public void registerGui(Gui gui, String modID) {
-
+	public boolean registerGui(Gui gui, String modID) {
 		// TODO verify mod id? Register with the mod instance rather?
 		gui.setModID(modID);
-		//if (!guiRegistry.containsKey(modID))
+		if (!guiRegistry.containsKey(modID)) {
 			guiRegistry.put(modID, new Registry<>());
+		} else {
+			return false;
+		}
 		guiRegistry.get(modID).register(gui);
+		return true;
 	}
 
 	public void registerOverlay(Gui gui, GuiType guiType) {
-		if (!overlayRegistry.containsKey(guiType))
+		if (!overlayRegistry.containsKey(guiType)) {
 			overlayRegistry.put(guiType, new ArrayList<>());
+		}
 		overlayRegistry.get(guiType).add(gui);
 	}
 
@@ -53,27 +56,27 @@ public abstract class GuiFactory {
 	 * instance. It will trigger the {@link BindEvent}, so any changes to the
 	 * instance can be done there.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Calling this is <i>safe</i>, you will always get a valid GUI for both
 	 * sides no matter on which side you call it.
 	 * </p>
-	 * 
 	 * @param modID Id of the {@link NovaMod} that registered the GUI
 	 * @param identifier Unique identifier for the GUI
 	 * @param entity {@link Entity} which opened the GUI
 	 * @param position The block coordinate on which to open the GUI
-	 * 
 	 * @see #showGui(Gui, Entity, Vector3i)
 	 */
 	public void showGui(String modID, String identifier, Entity entity, Vector3i position) {
 
 		Registry<Gui> gr = guiRegistry.get(modID);
-		if (gr == null)
+		if (gr == null) {
 			throw new NovaException(String.format("No GUI called %s registered for mod %s!", identifier, modID));
+		}
 		Optional<Gui> optGui = gr.get(identifier);
-		if (!optGui.isPresent())
+		if (!optGui.isPresent()) {
 			throw new NovaException(String.format("No GUI called %s registered for mod %s!", identifier, modID));
+		}
 		Gui gui = optGui.get();
 		showGui(gui, entity, position);
 	}
@@ -83,7 +86,7 @@ public abstract class GuiFactory {
 	 * Shows the provided {@link Gui}. It will trigger the {@link BindEvent}, so
 	 * any changes to the instance can be done there.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Calling this is <i>unsafe</i>, if you need a server side backend you
 	 * <b>have</b> to call this on <i>both</i> sides on order create a matching
@@ -92,12 +95,10 @@ public abstract class GuiFactory {
 	 * side GUIs, the usage of {@link #showGui(String, Gui, Entity, Vector3i)}
 	 * is recommended.
 	 * </p>
-	 * 
 	 * @param modID Id of the {@link NovaMod} that wants to show the GUI
 	 * @param gui GUI to to display
 	 * @param entity {@link Entity} which opened the GUI
 	 * @param position The block coordinate on which to open the GUI
-	 * 
 	 * @see #showGui(String, String, Entity, Vector3i)
 	 */
 	public void showGui(String modID, Gui gui, Entity entity, Vector3i position) {
@@ -113,7 +114,6 @@ public abstract class GuiFactory {
 	 * Closes the currently open NOVA {@link Gui} on the client side, if
 	 * present, and returns to the in-game GUI. It will not affect any native
 	 * GUIs that might exist along with NOVA.
-	 * 
 	 * @throws IllegalSideException if called on the server side
 	 */
 	@Sided(Side.CLIENT)
@@ -131,7 +131,6 @@ public abstract class GuiFactory {
 
 	/**
 	 * Returns the active NOVA {@link Gui} on the client side, if present.
-	 * 
 	 * @return NOVA {@link Gui}
 	 * @throws IllegalSideException if called on the server side
 	 */
@@ -146,13 +145,13 @@ public abstract class GuiFactory {
 	/**
 	 * Returns the active NOVA {@link Gui} of the supplied player on the client
 	 * side, if present.
-	 * 
 	 * @param player Player to check for
 	 * @return NOVA {@link Gui}
 	 */
 	public Optional<Gui> getActiveGui(Entity player) {
-		if (Side.get().isClient())
+		if (Side.get().isClient()) {
 			return getActiveGuiImpl();
+		}
 		return getActiveGuiImpl(player);
 	}
 
@@ -160,7 +159,6 @@ public abstract class GuiFactory {
 
 	/**
 	 * Returns the active {@link GuiType}.
-	 * 
 	 * @return active {@link GuiType}
 	 */
 	public GuiType getActiveGuiType() {
