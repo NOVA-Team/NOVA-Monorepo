@@ -70,8 +70,11 @@ public abstract class Canvas {
 
 	public void setScissor(Outline outline) {
 		Vector2i dimension = getDimension();
-		setScissor(outline.x1i(), outline.y1i(), dimension.x - outline.getWidth(), dimension.y - outline.getHeight());
-		enableScissor();
+		addScissor(
+				outline.y1i() + state.tyi(),
+				dimension.x - outline.getWidth() - state.txi(),
+				dimension.y - outline.getHeight() - state.tyi(),
+				outline.x1i() + state.txi());
 	}
 
 	public void setScissor(int top, int right, int bottom, int left) {
@@ -144,6 +147,14 @@ public abstract class Canvas {
 
 		public double ty() {
 			return ty;
+		}
+
+		public int txi() {
+			return (int) tx;
+		}
+
+		public int tyi() {
+			return (int) ty;
 		}
 
 		public double angle() {
