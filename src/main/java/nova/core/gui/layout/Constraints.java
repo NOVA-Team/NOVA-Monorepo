@@ -126,6 +126,8 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 				continue;
 			if (IntStream.range(0, parameters.length).allMatch((index) -> {
 				if (parameterTypes[index].isPrimitive()) {
+					// TODO This needs a cache to be able to deal with
+					// primitives & auto-boxing properly.
 					return Primitives.wrap(parameterTypes[index]).isInstance(parameters[index]);
 				} else {
 					return parameterTypes[index].isInstance(parameters[index]);

@@ -4,6 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nova.core.util.exception.NovaException;
+import nova.core.util.transform.Vector2;
+import nova.core.util.transform.Vector2d;
 import nova.core.util.transform.Vector2i;
 
 /**
@@ -15,37 +17,77 @@ public class RelativePosition extends Constraints<RelativePosition> {
 
 	public Anchor xAnchor = Anchor.WEST;
 	public Anchor yAnchor = Anchor.NORTH;
-	public int xOffset;
-	public int yOffset;
-	public boolean xRelative = true;
-	public boolean yRelative = true;
+	public double xOffset;
+	public double yOffset;
+	public boolean xRelative;
+	public boolean yRelative;
 
 	public RelativePosition() {
-
 	}
 
-	public RelativePosition(Vector2i pos) {
-		xOffset = pos.x;
-		yOffset = pos.y;
-		xRelative = yRelative = false;
-	}
-
-	public RelativePosition(Anchor xAnchor, Anchor yAnchor, int xOffset, int yOffset, boolean xRelative, boolean yRelative) {
-		this.xAnchor = xAnchor;
-		this.yAnchor = yAnchor;
-		this.xOffset = xOffset;
-		this.yOffset = yOffset;
+	public RelativePosition(double xOffset, double yOffset, Anchor xAnchor, Anchor yAnchor, boolean xRelative, boolean yRelative) {
+		this(xOffset, yOffset, xAnchor, yAnchor);
 		this.xRelative = xRelative;
 		this.yRelative = yRelative;
 	}
 
-	public RelativePosition(Anchor xAnchor, Anchor yAnchor, int xOffset, int yOffset) {
-		this(xAnchor, yAnchor, xOffset, yOffset, true, true);
+	public RelativePosition(double xOffset, double yOffset, Anchor xAnchor, Anchor yAnchor) {
+		this.xOffset = xOffset;
+		this.yOffset = yOffset;
+		this.xAnchor = xAnchor;
+		this.yAnchor = yAnchor;
+	}
+
+	public RelativePosition(Vector2<?> pos, Anchor xAnchor, Anchor yAnchor) {
+		this(pos.xd(), pos.yd(), xAnchor, yAnchor);
+	}
+
+	public RelativePosition(Vector2i pos) {
+		this(pos, Anchor.WEST, Anchor.NORTH);
+	}
+
+	public RelativePosition(Vector2i pos, Anchor xAnchor, Anchor yAnchor) {
+		this((Vector2<?>) pos, xAnchor, yAnchor);
+	}
+
+	public RelativePosition(Vector2d pos) {
+		this(pos, Anchor.WEST, Anchor.NORTH);
+	}
+
+	public RelativePosition(Vector2d pos, Anchor xAnchor, Anchor yAnchor) {
+		this((Vector2<?>) pos, Anchor.WEST, Anchor.NORTH);
+		xRelative = yRelative = true;
 	}
 
 	public RelativePosition(int xOffset, int yOffset) {
-		this.xOffset = xOffset;
-		this.yOffset = yOffset;
+		this(xOffset, yOffset, Anchor.WEST, Anchor.NORTH);
+	}
+
+	public RelativePosition(int xOffset, int yOffset, Anchor xAnchor, Anchor yAnchor) {
+		this((float) xOffset, (float) yOffset, xAnchor, yAnchor);
+	}
+
+	public RelativePosition(double xOffset, int yOffset) {
+		this(xOffset, yOffset, Anchor.WEST, Anchor.NORTH);
+	}
+
+	public RelativePosition(double xOffset, int yOffset, Anchor xAnchor, Anchor yAnchor) {
+		this(xOffset, (double) yOffset, xAnchor, yAnchor);
+		xRelative = true;
+	}
+
+	public RelativePosition(int xOffset, double yOffset) {
+		this(xOffset, yOffset, Anchor.WEST, Anchor.NORTH);
+	}
+
+	public RelativePosition(int xOffset, double yOffset, Anchor xAnchor, Anchor yAnchor) {
+		this((double) xOffset, yOffset, xAnchor, yAnchor);
+		yRelative = true;
+	}
+
+	public RelativePosition(double xOffset, double yOffset) {
+		this(xOffset, yOffset, Anchor.WEST, Anchor.NORTH);
+		xRelative = yRelative = true;
 	}
 
 	public static final Pattern pattern = Pattern.compile("(west|east|north|south):\\s?([-+]?\\d+)(%)?[\\s]?", Pattern.CASE_INSENSITIVE);
@@ -61,11 +103,11 @@ public class RelativePosition extends Constraints<RelativePosition> {
 				boolean relative = matcher.group(3) != null;
 				if (anchor.axis == 1) {
 					xAnchor = anchor;
-					xOffset = offset;
+					xOffset = relative ? offset / 100F : offset;
 					xRelative = relative;
 				} else if (anchor.axis == 2) {
 					yAnchor = anchor;
-					yOffset = offset;
+					yOffset = relative ? offset / 100F : offset;
 					yRelative = relative;
 				}
 			}
@@ -91,14 +133,14 @@ public class RelativePosition extends Constraints<RelativePosition> {
 		return this;
 	}
 
-	public RelativePosition setX(Anchor anchor, float offset) {
+	public RelativePosition setX(Anchor anchor, double offset) {
 		this.xAnchor = anchor;
 		this.xOffset = (int) (offset * 100);
 		this.xRelative = true;
 		return this;
 	}
 
-	public RelativePosition setY(Anchor anchor, float offset) {
+	public RelativePosition setY(Anchor anchor, double offset) {
 		this.yAnchor = anchor;
 		this.yOffset = (int) (offset * 100);
 		this.yRelative = true;
@@ -106,8 +148,8 @@ public class RelativePosition extends Constraints<RelativePosition> {
 	}
 
 	public Vector2i getPositionOf(Vector2i parentSize) {
-		int x = xRelative ? (int) (parentSize.x * (xOffset / 100F)) : xOffset;
-		int y = yRelative ? (int) (parentSize.y * (yOffset / 100F)) : yOffset;
+		int x = xRelative ? (int) (parentSize.x * xOffset) : (int) xOffset;
+		int y = yRelative ? (int) (parentSize.y * yOffset) : (int) yOffset;
 
 		if (xAnchor == Anchor.EAST)
 			x = parentSize.x - x;
