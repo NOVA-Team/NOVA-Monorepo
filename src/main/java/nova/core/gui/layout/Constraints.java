@@ -1,13 +1,12 @@
 package nova.core.gui.layout;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.google.common.primitives.Primitives;
+import nova.core.util.ReflectionUtil;
 
 /**
  * <p>
@@ -117,30 +116,14 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	 * @throws IllegalArgumentException if there is no matching constructor for
 	 *         the given set of arguments
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T extends Constraints<T>> T createConstraints(Class<T> clazz, Object... parameters) throws IllegalArgumentException {
-
-		for (Constructor<T> constructor : (Constructor<T>[]) clazz.getConstructors()) {
-			Class<?>[] parameterTypes = constructor.getParameterTypes();
-			if (parameterTypes.length != parameters.length)
-				continue;
-			if (IntStream.range(0, parameters.length).allMatch((index) -> {
-				if (parameterTypes[index].isPrimitive()) {
-					// TODO This needs a cache to be able to deal with
-					// primitives & auto-boxing properly.
-					return Primitives.wrap(parameterTypes[index]).isInstance(parameters[index]);
-				} else {
-					return parameterTypes[index].isInstance(parameters[index]);
-				}
-			})) {
-				try {
-					return constructor.newInstance(parameters);
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			}
+		try {
+			return ReflectionUtil.newInstanceMatching(clazz, parameters);
+		} catch (Exception e) {
+			throw new IllegalArgumentException(
+					"No matching constructor was found for constraint class " + clazz.getClass() +
+							" with the arguments " + Arrays.toString(parameters));
 		}
-		throw new IllegalArgumentException();
 	}
 
 	/**
