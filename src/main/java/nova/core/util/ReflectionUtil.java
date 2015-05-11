@@ -81,6 +81,8 @@ public class ReflectionUtil {
 
 		Class<?>[] execTypes = exec.getParameterTypes();
 		for (int i = 0; i < exec.getParameterCount(); i++) {
+			if (i >= parameterTypes.length && exec.isVarArgs())
+				break;
 
 			Class<?> a = parameterTypes[i];
 			Class<?> b = execTypes[i];
@@ -171,8 +173,6 @@ public class ReflectionUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> Optional<Constructor<T>> findMatchingConstructor(Class<T> clazz, Class<?>... parameterTypes) {
 
-		// Try the default method as it is much faster, works in
-		// many of the cases.
 		try {
 			// Try the default method as it is much faster, works in
 			// many of the cases.

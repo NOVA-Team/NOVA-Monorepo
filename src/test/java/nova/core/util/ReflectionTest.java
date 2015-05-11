@@ -32,7 +32,7 @@ public class ReflectionTest {
 	}
 	
 	@Test
-	public void testFindConstructor() throws NoSuchMethodException, SecurityException {
+	public void testFindConstructor() {
 		
 		assertThat(findMatchingConstructor(TestClass.class, double.class, double.class, int.class).get())
 			.isEqualTo(con_ddi);
@@ -46,7 +46,10 @@ public class ReflectionTest {
 		assertThat(findMatchingConstructor(TestClass.class, float[].class).get())
 			.isEqualTo(con_f_Var);
 		
-		assertThat(findMatchingConstructor(TestClass.class, String.class, Object.class, float.class).get())
+		assertThat(findMatchingConstructor(TestClass.class, String.class).get())
+			.isEqualTo(con_O_Var);
+		
+		assertThat(findMatchingConstructor(TestClass.class).get())
 			.isEqualTo(con_O_Var);
 		
 		assertThat(findMatchingConstructor(TestClass.class, String.class, Object.class, float.class).get())
