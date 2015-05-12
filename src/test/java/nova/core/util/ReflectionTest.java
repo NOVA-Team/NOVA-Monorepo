@@ -36,6 +36,9 @@ public class ReflectionTest {
 		
 		Constructor<?> constr = null;
 		
+		// Ambigious constructor, should fail.
+		assertThatThrownBy(() -> findMatchingConstructor(TestClass.class).get());
+		
 		assertThat(constr = findMatchingConstructor(TestClass.class, double.class, double.class, int.class).get())
 			.isEqualTo(con_ddi);
 		assertThat(newInstanceMatching(constr, 1D, 1D, 1)).isNotNull();
@@ -55,11 +58,7 @@ public class ReflectionTest {
 		assertThat(constr = findMatchingConstructor(TestClass.class, String.class).get())
 			.isEqualTo(con_O_Var);
 		assertThat(newInstanceMatching(constr, "Test")).isNotNull();
-		
-		assertThat(constr = findMatchingConstructor(TestClass.class).get())
-			.isEqualTo(con_O_Var);
-		assertThat(newInstanceMatching(constr)).isNotNull();
-		
+
 		assertThat(constr = findMatchingConstructor(TestClass.class, String.class, Object.class, float.class).get())
 			.isEqualTo(con_O_Var);
 		assertThat(newInstanceMatching(constr, "Test", new Object(), 1F)).isNotNull();

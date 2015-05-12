@@ -186,10 +186,17 @@ public class ReflectionUtil {
 			return Arrays.stream(clazz.getConstructors())
 				.filter(cons -> isAssignmentCompatible(cons, parameterTypes))
 				.sorted((consA, consB) -> {
-					return compareDistance(consA, consB, parameterTypes);
+					int comp = compareDistance(consA, consB, parameterTypes);
+					if (comp == 0) {
+						// Found an ambiguous constructor
+						throw new NovaException("Found an ambigious constructor.");
+					}
+					return comp;
 				})
 				.findFirst()
 				.map(constr2 -> (Constructor<T>) constr2);
+		} catch (NovaException e) {
+			throw e;
 		} catch (Exception e) {
 			return Optional.empty();
 		}
