@@ -23,7 +23,7 @@ public class ReflectionTest {
 		}
 	}
 	
-	static class TestClass {	
+	static class TestClass {
 		public TestClass(double a, double b, double c) {};	
 		public TestClass(Double a, Double b, Double c) {};
 		public TestClass(double a, double b, int c) {};
@@ -34,34 +34,46 @@ public class ReflectionTest {
 	@Test
 	public void testFindConstructor() {
 		
-		assertThat(findMatchingConstructor(TestClass.class, double.class, double.class, int.class).get())
-			.isEqualTo(con_ddi);
+		Constructor<?> constr = null;
 		
-		assertThat(findMatchingConstructor(TestClass.class, Double.class, Double.class, Integer.class).get())
+		assertThat(constr = findMatchingConstructor(TestClass.class, double.class, double.class, int.class).get())
 			.isEqualTo(con_ddi);
+		assertThat(newInstanceMatching(constr, 1D, 1D, 1)).isNotNull();
 		
-		assertThat(findMatchingConstructor(TestClass.class, int.class, int.class, int.class).get())
+		assertThat(constr = findMatchingConstructor(TestClass.class, Double.class, Double.class, Integer.class).get())
 			.isEqualTo(con_ddi);
+		assertThat(newInstanceMatching(constr, Double.valueOf(1), Double.valueOf(1), Integer.valueOf(1))).isNotNull();
 		
-		assertThat(findMatchingConstructor(TestClass.class, float[].class).get())
+		assertThat(constr = findMatchingConstructor(TestClass.class, int.class, int.class, int.class).get())
+			.isEqualTo(con_ddi);
+		assertThat(newInstanceMatching(constr, 1, 1, 1)).isNotNull();
+		
+		assertThat(constr = findMatchingConstructor(TestClass.class, float[].class).get())
 			.isEqualTo(con_f_Var);
+		assertThat(newInstanceMatching(constr, new float[5])).isNotNull();
 		
-		assertThat(findMatchingConstructor(TestClass.class, String.class).get())
+		assertThat(constr = findMatchingConstructor(TestClass.class, String.class).get())
 			.isEqualTo(con_O_Var);
+		assertThat(newInstanceMatching(constr, "Test")).isNotNull();
 		
-		assertThat(findMatchingConstructor(TestClass.class).get())
+		assertThat(constr = findMatchingConstructor(TestClass.class).get())
 			.isEqualTo(con_O_Var);
+		assertThat(newInstanceMatching(constr)).isNotNull();
 		
-		assertThat(findMatchingConstructor(TestClass.class, String.class, Object.class, float.class).get())
+		assertThat(constr = findMatchingConstructor(TestClass.class, String.class, Object.class, float.class).get())
 			.isEqualTo(con_O_Var);
+		assertThat(newInstanceMatching(constr, "Test", new Object(), 1F)).isNotNull();
 		
-		assertThat(findMatchingConstructor(TestClass.class, Object[].class).get())
+		assertThat(constr = findMatchingConstructor(TestClass.class, Object[].class).get())
 			.isEqualTo(con_O_Var);
+		assertThat(newInstanceMatching(constr, new Object[5])).isNotNull();
 		
-		assertThat(findMatchingConstructor(TestClass.class, float.class, float.class, float.class).get())
+		assertThat(constr = findMatchingConstructor(TestClass.class, float.class, float.class, float.class).get())
 			.isEqualTo(con_ddd);
+		assertThat(newInstanceMatching(constr, 1F, 1F, 1F)).isNotNull();
 		
-		assertThat(findMatchingConstructor(TestClass.class, Double.class, Double.class, Double.class).get())
+		assertThat(constr = findMatchingConstructor(TestClass.class, Double.class, Double.class, Double.class).get())
 			.isEqualTo(con_DDD);
+		assertThat(newInstanceMatching(constr, Double.valueOf(1), Double.valueOf(1), Double.valueOf(1))).isNotNull();
 	}
 }

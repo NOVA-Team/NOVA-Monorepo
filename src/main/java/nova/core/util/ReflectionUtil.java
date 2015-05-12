@@ -13,6 +13,7 @@ import java.util.function.BiConsumer;
 
 import nova.core.util.exception.NovaException;
 
+import com.google.common.collect.ObjectArrays;
 import com.google.common.primitives.Primitives;
 
 public class ReflectionUtil {
@@ -194,10 +195,52 @@ public class ReflectionUtil {
 		}
 	}
 
+	static <T> T newInstanceMatching(Constructor<T> constr, Object... args) {
+		try {
+			if (args == null || args.length == 0) {
+				// 0 parameter case
+				if (constr.isVarArgs()) {
+					return constr.newInstance(new Object[] { args });
+				} else {
+					return constr.newInstance();
+				}
+			} else {
+				if (constr.isVarArgs()) {
+					int last = constr.getParameterCount() - 1;
+
+					if (last < args.length) {
+						if (args.length == constr.getParameterCount()) {
+							// Check for array type
+							Class<?> append = args[last].getClass();
+							if (append.isArray() && constr.getParameterTypes()[last].isAssignableFrom(append)) {
+								// We have a matching array type as last
+								// argument, so use that one
+								return constr.newInstance(args);
+							}
+						}
+
+						// Append arguments as new array.
+						return constr.newInstance(ObjectArrays.concat(
+								Arrays.copyOfRange(args, 0, last),
+								(Object) Arrays.copyOfRange(args, last, args.length)));
+					} else {
+						// Empty parameter -> pass empty array for var-args
+						return constr.newInstance(ObjectArrays.concat(args, (Object) new Object[0]));
+					}
+				} else {
+					// No var-args
+					return constr.newInstance(args);
+				}
+			}
+		} catch (Exception e) {
+			throw new NovaException(e);
+		}
+	}
+
 	public static <T> T newInstanceMatching(Class<T> clazz, Object... args) {
 		try {
 			if (args != null && args.length > 0) {
-				return findMatchingConstructor(clazz, types(args)).get().newInstance(args);
+				return newInstanceMatching(findMatchingConstructor(clazz, types(args)).get(), args);
 			} else {
 				return clazz.newInstance();
 			}
