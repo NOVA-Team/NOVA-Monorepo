@@ -183,6 +183,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	public O add(GuiComponent<?, ?> component, Object... properties) {
 		Objects.requireNonNull(component);
 		component.parentContainer = Optional.of(this);
+		component.updateQualifiedName();
 		children.put(component.getID(), component);
 		layout.add(component, this, properties);
 		getNative().addElement(component);
