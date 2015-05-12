@@ -19,7 +19,10 @@ public abstract class Manager<T extends Identifiable, F extends Factory<T>> {
 
 	public abstract F register(Function<Object[], T> constructor);
 
-	public abstract F register(F factory);
+	public F register(F factory) {
+		registry.register(factory);
+		return factory;
+	}
 
 	public Optional<T> get(String name) {
 		Optional<F> factory = getFactory(name);
