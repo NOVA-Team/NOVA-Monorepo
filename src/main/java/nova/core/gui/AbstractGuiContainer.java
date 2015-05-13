@@ -1,13 +1,5 @@
 package nova.core.gui;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-
 import nova.core.gui.ComponentEvent.ResizeEvent;
 import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.layout.BorderLayout;
@@ -16,6 +8,14 @@ import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeContainer;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector2i;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
 /**
  * This class provides container for {@link GuiComponent}
@@ -64,7 +64,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 			}
 			return Optional.of(child);
 		}
-		GuiComponent<?, ?> subContainer = children.get(qualifiedName.substring(0, dot - 1));
+		GuiComponent<?, ?> subContainer = children.get(qualifiedName.substring(0, dot));
 		if (subContainer instanceof AbstractGuiContainer) {
 			return ((AbstractGuiContainer<?, ?>) subContainer).getChildElement(qualifiedName.substring(dot + 1));
 		}

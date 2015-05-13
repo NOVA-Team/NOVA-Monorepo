@@ -1,16 +1,16 @@
 package nova.core.gui.factory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.function.Function;
-
 import nova.core.gui.ComponentEvent;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiComponent;
 import nova.core.network.Packet;
 import nova.core.util.exception.NovaException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class GuiEventFactory {
 
@@ -45,8 +45,9 @@ public class GuiEventFactory {
 
 		qualifiedName = qualifiedName.substring(parentGui.getID().length() + 1);
 		Optional<GuiComponent<?, ?>> component = parentGui.getChildElement(qualifiedName);
-		if (!component.isPresent())
-			throw new NovaException(String.format("Recieved an event for a non-existent component \"%s\" at GUI \"%s\"", qualifiedName, parentGui));
+		if (!component.isPresent()) {
+			throw new NovaException(String.format("Received an event for a non-existent component \"%s\" at GUI \"%s\"", qualifiedName, parentGui));
+		}
 
 		E event = (E) networkEvents.get(eventID).apply(component.get());
 		packet.setID(eventSubID);
