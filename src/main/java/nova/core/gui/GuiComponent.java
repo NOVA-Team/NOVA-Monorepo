@@ -47,6 +47,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	private boolean isActive = true;
 	private boolean isVisible = true;
+	private boolean isDisplayed = true;
 	private boolean isMouseOver = false;
 
 	private SidedEventBus<ComponentEvent> componentEventBus = new SidedEventBus<ComponentEvent>(this::dispatchNetworkEvent);
@@ -119,6 +120,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		if (!oldOutline.getDimension().equals(outline.getDimension())) {
 			triggerEvent(new ResizeEvent(this, oldOutline));
 		}
+		revalidate();
 	}
 
 	public O setPreferredSize(int width, int height) {
@@ -146,6 +148,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 */
 	public O setPreferredSize(Vector2i size) {
 		preferredSize = Optional.of(size);
+		revalidate();
 		return (O) this;
 	}
 
@@ -162,6 +165,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 */
 	public O setMinimumSize(Vector2i size) {
 		minimumSize = Optional.of(size);
+		revalidate();
 		return (O) this;
 	}
 
@@ -178,6 +182,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 */
 	public O setMaximumSize(Vector2i size) {
 		maximumSize = Optional.of(size);
+		revalidate();
 		return (O) this;
 	}
 
@@ -200,9 +205,21 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * Call this when the component's state has changed and needs to be
 	 * re-rendered. The native component is requested to infer
 	 * {@link #render(int, int, Graphics)} after.
+	 * 
+	 * @see #revalidate()
 	 */
 	protected void repaint() {
 		nativeElement.requestRender();
+	}
+
+	/**
+	 * Call this when the component's state has changed and the parent layout
+	 * has to be refreshed.
+	 * 
+	 * @see #repaint()
+	 */
+	protected void revalidate() {
+		getParentContainer().ifPresent(AbstractGuiContainer::revalidate);
 	}
 
 	/**
@@ -254,6 +271,17 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		if (this.isVisible != isVisible) {
 			this.isVisible = isVisible;
 			repaint();
+		}
+	}
+
+	public boolean isDisplayed() {
+		return isDisplayed;
+	}
+
+	public void setDisplay(boolean isDisplayed) {
+		if (this.isDisplayed != isDisplayed) {
+			this.isDisplayed = isDisplayed;
+			revalidate();
 		}
 	}
 

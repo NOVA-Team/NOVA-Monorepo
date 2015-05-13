@@ -230,8 +230,13 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * 
 	 * @see GuiLayout#revalidate(AbstractGuiContainer)
 	 */
+	@Override
 	public void revalidate() {
-		layout.revalidate(this);
+		if (getParentContainer().isPresent()) {
+			getParentContainer().get().revalidate();
+		} else {
+			layout.revalidate(this);
+		}
 	}
 
 	@Override
