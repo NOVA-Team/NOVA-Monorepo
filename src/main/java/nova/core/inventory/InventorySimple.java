@@ -7,6 +7,7 @@ import nova.core.retention.Data;
 import nova.core.retention.Storable;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -15,6 +16,7 @@ import java.util.stream.IntStream;
  */
 public class InventorySimple implements Inventory, Storable, PacketHandler {
 
+	public BiFunction<Integer, Item, Boolean> isItemValidForSlot = (slot, item) -> true;
 	private Item[] items;
 	private boolean changed = false;
 
@@ -62,11 +64,11 @@ public class InventorySimple implements Inventory, Storable, PacketHandler {
 	}
 
 	@Override
-	public boolean set(int slot, Item stack) {
-		if (slot < 0 || slot >= items.length) {
+	public boolean set(int slot, Item item) {
+		if (slot < 0 || slot >= items.length || !isItemValidForSlot.apply(slot, item)) {
 			return false;
 		} else {
-			items[slot] = stack;
+			items[slot] = item;
 			changed = true;
 			return true;
 		}
