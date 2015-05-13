@@ -304,7 +304,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	// External listener
 
 	public <EVENT extends ComponentEvent> O onEvent(ComponentEventListener<EVENT, O> listener, Class<EVENT> clazz, Side side) {
-		if (side == Side.SERVER && !hasIdentifer())
+		if (side == Side.SERVER && !hasIdentifierRecursive())
 			throw new NovaException("Components without unique identifier can't recieve events on the server side!");
 		componentEventBus.add(listener, clazz, side);
 		return (O) this;
@@ -315,7 +315,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	public <EVENT extends ComponentEvent> O onEvent(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
-		if (side == Side.SERVER && !hasIdentifer())
+		if (side == Side.SERVER && !hasIdentifierRecursive())
 			throw new NovaException("Components without unique identifier can't recieve events on the server side!");
 		componentEventBus.add(listener, clazz, side);
 		return (O) this;
@@ -371,6 +371,23 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	protected final boolean hasIdentifer() {
 		return hasIdentifier;
+	}
+
+	/**
+	 * Returns true if all parent elements declare a unique identifier
+	 * 
+	 * @return hasIdentifier
+	 */
+	protected final boolean hasIdentifierRecursive() {
+		if (!hasIdentifer())
+			return false;
+		Optional<AbstractGuiContainer<?, ?>> parent = getParentContainer();
+		while (parent.isPresent()) {
+			if (!parent.get().hasIdentifer())
+				return false;
+			parent = parent.get().getParentContainer();
+		}
+		return true;
 	}
 
 	/**
