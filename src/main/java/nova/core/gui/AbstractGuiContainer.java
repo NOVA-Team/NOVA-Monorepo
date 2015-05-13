@@ -58,7 +58,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		int dot = qualifiedName.indexOf(".");
 		if (dot == -1) {
 			GuiComponent<?, ?> child = children.get(qualifiedName);
-			if (child != null && !child.hasIdentifer()) {
+			if (child == null || !child.hasIdentifer()) {
 				// Not funny. No you won't get that one.
 				return Optional.empty();
 			}

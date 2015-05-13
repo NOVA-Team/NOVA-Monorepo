@@ -15,7 +15,10 @@ public abstract class LanguageManager {
 	 */
 	public String translate(String key, Map<String, String> replacements) {
 		String str = translate(key);
-		replacements.forEach(str::replaceAll);
+
+		for (Map.Entry<String, String> replacement : replacements.entrySet()) {
+			str = str.replaceAll(replacement.getKey(), replacement.getValue());
+		}
 		return str;
 	}
 }
