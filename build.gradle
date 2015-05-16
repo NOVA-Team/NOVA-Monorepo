@@ -189,12 +189,9 @@ jacocoTestReport {
 }
 
 task checkTestStyle << {
-	sourceSets.test.java.visit { f ->
-		if (!f.isDirectory()) {
-			String file = IOUtils.toString(f.open(), Charset.forName("UTF-8"))
-			if (file.contains("import static org.junit.Assert")) {
-				throw new GradleException("File $f.name uses junit assertions, please use assertj assertions! See https://joel-costigliola.github.io/assertj/ to learn about assertj.")
-			}
+	sourceSets.test.java.each { file ->
+		if (file.text.contains("import static org.junit.Assert")) {
+			throw new GradleException("File $f.name uses junit assertions, please use assertj assertions! See https://joel-costigliola.github.io/assertj/ to learn about assertj.")
 		}
 	}
 }
