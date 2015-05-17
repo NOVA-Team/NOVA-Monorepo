@@ -115,24 +115,42 @@ public class NovaLauncher implements Loadable {
 
 					Constructor<?> cons = ocons.get();
 					Object[] parameters = Arrays.stream(cons.getParameterTypes())
-						.map(clazz -> (Object) diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(clazz)))
-						.collect(Collectors.toList()).toArray();
+												.map(clazz -> (Object) diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(clazz)))
+												.collect(Collectors.toList()).toArray();
 					return (Loadable) cons.newInstance(parameters);
 				} catch (Exception e) {
+					System.out.println("Failed to load NOVA Java mod: " + entry.getKey().name());
 					throw new ExceptionInInitializerError(e);
 				}
 			})));
 
 		/**
-		 * Get scala singleton mods
+		 * Get Scala singleton mods
 		 */
 		Map<NovaMod, Loadable> scalaModsMap = scalaClassesMap.entrySet().stream()
-			.collect(Collectors.toMap(Entry::getKey, e -> {
+															 .collect(Collectors.toMap(Entry::getKey, entry -> {
 				try {
-					Field field = e.getValue().getField("MODULE$");
-					return (Loadable) field.get(null);
+					Field field = entry.getValue().getField("MODULE$");
+					Loadable loadable = (Loadable) field.get(null);
+
+					//Inject dependencies to Scala singleton variables
+					//TODO: Does not work recursively for all hierarchy
+					Field[] fields = loadable.getClass().getDeclaredFields();
+
+					for (Field f : fields) {
+						f.setAccessible(true);
+						if (f.get(loadable) == null) {
+							try {
+								f.set(loadable, diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(f.getType())));
+							} catch (Exception e) {
+							}
+						}
+						f.setAccessible(false);
+					}
+
+					return loadable;
 				} catch (Exception ex) {
-					System.out.println("Failed to load NOVA mod: " + e.getValue());
+					System.out.println("Failed to load NOVA Scala mod: " + entry.getKey().name());
 					throw new ExceptionInInitializerError(ex);
 				}
 			}));
@@ -150,7 +168,6 @@ public class NovaLauncher implements Loadable {
 					Map<String, String> loadAfter = Arrays.stream(o1.getKey().dependencies())
 						.map(s -> s.split("@", 1))
 														  .collect(Collectors.toMap(s -> s[0], s -> s.length > 1 ? s[1] : ""));
-
 					// TODO: Compare version requirements.
 					return loadAfter.containsKey(o2.getKey().id()) ? 1 : 0;
 				})
