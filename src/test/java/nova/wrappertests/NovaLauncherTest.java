@@ -2,13 +2,12 @@ package nova.wrappertests;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.game.Game;
-import nova.internal.NovaLauncher;
+import nova.internal.launch.NovaLauncher;
 import nova.testutils.mod.NoLoadableTestMod;
 import nova.testutils.mod.NonAnnotatedTestMod;
 import nova.testutils.mod.TestMod;
 import org.assertj.core.util.Sets;
 import org.junit.Test;
-import org.slf4j.Logger;
 import se.jbee.inject.bootstrap.Bundle;
 
 import java.util.List;
