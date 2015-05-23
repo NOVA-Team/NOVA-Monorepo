@@ -1,7 +1,5 @@
 package nova.core.gui.components.inventory;
 
-import java.util.Optional;
-
 import nova.core.gui.Gui;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.BindEvent;
@@ -10,6 +8,8 @@ import nova.core.inventory.Inventory;
 import nova.core.inventory.ItemFilter;
 import nova.core.item.Item;
 import nova.core.util.exception.NovaException;
+
+import java.util.Optional;
 
 /**
  * A slot is a {@link GuiComponent} that can hold {@link Item Items}.
@@ -21,7 +21,7 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 	private final String inventoryID;
 	private final int slotID;
 	protected Inventory inventory;
-	private Optional<ItemFilter> filter;
+	private Optional<ItemFilter> filter = Optional.empty();
 	private boolean readonly;
 
 	/**
@@ -55,9 +55,13 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 		this("", inventoryID, slotID);
 	}
 
+	public Optional<ItemFilter> getFilter() {
+		return filter;
+	}
+
 	/**
 	 * Sets the {@link ItemFilter} of this slot. May be null.
-	 * 
+	 *
 	 * @param filter
 	 * @return this
 	 */
@@ -66,23 +70,19 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 		return this;
 	}
 
-	public Optional<ItemFilter> getFilter() {
-		return filter;
+	public boolean isReadOnly() {
+		return readonly;
 	}
 
 	/**
 	 * Sets weather this slot should be accessible by players.
-	 * 
+	 *
 	 * @param readonly
 	 * @return readonly flag
 	 */
 	public Slot setReadOnly(boolean readonly) {
 		this.readonly = readonly;
 		return this;
-	}
-
-	public boolean isReadOnly() {
-		return readonly;
 	}
 
 	public Optional<Item> getItem() {
@@ -98,7 +98,7 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 	}
 
 	public boolean accept(Item item) {
-		return filter.isPresent() ? filter.get().test(item) : true;
+		return !filter.isPresent() || filter.get().test(item);
 	}
 
 	public boolean setItem(Item item) {
