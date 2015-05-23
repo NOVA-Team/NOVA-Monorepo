@@ -219,7 +219,8 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * @see #repaint()
 	 */
 	protected void revalidate() {
-		getParentContainer().ifPresent(AbstractGuiContainer::revalidate);
+		// TODO Rewrite this so that it doesn't cause infinite loops
+		// getParentContainer().ifPresent(AbstractGuiContainer::revalidate);
 	}
 
 	/**

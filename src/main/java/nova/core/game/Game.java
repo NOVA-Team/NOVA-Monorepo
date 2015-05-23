@@ -6,7 +6,7 @@ import nova.core.event.EventManager;
 import nova.core.fluid.FluidManager;
 import nova.core.gui.KeyManager;
 import nova.core.gui.factory.GuiComponentFactory;
-import nova.core.gui.factory.GuiFactory;
+import nova.core.gui.factory.GuiManager;
 import nova.core.item.ItemDictionary;
 import nova.core.item.ItemManager;
 import nova.core.nativewrapper.NativeManager;
@@ -59,7 +59,7 @@ public class Game {
 
 	// TODO Move somewhere else
 	public final GuiComponentFactory guiComponentFactory;
-	public final GuiFactory guiFactory;
+	public final GuiManager guiFactory;
 
 	private Game(
 		Logger logger,
@@ -81,7 +81,7 @@ public class Game {
 		NativeManager nativeManager,
 		UpdateTicker.SynchronizedTicker syncTicker,
 		UpdateTicker.ThreadTicker threadTicker,
-		GuiComponentFactory guiComponentFactory, GuiFactory guiFactory) {
+		GuiComponentFactory guiComponentFactory, GuiManager guiFactory) {
 
 		this.logger = logger;
 

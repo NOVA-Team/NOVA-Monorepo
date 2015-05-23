@@ -11,11 +11,9 @@ import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.GuiEvent.BindEvent;
 import nova.core.gui.components.inventory.Slot;
 import nova.core.gui.factory.GuiEventFactory;
-import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.nativeimpl.NativeGui;
 import nova.core.gui.render.text.TextMetrics;
 import nova.core.inventory.Inventory;
-import nova.core.loader.NovaMod;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;
 import nova.core.player.InventoryPlayer;
@@ -27,7 +25,6 @@ import nova.core.util.transform.Vector3i;
  */
 public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 
-	protected Optional<String> modID = Optional.empty();
 	protected final boolean hasServerSide;
 
 	/**
@@ -37,7 +34,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	protected InventoryPlayer playerInventory;
 
 	/**
-	 * Creates a nwe GUI instance with a {@link Side#SERVER server} side
+	 * Creates a new GUI instance with a {@link Side#SERVER server} side
 	 * backend. You can register events with
 	 * {@link #onEvent(ComponentEventListener, Class, Side)} specifying on which
 	 * side the event gets processed. Keep the client side restrictions in mind.
@@ -66,28 +63,6 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 
 	public boolean hasServerSide() {
 		return hasServerSide;
-	}
-
-	/**
-	 * Initializes this GUI with a {@link NovaMod} mod id, you shouldn't be
-	 * using this unless really necessary, in general it's done by the
-	 * {@link GuiFactory}.
-	 * 
-	 * @param modID NOVA mod id
-	 */
-	public void setModID(String modID) {
-		this.modID = Optional.of(modID);
-	}
-
-	/**
-	 * Returns the {@link NovaMod} mod id referenced by this GUI. Populated once
-	 * registered with a {@link GuiEventFactory} or in case of an unregistered
-	 * GUI, after bind. Can be used for identifying purposes.
-	 * 
-	 * @return NOVA mod id
-	 */
-	public Optional<String> getModID() {
-		return modID;
 	}
 
 	protected void dispatchNetworkEvent(SidedComponentEvent event, GuiComponent<?, ?> sender) {

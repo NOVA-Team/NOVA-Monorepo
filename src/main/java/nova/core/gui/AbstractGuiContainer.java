@@ -1,5 +1,13 @@
 package nova.core.gui;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiConsumer;
+
 import nova.core.gui.ComponentEvent.ResizeEvent;
 import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.layout.BorderLayout;
@@ -8,14 +16,6 @@ import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeContainer;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.Vector2i;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.BiConsumer;
 
 /**
  * This class provides container for {@link GuiComponent}
@@ -105,7 +105,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		if (children.size() > 0) {
 			children.forEach((key, component) -> layout.add(component, this));
 		}
-		layout.revalidate(this);
+		revalidate();
 		return (O) this;
 	}
 
@@ -232,11 +232,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 */
 	@Override
 	public void revalidate() {
-		if (getParentContainer().isPresent()) {
-			getParentContainer().get().revalidate();
-		} else {
-			layout.revalidate(this);
-		}
+		layout.revalidate(this);
 	}
 
 	@Override
@@ -247,9 +243,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	@Override
 	protected void updateQualifiedName() {
 		super.updateQualifiedName();
-		children.forEach((k, v) -> {
-			v.updateQualifiedName();
-		});
+		children.values().forEach(GuiComponent::updateQualifiedName);
 	}
 
 	@Override
