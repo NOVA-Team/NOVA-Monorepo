@@ -1,7 +1,5 @@
 package nova.core.util.transform.vector;
 
-import nova.core.util.transform.Transform;
-
 /**
  * An abstract Vector3 class that is extended by both Vector3i and Vector3d
  * @param <O> -describeme-
@@ -57,7 +55,7 @@ public abstract class Vector3<O extends Vector3<O>> extends Vector<Vector3<O>, O
 		return (O) multiply(other);
 	}
 
-	public O transform(Transform transform) {
+	public O transform(Transformer transform) {
 		return (O) transform.transform(this);
 	}
 

@@ -22,12 +22,13 @@
  SOFTWARE. 
  */
 
-package nova.core.util.transform;
+package nova.core.util.transform.matrix;
 
 import com.google.common.math.DoubleMath;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
 import nova.core.util.collection.Pair;
+import nova.core.util.transform.vector.Transformer;
 import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
 
@@ -39,7 +40,7 @@ import java.math.RoundingMode;
  * All rotation operations operate in radians.
  * @author Calclavia, ChickenBones
  */
-public class Quaternion implements Transform, Storable {
+public class Quaternion implements Transformer, Storable {
 
 	public static final Quaternion identity = new Quaternion(0, 0, 0, 1);
 

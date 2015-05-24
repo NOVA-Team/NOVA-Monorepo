@@ -1,14 +1,13 @@
 package nova.core.util.transform.matrix;
 
 import nova.core.util.collection.Pair;
-import nova.core.util.transform.Quaternion;
-import nova.core.util.transform.Transform;
+import nova.core.util.transform.vector.Transformer;
 import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
 
 import java.util.Stack;
 
-public class MatrixStack implements Transform {
+public class MatrixStack implements Transformer {
 
 	private final Stack<Matrix4x4> stack = new Stack<>();
 	private Matrix4x4 current = Matrix4x4.IDENTITY;

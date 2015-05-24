@@ -1,6 +1,6 @@
 package nova.core.entity;
 
-import nova.core.util.transform.Quaternion;
+import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.world.PositionedWrapper;
 

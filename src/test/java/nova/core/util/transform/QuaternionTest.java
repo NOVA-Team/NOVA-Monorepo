@@ -1,5 +1,6 @@
 package nova.core.util.transform;
 
+import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
 import org.junit.Test;
 

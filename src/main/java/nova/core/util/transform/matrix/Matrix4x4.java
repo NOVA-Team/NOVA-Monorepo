@@ -1,6 +1,6 @@
 package nova.core.util.transform.matrix;
 
-import nova.core.util.transform.Transform;
+import nova.core.util.transform.vector.Transformer;
 import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
 
@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  *  Matrix4x4 for 3D Vector transforms. It is immutable.
  */
-public class Matrix4x4 extends Matrix implements Cloneable, Transform {
+public class Matrix4x4 extends Matrix implements Cloneable, Transformer {
 
 	/**
 	 * Identity matrix.

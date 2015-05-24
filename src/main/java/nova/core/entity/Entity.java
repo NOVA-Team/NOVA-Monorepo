@@ -2,7 +2,7 @@ package nova.core.entity;
 
 import nova.core.block.components.Stateful;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.Quaternion;
+import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.world.Positioned;
 

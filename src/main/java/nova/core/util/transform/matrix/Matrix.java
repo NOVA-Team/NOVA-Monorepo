@@ -4,7 +4,7 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.math.DoubleMath;
 import nova.core.util.transform.Operator;
-import nova.core.util.transform.Transform;
+import nova.core.util.transform.vector.Transformer;
 import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
 
@@ -15,7 +15,7 @@ import java.util.Arrays;
  */
 
 // TODO: Add unit testing
-public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Transform {
+public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Transformer {
 	// number of rows
 	public final int rows;
 	// number of columns
