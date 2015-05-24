@@ -15,4 +15,7 @@ public abstract class Sound implements Identifiable {
 		this.speedModification = speedModification;
 		this.volumeModification = volumeModification;
 	}
+	public Sound() {
+		this(1, 1, 1);
+	}
 }

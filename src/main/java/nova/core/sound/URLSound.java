@@ -13,6 +13,16 @@ public class URLSound extends StreamedSound {
 		this.location = location;
 	}
 
+	public URLSound(URL location, boolean downloadFirst) {
+		super(downloadFirst);
+		this.location = location;
+	}
+
+	public URLSound(URL location) {
+		super();
+		this.location = location;
+	}
+
 	@Override
 	public String getID() {
 		return location.toString();
