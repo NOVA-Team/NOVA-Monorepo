@@ -1,7 +1,7 @@
 package nova.core.render.model;
 
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.vector.Vector3d;
 
 import java.util.ArrayList;
 import java.util.List;

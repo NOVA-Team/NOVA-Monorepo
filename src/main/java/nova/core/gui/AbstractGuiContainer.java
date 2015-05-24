@@ -15,7 +15,7 @@ import nova.core.gui.layout.Constraints;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeContainer;
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
 
 /**
  * This class provides container for {@link GuiComponent}

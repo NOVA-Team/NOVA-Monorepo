@@ -1,7 +1,7 @@
 package nova.core.world;
 
-import nova.core.util.transform.Vector3;
-import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.vector.Vector3;
+import nova.core.util.transform.vector.Vector3d;
 
 /**
  * @author Calclavia

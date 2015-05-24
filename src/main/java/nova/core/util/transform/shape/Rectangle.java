@@ -1,4 +1,6 @@
-package nova.core.util.transform;
+package nova.core.util.transform.shape;
+
+import nova.core.util.transform.vector.Vector2;
 
 /**
  * Immutable, generic rectangle that defines the area between two coordinates in
@@ -21,12 +23,12 @@ public class Rectangle<T extends Vector2<T>> extends Shape<Rectangle<T>, Rectang
 		return min;
 	}
 
-	public T getMax() {
-		return max;
-	}
-
 	public Rectangle<T> setMin(T min) {
 		return new Rectangle<T>(min, max);
+	}
+
+	public T getMax() {
+		return max;
 	}
 
 	public Rectangle<T> setMax(T max) {

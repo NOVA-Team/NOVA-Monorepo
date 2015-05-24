@@ -1,11 +1,11 @@
 package nova.core.render.model;
 
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.Matrix4x4;
-import nova.core.util.transform.MatrixStack;
 import nova.core.util.transform.Quaternion;
-import nova.core.util.transform.Vector2d;
-import nova.core.util.transform.Vector3;
+import nova.core.util.transform.matrix.Matrix4x4;
+import nova.core.util.transform.matrix.MatrixStack;
+import nova.core.util.transform.vector.Vector2d;
+import nova.core.util.transform.vector.Vector3;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -1,15 +1,15 @@
 package nova.core.gui;
 
-import java.util.Optional;
-
 import nova.core.block.Block;
 import nova.core.entity.Entity;
 import nova.core.event.CancelableEvent;
 import nova.core.gui.KeyManager.Key;
 import nova.core.gui.render.Graphics;
 import nova.core.player.Player;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
+
+import java.util.Optional;
 
 /**
  * Event for GUI, like mouse click

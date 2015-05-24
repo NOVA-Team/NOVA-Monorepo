@@ -1,7 +1,7 @@
 package nova.core.gui.render.text;
 
-import nova.core.util.transform.Vector2d;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2d;
+import nova.core.util.transform.vector.Vector2i;
 
 /**
  * Generic interface for a TextRenderer. A TextRenderer can draw text to the

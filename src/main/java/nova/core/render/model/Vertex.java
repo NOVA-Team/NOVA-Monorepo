@@ -1,8 +1,8 @@
 package nova.core.render.model;
 
 import nova.core.render.Color;
-import nova.core.util.transform.Vector2d;
-import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.vector.Vector2d;
+import nova.core.util.transform.vector.Vector3d;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

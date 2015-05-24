@@ -3,7 +3,7 @@ package nova.core.entity;
 import nova.core.block.components.Stateful;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.Quaternion;
-import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.vector.Vector3d;
 import nova.core.world.Positioned;
 
 public abstract class Entity extends Positioned<EntityWrapper, Vector3d> implements Identifiable, Stateful, EntityWrapper {

@@ -1,10 +1,14 @@
-package nova.core.util.transform;
-
-import java.util.Arrays;
+package nova.core.util.transform.matrix;
 
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.math.DoubleMath;
+import nova.core.util.transform.Operator;
+import nova.core.util.transform.Transform;
+import nova.core.util.transform.vector.Vector3;
+import nova.core.util.transform.vector.Vector3d;
+
+import java.util.Arrays;
 
 /**
  * A class that represents a matrix.

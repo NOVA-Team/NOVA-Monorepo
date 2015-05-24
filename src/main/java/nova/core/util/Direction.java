@@ -1,8 +1,8 @@
 package nova.core.util;
 
 import nova.core.util.transform.Quaternion;
-import nova.core.util.transform.Vector3d;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.transform.vector.Vector3i;
 
 /**
  * Defines basic directions in world.

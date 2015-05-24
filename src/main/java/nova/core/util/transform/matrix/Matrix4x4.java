@@ -1,15 +1,15 @@
-package nova.core.util.transform;
+package nova.core.util.transform.matrix;
 
-import com.google.common.hash.Hasher;
-import com.google.common.hash.Hashing;
-import com.google.common.math.DoubleMath;
+import nova.core.util.transform.Transform;
+import nova.core.util.transform.vector.Vector3;
+import nova.core.util.transform.vector.Vector3d;
 
 import java.util.Arrays;
 
 /**
  *  Matrix4x4 for 3D Vector transforms. It is immutable.
  */
-public class Matrix4x4 extends Matrix implements Cloneable, Transform{
+public class Matrix4x4 extends Matrix implements Cloneable, Transform {
 
 	/**
 	 * Identity matrix.

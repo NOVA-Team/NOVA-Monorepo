@@ -1,5 +1,8 @@
 package nova.core.util.transform;
 
+import nova.core.util.transform.vector.Vector3;
+import nova.core.util.transform.vector.Vector3d;
+
 /**
  * An interface applied to objects that can act as vector transformers.
  * @author Calclavia

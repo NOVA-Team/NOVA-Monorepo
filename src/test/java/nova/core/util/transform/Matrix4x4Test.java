@@ -1,8 +1,11 @@
 package nova.core.util.transform;
 
+import nova.core.util.transform.matrix.Matrix;
+import nova.core.util.transform.matrix.Matrix4x4;
+import nova.core.util.transform.vector.Vector3d;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class Matrix4x4Test {
 

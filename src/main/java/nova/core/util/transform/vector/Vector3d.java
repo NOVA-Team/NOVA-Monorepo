@@ -1,8 +1,9 @@
-package nova.core.util.transform;
+package nova.core.util.transform.vector;
 
 import com.google.common.math.DoubleMath;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
+import nova.core.util.transform.matrix.Matrix;
 
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that

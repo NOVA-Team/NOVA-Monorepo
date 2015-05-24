@@ -28,6 +28,8 @@ import com.google.common.math.DoubleMath;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
 import nova.core.util.collection.Pair;
+import nova.core.util.transform.vector.Vector3;
+import nova.core.util.transform.vector.Vector3d;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

@@ -1,8 +1,8 @@
 package nova.core.util.transform;
 
-import nova.core.util.transform.Matrix;
-
-import org.junit.Ignore;
+import nova.core.util.transform.matrix.Matrix;
+import nova.core.util.transform.vector.Vector2d;
+import nova.core.util.transform.vector.Vector3d;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

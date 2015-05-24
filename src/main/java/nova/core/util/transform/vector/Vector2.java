@@ -1,4 +1,4 @@
-package nova.core.util.transform;
+package nova.core.util.transform.vector;
 
 /**
  * An abstract Vector3 class that is extended by both Vector3i and Vector3d

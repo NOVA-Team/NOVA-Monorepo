@@ -1,4 +1,6 @@
-package nova.core.util.transform;
+package nova.core.util.transform.vector;
+
+import nova.core.util.transform.Operator;
 
 /**
  * Represents an abstract vector with its mathematical operators.

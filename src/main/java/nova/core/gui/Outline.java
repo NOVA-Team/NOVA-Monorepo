@@ -1,7 +1,7 @@
 package nova.core.gui;
 
-import nova.core.util.transform.Rectangle;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.shape.Rectangle;
+import nova.core.util.transform.vector.Vector2i;
 
 /**
  * A {@link Rectangle} that resembles the outline of a {@link GuiComponent}.
@@ -32,16 +32,16 @@ public class Outline extends Rectangle<Vector2i> {
 		return x2i() - x1i();
 	}
 
+	public Outline setWidth(int width) {
+		return new Outline(new Vector2i(x1i(), x1i() + width), max);
+	}
+
 	public int getHeight() {
 		return y2i() - y1i();
 	}
 
 	public Outline setHeight(int height) {
 		return new Outline(min, new Vector2i(y1i(), y1i() + height));
-	}
-
-	public Outline setWidth(int width) {
-		return new Outline(new Vector2i(x1i(), x1i() + width), max);
 	}
 
 	public Vector2i getDimension() {

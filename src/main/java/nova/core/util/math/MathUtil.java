@@ -1,7 +1,7 @@
 package nova.core.util.math;
 
-import nova.core.util.transform.Vector3d;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.transform.vector.Vector3i;
 
 /**
  * Utility class for everything related to numbers.

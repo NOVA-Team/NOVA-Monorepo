@@ -1,8 +1,8 @@
 package nova.core.render.model;
 
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Vector2d;
-import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.vector.Vector2d;
+import nova.core.util.transform.vector.Vector3d;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,9 +20,6 @@ import java.util.regex.Pattern;
  */
 public class WavefrontObjectModel extends ModelProvider {
 
-	//A map of all models generated with their names
-	private final Model model = new Model();
-
 	private static Pattern vertexPattern = Pattern.compile("(v( (\\-){0,1}\\d+\\.\\d+){3,4} *\\n)|(v( (\\-){0,1}\\d+\\.\\d+){3,4} *$)");
 	private static Pattern vertexNormalPattern = Pattern.compile("(vn( (\\-){0,1}\\d+\\.\\d+){3,4} *\\n)|(vn( (\\-){0,1}\\d+\\.\\d+){3,4} *$)");
 	private static Pattern textureCoordinatePattern = Pattern.compile("(vt( (\\-){0,1}\\d+\\.\\d+){2,3} *\\n)|(vt( (\\-){0,1}\\d+\\.\\d+){2,3} *$)");
@@ -32,7 +29,8 @@ public class WavefrontObjectModel extends ModelProvider {
 	private static Pattern face_V_Pattern = Pattern.compile("(f( \\d+){3,4} *\\n)|(f( \\d+){3,4} *$)");
 	private static Pattern subModelPattern = Pattern.compile("([go]([^\\\\ ]*+)*\\n)|([go]( [^\\\\ ]*+) *$)");
 	private static Matcher globalMatcher;
-
+	//A map of all models generated with their names
+	private final Model model = new Model();
 	private Model currentModel = null;
 	private ArrayList<Vector3d> vertices = new ArrayList<>();
 	private ArrayList<Vector2d> textureCoordinates = new ArrayList<>();

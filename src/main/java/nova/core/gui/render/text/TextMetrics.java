@@ -1,7 +1,7 @@
 package nova.core.gui.render.text;
 
 import nova.core.gui.render.text.TextRenderer.RenderedText;
-import nova.core.util.transform.Vector2d;
+import nova.core.util.transform.vector.Vector2d;
 
 /**
  * Provides methods for calculating the bounds of {@link FormattedText} and

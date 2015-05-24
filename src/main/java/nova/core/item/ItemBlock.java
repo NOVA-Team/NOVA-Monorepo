@@ -5,8 +5,8 @@ import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
 import nova.core.game.Game;
 import nova.core.util.Direction;
-import nova.core.util.transform.Vector3d;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
 
 import java.util.Optional;

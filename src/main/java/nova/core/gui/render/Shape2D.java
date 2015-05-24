@@ -1,8 +1,8 @@
 package nova.core.gui.render;
 
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Rectangle;
-import nova.core.util.transform.Vector2d;
+import nova.core.util.transform.shape.Rectangle;
+import nova.core.util.transform.vector.Vector2d;
 
 /**
  * A Shape2D is a polygon mesh in 2D space. It defines an array of

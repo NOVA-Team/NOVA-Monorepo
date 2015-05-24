@@ -1,7 +1,7 @@
 package nova.core.entity;
 
 import nova.core.util.transform.Quaternion;
-import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.vector.Vector3d;
 
 /**
  * A simple rigid body class for entity physics.

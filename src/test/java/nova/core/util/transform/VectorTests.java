@@ -1,5 +1,8 @@
 package nova.core.util.transform;
 
+import nova.core.util.transform.vector.Vector2d;
+import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.transform.vector.Vector3i;
 import org.junit.Test;
 
 import java.util.Random;

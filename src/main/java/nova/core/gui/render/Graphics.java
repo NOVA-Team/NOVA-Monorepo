@@ -5,7 +5,7 @@ import nova.core.gui.render.text.FormattedText;
 import nova.core.gui.render.text.TextRenderer;
 import nova.core.render.Color;
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.Vector2d;
+import nova.core.util.transform.vector.Vector2d;
 
 /**
  * 
@@ -29,16 +29,16 @@ public class Graphics implements TextRenderer {
 		return canvas;
 	}
 
-	public void setColor(Color color) {
-		canvas.setColor(color);
-	}
-
 	public void bindTexture(Texture texture) {
 		canvas.bindTexture(texture);
 	}
 
 	public Color getColor() {
 		return canvas.getColor();
+	}
+
+	public void setColor(Color color) {
+		canvas.setColor(color);
 	}
 
 	public int getLineWidth() {

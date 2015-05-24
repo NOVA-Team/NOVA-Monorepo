@@ -1,12 +1,12 @@
 package nova.core.gui.layout;
 
-import java.util.Objects;
-
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
+
+import java.util.Objects;
 
 public abstract class AbstractGuiLayout<T extends Constraints<T>> implements GuiLayout {
 

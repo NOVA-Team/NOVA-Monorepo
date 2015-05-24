@@ -1,7 +1,7 @@
 package nova.core.world;
 
-import nova.core.util.transform.Vector3;
-import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.vector.Vector3;
+import nova.core.util.transform.vector.Vector3d;
 
 /**
  * Applied to any object that can have a position in the world.
@@ -24,7 +24,7 @@ public class Positioned<W extends PositionedWrapper<V>, V extends Vector3> imple
 
 	/**
 	 * Gets position of this positioned object.
-	 * @return {@link nova.core.util.transform.Vector3d} containing the position in the world of this positioned object.
+	 * @return {@link Vector3d} containing the position in the world of this positioned object.
 	 */
 	public V position() {
 		return wrapper.position();

@@ -2,7 +2,7 @@ package nova.core.gui.layout;
 
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
 
 /**
  * Root class for {@link AbstractGuiContainer} layouts. A layout handles

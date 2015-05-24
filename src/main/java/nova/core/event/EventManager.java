@@ -1,7 +1,7 @@
 package nova.core.event;
 
 import nova.core.block.Block;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
 
 import java.util.Optional;

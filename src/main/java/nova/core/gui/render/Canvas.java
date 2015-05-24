@@ -1,13 +1,13 @@
 package nova.core.gui.render;
 
-import java.util.Stack;
-
 import nova.core.gui.Outline;
 import nova.core.gui.Spacing;
 import nova.core.render.Color;
 import nova.core.render.texture.Texture;
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
+
+import java.util.Stack;
 
 /**
  * A canvas is an object that can be drawn onto in 2D space. The content might
@@ -39,12 +39,12 @@ public abstract class Canvas {
 		return dimension;
 	}
 
-	public void setZIndex(int zIndex) {
-		state.zIndex = zIndex;
-	}
-
 	public int getZIndex() {
 		return state.zIndex;
+	}
+
+	public void setZIndex(int zIndex) {
+		state.zIndex = zIndex;
 	}
 
 	public Color getColor() {

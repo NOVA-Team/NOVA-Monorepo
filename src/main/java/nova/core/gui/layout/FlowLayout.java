@@ -1,15 +1,15 @@
 package nova.core.gui.layout;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.layout.Constraints.FlowLayoutConstraints;
 import nova.core.util.exception.NovaException;
 import nova.core.util.math.MathUtil;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FlowLayout extends AbstractGuiLayout<FlowLayoutConstraints> {
 

@@ -7,9 +7,9 @@ import nova.core.entity.EntityFactory;
 import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.Cuboid;
-import nova.core.util.transform.Vector3d;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.transform.vector.Vector3i;
 
 import java.util.Optional;
 import java.util.Set;

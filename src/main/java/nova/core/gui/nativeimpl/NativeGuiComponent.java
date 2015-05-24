@@ -1,11 +1,11 @@
 package nova.core.gui.nativeimpl;
 
-import java.util.Optional;
-
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.render.Graphics;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
+
+import java.util.Optional;
 
 //TODO Make this generic even if it means writing novels when extending.
 

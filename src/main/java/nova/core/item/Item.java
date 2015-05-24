@@ -7,8 +7,8 @@ import nova.core.render.Color;
 import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.Vector3d;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
 
 import java.util.List;

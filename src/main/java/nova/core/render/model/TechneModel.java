@@ -1,9 +1,9 @@
 package nova.core.render.model;
 
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.MatrixStack;
-import nova.core.util.transform.Vector2d;
-import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.matrix.MatrixStack;
+import nova.core.util.transform.vector.Vector2d;
+import nova.core.util.transform.vector.Vector3d;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

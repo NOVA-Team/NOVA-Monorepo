@@ -1,7 +1,7 @@
 package nova.core.gui;
 
-import nova.core.util.transform.Rectangle;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.shape.Rectangle;
+import nova.core.util.transform.vector.Vector2i;
 
 /**
  * <p>

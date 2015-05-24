@@ -1,7 +1,7 @@
 package nova.core.gui.layout;
 
 import nova.core.gui.Outline;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
 
 /**
  * An anchor, specifies on which side of a rectangle something is bound to.

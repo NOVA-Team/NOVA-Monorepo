@@ -1,14 +1,14 @@
 package nova.core.gui;
 
-import java.util.Optional;
-
 import nova.core.gui.layout.Constraints;
 import nova.core.gui.layout.RelativePosition;
 import nova.core.gui.render.Canvas;
 import nova.core.gui.render.Graphics;
 import nova.core.render.Color;
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
+
+import java.util.Optional;
 
 // TODO Document me!
 /**

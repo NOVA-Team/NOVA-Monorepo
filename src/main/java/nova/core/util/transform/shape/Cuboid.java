@@ -1,4 +1,8 @@
-package nova.core.util.transform;
+package nova.core.util.transform.shape;
+
+import nova.core.util.transform.vector.Vector3;
+import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.transform.vector.Vector3i;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

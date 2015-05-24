@@ -1,11 +1,11 @@
 package nova.core.gui.layout;
 
-import java.util.HashMap;
-
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
+
+import java.util.HashMap;
 
 /**
  * A fixed layout gives every one of its components a {@link RelativePosition}.

@@ -8,9 +8,9 @@ import nova.core.render.Color;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.Cuboid;
-import nova.core.util.transform.Vector3d;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.Positioned;
 
 import java.util.Collections;

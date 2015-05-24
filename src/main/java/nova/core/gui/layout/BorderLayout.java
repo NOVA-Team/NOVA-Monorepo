@@ -1,14 +1,14 @@
 package nova.core.gui.layout;
 
-import java.util.EnumMap;
-
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.layout.Constraints.BorderConstraints;
 import nova.core.util.exception.NovaException;
 import nova.core.util.math.MathUtil;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
+
+import java.util.EnumMap;
 
 /**
  * A basic layout that splits the parent's container up into multiple regions.
@@ -19,11 +19,11 @@ import nova.core.util.transform.Vector2i;
  */
 public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 
+	private final EnumMap<Anchor, GuiComponent<?, ?>> components = new EnumMap<>(Anchor.class);
+
 	public BorderLayout() {
 		super(BorderConstraints.class);
 	}
-
-	private final EnumMap<Anchor, GuiComponent<?, ?>> components = new EnumMap<>(Anchor.class);
 
 	@Override
 	public void revalidate(AbstractGuiContainer<?, ?> parent) {

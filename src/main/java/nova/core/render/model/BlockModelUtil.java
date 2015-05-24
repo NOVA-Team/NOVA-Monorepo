@@ -4,7 +4,7 @@ import nova.core.block.Block;
 import nova.core.render.Color;
 import nova.core.util.Direction;
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Cuboid;
+import nova.core.util.transform.shape.Cuboid;
 
 /**
  * Block model helper methods

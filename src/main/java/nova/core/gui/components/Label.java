@@ -1,13 +1,13 @@
 package nova.core.gui.components;
 
-import java.util.Optional;
-
 import nova.core.gui.GuiComponent;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.gui.render.Graphics;
 import nova.core.gui.render.text.FormattedText;
-import nova.core.util.transform.Vector2d;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2d;
+import nova.core.util.transform.vector.Vector2i;
+
+import java.util.Optional;
 
 /**
  * A label is a component that defines a single piece of text. Labels have their
@@ -41,13 +41,13 @@ public class Label extends GuiComponent<Label, NativeGuiComponent> {
 		return this;
 	}
 
+	public FormattedText getText() {
+		return text;
+	}
+
 	public Label setText(FormattedText text) {
 		this.text = text;
 		return this;
-	}
-
-	public FormattedText getText() {
-		return text;
 	}
 
 	@Override

@@ -1,6 +1,8 @@
-package nova.core.util.transform;
+package nova.core.util.transform.matrix;
 
 import com.google.common.math.DoubleMath;
+import nova.core.util.transform.vector.Vector3;
+import nova.core.util.transform.vector.Vector3d;
 
 public class MatrixHelper {
 

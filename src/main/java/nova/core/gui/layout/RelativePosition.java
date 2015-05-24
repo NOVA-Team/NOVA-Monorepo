@@ -1,12 +1,12 @@
 package nova.core.gui.layout;
 
+import nova.core.util.exception.NovaException;
+import nova.core.util.transform.vector.Vector2;
+import nova.core.util.transform.vector.Vector2d;
+import nova.core.util.transform.vector.Vector2i;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Vector2;
-import nova.core.util.transform.Vector2d;
-import nova.core.util.transform.Vector2i;
 
 /**
  * {@link Constraints} for relative positioning.
@@ -15,6 +15,7 @@ import nova.core.util.transform.Vector2i;
  */
 public class RelativePosition extends Constraints<RelativePosition> {
 
+	public static final Pattern pattern = Pattern.compile("(west|east|north|south):\\s?([-+]?\\d+)(%)?[\\s]?", Pattern.CASE_INSENSITIVE);
 	public Anchor xAnchor = Anchor.WEST;
 	public Anchor yAnchor = Anchor.NORTH;
 	public double xOffset;
@@ -89,8 +90,6 @@ public class RelativePosition extends Constraints<RelativePosition> {
 		this(xOffset, yOffset, Anchor.WEST, Anchor.NORTH);
 		xRelative = yRelative = true;
 	}
-
-	public static final Pattern pattern = Pattern.compile("(west|east|north|south):\\s?([-+]?\\d+)(%)?[\\s]?", Pattern.CASE_INSENSITIVE);
 
 	public RelativePosition(String str) {
 		try {

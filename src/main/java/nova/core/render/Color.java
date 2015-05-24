@@ -1,6 +1,6 @@
 package nova.core.render;
 
-import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.vector.Vector3d;
 
 /**
  * Arbitrary immutable color object. Holds a color in argb space.
