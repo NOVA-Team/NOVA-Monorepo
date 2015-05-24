@@ -5,7 +5,10 @@ import nova.core.component.ComponentProvider;
 import nova.core.util.collection.TreeNode;
 
 /**
- * An object that handles the transformation of an object
+ * An object that handles the transformation of an object.
+ *
+ * A transform is always relative to the parent.
+ *
  * @author Calclavia
  */
 public abstract class Transform<S extends Transform<S, V, R>, V, R> extends TreeNode<S> implements Component {

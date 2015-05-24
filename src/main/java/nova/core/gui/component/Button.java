@@ -1,4 +1,4 @@
-package nova.core.gui.components;
+package nova.core.gui.component;
 
 import nova.core.gui.ComponentEvent;
 import nova.core.gui.GuiComponent;

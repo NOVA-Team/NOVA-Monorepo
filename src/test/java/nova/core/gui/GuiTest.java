@@ -1,8 +1,8 @@
 package nova.core.gui;
 
 import nova.core.gui.ComponentEvent.ActionEvent;
-import nova.core.gui.components.Button;
-import nova.core.gui.components.Container;
+import nova.core.gui.component.Button;
+import nova.core.gui.component.Container;
 import nova.core.gui.layout.Anchor;
 import nova.core.gui.layout.BorderLayout;
 import nova.core.gui.layout.Constraints.BorderConstraints;

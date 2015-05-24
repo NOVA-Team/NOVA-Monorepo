@@ -1,4 +1,4 @@
-package nova.core.gui.components.inventory;
+package nova.core.gui.component.inventory;
 
 import nova.core.gui.Gui;
 import nova.core.gui.GuiComponent;

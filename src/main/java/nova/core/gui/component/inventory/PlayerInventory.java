@@ -1,4 +1,4 @@
-package nova.core.gui.components.inventory;
+package nova.core.gui.component.inventory;
 
 import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.BindEvent;

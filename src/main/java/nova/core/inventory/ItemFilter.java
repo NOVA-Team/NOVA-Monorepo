@@ -1,9 +1,9 @@
 package nova.core.inventory;
 
-import java.util.function.Predicate;
-
-import nova.core.gui.components.inventory.Slot;
+import nova.core.gui.component.inventory.Slot;
 import nova.core.item.Item;
+
+import java.util.function.Predicate;
 
 /**
  * A filter that only accepts a specific sub-type of {@link Item}. For use with

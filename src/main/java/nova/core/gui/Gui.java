@@ -5,7 +5,7 @@ import nova.core.game.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.GuiEvent.BindEvent;
-import nova.core.gui.components.inventory.Slot;
+import nova.core.gui.component.inventory.Slot;
 import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.nativeimpl.NativeGui;
 import nova.core.gui.render.text.TextMetrics;
