@@ -1,6 +1,5 @@
 package nova.core.game;
 
-import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.block.BlockManager;
 import nova.core.entity.EntityManager;
 import nova.core.event.EventManager;
@@ -18,6 +17,7 @@ import nova.core.render.RenderManager;
 import nova.core.util.LanguageManager;
 import nova.core.util.SaveManager;
 import nova.core.world.WorldManager;
+import nova.core.world.component.ComponentManager;
 import nova.internal.tick.UpdateTicker;
 import org.slf4j.Logger;
 
@@ -30,7 +30,6 @@ public class Game {
 	 */
 	public static Game instance;
 
-	public final DependencyInjectionEntryPoint diep;
 	public final Logger logger;
 
 	public final ClientManager clientManager;
@@ -48,6 +47,7 @@ public class Game {
 	public final SaveManager saveManager;
 	public final LanguageManager languageManager;
 	public final KeyManager keyManager;
+	public final ComponentManager componentManager;
 	public final NativeManager nativeManager;
 
 	/**
@@ -64,7 +64,6 @@ public class Game {
 	public final GuiManager guiFactory;
 
 	private Game(
-		DependencyInjectionEntryPoint diep,
 		Logger logger,
 		ClientManager clientManager,
 		BlockManager blockManager,
@@ -82,11 +81,11 @@ public class Game {
 		LanguageManager languageManager,
 		KeyManager keyManager,
 		NativeManager nativeManager,
+		ComponentManager componentManager,
 		UpdateTicker.SynchronizedTicker syncTicker,
 		UpdateTicker.ThreadTicker threadTicker,
 		GuiComponentFactory guiComponentFactory, GuiManager guiFactory) {
 
-		this.diep = diep;
 		this.logger = logger;
 
 		this.clientManager = clientManager;
@@ -105,6 +104,7 @@ public class Game {
 		this.languageManager = languageManager;
 		this.keyManager = keyManager;
 		this.nativeManager = nativeManager;
+		this.componentManager = componentManager;
 
 		this.syncTicker = syncTicker;
 		this.threadTicker = threadTicker;

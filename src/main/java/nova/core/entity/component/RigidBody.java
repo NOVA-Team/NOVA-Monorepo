@@ -1,10 +1,10 @@
-package nova.core.entity;
+package nova.core.entity.component;
 
-import nova.core.util.component.Component;
-import nova.core.util.component.ComponentProvider;
-import nova.core.util.component.Updater;
 import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
+import nova.core.world.component.Component;
+import nova.core.world.component.ComponentProvider;
+import nova.core.world.component.Updater;
 
 /**
  * A rigid body component for entity physics.
@@ -133,5 +133,10 @@ public abstract class RigidBody implements Component, Updater {
 
 	public final Quaternion angularVelocity() {
 		return getAngularVelocity();
+	}
+
+	@Override
+	public final String getID() {
+		return null;
 	}
 }

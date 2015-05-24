@@ -13,14 +13,6 @@ import java.util.Set;
 public class CoreBundle extends BootstrapperBundle {
 	private static Set<Class<? extends Bundle>> coreModules = Sets.newHashSet();
 
-	public static Set<Class<? extends Bundle>> getAllCoreModules() {
-		return Collections.unmodifiableSet(coreModules);
-	}
-
-	private static void add(Class<? extends Bundle> module) {
-		coreModules.add(module.asSubclass(Bundle.class));
-	}
-
 	static {
 		/**
 		 * Managers
@@ -38,6 +30,7 @@ public class CoreBundle extends BootstrapperBundle {
 		add(CraftingModule.class);
 		add(GuiModule.class);
 		add(NativeModule.class);
+		add(ComponentModule.class);
 
 		/**
 		 * General
@@ -50,6 +43,14 @@ public class CoreBundle extends BootstrapperBundle {
 		add(OptionalModule.class);
 		add(DICoreModule.class);
 		add(LoggerModule.class);
+	}
+
+	public static Set<Class<? extends Bundle>> getAllCoreModules() {
+		return Collections.unmodifiableSet(coreModules);
+	}
+
+	private static void add(Class<? extends Bundle> module) {
+		coreModules.add(module.asSubclass(Bundle.class));
 	}
 
 	@Override

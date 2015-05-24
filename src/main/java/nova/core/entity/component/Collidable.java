@@ -1,4 +1,4 @@
-package nova.core.entity.components;
+package nova.core.entity.component;
 
 import nova.core.entity.Entity;
 import nova.core.util.transform.shape.Cuboid;

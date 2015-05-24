@@ -1,12 +1,13 @@
 package nova.core.entity;
 
 import nova.core.block.components.Stateful;
+import nova.core.game.Game;
 import nova.core.util.Identifiable;
-import nova.core.util.component.Component;
-import nova.core.util.component.ComponentProvider;
 import nova.core.util.transform.Transform3d;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.world.Positioned;
+import nova.core.world.component.Component;
+import nova.core.world.component.ComponentProvider;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +20,7 @@ public abstract class Entity extends Positioned<EntityWrapper, Vector3d> impleme
 	/**
 	 * The default transform component.
 	 */
-	public final Transform3d transform = new Transform3d(this);
+	public final Transform3d transform = Game.instance.componentManager.make(Transform3d.class, this);
 
 	private Set<Component> components = new HashSet<>();
 
