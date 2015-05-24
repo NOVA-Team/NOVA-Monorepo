@@ -16,7 +16,6 @@ buildscript {
 	dependencies {
 		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
 		classpath 'us.phildop:gradle-sublimetext-plugin:0.5.3'
-		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.3.1'
 	}
 }
 
@@ -32,7 +31,6 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 apply plugin: 'jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
 
 
 /*checkstyle {
