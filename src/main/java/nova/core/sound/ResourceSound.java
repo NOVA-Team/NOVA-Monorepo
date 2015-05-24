@@ -12,6 +12,11 @@ public class ResourceSound extends Sound {
 		this.domain = domain;
 		this.resource = resource;
 	}
+	public ResourceSound(String domain, String resource) {
+		super();
+		this.domain = domain;
+		this.resource = resource;
+	}
 
 	@Override
 	public String getID() {

@@ -8,4 +8,13 @@ public abstract class StreamedSound extends Sound {
 		super(pitchModification, speedModification, volumeModification);
 		this.downloadFirst = downloadFirst;
 	}
+
+	public StreamedSound(boolean downloadFirst) {
+		super();
+		this.downloadFirst = downloadFirst;
+	}
+
+	public StreamedSound() {
+		this(false);
+	}
 }
