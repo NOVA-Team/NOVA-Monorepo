@@ -1,8 +1,5 @@
 package nova.core.gui;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.SidedEventBus;
@@ -19,7 +16,10 @@ import nova.core.network.NetworkTarget.Side;
 import nova.core.network.PacketHandler;
 import nova.core.util.Identifiable;
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Vector2i;
+import nova.core.util.transform.vector.Vector2i;
+
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Defines a basic gui component. A component can be added to
@@ -35,29 +35,25 @@ import nova.core.util.transform.Vector2i;
 @SuppressWarnings("unchecked")
 public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketHandler {
 
-	private String qualifiedName;
 	private final boolean hasIdentifier;
 	private final String uniqueID;
-	private T nativeElement;
-
 	protected Optional<Vector2i> preferredSize = Optional.empty();
 	protected Optional<Vector2i> minimumSize = Optional.empty();
 	protected Optional<Vector2i> maximumSize = Optional.empty();
 	protected Optional<Background> background = Optional.empty();
-
-	private boolean isActive = true;
-	private boolean isVisible = true;
-	private boolean isDisplayed = true;
-	private boolean isMouseOver = false;
-
-	private SidedEventBus<ComponentEvent> componentEventBus = new SidedEventBus<ComponentEvent>(this::dispatchNetworkEvent);
-	private EventBus<GuiEvent> guiEventBus = new EventBus<GuiEvent>();
-
 	/**
 	 * Parent container instance. The instance will be populated once added to a
 	 * {@link AbstractGuiContainer}.
 	 */
 	protected Optional<AbstractGuiContainer<?, ?>> parentContainer = Optional.empty();
+	private String qualifiedName;
+	private T nativeElement;
+	private boolean isActive = true;
+	private boolean isVisible = true;
+	private boolean isDisplayed = true;
+	private boolean isMouseOver = false;
+	private SidedEventBus<ComponentEvent> componentEventBus = new SidedEventBus<ComponentEvent>(this::dispatchNetworkEvent);
+	private EventBus<GuiEvent> guiEventBus = new EventBus<GuiEvent>();
 
 	public GuiComponent(String uniqueID, Class<T> nativeClass) {
 		if (uniqueID.length() > 0) {
@@ -186,19 +182,19 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 		return (O) this;
 	}
 
+	public Optional<Background> getBackground() {
+		return background;
+	}
+
 	/**
 	 * Sets the {@link Background} of this component.
-	 * 
+	 *
 	 * @param background Background to use
 	 * @return This component
 	 */
 	public O setBackground(Background background) {
 		this.background = Optional.of(background.clone());
 		return (O) this;
-	}
-
-	public Optional<Background> getBackground() {
-		return background;
 	}
 
 	/**

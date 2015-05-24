@@ -1,12 +1,5 @@
 package nova.core.gui.factory;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import nova.core.entity.Entity;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiEvent.BindEvent;
@@ -17,19 +10,22 @@ import nova.core.network.Sided;
 import nova.core.util.Manager;
 import nova.core.util.Registry;
 import nova.core.util.exception.NovaException;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3i;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class GuiManager extends Manager<Gui, GuiFactory> {
-
-	public GuiManager() {
-		super(new Registry<>());
-	}
 
 	// TODO Move this into a seperate manager
 	protected EnumMap<GuiType, List<Gui>> overlayRegistry = new EnumMap<>(GuiType.class);
 
-	public static enum GuiType {
-		INGAME, TITLE, OPTIONS, INGAME_OPTIONS, CRAFTING, NATIVE, CUSTOM
+	public GuiManager() {
+		super(new Registry<>());
 	}
 
 	@Deprecated
@@ -61,11 +57,9 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 	 * Calling this is <i>safe</i>, you will always get a valid GUI for both
 	 * sides no matter on which side you call it.
 	 * </p>
-	 * 
 	 * @param identifier Unique identifier for the GUI
 	 * @param entity {@link Entity} which opened the GUI
 	 * @param position The block coordinate on which to open the GUI
-	 * 
 	 * @see #showGui(Gui, Entity, Vector3i)
 	 */
 	public void showGui(String identifier, Entity entity, Vector3i position) {
@@ -87,7 +81,6 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 	 * only be used for client side GUIs, the usage of
 	 * {@link #showGui(String, Entity, Vector3i)} is recommended.
 	 * </p>
-	 * 
 	 * @param modID Id of the {@link NovaMod} that wants to show the GUI
 	 * @param gui GUI to to display
 	 * @param entity {@link Entity} which opened the GUI
@@ -106,7 +99,6 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 	 * Closes the currently open NOVA {@link Gui} on the client side, if
 	 * present, and returns to the in-game GUI. It will not affect any native
 	 * GUIs that might exist along with NOVA.
-	 * 
 	 * @throws IllegalSideException if called on the server side
 	 */
 	@Sided(Side.CLIENT)
@@ -124,7 +116,6 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 
 	/**
 	 * Returns the active NOVA {@link Gui} on the client side, if present.
-	 * 
 	 * @return NOVA {@link Gui}
 	 * @throws IllegalSideException if called on the server side
 	 */
@@ -139,7 +130,6 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 	/**
 	 * Returns the active NOVA {@link Gui} of the supplied player on the client
 	 * side, if present.
-	 * 
 	 * @param player Player to check for
 	 * @return NOVA {@link Gui}
 	 */
@@ -154,10 +144,13 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 
 	/**
 	 * Returns the active {@link GuiType}.
-	 * 
 	 * @return active {@link GuiType}
 	 */
 	public GuiType getActiveGuiType() {
 		return getActiveGui().isPresent() ? GuiType.CUSTOM : GuiType.NATIVE;
+	}
+
+	public static enum GuiType {
+		INGAME, TITLE, OPTIONS, INGAME_OPTIONS, CRAFTING, NATIVE, CUSTOM
 	}
 }
