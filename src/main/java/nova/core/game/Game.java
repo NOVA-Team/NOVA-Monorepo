@@ -1,5 +1,6 @@
 package nova.core.game;
 
+import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.block.BlockManager;
 import nova.core.entity.EntityManager;
 import nova.core.event.EventManager;
@@ -29,6 +30,7 @@ public class Game {
 	 */
 	public static Game instance;
 
+	public final DependencyInjectionEntryPoint diep;
 	public final Logger logger;
 
 	public final ClientManager clientManager;
@@ -62,6 +64,7 @@ public class Game {
 	public final GuiManager guiFactory;
 
 	private Game(
+		DependencyInjectionEntryPoint diep,
 		Logger logger,
 		ClientManager clientManager,
 		BlockManager blockManager,
@@ -83,6 +86,7 @@ public class Game {
 		UpdateTicker.ThreadTicker threadTicker,
 		GuiComponentFactory guiComponentFactory, GuiManager guiFactory) {
 
+		this.diep = diep;
 		this.logger = logger;
 
 		this.clientManager = clientManager;

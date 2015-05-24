@@ -1,60 +1,137 @@
 package nova.core.entity;
 
+import nova.core.util.component.Component;
+import nova.core.util.component.ComponentProvider;
+import nova.core.util.component.Updater;
 import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
 
 /**
- * A simple rigid body class for entity physics.
- *
+ * A rigid body component for entity physics.
  * @author Calclavia
  */
-public interface RigidBody {
+//TODO: Don't only use Scala method convention names
+public abstract class RigidBody implements Component, Updater {
+
+	private final ComponentProvider provider;
+
+	private double mass = 1;
+
+	/**
+	 * Translation
+	 */
+	private double drag = 0;
+	private Vector3d velocity = Vector3d.zero;
+	private Vector3d gravity = new Vector3d(0, -9.81, 0);
+
+	/**
+	 * Rotation
+	 */
+	private double angularDrag = 0;
+	private Quaternion angularVelocity = Quaternion.identity;
+
+	public RigidBody(ComponentProvider provider) {
+		this.provider = provider;
+	}
+
 	/**
 	 * Mass in kilograms. Default is 1 kg.
 	 */
-	double mass();
+	public double getMass() {
+		return mass;
+	}
 
-	void setMass(double mass);
+	public void setMass(double mass) {
+		this.mass = mass;
+	}
 
 	/**
 	 * Velocity is how fast the body is moving
 	 */
-	Vector3d velocity();
+	public Vector3d getVelocity() {
+		return velocity;
+	}
 
-	void setVelocity(Vector3d velocity);
+	public void setVelocity(Vector3d velocity) {
+		this.velocity = velocity;
+	}
 
-	double drag();
+	public double getDrag() {
+		return drag;
+	}
 
-	void setDrag(double drag);
+	public void setDrag(double drag) {
+		this.drag = drag;
+	}
 
 	/**
 	 * Gravity is an acceleration.
 	 */
-	Vector3d gravity();
+	public Vector3d getGravity() {
+		return gravity;
+	}
 
-	void setGravity(Vector3d gravity);
+	public void setGravity(Vector3d gravity) {
+		this.gravity = gravity;
+	}
 
 	/**
 	 * Rotation Methods
 	 */
-	double angularDrag();
+	public double getAngularDrag() {
+		return angularDrag;
+	}
 
-	void setAngularDrag(double angularDrag);
+	public void setAngularDrag(double angularDrag) {
+		this.angularDrag = angularDrag;
+	}
 
-	Quaternion angularVelocity();
+	public Quaternion getAngularVelocity() {
+		return angularVelocity;
+	}
 
-	void setAngularVelocity(Quaternion angularVelocity);
-
-	Vector3d center();
-
-	void setCenter(Vector3d center);
+	public void setAngularVelocity(Quaternion angularVelocity) {
+		this.angularVelocity = angularVelocity;
+	}
 
 	/**
-	 * Force methods
+	 * Forces
 	 */
-	void addForce(Vector3d force);
+	public abstract void addForce(Vector3d force);
 
-	void addForce(Vector3d force, Vector3d position);
+	public abstract void addForce(Vector3d force, Vector3d position);
 
-	void addTorque(Vector3d torque);
+	public abstract void addTorque(Vector3d torque);
+
+	@Override
+	public ComponentProvider provider() {
+		return provider;
+	}
+
+	/**
+	 * Scala sugar coating
+	 */
+	public final double mass() {
+		return getMass();
+	}
+
+	public final Vector3d velocity() {
+		return getVelocity();
+	}
+
+	public final double drag() {
+		return getDrag();
+	}
+
+	public final Vector3d gravity() {
+		return getGravity();
+	}
+
+	public final double angularDrag() {
+		return getAngularDrag();
+	}
+
+	public final Quaternion angularVelocity() {
+		return getAngularVelocity();
+	}
 }

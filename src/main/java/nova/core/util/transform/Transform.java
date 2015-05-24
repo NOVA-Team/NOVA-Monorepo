@@ -70,42 +70,42 @@ public abstract class Transform<S extends Transform<S, V, R>, V, R> extends Tree
 	}
 
 	@Override
-	public ComponentProvider provider() {
+	public final ComponentProvider provider() {
 		return provider;
 	}
 
 	/**
 	 * Scala syntactic sugar coating
 	 */
-	public V position() {
-		return position;
+	public final V position() {
+		return getPosition();
 	}
 
-	public V scale() {
-		return scale;
+	public final V scale() {
+		return getScale();
 	}
 
-	public V pivot() {
-		return pivot;
+	public final V pivot() {
+		return getPivot();
 	}
 
-	public R rotation() {
-		return rotation;
+	public final R rotation() {
+		return getRotation();
 	}
 
-	public void $eq_position(V position) {
-		this.position = position;
+	public final void position_$eq(V position) {
+		setPosition(position);
 	}
 
-	public void $eq_rotation(R rotation) {
-		this.rotation = rotation;
+	public final void rotation_$eq(R rotation) {
+		setRotation(rotation);
 	}
 
-	public void $eq_scale(V scale) {
-		this.scale = scale;
+	public final void scale_$eq(V scale) {
+		setScale(scale);
 	}
 
-	public void $eq_pivot(V pivot) {
-		this.pivot = pivot;
+	public final void pivot_$eq(V pivot) {
+		setPivot(pivot);
 	}
 }
