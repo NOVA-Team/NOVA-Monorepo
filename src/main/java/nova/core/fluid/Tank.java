@@ -7,7 +7,6 @@ import java.util.Optional;
  * @see FluidConsumer
  * @see Tank
  */
-//TODO: Implement Component
 public interface Tank extends FluidConsumer, FluidProvider {
 
 	/**

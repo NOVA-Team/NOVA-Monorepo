@@ -1,16 +1,16 @@
 package nova.core.fluid;
 
+import nova.core.component.Component;
+
 import java.util.Optional;
 
 /**
  * Objects with this interface declare their ability to provide {@link Fluid FluidStacks}
- *
  * @see FluidConsumer
  */
-public interface FluidProvider {
+public interface FluidProvider extends Component {
 	/**
 	 * Attempt to extract fluid from this FluidProvider
-	 *
 	 * @param amount Amount of fluid to extract
 	 * @param simulate Whether to simulate the extraction
 	 * @return Extracted {@link Fluid}
@@ -19,7 +19,6 @@ public interface FluidProvider {
 
 	/**
 	 * Attempt to extract fluid from this FluidProvider
-	 *
 	 * @param amount Amount of fluid to extract
 	 * @return Extracted {@link Fluid}
 	 */

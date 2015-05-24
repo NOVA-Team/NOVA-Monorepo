@@ -1,5 +1,6 @@
 package nova.core.fluid;
 
+import nova.core.component.ComponentProvider;
 import nova.core.network.Packet;
 import nova.core.network.PacketHandler;
 import nova.core.retention.Data;
@@ -124,5 +125,16 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 	@Override
 	public void write(Packet packet) {
 		containedFluid = Optional.of((Fluid) packet.readStorable());
+	}
+
+	@Override
+	public ComponentProvider provider() {
+		//TODO: We DO NOT have a provider reference, because we cannot have a constructor with parameters...
+		return null;
+	}
+
+	@Override
+	public String getID() {
+		return "tankSimple";
 	}
 }
