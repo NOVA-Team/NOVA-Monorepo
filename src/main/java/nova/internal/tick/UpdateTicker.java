@@ -1,6 +1,6 @@
 package nova.internal.tick;
 
-import nova.core.world.component.Updater;
+import nova.core.component.Updater;
 
 import java.util.Collections;
 import java.util.Set;

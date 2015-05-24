@@ -1,18 +1,26 @@
 package nova.core.world;
 
+import nova.core.component.Component;
+import nova.core.component.ComponentProvider;
 import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Applied to any object that can have a position in the world.
  * @author Calclavia
  */
-public class Positioned<W extends PositionedWrapper<V>, V extends Vector3> implements PositionedWrapper<V> {
+//TODO: Positioned should probably be a component?
+public class Positioned<W extends PositionedWrapper<V>, V extends Vector3> implements PositionedWrapper<V>, ComponentProvider {
+
 	/**
 	 * The wrapper is injected from positioned objectFactory.
 	 * The wrapper may be null in cases where a backward wrapper is created for native entities.
 	 */
 	public final W wrapper = null;
+	private Set<Component> components = new HashSet<>();
 
 	/**
 	 * Gets the world of this positioned object.
@@ -44,5 +52,10 @@ public class Positioned<W extends PositionedWrapper<V>, V extends Vector3> imple
 	 */
 	public void setPosition(Vector3d position) {
 		wrapper.setPosition(position);
+	}
+
+	@Override
+	public Set<Component> components() {
+		return components;
 	}
 }

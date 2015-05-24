@@ -1,8 +1,8 @@
 package nova.core.util.transform;
 
+import nova.core.component.Component;
+import nova.core.component.ComponentProvider;
 import nova.core.util.collection.TreeNode;
-import nova.core.world.component.Component;
-import nova.core.world.component.ComponentProvider;
 
 /**
  * An object that handles the transformation of an object

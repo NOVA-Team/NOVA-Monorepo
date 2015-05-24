@@ -1,7 +1,7 @@
 package nova.core.util.transform;
 
+import nova.core.component.ComponentProvider;
 import nova.core.util.transform.vector.Vector2d;
-import nova.core.world.component.ComponentProvider;
 
 /**
  * A 2D transform

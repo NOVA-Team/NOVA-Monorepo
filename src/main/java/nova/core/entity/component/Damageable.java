@@ -7,6 +7,7 @@ import nova.core.util.Identifiable;
  *
  * @author Calclavia
  */
+//TODO: Change to component
 public interface Damageable {
 
 	default void damage(double amount) {

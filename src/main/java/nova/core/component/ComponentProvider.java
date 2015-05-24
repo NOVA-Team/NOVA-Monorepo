@@ -1,4 +1,4 @@
-package nova.core.world.component;
+package nova.core.component;
 
 import java.util.Optional;
 import java.util.Set;

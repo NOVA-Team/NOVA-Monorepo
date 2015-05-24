@@ -1,10 +1,10 @@
 package nova.core.entity.component;
 
+import nova.core.component.Component;
+import nova.core.component.ComponentProvider;
+import nova.core.component.Updater;
 import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
-import nova.core.world.component.Component;
-import nova.core.world.component.ComponentProvider;
-import nova.core.world.component.Updater;
 
 /**
  * A rigid body component for entity physics.

@@ -1,6 +1,6 @@
 package nova.core.depmodules;
 
-import nova.core.world.component.ComponentManager;
+import nova.core.component.ComponentManager;
 import se.jbee.inject.bind.BinderModule;
 import se.jbee.inject.util.Scoped;
 

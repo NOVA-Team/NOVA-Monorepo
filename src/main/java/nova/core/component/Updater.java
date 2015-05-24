@@ -1,4 +1,4 @@
-package nova.core.world.component;
+package nova.core.component;
 
 /**
  * Implement this on Blocks and Entities which can tick.

@@ -1,4 +1,4 @@
-package nova.core.world.component;
+package nova.core.component;
 
 import nova.core.util.Factory;
 import nova.core.util.Manager;

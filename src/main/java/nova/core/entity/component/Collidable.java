@@ -9,6 +9,7 @@ import java.util.Collection;
  * Implement this on a Block or Entity which can collide with
  * another entity.
  */
+//TODO: Change to component
 public interface Collidable {
 	/**
 	 * This method is used to get box of this entity.

@@ -7,6 +7,7 @@ import java.util.Set;
  * Items will implement this as they are not direction sensitive.
  * @author Calclavia
  */
+//TODO: Switch to component system
 public interface TankProvider {
 	Set<Tank> getTanks();
 }

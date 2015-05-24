@@ -1,6 +1,7 @@
 package nova.core.game;
 
 import nova.core.block.BlockManager;
+import nova.core.component.ComponentManager;
 import nova.core.entity.EntityManager;
 import nova.core.event.EventManager;
 import nova.core.fluid.FluidManager;
@@ -17,17 +18,11 @@ import nova.core.render.RenderManager;
 import nova.core.util.LanguageManager;
 import nova.core.util.SaveManager;
 import nova.core.world.WorldManager;
-import nova.core.world.component.ComponentManager;
 import nova.internal.tick.UpdateTicker;
 import org.slf4j.Logger;
 
 public class Game {
 
-	/**
-	 * Use only when injection is not a solution. For example when performance
-	 * is a concern. Treat as -100 style points. Must be initialized by code
-	 * handling launch and dependency injection entry point.
-	 */
 	public static Game instance;
 
 	public final Logger logger;
