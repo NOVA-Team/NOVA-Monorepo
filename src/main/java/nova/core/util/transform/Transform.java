@@ -1,12 +1,14 @@
 package nova.core.util.transform;
 
+import nova.core.util.components.Component;
+
 import java.util.Optional;
 
 /**
  * An object that handles the transformation of an object
  * @author Calclavia
  */
-public abstract class Transform<S extends Transform<S, V, R>, V, R> {
+public abstract class Transform<S extends Transform<S, V, R>, V, R> implements Component {
 
 	//The parent transform.
 	public Optional<S> parent;
