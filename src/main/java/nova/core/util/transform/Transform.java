@@ -1,17 +1,13 @@
 package nova.core.util.transform;
 
+import nova.core.util.collection.TreeNode;
 import nova.core.util.components.Component;
-
-import java.util.Optional;
 
 /**
  * An object that handles the transformation of an object
  * @author Calclavia
  */
-public abstract class Transform<S extends Transform<S, V, R>, V, R> implements Component {
-
-	//The parent transform.
-	public Optional<S> parent;
+public abstract class Transform<S extends Transform<S, V, R>, V, R> extends TreeNode<S> implements Component {
 
 	//The position of the transform. Can never be null.
 	public V position;
@@ -21,6 +17,9 @@ public abstract class Transform<S extends Transform<S, V, R>, V, R> implements C
 
 	//The scale of the transform. Can never be null.
 	public V scale;
+
+	//The center of rotation.
+	public V pivot;
 
 	/**
 	 * Default values of transform
