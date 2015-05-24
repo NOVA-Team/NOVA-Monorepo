@@ -40,6 +40,7 @@ public abstract class NovaLauncherTest {
 		Game.instance = diep.init();
 
 		launcher.generateDependencies();
+		launcher.load();
 		launcher.preInit();
 		launcher.init();
 		launcher.postInit();
