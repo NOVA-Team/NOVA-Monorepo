@@ -1,6 +1,6 @@
 package nova.core.gui.flexible;
 
-import nova.core.component.transform.Transform2d;
+import nova.core.component.transform.PositionTransform;
 import nova.core.util.transform.vector.Vector2d;
 
 /**
@@ -18,7 +18,7 @@ import nova.core.util.transform.vector.Vector2d;
  * Max anchor associates with the top right corner of the parent.
  * @author Calclavia
  */
-public class TransformUI extends Transform2d {
+public class TransformUI extends PositionTransform<Vector2d> {
 
 	public Vector2d minAnchor = Vector2d.zero;
 

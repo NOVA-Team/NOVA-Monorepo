@@ -1,8 +1,9 @@
-package nova.core.block.component;
+package nova.core.component.transform;
 
 import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.component.Component;
+import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.network.Sync;
 import nova.core.retention.Storable;
@@ -11,13 +12,12 @@ import nova.core.util.Direction;
 import nova.core.util.transform.vector.Vector3d;
 
 /**
- * A component that is applied to blocks with specific orientations.
+ * A component that is applied to providers with discrete orientations.
  * @author Calclavia
  */
-//TODO: Hook into block place and rotate event
-public class Oriented extends Component implements Storable, Stateful {
+public class Orientation extends Component implements Storable, Stateful {
 
-	public final Block block;
+	public final ComponentProvider provider;
 
 	/**
 	 * The allowed rotation directions the block can face.
@@ -29,48 +29,53 @@ public class Oriented extends Component implements Storable, Stateful {
 	 */
 	@Sync
 	@Stored
-	public Direction direction = Direction.UNKNOWN;
+	public Direction orientation = Direction.UNKNOWN;
 
-	public Oriented(Block block) {
-		this.block = block;
+	public Orientation(ComponentProvider provider) {
+		this.provider = provider;
 	}
 
-	public Oriented autoRotate() {
-		block.blockPlaceEvent.add(evt -> evt.by.ifPresent(by -> direction = calculateDirection(by)));
-		block.rightClickEvent.add(evt -> rotate(evt.side.ordinal(), evt.position));
+	public Orientation hookBlockEvents() {
+		if (provider instanceof Block) {
+			((Block) provider).blockPlaceEvent.add(evt -> evt.by.ifPresent(by -> orientation = calculateDirection(by)));
+			((Block) provider).rightClickEvent.add(evt -> rotate(evt.side.ordinal(), evt.position));
+		}
 		return this;
 	}
 
-	public Oriented setMask(int mask) {
+	public Orientation setMask(int mask) {
 		this.rotationMask = mask;
 		return this;
 	}
 
-	public Oriented flipPlacement(boolean flip) {
+	public Orientation flipPlacement(boolean flip) {
 		isFlip = flip;
 		return this;
 	}
 
 	public Direction calculateDirection(Entity entity) {
-		if (Math.abs(entity.transform.position().x - block.position().x) < 2 && Math.abs(entity.transform.position().z - block.position().z) < 2) {
-			double height = entity.transform.position().y + 1.82D;//- entity.yOffset
+		if (provider instanceof Block) {
+			if (Math.abs(entity.transform.position().x - ((Block) provider).x()) < 2 && Math.abs(entity.transform.position().z - ((Block) provider).z()) < 2) {
+				double height = entity.transform.position().y + 1.82D;//- entity.yOffset
 
-			if (canRotate(1) && height - block.position().y > 2.0D) {
-				return Direction.UP;
+				if (canRotate(1) && height - ((Block) provider).y() > 2.0D) {
+					return Direction.UP;
+				}
+				if (canRotate(0) && ((Block) provider).y() - height > 0.0D) {
+					return Direction.DOWN;
+				}
 			}
-			if (canRotate(0) && block.position().y - height > 0.0D) {
-				return Direction.DOWN;
+
+			int playerSide = (int) Math.floor(entity.transform.rotation().toEuler().x * 4.0F / 360.0F + 0.5D) & 3;
+			int returnSide = (playerSide == 0 && canRotate(2)) ? 2 : ((playerSide == 1 && canRotate(5)) ? 5 : playerSide == 2 && canRotate(3) ? 3 : (playerSide == 3 && canRotate(4)) ? 4 : 0);
+
+			if (isFlip) {
+				return Direction.fromOrdinal(returnSide).opposite();
 			}
+			return Direction.fromOrdinal(returnSide);
 		}
 
-		int playerSide = (int) Math.floor(entity.transform.rotation().toEuler().x * 4.0F / 360.0F + 0.5D) & 3;
-		int returnSide = (playerSide == 0 && canRotate(2)) ? 2 : ((playerSide == 1 && canRotate(5)) ? 5 : playerSide == 2 && canRotate(3) ? 3 : (playerSide == 3 && canRotate(4)) ? 4 : 0);
-
-		if (isFlip) {
-			return Direction.fromOrdinal(returnSide).opposite();
-		}
-
-		return Direction.fromOrdinal(returnSide);
+		return Direction.UNKNOWN;
 	}
 
 	public boolean canRotate(int side) {
@@ -88,7 +93,7 @@ public class Oriented extends Component implements Storable, Stateful {
 		int result = getSideToRotate(side, hit);
 
 		if (result != -1) {
-			direction = Direction.fromOrdinal(result);
+			orientation = Direction.fromOrdinal(result);
 			return true;
 		}
 

@@ -8,7 +8,7 @@ package nova.core.block;
  * To make sure your block gets saved on world reloads (etc.), implement
  * Storable.
  */
-public interface Stateful extends PositionDependent {
+public interface Stateful {
 	/**
 	 * This function will get called upon the very first initialization/construction of
 	 * the Stateful instance. There is no guarantee that Stored values will be retained,

@@ -1,24 +1,22 @@
 package nova.core.entity;
 
 import nova.core.block.Stateful;
-import nova.core.component.transform.Transform3d;
+import nova.core.component.transform.EntityTransform;
 import nova.core.game.Game;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.world.Positioned;
+import nova.core.util.WrapperProvider;
 
 /**
  * An entity is an object in the world that has a position.
  */
-public abstract class Entity extends Positioned<EntityWrapper, Vector3d> implements Identifiable, Stateful, EntityWrapper {
+public abstract class Entity extends WrapperProvider<EntityWrapper> implements Identifiable, Stateful {
 
 	/**
 	 * The default transform component.
 	 */
-	public final Transform3d transform = Game.instance.componentManager.make(Transform3d.class, this);
+	public final EntityTransform transform = Game.instance.componentManager.make(EntityTransform.class, this);
 
 	public Entity() {
 		add(transform);
 	}
-
 }

@@ -1,5 +1,6 @@
 package nova.core.block;
 
+import nova.core.component.transform.BlockTransform;
 import nova.core.entity.Entity;
 import nova.core.event.CancelableEvent;
 import nova.core.event.EventBus;
@@ -8,21 +9,31 @@ import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
+import nova.core.util.WrapperProvider;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
-import nova.core.world.Positioned;
+import nova.core.world.World;
 
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-public abstract class Block extends Positioned<BlockWrapper, Vector3i> implements Identifiable, BlockWrapper {
+/**
+ * @author Calclavia
+ */
+public abstract class Block extends WrapperProvider<BlockWrapper> implements Identifiable {
 
 	public final EventBus<NeighborChangeEvent> neighborChangeEvent = new EventBus<>();
 	public final EventBus<BlockPlaceEvent> blockPlaceEvent = new EventBus<>();
 	public final EventBus<BlockRemoveEvent> blockRemoveEvent = new EventBus<>();
 	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
 	public final EventBus<LeftClickEvent> leftClickEvent = new EventBus<>();
+
+	public final BlockTransform transform = Game.instance.componentManager.make(BlockTransform.class, this);
+
+	public Block() {
+		add(transform);
+	}
 
 	public ItemFactory getItemFactory() {
 		return Game.instance.itemManager.getItemFactoryFromBlock(factory());
@@ -37,12 +48,16 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 		return Game.instance.blockManager.getFactory(getID()).get();
 	}
 
+	public final World world() {
+		return transform.world();
+	}
+
 	/**
 	 * Get the x co-ordinate of the block.
 	 * @return The x co-ordinate of the block.
 	 */
 	public final int x() {
-		return position().x;
+		return transform.position().x;
 	}
 
 	/**
@@ -50,7 +65,7 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 	 * @return The y co-ordinate of the block.
 	 */
 	public final int y() {
-		return position().y;
+		return transform.position().y;
 	}
 
 	/**
@@ -58,7 +73,7 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 	 * @return The z co-ordinate of the block.
 	 */
 	public final int z() {
-		return position().z;
+		return transform.position().z;
 	}
 
 	/**
