@@ -5,19 +5,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import nova.core.component.Updater;
 import nova.core.component.renderer.DynamicRenderer;
-import nova.core.component.transform.Transform3d;
+import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.entity.EntityWrapper;
 import nova.core.util.transform.matrix.MatrixStack;
-import nova.core.util.transform.vector.Vector3d;
 import nova.wrapper.mc1710.backward.render.BWModel;
-import nova.wrapper.mc1710.backward.world.BWWorld;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -28,7 +24,7 @@ import java.util.Optional;
 public class FWEntityFX extends EntityFX implements EntityWrapper {
 
 	public final Entity wrapped;
-	public final Transform3d transform;
+	public final EntityTransform transform;
 
 	public FWEntityFX(World world, EntityFactory factory) {
 		super(world, 0, 0, 0);
@@ -82,36 +78,4 @@ public class FWEntityFX extends EntityFX implements EntityWrapper {
 			.filter(component -> component instanceof Updater)
 			.forEach(component -> ((Updater) component).update(deltaTime));
 	}
-
-	/**
-	 * Entity Wrapper Methods
-	 * @return
-	 */
-	@Override
-	public nova.core.world.World world() {
-		return new BWWorld(worldObj);
-	}
-
-	@Override
-	public Vector3d position() {
-		return new Vector3d(posX, posY, posZ);
-	}
-
-	@Override
-	public void setWorld(nova.core.world.World world) {
-		travelToDimension(Arrays
-				.stream(DimensionManager.getWorlds())
-				.filter(w -> w.getProviderName().equals(world.getID()))
-				.findAny()
-				.get()
-				.provider
-				.dimensionId
-		);
-	}
-
-	@Override
-	public void setPosition(Vector3d position) {
-		setPosition(position.x, position.y, position.z);
-	}
-
 }

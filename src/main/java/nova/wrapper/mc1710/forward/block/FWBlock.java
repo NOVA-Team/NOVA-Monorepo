@@ -299,7 +299,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public boolean canConnectRedstone(IBlockAccess access, int x, int y, int z, int side) {
 		Block blockInstance = getBlockInstance(access, new Vector3i(x, y, z));
-		WrapperEventManager.RedstoneConnectEvent event = new WrapperEventManager.RedstoneConnectEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
+		WrapperEventManager.RedstoneConnectEvent event = new WrapperEventManager.RedstoneConnectEvent(blockInstance.world(), blockInstance.transform.position(), Direction.fromOrdinal(side));
 		WrapperEventManager.instance.onCanConnect.publish(event);
 		return event.canConnect;
 	}
@@ -307,7 +307,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public int isProvidingWeakPower(IBlockAccess access, int x, int y, int z, int side) {
 		Block blockInstance = getBlockInstance(access, new Vector3i(x, y, z));
-		WrapperEventManager.RedstoneEvent event = new WrapperEventManager.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
+		WrapperEventManager.RedstoneEvent event = new WrapperEventManager.RedstoneEvent(blockInstance.world(), blockInstance.transform.position(), Direction.fromOrdinal(side));
 		WrapperEventManager.instance.onWeakPower.publish(event);
 		return event.power;
 	}
@@ -315,7 +315,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public int isProvidingStrongPower(IBlockAccess access, int x, int y, int z, int side) {
 		Block blockInstance = getBlockInstance(access, new Vector3i(x, y, z));
-		WrapperEventManager.RedstoneEvent event = new WrapperEventManager.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
+		WrapperEventManager.RedstoneEvent event = new WrapperEventManager.RedstoneEvent(blockInstance.world(), blockInstance.transform.position(), Direction.fromOrdinal(side));
 		WrapperEventManager.instance.onStrongPower.publish(event);
 		return event.power;
 	}

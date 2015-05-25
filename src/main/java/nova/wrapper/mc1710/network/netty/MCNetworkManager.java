@@ -53,7 +53,7 @@ public class MCNetworkManager extends NetworkManager {
 		PacketAbstract discriminator;
 
 		if (sender instanceof Block) {
-			Vector3i position = ((Block) sender).position();
+			Vector3i position = ((Block) sender).transform.position();
 			discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
 		} else if (sender instanceof Entity) {
 			Entity entity = (Entity) sender;
@@ -82,7 +82,7 @@ public class MCNetworkManager extends NetworkManager {
 	}
 
 	public PacketBlock getBlockPacket(int id, PacketHandler sender) {
-		Vector3i position = ((Block) sender).position();
+		Vector3i position = ((Block) sender).transform.position();
 		PacketBlock discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
 		MCPacket mcPacket = new MCPacket(discriminator.data);
 		mcPacket.setID(id);

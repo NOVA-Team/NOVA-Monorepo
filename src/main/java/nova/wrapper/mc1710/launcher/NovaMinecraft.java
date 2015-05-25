@@ -31,8 +31,8 @@ import nova.wrapper.mc1710.depmodules.NetworkModule;
 import nova.wrapper.mc1710.depmodules.SaveModule;
 import nova.wrapper.mc1710.depmodules.TickerModule;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
+import nova.wrapper.mc1710.forward.entity.MCEntityTransform;
 import nova.wrapper.mc1710.forward.entity.MCRigidBody;
-import nova.wrapper.mc1710.forward.entity.MCTransform3d;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.item.OreDictionaryIntegration;
 import nova.wrapper.mc1710.manager.config.ConfigManager;
@@ -98,7 +98,7 @@ public class NovaMinecraft {
 		 * Set up components
 		 */
 		Game.instance.componentManager.register(args -> args.length > 0 ? new MCRigidBody((ComponentProvider) args[0]) : new MCRigidBody(null));
-		Game.instance.componentManager.register(args -> args.length > 0 ? new MCTransform3d((ComponentProvider) args[0]) : new MCTransform3d(null));
+		Game.instance.componentManager.register(args -> args.length > 0 ? new MCEntityTransform((ComponentProvider) args[0]) : new MCEntityTransform(null));
 
 		launcher.generateDependencies();
 

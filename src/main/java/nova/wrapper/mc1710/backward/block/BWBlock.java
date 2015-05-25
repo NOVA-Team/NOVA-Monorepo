@@ -22,21 +22,21 @@ public class BWBlock extends Block implements Storable {
 
 		add(
 			new LightEmitter()
-			.setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), position().x, position().y, position().z) / 15.0F)
+			.setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), x(), y(), z()) / 15.0F)
 		);
 	}
 
 	private IBlockAccess getMcBlockAccess() {
-		return ((BWWorld) wrapper.world()).access;
+		return ((BWWorld) transform.world()).access;
 	}
 
 	private int getMetadata() {
-		return getMcBlockAccess().getBlockMetadata(position().x, position().y, position().z);
+		return getMcBlockAccess().getBlockMetadata(x(), y(), z());
 	}
 
 	private TileEntity getTileEntity() {
 		if (mcTileEntity == null && mcBlock.hasTileEntity(getMetadata())) {
-			mcTileEntity = getMcBlockAccess().getTileEntity(position().x, position().y, position().z);
+			mcTileEntity = getMcBlockAccess().getTileEntity(x(), y(), z());
 		}
 		return mcTileEntity;
 	}
