@@ -24,4 +24,9 @@ public class Oriented extends Component implements Storable, Stateful {
 	@Sync
 	@Stored
 	public Direction direction = Direction.UNKNOWN;
+
+	public Oriented setMask(int mask) {
+		this.rotationMask = mask;
+		return this;
+	}
 }
