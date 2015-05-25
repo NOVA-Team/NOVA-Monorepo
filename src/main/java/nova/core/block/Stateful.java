@@ -1,4 +1,4 @@
-package nova.core.block.component;
+package nova.core.block;
 
 /**
  * This interface should be implemented by any block willing to keep a

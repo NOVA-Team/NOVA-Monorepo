@@ -1,6 +1,6 @@
 package nova.core.entity;
 
-import nova.core.block.component.Stateful;
+import nova.core.block.Stateful;
 import nova.core.component.transform.Transform3d;
 import nova.core.game.Game;
 import nova.core.util.Identifiable;

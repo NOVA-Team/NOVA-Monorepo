@@ -1,4 +1,4 @@
-package nova.core.block.component;
+package nova.core.block;
 
 public interface PositionDependent {
 }
