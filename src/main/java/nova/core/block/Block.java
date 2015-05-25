@@ -1,6 +1,7 @@
 package nova.core.block;
 
 import nova.core.entity.Entity;
+import nova.core.event.EventBus;
 import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
@@ -8,6 +9,7 @@ import nova.core.render.Color;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
+import nova.core.util.collection.Tuple4;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.Positioned;
@@ -17,6 +19,29 @@ import java.util.Optional;
 import java.util.Set;
 
 public abstract class Block extends Positioned<BlockWrapper, Vector3i> implements Identifiable, BlockWrapper {
+
+	/**
+	 * Called when a block next to this one changes (removed, placed, etc...).
+	 * @param neighborPosition The position of the block that changed.
+	 */
+	public final EventBus<Vector3i> onNeighborChange = new EventBus<>();
+	/**
+	 * Called when the block is placed.
+	 */
+	public final EventBus<Optional<Entity>> onPlace = new EventBus<>();
+	/**
+	 * Called when the block is removed.
+	 */
+	public final EventBus<Optional<Entity>> onRemoved = new EventBus<>();
+	/**
+	 * Called when the block is left clicked.
+	 * @param entity The entity that right clicked this object. Most likely a
+	 * player.
+	 * @param side The side it was clicked.
+	 * @param hit The position it was clicked.
+	 * @return {@code true} if the right click action does something.
+	 */
+	public final EventBus<Tuple4<Entity, Integer, Vector3d, Boolean>> onLeftClick = new EventBus<>();
 
 	public ItemFactory getItemFactory() {
 		return Game.instance.itemManager.getItemFactoryFromBlock(factory());
@@ -62,40 +87,6 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 	 */
 	public Set<Item> getDrops() {
 		return Collections.singleton(Game.instance.itemManager.getItemFromBlock(factory()).makeItem());
-	}
-
-	/**
-	 * Called when a block next to this one changes (removed, placed, etc...).
-	 * @param neighborPosition The position of the block that changed.
-	 */
-	public void onNeighborChange(Vector3i neighborPosition) {
-
-	}
-
-	/**
-	 * Called when the block is placed.
-	 */
-	public void onPlaced() {
-
-	}
-
-	/**
-	 * Called when the block is removed.
-	 */
-	public void onRemoved() {
-
-	}
-
-	/**
-	 * Called when the block is left clicked.
-	 * @param entity The entity that right clicked this object. Most likely a
-	 * player.
-	 * @param side The side it was clicked.
-	 * @param hit The position it was clicked.
-	 * @return {@code true} if the right click action does something.
-	 */
-	public boolean onLeftClick(Entity entity, int side, Vector3d hit) {
-		return false;
 	}
 
 	/**

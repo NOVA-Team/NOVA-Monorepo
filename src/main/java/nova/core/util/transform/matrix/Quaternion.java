@@ -27,7 +27,7 @@ package nova.core.util.transform.matrix;
 import com.google.common.math.DoubleMath;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
-import nova.core.util.collection.Pair;
+import nova.core.util.collection.Tuple2;
 import nova.core.util.transform.vector.Transformer;
 import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
@@ -188,7 +188,7 @@ public class Quaternion implements Transformer, Storable {
 		return new Vector3d(Math.atan2(2 * y * w - 2 * x * z, sqx - sqy - sqz + sqw), Math.asin(2 * test / unit), Math.atan2(2 * x * w - 2 * y * z, -sqx + sqy - sqz + sqw));
 	}
 
-	public Pair<Vector3d, Double> toAngleAxis() {
+	public Tuple2<Vector3d, Double> toAngleAxis() {
 		Quaternion normalQuat = this;
 
 		// if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalised
@@ -204,9 +204,9 @@ public class Quaternion implements Transformer, Storable {
 			// test to avoid divide by zero, s is always positive due to sqrt
 			// if s close to zero then direction of axis not important
 			// if it is important that axis is normalised then replace with x=1; y=z=0;
-			return new Pair<>(new Vector3d(normalQuat.x, normalQuat.y, normalQuat.z), 2 * Math.acos(w));
+			return new Tuple2<>(new Vector3d(normalQuat.x, normalQuat.y, normalQuat.z), 2 * Math.acos(w));
 		} else {
-			return new Pair<>(new Vector3d(normalQuat.x / s, normalQuat.y / s, normalQuat.z / s), 2 * Math.acos(w));
+			return new Tuple2<>(new Vector3d(normalQuat.x / s, normalQuat.y / s, normalQuat.z / s), 2 * Math.acos(w));
 		}
 
 	}
