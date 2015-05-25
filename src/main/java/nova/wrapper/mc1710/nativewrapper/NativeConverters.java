@@ -43,7 +43,7 @@ public class NativeConverters {
 
 		@Override
 		public Object convertToNative(Object novaObj) {
-			Optional<MCEntityWrapper> opWrapper = ((Entity) novaObj).get(MCEntityWrapper.class);
+			Optional<MCEntityWrapper> opWrapper = ((Entity) novaObj).getOp(MCEntityWrapper.class);
 			if (opWrapper.isPresent())
 			{
 				if (opWrapper.get().wrapper instanceof FWEntity)

@@ -96,7 +96,7 @@ public class BWWorld extends World {
 
 	@Override
 	public void removeEntity(Entity entity) {
-		world().removeEntity(entity.get(MCEntityWrapper.class).get().wrapper);
+		world().removeEntity(entity.get(MCEntityWrapper.class).wrapper);
 	}
 
 	@Override

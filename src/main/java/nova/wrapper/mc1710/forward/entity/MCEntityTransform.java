@@ -21,7 +21,7 @@ public class MCEntityTransform extends EntityTransform {
 	public MCEntityTransform(ComponentProvider provider) {
 		//TODO: This nullable provider is horrible. Change this.
 		if (provider != null) {
-			mcEntity = provider.get(MCEntityWrapper.class).get().wrapper;
+			mcEntity = provider.get(MCEntityWrapper.class).wrapper;
 		}
 	}
 

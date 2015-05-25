@@ -14,7 +14,7 @@ public class MCBlockTransform extends BlockTransform {
 
 	public MCBlockTransform(Block provider) {
 		this.provider = provider;
-		this.wrapper = provider.get(MCBlockWrapper.class).get();
+		this.wrapper = provider.get(MCBlockWrapper.class);
 	}
 
 	@Override

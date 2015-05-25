@@ -41,7 +41,7 @@ public class FWEntityFX extends EntityFX {
 
 	@Override
 	public void renderParticle(Tessellator tess, float x, float y, float z, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
-		Optional<DynamicRenderer> opRenderer = wrapped.get(DynamicRenderer.class);
+		Optional<DynamicRenderer> opRenderer = wrapped.getOp(DynamicRenderer.class);
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
 			model.matrix = new MatrixStack().translate(x, y, z).rotate(transform.rotation()).getMatrix();

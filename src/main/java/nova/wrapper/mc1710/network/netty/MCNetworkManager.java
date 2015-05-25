@@ -57,7 +57,7 @@ public class MCNetworkManager extends NetworkManager {
 			discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
 		} else if (sender instanceof Entity) {
 			Entity entity = (Entity) sender;
-			discriminator = new PacketEntity(entity.get(MCEntityWrapper.class).get().wrapper);
+			discriminator = new PacketEntity(entity.get(MCEntityWrapper.class).wrapper);
 
 		} else {
 			throw new NovaException("Fail to send packet as the PacketHandler is of invalid type.");
