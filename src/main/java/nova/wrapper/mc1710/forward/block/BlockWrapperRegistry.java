@@ -11,7 +11,7 @@ import nova.core.block.BlockManager;
 import nova.core.game.Game;
 import nova.core.util.Category;
 import nova.wrapper.mc1710.backward.block.BWBlock;
-import nova.wrapper.mc1710.item.FWItemBlock;
+import nova.wrapper.mc1710.wrapper.item.FWItemBlock;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
 

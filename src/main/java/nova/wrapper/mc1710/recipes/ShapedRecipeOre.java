@@ -10,29 +10,28 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import nova.core.game.Game;
 import nova.core.recipes.crafting.ShapedCraftingRecipe;
-import nova.wrapper.mc1710.util.WrapUtility;
 
 /**
- *
  * @author Stan
  */
 public class ShapedRecipeOre extends ShapedOreRecipe {
 	private final ShapedCraftingRecipe recipe;
-	
+
 	public ShapedRecipeOre(Object[] contents, ShapedCraftingRecipe recipe) {
-		super(WrapUtility.wrapItemStack(recipe.getNominalOutput()), contents);
-		
+		super((ItemStack) Game.instance.nativeManager.toNative(recipe.getNominalOutput().get()), contents);
+
 		this.recipe = recipe;
 	}
-	
+
 	@Override
-    public boolean matches(InventoryCrafting inventory, World world) {
+	public boolean matches(InventoryCrafting inventory, World world) {
 		return recipe.matches(MCCraftingGrid.get(inventory));
 	}
-	
+
 	@Override
-    public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return WrapUtility.wrapItemStack(recipe.getCraftingResult(MCCraftingGrid.get(inventory))).copy();
+	public ItemStack getCraftingResult(InventoryCrafting inventory) {
+		return ((ItemStack) Game.instance.nativeManager.toNative(recipe.getCraftingResult(MCCraftingGrid.get(inventory)))).copy();
 	}
 }

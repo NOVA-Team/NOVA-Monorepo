@@ -33,8 +33,8 @@ import nova.wrapper.mc1710.depmodules.TickerModule;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.forward.entity.MCEntityTransform;
 import nova.wrapper.mc1710.forward.entity.MCRigidBody;
-import nova.wrapper.mc1710.item.ItemWrapperRegistry;
-import nova.wrapper.mc1710.item.OreDictionaryIntegration;
+import nova.wrapper.mc1710.wrapper.item.ItemConverter;
+import nova.wrapper.mc1710.wrapper.item.OreDictionaryIntegration;
 import nova.wrapper.mc1710.manager.config.ConfigManager;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
 import nova.wrapper.mc1710.wrapper.block.BlockConverter;
@@ -93,12 +93,13 @@ public class NovaMinecraft {
 		Game.instance.nativeManager.registerConverter(new DataWrapper());
 		Game.instance.nativeManager.registerConverter(new EntityConverter());
 		Game.instance.nativeManager.registerConverter(new BlockConverter());
+		Game.instance.nativeManager.registerConverter(new ItemConverter());
 
 		/**
 		 * Set manager parameters
 		 */
 		BlockWrapperRegistry.instance.registerBlocks();
-		ItemWrapperRegistry.instance.registerItems();
+		ItemConverter.instance().registerItems();
 		OreDictionaryIntegration.instance.registerOreDictionary();
 		MinecraftRecipeRegistry.instance.registerRecipes();
 

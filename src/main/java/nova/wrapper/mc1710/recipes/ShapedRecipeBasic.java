@@ -4,6 +4,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.world.World;
+import nova.core.game.Game;
 import nova.core.recipes.crafting.ShapedCraftingRecipe;
 import nova.wrapper.mc1710.util.WrapUtility;
 
@@ -17,7 +18,7 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 	private final ShapedCraftingRecipe recipe;
 	
 	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedCraftingRecipe recipe) {
-		super(recipe.getWidth(), recipe.getHeight(), basicInputs, WrapUtility.wrapItemStack(recipe.getNominalOutput()));
+		super(recipe.getWidth(), recipe.getHeight(), basicInputs, Game.instance.nativeManager.toNative(recipe.getNominalOutput()));
 		
 		this.recipe = recipe;
 	}
@@ -30,6 +31,6 @@ public class ShapedRecipeBasic extends ShapedRecipes {
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inventory) {
 		Optional<nova.core.item.Item> result = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
-		return WrapUtility.wrapItemStack(result);
+		return Game.instance.nativeManager.toNative(result);
 	}
 }

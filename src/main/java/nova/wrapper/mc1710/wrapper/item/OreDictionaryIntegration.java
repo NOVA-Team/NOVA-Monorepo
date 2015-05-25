@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.item;
+package nova.wrapper.mc1710.wrapper.item;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -25,13 +25,13 @@ public class OreDictionaryIntegration {
 
 		for (String oredictEntry : novaItemDictionary.keys()) {
 			for (String oreValue : novaItemDictionary.get(oredictEntry)) {
-				OreDictionary.registerOre(oredictEntry, ItemWrapperRegistry.instance.getMCItemStack(oreValue));
+				OreDictionary.registerOre(oredictEntry, ItemConverter.instance().toNative(oreValue));
 			}
 		}
 
 		for (String oredictEntry : OreDictionary.getOreNames()) {
 			for (ItemStack oreValue : OreDictionary.getOres(oredictEntry)) {
-				Item novaItem = ItemWrapperRegistry.instance.getNovaItem(oreValue);
+				Item novaItem = ItemConverter.instance().getNovaItem(oreValue);
 				String id = novaItem.getID();
 				if (!novaItemDictionary.get(oredictEntry).contains(id))
 					novaItemDictionary.add(oredictEntry, id);
@@ -43,13 +43,14 @@ public class OreDictionaryIntegration {
 	}
 
 	private void onEntryAdded(Dictionary.AddEvent<String> event) {
-		if (!OreDictionary.getOres(event.key).contains(event.value))
-			OreDictionary.registerOre(event.key, ItemWrapperRegistry.instance.getMCItemStack(event.value));
+		if (!OreDictionary.getOres(event.key).contains(event.value)) {
+			OreDictionary.registerOre(event.key, ItemConverter.instance().toNative(event.value));
+		}
 	}
 
 	private void onEntryRemoved(Dictionary.RemoveEvent<String> event) {
 		int id = OreDictionary.getOreID(event.key);
-		ItemStack itemStack = ItemWrapperRegistry.instance.getMCItemStack(event.value);
+		ItemStack itemStack = ItemConverter.instance().toNative(event.value);
 		ItemStack toRemove = null;
 		for (ItemStack oreDictItemStack : OreDictionary.getOres(event.key)) {
 			if (oreDictItemStack.getItem() == itemStack.getItem() && toRemove.getItemDamage() == oreDictItemStack.getItemDamage())

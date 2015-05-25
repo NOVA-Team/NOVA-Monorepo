@@ -1,6 +1,7 @@
 package nova.wrapper.mc1710.recipes;
 
 import net.minecraft.item.crafting.IRecipe;
+import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingGrid;
 import nova.core.recipes.crafting.CraftingRecipe;
@@ -26,8 +27,8 @@ public class MCCraftingRecipe implements CraftingRecipe {
 
     @Override
 	public Optional<Item> getCraftingResult(CraftingGrid craftingGrid) {
-		return WrapUtility.unwrapItemStack(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid)));
-    }
+		return Game.instance.nativeManager.toNova(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid)));
+	}
 
     @Override
     public void consumeItems(CraftingGrid craftingGrid) {
@@ -36,6 +37,6 @@ public class MCCraftingRecipe implements CraftingRecipe {
 
     @Override
 	public Optional<Item> getNominalOutput() {
-		return WrapUtility.unwrapItemStack(recipe.getRecipeOutput());
-    }
+		return Game.instance.nativeManager.toNova(recipe.getRecipeOutput());
+	}
 }

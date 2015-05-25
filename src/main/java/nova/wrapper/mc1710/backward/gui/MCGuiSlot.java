@@ -12,7 +12,7 @@ import nova.core.util.transform.vector.Vector2i;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCGuiScreen;
 import nova.wrapper.mc1710.forward.inventory.FWInventory;
-import nova.wrapper.mc1710.item.ItemWrapperRegistry;
+import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Optional;
@@ -110,7 +110,7 @@ public class MCGuiSlot extends MCGuiComponent<Slot> implements NativeSlot, Drawa
 
 		@Override
 		public boolean isItemValid(ItemStack stack) {
-			return slot == null || !slot.isReadOnly() && slot.accept(ItemWrapperRegistry.instance.getNovaItem(stack));
+			return slot == null || !slot.isReadOnly() && slot.accept(ItemConverter.instance().getNovaItem(stack));
 		}
 
 		@Override

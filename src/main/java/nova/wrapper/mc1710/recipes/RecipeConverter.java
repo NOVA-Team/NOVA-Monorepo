@@ -6,6 +6,7 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingRecipe;
 import nova.core.recipes.crafting.ItemIngredient;
@@ -65,7 +66,7 @@ public class RecipeConverter {
         if (ingredient == null) {
             return null;
         } else if (ingredient instanceof ItemStack) {
-			return new SpecificItemIngredient(WrapUtility.unwrapItemStack((ItemStack) ingredient).get().getID());
+			return new SpecificItemIngredient(((Item) Game.instance.nativeManager.toNova(ingredient)).getID());
 		} else if (ingredient instanceof String) {
             return new OreItemIngredient((String) ingredient);
         } else if (ingredient instanceof List) {
@@ -90,7 +91,7 @@ public class RecipeConverter {
 
     private static ItemStack wrapSpecific(SpecificItemIngredient ingredient) {
         for (Item item : ingredient.getExampleItems().get()) {
-			return WrapUtility.wrapItemStack(Optional.of(item.factory().makeItem()));
+			return Game.instance.nativeManager.toNative(Optional.of(item.factory().makeItem()));
 		}
 
         throw new AssertionError("this can't be!");
@@ -192,9 +193,10 @@ public class RecipeConverter {
         net.minecraft.item.ItemStack recipeOutput = recipe.getRecipeOutput();
 		nova.core.item.Item output;
 		if (recipeOutput == null)
-            output = null;
-        else
-            output = WrapUtility.unwrapItemStack(recipeOutput).get();
+			output = null;
+		else {
+			output = Game.instance.nativeManager.toNova(recipeOutput);
+		}
 
         if (recipe instanceof ShapelessRecipes) {
 			ShapelessRecipes shapeless = (ShapelessRecipes) recipe;

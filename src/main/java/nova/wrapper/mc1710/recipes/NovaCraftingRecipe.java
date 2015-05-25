@@ -4,6 +4,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import nova.core.game.Game;
 import nova.core.recipes.crafting.CraftingRecipe;
 import nova.wrapper.mc1710.util.WrapUtility;
 
@@ -21,8 +22,8 @@ public class NovaCraftingRecipe implements IRecipe {
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inventoryCrafting) {
-        return WrapUtility.wrapItemStack(recipe.getCraftingResult(MCCraftingGrid.get(inventoryCrafting)));
-    }
+		return Game.instance.nativeManager.toNative(recipe.getCraftingResult(MCCraftingGrid.get(inventoryCrafting)));
+	}
 
     @Override
     public int getRecipeSize() {
@@ -31,6 +32,6 @@ public class NovaCraftingRecipe implements IRecipe {
 
     @Override
     public ItemStack getRecipeOutput() {
-        return WrapUtility.wrapItemStack(recipe.getNominalOutput());
-    }
+		return Game.instance.nativeManager.toNative(recipe.getNominalOutput());
+	}
 }

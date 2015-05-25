@@ -9,7 +9,7 @@ import nova.core.loader.Loadable;
 import nova.wrapper.mc1710.forward.block.FWBlock;
 import nova.wrapper.mc1710.forward.block.FWTile;
 import nova.wrapper.mc1710.forward.entity.FWEntity;
-import nova.wrapper.mc1710.item.FWItem;
+import nova.wrapper.mc1710.wrapper.item.FWItem;
 
 import java.util.Set;
 

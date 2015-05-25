@@ -11,6 +11,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.world.World;
+import nova.core.game.Game;
 import nova.core.recipes.crafting.ShapelessCraftingRecipe;
 import nova.wrapper.mc1710.util.WrapUtility;
 
@@ -22,7 +23,7 @@ public class ShapelessRecipeBasic extends ShapelessRecipes {
 	private final ShapelessCraftingRecipe recipe;
 	
 	public ShapelessRecipeBasic(ItemStack[] ingredients, ShapelessCraftingRecipe recipe) {
-		super(WrapUtility.wrapItemStack(recipe.getNominalOutput()), Arrays.asList(ingredients));
+		super(Game.instance.nativeManager.toNative(recipe.getNominalOutput()), Arrays.asList(ingredients));
 		
 		this.recipe = recipe;
 	}
@@ -34,6 +35,6 @@ public class ShapelessRecipeBasic extends ShapelessRecipes {
 	
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return WrapUtility.wrapItemStack(recipe.getCraftingResult(MCCraftingGrid.get(inventory)));
+		return Game.instance.nativeManager.toNative(recipe.getCraftingResult(MCCraftingGrid.get(inventory)));
 	}
 }

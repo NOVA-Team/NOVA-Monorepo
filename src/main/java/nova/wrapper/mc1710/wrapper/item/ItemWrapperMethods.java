@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.item;
+package nova.wrapper.mc1710.wrapper.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -39,14 +39,14 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		Item item = getItemFactory().makeItem(Game.instance.nativeManager.toNative(itemStack.getTagCompound())).setCount(itemStack.stackSize);
 		boolean b = item.onUse(new BWEntityPlayer(player), new BWWorld(world), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
-		ItemWrapperRegistry.instance.updateMCItemStack(itemStack, item);
+		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return b;
 	}
 
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		Item item = getItemFactory().makeItem(Game.instance.nativeManager.toNative(itemStack.getTagCompound())).setCount(itemStack.stackSize);
 		item.onRightClick(new BWEntityPlayer(player));
-		ItemWrapperRegistry.instance.updateMCItemStack(itemStack, item);
+		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return itemStack;
 	}
 

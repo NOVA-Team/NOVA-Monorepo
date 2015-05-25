@@ -1,18 +1,19 @@
-package nova.wrapper.mc1710.item;
+package nova.wrapper.mc1710.wrapper.item;
 
 import com.google.common.collect.HashBiMap;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.block.BlockFactory;
 import nova.core.game.Game;
+import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.item.ItemManager;
 import nova.core.item.event.ItemIDNotFoundEvent;
+import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.util.Category;
 import nova.core.util.exception.NovaException;
@@ -25,91 +26,49 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
+ * The main class responsible for wrapping items.
  * @author Calclavia, Stan Hebben
  */
-public class ItemWrapperRegistry {
-
-	public static final ItemWrapperRegistry instance = new ItemWrapperRegistry();
+public class ItemConverter implements NativeConverter<Item, ItemStack> {
 
 	/**
 	 * A map of all blocks registered
 	 */
 	private final HashBiMap<ItemFactory, MinecraftItemMapping> map = HashBiMap.create();
 
-	public MinecraftItemMapping get(ItemFactory item) {
-		return map.get(item);
+	public static ItemConverter instance() {
+		return (ItemConverter) Game.instance.nativeManager.getNative(Item.class, ItemStack.class);
 	}
 
-	public ItemFactory get(MinecraftItemMapping minecraftItem) {
-		return map.inverse().get(minecraftItem);
+	@Override
+	public Class<Item> getNovaSide() {
+		return Item.class;
 	}
 
-	public net.minecraft.item.ItemStack getMCItemStack(nova.core.item.Item item) {
-		if (item == null) {
-			return null;
-		}
-
-		if (item instanceof BWItem) {
-			return ((BWItem) item).makeItemStack(item.count());
-		} else {
-			ItemFactory itemFactory = Game.instance.itemManager.getItem(item.getID()).get();
-			LinkedNBTTagCompound tag = new LinkedNBTTagCompound(item);
-
-			MinecraftItemMapping mapping = get(itemFactory);
-			if (mapping == null) {
-				throw new NovaException("Missing mapping for " + itemFactory.getID());
-			}
-
-			ItemStack result = new ItemStack(mapping.item, item.count(), mapping.meta);
-			result.setTagCompound(tag);
-			return result;
-		}
+	@Override
+	public Class<ItemStack> getNativeSide() {
+		return ItemStack.class;
 	}
 
-	public net.minecraft.item.ItemStack getMCItemStack(nova.core.item.ItemFactory itemFactory) {
-		LinkedNBTTagCompound tag = new LinkedNBTTagCompound(itemFactory.makeItem());
-
-		MinecraftItemMapping mapping = get(itemFactory);
-		if (mapping == null) {
-			throw new NovaException("Missing mapping for " + itemFactory.getID());
-		}
-
-		ItemStack result = new ItemStack(mapping.item, 1, mapping.meta);
-		result.setTagCompound(tag);
-		return result;
-	}
-
-	/**
-	 * Saves NOVA item into a Minecraft ItemStack.
-	 */
-	public net.minecraft.item.ItemStack updateMCItemStack(ItemStack itemStack, nova.core.item.Item item) {
-		itemStack.stackSize = item.count();
-		itemStack.setTagCompound(Game.instance.nativeManager.toNative(item.factory().saveItem(item)));
-		return itemStack;
-	}
-
-	public net.minecraft.item.ItemStack getMCItemStack(String id) {
-		return getMCItemStack(Game.instance.itemManager.getItem(id).get().makeItem().setCount(1));
-	}
-
-	public nova.core.item.Item getNovaItemStack(net.minecraft.item.ItemStack itemStack) {
+	@Override
+	public Item toNova(ItemStack itemStack) {
 		return getNovaItem(itemStack).setCount(itemStack.stackSize);
 	}
 
-	public nova.core.item.Item getNovaItem(net.minecraft.item.ItemStack itemStack) {
+	//TODO: Why is this method separate?
+	public Item getNovaItem(ItemStack itemStack) {
 		if (itemStack.getItemDamage() == net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE) {
 			// TODO: Deal with wildcard meta values - important for the ore dictionary
 			return getNovaItem(new ItemStack(itemStack.getItem(), 1, 0));
 		}
 
-		if (itemStack.getTagCompound() != null && itemStack.getTagCompound() instanceof LinkedNBTTagCompound) {
-			return ((LinkedNBTTagCompound) itemStack.getTagCompound()).getItem();
+		if (itemStack.getTagCompound() != null && itemStack.getTagCompound() instanceof WrappedNBTTagCompound) {
+			return ((WrappedNBTTagCompound) itemStack.getTagCompound()).getItem();
 		} else {
 			MinecraftItemMapping mapping = new MinecraftItemMapping(itemStack);
 			ItemFactory itemFactory = map.inverse().get(mapping);
-			if (itemFactory == null && itemStack.getHasSubtypes())
-			// load subitem
-			{
+			if (itemFactory == null && itemStack.getHasSubtypes()) {
+				// load subitem
 				itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
 			}
 
@@ -124,6 +83,64 @@ public class ItemWrapperRegistry {
 
 			return itemFactory.makeItem(data);
 		}
+	}
+
+	@Override
+	public ItemStack toNative(Item item) {
+		if (item == null) {
+			return null;
+		}
+
+		//Prevent recusive wrapping
+		if (item instanceof BWItem) {
+			return ((BWItem) item).makeItemStack(item.count());
+		} else {
+			ItemFactory itemFactory = Game.instance.itemManager.getItem(item.getID()).get();
+			WrappedNBTTagCompound tag = new WrappedNBTTagCompound(item);
+
+			MinecraftItemMapping mapping = get(itemFactory);
+			if (mapping == null) {
+				throw new NovaException("Missing mapping for " + itemFactory.getID());
+			}
+
+			ItemStack result = new ItemStack(mapping.item, item.count(), mapping.meta);
+			result.setTagCompound(tag);
+			return result;
+		}
+	}
+
+	public ItemStack toNative(ItemFactory itemFactory) {
+		WrappedNBTTagCompound tag = new WrappedNBTTagCompound(itemFactory.makeItem());
+
+		MinecraftItemMapping mapping = get(itemFactory);
+		if (mapping == null) {
+			throw new NovaException("Missing mapping for " + itemFactory.getID());
+		}
+
+		ItemStack result = new ItemStack(mapping.item, 1, mapping.meta);
+		result.setTagCompound(tag);
+		return result;
+	}
+
+	public ItemStack toNative(String id) {
+		return toNative(Game.instance.itemManager.getItem(id).get().makeItem().setCount(1));
+	}
+
+	public MinecraftItemMapping get(ItemFactory item) {
+		return map.get(item);
+	}
+
+	public ItemFactory get(MinecraftItemMapping minecraftItem) {
+		return map.inverse().get(minecraftItem);
+	}
+
+	/**
+	 * Saves NOVA item into a Minecraft ItemStack.
+	 */
+	public net.minecraft.item.ItemStack updateMCItemStack(ItemStack itemStack, nova.core.item.Item item) {
+		itemStack.stackSize = item.count();
+		itemStack.setTagCompound(Game.instance.nativeManager.toNative(item.factory().saveItem(item)));
+		return itemStack;
 	}
 
 	/**
@@ -158,7 +175,7 @@ public class ItemWrapperRegistry {
 		if (itemFactory.getDummy() instanceof ItemBlock) {
 			BlockFactory blockFactory = ((ItemBlock) (itemFactory.getDummy())).blockFactory;
 			net.minecraft.block.Block mcBlock = BlockWrapperRegistry.instance.getMCBlock(blockFactory);
-			itemWrapper = Item.getItemFromBlock(mcBlock);
+			itemWrapper = net.minecraft.item.Item.getItemFromBlock(mcBlock);
 			if (itemWrapper == null) {
 				throw new NovaException("Missing block: " + itemFactory.getID());
 			}
@@ -194,9 +211,9 @@ public class ItemWrapperRegistry {
 	}
 
 	private void registerMinecraftItemsToNOVA() {
-		Set<String> itemIDs = (Set<String>) Item.itemRegistry.getKeys();
+		Set<String> itemIDs = (Set<String>) net.minecraft.item.Item.itemRegistry.getKeys();
 		itemIDs.forEach(itemID -> {
-			Item item = (Item) Item.itemRegistry.getObject(itemID);
+			net.minecraft.item.Item item = (net.minecraft.item.Item) net.minecraft.item.Item.itemRegistry.getObject(itemID);
 			registerMinecraftMapping(item, 0);
 		});
 	}
@@ -218,7 +235,7 @@ public class ItemWrapperRegistry {
 			int meta = Integer.parseInt(event.id.substring(lastColon + 1));
 			String itemID = event.id.substring(0, lastColon);
 
-			Item item = (Item) Item.itemRegistry.getObject(itemID);
+			net.minecraft.item.Item item = (net.minecraft.item.Item) net.minecraft.item.Item.itemRegistry.getObject(itemID);
 			if (item == null || !item.getHasSubtypes()) {
 				return;
 			}
@@ -228,7 +245,7 @@ public class ItemWrapperRegistry {
 		}
 	}
 
-	private ItemFactory registerMinecraftMapping(Item item, int meta) {
+	private ItemFactory registerMinecraftMapping(net.minecraft.item.Item item, int meta) {
 		MinecraftItemMapping mapping = new MinecraftItemMapping(item, meta);
 		if (map.inverse().containsKey(mapping))
 		// don't register twice, return the factory instead

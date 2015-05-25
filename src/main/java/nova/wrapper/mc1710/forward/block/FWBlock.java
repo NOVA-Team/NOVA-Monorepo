@@ -41,7 +41,7 @@ import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.backward.world.BWWorld;
 import nova.wrapper.mc1710.forward.util.FWCuboid;
-import nova.wrapper.mc1710.item.ItemWrapperRegistry;
+import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
 import org.lwjgl.opengl.GL11;
@@ -242,7 +242,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 		return block.getDrops()
 			.stream()
-			.map(ItemWrapperRegistry.instance::getMCItemStack)
+			.map(ItemConverter.instance()::toNative)
 			.collect(Collectors.toCollection(ArrayList::new));
 	}
 

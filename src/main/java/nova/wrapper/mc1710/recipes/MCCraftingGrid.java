@@ -8,8 +8,9 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import nova.core.entity.component.Player;
+import nova.core.game.Game;
 import nova.core.recipes.crafting.CraftingGrid;
-import nova.wrapper.mc1710.item.ItemWrapperRegistry;
+import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.util.ReflectionUtil;
 import nova.wrapper.mc1710.util.WrapUtility;
 
@@ -107,7 +108,7 @@ public class MCCraftingGrid implements CraftingGrid {
 					if (stacks[i] == null)
                         numberOfStacks++;
 
-					stacks[i] = WrapUtility.unwrapItemStack(original[i]).get();
+					stacks[i] = Game.instance.nativeManager.toNova(original[i]);
 				} else {
 					if (stacks[i] != null)
                         numberOfStacks--;
@@ -161,7 +162,7 @@ public class MCCraftingGrid implements CraftingGrid {
 		int ix = y * width + x;
 		if (!stack.equals(stacks[ix])) {
 			if (stack.isPresent()) {
-                inventory.setInventorySlotContents(ix, WrapUtility.wrapItemStack(stack));
+				inventory.setInventorySlotContents(ix, Game.instance.nativeManager.toNative(stack));
 
                 if (stacks[ix] == null) {
                     numberOfStacks++;
@@ -193,8 +194,8 @@ public class MCCraftingGrid implements CraftingGrid {
             if (stacks[i] == null)
                 numberOfStacks++;
 
-            inventory.setInventorySlotContents(i, WrapUtility.wrapItemStack(stack));
-            stacks[i] = stack.get();
+			inventory.setInventorySlotContents(i, Game.instance.nativeManager.toNative(stack));
+			stacks[i] = stack.get();
         }
 
         return true;
@@ -202,7 +203,7 @@ public class MCCraftingGrid implements CraftingGrid {
 
     @Override
 	public void giveBack(nova.core.item.Item itemStack) {
-		playerOrig.inventory.addItemStackToInventory(ItemWrapperRegistry.instance.getMCItemStack(itemStack));
+		playerOrig.inventory.addItemStackToInventory(ItemConverter.instance().toNative(itemStack));
 	}
 
     @Override

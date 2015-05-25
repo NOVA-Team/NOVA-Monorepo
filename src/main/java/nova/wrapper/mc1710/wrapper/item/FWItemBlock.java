@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.item;
+package nova.wrapper.mc1710.wrapper.item;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -6,25 +6,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import nova.core.item.ItemFactory;
+import nova.wrapper.mc1710.forward.block.FWBlock;
 
 import java.util.List;
 
 /**
  * @author Calclavia
  */
-public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethods {
+public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWrapperMethods {
 
-	public final ItemFactory itemFactory;
-
-	public FWItem(ItemFactory item) {
-		this.itemFactory = item;
-		setUnlocalizedName(item.getID());
-		setMaxStackSize(item.getDummy().getMaxCount());
+	public FWItemBlock(net.minecraft.block.Block block) {
+		super(block);
 	}
 
 	@Override
 	public ItemFactory getItemFactory() {
-		return itemFactory;
+		return ((FWBlock) field_150939_a).block.getItemFactory();
 	}
 
 	@Override

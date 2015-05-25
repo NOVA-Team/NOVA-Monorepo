@@ -19,7 +19,7 @@ import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.forward.block.FWBlock;
 import nova.wrapper.mc1710.forward.entity.FWEntity;
 import nova.wrapper.mc1710.forward.entity.MCEntityWrapper;
-import nova.wrapper.mc1710.item.ItemWrapperRegistry;
+import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 
 import java.util.HashSet;
@@ -106,7 +106,7 @@ public class BWWorld extends World {
 
 	@Override
 	public Entity addEntity(Vector3d position, Item item) {
-		EntityItem entityItem = new EntityItem(world(), position.x, position.y, position.z, ItemWrapperRegistry.instance.getMCItemStack(item));
+		EntityItem entityItem = new EntityItem(world(), position.x, position.y, position.z, Game.instance.nativeManager.toNative(item));
 		world().spawnEntityInWorld(entityItem);
 		return new BWEntity(entityItem);
 	}

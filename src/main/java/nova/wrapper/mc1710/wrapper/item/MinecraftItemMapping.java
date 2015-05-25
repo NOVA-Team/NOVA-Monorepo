@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.item;
+package nova.wrapper.mc1710.wrapper.item;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

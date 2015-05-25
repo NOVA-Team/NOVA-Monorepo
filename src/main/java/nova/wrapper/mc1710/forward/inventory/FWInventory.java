@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import nova.core.inventory.Inventory;
-import nova.wrapper.mc1710.item.ItemWrapperRegistry;
+import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 
 public class FWInventory implements IInventory {
 
@@ -21,7 +21,7 @@ public class FWInventory implements IInventory {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return ItemWrapperRegistry.instance.getMCItemStack(inventory.get(slot).orElse(null));
+		return ItemConverter.instance().toNative(inventory.get(slot).orElse(null));
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class FWInventory implements IInventory {
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inventory.set(slot, stack != null ? ItemWrapperRegistry.instance.getNovaItem(stack) : null);
+		inventory.set(slot, stack != null ? ItemConverter.instance().getNovaItem(stack) : null);
 	}
 
 	@Override
