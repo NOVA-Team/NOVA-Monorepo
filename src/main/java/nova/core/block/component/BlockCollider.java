@@ -79,4 +79,9 @@ public class BlockCollider extends Component {
 		isOpaqueCube = () -> is;
 		return this;
 	}
+
+	public BlockCollider setEntityCollide(Consumer<Entity> onEntityCollide) {
+		this.onEntityCollide = onEntityCollide;
+		return this;
+	}
 }

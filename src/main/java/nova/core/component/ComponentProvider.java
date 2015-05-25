@@ -1,5 +1,7 @@
 package nova.core.component;
 
+import nova.core.util.exception.NovaException;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,10 @@ public abstract class ComponentProvider {
 	 * @param component The component to add
 	 */
 	public final <C extends Component> C add(C component) {
+		if (componentMap.containsKey(component.getClass())) {
+			throw new NovaException("Attempt to add two of the same component types: " + component.getClass());
+		}
+
 		componentMap.put(component.getClass(), component);
 		return component;
 	}
