@@ -8,8 +8,8 @@ import nova.core.block.Block;
 import nova.core.network.PacketHandler;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
-import nova.wrapper.mc1710.forward.block.FWBlock;
-import nova.wrapper.mc1710.forward.block.FWTile;
+import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
+import nova.wrapper.mc1710.wrapper.block.forward.FWTile;
 import nova.wrapper.mc1710.network.MCPacket;
 
 /**

@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.forward.block;
+package nova.wrapper.mc1710.wrapper.block.forward;
 
 import nova.core.block.Block;
 import nova.core.component.transform.BlockTransform;

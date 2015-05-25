@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.block;
+package nova.wrapper.mc1710.wrapper.block.backward;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -12,7 +12,7 @@ import nova.core.retention.Stored;
 import nova.wrapper.mc1710.backward.world.BWWorld;
 
 public class BWBlock extends Block implements Storable {
-	private final net.minecraft.block.Block mcBlock;
+	public final net.minecraft.block.Block mcBlock;
 	@Stored
 	public int metadata;
 	private TileEntity mcTileEntity;

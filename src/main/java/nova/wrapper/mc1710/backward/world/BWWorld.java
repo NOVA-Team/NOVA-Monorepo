@@ -13,13 +13,11 @@ import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
-import nova.wrapper.mc1710.backward.block.BWBlock;
+import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.backward.entity.BWEntity;
-import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
-import nova.wrapper.mc1710.forward.block.FWBlock;
+import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
 import nova.wrapper.mc1710.forward.entity.FWEntity;
 import nova.wrapper.mc1710.forward.entity.MCEntityWrapper;
-import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 
 import java.util.HashSet;
@@ -68,7 +66,7 @@ public class BWWorld extends World {
 	@Override
 	public boolean setBlock(Vector3i position, BlockFactory blockFactory, Object... args) {
 		//TODO: Implement object arguments
-		net.minecraft.block.Block mcBlock = BlockWrapperRegistry.instance.getMCBlock(blockFactory);
+		net.minecraft.block.Block mcBlock = Game.instance.nativeManager.toNative(blockFactory);
 		return world().setBlock(position.x, position.y, position.z, mcBlock != null ? mcBlock : Blocks.air);
 	}
 

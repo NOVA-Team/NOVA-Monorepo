@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.forward.block;
+package nova.wrapper.mc1710.wrapper.block.forward;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;

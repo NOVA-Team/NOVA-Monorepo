@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.forward.block;
+package nova.wrapper.mc1710.wrapper.block.forward;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;

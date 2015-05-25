@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import nova.core.item.ItemFactory;
-import nova.wrapper.mc1710.forward.block.FWBlock;
+import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
 
 import java.util.List;
 

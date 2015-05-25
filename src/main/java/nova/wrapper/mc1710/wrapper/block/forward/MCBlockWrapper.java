@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.forward.block;
+package nova.wrapper.mc1710.wrapper.block.forward;
 
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;

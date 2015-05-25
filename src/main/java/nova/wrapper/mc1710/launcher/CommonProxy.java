@@ -6,8 +6,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.loader.Loadable;
-import nova.wrapper.mc1710.forward.block.FWBlock;
-import nova.wrapper.mc1710.forward.block.FWTile;
+import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
+import nova.wrapper.mc1710.wrapper.block.forward.FWTile;
 import nova.wrapper.mc1710.forward.entity.FWEntity;
 import nova.wrapper.mc1710.wrapper.item.FWItem;
 

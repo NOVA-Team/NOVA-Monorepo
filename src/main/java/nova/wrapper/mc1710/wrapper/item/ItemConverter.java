@@ -17,7 +17,7 @@ import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.util.Category;
 import nova.core.util.exception.NovaException;
-import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
+import nova.wrapper.mc1710.wrapper.block.BlockConverter;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
 
@@ -174,7 +174,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack> {
 
 		if (itemFactory.getDummy() instanceof ItemBlock) {
 			BlockFactory blockFactory = ((ItemBlock) (itemFactory.getDummy())).blockFactory;
-			net.minecraft.block.Block mcBlock = BlockWrapperRegistry.instance.getMCBlock(blockFactory);
+			net.minecraft.block.Block mcBlock = Game.instance.nativeManager.toNative(blockFactory);
 			itemWrapper = net.minecraft.item.Item.getItemFromBlock(mcBlock);
 			if (itemWrapper == null) {
 				throw new NovaException("Missing block: " + itemFactory.getID());

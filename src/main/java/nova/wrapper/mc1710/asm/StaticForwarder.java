@@ -5,7 +5,7 @@ import net.minecraft.world.chunk.Chunk;
 import nova.core.event.EventManager;
 import nova.core.game.Game;
 import nova.core.util.transform.vector.Vector3i;
-import nova.wrapper.mc1710.backward.block.BWBlock;
+import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.backward.world.BWWorld;
 
 /**
