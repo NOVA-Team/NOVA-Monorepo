@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Handles block collision and bounds.
@@ -21,6 +22,9 @@ public class BlockCollider extends Component {
 	public final Block block;
 	public Consumer<Entity> onEntityCollide = (entity) -> {
 	};
+
+	public Supplier<Boolean> isCube = () -> getBoundingBox().isCube();
+	public Supplier<Boolean> isOpaqueCube = this::isCube;
 
 	public BlockCollider(Block block) {
 		this.block = block;
@@ -56,7 +60,12 @@ public class BlockCollider extends Component {
 	 * @return {@code true} is this block is a cube.
 	 */
 	public boolean isCube() {
-		return getBoundingBox().isCube();
+		return isCube.get();
+	}
+
+	public BlockCollider setCube(boolean is) {
+		isCube = () -> is;
+		return this;
 	}
 
 	/**
@@ -64,7 +73,12 @@ public class BlockCollider extends Component {
 	 * @return {@code true} is this block is a cube that is opaque.
 	 */
 	public boolean isOpaqueCube() {
-		return isCube();
+		return isOpaqueCube.get();
+	}
+
+	public BlockCollider setOpaqueCube(boolean is) {
+		isOpaqueCube = () -> is;
+		return this;
 	}
 
 	/**
