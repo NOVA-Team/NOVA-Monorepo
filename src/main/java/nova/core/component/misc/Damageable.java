@@ -1,20 +1,19 @@
-package nova.core.entity.component;
+package nova.core.component.misc;
 
+import nova.core.component.Component;
 import nova.core.util.Identifiable;
 
 /**
- * Applied to entities that can take damage.
- *
+ * Applied to objects that can take damage.
  * @author Calclavia
  */
-//TODO: Change to component
-public interface Damageable {
+public abstract class Damageable extends Component {
 
-	default void damage(double amount) {
+	public void damage(double amount) {
 		damage(amount, DamageType.generic);
 	}
 
-	void damage(double amount, DamageType type);
+	public abstract void damage(double amount, DamageType type);
 
 	public static class DamageType implements Identifiable {
 

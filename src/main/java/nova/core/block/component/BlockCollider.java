@@ -1,15 +1,13 @@
 package nova.core.block.component;
 
 import nova.core.block.Block;
-import nova.core.component.Component;
+import nova.core.component.misc.Collider;
 import nova.core.entity.Entity;
 import nova.core.util.transform.shape.Cuboid;
-import nova.core.util.transform.vector.Vector3i;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -17,17 +15,9 @@ import java.util.function.Supplier;
  * This component is required for most rendering operations.
  * @author Calclavia
  */
-public class BlockCollider extends Component {
+public class BlockCollider extends Collider {
 
 	public final Block block;
-
-	/**
-	 * Called when an entity collides with this block. More specifically, when
-	 * the entity's block bounds coincide with the block bounds.
-	 * @param entity colliding entity
-	 */
-	public Consumer<Entity> onEntityCollide = (entity) -> {
-	};
 
 	/**
 	 * Called to check if the block is a cube.
@@ -50,7 +40,7 @@ public class BlockCollider extends Component {
 	 * @return The bounding box of this block.
 	 */
 	public Cuboid getBoundingBox() {
-		return new Cuboid(new Vector3i(0, 0, 0), new Vector3i(1, 1, 1));
+		return collisionBoxes.stream().findFirst().get();
 	}
 
 	/**
@@ -77,11 +67,6 @@ public class BlockCollider extends Component {
 
 	public BlockCollider setOpaqueCube(boolean is) {
 		isOpaqueCube = () -> is;
-		return this;
-	}
-
-	public BlockCollider setEntityCollide(Consumer<Entity> onEntityCollide) {
-		this.onEntityCollide = onEntityCollide;
 		return this;
 	}
 }
