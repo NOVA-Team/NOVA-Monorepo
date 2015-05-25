@@ -21,6 +21,6 @@ class RotatedRenderer extends StaticRenderer {
 	@Override
 	public void renderStatic(Model model) {
 		BlockModelUtil.drawBlock(model, (Block) provider);
-		model.rotate(provider.get(Orientation.class).get().orientation.rotation);
+		model.rotate(provider.get(Orientation.class).orientation.rotation);
 	}
 }

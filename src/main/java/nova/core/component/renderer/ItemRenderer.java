@@ -23,11 +23,11 @@ public class ItemRenderer extends Component {
 	 * @param model A {@link Model} to use.
 	 */
 	public void renderItem(Model model) {
-		Optional<StaticRenderer> opComponent = provider.get(StaticRenderer.class);
+		Optional<StaticRenderer> opComponent = provider.getOp(StaticRenderer.class);
 		if (opComponent.isPresent()) {
 			opComponent.get().renderStatic(model);
 		} else {
-			provider.get(DynamicRenderer.class).ifPresent(c -> c.renderDynamic(model));
+			provider.getOp(DynamicRenderer.class).ifPresent(c -> c.renderDynamic(model));
 		}
 	}
 

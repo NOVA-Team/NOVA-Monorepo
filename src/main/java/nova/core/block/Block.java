@@ -43,7 +43,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	}
 
 	public final BlockTransform transform() {
-		return get(BlockTransform.class).get();
+		return get(BlockTransform.class);
 	}
 
 	public final World world() {

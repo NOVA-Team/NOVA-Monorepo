@@ -81,7 +81,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 */
 	public void bind(Entity entity, Vector3i position) {
 		inventoryMap.clear();
-		playerInventory = entity.get(Player.class).get().getInventory();
+		playerInventory = entity.get(Player.class).getInventory();
 		onEvent(new GuiEvent.BindEvent(this, entity, position));
 		repaint();
 	}

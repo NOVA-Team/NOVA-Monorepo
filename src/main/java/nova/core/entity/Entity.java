@@ -14,7 +14,7 @@ import nova.core.world.World;
 public abstract class Entity extends ComponentProvider implements Identifiable, Stateful {
 
 	public final EntityTransform transform() {
-		return get(EntityTransform.class).get();
+		return get(EntityTransform.class);
 	}
 
 	public final World world() {

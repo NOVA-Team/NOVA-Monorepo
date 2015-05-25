@@ -42,11 +42,14 @@ public abstract class ComponentProvider {
 		return componentMap.containsKey(componentType);
 	}
 
-	public final <C extends Component> Optional<C> remove(Class<C> componentType) {
-		return Optional.ofNullable((C) componentMap.remove(componentType));
+	public final <C extends Component> C remove(Class<C> componentType) {
+		if (!has(componentType)) {
+			throw new NovaException("Attempt to remove component that does not exist: " + componentType);
+		}
+		return (C) componentMap.remove(componentType);
 	}
 
-	public final <C extends Component> Optional<C> get(Class<C> componentType) {
+	public final <C extends Component> Optional<C> getOp(Class<C> componentType) {
 		Component component = componentMap.get(componentType);
 
 		if (component != null) {
@@ -59,6 +62,10 @@ public abstract class ComponentProvider {
 				.map(componentType::cast)
 				.findFirst();
 		}
+	}
+
+	public final <C extends Component> C get(Class<C> componentType) {
+		return getOp(componentType).orElseThrow(() -> new NovaException("Attempt to get component that does not exist: " + componentType));
 	}
 
 	/**

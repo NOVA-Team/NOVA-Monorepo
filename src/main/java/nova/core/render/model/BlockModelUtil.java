@@ -22,8 +22,8 @@ public class BlockModelUtil {
 	 * @return This Model
 	 */
 	public static Model drawBlock(Model model, Block block) {
-		Optional<BlockCollider> collider = block.get(BlockCollider.class);
-		Optional<StaticBlockRenderer> staticRenderer = block.get(StaticBlockRenderer.class);
+		Optional<BlockCollider> collider = block.getOp(BlockCollider.class);
+		Optional<StaticBlockRenderer> staticRenderer = block.getOp(StaticBlockRenderer.class);
 
 		if (collider.isPresent() && staticRenderer.isPresent()) {
 			Cuboid boundingBox = collider.get().getBoundingBox();
