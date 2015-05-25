@@ -2,7 +2,7 @@ package nova.wrapper.mc1710.backward.entity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
-import nova.core.entity.component.Damageable;
+import nova.core.component.misc.Damageable;
 import nova.core.entity.component.Player;
 import nova.core.inventory.component.InventoryPlayer;
 import nova.wrapper.mc1710.backward.inventory.BWInventory;
@@ -11,7 +11,7 @@ import nova.wrapper.mc1710.backward.inventory.BWInventory;
  * A Nova to Minecraft entity wrapper
  * @author Calclavia
  */
-public class BWEntityPlayer extends BWEntity implements Damageable {
+public class BWEntityPlayer extends BWEntity {
 
 	public final net.minecraft.entity.player.EntityPlayer entity;
 	public final BWInventoryPlayer inventory;
@@ -21,16 +21,15 @@ public class BWEntityPlayer extends BWEntity implements Damageable {
 		this.entity = entity;
 		this.inventory = new BWInventoryPlayer(entity);
 		add(new MCPlayer(entity));
-	}
-
-	@Override
-	public void damage(double amount, DamageType type) {
-
-		if (type == DamageType.generic) {
-			entity.attackEntityFrom(DamageSource.generic, (float) amount);
-		}
-
-		// TODO: Apply other damage source wrappers?
+		add(new Damageable() {
+			@Override
+			public void damage(double amount, DamageType type) {
+				if (type == DamageType.generic) {
+					entity.attackEntityFrom(DamageSource.generic, (float) amount);
+				}
+				// TODO: Apply other damage source wrappers?
+			}
+		});
 	}
 
 	public static class MCPlayer extends Player {
