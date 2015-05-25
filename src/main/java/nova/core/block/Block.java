@@ -1,6 +1,7 @@
 package nova.core.block;
 
 import nova.core.entity.Entity;
+import nova.core.event.CancelableEvent;
 import nova.core.event.EventBus;
 import nova.core.game.Game;
 import nova.core.item.Item;
@@ -90,45 +91,48 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 	/**
 	 * Block Events
 	 */
-	public static class BlockEvent {
-
-	}
-
-	public static class NeighborChangeEvent extends BlockEvent {
-		public final Vector3i neighborPosition;
+	@CancelableEvent.Cancelable
+	public static class NeighborChangeEvent extends CancelableEvent {
+		public final Optional<Vector3i> neighborPosition;
 
 		/**
 		 * Called when a block next to this one changes (removed, placed, etc...).
 		 * @param neighborPosition The position of the block that changed.
 		 */
-		public NeighborChangeEvent(Vector3i neighborPosition) {
+		public NeighborChangeEvent(Optional<Vector3i> neighborPosition) {
 			this.neighborPosition = neighborPosition;
 		}
 	}
 
-	public static class BlockPlaceEvent extends BlockEvent {
-		public final Optional<Entity> entity;
+	public static class BlockPlaceEvent {
+		/**
+		 * The entity that placed the block
+		 */
+		public final Optional<Entity> by;
 
 		/**
 		 * Called when the block is placed.
 		 */
-		public BlockPlaceEvent(Optional<Entity> entity) {
-			this.entity = entity;
+		public BlockPlaceEvent(Optional<Entity> by) {
+			this.by = by;
 		}
 	}
 
-	public static class BlockRemoveEvent extends BlockEvent {
-		public final Optional<Entity> entity;
+	public static class BlockRemoveEvent {
+		/**
+		 * The entity that removed the block
+		 */
+		public final Optional<Entity> by;
 
 		/**
 		 * Called when the block is removed.
 		 */
-		public BlockRemoveEvent(Optional<Entity> entity) {
-			this.entity = entity;
+		public BlockRemoveEvent(Optional<Entity> by) {
+			this.by = by;
 		}
 	}
 
-	public static class RightClickEvent extends BlockEvent {
+	public static class RightClickEvent {
 		/**
 		 * The entity that clicked this object. Most likely a
 		 * player.
@@ -157,7 +161,7 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 		}
 	}
 
-	public static class LeftClickEvent extends BlockEvent {
+	public static class LeftClickEvent {
 		/**
 		 * The entity that clicked this object. Most likely a
 		 * player.

@@ -20,11 +20,26 @@ import java.util.function.Supplier;
 public class BlockCollider extends Component {
 
 	public final Block block;
+
+	/**
+	 * Called when an entity collides with this block. More specifically, when
+	 * the entity's block bounds coincide with the block bounds.
+	 * @param entity colliding entity
+	 */
 	public Consumer<Entity> onEntityCollide = (entity) -> {
 	};
 
+	/**
+	 * Called to check if the block is a cube.
+	 * @return {@code true} is this block is a cube.
+	 */
 	public Supplier<Boolean> isCube = () -> getBoundingBox().isCube();
-	public Supplier<Boolean> isOpaqueCube = this::isCube;
+
+	/**
+	 * Called to check if the block is an opaque cube.
+	 * @return {@code true} is this block is a cube that is opaque.
+	 */
+	public Supplier<Boolean> isOpaqueCube = isCube;
 
 	public BlockCollider(Block block) {
 		this.block = block;
@@ -55,38 +70,13 @@ public class BlockCollider extends Component {
 		return bounds;
 	}
 
-	/**
-	 * Called to check if the block is a cube.
-	 * @return {@code true} is this block is a cube.
-	 */
-	public boolean isCube() {
-		return isCube.get();
-	}
-
 	public BlockCollider setCube(boolean is) {
 		isCube = () -> is;
 		return this;
 	}
 
-	/**
-	 * Called to check if the block is an opaque cube.
-	 * @return {@code true} is this block is a cube that is opaque.
-	 */
-	public boolean isOpaqueCube() {
-		return isOpaqueCube.get();
-	}
-
 	public BlockCollider setOpaqueCube(boolean is) {
 		isOpaqueCube = () -> is;
 		return this;
-	}
-
-	/**
-	 * Called when an entity collides with this block. More specifically, when
-	 * the entity's block bounds coincide with the block bounds.
-	 * @param entity colliding entity
-	 */
-	public void onEntityCollide(Entity entity) {
-		onEntityCollide.accept(entity);
 	}
 }

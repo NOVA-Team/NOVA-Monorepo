@@ -4,7 +4,10 @@ import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
 
 /**
- * A 3D transform
+ * A 3D transform.
+ *
+ * Note that the implemented Transform3d for entities require a constructor with type ComponentProvider.
+ *
  * @author Calclavia
  */
 public class Transform3d extends Transform<Transform3d, Vector3d, Quaternion> {

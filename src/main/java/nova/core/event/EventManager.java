@@ -4,8 +4,6 @@ import nova.core.block.Block;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
 
-import java.util.Optional;
-
 /**
  * General event manager that handles basic events
  * @author Calclavia
@@ -22,14 +20,9 @@ public class EventManager {
 	public EventBus<EmptyEvent> serverStopping = new EventBus<>();
 
 	/**
-	 * Called when a block is changed (set block).
+	 * Called when a block is changed (set block) in the world.
 	 */
 	public EventBus<BlockChangeEvent> blockChange = new EventBus<>();
-
-	/**
-	 * Called when a block's neighbor change.
-	 */
-	public EventBus<BlockNeighborChangeEvent> blockNeighborChange = new EventBus<>();
 
 	public static class BlockEvent extends CancelableEvent {
 		//The world
@@ -43,6 +36,9 @@ public class EventManager {
 		}
 	}
 
+	/**
+	 * Called when a block in the world changes.
+	 */
 	public static class BlockChangeEvent extends BlockEvent {
 
 		//The block that was in this position previously
@@ -54,17 +50,6 @@ public class EventManager {
 			super(world, position);
 			this.newBlock = newBlock;
 			this.oldBlock = oldBlock;
-		}
-	}
-
-	@CancelableEvent.Cancelable
-	public static class BlockNeighborChangeEvent extends BlockEvent {
-		//The neighbor block
-		public final Optional<Block> neighbor;
-
-		public BlockNeighborChangeEvent(World world, Vector3i position, Optional<Block> neighbor) {
-			super(world, position);
-			this.neighbor = neighbor;
 		}
 	}
 
