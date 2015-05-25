@@ -1,42 +1,65 @@
 package nova.core.component;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * A component provider is implemented in blocks or entities.
  * A component provider provides the components associated with the object.
  * @author Calclavia
  */
-public interface ComponentProvider {
+public abstract class ComponentProvider {
+
+	private Map<Class<? extends Component>, Component> componentMap = new HashMap<>();
 
 	/**
 	 * Adds a component to the provider
 	 * @param component The component to add
 	 */
-	default void add(Component component) {
-		components().add(component);
+	public final Component add(Component component) {
+		componentMap.put(component.getClass(), component);
+		return component;
 	}
 
 	/**
 	 * Removes a component from the provider
 	 * @param component The component to remove
 	 */
-	default void remove(Component component) {
-		components().remove(component);
+	public final Component remove(Component component) {
+		componentMap.remove(component.getClass());
+		return component;
 	}
 
-	default <C extends Component> Optional<C> getComponent(Class<C> componentType) {
-		return components()
-			.stream()
-			.filter(component -> componentType.isAssignableFrom(component.getClass()))
-			.map(component -> componentType.cast(component))
-			.findFirst();
+	public final boolean has(Class<? extends Component> componentType) {
+		return componentMap.containsKey(componentType);
+	}
+
+	public final <C extends Component> Optional<C> remove(Class<C> componentType) {
+		return Optional.ofNullable((C) componentMap.remove(componentType));
+	}
+
+	public final <C extends Component> Optional<C> get(Class<C> componentType) {
+		Component component = componentMap.get(componentType);
+
+		if (component != null) {
+			return Optional.of((C) component);
+		} else {
+			return componentMap
+				.values()
+				.stream()
+				.filter(c -> componentType.isAssignableFrom(c.getClass()))
+				.map(componentType::cast)
+				.findFirst();
+		}
 	}
 
 	/**
 	 * Gets a set of components that this ComponentProvider provides.
 	 * @return A set of components.
 	 */
-	Set<Component> components();
+	public final Collection<Component> components() {
+		return componentMap.values();
+	}
 }

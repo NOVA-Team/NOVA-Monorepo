@@ -22,7 +22,7 @@ public class BlockModelUtil {
 	 */
 	public static Model drawBlock(Model model, Block block) {
 
-		Optional<BlockCollider> collider = block.getComponent(BlockCollider.class);
+		Optional<BlockCollider> collider = block.get(BlockCollider.class);
 		if (collider.isPresent()) {
 			Cuboid boundingBox = collider.get().getBoundingBox();
 			double minX = boundingBox.min.x - 0.5;

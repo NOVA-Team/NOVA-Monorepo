@@ -1,6 +1,5 @@
 package nova.core.item;
 
-import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.game.Game;
@@ -13,14 +12,10 @@ import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-public abstract class Item implements ComponentProvider, Identifiable {
-
-	private Set<Component> components = new HashSet<>();
+public abstract class Item extends ComponentProvider implements Identifiable {
 
 	/**
 	 * The amount of this item that is present.
@@ -154,10 +149,5 @@ public abstract class Item implements ComponentProvider, Identifiable {
 	 */
 	public Optional<ItemTexture> getTexture() {
 		return Optional.empty();
-	}
-
-	@Override
-	public Set<Component> components() {
-		return components;
 	}
 }
