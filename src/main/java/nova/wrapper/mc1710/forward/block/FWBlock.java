@@ -21,12 +21,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 import nova.core.block.Block;
-import nova.core.block.BlockChanger;
 import nova.core.block.BlockFactory;
-import nova.core.block.components.ItemRenderer;
-import nova.core.block.components.LightEmitter;
-import nova.core.block.components.Stateful;
-import nova.core.block.components.StaticRenderer;
+import nova.core.block.Stateful;
 import nova.core.component.Updater;
 import nova.core.event.EventManager;
 import nova.core.game.Game;
@@ -166,13 +162,13 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-		getBlockInstance(world, new Vector3i(x, y, z)).onPlaced(new BlockChanger.Entity(BackwardProxyUtil.getEntityWrapper(entity)));
+		getBlockInstance(world, new Vector3i(x, y, z)).onPlaced(BackwardProxyUtil.getEntityWrapper(entity));
 		//TODO: Should we consider onBlockPlaced also?
 	}
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, net.minecraft.block.Block block, int i) {
-		getBlockInstance(world, new Vector3i(x, y, z)).onRemoved(new BlockChanger.Unknown());
+		getBlockInstance(world, new Vector3i(x, y, z)).onRemoved(Optional.empty());
 		super.breakBlock(world, x, y, z, block, i);
 	}
 
