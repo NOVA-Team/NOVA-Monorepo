@@ -8,13 +8,11 @@ import nova.core.render.Color;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.Positioned;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -67,47 +65,6 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 	}
 
 	/**
-	 * Called to get the bounding box of this block.
-	 * @return The bounding box of this block.
-	 */
-	public Cuboid getBoundingBox() {
-		return new Cuboid(new Vector3i(0, 0, 0), new Vector3i(1, 1, 1));
-	}
-
-	/**
-	 * Called to check for collisions.
-	 * @param intersect Cuboid that could be colliding.
-	 * @param entity The entity that could be colliding.
-	 * @return Cuboids that represent colliding areas.
-	 */
-	public Set<Cuboid> getCollidingBoxes(Cuboid intersect, Optional<Entity> entity) {
-		Set<Cuboid> bounds = new HashSet<>();
-		Cuboid defaultBound = getBoundingBox();
-
-		if (defaultBound.add(position()).intersects(intersect)) {
-			bounds.add(getBoundingBox());
-		}
-
-		return bounds;
-	}
-
-	/**
-	 * Called to check if the block is a cube.
-	 * @return {@code true} is this block is a cube.
-	 */
-	public boolean isCube() {
-		return getBoundingBox().isCube();
-	}
-
-	/**
-	 * Called to check if the block is an opaque cube.
-	 * @return {@code true} is this block is a cube that is opaque.
-	 */
-	public boolean isOpaqueCube() {
-		return isCube();
-	}
-
-	/**
 	 * Called when a block next to this one changes (removed, placed, etc...).
 	 * @param neighborPosition The position of the block that changed.
 	 */
@@ -117,17 +74,15 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 
 	/**
 	 * Called when the block is placed.
-	 * @param changer The BlockChanger that placed the block.
 	 */
-	public void onPlaced(BlockChanger changer) {
+	public void onPlaced() {
 
 	}
 
 	/**
 	 * Called when the block is removed.
-	 * @param changer The BlockChanger that removed the block.
 	 */
-	public void onRemoved(BlockChanger changer) {
+	public void onRemoved() {
 
 	}
 
@@ -153,15 +108,6 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 	 */
 	public boolean onRightClick(Entity entity, int side, Vector3d hit) {
 		return false;
-	}
-
-	/**
-	 * Called when an entity collides with this block. More specifically, when
-	 * the entity's block bounds coincide with the block bounds.
-	 * @param entity colliding entity
-	 */
-	public void onEntityCollide(Entity entity) {
-
 	}
 
 	/**

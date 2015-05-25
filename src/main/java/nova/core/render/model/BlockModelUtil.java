@@ -1,71 +1,77 @@
 package nova.core.render.model;
 
 import nova.core.block.Block;
+import nova.core.block.component.BlockCollider;
 import nova.core.render.Color;
 import nova.core.util.Direction;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.shape.Cuboid;
 
+import java.util.Optional;
+
 /**
  * Block model helper methods
- *
  * @author Calclavia
  */
 public class BlockModelUtil {
 
 	/**
 	 * Draws a standard block.
-	 *
 	 * @param block Block to draw
 	 * @return This Model
 	 */
 	public static Model drawBlock(Model model, Block block) {
 
-		Cuboid boundingBox = block.getBoundingBox();
-		double minX = boundingBox.min.x - 0.5;
-		double minY = boundingBox.min.y - 0.5;
-		double minZ = boundingBox.min.z - 0.5;
-		double maxX = boundingBox.max.x - 0.5;
-		double maxY = boundingBox.max.y - 0.5;
-		double maxZ = boundingBox.max.z - 0.5;
+		Optional<BlockCollider> collider = block.getComponent(BlockCollider.class);
+		if (collider.isPresent()) {
+			Cuboid boundingBox = collider.get().getBoundingBox();
+			double minX = boundingBox.min.x - 0.5;
+			double minY = boundingBox.min.y - 0.5;
+			double minZ = boundingBox.min.z - 0.5;
+			double maxX = boundingBox.max.x - 0.5;
+			double maxY = boundingBox.max.y - 0.5;
+			double maxZ = boundingBox.max.z - 0.5;
 
-		if (block.shouldRenderSide(Direction.DOWN)) {
-			Color downColor = block.colorMultiplier(Direction.DOWN);
-			Face face = drawDown(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-			face.texture = block.getTexture(Direction.DOWN);
-			face.vertices.forEach(v -> v.setColor(downColor));
+			if (block.shouldRenderSide(Direction.DOWN)) {
+				Color downColor = block.colorMultiplier(Direction.DOWN);
+				Face face = drawDown(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+				face.texture = block.getTexture(Direction.DOWN);
+				face.vertices.forEach(v -> v.setColor(downColor));
+			}
+			if (block.shouldRenderSide(Direction.UP)) {
+				Color upColor = block.colorMultiplier(Direction.UP);
+				Face face = drawUp(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+				face.texture = block.getTexture(Direction.UP);
+				face.vertices.forEach(v -> v.setColor(upColor));
+			}
+			if (block.shouldRenderSide(Direction.NORTH)) {
+				Color northColor = block.colorMultiplier(Direction.NORTH);
+				Face face = drawNorth(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+				face.texture = block.getTexture(Direction.NORTH);
+				face.vertices.forEach(v -> v.setColor(northColor));
+			}
+			if (block.shouldRenderSide(Direction.SOUTH)) {
+				Color southColor = block.colorMultiplier(Direction.SOUTH);
+				Face face = drawSouth(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+				face.texture = block.getTexture(Direction.SOUTH);
+				face.vertices.forEach(v -> v.setColor(southColor));
+			}
+			if (block.shouldRenderSide(Direction.WEST)) {
+				Color westColor = block.colorMultiplier(Direction.WEST);
+				Face face = drawWest(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+				face.texture = block.getTexture(Direction.WEST);
+				face.vertices.forEach(v -> v.setColor(westColor));
+			}
+			if (block.shouldRenderSide(Direction.EAST)) {
+				Color eastColor = block.colorMultiplier(Direction.EAST);
+				Face face = drawEast(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+				face.texture = block.getTexture(Direction.EAST);
+				face.vertices.forEach(v -> v.setColor(eastColor));
+			}
+			return model;
 		}
-		if (block.shouldRenderSide(Direction.UP)) {
-			Color upColor = block.colorMultiplier(Direction.UP);
-			Face face = drawUp(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-			face.texture = block.getTexture(Direction.UP);
-			face.vertices.forEach(v -> v.setColor(upColor));
-		}
-		if (block.shouldRenderSide(Direction.NORTH)) {
-			Color northColor = block.colorMultiplier(Direction.NORTH);
-			Face face = drawNorth(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-			face.texture = block.getTexture(Direction.NORTH);
-			face.vertices.forEach(v -> v.setColor(northColor));
-		}
-		if (block.shouldRenderSide(Direction.SOUTH)) {
-			Color southColor = block.colorMultiplier(Direction.SOUTH);
-			Face face = drawSouth(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-			face.texture = block.getTexture(Direction.SOUTH);
-			face.vertices.forEach(v -> v.setColor(southColor));
-		}
-		if (block.shouldRenderSide(Direction.WEST)) {
-			Color westColor = block.colorMultiplier(Direction.WEST);
-			Face face = drawWest(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-			face.texture = block.getTexture(Direction.WEST);
-			face.vertices.forEach(v -> v.setColor(westColor));
-		}
-		if (block.shouldRenderSide(Direction.EAST)) {
-			Color eastColor = block.colorMultiplier(Direction.EAST);
-			Face face = drawEast(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-			face.texture = block.getTexture(Direction.EAST);
-			face.vertices.forEach(v -> v.setColor(eastColor));
-		}
-		return model;
+
+		return null;
 	}
 
 	public static Face drawDown(
