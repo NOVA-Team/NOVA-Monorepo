@@ -1,31 +1,34 @@
-package nova.core.player;
+package nova.core.entity.component;
+
+import nova.core.component.Component;
+import nova.core.inventory.component.InventoryPlayer;
 
 /**
  * Basic representation of Player
  */
-public interface Player {
+public abstract class Player extends Component {
 	/**
 	 * @return Returns player name that can be used to identify this player
 	 */
-	String getUsername();
+	public abstract String getUsername();
 
 	/**
 	 * @return Returns the ID representing the player.
 	 * For many games, the username is the ID.
 	 */
-	default String getID() {
+	public String getPlayerID() {
 		return getUsername();
 	}
 
 	/**
 	 * @return Inventory of the player
 	 */
-	InventoryPlayer getInventory();
+	public abstract InventoryPlayer getInventory();
 
 	/**
 	 * @return Returns non-identifying player name
 	 */
-	default String getDisplayName() {
+	public String getDisplayName() {
 		return getUsername();
 	}
 }

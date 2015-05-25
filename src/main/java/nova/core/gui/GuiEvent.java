@@ -2,10 +2,10 @@ package nova.core.gui;
 
 import nova.core.block.Block;
 import nova.core.entity.Entity;
+import nova.core.entity.component.Player;
 import nova.core.event.CancelableEvent;
 import nova.core.gui.KeyManager.Key;
 import nova.core.gui.render.Graphics;
-import nova.core.player.Player;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
 
@@ -102,7 +102,7 @@ public class GuiEvent extends CancelableEvent {
 			this.gui = gui;
 			this.entity = entity;
 			this.position = position;
-			this.player = (Player) entity;
+			this.player = entity.get(Player.class).get();
 			this.world = entity.transform.world();
 			this.block = world.getBlock(position);
 		}

@@ -1,6 +1,6 @@
 package nova.core.game;
 
-import nova.core.player.Player;
+import nova.core.entity.component.Player;
 
 /**
  * The ClientManager to access client-side instances.

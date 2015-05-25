@@ -1,6 +1,7 @@
 package nova.core.gui;
 
 import nova.core.entity.Entity;
+import nova.core.entity.component.Player;
 import nova.core.game.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
@@ -10,10 +11,9 @@ import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.nativeimpl.NativeGui;
 import nova.core.gui.render.text.TextMetrics;
 import nova.core.inventory.Inventory;
+import nova.core.inventory.component.InventoryPlayer;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;
-import nova.core.player.InventoryPlayer;
-import nova.core.player.Player;
 import nova.core.util.transform.vector.Vector3i;
 
 import java.util.HashMap;
@@ -81,7 +81,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 */
 	public void bind(Entity entity, Vector3i position) {
 		inventoryMap.clear();
-		playerInventory = ((Player) entity).getInventory();
+		playerInventory = entity.get(Player.class).get().getInventory();
 		onEvent(new GuiEvent.BindEvent(this, entity, position));
 		repaint();
 	}

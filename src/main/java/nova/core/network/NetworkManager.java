@@ -1,7 +1,7 @@
 package nova.core.network;
 
+import nova.core.entity.component.Player;
 import nova.core.network.NetworkTarget.Side;
-import nova.core.player.Player;
 
 /**
  * A central network manager.

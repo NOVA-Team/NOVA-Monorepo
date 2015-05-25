@@ -1,4 +1,4 @@
-package nova.core.inventory.components;
+package nova.core.inventory.component;
 
 import nova.core.inventory.Inventory;
 import nova.core.util.Direction;

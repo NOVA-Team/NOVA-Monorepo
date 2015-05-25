@@ -1,7 +1,7 @@
 package nova.internal.dummy;
 
+import nova.core.entity.component.Player;
 import nova.core.item.Item;
-import nova.core.player.Player;
 import nova.core.recipes.crafting.CraftingGrid;
 
 import java.util.Optional;

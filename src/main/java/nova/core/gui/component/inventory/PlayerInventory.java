@@ -3,7 +3,7 @@ package nova.core.gui.component.inventory;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.BindEvent;
 import nova.core.gui.nativeimpl.NativePlayerInventory;
-import nova.core.player.InventoryPlayer;
+import nova.core.inventory.component.InventoryPlayer;
 
 /**
  * Defines the standard player inventory. It automatically gets wrapped to the

@@ -1,4 +1,4 @@
-package nova.core.player;
+package nova.core.inventory.component;
 
 import nova.core.inventory.Inventory;
 import nova.core.item.Item;

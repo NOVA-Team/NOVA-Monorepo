@@ -3,7 +3,6 @@ package nova.core.item;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.game.Game;
-import nova.core.player.Player;
 import nova.core.render.Color;
 import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;
@@ -99,10 +98,10 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 
 	/**
 	 * Gets a list of tooltips for this item.
-	 * @param player {@link Player}
+	 * @param entity {@link Entity} with the component Player attached.
 	 * @param tooltips The tooltip list to add to.
 	 */
-	public void getTooltips(Optional<Player> player, List<String> tooltips) {
+	public void getTooltips(Optional<Entity> player, List<String> tooltips) {
 	}
 
 	/**

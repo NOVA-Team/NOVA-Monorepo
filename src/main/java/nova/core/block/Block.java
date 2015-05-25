@@ -29,6 +29,7 @@ public abstract class Block extends WrapperProvider<BlockWrapper> implements Ide
 	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
 	public final EventBus<LeftClickEvent> leftClickEvent = new EventBus<>();
 
+	//TODO: Remove
 	public final BlockTransform transform = Game.instance.componentManager.make(BlockTransform.class, this);
 
 	public Block() {
@@ -52,12 +53,16 @@ public abstract class Block extends WrapperProvider<BlockWrapper> implements Ide
 		return transform.world();
 	}
 
+	public final Vector3i position() {
+		return transform.position();
+	}
+
 	/**
 	 * Get the x co-ordinate of the block.
 	 * @return The x co-ordinate of the block.
 	 */
 	public final int x() {
-		return transform.position().x;
+		return position().x;
 	}
 
 	/**
@@ -65,7 +70,7 @@ public abstract class Block extends WrapperProvider<BlockWrapper> implements Ide
 	 * @return The y co-ordinate of the block.
 	 */
 	public final int y() {
-		return transform.position().y;
+		return position().y;
 	}
 
 	/**
@@ -73,7 +78,7 @@ public abstract class Block extends WrapperProvider<BlockWrapper> implements Ide
 	 * @return The z co-ordinate of the block.
 	 */
 	public final int z() {
-		return transform.position().z;
+		return position().z;
 	}
 
 	/**

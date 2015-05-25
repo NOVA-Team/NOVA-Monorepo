@@ -1,5 +1,7 @@
 package nova.core.inventory;
 
+import nova.core.item.Item;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,8 +12,6 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
-import nova.core.item.Item;
 
 /**
  * This interface provides inventory that can hold {@link Item Items}

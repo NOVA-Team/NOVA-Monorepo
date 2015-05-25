@@ -1,7 +1,7 @@
 package nova.core.recipes.crafting;
 
+import nova.core.entity.component.Player;
 import nova.core.item.Item;
-import nova.core.player.Player;
 import nova.core.util.transform.vector.Vector2i;
 
 import java.util.Optional;

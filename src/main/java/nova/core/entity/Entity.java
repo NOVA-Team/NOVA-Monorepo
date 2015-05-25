@@ -14,6 +14,7 @@ public abstract class Entity extends WrapperProvider<EntityWrapper> implements I
 	/**
 	 * The default transform component.
 	 */
+	//TODO: Make this a method. We don't even need a reference.
 	public final EntityTransform transform = Game.instance.componentManager.make(EntityTransform.class, this);
 
 	public Entity() {
