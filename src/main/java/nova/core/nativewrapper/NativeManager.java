@@ -2,10 +2,10 @@ package nova.core.nativewrapper;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import nova.core.util.exception.NovaException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author TheSandromatic
@@ -18,52 +18,63 @@ public class NativeManager {
 	/**
 	 * A map from a Native written type to a Converter.
 	 */
-	private final Map<Class<?>, NativeConverter> nativeConverterNative = new HashMap<>();
+	private final Map<Class<?>, NativeConverter> novaToNative = new HashMap<>();
 	/**
 	 * A map from a Nova written type to a Converter.
 	 */
-	private final Map<Class<?>, NativeConverter> nativeConverterNova = new HashMap<>();
+	private final Map<Class<?>, NativeConverter> nativeToNova = new HashMap<>();
 
 	public void registerPassthroughInterface(Class<?> novaSide, Class<?> nativeSide) {
 		passthroughInterfaceNovaToNative.put(novaSide, nativeSide);
-	}
-
-	public void registerNativeConverter(NativeConverter converter) {
-		nativeConverterNative.put(converter.getNativeSide(), converter);
-		nativeConverterNova.put(converter.getNovaSide(), converter);
 	}
 
 	public Class<?> getNativeInterface(Class<?> novaInterface) {
 		return passthroughInterfaceNovaToNative.get(novaInterface);
 	}
 
-	private NativeConverter findNativeConverter(Map<Class<?>, NativeConverter> map, Object obj)
-	{
+	public void registerConverter(NativeConverter<?, ?> converter) {
+		novaToNative.put(converter.getNativeSide(), converter);
+		nativeToNova.put(converter.getNovaSide(), converter);
+	}
+
+	public <NOVA, NATIVE> NativeConverter<NOVA, NATIVE> getNative(Class<NOVA> novaClass, Class<NATIVE> nativeClass) {
+		return novaToNative.get(novaClass);
+	}
+
+	private NativeConverter findConverter(Map<Class<?>, NativeConverter> map, Object obj) {
 		Class<?> clazz = obj.getClass();
 		NativeConverter nc = map.get(clazz);
-		while (nc == null)
-		{
+		while (nc == null) {
 			clazz = clazz.getSuperclass();
-			if (clazz == Object.class)
+			if (clazz == Object.class) {
 				return null;
+			}
 			nc = map.get(clazz);
 		}
 		return nc;
 	}
-	
-	public Optional<Object> convertToNova(Object nativeObject) {
-		try {
-			return Optional.of(findNativeConverter(nativeConverterNative,nativeObject).convertToNova(nativeObject));
-		} catch (NullPointerException e) {
-			return Optional.empty();
+
+	/**
+	 * Converts a native object to a nova object. This method has autocast, is DANGEROUS and may crash.
+	 */
+	public <T> T toNova(Object nativeObject) {
+		NativeConverter converter = findConverter(novaToNative, nativeObject);
+		if (converter == null) {
+			throw new NovaException("Converter for " + nativeObject.getClass() + " does not exist!");
 		}
+
+		return (T) converter.toNova(nativeObject);
 	}
 
-	public Optional<Object> convertToNative(Object novaObject) {
-		try {
-			return Optional.of(findNativeConverter(nativeConverterNova,novaObject).convertToNative(novaObject));
-		} catch (NullPointerException e) {
-			return Optional.empty();
+	/**
+	 * Converts a nova object to a native object. This method has autocast, is DANGEROUS and may crash.
+	 */
+	public <T> T toNative(Object novaObject) {
+		NativeConverter converter = findConverter(nativeToNova, novaObject);
+		if (converter == null) {
+			throw new NovaException("Converter for " + novaObject.getClass() + " does not exist!");
 		}
+
+		return (T) converter.toNative(novaObject);
 	}
 }

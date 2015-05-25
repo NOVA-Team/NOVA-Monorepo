@@ -1,14 +1,15 @@
 package nova.core.nativewrapper;
 
 /**
- * @author TheSandromatic
+ * A dual wrapper converts between a nova object and native object.
+ * @author TheSandromatic, Calclavia
  */
-public interface NativeConverter {
-	Class<?> getNovaSide();
+public interface NativeConverter<NOVA, NATIVE> {
+	Class<NOVA> getNovaSide();
 
-	Class<?> getNativeSide();
+	Class<NATIVE> getNativeSide();
 
-	Object convertToNova(Object nativeObj);
+	NOVA toNova(NATIVE nativeObj);
 
-	Object convertToNative(Object novaObj);
+	NATIVE toNative(NOVA novaObj);
 }
