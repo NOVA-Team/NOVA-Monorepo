@@ -84,6 +84,7 @@ runServer {
 }
 
 jar {
+	from project(':core').sourceSets.main.output
 	manifest {
 		attributes 'FMLCorePlugin': 'nova.wrapper.mc1710.NovaMinecraftCore'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
@@ -183,11 +184,7 @@ sublimeText {
 	addGradleCompile = true
 }
 
-idea {
-	project {
-		languageLevel = "1.8"
-	}
-}
+idea.project?.languageLevel = "1.8"
 
 test {
 	forkEvery = 1
