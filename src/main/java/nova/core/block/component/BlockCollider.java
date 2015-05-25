@@ -21,13 +21,13 @@ public class BlockCollider extends Collider {
 
 	/**
 	 * Called to check if the block is a cube.
-	 * @return {@code true} is this block is a cube.
+	 * Returns true if this block is a cube.
 	 */
 	public Supplier<Boolean> isCube = () -> getBoundingBox().isCube();
 
 	/**
 	 * Called to check if the block is an opaque cube.
-	 * @return {@code true} is this block is a cube that is opaque.
+	 * Returns true if this block is a cube that is opaque.
 	 */
 	public Supplier<Boolean> isOpaqueCube = isCube;
 

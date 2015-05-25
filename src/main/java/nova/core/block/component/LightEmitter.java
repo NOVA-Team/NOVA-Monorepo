@@ -8,7 +8,7 @@ public class LightEmitter extends Component {
 
 	/**
 	 * Called to get the amount of light emitted from a block.
-	 * @return The level of light that is emitted by the block.
+	 * Returns the level of light that is emitted by the block.
 	 */
 	public Supplier<Float> emittedLevel = () -> 0f;
 

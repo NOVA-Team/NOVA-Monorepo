@@ -1,5 +1,6 @@
 package nova.core.component.renderer;
 
+import nova.core.block.component.StaticBlockRenderer;
 import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
 import nova.core.render.model.Model;
@@ -7,7 +8,7 @@ import nova.core.render.model.Model;
 /**
  * This interface specifies that a block requires custom static rendering.
  * This type of rendering only updates its render state every time the world changes (block change)
- * See {@Link StaticBlockRenderer}
+ * See {@link StaticBlockRenderer}
  */
 public class StaticRenderer extends Component {
 

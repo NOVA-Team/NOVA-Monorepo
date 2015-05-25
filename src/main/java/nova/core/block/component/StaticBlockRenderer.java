@@ -18,21 +18,22 @@ import java.util.function.Function;
 public class StaticBlockRenderer extends StaticRenderer {
 	/**
 	 * Called to get the texture of this block for a certain side.
-	 * @param side The side of the block that the texture is for.
-	 * @return An optional of the texture.
+	 * side - The side of the block that the texture is for.
+	 * Returns an optional of the texture.
 	 */
 	public Function<Direction, Optional<Texture>> texture = (dir) -> Optional.empty();
 	/**
 	 * Called when this block is to be rendered.
-	 * @param model A {@link nova.core.render.model.Model} to use.
+	 * Direction - The direction to render
+	 * Return true if the side should render
 	 */
 	public Function<Direction, Boolean> renderSide = (dir) -> true;
 
 	/**
 	 * Gets the color of a specific face. This is called by the default block
 	 * renderer.
-	 * @param side - The side of the block.
-	 * @return The color
+	 * direction - The side of the block.
+	 * ReturnsThe color
 	 */
 	public Function<Direction, Color> colorMultiplier = (dir) -> Color.white;
 
