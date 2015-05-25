@@ -63,7 +63,7 @@ public class BlockCollider extends Component {
 		Set<Cuboid> bounds = new HashSet<>();
 		Cuboid defaultBound = getBoundingBox();
 
-		if (defaultBound.add(block.transform.position()).intersects(intersect)) {
+		if (defaultBound.add(block.position()).intersects(intersect)) {
 			bounds.add(getBoundingBox());
 		}
 

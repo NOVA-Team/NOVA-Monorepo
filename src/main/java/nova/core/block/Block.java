@@ -1,5 +1,6 @@
 package nova.core.block;
 
+import nova.core.component.ComponentProvider;
 import nova.core.component.transform.BlockTransform;
 import nova.core.entity.Entity;
 import nova.core.event.CancelableEvent;
@@ -9,7 +10,6 @@ import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
-import nova.core.util.WrapperProvider;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
@@ -21,20 +21,13 @@ import java.util.Set;
 /**
  * @author Calclavia
  */
-public abstract class Block extends WrapperProvider<BlockWrapper> implements Identifiable {
+public abstract class Block extends ComponentProvider implements Identifiable {
 
 	public final EventBus<NeighborChangeEvent> neighborChangeEvent = new EventBus<>();
 	public final EventBus<BlockPlaceEvent> blockPlaceEvent = new EventBus<>();
 	public final EventBus<BlockRemoveEvent> blockRemoveEvent = new EventBus<>();
 	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
 	public final EventBus<LeftClickEvent> leftClickEvent = new EventBus<>();
-
-	//TODO: Remove
-	public final BlockTransform transform = Game.instance.componentManager.make(BlockTransform.class, this);
-
-	public Block() {
-		add(transform);
-	}
 
 	public ItemFactory getItemFactory() {
 		return Game.instance.itemManager.getItemFactoryFromBlock(factory());
@@ -49,12 +42,16 @@ public abstract class Block extends WrapperProvider<BlockWrapper> implements Ide
 		return Game.instance.blockManager.getFactory(getID()).get();
 	}
 
+	public final BlockTransform transform() {
+		return get(BlockTransform.class).get();
+	}
+
 	public final World world() {
-		return transform.world();
+		return transform().world();
 	}
 
 	public final Vector3i position() {
-		return transform.position();
+		return transform().position();
 	}
 
 	/**

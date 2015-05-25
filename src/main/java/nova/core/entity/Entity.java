@@ -1,23 +1,67 @@
 package nova.core.entity;
 
 import nova.core.block.Stateful;
+import nova.core.component.ComponentProvider;
 import nova.core.component.transform.EntityTransform;
-import nova.core.game.Game;
 import nova.core.util.Identifiable;
-import nova.core.util.WrapperProvider;
+import nova.core.util.transform.matrix.Quaternion;
+import nova.core.util.transform.vector.Vector3d;
+import nova.core.world.World;
 
 /**
  * An entity is an object in the world that has a position.
  */
-public abstract class Entity extends WrapperProvider<EntityWrapper> implements Identifiable, Stateful {
+public abstract class Entity extends ComponentProvider implements Identifiable, Stateful {
 
-	/**
-	 * The default transform component.
-	 */
-	//TODO: Make this a method. We don't even need a reference.
-	public final EntityTransform transform = Game.instance.componentManager.make(EntityTransform.class, this);
+	public final EntityTransform transform() {
+		return get(EntityTransform.class).get();
+	}
 
-	public Entity() {
-		add(transform);
+	public final World world() {
+		return transform().world();
+	}
+
+	public final Vector3d position() {
+		return transform().position();
+	}
+
+	public final Vector3d scale() {
+		return transform().scale();
+	}
+
+	public final Vector3d pivot() {
+		return transform().pivot();
+	}
+
+	public final Quaternion rotation() {
+		return transform().rotation();
+	}
+
+	public final double x() {
+		return position().x;
+	}
+
+	public final double y() {
+		return position().y;
+	}
+
+	public final double z() {
+		return position().z;
+	}
+
+	public void setWorld(World world) {
+		transform().setWorld(world);
+	}
+
+	public void setPosition(Vector3d pos) {
+		transform().setPosition(pos);
+	}
+
+	public void setPivot(Vector3d pivot) {
+		transform().setPivot(pivot);
+	}
+
+	public void setRotation(Quaternion rotation) {
+		transform().setRotation(rotation);
 	}
 }

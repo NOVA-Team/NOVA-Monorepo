@@ -55,8 +55,8 @@ public class Orientation extends Component implements Storable, Stateful {
 
 	public Direction calculateDirection(Entity entity) {
 		if (provider instanceof Block) {
-			if (Math.abs(entity.transform.position().x - ((Block) provider).x()) < 2 && Math.abs(entity.transform.position().z - ((Block) provider).z()) < 2) {
-				double height = entity.transform.position().y + 1.82D;//- entity.yOffset
+			if (Math.abs(entity.position().x - ((Block) provider).x()) < 2 && Math.abs(entity.position().z - ((Block) provider).z()) < 2) {
+				double height = entity.position().y + 1.82D;//- entity.yOffset
 
 				if (canRotate(1) && height - ((Block) provider).y() > 2.0D) {
 					return Direction.UP;
@@ -66,7 +66,7 @@ public class Orientation extends Component implements Storable, Stateful {
 				}
 			}
 
-			int playerSide = (int) Math.floor(entity.transform.rotation().toEuler().x * 4.0F / 360.0F + 0.5D) & 3;
+			int playerSide = (int) Math.floor(entity.rotation().toEuler().x * 4.0F / 360.0F + 0.5D) & 3;
 			int returnSide = (playerSide == 0 && canRotate(2)) ? 2 : ((playerSide == 1 && canRotate(5)) ? 5 : playerSide == 2 && canRotate(3) ? 3 : (playerSide == 3 && canRotate(4)) ? 4 : 0);
 
 			if (isFlip) {

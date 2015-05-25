@@ -103,7 +103,7 @@ public class GuiEvent extends CancelableEvent {
 			this.entity = entity;
 			this.position = position;
 			this.player = entity.get(Player.class).get();
-			this.world = entity.transform.world();
+			this.world = entity.world();
 			this.block = world.getBlock(position);
 		}
 	}
