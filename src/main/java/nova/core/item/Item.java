@@ -98,7 +98,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 
 	/**
 	 * Gets a list of tooltips for this item.
-	 * @param entity {@link Entity} with the component Player attached.
+	 * @param player {@link Entity} with the component Player attached.
 	 * @param tooltips The tooltip list to add to.
 	 */
 	public void getTooltips(Optional<Entity> player, List<String> tooltips) {

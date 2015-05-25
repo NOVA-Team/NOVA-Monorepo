@@ -18,7 +18,7 @@ public class Collider extends Component {
 	/**
 	 * Called when an entity collides with this object. More specifically, when
 	 * the entity's block bounds coincide with the bounds of this object.
-	 * @param entity colliding entity
+	 * Entity - the colliding entity
 	 */
 	public Consumer<Entity> onEntityCollide = (entity) -> {
 	};
