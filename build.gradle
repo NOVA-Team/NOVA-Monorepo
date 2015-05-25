@@ -1,0 +1,213 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+		maven {
+			url 'http://maven.novaapi.net/'
+		}
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+		classpath 'us.phildop:gradle-sublimetext-plugin:0.5.3'
+	}
+}
+
+apply from: "https://raw.githubusercontent.com/NOVAAPI/NovaCore/5f4dafcc36bfbdff13edd355b70c18842b439a91/gradle/modules/utils.gradle"
+apply plugin: 'java'
+apply plugin: 'forge'
+
+apply plugin: 'maven-publish'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+apply plugin: 'sublimeText'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+apply plugin: 'jacoco'
+
+configurations.all {
+	resolutionStrategy.cacheChangingModulesFor 5, 'minutes'
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven {
+		url 'http://maven.novaapi.net/'
+	}
+}
+
+dependencies {
+    if (project.hasProperty("nova.core.location")) {
+        compile project(":NovaCore")
+        testCompile project(path: ':NovaCore', configuration: 'wrapperTests')
+    } else {
+        compile group: "nova.core", name: "NovaCore", version: property("nova.core.version"), changing: true
+        testCompile group: "nova.core", name: "NovaCore", version: property("nova.core.version"), classifier: "wrappertests", changing: true
+    }
+
+	testCompile "junit:junit:4.12"
+	testCompile 'org.assertj:assertj-core:3.0.0'
+	testRuntime 'org.slf4j:slf4j-simple:1.7.10'
+}
+
+compileJava {
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
+	options.encoding = 'UTF-8'
+	options.fork = true
+	options.compilerArgs << '-Xlint'
+}
+
+compileTestJava {
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
+	options.encoding = 'UTF-8'
+	options.fork = true
+	options.compilerArgs << '-Xlint'
+}
+
+runClient {
+	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc1710.NovaMinecraftCore'
+}
+runServer {
+	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc1710.NovaMinecraftCore'
+}
+
+jar {
+	manifest {
+		attributes 'FMLCorePlugin': 'nova.wrapper.mc1710.NovaMinecraftCore'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+	}
+}
+
+minecraft {
+	version = property("forge.version")
+	runDir = "run"
+}
+
+processResources {
+	// this will ensure that this task is redone when the versions change.
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+
+	// replace stuff in mcmod.info, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+
+		// replace version and mcversion
+		expand 'version':project.version, 'mcversion':project.minecraft.version
+	}
+
+	// copy everything else, thats not the mcmod.info
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	from sourceSets.main.allSource
+	classifier = 'sources'
+}
+
+task deobfJar(type: Jar) {
+	from sourceSets.main.output
+	classifier = 'deobf'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	from javadoc.destinationDir
+	classifier = 'javadoc'
+}
+
+shadowJar {
+	manifest {
+		attributes("Implementation-Title": project.name,
+				   "Implementation-Version": version,
+				   "Specification-Title": "NovaCore")
+	}
+}
+
+artifacts {
+	archives sourcesJar
+	archives deobfJar
+	archives javadocJar
+}
+
+publishing {
+	publications {
+		main(MavenPublication) {
+			from components.java
+
+			artifact sourcesJar
+			artifact deobfJar
+			artifact javadocJar
+
+			pom.withXml(writePom(project.properties))
+			pom.withXml { xml ->
+				def children = xml.asNode().get("dependencies")[0]
+				for (child in children) {
+					def artifactId = child.get("artifactId")[0].value()[0]
+					if (artifactId.equals("forgeSrc") || artifactId.equals("forgeBin")) {
+						//child.appendNode("groupId", "net.minecraftforge")
+						children.remove(child)
+						break;
+					}
+				}
+			}
+		}
+	}
+	repositories {
+		if (System.getenv("MAVEN_DIR") != null) {
+			maven {
+				url System.getenv("MAVEN_DIR")
+			}
+		}
+	}
+}
+
+sublimeText {
+	defaultFileExcludePatterns = ['.project', '.classpath', '.pydevproject']
+	defaultFolderExcludePatterns = ['.gradle', 'bin', 'build', '.settings']
+	generateSublimeJavaClasspath = true
+	generateSublimeJavaSrcpath = true
+	addGradleCompile = true
+}
+
+idea {
+	project {
+		languageLevel = "1.8"
+	}
+}
+
+test {
+	forkEvery = 1
+	maxParallelForks = 4
+
+	testLogging {
+		exceptionFormat = 'full'
+	}
+
+	testLogging.showStandardStreams = true
+
+	beforeTest { descriptor ->
+		def classPadded = String.format("%-50s", descriptor.className)
+		logger.lifecycle("Running test ${classPadded} ${descriptor.name}()")
+	}
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled = true // coveralls plugin depends on xml format report
+		html.enabled = true
+	}
+}
