@@ -14,9 +14,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import nova.core.block.Block;
 import nova.core.entity.Entity;
+import nova.core.entity.component.Player;
 import nova.core.network.NetworkManager;
 import nova.core.network.PacketHandler;
-import nova.core.player.Player;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
@@ -93,8 +93,8 @@ public class MCNetworkManager extends NetworkManager {
 
 	@Override
 	public void sendChat(Player player, String message) {
-		if (player instanceof BWEntityPlayer) {
-			((BWEntityPlayer) player).entity.addChatMessage(new ChatComponentText(message));
+		if (player instanceof BWEntityPlayer.MCPlayer) {
+			((BWEntityPlayer.MCPlayer) player).entity.addChatMessage(new ChatComponentText(message));
 		}
 	}
 

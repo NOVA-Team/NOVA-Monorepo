@@ -1,9 +1,9 @@
 package nova.wrapper.mc1710.depmodules;
 
+import nova.core.entity.component.Player;
 import nova.core.network.NetworkManager;
 import nova.core.network.Packet;
 import nova.core.network.PacketHandler;
-import nova.core.player.Player;
 import se.jbee.inject.bind.BinderModule;
 
 /**

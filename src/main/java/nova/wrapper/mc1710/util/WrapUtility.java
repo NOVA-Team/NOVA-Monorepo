@@ -2,7 +2,7 @@ package nova.wrapper.mc1710.util;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import nova.core.player.Player;
+import nova.core.entity.component.Player;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 
 import java.util.Optional;
