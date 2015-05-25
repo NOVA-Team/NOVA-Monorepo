@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
-import nova.core.block.components.DynamicRenderer;
+import nova.core.component.renderer.DynamicRenderer;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
+
+import java.util.Optional;
 
 /**
  * @author Calclavia
@@ -19,10 +21,11 @@ public class FWTileRenderer extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float p_147500_8_) {
 		Block block = ((FWTile) tile).getBlock();
-		if (block instanceof DynamicRenderer) {
+		Optional<DynamicRenderer> opRenderer = block.get(DynamicRenderer.class);
+		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
 			model.translate(x + 0.5, y + 0.5, z + 0.5);
-			((DynamicRenderer) block).renderDynamic(model);
+			opRenderer.get().renderDynamic(model);
 			bindTexture(TextureMap.locationBlocksTexture);
 			RenderUtility.enableBlending();
 			Tessellator.instance.startDrawingQuads();

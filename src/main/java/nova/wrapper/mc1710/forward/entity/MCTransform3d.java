@@ -1,7 +1,7 @@
 package nova.wrapper.mc1710.forward.entity;
 
 import nova.core.component.ComponentProvider;
-import nova.core.util.transform.Transform3d;
+import nova.core.component.transform.Transform3d;
 import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
 
@@ -13,7 +13,6 @@ public class MCTransform3d extends Transform3d {
 	private net.minecraft.entity.Entity mcEntity;
 
 	public MCTransform3d(ComponentProvider provider) {
-		super(provider);
 		//TODO: This nullable provider is horrible. Change this.
 		if (provider != null) {
 			mcEntity = (net.minecraft.entity.Entity) ((nova.core.entity.Entity) provider).wrapper;

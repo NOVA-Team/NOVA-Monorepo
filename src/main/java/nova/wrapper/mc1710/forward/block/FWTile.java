@@ -5,7 +5,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
-import nova.core.block.components.Stateful;
+import nova.core.block.Stateful;
 import nova.core.component.Updater;
 import nova.core.game.Game;
 import nova.core.retention.Data;
@@ -22,7 +22,6 @@ import java.util.concurrent.FutureTask;
 
 /**
  * A Minecraft TileEntity to Nova block wrapper
- *
  * @author Calclavia
  */
 public class FWTile extends TileEntity {
@@ -118,7 +117,6 @@ public class FWTile extends TileEntity {
 
 	/**
 	 * Waits for when the block instance is not null.
-	 *
 	 * @param action
 	 */
 	//TODO: Dump this back into the server thread. Threads also cannot printline.
@@ -149,7 +147,6 @@ public class FWTile extends TileEntity {
 
 	/**
 	 * Only register tile updates if the block is an instance of Updater.
-	 *
 	 * @return Whether can update
 	 */
 	@Override

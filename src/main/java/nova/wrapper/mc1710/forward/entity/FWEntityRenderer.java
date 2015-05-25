@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import nova.core.block.components.DynamicRenderer;
+import nova.core.component.renderer.DynamicRenderer;
 import nova.core.util.transform.matrix.MatrixStack;
 import nova.wrapper.mc1710.backward.render.BWModel;
 
@@ -27,10 +27,12 @@ public class FWEntityRenderer extends Render {
 	}
 
 	private void render(Entity wrapper, nova.core.entity.Entity entity, double x, double y, double z) {
-		if (entity instanceof DynamicRenderer) {
+		Optional<DynamicRenderer> opRenderer = entity.get(DynamicRenderer.class);
+
+		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
 			model.matrix = new MatrixStack().translate(x, y, z).rotate(entity.transform.rotation()).getMatrix();
-			((DynamicRenderer) entity).renderDynamic(model);
+			opRenderer.get().renderDynamic(model);
 			Tessellator.instance.startDrawingQuads();
 			model.render(Optional.of(renderManager));
 			Tessellator.instance.draw();
