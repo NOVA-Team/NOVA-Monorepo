@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.util;
+package nova.wrapper.mc1710.wrapper.data;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagByte;
@@ -11,6 +11,8 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
+import nova.core.game.Game;
+import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 
 import java.util.Set;
@@ -19,30 +21,24 @@ import java.util.Set;
  * Utility that manages common NBT queueSave and load methods
  * @author Calclavia
  */
-public class DataUtility {
+public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 
-	/**
-	 * Converts a Map of objects into NBT.
-	 * @param data Map
-	 * @return NBT
-	 */
-	public static NBTTagCompound dataToNBT(Data data) {
-		if (data == null) {
-			return null;
-		}
-
-		return dataToNBT(new NBTTagCompound(), data);
+	public static DataWrapper instance() {
+		return (DataWrapper) Game.instance.nativeManager.getNative(Data.class, NBTTagCompound.class);
 	}
 
-	public static NBTTagCompound dataToNBT(NBTTagCompound nbt, Data data) {
-		if (data.className != null) {
-			nbt.setString("class", data.className);
-		}
-		data.forEach((k, v) -> save(nbt, k, v));
-		return nbt;
+	@Override
+	public Class<Data> getNovaSide() {
+		return Data.class;
 	}
 
-	public static Data nbtToData(NBTTagCompound nbt) {
+	@Override
+	public Class<NBTTagCompound> getNativeSide() {
+		return NBTTagCompound.class;
+	}
+
+	@Override
+	public Data toNova(NBTTagCompound nbt) {
 		Data data = new Data();
 		if (nbt != null) {
 			data.className = nbt.getString("class");
@@ -52,6 +48,23 @@ public class DataUtility {
 		return data;
 	}
 
+	@Override
+	public NBTTagCompound toNative(Data data) {
+		if (data == null) {
+			return null;
+		}
+
+		return toNative(new NBTTagCompound(), data);
+	}
+
+	public NBTTagCompound toNative(NBTTagCompound nbt, Data data) {
+		if (data.className != null) {
+			nbt.setString("class", data.className);
+		}
+		data.forEach((k, v) -> save(nbt, k, v));
+		return nbt;
+	}
+
 	/**
 	 * Saves an unknown object to NBT
 	 * @param tag - NBTTagCompound to queueSave the tag too
@@ -59,7 +72,7 @@ public class DataUtility {
 	 * @param value - the actual object
 	 * @return the tag when done saving too i
 	 */
-	public static NBTTagCompound save(NBTTagCompound tag, String key, Object value) {
+	public NBTTagCompound save(NBTTagCompound tag, String key, Object value) {
 		if (value instanceof Boolean) {
 			tag.setBoolean("isBoolean", true);
 			tag.setBoolean(key, (boolean) value);
@@ -82,7 +95,7 @@ public class DataUtility {
 			tag.setString(key, (String) value);
 		} else if (value instanceof Data) {
 			NBTTagCompound innerTag = new NBTTagCompound();
-			dataToNBT(innerTag, (Data) value);
+			toNative(innerTag, (Data) value);
 			tag.setTag(key, innerTag);
 		}
 		return tag;
@@ -94,7 +107,7 @@ public class DataUtility {
 	 * @param key - name of the value
 	 * @return object or suggestionValue if nothing is found
 	 */
-	public static Object load(NBTTagCompound tag, String key) {
+	public Object load(NBTTagCompound tag, String key) {
 		if (tag != null && key != null) {
 			NBTBase saveTag = tag.getTag(key);
 
@@ -122,7 +135,7 @@ public class DataUtility {
 				return tag.getIntArray(key);
 			} else if (saveTag instanceof NBTTagCompound) {
 				NBTTagCompound innerTag = tag.getCompoundTag(key);
-				return nbtToData(innerTag);
+				return toNova(innerTag);
 			}
 		}
 		return null;

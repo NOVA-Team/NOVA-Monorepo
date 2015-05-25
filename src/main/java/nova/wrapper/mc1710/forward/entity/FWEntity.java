@@ -6,9 +6,10 @@ import nova.core.component.Updater;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
+import nova.core.game.Game;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
-import nova.wrapper.mc1710.util.DataUtility;
+import nova.wrapper.mc1710.wrapper.data.DataWrapper;
 
 /**
  * Entity wrapper
@@ -30,17 +31,16 @@ public class FWEntity extends net.minecraft.entity.Entity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		if (wrapped instanceof Storable) {
-			((Storable) wrapped).load(DataUtility.nbtToData(nbt));
+			((Storable) wrapped).load(Game.instance.nativeManager.toNova(nbt));
 		}
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
-
 		if (wrapped instanceof Storable) {
 			Data data = new Data();
 			((Storable) wrapped).save(data);
-			DataUtility.dataToNBT(nbt, data);
+			DataWrapper.instance().toNative(nbt, data);
 		}
 	}
 

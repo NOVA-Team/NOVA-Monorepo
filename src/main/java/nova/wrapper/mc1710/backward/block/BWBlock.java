@@ -5,11 +5,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
 import nova.core.block.component.LightEmitter;
+import nova.core.game.Game;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
 import nova.wrapper.mc1710.backward.world.BWWorld;
-import nova.wrapper.mc1710.util.DataUtility;
 
 public class BWBlock extends Block implements Storable {
 	private final net.minecraft.block.Block mcBlock;
@@ -54,7 +54,7 @@ public class BWBlock extends Block implements Storable {
 		if (tileEntity != null) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			tileEntity.writeToNBT(nbt);
-			data.putAll(DataUtility.nbtToData(nbt));
+			data.putAll(Game.instance.nativeManager.toNova(nbt));
 		}
 	}
 
@@ -64,7 +64,7 @@ public class BWBlock extends Block implements Storable {
 
 		TileEntity tileEntity = getTileEntity();
 		if (tileEntity != null) {
-			tileEntity.writeToNBT(DataUtility.dataToNBT(data));
+			tileEntity.writeToNBT(Game.instance.nativeManager.toNative(data));
 		}
 	}
 }

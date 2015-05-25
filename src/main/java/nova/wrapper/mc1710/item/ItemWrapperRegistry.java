@@ -6,6 +6,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import nova.core.block.BlockFactory;
 import nova.core.game.Game;
 import nova.core.item.ItemBlock;
@@ -17,7 +18,6 @@ import nova.core.util.Category;
 import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
-import nova.wrapper.mc1710.util.DataUtility;
 import nova.wrapper.mc1710.util.ModCreativeTab;
 
 import java.util.Arrays;
@@ -84,7 +84,7 @@ public class ItemWrapperRegistry {
 	 */
 	public net.minecraft.item.ItemStack updateMCItemStack(ItemStack itemStack, nova.core.item.Item item) {
 		itemStack.stackSize = item.count();
-		itemStack.setTagCompound(DataUtility.dataToNBT(item.factory().saveItem(item)));
+		itemStack.setTagCompound(Game.instance.nativeManager.toNative(item.factory().saveItem(item)));
 		return itemStack;
 	}
 
@@ -113,7 +113,7 @@ public class ItemWrapperRegistry {
 				itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
 			}
 
-			Data data = DataUtility.nbtToData(itemStack.getTagCompound());
+			Data data = Game.instance.nativeManager.toNova(itemStack.getTagCompound() != null ? itemStack.getTagCompound() : new NBTTagCompound());
 			if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
 				if (data == null) {
 					data = new Data();

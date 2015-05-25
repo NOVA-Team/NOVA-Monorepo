@@ -36,8 +36,10 @@ import nova.wrapper.mc1710.forward.entity.MCRigidBody;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.item.OreDictionaryIntegration;
 import nova.wrapper.mc1710.manager.config.ConfigManager;
-import nova.wrapper.mc1710.nativewrapper.NativeConverters;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
+import nova.wrapper.mc1710.wrapper.block.BlockConverter;
+import nova.wrapper.mc1710.wrapper.data.DataWrapper;
+import nova.wrapper.mc1710.wrapper.entity.EntityConverter;
 
 import java.io.File;
 import java.util.List;
@@ -86,13 +88,19 @@ public class NovaMinecraft {
 		Game.instance = diep.init();
 
 		/**
+		 * Register native dual converters
+		 */
+		Game.instance.nativeManager.registerConverter(new DataWrapper());
+		Game.instance.nativeManager.registerConverter(new EntityConverter());
+		Game.instance.nativeManager.registerConverter(new BlockConverter());
+
+		/**
 		 * Set manager parameters
 		 */
 		BlockWrapperRegistry.instance.registerBlocks();
 		ItemWrapperRegistry.instance.registerItems();
 		OreDictionaryIntegration.instance.registerOreDictionary();
 		MinecraftRecipeRegistry.instance.registerRecipes();
-		NativeConverters.registerConverters(Game.instance.nativeManager);
 
 		/**
 		 * Set up components

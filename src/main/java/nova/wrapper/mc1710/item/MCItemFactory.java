@@ -1,10 +1,10 @@
 package nova.wrapper.mc1710.item;
 
 import net.minecraft.nbt.NBTTagCompound;
+import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
-import nova.wrapper.mc1710.util.DataUtility;
 
 /**
  * @author Stan
@@ -32,7 +32,7 @@ public class MCItemFactory extends ItemFactory {
 	@Override
 	public Item makeItem(Data data, Object... args) {
 		int meta = (Integer) data.getOrDefault("damage", this.meta);
-		NBTTagCompound nbtData = DataUtility.dataToNBT(data);
+		NBTTagCompound nbtData = Game.instance.nativeManager.toNative(data);
 		return new BWItem(item, meta, nbtData);
 	}
 
@@ -44,7 +44,7 @@ public class MCItemFactory extends ItemFactory {
 
 		BWItem mcItem = (BWItem) item;
 
-		Data result = DataUtility.nbtToData(mcItem.getTag());
+		Data result = Game.instance.nativeManager.toNova(mcItem.getTag());
 		if (result == null) {
 			result = new Data();
 		}

@@ -7,10 +7,10 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.world.WorldEvent;
+import nova.core.game.Game;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.SaveManager;
-import nova.wrapper.mc1710.util.DataUtility;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,13 +39,13 @@ public class MCSaveManager extends SaveManager {
 	public void save(String filename, Storable storable) {
 		Data saveMap = new Data();
 		storable.save(saveMap);
-		saveFile(filename, DataUtility.dataToNBT(saveMap));
+		saveFile(filename, Game.instance.nativeManager.toNative(saveMap));
 	}
 
 	@Override
 	public void load(String filename, Storable storable) {
 		NBTTagCompound nbt = loadFile(filename);
-		storable.load(DataUtility.nbtToData(nbt));
+		storable.load(Game.instance.nativeManager.toNova(nbt));
 	}
 
 	/**
