@@ -1,6 +1,6 @@
-package nova.core.fluid;
+package nova.core.fluid.component;
 
-import nova.core.component.Component;
+import nova.core.fluid.Fluid;
 
 import java.util.Optional;
 
@@ -8,7 +8,7 @@ import java.util.Optional;
  * Objects with this interface declare their ability to provide {@link Fluid FluidStacks}
  * @see FluidConsumer
  */
-public interface FluidProvider extends Component {
+public interface FluidProvider {
 	/**
 	 * Attempt to extract fluid from this FluidProvider
 	 * @param amount Amount of fluid to extract

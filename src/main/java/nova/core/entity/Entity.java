@@ -1,9 +1,9 @@
 package nova.core.entity;
 
-import nova.core.block.components.Stateful;
+import nova.core.block.component.Stateful;
+import nova.core.component.transform.Transform3d;
 import nova.core.game.Game;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.Transform3d;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.world.Positioned;
 

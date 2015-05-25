@@ -1,4 +1,4 @@
-package nova.core.block.components;
+package nova.core.block.component;
 
 import nova.core.util.Direction;
 
@@ -6,6 +6,7 @@ import nova.core.util.Direction;
  * Implement this interface on BlockLogics which allow extraction of
  * objects into them.
  */
+//TODO: Convert to component
 public interface Extractable {
 	/**
 	 * Called to check if a block can have something extracted from it.

@@ -1,7 +1,6 @@
 package nova.core.gui.flexible;
 
-import nova.core.component.ComponentProvider;
-import nova.core.util.transform.Transform2d;
+import nova.core.component.transform.Transform2d;
 import nova.core.util.transform.vector.Vector2d;
 
 /**
@@ -24,8 +23,4 @@ public class TransformUI extends Transform2d {
 	public Vector2d minAnchor = Vector2d.zero;
 
 	public Vector2d maxAnchor = Vector2d.one;
-
-	public TransformUI(ComponentProvider provider) {
-		super(provider);
-	}
 }

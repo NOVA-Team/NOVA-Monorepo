@@ -1,5 +1,6 @@
 package nova.core.fluid;
 
+import nova.core.fluid.component.Tank;
 import nova.core.util.Direction;
 
 import java.util.Set;

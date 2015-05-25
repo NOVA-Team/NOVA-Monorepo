@@ -11,9 +11,8 @@ import nova.core.util.transform.vector.Vector3d;
  * @author Calclavia
  */
 //TODO: Don't only use Scala method convention names
-public abstract class RigidBody implements Component, Updater {
-
-	private final ComponentProvider provider;
+public abstract class RigidBody extends Component implements Updater {
+	public final ComponentProvider provider;
 
 	private double mass = 1;
 
@@ -102,11 +101,6 @@ public abstract class RigidBody implements Component, Updater {
 	public abstract void addForce(Vector3d force, Vector3d position);
 
 	public abstract void addTorque(Vector3d torque);
-
-	@Override
-	public ComponentProvider provider() {
-		return provider;
-	}
 
 	/**
 	 * Scala sugar coating

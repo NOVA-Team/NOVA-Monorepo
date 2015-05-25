@@ -13,7 +13,7 @@ import java.util.Set;
 public class Canvas implements ComponentProvider {
 
 	//TODO: Use ComponentManager/factory
-	public final TransformUI transform = new TransformUI(this);
+	public final TransformUI transform = new TransformUI();
 	private final Set<Component> components = new HashSet<>();
 	/**
 	 * The later determines how the Canvas will be rendered. A higher value means a layer more in-front.

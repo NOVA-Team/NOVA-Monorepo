@@ -1,6 +1,7 @@
-package nova.core.fluid;
+package nova.core.fluid.component;
 
-import nova.core.component.ComponentProvider;
+import nova.core.component.Component;
+import nova.core.fluid.Fluid;
 import nova.core.network.Packet;
 import nova.core.network.PacketHandler;
 import nova.core.retention.Data;
@@ -11,7 +12,7 @@ import java.util.Optional;
 /**
  * This class provides basic implementation of {@link Tank}
  */
-public class TankSimple implements Tank, Storable, PacketHandler {
+public class TankSimple extends Component implements Tank, Storable, PacketHandler {
 
 	private Optional<Fluid> containedFluid = Optional.empty();
 	private int capacity;
@@ -125,12 +126,6 @@ public class TankSimple implements Tank, Storable, PacketHandler {
 	@Override
 	public void write(Packet packet) {
 		containedFluid = Optional.of((Fluid) packet.readStorable());
-	}
-
-	@Override
-	public ComponentProvider provider() {
-		//TODO: We DO NOT have a provider reference, because we cannot have a constructor with parameters...
-		return null;
 	}
 
 	@Override

@@ -1,26 +1,26 @@
-package nova.core.fluid;
+package nova.core.fluid.component;
 
-import nova.core.component.Component;
+import nova.core.fluid.Fluid;
 
 /**
  * Objects with this interface declare their ability to consume {@link Fluid FluidStacks}
  * @see FluidConsumer
  */
-public interface FluidConsumer extends Component {
+public interface FluidConsumer {
 	/**
 	 * Attempt to insert fluid into this consumer
 	 * @param fluid {@link Fluid} to insert
 	 * @param simulate Whether to simulate the insertion
 	 * @return The amount actually filled
 	 */
-	public int addFluid(Fluid fluid, boolean simulate);
+	int addFluid(Fluid fluid, boolean simulate);
 
 	/**
 	 * Attempt to insert fluid into this consumer
 	 * @param fluid {@link Fluid} to insert
 	 * @return Left {@link Fluid}
 	 */
-	public default int addFluid(Fluid fluid) {
+	default int addFluid(Fluid fluid) {
 		return addFluid(fluid, false);
 	}
 }

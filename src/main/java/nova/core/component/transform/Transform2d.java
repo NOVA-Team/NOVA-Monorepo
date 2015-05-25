@@ -1,6 +1,5 @@
-package nova.core.util.transform;
+package nova.core.component.transform;
 
-import nova.core.component.ComponentProvider;
 import nova.core.util.transform.vector.Vector2d;
 
 /**
@@ -9,8 +8,8 @@ import nova.core.util.transform.vector.Vector2d;
  */
 public class Transform2d extends Transform<Transform2d, Vector2d, Integer> {
 
-	public Transform2d(ComponentProvider provider) {
-		super(provider, Vector2d.zero, 0, Vector2d.one);
+	public Transform2d() {
+		super(Vector2d.zero, 0, Vector2d.one);
 	}
 
 	@Override

@@ -1,8 +1,6 @@
-package nova.core.util.transform;
+package nova.core.component.transform;
 
 import nova.core.component.Component;
-import nova.core.component.ComponentProvider;
-import nova.core.util.collection.TreeNode;
 
 /**
  * An object that handles the transformation of an object.
@@ -11,9 +9,8 @@ import nova.core.util.collection.TreeNode;
  *
  * @author Calclavia
  */
-public abstract class Transform<S extends Transform<S, V, R>, V, R> extends TreeNode<S> implements Component {
-
-	public final ComponentProvider provider;
+//TODO: Parenting?
+public abstract class Transform<S extends Transform<S, V, R>, V, R> extends Component {
 
 	//The position of the transform. Can never be null.
 	private V position;
@@ -33,8 +30,7 @@ public abstract class Transform<S extends Transform<S, V, R>, V, R> extends Tree
 	 * @param rotation The default rotation
 	 * @param scale The default scale
 	 */
-	public Transform(ComponentProvider provider, V position, R rotation, V scale) {
-		this.provider = provider;
+	public Transform(V position, R rotation, V scale) {
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
@@ -70,11 +66,6 @@ public abstract class Transform<S extends Transform<S, V, R>, V, R> extends Tree
 
 	public void setRotation(R rotation) {
 		this.rotation = rotation;
-	}
-
-	@Override
-	public final ComponentProvider provider() {
-		return provider;
 	}
 
 	/**

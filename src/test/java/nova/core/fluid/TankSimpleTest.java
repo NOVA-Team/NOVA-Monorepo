@@ -1,5 +1,6 @@
 package nova.core.fluid;
 
+import nova.core.fluid.component.TankSimple;
 import nova.core.retention.Data;
 import org.junit.Test;
 
@@ -8,7 +9,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Created by magik6k on 4/18/15.
+ * @author magik6k
  */
 public class TankSimpleTest {
 
@@ -35,8 +36,8 @@ public class TankSimpleTest {
 
     @Test
     public void storeTest() {
-        TankSimple tank = new TankSimple(150);
-        assertThat(tank.addFluid(new Fluid("water").setAmount(100))).isEqualTo(100);
+		TankSimple tank = new TankSimple(150);
+		assertThat(tank.addFluid(new Fluid("water").setAmount(100))).isEqualTo(100);
 
         Data tankData = new Data();
         tank.save(tankData);
