@@ -9,8 +9,16 @@ import nova.wrapper.mc1710.backward.block.BWBlock;
 import nova.wrapper.mc1710.backward.entity.BWEntity;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.forward.entity.FWEntity;
+import nova.wrapper.mc1710.forward.entity.MCEntityWrapper;
+
+import java.util.Optional;
 
 public class NativeConverters {
+
+	public static void registerConverters(NativeManager nativeManager) {
+		nativeManager.registerNativeConverter(new EntityNativeConverter());
+		nativeManager.registerNativeConverter(new BlockNativeConverter());
+	}
 
 	public static class EntityNativeConverter implements NativeConverter {
 
@@ -35,12 +43,12 @@ public class NativeConverters {
 
 		@Override
 		public Object convertToNative(Object novaObj) {
-			if (((Entity) novaObj).wrapper != null)
+			Optional<MCEntityWrapper> opWrapper = ((Entity) novaObj).get(MCEntityWrapper.class);
+			if (opWrapper.isPresent())
 			{
-				if (((Entity) novaObj).wrapper instanceof FWEntity)
+				if (opWrapper.get().wrapper instanceof FWEntity)
 				{
-					// NOVA entity
-					return ((Entity) novaObj).wrapper;
+					return opWrapper.get().wrapper;
 				} else {
 					throw new IllegalArgumentException("Entity wrapper is invalid(where did this object come from?)");
 				}
@@ -77,11 +85,7 @@ public class NativeConverters {
 		public Object convertToNative(Object novaObj) {
 			return BlockWrapperRegistry.instance.getMCBlock((Block)novaObj);
 		}
-		
-	}
-	public static void registerConverters(NativeManager nativeManager) {
-		nativeManager.registerNativeConverter(new EntityNativeConverter());
-		nativeManager.registerNativeConverter(new BlockNativeConverter());
+
 	}
 
 }

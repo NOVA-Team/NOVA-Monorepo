@@ -27,7 +27,7 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	private IBlockAccess getMcBlockAccess() {
-		return ((BWWorld) transform.world()).access;
+		return ((BWWorld) world()).access;
 	}
 
 	private int getMetadata() {

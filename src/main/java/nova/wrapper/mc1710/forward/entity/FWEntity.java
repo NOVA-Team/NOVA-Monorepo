@@ -6,7 +6,6 @@ import nova.core.component.Updater;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.entity.EntityWrapper;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.wrapper.mc1710.util.DataUtility;
@@ -15,15 +14,16 @@ import nova.wrapper.mc1710.util.DataUtility;
  * Entity wrapper
  * @author Calclavia
  */
-public class FWEntity extends net.minecraft.entity.Entity implements EntityWrapper {
+public class FWEntity extends net.minecraft.entity.Entity {
 
 	public final Entity wrapped;
 	public final EntityTransform transform;
 
 	public FWEntity(World world, EntityFactory factory, Object... args) {
 		super(world);
-		this.wrapped = factory.makeEntity(this, args);
-		this.transform = wrapped.transform;
+		this.wrapped = factory.makeEntity(new MCEntityWrapper(this), args);
+		this.transform = new MCEntityTransform(wrapped);
+		wrapped.components().add(transform);
 		entityInit();
 	}
 

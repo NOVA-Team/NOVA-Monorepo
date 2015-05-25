@@ -21,7 +21,7 @@ import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
-import nova.wrapper.mc1710.forward.entity.FWEntity;
+import nova.wrapper.mc1710.forward.entity.MCEntityWrapper;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.network.MCPacket;
 import nova.wrapper.mc1710.network.discriminator.PacketAbstract;
@@ -53,11 +53,11 @@ public class MCNetworkManager extends NetworkManager {
 		PacketAbstract discriminator;
 
 		if (sender instanceof Block) {
-			Vector3i position = ((Block) sender).transform.position();
+			Vector3i position = ((Block) sender).position();
 			discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
 		} else if (sender instanceof Entity) {
 			Entity entity = (Entity) sender;
-			discriminator = new PacketEntity((FWEntity) entity.wrapper);
+			discriminator = new PacketEntity(entity.get(MCEntityWrapper.class).get().wrapper);
 
 		} else {
 			throw new NovaException("Fail to send packet as the PacketHandler is of invalid type.");
@@ -82,7 +82,7 @@ public class MCNetworkManager extends NetworkManager {
 	}
 
 	public PacketBlock getBlockPacket(int id, PacketHandler sender) {
-		Vector3i position = ((Block) sender).transform.position();
+		Vector3i position = ((Block) sender).position();
 		PacketBlock discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
 		MCPacket mcPacket = new MCPacket(discriminator.data);
 		mcPacket.setID(id);

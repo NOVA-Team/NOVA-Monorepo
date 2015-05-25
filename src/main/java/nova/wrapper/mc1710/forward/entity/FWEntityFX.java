@@ -10,7 +10,6 @@ import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.entity.EntityWrapper;
 import nova.core.util.transform.matrix.MatrixStack;
 import nova.wrapper.mc1710.backward.render.BWModel;
 
@@ -21,21 +20,23 @@ import java.util.Optional;
  * @author Calclavia
  */
 @SideOnly(Side.CLIENT)
-public class FWEntityFX extends EntityFX implements EntityWrapper {
+public class FWEntityFX extends EntityFX {
 
 	public final Entity wrapped;
 	public final EntityTransform transform;
 
 	public FWEntityFX(World world, EntityFactory factory) {
 		super(world, 0, 0, 0);
-		this.wrapped = factory.makeEntity(this);
-		this.transform = wrapped.transform;
+		this.wrapped = factory.makeEntity(new MCEntityWrapper(this));
+		this.transform = new MCEntityTransform(wrapped);
+		wrapped.components().add(transform);
 	}
 
 	public FWEntityFX(World world, Entity entity) {
 		super(world, 0, 0, 0);
 		this.wrapped = entity;
-		this.transform = wrapped.transform;
+		this.transform = new MCEntityTransform(wrapped);
+		wrapped.components().add(transform);
 	}
 
 	@Override

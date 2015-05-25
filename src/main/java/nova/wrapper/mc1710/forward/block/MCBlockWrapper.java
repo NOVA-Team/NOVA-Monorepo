@@ -1,14 +1,13 @@
 package nova.wrapper.mc1710.forward.block;
 
-import nova.core.block.BlockWrapper;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
+import nova.internal.dummy.Wrapper;
 
 /**
  * @author Calclavia
  */
-public class MCBlockWrapper implements BlockWrapper {
-
+public class MCBlockWrapper extends Wrapper {
 	public final World world;
 	public final Vector3i position;
 

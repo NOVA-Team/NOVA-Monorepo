@@ -18,6 +18,7 @@ import nova.wrapper.mc1710.backward.entity.BWEntity;
 import nova.wrapper.mc1710.forward.block.BlockWrapperRegistry;
 import nova.wrapper.mc1710.forward.block.FWBlock;
 import nova.wrapper.mc1710.forward.entity.FWEntity;
+import nova.wrapper.mc1710.forward.entity.MCEntityWrapper;
 import nova.wrapper.mc1710.item.ItemWrapperRegistry;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 
@@ -95,7 +96,7 @@ public class BWWorld extends World {
 
 	@Override
 	public void removeEntity(Entity entity) {
-		world().removeEntity((FWEntity) entity.wrapper);
+		world().removeEntity(entity.get(MCEntityWrapper.class).get().wrapper);
 	}
 
 	@Override

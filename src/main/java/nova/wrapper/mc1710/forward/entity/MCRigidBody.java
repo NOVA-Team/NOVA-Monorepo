@@ -32,7 +32,7 @@ public class MCRigidBody extends RigidBody {
 		//TODO: This nullable provider is horrible. Change this.
 		if (provider != null) {
 			entity = (nova.core.entity.Entity) provider;
-			mcEntity = (net.minecraft.entity.Entity) entity.wrapper;
+			mcEntity = entity.get(MCEntityWrapper.class).get().wrapper;
 		}
 	}
 
@@ -64,7 +64,7 @@ public class MCRigidBody extends RigidBody {
 		//Integrate angular velocity to angular displacement
 		Quaternion angularVel = angularVelocity();
 		Quaternion deltaRotation = angularVel.scale(deltaTime);
-		entity.transform.setRotation(entity.transform.rotation().rightMultiply(deltaRotation));
+		entity.transform().setRotation(entity.rotation().rightMultiply(deltaRotation));
 
 		//Integrate torque to angular velocity
 		setAngularVelocity(angularVelocity().rightMultiply(Quaternion.fromEuler(netTorque.multiply(deltaTime))));
