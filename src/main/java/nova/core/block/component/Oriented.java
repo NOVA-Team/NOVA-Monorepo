@@ -3,6 +3,7 @@ package nova.core.block.component;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.component.Component;
+import nova.core.entity.Entity;
 import nova.core.network.Sync;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
@@ -22,7 +23,7 @@ public class Oriented extends Component implements Storable, Stateful {
 	 * The allowed rotation directions the block can face.
 	 */
 	public int rotationMask = 0x3C;
-	public boolean isFlipPlacement = false;
+	public boolean isFlip = false;
 	/**
 	 * The direction the block is facing.
 	 */
@@ -34,14 +35,42 @@ public class Oriented extends Component implements Storable, Stateful {
 		this.block = block;
 	}
 
+	public Oriented autoRotate() {
+		block.blockPlaceEvent.add(evt -> evt.by.ifPresent(by -> direction = calculateDirection(by)));
+		block.rightClickEvent.add(evt -> rotate(evt.side.ordinal(), evt.position));
+		return this;
+	}
+
 	public Oriented setMask(int mask) {
 		this.rotationMask = mask;
 		return this;
 	}
 
 	public Oriented flipPlacement(boolean flip) {
-		isFlipPlacement = flip;
+		isFlip = flip;
 		return this;
+	}
+
+	public Direction calculateDirection(Entity entity) {
+		if (Math.abs(entity.transform.position().x - block.position().x) < 2 && Math.abs(entity.transform.position().z - block.position().z) < 2) {
+			double height = entity.transform.position().y + 1.82D;//- entity.yOffset
+
+			if (canRotate(1) && height - block.position().y > 2.0D) {
+				return Direction.UP;
+			}
+			if (canRotate(0) && block.position().y - height > 0.0D) {
+				return Direction.DOWN;
+			}
+		}
+
+		int playerSide = (int) Math.floor(entity.transform.rotation().toEuler().x * 4.0F / 360.0F + 0.5D) & 3;
+		int returnSide = (playerSide == 0 && canRotate(2)) ? 2 : ((playerSide == 1 && canRotate(5)) ? 5 : playerSide == 2 && canRotate(3) ? 3 : (playerSide == 3 && canRotate(4)) ? 4 : 0);
+
+		if (isFlip) {
+			return Direction.fromOrdinal(returnSide).opposite();
+		}
+
+		return Direction.fromOrdinal(returnSide);
 	}
 
 	public boolean canRotate(int side) {
