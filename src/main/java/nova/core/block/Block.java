@@ -5,9 +5,6 @@ import nova.core.event.EventBus;
 import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
-import nova.core.render.Color;
-import nova.core.render.texture.Texture;
-import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.core.util.collection.Tuple4;
 import nova.core.util.transform.vector.Vector3d;
@@ -99,29 +96,6 @@ public abstract class Block extends Positioned<BlockWrapper, Vector3i> implement
 	 */
 	public boolean onRightClick(Entity entity, int side, Vector3d hit) {
 		return false;
-	}
-
-	/**
-	 * Called to get the texture of this block for a certain side.
-	 * @param side The side of the block that the texture is for.
-	 * @return An optional of the texture.
-	 */
-	public Optional<Texture> getTexture(Direction side) {
-		return Optional.empty();
-	}
-
-	public boolean shouldRenderSide(Direction side) {
-		return true;
-	}
-
-	/**
-	 * Gets the color of a specific face. This is called by the default block
-	 * renderer.
-	 * @param side - The side of the block.
-	 * @return The color
-	 */
-	public Color colorMultiplier(Direction side) {
-		return Color.white;
 	}
 
 	/**
