@@ -18,7 +18,7 @@ public abstract class ComponentProvider {
 	 * Adds a component to the provider
 	 * @param component The component to add
 	 */
-	public final Component add(Component component) {
+	public final <C extends Component> C add(C component) {
 		componentMap.put(component.getClass(), component);
 		return component;
 	}
@@ -27,7 +27,7 @@ public abstract class ComponentProvider {
 	 * Removes a component from the provider
 	 * @param component The component to remove
 	 */
-	public final Component remove(Component component) {
+	public final <C extends Component> C remove(C component) {
 		componentMap.remove(component.getClass());
 		return component;
 	}
