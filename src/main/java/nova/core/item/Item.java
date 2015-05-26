@@ -14,6 +14,7 @@ import nova.core.world.World;
 import java.util.List;
 import java.util.Optional;
 
+//TODO: Convert to component system
 public abstract class Item extends ComponentProvider implements Identifiable {
 
 	/**

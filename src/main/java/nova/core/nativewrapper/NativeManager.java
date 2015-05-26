@@ -4,8 +4,9 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import nova.core.util.exception.NovaException;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,6 +17,8 @@ public class NativeManager {
 	 * A map from a Nova written interface, to a Native written interface.
 	 */
 	private final BiMap<Class<?>, Class<?>> passthroughInterfaceNovaToNative = HashBiMap.create();
+
+	private final List<NativeConverter> converters = new ArrayList<>();
 	/**
 	 * A map from a Native written type to a Converter.
 	 */
@@ -36,6 +39,7 @@ public class NativeManager {
 	public void registerConverter(NativeConverter<?, ?> converter) {
 		nativeConverters.put(converter.getNativeSide(), converter);
 		novaConverters.put(converter.getNovaSide(), converter);
+		converters.add(converter);
 	}
 
 	public <NOVA, NATIVE> NativeConverter<NOVA, NATIVE> getNative(Class<NOVA> novaClass, Class<NATIVE> nativeClass) {
@@ -67,7 +71,7 @@ public class NativeManager {
 	public <T> T toNova(Object nativeObject) {
 		NativeConverter converter = findConverter(nativeConverters, nativeObject);
 		if (converter == null) {
-			throw new NovaException("Converter for " + nativeObject.getClass() + " does not exist!");
+			throw new NovaException("NativeManager.toNova: Converter for " + nativeObject + " with class " + nativeObject.getClass() + " does not exist!");
 		}
 
 		return (T) converter.toNova(nativeObject);
@@ -79,13 +83,13 @@ public class NativeManager {
 	public <T> T toNative(Object novaObject) {
 		NativeConverter converter = findConverter(novaConverters, novaObject);
 		if (converter == null) {
-			throw new NovaException("Converter for " + novaObject.getClass() + " does not exist!");
+			throw new NovaException("NativeManager.toNative: Converter for " + novaObject + " with class " + novaObject.getClass() + " does not exist!");
 		}
 
 		return (T) converter.toNative(novaObject);
 	}
 
-	public Collection<NativeConverter> getNativeConverters() {
-		return nativeConverters.values();
+	public List<NativeConverter> getNativeConverters() {
+		return converters;
 	}
 }
