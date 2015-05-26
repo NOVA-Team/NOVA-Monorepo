@@ -5,6 +5,7 @@ import nova.core.component.ComponentProvider;
 import nova.core.render.model.Model;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * This interface specifies that a block requires custom static item rendering.
@@ -14,21 +15,27 @@ public class ItemRenderer extends Component {
 
 	public final ComponentProvider provider;
 
+	/**
+	 * Called when the item of this block is to be rendered.
+	 * model - A {@link Model} to use.
+	 */
+	public Consumer<Model> onRender = this::renderItem;
+
 	public ItemRenderer(ComponentProvider provider) {
 		this.provider = provider;
 	}
 
-	/**
-	 * Called when the item of this block is to be rendered.
-	 * @param model A {@link Model} to use.
-	 */
-	public void renderItem(Model model) {
+	protected void renderItem(Model model) {
 		Optional<StaticRenderer> opComponent = provider.getOp(StaticRenderer.class);
 		if (opComponent.isPresent()) {
-			opComponent.get().renderStatic(model);
+			opComponent.get().onRender.accept(model);
 		} else {
-			provider.getOp(DynamicRenderer.class).ifPresent(c -> c.renderDynamic(model));
+			provider.getOp(DynamicRenderer.class).ifPresent(c -> c.onRender.accept(model));
 		}
 	}
 
+	public ItemRenderer onRender(Consumer<Model> onRender) {
+		this.onRender = onRender;
+		return this;
+	}
 }
