@@ -8,6 +8,7 @@ import nova.core.util.transform.shape.Cuboid;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
@@ -30,6 +31,14 @@ public class BlockCollider extends Collider {
 	 * Returns true if this block is a cube that is opaque.
 	 */
 	public Supplier<Boolean> isOpaqueCube = isCube;
+	/**
+	 * Called to check for collisions.
+	 * intersect Cuboid that could be colliding.
+	 * entity The entity that could be colliding.
+	 * Returns the cuboids that represent colliding areas.
+	 */
+	//TODO: Think of a neater way to do this.
+	public BiFunction<Cuboid, Optional<Entity>, Set<Cuboid>> collidingBoxes = this::getCollidingBoxes;
 
 	public BlockCollider(Block block) {
 		this.block = block;
@@ -43,13 +52,7 @@ public class BlockCollider extends Collider {
 		return collisionBoxes.stream().findFirst().get();
 	}
 
-	/**
-	 * Called to check for collisions.
-	 * @param intersect Cuboid that could be colliding.
-	 * @param entity The entity that could be colliding.
-	 * @return Cuboids that represent colliding areas.
-	 */
-	public Set<Cuboid> getCollidingBoxes(Cuboid intersect, Optional<Entity> entity) {
+	protected Set<Cuboid> getCollidingBoxes(Cuboid intersect, Optional<Entity> entity) {
 		Set<Cuboid> bounds = new HashSet<>();
 		Cuboid defaultBound = getBoundingBox();
 
@@ -60,13 +63,28 @@ public class BlockCollider extends Collider {
 		return bounds;
 	}
 
-	public BlockCollider setCube(boolean is) {
+	public BlockCollider collidingBoxes(BiFunction<Cuboid, Optional<Entity>, Set<Cuboid>> collidingBoxes) {
+		this.collidingBoxes = collidingBoxes;
+		return this;
+	}
+
+	public BlockCollider isCube(boolean is) {
 		isCube = () -> is;
 		return this;
 	}
 
-	public BlockCollider setOpaqueCube(boolean is) {
+	public BlockCollider isOpaqueCube(boolean is) {
 		isOpaqueCube = () -> is;
+		return this;
+	}
+
+	public BlockCollider isCube(Supplier<Boolean> isCube) {
+		this.isCube = isCube;
+		return this;
+	}
+
+	public BlockCollider isOpaqueCube(Supplier<Boolean> isOpaqueCube) {
+		this.isOpaqueCube = isOpaqueCube;
 		return this;
 	}
 }

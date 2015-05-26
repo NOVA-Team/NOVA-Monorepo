@@ -25,7 +25,7 @@ public class Collider extends Component {
 
 	public List<Cuboid> collisionBoxes = Collections.singletonList(new Cuboid(new Vector3i(0, 0, 0), new Vector3i(1, 1, 1)));
 
-	public Collider setEntityCollide(Consumer<Entity> onEntityCollide) {
+	public Collider onEntityCollide(Consumer<Entity> onEntityCollide) {
 		this.onEntityCollide = onEntityCollide;
 		return this;
 	}
