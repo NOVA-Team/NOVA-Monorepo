@@ -66,7 +66,7 @@ public class BWWorld extends World {
 	@Override
 	public boolean setBlock(Vector3i position, BlockFactory blockFactory, Object... args) {
 		//TODO: Implement object arguments
-		net.minecraft.block.Block mcBlock = Game.instance.nativeManager.toNative(blockFactory);
+		net.minecraft.block.Block mcBlock = Game.instance.nativeManager.toNative(blockFactory.getDummy());
 		return world().setBlock(position.x, position.y, position.z, mcBlock != null ? mcBlock : Blocks.air);
 	}
 

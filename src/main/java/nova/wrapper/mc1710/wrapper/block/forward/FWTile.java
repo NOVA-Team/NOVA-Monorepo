@@ -11,8 +11,8 @@ import nova.core.game.Game;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.transform.vector.Vector3i;
-import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 import nova.wrapper.mc1710.network.netty.MCNetworkManager;
+import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -49,6 +49,7 @@ public class FWTile extends TileEntity {
 				Optional<BlockFactory> blockFactory = Game.instance.blockManager.getFactory(blockID);
 				if (blockFactory.isPresent()) {
 					block = blockFactory.get().makeBlock(new MCBlockWrapper(new BWWorld(getWorldObj()), new Vector3i(xCoord, yCoord, zCoord)));
+					block.add(new MCBlockTransform(block));
 
 					if (cacheData != null && block instanceof Storable) {
 						((Storable) block).load(cacheData);
