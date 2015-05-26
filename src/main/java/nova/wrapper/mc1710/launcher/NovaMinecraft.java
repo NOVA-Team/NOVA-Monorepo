@@ -18,6 +18,7 @@ import nova.core.deps.DepDownloader;
 import nova.core.deps.MavenDependency;
 import nova.core.event.EventManager;
 import nova.core.game.Game;
+import nova.core.loader.Loadable;
 import nova.core.loader.NativeLoader;
 import nova.internal.launch.ModLoader;
 import nova.internal.launch.NovaLauncher;
@@ -30,16 +31,16 @@ import nova.wrapper.mc1710.depmodules.LanguageModule;
 import nova.wrapper.mc1710.depmodules.NetworkModule;
 import nova.wrapper.mc1710.depmodules.SaveModule;
 import nova.wrapper.mc1710.depmodules.TickerModule;
-import nova.wrapper.mc1710.wrapper.block.BlockConverter;
 import nova.wrapper.mc1710.forward.entity.MCEntityTransform;
 import nova.wrapper.mc1710.forward.entity.MCRigidBody;
-import nova.wrapper.mc1710.wrapper.block.world.WorldConverter;
-import nova.wrapper.mc1710.wrapper.item.ItemConverter;
-import nova.wrapper.mc1710.wrapper.item.OreDictionaryIntegration;
 import nova.wrapper.mc1710.manager.config.ConfigManager;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
+import nova.wrapper.mc1710.wrapper.block.BlockConverter;
+import nova.wrapper.mc1710.wrapper.block.world.WorldConverter;
 import nova.wrapper.mc1710.wrapper.data.DataWrapper;
 import nova.wrapper.mc1710.wrapper.entity.EntityConverter;
+import nova.wrapper.mc1710.wrapper.item.ItemConverter;
+import nova.wrapper.mc1710.wrapper.item.OreDictionaryIntegration;
 
 import java.io.File;
 import java.util.List;
@@ -64,7 +65,15 @@ public class NovaMinecraft {
 	private static NovaLauncher launcher;
 
 	private static ModLoader<NativeLoader> nativeLoader;
+	private static Set<Loadable> nativeConverters;
 
+	/**
+	 * ORDER OF LOADING.
+	 *
+	 * 1. Native Loaders
+	 * 2. Native Converters
+	 * 3. Mods
+	 */
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
 
@@ -146,6 +155,8 @@ public class NovaMinecraft {
 		nativeLoader.load();
 
 		nativeLoader.preInit();
+		nativeConverters = Game.instance.nativeManager.getNativeConverters().stream().filter(n -> n instanceof Loadable).map(n -> (Loadable) n).collect(Collectors.toSet());
+		nativeConverters.forEach(Loadable::preInit);
 		launcher.preInit();
 
 		// Initiate config system
@@ -170,6 +181,7 @@ public class NovaMinecraft {
 	public void init(FMLInitializationEvent evt) {
 		proxy.init();
 		nativeLoader.init();
+		nativeConverters.forEach(Loadable::init);
 		launcher.init();
 	}
 
@@ -177,6 +189,7 @@ public class NovaMinecraft {
 	public void postInit(FMLPostInitializationEvent evt) {
 		proxy.postInit();
 		nativeLoader.postInit();
+		nativeConverters.forEach(Loadable::postInit);
 		launcher.postInit();
 	}
 
