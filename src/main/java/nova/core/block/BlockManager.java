@@ -1,5 +1,7 @@
 package nova.core.block;
 
+import nova.core.event.CancelableEvent;
+import nova.core.event.CancelableEventBus;
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
@@ -15,7 +17,7 @@ import java.util.function.Supplier;
 public class BlockManager extends Manager<Block, BlockFactory> {
 
 	private final Supplier<ItemManager> itemManager;
-	private final EventBus<BlockRegisteredEvent> blockRegisteredListeners = new EventBus<>();
+	private final EventBus<BlockRegisteredEvent> blockRegisteredListeners = new CancelableEventBus<>();
 
 	private BlockManager(Registry<BlockFactory> registry, Supplier<ItemManager> itemManager) {
 		super(registry);
@@ -61,7 +63,8 @@ public class BlockManager extends Manager<Block, BlockFactory> {
 		return blockRegisteredListeners.add(listener);
 	}
 
-	public class BlockRegisteredEvent {
+	@CancelableEvent.Cancelable
+	public static class BlockRegisteredEvent extends CancelableEvent {
 		public final BlockFactory blockFactory;
 
 		public BlockRegisteredEvent(BlockFactory blockFactory) {
