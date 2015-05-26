@@ -37,7 +37,7 @@ public class Orientation extends Component implements Storable, Stateful {
 
 	public Orientation hookBlockEvents() {
 		if (provider instanceof Block) {
-			((Block) provider).blockPlaceEvent.add(evt -> evt.by.ifPresent(by -> orientation = calculateDirection(by)));
+			((Block) provider).placeEvent.add(evt -> evt.by.ifPresent(by -> orientation = calculateDirection(by)));
 			((Block) provider).rightClickEvent.add(evt -> rotate(evt.side.ordinal(), evt.position));
 		}
 		return this;

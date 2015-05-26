@@ -25,8 +25,8 @@ import java.util.Set;
 public abstract class Block extends ComponentProvider implements Identifiable {
 
 	public final EventBus<NeighborChangeEvent> neighborChangeEvent = new EventBus<>();
-	public final EventBus<BlockPlaceEvent> blockPlaceEvent = new EventBus<>();
-	public final EventBus<BlockRemoveEvent> blockRemoveEvent = new EventBus<>();
+	public final EventBus<BlockPlaceEvent> placeEvent = new EventBus<>();
+	public final EventBus<BlockRemoveEvent> removeEvent = new EventBus<>();
 	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
 	public final EventBus<LeftClickEvent> leftClickEvent = new EventBus<>();
 

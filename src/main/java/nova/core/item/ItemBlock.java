@@ -13,7 +13,6 @@ import java.util.Optional;
 
 /**
  * An ItemBlock is an Item that is meant to be used to place blocks.
- *
  * @author Calclavia
  */
 public class ItemBlock extends Item {
@@ -29,7 +28,7 @@ public class ItemBlock extends Item {
 		Vector3i placePos = position.add(side.toVector());
 
 		if (onPrePlace(world, placePos)) {
-			return onPostPlace(world, placePos);
+			return onPostPlace(world, placePos, entity);
 		}
 
 		return false;
@@ -43,7 +42,13 @@ public class ItemBlock extends Item {
 		return false;
 	}
 
-	protected boolean onPostPlace(World world, Vector3i placePos) {
+	protected boolean onPostPlace(World world, Vector3i placePos, Entity entity) {
+
+		Optional<Block> opBlock = world.getBlock(placePos);
+		if (opBlock.isPresent() && opBlock.get().sameType(blockFactory.getDummy())) {
+			opBlock.get().placeEvent.publish(new Block.BlockPlaceEvent(Optional.of(entity)));
+		}
+
 		return true;
 	}
 
