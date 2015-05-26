@@ -1,5 +1,6 @@
 package nova.core.retention;
 
+import nova.core.component.ComponentProvider;
 import nova.core.util.ReflectionUtil;
 
 /**
@@ -29,6 +30,14 @@ public interface Storable {
 				e.printStackTrace();
 			}
 		});
+
+		if (this instanceof ComponentProvider) {
+			((ComponentProvider) this)
+				.components()
+				.stream()
+				.filter(c -> c instanceof Storable)
+				.forEach(c -> ((Storable) c).save(data));
+		}
 	}
 
 	default void load(Data data) {
@@ -53,5 +62,13 @@ public interface Storable {
 				}
 			}
 		});
+
+		if (this instanceof ComponentProvider) {
+			((ComponentProvider) this)
+				.components()
+				.stream()
+				.filter(c -> c instanceof Storable)
+				.forEach(c -> ((Storable) c).load(data));
+		}
 	}
 }

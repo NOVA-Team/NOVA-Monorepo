@@ -1,5 +1,6 @@
 package nova.core.network;
 
+import nova.core.component.ComponentProvider;
 import nova.core.util.ReflectionUtil;
 
 import java.util.Arrays;
@@ -25,6 +26,14 @@ public interface PacketHandler {
 				}
 			}
 		});
+
+		if (this instanceof ComponentProvider) {
+			((ComponentProvider) this)
+				.components()
+				.stream()
+				.filter(c -> c instanceof PacketHandler)
+				.forEach(c -> ((PacketHandler) c).read(packet));
+		}
 	}
 
 	/**
@@ -43,6 +52,14 @@ public interface PacketHandler {
 				}
 			}
 		});
+
+		if (this instanceof ComponentProvider) {
+			((ComponentProvider) this)
+				.components()
+				.stream()
+				.filter(c -> c instanceof PacketHandler)
+				.forEach(c -> ((PacketHandler) c).write(packet));
+		}
 	}
 
 }
