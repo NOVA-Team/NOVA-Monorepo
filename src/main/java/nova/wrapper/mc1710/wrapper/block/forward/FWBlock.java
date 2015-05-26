@@ -216,7 +216,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		Optional<BlockCollider> opCollider = blockInstance.getOp(BlockCollider.class);
 		opCollider.ifPresent(collider -> {
-				Set<Cuboid> boxes = collider.getCollidingBoxes(new BWCuboid(aabb), entity != null ? Optional.of(BackwardProxyUtil.getEntityWrapper(entity)) : Optional.empty());
+				Set<Cuboid> boxes = collider.collidingBoxes.apply(new BWCuboid(aabb), entity != null ? Optional.of(BackwardProxyUtil.getEntityWrapper(entity)) : Optional.empty());
 
 				list.addAll(
 					boxes
