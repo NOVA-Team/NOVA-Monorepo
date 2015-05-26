@@ -9,22 +9,24 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.game.Game;
+import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.util.Category;
-import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
+import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
 import nova.wrapper.mc1710.wrapper.item.FWItemBlock;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * @author Calclavia
  */
-public class BlockConverter implements NativeConverter<Block, net.minecraft.block.Block> {
+public class BlockConverter implements NativeConverter<Block, net.minecraft.block.Block>, Loadable {
 	/**
 	 * A map of all blockFactory to MC blocks registered
 	 */
@@ -71,7 +73,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	/**
 	 * Register all Nova blocks
 	 */
-	public void registerBlocks() {
+	public void preInit() {
 		BlockManager blockManager = Game.instance.blockManager;
 
 		//Register air block
@@ -84,17 +86,11 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 
 		blockManager.register(airBlock);
 
-		//Register all blocks that are already registered.
-		blockManager.registry.forEach(this::addNOVABlock);
-		//Continue registering blocks afterwords.
-		blockManager.whenBlockRegistered(this::onBlockRegistered);
+		//NOTE: There should NEVER be blocks already registered in preInit() stage of a NativeConverter.
+		blockManager.whenBlockRegistered(event -> registerNovaBlock(event.blockFactory));
 	}
 
-	private void onBlockRegistered(BlockManager.BlockRegisteredEvent event) {
-		addNOVABlock(event.blockFactory);
-	}
-
-	private void addNOVABlock(BlockFactory blockFactory) {
+	private void registerNovaBlock(BlockFactory blockFactory) {
 		FWBlock blockWrapper = new FWBlock(blockFactory);
 		blockFactoryMap.put(blockFactory, blockWrapper);
 		NovaMinecraft.proxy.registerBlock(blockWrapper);

@@ -106,10 +106,8 @@ public class NovaMinecraft {
 		Game.instance.nativeManager.registerConverter(new WorldConverter());
 
 		/**
-		 * Initial native converters
+		 * Initiate recipe and ore dictionary integration
 		 */
-		BlockConverter.instance().registerBlocks();
-		ItemConverter.instance().registerItems();
 		OreDictionaryIntegration.instance.registerOreDictionary();
 		MinecraftRecipeRegistry.instance.registerRecipes();
 
@@ -119,6 +117,9 @@ public class NovaMinecraft {
 		Game.instance.componentManager.register(args -> args.length > 0 ? new MCRigidBody((ComponentProvider) args[0]) : new MCRigidBody(null));
 		Game.instance.componentManager.register(args -> args.length > 0 ? new MCEntityTransform((ComponentProvider) args[0]) : new MCEntityTransform(null));
 
+		/**
+		 * Download dependencies
+		 */
 		launcher.generateDependencies();
 
 		try {

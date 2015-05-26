@@ -13,11 +13,11 @@ import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.item.ItemManager;
 import nova.core.item.event.ItemIDNotFoundEvent;
+import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.util.Category;
 import nova.core.util.exception.NovaException;
-import nova.wrapper.mc1710.wrapper.block.BlockConverter;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
 
@@ -29,7 +29,7 @@ import java.util.Set;
  * The main class responsible for wrapping items.
  * @author Calclavia, Stan Hebben
  */
-public class ItemConverter implements NativeConverter<Item, ItemStack> {
+public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable {
 
 	/**
 	 * A map of all blocks registered
@@ -146,7 +146,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack> {
 	/**
 	 * Register all Nova blocks
 	 */
-	public void registerItems() {
+	public void preInit() {
 		registerNOVAItemsToMinecraft();
 		registerMinecraftItemsToNOVA();
 		registerSubtypeResolution();
