@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import nova.core.util.exception.NovaException;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,5 +77,9 @@ public class NativeManager {
 		}
 
 		return (T) converter.toNative(novaObject);
+	}
+
+	public Collection<NativeConverter> getNativeConverters() {
+		return novaToNative.values();
 	}
 }
