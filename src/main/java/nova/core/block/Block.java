@@ -7,6 +7,7 @@ import nova.core.event.CancelableEvent;
 import nova.core.event.EventBus;
 import nova.core.game.Game;
 import nova.core.item.Item;
+import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
@@ -28,6 +29,14 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	public final EventBus<BlockRemoveEvent> blockRemoveEvent = new EventBus<>();
 	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
 	public final EventBus<LeftClickEvent> leftClickEvent = new EventBus<>();
+
+	/**
+	 * Called when the block is registered.
+	 */
+	public void onRegister() {
+		//Register the itemblock
+		Game.instance.itemManager.register((args) -> new ItemBlock(factory()));
+	}
 
 	public ItemFactory getItemFactory() {
 		return Game.instance.itemManager.getItemFactoryFromBlock(factory());

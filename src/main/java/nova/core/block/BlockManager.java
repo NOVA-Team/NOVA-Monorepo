@@ -6,7 +6,6 @@ import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
 import nova.core.game.Game;
-import nova.core.item.ItemBlock;
 import nova.core.item.ItemManager;
 import nova.core.util.Manager;
 import nova.core.util.Registry;
@@ -55,7 +54,7 @@ public class BlockManager extends Manager<Block, BlockFactory> {
 	public BlockFactory register(BlockFactory factory) {
 		registry.register(factory);
 		blockRegisteredListeners.publish(new BlockRegisteredEvent(factory));
-		itemManager.get().register((args) -> new ItemBlock(factory));
+		factory.getDummy().onRegister();
 		return factory;
 	}
 
