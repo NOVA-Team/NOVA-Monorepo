@@ -169,17 +169,25 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	}
 
 	@Override
+	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
+		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+		Block.BlockPlaceEvent evt = new Block.BlockPlaceEvent(Optional.empty());
+		blockInstance.placeEvent.publish(evt);
+		return meta;
+	}
+
+	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		Block.BlockPlaceEvent evt = new Block.BlockPlaceEvent(Optional.of(BackwardProxyUtil.getEntityWrapper(entity)));
-		blockInstance.blockPlaceEvent.publish(evt);
+		blockInstance.placeEvent.publish(evt);
 	}
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, net.minecraft.block.Block block, int i) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		Block.BlockRemoveEvent evt = new Block.BlockRemoveEvent(Optional.empty());
-		blockInstance.blockRemoveEvent.publish(evt);
+		blockInstance.removeEvent.publish(evt);
 		super.breakBlock(world, x, y, z, block, i);
 	}
 
