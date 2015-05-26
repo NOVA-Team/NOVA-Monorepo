@@ -5,7 +5,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import nova.core.block.BlockFactory;
 import nova.core.game.Game;
 import nova.core.item.Item;
@@ -32,7 +31,7 @@ import java.util.Set;
 public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable {
 
 	/**
-	 * A map of all blocks registered
+	 * A map of all items registered
 	 */
 	private final HashBiMap<ItemFactory, MinecraftItemMapping> map = HashBiMap.create();
 
@@ -65,19 +64,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		if (itemStack.getTagCompound() != null && itemStack.getTagCompound() instanceof WrappedNBTTagCompound) {
 			return ((WrappedNBTTagCompound) itemStack.getTagCompound()).getItem();
 		} else {
-			MinecraftItemMapping mapping = new MinecraftItemMapping(itemStack);
-			ItemFactory itemFactory = map.inverse().get(mapping);
-			if (itemFactory == null && itemStack.getHasSubtypes()) {
-				// load subitem
-				itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
-			}
+			ItemFactory itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
 
-			Data data = Game.instance.nativeManager.toNova(itemStack.getTagCompound() != null ? itemStack.getTagCompound() : new NBTTagCompound());
+			Data data = itemStack.getTagCompound() != null ? Game.instance.nativeManager.toNova(itemStack.getTagCompound()) : new Data();
 			if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
-				if (data == null) {
-					data = new Data();
-				}
-
 				data.put("damage", itemStack.getItemDamage());
 			}
 
@@ -248,8 +238,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	private ItemFactory registerMinecraftMapping(net.minecraft.item.Item item, int meta) {
 		MinecraftItemMapping mapping = new MinecraftItemMapping(item, meta);
 		if (map.inverse().containsKey(mapping))
-		// don't register twice, return the factory instead
 		{
+			// don't register twice, return the factory instead
 			return map.inverse().get(mapping);
 		}
 
@@ -261,4 +251,58 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		return itemFactory;
 	}
 
+	/**
+	 * Used to map MC items and their meta to nova item factories.
+	 */
+	public final class MinecraftItemMapping {
+		public final net.minecraft.item.Item item;
+		public final int meta;
+
+		public MinecraftItemMapping(net.minecraft.item.Item item, int meta) {
+			this.item = item;
+			this.meta = item.getHasSubtypes() ? meta : 0;
+		}
+
+		public MinecraftItemMapping(ItemStack itemStack) {
+			this.item = itemStack.getItem();
+			this.meta = itemStack.getHasSubtypes() ? itemStack.getItemDamage() : 0;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+
+			MinecraftItemMapping that = (MinecraftItemMapping) o;
+
+			if (meta != that.meta) {
+				return false;
+			}
+			if (!item.equals(that.item)) {
+				return false;
+			}
+
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = item.hashCode();
+			result = 31 * result + meta;
+			return result;
+		}
+
+		@Override
+		public String toString() {
+			if (item.getHasSubtypes()) {
+				return net.minecraft.item.Item.itemRegistry.getNameForObject(item) + ":" + meta;
+			} else {
+				return net.minecraft.item.Item.itemRegistry.getNameForObject(item);
+			}
+		}
+	}
 }
