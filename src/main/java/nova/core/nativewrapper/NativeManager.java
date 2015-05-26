@@ -19,11 +19,11 @@ public class NativeManager {
 	/**
 	 * A map from a Native written type to a Converter.
 	 */
-	private final Map<Class<?>, NativeConverter> novaToNative = new HashMap<>();
+	private final Map<Class<?>, NativeConverter> nativeConverters = new HashMap<>();
 	/**
 	 * A map from a Nova written type to a Converter.
 	 */
-	private final Map<Class<?>, NativeConverter> nativeToNova = new HashMap<>();
+	private final Map<Class<?>, NativeConverter> novaConverters = new HashMap<>();
 
 	public void registerPassthroughInterface(Class<?> novaSide, Class<?> nativeSide) {
 		passthroughInterfaceNovaToNative.put(novaSide, nativeSide);
@@ -34,12 +34,18 @@ public class NativeManager {
 	}
 
 	public void registerConverter(NativeConverter<?, ?> converter) {
-		novaToNative.put(converter.getNativeSide(), converter);
-		nativeToNova.put(converter.getNovaSide(), converter);
+		nativeConverters.put(converter.getNativeSide(), converter);
+		novaConverters.put(converter.getNovaSide(), converter);
 	}
 
 	public <NOVA, NATIVE> NativeConverter<NOVA, NATIVE> getNative(Class<NOVA> novaClass, Class<NATIVE> nativeClass) {
-		return novaToNative.get(novaClass);
+		NativeConverter nativeConverter = novaConverters.get(novaClass);
+
+		if (nativeConverter == nativeConverters.get(nativeClass)) {
+			return nativeConverter;
+		}
+
+		throw new NovaException("Cannot find native converter for: " + novaClass);
 	}
 
 	private NativeConverter findConverter(Map<Class<?>, NativeConverter> map, Object obj) {
@@ -59,7 +65,7 @@ public class NativeManager {
 	 * Converts a native object to a nova object. This method has autocast, is DANGEROUS and may crash.
 	 */
 	public <T> T toNova(Object nativeObject) {
-		NativeConverter converter = findConverter(novaToNative, nativeObject);
+		NativeConverter converter = findConverter(nativeConverters, nativeObject);
 		if (converter == null) {
 			throw new NovaException("Converter for " + nativeObject.getClass() + " does not exist!");
 		}
@@ -71,7 +77,7 @@ public class NativeManager {
 	 * Converts a nova object to a native object. This method has autocast, is DANGEROUS and may crash.
 	 */
 	public <T> T toNative(Object novaObject) {
-		NativeConverter converter = findConverter(nativeToNova, novaObject);
+		NativeConverter converter = findConverter(novaConverters, novaObject);
 		if (converter == null) {
 			throw new NovaException("Converter for " + novaObject.getClass() + " does not exist!");
 		}
@@ -80,6 +86,6 @@ public class NativeManager {
 	}
 
 	public Collection<NativeConverter> getNativeConverters() {
-		return novaToNative.values();
+		return nativeConverters.values();
 	}
 }
