@@ -340,7 +340,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 			GL11.glPushMatrix();
 			Tessellator.instance.startDrawingQuads();
 			BWModel model = new BWModel();
-			opRenderer.get().renderItem(model);
+			opRenderer.get().onRender.accept(model);
 			model.render();
 			Tessellator.instance.draw();
 			GL11.glPopMatrix();
@@ -356,7 +356,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
 			model.matrix = new MatrixStack().translate(x + 0.5, y + 0.5, z + 0.5).getMatrix();
-			opRenderer.get().renderStatic(model);
+			opRenderer.get().onRender.accept(model);
 			model.renderWorld(world);
 		}
 		return false;
