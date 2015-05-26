@@ -156,8 +156,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 	private void registerNOVAItem(ItemFactory itemFactory) {
 		if (map.containsKey(itemFactory))
-		// just a safeguard - don't map stuff twice
 		{
+			// just a safeguard - don't map stuff twice
 			return;
 		}
 

@@ -21,7 +21,6 @@ import nova.wrapper.mc1710.wrapper.item.FWItemBlock;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * @author Calclavia
@@ -78,6 +77,11 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 
 		//Register air block
 		BlockFactory airBlock = new BlockFactory((args) -> new BWBlock(Blocks.air) {
+			@Override
+			public void onRegister() {
+
+			}
+
 			@Override
 			public String getID() {
 				return "air";

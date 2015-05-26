@@ -51,4 +51,9 @@ public class BWItem extends Item implements Storable {
     public String getID() {
         return id;
     }
+
+	@Override
+	public String toString() {
+		return getID();
+	}
 }
