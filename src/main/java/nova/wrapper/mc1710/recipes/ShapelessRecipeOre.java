@@ -5,7 +5,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import nova.core.game.Game;
+import nova.core.item.Item;
 import nova.core.recipes.crafting.ShapelessCraftingRecipe;
+
+import java.util.Optional;
 
 /**
  * @author Stan Hebben
@@ -26,6 +29,10 @@ public class ShapelessRecipeOre extends ShapelessOreRecipe {
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return ((ItemStack) Game.instance.nativeManager.toNative(recipe.getCraftingResult(MCCraftingGrid.get(inventory)))).copy();
+		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
+		if (craftingResult.isPresent()) {
+			return ((ItemStack) Game.instance.nativeManager.toNative(craftingResult.get())).copy();
+		}
+		return null;
 	}
 }

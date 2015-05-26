@@ -6,35 +6,40 @@
 
 package nova.wrapper.mc1710.recipes;
 
-import java.util.Arrays;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.world.World;
 import nova.core.game.Game;
+import nova.core.item.Item;
 import nova.core.recipes.crafting.ShapelessCraftingRecipe;
-import nova.wrapper.mc1710.util.WrapUtility;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
- *
  * @author Stan
  */
 public class ShapelessRecipeBasic extends ShapelessRecipes {
 	private final ShapelessCraftingRecipe recipe;
-	
+
 	public ShapelessRecipeBasic(ItemStack[] ingredients, ShapelessCraftingRecipe recipe) {
-		super(Game.instance.nativeManager.toNative(recipe.getNominalOutput()), Arrays.asList(ingredients));
-		
+		super(recipe.getNominalOutput().isPresent() ? Game.instance.nativeManager.toNative(recipe.getNominalOutput().get()) : null, Arrays.asList(ingredients));
+
 		this.recipe = recipe;
 	}
-	
+
 	@Override
 	public boolean matches(InventoryCrafting inventory, World world) {
 		return recipe.matches(MCCraftingGrid.get(inventory));
 	}
-	
+
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		return Game.instance.nativeManager.toNative(recipe.getCraftingResult(MCCraftingGrid.get(inventory)));
+		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
+		if (craftingResult.isPresent()) {
+			return Game.instance.nativeManager.toNative(craftingResult.get());
+		}
+		return null;
 	}
 }

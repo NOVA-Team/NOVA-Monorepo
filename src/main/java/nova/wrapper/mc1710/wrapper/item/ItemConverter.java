@@ -145,7 +145,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	private void registerNOVAItemsToMinecraft() {
 		ItemManager itemManager = Game.instance.itemManager;
 
-		itemManager.registry.forEach(this::registerNOVAItem);
+		//There should be no items registered during Native Converter preInit()
+		//	itemManager.registry.forEach(this::registerNOVAItem);
 		itemManager.whenItemRegistered(this::onItemRegistered);
 	}
 
@@ -164,7 +165,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 		if (itemFactory.getDummy() instanceof ItemBlock) {
 			BlockFactory blockFactory = ((ItemBlock) (itemFactory.getDummy())).blockFactory;
-			net.minecraft.block.Block mcBlock = Game.instance.nativeManager.toNative(blockFactory);
+			net.minecraft.block.Block mcBlock = Game.instance.nativeManager.toNative(blockFactory.getDummy());
 			itemWrapper = net.minecraft.item.Item.getItemFromBlock(mcBlock);
 			if (itemWrapper == null) {
 				throw new NovaException("Missing block: " + itemFactory.getID());

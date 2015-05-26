@@ -12,8 +12,8 @@ import nova.core.util.Direction;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
-import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 import nova.wrapper.mc1710.render.RenderUtility;
+import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +27,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	ItemFactory getItemFactory();
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
-		Item item = getItemFactory()
-			.makeItem(Game.instance.nativeManager.toNative(itemStack.getTagCompound()));
+		Item item = Game.instance.nativeManager.toNative(itemStack);
 
 		item.setCount(itemStack.stackSize)
 			.getTooltips(Optional.of(new BWEntityPlayer(player)), list);
@@ -37,14 +36,14 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		Item item = getItemFactory().makeItem(Game.instance.nativeManager.toNative(itemStack.getTagCompound())).setCount(itemStack.stackSize);
+		Item item = Game.instance.nativeManager.toNative(itemStack);
 		boolean b = item.onUse(new BWEntityPlayer(player), new BWWorld(world), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return b;
 	}
 
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		Item item = getItemFactory().makeItem(Game.instance.nativeManager.toNative(itemStack.getTagCompound())).setCount(itemStack.stackSize);
+		Item item = Game.instance.nativeManager.toNative(itemStack);
 		item.onRightClick(new BWEntityPlayer(player));
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return itemStack;
@@ -58,8 +57,9 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default IIcon getIcon(ItemStack itemStack, int pass) {
-		if (getItemFactory().makeItem(Game.instance.nativeManager.toNative(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTexture().isPresent()) {
-			return RenderUtility.instance.getIcon(getItemFactory().makeItem(Game.instance.nativeManager.toNative(itemStack.getTagCompound())).setCount(itemStack.stackSize).getTexture().get());
+		Item item = Game.instance.nativeManager.toNative(itemStack);
+		if (item.getTexture().isPresent()) {
+			return RenderUtility.instance.getIcon(item.getTexture().get());
 		}
 		return null;
 	}
@@ -73,10 +73,10 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default void renderItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data) {
-		getItemFactory().makeItem(Game.instance.nativeManager.toNative(itemStack.getTagCompound())).setCount(itemStack.stackSize).onRender(type.ordinal(), data);
+		((Item) Game.instance.nativeManager.toNative(itemStack)).onRender(type.ordinal(), data);
 	}
 
 	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
-		return getItemFactory().makeItem(Game.instance.nativeManager.toNative(itemStack.getTagCompound())).setCount(itemStack.stackSize).colorMultiplier().argb();
+		return ((Item) Game.instance.nativeManager.toNative(itemStack)).colorMultiplier().argb();
 	}
 }

@@ -6,31 +6,32 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.world.World;
 import nova.core.game.Game;
 import nova.core.recipes.crafting.ShapedCraftingRecipe;
-import nova.wrapper.mc1710.util.WrapUtility;
 
 import java.util.Optional;
 
 /**
- *
  * @author Stan Hebben
  */
 public class ShapedRecipeBasic extends ShapedRecipes {
 	private final ShapedCraftingRecipe recipe;
-	
+
 	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedCraftingRecipe recipe) {
-		super(recipe.getWidth(), recipe.getHeight(), basicInputs, Game.instance.nativeManager.toNative(recipe.getNominalOutput()));
-		
+		super(recipe.getWidth(), recipe.getHeight(), basicInputs, recipe.getNominalOutput().isPresent() ? Game.instance.nativeManager.toNative(recipe.getNominalOutput().get()) : null);
+
 		this.recipe = recipe;
 	}
-	
+
 	@Override
-    public boolean matches(InventoryCrafting inventory, World world) {
+	public boolean matches(InventoryCrafting inventory, World world) {
 		return recipe.matches(MCCraftingGrid.get(inventory));
 	}
 
-    @Override
-    public ItemStack getCraftingResult(InventoryCrafting inventory) {
+	@Override
+	public ItemStack getCraftingResult(InventoryCrafting inventory) {
 		Optional<nova.core.item.Item> result = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
-		return Game.instance.nativeManager.toNative(result);
+		if (result.isPresent()) {
+			return Game.instance.nativeManager.toNative(result.get());
+		}
+		return null;
 	}
 }

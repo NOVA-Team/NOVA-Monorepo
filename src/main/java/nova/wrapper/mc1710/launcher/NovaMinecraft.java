@@ -157,7 +157,7 @@ public class NovaMinecraft {
 
 		nativeLoader.preInit();
 		nativeConverters = Game.instance.nativeManager.getNativeConverters().stream().filter(n -> n instanceof Loadable).map(n -> (Loadable) n).collect(Collectors.toSet());
-		nativeConverters.forEach(Loadable::preInit);
+		nativeConverters.stream().forEachOrdered(Loadable::preInit);
 		launcher.preInit();
 
 		// Initiate config system
@@ -182,7 +182,7 @@ public class NovaMinecraft {
 	public void init(FMLInitializationEvent evt) {
 		proxy.init();
 		nativeLoader.init();
-		nativeConverters.forEach(Loadable::init);
+		nativeConverters.stream().forEachOrdered(Loadable::init);
 		launcher.init();
 	}
 
@@ -190,7 +190,7 @@ public class NovaMinecraft {
 	public void postInit(FMLPostInitializationEvent evt) {
 		proxy.postInit();
 		nativeLoader.postInit();
-		nativeConverters.forEach(Loadable::postInit);
+		nativeConverters.stream().forEachOrdered(Loadable::postInit);
 		launcher.postInit();
 	}
 

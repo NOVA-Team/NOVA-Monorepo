@@ -177,6 +177,6 @@ public class FWTile extends TileEntity {
 		 * we must wait until the block is injected with World and Position data using Future.
 		 */
 		blockID = nbt.getString("novaID");
-		cacheData = Game.instance.nativeManager.toNative(nbt.getCompoundTag("nova"));
+		cacheData = Game.instance.nativeManager.toNova(nbt.getCompoundTag("nova"));
 	}
 }
