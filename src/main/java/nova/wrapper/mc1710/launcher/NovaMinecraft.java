@@ -1,15 +1,10 @@
 package nova.wrapper.mc1710.launcher;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.FMLInjectionData;
+import java.io.File;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import nova.bootstrap.DependencyInjectionEntryPoint;
@@ -29,6 +24,7 @@ import nova.wrapper.mc1710.depmodules.GuiModule;
 import nova.wrapper.mc1710.depmodules.KeyModule;
 import nova.wrapper.mc1710.depmodules.LanguageModule;
 import nova.wrapper.mc1710.depmodules.NetworkModule;
+import nova.wrapper.mc1710.depmodules.RenderModule;
 import nova.wrapper.mc1710.depmodules.SaveModule;
 import nova.wrapper.mc1710.depmodules.TickerModule;
 import nova.wrapper.mc1710.forward.entity.MCEntityTransform;
@@ -41,14 +37,20 @@ import nova.wrapper.mc1710.wrapper.data.DataWrapper;
 import nova.wrapper.mc1710.wrapper.entity.EntityConverter;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.wrapper.item.OreDictionaryIntegration;
-
-import java.io.File;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 
 /**
  * The main Nova Minecraft Wrapper loader, using Minecraft Forge.
+ * 
  * @author Calclavia
  */
 @Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name, version = NovaMinecraftPreloader.version)
@@ -70,9 +72,7 @@ public class NovaMinecraft {
 	/**
 	 * ORDER OF LOADING.
 	 *
-	 * 1. Native Loaders
-	 * 2. Native Converters
-	 * 3. Mods
+	 * 1. Native Loaders 2. Native Converters 3. Mods
 	 */
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
@@ -88,6 +88,7 @@ public class NovaMinecraft {
 		diep.install(LanguageModule.class);
 		diep.install(KeyModule.class);
 		diep.install(ClientModule.class);
+		diep.install(RenderModule.class);
 
 		Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
 
@@ -138,20 +139,20 @@ public class NovaMinecraft {
 		 * Instantiate native loaders
 		 */
 		nativeLoader = new ModLoader<>(NativeLoader.class, diep,
-			evt.getAsmData()
-				.getAll(NativeLoader.class.getName())
-				.stream()
-				.map(d -> d.getClassName())
-				.map(c -> {
-					try {
-						return Class.forName(c);
-					} catch (ClassNotFoundException e) {
-						throw new ExceptionInInitializerError(e);
-					}
-				})
-				.filter(c -> mcId.equals(c.getAnnotation(NativeLoader.class).forGame()))
-				.collect(Collectors.toSet())
-		);
+				evt.getAsmData()
+					.getAll(NativeLoader.class.getName())
+					.stream()
+					.map(d -> d.getClassName())
+					.map(c -> {
+						try {
+							return Class.forName(c);
+						} catch (ClassNotFoundException e) {
+							throw new ExceptionInInitializerError(e);
+						}
+					})
+					.filter(c -> mcId.equals(c.getAnnotation(NativeLoader.class).forGame()))
+					.collect(Collectors.toSet())
+				);
 
 		nativeLoader.load();
 
