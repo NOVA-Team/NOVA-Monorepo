@@ -25,7 +25,7 @@ public class FWTileRenderer extends TileEntitySpecialRenderer {
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
 			model.translate(x + 0.5, y + 0.5, z + 0.5);
-			opRenderer.get().renderDynamic(model);
+			opRenderer.get().onRender.accept(model);
 			bindTexture(TextureMap.locationBlocksTexture);
 			RenderUtility.enableBlending();
 			Tessellator.instance.startDrawingQuads();

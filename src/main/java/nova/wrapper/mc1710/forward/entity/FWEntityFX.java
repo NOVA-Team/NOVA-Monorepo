@@ -45,7 +45,7 @@ public class FWEntityFX extends EntityFX {
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
 			model.matrix = new MatrixStack().translate(x, y, z).rotate(transform.rotation()).getMatrix();
-			opRenderer.get().renderDynamic(model);
+			opRenderer.get().onRender.accept(model);
 			model.renderWorld(worldObj);
 		}
 	}

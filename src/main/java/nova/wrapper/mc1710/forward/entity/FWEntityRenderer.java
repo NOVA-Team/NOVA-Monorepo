@@ -32,7 +32,7 @@ public class FWEntityRenderer extends Render {
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
 			model.matrix = new MatrixStack().translate(x, y, z).rotate(entity.rotation()).getMatrix();
-			opRenderer.get().renderDynamic(model);
+			opRenderer.get().onRender.accept(model);
 			Tessellator.instance.startDrawingQuads();
 			model.render(Optional.of(renderManager));
 			Tessellator.instance.draw();
