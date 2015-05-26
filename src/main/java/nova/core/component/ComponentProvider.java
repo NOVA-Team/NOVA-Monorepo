@@ -21,8 +21,21 @@ public abstract class ComponentProvider {
 	 * @param component The component to add
 	 */
 	public final <C extends Component> C add(C component) {
-		if (componentMap.containsKey(component.getClass())) {
+		if (has(component.getClass())) {
 			throw new NovaException("Attempt to add two of the same component types: " + component.getClass());
+		}
+
+		componentMap.put(component.getClass(), component);
+		return component;
+	}
+
+	/**
+	 * Adds a component to the provider if it is not present
+	 * @param component The component to add
+	 */
+	public final <C extends Component> C getOrAdd(C component) {
+		if (has(component.getClass())) {
+			return (C) get(component.getClass());
 		}
 
 		componentMap.put(component.getClass(), component);
