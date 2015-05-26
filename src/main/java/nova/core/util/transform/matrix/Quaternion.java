@@ -97,7 +97,7 @@ public class Quaternion implements Transformer, Storable {
 	/**
 	 * Returns a quaternion from Angle Axis rotation.
 	 * @param axis Axis {@link Vector3}
-	 * @param angle Angle
+	 * @param angle Angle in radians
 	 * @return The Quaternion representation of the angle axis rotation.
 	 */
 	public static Quaternion fromAxis(Vector3<?> axis, double angle) {

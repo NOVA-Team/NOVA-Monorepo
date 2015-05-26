@@ -8,12 +8,12 @@ import nova.core.util.transform.vector.Vector3i;
  * Defines basic directions in world.
  */
 public enum Direction {
-	DOWN(0, -1, 0, Quaternion.fromAxis(Vector3d.xAxis, -90)),
-	UP(0, 1, 0, Quaternion.fromAxis(Vector3d.xAxis, 90)),
-	NORTH(0, 0, -1, Quaternion.fromAxis(Vector3d.yAxis, 90)),
-	SOUTH(0, 0, 1, Quaternion.fromAxis(Vector3d.yAxis, -90)),
-	WEST(-1, 0, 0, Quaternion.fromAxis(Vector3d.yAxis, -180)),
-	EAST(1, 0, 0, Quaternion.fromAxis(Vector3d.yAxis, 0)),
+	DOWN(0, -1, 0, Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)),
+	UP(0, 1, 0, Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2)),
+	NORTH(0, 0, -1, Quaternion.fromAxis(Vector3d.yAxis, -Math.PI)),
+	SOUTH(0, 0, 1, Quaternion.fromAxis(Vector3d.yAxis, 0)),
+	WEST(-1, 0, 0, Quaternion.fromAxis(Vector3d.yAxis, Math.PI / 2)),
+	EAST(1, 0, 0, Quaternion.fromAxis(Vector3d.yAxis, -Math.PI / 2)),
 	UNKNOWN(0, 0, 0, Quaternion.identity);
 
 	public static final Direction[] DIRECTIONS = new Direction[] {
@@ -34,7 +34,6 @@ public enum Direction {
 
 	/**
 	 * Turns direction number into Direction.
-	 *
 	 * @param directionID Direction ID / number.
 	 * @return Resulting Direction.
 	 * @throws IllegalArgumentException if the direction ID is invalid (greater than {@code 6} or less than {@code 0})

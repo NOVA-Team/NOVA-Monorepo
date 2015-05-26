@@ -66,8 +66,8 @@ public class Orientation extends Component implements Storable, Stateful {
 				}
 			}
 
-			int playerSide = (int) Math.floor(entity.rotation().toEuler().x * 4.0F / 360.0F + 0.5D) & 3;
-			int returnSide = (playerSide == 0 && canRotate(2)) ? 2 : ((playerSide == 1 && canRotate(5)) ? 5 : playerSide == 2 && canRotate(3) ? 3 : (playerSide == 3 && canRotate(4)) ? 4 : 0);
+			int playerSide = (int) Math.floor(entity.rotation().toEuler().x * 4 / (Math.PI * 2) + 0.5D) & 3;
+			int returnSide = (playerSide == 0 && canRotate(2)) ? 2 : ((playerSide == 1 && canRotate(5)) ? 5 : (playerSide == 2 && canRotate(3) ? 3 : ((playerSide == 3 && canRotate(4)) ? 4 : 0)));
 
 			if (isFlip) {
 				return Direction.fromOrdinal(returnSide).opposite();
@@ -108,7 +108,6 @@ public class Orientation extends Component implements Storable, Stateful {
 
 		switch (hitSide) {
 			case 0:
-				break;
 			case 1:
 				if (hit.x < 0.25) {
 					if (hit.z < 0.25) {
@@ -155,7 +154,6 @@ public class Orientation extends Component implements Storable, Stateful {
 				}
 				break;
 			case 2:
-				break;
 			case 3:
 				if (hit.x < 0.25) {
 					if (hit.y < 0.25) {
@@ -202,7 +200,6 @@ public class Orientation extends Component implements Storable, Stateful {
 				}
 				break;
 			case 4:
-				break;
 			case 5:
 				if (hit.z < 0.25) {
 					if (hit.y < 0.25) {
