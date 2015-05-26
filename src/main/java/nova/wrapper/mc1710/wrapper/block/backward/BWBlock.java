@@ -9,7 +9,7 @@ import nova.core.game.Game;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
-import nova.wrapper.mc1710.backward.world.BWWorld;
+import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
 public class BWBlock extends Block implements Storable {
 	public final net.minecraft.block.Block mcBlock;

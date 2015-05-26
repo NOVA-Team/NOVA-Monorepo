@@ -84,7 +84,9 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 
 		blockManager.register(airBlock);
 
+		//Register all blocks that are already registered.
 		blockManager.registry.forEach(this::addNOVABlock);
+		//Continue registering blocks afterwords.
 		blockManager.whenBlockRegistered(this::onBlockRegistered);
 	}
 

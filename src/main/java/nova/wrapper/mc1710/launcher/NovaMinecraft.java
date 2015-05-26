@@ -33,6 +33,7 @@ import nova.wrapper.mc1710.depmodules.TickerModule;
 import nova.wrapper.mc1710.wrapper.block.BlockConverter;
 import nova.wrapper.mc1710.forward.entity.MCEntityTransform;
 import nova.wrapper.mc1710.forward.entity.MCRigidBody;
+import nova.wrapper.mc1710.wrapper.block.world.WorldConverter;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.wrapper.item.OreDictionaryIntegration;
 import nova.wrapper.mc1710.manager.config.ConfigManager;
@@ -87,15 +88,16 @@ public class NovaMinecraft {
 		Game.instance = diep.init();
 
 		/**
-		 * Register native dual converters
+		 * Register native converters
 		 */
 		Game.instance.nativeManager.registerConverter(new DataWrapper());
 		Game.instance.nativeManager.registerConverter(new EntityConverter());
 		Game.instance.nativeManager.registerConverter(new BlockConverter());
 		Game.instance.nativeManager.registerConverter(new ItemConverter());
+		Game.instance.nativeManager.registerConverter(new WorldConverter());
 
 		/**
-		 * Set manager parameters
+		 * Initial native converters
 		 */
 		BlockConverter.instance().registerBlocks();
 		ItemConverter.instance().registerItems();

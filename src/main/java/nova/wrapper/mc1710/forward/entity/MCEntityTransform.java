@@ -7,7 +7,7 @@ import nova.core.component.transform.EntityTransform;
 import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.world.World;
-import nova.wrapper.mc1710.backward.world.BWWorld;
+import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
 import java.util.Arrays;
 

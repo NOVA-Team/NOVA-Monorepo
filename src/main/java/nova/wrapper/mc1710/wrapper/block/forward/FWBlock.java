@@ -39,7 +39,7 @@ import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.backward.BackwardProxyUtil;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.backward.util.BWCuboid;
-import nova.wrapper.mc1710.backward.world.BWWorld;
+import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 import nova.wrapper.mc1710.forward.util.FWCuboid;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.render.RenderUtility;
@@ -110,7 +110,9 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	public Block getBlockInstance(nova.core.world.World world, Vector3i position) {
 		//TODO: Implement obj args
-		return factory.makeBlock(new MCBlockWrapper(world, position));
+		Block block = factory.makeBlock(new MCBlockWrapper(world, position));
+		block.add(new MCBlockTransform(block));
+		return block;
 	}
 
 	@Override

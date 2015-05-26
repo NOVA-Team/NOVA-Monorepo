@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.world;
+package nova.wrapper.mc1710.wrapper.block.world;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;

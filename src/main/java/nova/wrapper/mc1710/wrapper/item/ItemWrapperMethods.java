@@ -12,7 +12,7 @@ import nova.core.util.Direction;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
-import nova.wrapper.mc1710.backward.world.BWWorld;
+import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 import nova.wrapper.mc1710.render.RenderUtility;
 
 import java.util.List;
