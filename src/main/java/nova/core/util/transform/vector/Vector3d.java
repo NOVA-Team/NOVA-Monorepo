@@ -13,6 +13,7 @@ import nova.core.util.transform.matrix.Matrix;
 @SuppressWarnings("rawtypes")
 public class Vector3d extends Vector3<Vector3d> implements Storable {
 	public static final Vector3d zero = new Vector3d(0, 0, 0);
+	public static final Vector3d center = new Vector3d(0.5, 0.5, 0.5);
 	public static final Vector3d one = new Vector3d(1, 1, 1);
 	public static final Vector3d xAxis = new Vector3d(1, 0, 0);
 	public static final Vector3d yAxis = new Vector3d(0, 1, 0);

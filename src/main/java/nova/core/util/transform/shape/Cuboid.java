@@ -1,5 +1,6 @@
 package nova.core.util.transform.shape;
 
+import nova.core.util.transform.vector.Transformer;
 import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
@@ -133,6 +134,10 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	 */
 	public boolean intersects(Vector3<?> other) {
 		return other.xd() > this.min.x && other.xd() < this.max.x ? (other.yd() > this.min.y && other.yd() < this.max.y ? other.zd() > this.min.z && other.zd() < this.max.z : false) : false;
+	}
+
+	public Cuboid transform(Transformer transform) {
+		return new Cuboid(transform.transform(min), transform.transform(max));
 	}
 
 	@Override
