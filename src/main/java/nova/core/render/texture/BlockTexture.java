@@ -10,4 +10,9 @@ public class BlockTexture extends Texture {
 	public BlockTexture(String domain, String resource) {
 		super(domain, resource);
 	}
+
+	@Override
+	public String getPath() {
+		return "textures/blocks/" + super.getPath();
+	}
 }

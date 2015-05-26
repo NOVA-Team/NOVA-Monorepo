@@ -10,4 +10,9 @@ public class ItemTexture extends Texture {
 	public ItemTexture(String domain, String resource) {
 		super(domain, resource);
 	}
+
+	@Override
+	public String getPath() {
+		return "textures/items/" + super.getPath();
+	}
 }

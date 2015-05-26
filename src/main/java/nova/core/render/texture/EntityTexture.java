@@ -6,4 +6,8 @@ public class EntityTexture extends Texture {
 		super(domain, resource);
 	}
 
+	@Override
+	public String getPath() {
+		return "textures/entity/" + super.getPath();
+	}
 }

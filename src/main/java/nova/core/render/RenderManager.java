@@ -1,17 +1,19 @@
 package nova.core.render;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import nova.core.render.model.ModelProvider;
 import nova.core.render.texture.BlockTexture;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.ItemTexture;
-
-import java.util.HashSet;
-import java.util.Set;
+import nova.core.render.texture.Texture;
+import nova.core.util.transform.vector.Vector2i;
 
 /**
  * @author Calclavia
  */
-public class RenderManager {
+public abstract class RenderManager {
 
 	public final Set<BlockTexture> blockTextures = new HashSet<>();
 	public final Set<ItemTexture> itemTextures = new HashSet<>();
@@ -37,4 +39,7 @@ public class RenderManager {
 		entityTextures.add(texture);
 		return texture;
 	}
+
+	@Deprecated
+	public abstract Vector2i getDimension(Texture texture);
 }
