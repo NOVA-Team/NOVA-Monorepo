@@ -4,7 +4,6 @@ import nova.core.block.Block;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.render.Color;
 import nova.core.render.model.BlockModelUtil;
-import nova.core.render.model.Model;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 
@@ -39,6 +38,7 @@ public class StaticBlockRenderer extends StaticRenderer {
 
 	public StaticBlockRenderer(Block provider) {
 		super(provider);
+		onRender = model -> BlockModelUtil.drawBlock(model, (Block) provider);
 	}
 
 	public StaticBlockRenderer setTexture(Function<Direction, Optional<Texture>> texture) {
@@ -54,9 +54,5 @@ public class StaticBlockRenderer extends StaticRenderer {
 	public StaticBlockRenderer setColorMultiplier(Function<Direction, Color> colorMultiplier) {
 		this.colorMultiplier = colorMultiplier;
 		return this;
-	}
-
-	public void renderStatic(Model model) {
-		BlockModelUtil.drawBlock(model, (Block) provider);
 	}
 }
