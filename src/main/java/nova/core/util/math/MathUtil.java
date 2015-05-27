@@ -219,4 +219,8 @@ public class MathUtil {
 	public static float absClamp(int value, int bounds) {
 		return min(max(value, -bounds), bounds);
 	}
+
+	public static double truncate(double value, int truncation) {
+		return Math.floor(value * truncation) / truncation;
+	}
 }

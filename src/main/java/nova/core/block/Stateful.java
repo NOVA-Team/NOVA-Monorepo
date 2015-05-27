@@ -8,6 +8,7 @@ package nova.core.block;
  * To make sure your block gets saved on world reloads (etc.), implement
  * Storable.
  */
+//TODO: Remove methods. Redundant.
 public interface Stateful {
 	/**
 	 * This function will get called upon the very first initialization/construction of
