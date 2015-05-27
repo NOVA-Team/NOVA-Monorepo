@@ -135,37 +135,31 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		/**
 		 * The entity that placed the block
 		 */
-		public final Optional<Entity> by;
+		public final Entity placer;
+
 		/**
 		 * Side placed on
 		 */
-		public final Optional<Direction> side;
+		public final Direction side;
 
 		/**
 		 * Where the player clicked on the block for placement.
 		 */
-		public final Optional<Vector3d> hit;
+		public final Vector3d hit;
 
 		/**
 		 * The item used to place this block.
 		 */
-		public final Optional<Item> item;
+		public final Item item;
 
 		/**
 		 * Called when the block is placed.
 		 */
-		public BlockPlaceEvent(Entity by, Item item) {
-			this.by = Optional.of(by);
-			this.side = Optional.empty();
-			this.hit = Optional.empty();
-			this.item = Optional.of(item);
-		}
-
-		public BlockPlaceEvent(Direction side, Vector3d hit) {
-			this.by = Optional.empty();
-			this.side = Optional.of(side);
-			this.hit = Optional.of(hit);
-			this.item = Optional.empty();
+		public BlockPlaceEvent(Entity placer, Direction side, Vector3d hit, Item item) {
+			this.placer = placer;
+			this.side = side;
+			this.hit = hit;
+			this.item = item;
 		}
 	}
 

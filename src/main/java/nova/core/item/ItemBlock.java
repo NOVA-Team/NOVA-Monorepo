@@ -28,14 +28,14 @@ public class ItemBlock extends Item {
 	public boolean onUse(Entity entity, World world, Vector3i position, Direction side, Vector3d hit) {
 		Vector3i placePos = position.add(side.toVector());
 
-		if (onPrePlace(world, placePos)) {
-			return onPostPlace(world, placePos, entity);
+		if (onPrePlace(entity, world, position, side, hit)) {
+			return onPostPlace(entity, world, position, side, hit);
 		}
 
 		return false;
 	}
 
-	protected boolean onPrePlace(World world, Vector3i placePos) {
+	protected boolean onPrePlace(Entity entity, World world, Vector3i placePos, Direction side, Vector3d hit) {
 		Optional<Block> checkBlock = world.getBlock(placePos);
 		if (checkBlock.isPresent() && checkBlock.get().factory().equals(Game.instance.blockManager.getAirBlockFactory())) {
 			return world.setBlock(placePos, blockFactory);
@@ -43,11 +43,11 @@ public class ItemBlock extends Item {
 		return false;
 	}
 
-	protected boolean onPostPlace(World world, Vector3i placePos, Entity entity) {
+	protected boolean onPostPlace(Entity entity, World world, Vector3i placePos, Direction side, Vector3d hit) {
 		Optional<Block> opBlock = world.getBlock(placePos);
 		if (opBlock.isPresent() && opBlock.get().sameType(blockFactory.getDummy())) {
 			//TODO: What if the block is NOT placed by a player?
-			opBlock.get().placeEvent.publish(new Block.BlockPlaceEvent(entity, entity.get(Player.class).getInventory().getHeldItem().get()));
+			opBlock.get().placeEvent.publish(new Block.BlockPlaceEvent(entity, side, hit, this));
 		}
 
 		return true;
