@@ -14,9 +14,9 @@ import java.util.Map;
  */
 public class NativeManager {
 	/**
-	 * A map from a Nova written interface, to a Native written interface.
+	 * A map from a Nova component, to a Native interface.
 	 */
-	private final BiMap<Class<?>, Class<?>> passthroughInterfaceNovaToNative = HashBiMap.create();
+	private final BiMap<Class<?>, Class<?>> novaComponentToNativeInterface = HashBiMap.create();
 
 	private final List<NativeConverter> converters = new ArrayList<>();
 	/**
@@ -28,12 +28,34 @@ public class NativeManager {
 	 */
 	private final Map<Class<?>, NativeConverter> novaConverters = new HashMap<>();
 
-	public void registerPassthroughInterface(Class<?> novaSide, Class<?> nativeSide) {
-		passthroughInterfaceNovaToNative.put(novaSide, nativeSide);
+	/**
+	 * Registers a component to a native interface.
+	 *
+	 * @param component A component. Must extend INTERFACE.
+	 * @param nativeInterface the class of the INTERFACE.
+	 */
+	public <INTERFACE> void registerComponentToInterface(Class<? extends INTERFACE> component, Class<INTERFACE> nativeInterface) {
+		novaComponentToNativeInterface.put(component, nativeInterface);
 	}
 
-	public Class<?> getNativeInterface(Class<?> novaInterface) {
-		return passthroughInterfaceNovaToNative.get(novaInterface);
+	/**
+	 * Gets the interface registered for a component.
+	 *
+	 * @param component the component.
+	 * @return The interface on the native side.
+	 */
+	public Class<?> getNativeInterface(Class<?> component) {
+		return novaComponentToNativeInterface.get(component);
+	}
+
+	/**
+	 * Gets the component registered for an interface.
+	 *
+	 * @param nativeInterface the interface.
+	 * @return the component registered to it.
+	 */
+	public Class<?> getNovaComponent(Class<?> nativeInterface) {
+		return novaComponentToNativeInterface.inverse().get(nativeInterface);
 	}
 
 	public void registerConverter(NativeConverter<?, ?> converter) {
