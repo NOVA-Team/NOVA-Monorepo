@@ -1,12 +1,6 @@
 package nova.wrapper.mc1710.launcher;
 
-import nova.wrapper.mc1710.depmodules.ClientModule;
-import nova.wrapper.mc1710.depmodules.FakeNetworkModule;
-import nova.wrapper.mc1710.depmodules.GuiModule;
-import nova.wrapper.mc1710.depmodules.KeyModule;
-import nova.wrapper.mc1710.depmodules.LanguageModule;
-import nova.wrapper.mc1710.depmodules.SaveModule;
-import nova.wrapper.mc1710.depmodules.TickerModule;
+import nova.wrapper.mc1710.depmodules.*;
 import se.jbee.inject.bootstrap.Bundle;
 
 import java.util.Arrays;
@@ -20,13 +14,14 @@ public class NovaLauncherTest extends nova.wrappertests.NovaLauncherTest {
 	@Override
 	public List<Class<? extends Bundle>> getModules() {
 		return Arrays.<Class<? extends Bundle>>asList(
+			ClientModule.class,
 			GuiModule.class,
-			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.
-			SaveModule.class,
-			TickerModule.class,
-			LanguageModule.class,
 			KeyModule.class,
-			ClientModule.class
+			LanguageModule.class,
+			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.
+			RenderModule.class,
+			SaveModule.class,
+			TickerModule.class
 		);
 	}
 }
