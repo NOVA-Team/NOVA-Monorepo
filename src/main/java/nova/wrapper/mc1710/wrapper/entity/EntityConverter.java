@@ -1,50 +1,47 @@
 package nova.wrapper.mc1710.wrapper.entity;
 
+import net.minecraft.entity.player.EntityPlayer;
 import nova.core.entity.Entity;
 import nova.core.nativewrapper.NativeConverter;
-import nova.wrapper.mc1710.backward.BackwardProxyUtil;
 import nova.wrapper.mc1710.backward.entity.BWEntity;
+import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
 import nova.wrapper.mc1710.forward.entity.FWEntity;
 import nova.wrapper.mc1710.forward.entity.MCEntityWrapper;
 
-import java.util.Optional;
-
-public class EntityConverter implements NativeConverter {
+public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity> {
 
 	@Override
-	public Class<?> getNovaSide() {
+	public Class<Entity> getNovaSide() {
 		return Entity.class;
 	}
 
 	@Override
-	public Class<?> getNativeSide() {
+	public Class<net.minecraft.entity.Entity> getNativeSide() {
 		return net.minecraft.entity.Entity.class;
 	}
 
 	@Override
-	public Object toNova(Object nativeObj) {
-		if (nativeObj instanceof FWEntity) {
-			return ((FWEntity) nativeObj).wrapped;
+	public Entity toNova(net.minecraft.entity.Entity mcEntity) {
+		//Prevents dual wrapping
+		if (mcEntity instanceof FWEntity) {
+			return ((FWEntity) mcEntity).wrapped;
 		}
-		return BackwardProxyUtil.getEntityWrapper((net.minecraft.entity.Entity) nativeObj);
+
+		if (mcEntity instanceof EntityPlayer) {
+			return new BWEntityPlayer((EntityPlayer) mcEntity);
+		}
+		return new BWEntity(mcEntity);
 	}
 
 	@Override
-	public Object toNative(Object novaObj) {
-		Optional<MCEntityWrapper> opWrapper = ((Entity) novaObj).getOp(MCEntityWrapper.class);
-		if (opWrapper.isPresent()) {
-			if (opWrapper.get().wrapper instanceof FWEntity) {
-				return opWrapper.get().wrapper;
-			} else {
-				throw new IllegalArgumentException("Entity wrapper is invalid(where did this object come from?)");
-			}
-		} else {
-			if (novaObj instanceof BWEntity) {
-				return ((BWEntity) novaObj).entity;
-			} else {
-				// *Shouldn't* happen, but inevitably will if someone tries implementing stuff they shouldn't.
-				throw new IllegalArgumentException("Entity doesn't have a wrapper, and isn't a BWEntity, conversion not possible.");
-			}
+	public net.minecraft.entity.Entity toNative(Entity novaObj) {
+		MCEntityWrapper wrapper = novaObj.get(MCEntityWrapper.class);
+
+		if (wrapper.wrapper instanceof FWEntity) {
+			return wrapper.wrapper;
 		}
+
+		throw new IllegalArgumentException("Entity wrapper is invalid (where did this object come from?)");
+
 	}
 }

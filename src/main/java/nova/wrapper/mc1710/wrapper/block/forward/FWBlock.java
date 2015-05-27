@@ -30,6 +30,7 @@ import nova.core.component.Updater;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.game.Game;
+import nova.core.item.Item;
 import nova.core.render.texture.Texture;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
@@ -37,7 +38,6 @@ import nova.core.util.transform.matrix.MatrixStack;
 import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
-import nova.wrapper.mc1710.backward.BackwardProxyUtil;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.forward.util.FWCuboid;
@@ -180,7 +180,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		Block.BlockPlaceEvent evt = new Block.BlockPlaceEvent(BackwardProxyUtil.getEntityWrapper(entity), Game.instance.nativeManager.toNova(itemStack));
+		Block.BlockPlaceEvent evt = new Block.BlockPlaceEvent(Game.instance.nativeManager.toNova(entity), (Item) Game.instance.nativeManager.toNova(itemStack));
 		blockInstance.placeEvent.publish(evt);
 	}
 
@@ -196,7 +196,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		MovingObjectPosition mop = player.rayTrace(10, 1);
-		Block.LeftClickEvent evt = new Block.LeftClickEvent(BackwardProxyUtil.getEntityWrapper(player), Direction.fromOrdinal(mop.sideHit), new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.instance.nativeManager.toNova(player), Direction.fromOrdinal(mop.sideHit), new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
 		blockInstance.leftClickEvent.publish(evt);
 	}
 
@@ -208,7 +208,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		Block.RightClickEvent evt = new Block.RightClickEvent(BackwardProxyUtil.getEntityWrapper(player), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
+		Block.RightClickEvent evt = new Block.RightClickEvent(Game.instance.nativeManager.toNova(player), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
 		blockInstance.rightClickEvent.publish(evt);
 		return evt.result;
 	}
@@ -217,7 +217,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		Optional<BlockCollider> opCollider = blockInstance.getOp(BlockCollider.class);
-		opCollider.ifPresent(collider -> collider.onEntityCollide.accept(BackwardProxyUtil.getEntityWrapper(entity)));
+		opCollider.ifPresent(collider -> collider.onEntityCollide.accept(Game.instance.nativeManager.toNova(entity)));
 	}
 
 	@Override
@@ -225,7 +225,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		Optional<BlockCollider> opCollider = blockInstance.getOp(BlockCollider.class);
 		opCollider.ifPresent(collider -> {
-				Set<Cuboid> boxes = collider.collidingBoxes.apply(new BWCuboid(aabb), entity != null ? Optional.of(BackwardProxyUtil.getEntityWrapper(entity)) : Optional.empty());
+				Set<Cuboid> boxes = collider.collidingBoxes.apply(new BWCuboid(aabb), entity != null ? Optional.of(Game.instance.nativeManager.toNova(entity)) : Optional.empty());
 
 				list.addAll(
 					boxes
