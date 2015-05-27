@@ -50,7 +50,7 @@ public class NativeManagerTest {
 		Type1 t1 = new Type1(10);
 		Type2 t2 = new Type2(10);
 		manager.registerConverter(converter);
-		assertThat(manager.toNative(t1).equals(t2)).isTrue();
-		assertThat(manager.toNova(t2).equals(t1)).isTrue();
+		assertThat((Type2) manager.toNative(t1)).isEqualTo(t2);
+		assertThat((Type1) manager.toNova(t2)).isEqualTo(t1);
 	}
 }
