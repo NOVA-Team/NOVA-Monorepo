@@ -1,16 +1,16 @@
 package nova.wrapper.mc1710;
 
+import java.util.Map;
+
+import nova.wrapper.mc1710.asm.transformers.Transformers;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
-import nova.wrapper.mc1710.asm.NovaTransformer;
-
-import java.util.Map;
 
 @MCVersion(value = "1.7.10")
 public class NovaMinecraftCore implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[] { NovaTransformer.class.getName() };
+		return new String[] { Transformers.class.getName() };
 	}
 
 	@Override
