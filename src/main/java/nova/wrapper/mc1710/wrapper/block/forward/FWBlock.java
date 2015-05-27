@@ -29,6 +29,7 @@ import nova.core.block.component.StaticBlockRenderer;
 import nova.core.component.Updater;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
+import nova.core.game.Game;
 import nova.core.render.texture.Texture;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
@@ -39,11 +40,11 @@ import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.backward.BackwardProxyUtil;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.backward.util.BWCuboid;
-import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 import nova.wrapper.mc1710.forward.util.FWCuboid;
-import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
+import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
+import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -171,7 +172,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		Block.BlockPlaceEvent evt = new Block.BlockPlaceEvent(Optional.empty());
+		Block.BlockPlaceEvent evt = new Block.BlockPlaceEvent(Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
 		blockInstance.placeEvent.publish(evt);
 		return meta;
 	}
@@ -179,7 +180,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		Block.BlockPlaceEvent evt = new Block.BlockPlaceEvent(Optional.of(BackwardProxyUtil.getEntityWrapper(entity)));
+		Block.BlockPlaceEvent evt = new Block.BlockPlaceEvent(BackwardProxyUtil.getEntityWrapper(entity), Game.instance.nativeManager.toNova(itemStack));
 		blockInstance.placeEvent.publish(evt);
 	}
 
