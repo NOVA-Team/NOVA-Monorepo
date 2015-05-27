@@ -9,16 +9,17 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.game.Game;
 import nova.core.item.Item;
+import nova.core.sound.Sound;
 import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
-import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.backward.entity.BWEntity;
-import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
 import nova.wrapper.mc1710.forward.entity.FWEntity;
 import nova.wrapper.mc1710.forward.entity.MCEntityWrapper;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
+import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
+import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -112,5 +113,11 @@ public class BWWorld extends World {
 	@Override
 	public String getID() {
 		return world().provider.getDimensionName();
+	}
+
+	@Override
+	public void playSoundAtPosition(Vector3d position, Sound sound) {
+		//TODO: This may not work!
+		world().playSound(position.x, position.y, position.z, sound.getID(), sound.pitch, sound.volume, false);
 	}
 }
