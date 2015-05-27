@@ -2,6 +2,7 @@ package nova.core.sound;
 
 /**
  * a sound object with a resource on the client.
+ * @author skyem123
  */
 public class ResourceSound extends Sound {
 	public final String domain;
