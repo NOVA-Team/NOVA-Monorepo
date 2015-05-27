@@ -6,6 +6,7 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.game.Game;
 import nova.core.item.Item;
+import nova.core.sound.Sound;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
@@ -92,4 +93,11 @@ public abstract class World implements Identifiable {
 	 * @return A set of entities.
 	 */
 	public abstract Set<Entity> getEntities(Cuboid bound);
+
+	/**
+	 * Plays a sound at a certain position.
+	 * @param position The position in the world of the sound.
+	 * @param sound The sound that will be played.
+	 */
+	public abstract void playSoundAtPosition(Vector3d position, Sound sound);
 }
