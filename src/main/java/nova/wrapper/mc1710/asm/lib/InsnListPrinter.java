@@ -1,6 +1,11 @@
 package nova.wrapper.mc1710.asm.lib;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
+
 import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FrameNode;
@@ -20,12 +25,12 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import org.objectweb.asm.util.Textifier;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
-
 public class InsnListPrinter extends Textifier {
 	private boolean buildingLabelMap = false;
+
+	public InsnListPrinter() {
+		super(Opcodes.ASM5);
+	}
 
 	public void visitInsnList(InsnList list) {
 		text.clear();

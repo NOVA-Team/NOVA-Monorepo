@@ -1,8 +1,5 @@
 package nova.wrapper.mc1710.asm.transformers;
 
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.ILOAD;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import nova.wrapper.mc1710.asm.lib.ASMHelper;
 import nova.wrapper.mc1710.asm.lib.ObfMapping;
 
