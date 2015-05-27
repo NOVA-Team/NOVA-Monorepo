@@ -3,6 +3,7 @@ package nova.core.item;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
+import nova.core.entity.component.Player;
 import nova.core.game.Game;
 import nova.core.util.Direction;
 import nova.core.util.transform.vector.Vector3d;
@@ -43,10 +44,10 @@ public class ItemBlock extends Item {
 	}
 
 	protected boolean onPostPlace(World world, Vector3i placePos, Entity entity) {
-
 		Optional<Block> opBlock = world.getBlock(placePos);
 		if (opBlock.isPresent() && opBlock.get().sameType(blockFactory.getDummy())) {
-			opBlock.get().placeEvent.publish(new Block.BlockPlaceEvent(Optional.of(entity)));
+			//TODO: What if the block is NOT placed by a player?
+			opBlock.get().placeEvent.publish(new Block.BlockPlaceEvent(entity, entity.get(Player.class).getInventory().getHeldItem().get()));
 		}
 
 		return true;
