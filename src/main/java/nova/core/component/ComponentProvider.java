@@ -1,5 +1,6 @@
 package nova.core.component;
 
+import nova.core.event.EventBus;
 import nova.core.util.exception.NovaException;
 
 import java.util.Collection;
@@ -14,6 +15,8 @@ import java.util.Optional;
  */
 public abstract class ComponentProvider {
 
+	public EventBus<ComponentAdded> onComponentAdded = new EventBus<>();
+	public EventBus<ComponentRemoved> onComponentRemoved = new EventBus<>();
 	private Map<Class<? extends Component>, Component> componentMap = new HashMap<>();
 
 	/**
@@ -26,6 +29,7 @@ public abstract class ComponentProvider {
 		}
 
 		componentMap.put(component.getClass(), component);
+		onComponentAdded.publish(new ComponentAdded(component));
 		return component;
 	}
 
@@ -48,6 +52,7 @@ public abstract class ComponentProvider {
 	 */
 	public final <C extends Component> C remove(C component) {
 		componentMap.remove(component.getClass());
+		onComponentRemoved.publish(new ComponentRemoved(component));
 		return component;
 	}
 
@@ -90,5 +95,21 @@ public abstract class ComponentProvider {
 	 */
 	public final Collection<Component> components() {
 		return componentMap.values();
+	}
+
+	public static class ComponentAdded {
+		public final Component component;
+
+		public ComponentAdded(Component component) {
+			this.component = component;
+		}
+	}
+
+	public static class ComponentRemoved {
+		public final Component component;
+
+		public ComponentRemoved(Component component) {
+			this.component = component;
+		}
 	}
 }
