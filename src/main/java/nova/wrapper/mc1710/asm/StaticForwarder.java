@@ -1,12 +1,15 @@
 package nova.wrapper.mc1710.asm;
 
 import net.minecraft.block.Block;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.chunk.Chunk;
 import nova.core.event.EventManager;
 import nova.core.game.Game;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
+import nova.wrapper.mc1710.wrapper.block.forward.FWTile;
+import nova.wrapper.mc1710.wrapper.block.forward.FWTileLoader;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
 /**
@@ -25,11 +28,16 @@ public class StaticForwarder {
 	/**
 	 * Used to inject forwarded TileEntites
 	 * 
+	 * @param data
 	 * @param clazz
 	 * @return
 	 * @throws Exception
 	 */
-	public static TileEntity loadTileEntityHook(Class<? extends TileEntity> clazz) throws Exception {
-		return clazz.newInstance();
+	public static TileEntity loadTileEntityHook(NBTTagCompound data, Class<? extends TileEntity> clazz) throws Exception {
+		if (clazz.equals(FWTile.class)) {
+			return FWTileLoader.loadTile(data);
+		} else {
+			return clazz.newInstance();
+		}
 	}
 }

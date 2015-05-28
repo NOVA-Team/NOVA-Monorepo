@@ -1,16 +1,20 @@
 package nova.wrapper.mc1710.wrapper.block.forward;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -30,7 +34,6 @@ import nova.core.component.Updater;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.game.Game;
-import nova.core.item.Item;
 import nova.core.render.texture.Texture;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
@@ -45,21 +48,19 @@ import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A Minecraft to Nova block wrapper
+ * 
  * @author Calclavia
  */
 public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
@@ -75,7 +76,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
-	//TODO: Resolve unknown material issue
+	// TODO: Resolve unknown material issue
 	public FWBlock(BlockFactory factory) {
 		super(Material.piston);
 		this.factory = factory;
@@ -94,11 +95,12 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3i position) {
 		/**
-		 * If this block has a TileEntity, forward the method into the Stateful block.
-		 * Otherwise, create a new instance of the block and forward the methods over.
+		 * If this block has a TileEntity, forward the method into the Stateful
+		 * block. Otherwise, create a new instance of the block and forward the
+		 * methods over.
 		 */
 		if (hasTileEntity(0)) {
-			FWTile tileWrapper = ((FWTile) access.getTileEntity(position.x, position.y, position.z));
+			FWTile tileWrapper = (FWTile) access.getTileEntity(position.x, position.y, position.z);
 			if (tileWrapper != null && tileWrapper.getBlock() != null) {
 				return ((FWTile) access.getTileEntity(position.x, position.y, position.z)).getBlock();
 			}
@@ -110,7 +112,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	}
 
 	public Block getBlockInstance(nova.core.world.World world, Vector3i position) {
-		//TODO: Implement obj args
+		// TODO: Implement obj args
 		Block block = factory.makeBlock();
 		block.add(new MCBlockWrapper(world, position));
 		block.add(new MCBlockTransform(block));
@@ -119,8 +121,10 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player) {
-		// HACK: called before block is destroyed by the player prior to the player getting the drops. Determine drops here.
-		// hack is needed because the player sets the block to air *before* getting the drops. woo good logic from mojang.
+		// HACK: called before block is destroyed by the player prior to the
+		// player getting the drops. Determine drops here.
+		// hack is needed because the player sets the block to air *before*
+		// getting the drops. woo good logic from mojang.
 		if (!player.capabilities.isCreativeMode) {
 			harvestedBlocks.put(new BlockPosition(world, x, y, z), getBlockInstance(world, new Vector3i(x, y, z)));
 		}
@@ -128,13 +132,13 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public boolean hasTileEntity(int metadata) {
-		//A block requires a TileEntity if it stores data or if it ticks.
+		// A block requires a TileEntity if it stores data or if it ticks.
 		return Storable.class.isAssignableFrom(blockClass) || Stateful.class.isAssignableFrom(blockClass) || Updater.class.isAssignableFrom(blockClass);
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
-		return new FWTile(factory.getID());
+		return FWTileLoader.loadTile(block);
 	}
 
 	@Override
@@ -165,11 +169,11 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, net.minecraft.block.Block otherBlock) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		//Minecraft does not provide the neighbor :(
+		// Minecraft does not provide the neighbor :(
 		Block.NeighborChangeEvent evt = new Block.NeighborChangeEvent(Optional.empty());
 		blockInstance.neighborChangeEvent.publish(evt);
 	}
-	
+
 	@Override
 	public void breakBlock(World world, int x, int y, int z, net.minecraft.block.Block block, int i) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
@@ -211,17 +215,17 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		Optional<BlockCollider> opCollider = blockInstance.getOp(BlockCollider.class);
 		opCollider.ifPresent(collider -> {
-				Set<Cuboid> boxes = collider.collidingBoxes.apply(new BWCuboid(aabb), entity != null ? Optional.of(Game.instance.nativeManager.toNova(entity)) : Optional.empty());
+			Set<Cuboid> boxes = collider.collidingBoxes.apply(new BWCuboid(aabb), entity != null ? Optional.of(Game.instance.nativeManager.toNova(entity)) : Optional.empty());
 
-				list.addAll(
-					boxes
-						.stream()
-						.map(c -> c.add(new Vector3i(x, y, z)))
-						.map(FWCuboid::new)
-						.collect(Collectors.toList())
+			list.addAll(
+				boxes
+					.stream()
+					.map(c -> c.add(new Vector3i(x, y, z)))
+					.map(FWCuboid::new)
+					.collect(Collectors.toList())
 				);
-			}
-		);
+		}
+			);
 	}
 
 	@Override
@@ -381,12 +385,12 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		//TODO: Use this
+		// TODO: Use this
 	}
 
 	@Override
 	public float getExplosionResistance(Entity expEntity, World world, int x, int y, int z, double explosionX, double p_explosionresistance, double explosionY) {
-		//TODO: Maybe do something with these parameters.
+		// TODO: Maybe do something with these parameters.
 		return (float) getBlockInstance(world, new Vector3i(x, y, z)).getResistance() * 30;
 	}
 

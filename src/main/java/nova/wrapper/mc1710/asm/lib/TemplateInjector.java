@@ -2,9 +2,6 @@ package nova.wrapper.mc1710.asm.lib;
 
 import com.google.common.collect.HashBiMap;
 
-import net.minecraft.launchwrapper.LaunchClassLoader;
-import nova.wrapper.mc1710.asm.transformers.ChunkTransformer;
-
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -23,8 +20,6 @@ public class TemplateInjector {
 
 	public static final TemplateInjector instance = new TemplateInjector();
 	private HashBiMap<String, InjectionTemplate> templates = HashBiMap.create();
-	public static LaunchClassLoader cl = (LaunchClassLoader) ChunkTransformer.class.getClassLoader();
-
 	/**
 	 * Registers a class to be injected by a default interface
 	 *
@@ -37,7 +32,7 @@ public class TemplateInjector {
 
 	private ClassNode getClassNode(String name) {
 		try {
-			return ASMHelper.createClassNode(TemplateInjector.cl.getClassBytes(name.replace('/', '.')));
+			return ASMHelper.createClassNode(ASMHelper.cl.getClassBytes(name.replace('/', '.')));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

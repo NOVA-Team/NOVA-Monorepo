@@ -2,6 +2,10 @@ package nova.wrapper.mc1710.asm.lib;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+
+import net.minecraft.launchwrapper.LaunchClassLoader;
+import nova.wrapper.mc1710.asm.transformers.ChunkTransformer;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -318,4 +322,6 @@ public class ASMHelper {
 			this.before = before;
 		}
 	}
+
+	public static LaunchClassLoader cl = (LaunchClassLoader) ChunkTransformer.class.getClassLoader();
 }
