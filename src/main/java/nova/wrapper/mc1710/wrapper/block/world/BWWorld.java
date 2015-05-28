@@ -58,7 +58,7 @@ public class BWWorld extends World {
 		if (mcBlock == null || mcBlock == Blocks.air) {
 			return Optional.of(Game.instance.blockManager.getAirBlock());
 		} else if (mcBlock instanceof FWBlock) {
-			return Optional.of(((FWBlock) mcBlock).getBlockInstance(this, position));
+			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
 		} else {
 			return Optional.of(new BWBlock(mcBlock));
 		}

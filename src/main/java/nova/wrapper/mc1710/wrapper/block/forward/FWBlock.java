@@ -1,15 +1,10 @@
 package nova.wrapper.mc1710.wrapper.block.forward;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -48,19 +43,21 @@ import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
 
 /**
  * A Minecraft to Nova block wrapper
- * 
  * @author Calclavia
  */
 public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
@@ -111,7 +108,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	}
 
-	public Block getBlockInstance(nova.core.world.World world, Vector3i position) {
+	private Block getBlockInstance(nova.core.world.World world, Vector3i position) {
 		// TODO: Implement obj args
 		Block block = factory.makeBlock();
 		block.add(new MCBlockWrapper(world, position));
@@ -215,17 +212,17 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		Optional<BlockCollider> opCollider = blockInstance.getOp(BlockCollider.class);
 		opCollider.ifPresent(collider -> {
-			Set<Cuboid> boxes = collider.collidingBoxes.apply(new BWCuboid(aabb), entity != null ? Optional.of(Game.instance.nativeManager.toNova(entity)) : Optional.empty());
+				Set<Cuboid> boxes = collider.collidingBoxes.apply(new BWCuboid(aabb), entity != null ? Optional.of(Game.instance.nativeManager.toNova(entity)) : Optional.empty());
 
-			list.addAll(
-				boxes
-					.stream()
-					.map(c -> c.add(new Vector3i(x, y, z)))
-					.map(FWCuboid::new)
-					.collect(Collectors.toList())
+				list.addAll(
+					boxes
+						.stream()
+						.map(c -> c.add(new Vector3i(x, y, z)))
+						.map(FWCuboid::new)
+						.collect(Collectors.toList())
 				);
-		}
-			);
+			}
+		);
 	}
 
 	@Override
