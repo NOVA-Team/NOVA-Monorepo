@@ -2,6 +2,7 @@ package nova.wrapper.mc1710.forward.entity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import nova.core.block.Stateful;
 import nova.core.component.Updater;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
@@ -52,7 +53,8 @@ public class FWEntity extends net.minecraft.entity.Entity {
 	protected void entityInit() {
 		//MC calls entityInit() before we finish wrapping, so this variable is required to check if wrapped exists.
 		if (wrapped != null) {
-			wrapped.awake();
+			wrapped.awakeEvent.publish(new Stateful.AwakeEvent());
+			wrapped.loadEvent.publish(new Stateful.LoadEvent());
 		}
 	}
 
@@ -72,5 +74,11 @@ public class FWEntity extends net.minecraft.entity.Entity {
 			.stream()
 			.filter(component -> component instanceof Updater)
 			.forEach(component -> ((Updater) component).update(deltaTime));
+	}
+
+	@Override
+	public void setDead() {
+		wrapped.unloadEvent.publish(new Stateful.UnloadEvent());
+		super.setDead();
 	}
 }

@@ -55,9 +55,8 @@ public class FWTile extends TileEntity {
 						((Storable) block).load(cacheData);
 						cacheData = null;
 					}
-					if (block instanceof Stateful) {
-						((Stateful) block).load();
-					}
+
+					block.awakeEvent.publish(new Stateful.AwakeEvent());
 				} else {
 					System.out.println("Error! Invalid NOVA block ID");
 				}
@@ -78,18 +77,12 @@ public class FWTile extends TileEntity {
 	public void validate() {
 		super.validate();
 		getBlock();
-		waitForBlock(() -> {
-			if (block instanceof Stateful) {
-				((Stateful) block).awake();
-			}
-		});
+		waitForBlock(() -> block.loadEvent.publish(new Stateful.LoadEvent()));
 	}
 
 	@Override
 	public void invalidate() {
-		if (block instanceof Stateful) {
-			((Stateful) block).unload();
-		}
+		block.unloadEvent.publish(new Stateful.UnloadEvent());
 		super.invalidate();
 	}
 

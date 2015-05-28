@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
+import nova.core.block.Stateful;
 import nova.core.component.Updater;
 import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.transform.EntityTransform;
@@ -50,6 +51,7 @@ public class FWEntityFX extends EntityFX {
 		}
 	}
 
+
 	/**
 	 * All methods below here are exactly the same between FWEntity and FWEntityFX.
 	 * *****************************************************************************
@@ -58,7 +60,8 @@ public class FWEntityFX extends EntityFX {
 	protected void entityInit() {
 		//MC calls entityInit() before we finish wrapping, so this variable is required to check if wrapped exists.
 		if (wrapped != null) {
-			wrapped.awake();
+			wrapped.awakeEvent.publish(new Stateful.AwakeEvent());
+			wrapped.loadEvent.publish(new Stateful.LoadEvent());
 		}
 	}
 
@@ -78,5 +81,11 @@ public class FWEntityFX extends EntityFX {
 			.stream()
 			.filter(component -> component instanceof Updater)
 			.forEach(component -> ((Updater) component).update(deltaTime));
+	}
+
+	@Override
+	public void setDead() {
+		wrapped.unloadEvent.publish(new Stateful.UnloadEvent());
+		super.setDead();
 	}
 }
