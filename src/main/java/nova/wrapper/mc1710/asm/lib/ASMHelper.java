@@ -1,14 +1,28 @@
 package nova.wrapper.mc1710.asm.lib;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import static org.objectweb.asm.Opcodes.ARETURN;
+import static org.objectweb.asm.Opcodes.DRETURN;
+import static org.objectweb.asm.Opcodes.FRETURN;
+import static org.objectweb.asm.Opcodes.IRETURN;
+import static org.objectweb.asm.Opcodes.LRETURN;
+import static org.objectweb.asm.Opcodes.RET;
+import static org.objectweb.asm.Opcodes.RETURN;
+
+import java.lang.reflect.Executable;
+import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import nova.wrapper.mc1710.asm.transformers.ChunkTransformer;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
@@ -18,18 +32,8 @@ import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.objectweb.asm.Opcodes.ARETURN;
-import static org.objectweb.asm.Opcodes.DRETURN;
-import static org.objectweb.asm.Opcodes.FRETURN;
-import static org.objectweb.asm.Opcodes.IRETURN;
-import static org.objectweb.asm.Opcodes.LRETURN;
-import static org.objectweb.asm.Opcodes.RET;
-import static org.objectweb.asm.Opcodes.RETURN;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 /**
  * @author ChickenBones
@@ -193,11 +197,11 @@ public class ASMHelper {
 		dst.visitMaxs(src.maxStack, src.maxLocals);
 	}
 
-	public static byte[] alterMethods(String name, byte[] bytes, HashMultimap<String, MethodAltercator> altercators) {
+	public static byte[] alterMethods(String name, byte[] bytes, HashMultimap<String, MethodAlterator> altercators) {
 		if (altercators.containsKey(name)) {
 			ClassNode cnode = createClassNode(bytes);
 
-			for (MethodAltercator injector : altercators.get(name)) {
+			for (MethodAlterator injector : altercators.get(name)) {
 				MethodNode method = findMethod(injector.method, cnode);
 				if (method == null) {
 					throw new RuntimeException("Method not found: " + injector.method);
@@ -281,10 +285,10 @@ public class ASMHelper {
 		public Label body = new Label();
 	}
 
-	public static abstract class MethodAltercator {
+	public static abstract class MethodAlterator {
 		public final ObfMapping method;
 
-		public MethodAltercator(ObfMapping method) {
+		public MethodAlterator(ObfMapping method) {
 			this.method = method;
 		}
 
@@ -323,5 +327,47 @@ public class ASMHelper {
 		}
 	}
 
-	public static LaunchClassLoader cl = (LaunchClassLoader) ChunkTransformer.class.getClassLoader();
+	public static LaunchClassLoader cl = (LaunchClassLoader) ASMHelper.class.getClassLoader();
+
+	private static Method defineClass1;
+	private static Method defineClass2;
+
+	public static String[] getExceptionTypes(Executable exec) {
+		return Arrays.stream(exec.getExceptionTypes()).map(Type::getInternalName).toArray(s -> new String[s]);
+	}
+
+	static {
+		try {
+			defineClass1 = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] { String.class, byte[].class, int.class, int.class });
+			defineClass2 = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] { String.class, byte[].class, int.class, int.class, ProtectionDomain.class });
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static <T> Class<T> defineClass(ClassNode cn, int flags) {
+		try {
+			byte[] bytes = createBytes(cn, flags);
+			defineClass1.setAccessible(true);
+			Class<T> clazz = (Class<T>) defineClass1.invoke(Thread.currentThread().getContextClassLoader(), cn.name.replaceAll("/", "."), bytes, 0, bytes.length);
+			defineClass1.setAccessible(false);
+			return clazz;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static <T> Class<T> defineClass(ClassNode cn, int flags, ProtectionDomain domain) {
+		if (domain == null)
+			return defineClass(cn, flags);
+		try {
+			byte[] bytes = createBytes(cn, flags);
+			defineClass2.setAccessible(true);
+			Class<T> clazz = (Class<T>) defineClass2.invoke(Thread.currentThread().getContextClassLoader(), cn.name.replaceAll("/", "."), bytes, 0, bytes.length, domain);
+			defineClass2.setAccessible(false);
+			return clazz;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

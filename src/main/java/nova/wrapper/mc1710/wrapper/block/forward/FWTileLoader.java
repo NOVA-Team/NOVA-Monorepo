@@ -5,7 +5,6 @@ import java.util.Optional;
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
-import nova.core.component.ComponentProvider;
 import nova.core.game.Game;
 import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.asm.lib.ComponentInjector;
@@ -15,6 +14,8 @@ import nova.wrapper.mc1710.asm.lib.ComponentInjector;
  */
 public final class FWTileLoader {
 
+	private static ComponentInjector<FWTile> injector = new ComponentInjector<>(FWTile.class);
+
 	private FWTileLoader() {
 	}
 
@@ -22,7 +23,7 @@ public final class FWTileLoader {
 		try {
 			String blockID = data.getString("novaID");
 			Block block = createBlock(blockID);
-			FWTile tile = createWrapperClass(block).newInstance();
+			FWTile tile = injector.inject(block, new Class[0], new Object[0]);
 			tile.setBlock(block);
 			return tile;
 		} catch (Exception e) {
@@ -33,7 +34,7 @@ public final class FWTileLoader {
 	public static FWTile loadTile(String blockID) {
 		try {
 			Block block = createBlock(blockID);
-			FWTile tile = createWrapperClass(block).getConstructor(String.class).newInstance(blockID);
+			FWTile tile = injector.inject(block, new Class[] { String.class }, new Object[] { blockID });
 			tile.setBlock(block);
 			return tile;
 		} catch (Exception e) {
@@ -48,9 +49,5 @@ public final class FWTileLoader {
 		} else {
 			throw new NovaException("Error! Invalid NOVA block ID");
 		}
-	}
-
-	private static Class<? extends FWTile> createWrapperClass(ComponentProvider provider) {
-		return new ComponentInjector(provider).inject(FWTile.class);
 	}
 }
