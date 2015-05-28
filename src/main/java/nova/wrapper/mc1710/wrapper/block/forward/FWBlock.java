@@ -22,10 +22,10 @@ import net.minecraftforge.client.IItemRenderer;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.Stateful;
-import nova.core.block.component.BlockCollider;
 import nova.core.block.component.LightEmitter;
 import nova.core.block.component.StaticBlockRenderer;
 import nova.core.component.Updater;
+import nova.core.component.misc.Collider;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.game.Game;
@@ -37,7 +37,6 @@ import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.backward.render.BWModel;
-import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.forward.util.FWCuboid;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
@@ -203,16 +202,27 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		Optional<BlockCollider> opCollider = blockInstance.getOp(BlockCollider.class);
-		opCollider.ifPresent(collider -> collider.onEntityCollide.accept(Game.instance.nativeManager.toNova(entity)));
+		blockInstance.getOp(Collider.class).ifPresent(collider -> collider.collideEvent.publish(new Collider.CollideEvent(Game.instance.nativeManager.toNova(entity))));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+
+		if (blockInstance.has(Collider.class)) {
+			return new FWCuboid(blockInstance.get(Collider.class).boundingBox);
+		}
+		return null;
 	}
 
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List list, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		Optional<BlockCollider> opCollider = blockInstance.getOp(BlockCollider.class);
-		opCollider.ifPresent(collider -> {
-				Set<Cuboid> boxes = collider.collidingBoxes.apply(new BWCuboid(aabb), entity != null ? Optional.of(Game.instance.nativeManager.toNova(entity)) : Optional.empty());
+		blockInstance.getOp(Collider.class).ifPresent(
+			collider -> {
+				//new BWCuboid(aabb),
+				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(Game.instance.nativeManager.toNova(entity)));
 
 				list.addAll(
 					boxes
@@ -251,7 +261,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 			return true;
 		}
 
-		Optional<BlockCollider> blockCollider = block.getOp(BlockCollider.class);
+		Optional<Collider> blockCollider = block.getOp(Collider.class);
 
 		if (blockCollider.isPresent()) {
 			return blockCollider.get().isOpaqueCube.get();
@@ -262,24 +272,13 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public boolean isNormalCube() {
-		Optional<BlockCollider> blockCollider = block.getOp(BlockCollider.class);
+		Optional<Collider> blockCollider = block.getOp(Collider.class);
 
 		if (blockCollider.isPresent()) {
 			return blockCollider.get().isCube.get();
 		} else {
 			return super.isNormalCube();
 		}
-	}
-
-	@Override
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		Optional<BlockCollider> opCollider = blockInstance.getOp(BlockCollider.class);
-
-		if (opCollider.isPresent()) {
-			return new FWCuboid(opCollider.get().getBoundingBox().add(new Vector3i(x, y, z)));
-		}
-		return null;
 	}
 
 	@Override
