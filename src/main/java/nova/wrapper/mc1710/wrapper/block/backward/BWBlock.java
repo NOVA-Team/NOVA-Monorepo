@@ -1,11 +1,13 @@
 package nova.wrapper.mc1710.wrapper.block.backward;
 
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
 import nova.core.block.component.LightEmitter;
 import nova.core.game.Game;
+import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
@@ -19,11 +21,12 @@ public class BWBlock extends Block implements Storable {
 
 	public BWBlock(net.minecraft.block.Block block) {
 		this.mcBlock = block;
+		add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), x(), y(), z()) / 15.0F);
+	}
 
-		add(
-			new LightEmitter()
-			.setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), x(), y(), z()) / 15.0F)
-		);
+	@Override
+	public ItemFactory getItemFactory() {
+		return Game.instance.nativeManager.toNova(Item.getItemFromBlock(mcBlock));
 	}
 
 	private IBlockAccess getMcBlockAccess() {
