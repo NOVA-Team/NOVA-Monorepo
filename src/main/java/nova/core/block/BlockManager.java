@@ -3,8 +3,6 @@ package nova.core.block;
 import nova.core.event.CancelableEvent;
 import nova.core.event.CancelableEventBus;
 import nova.core.event.EventBus;
-import nova.core.event.EventListener;
-import nova.core.event.EventListenerHandle;
 import nova.core.game.Game;
 import nova.core.item.ItemManager;
 import nova.core.util.Manager;
@@ -15,8 +13,8 @@ import java.util.function.Supplier;
 
 public class BlockManager extends Manager<Block, BlockFactory> {
 
+	public final EventBus<BlockRegisteredEvent> blockRegisteredListeners = new CancelableEventBus<>();
 	private final Supplier<ItemManager> itemManager;
-	private final EventBus<BlockRegisteredEvent> blockRegisteredListeners = new CancelableEventBus<>();
 
 	private BlockManager(Registry<BlockFactory> registry, Supplier<ItemManager> itemManager) {
 		super(registry);
@@ -52,19 +50,16 @@ public class BlockManager extends Manager<Block, BlockFactory> {
 	 */
 	@Override
 	public BlockFactory register(BlockFactory factory) {
-		registry.register(factory);
-		blockRegisteredListeners.publish(new BlockRegisteredEvent(factory));
-		factory.getDummy().onRegister();
-		return factory;
-	}
-
-	public EventListenerHandle<BlockRegisteredEvent> whenBlockRegistered(EventListener<BlockRegisteredEvent> listener) {
-		return blockRegisteredListeners.add(listener);
+		BlockRegisteredEvent event = new BlockRegisteredEvent(factory);
+		blockRegisteredListeners.publish(event);
+		registry.register(event.blockFactory);
+		event.blockFactory.getDummy().onRegister();
+		return event.blockFactory;
 	}
 
 	@CancelableEvent.Cancelable
 	public static class BlockRegisteredEvent extends CancelableEvent {
-		public final BlockFactory blockFactory;
+		public BlockFactory blockFactory;
 
 		public BlockRegisteredEvent(BlockFactory blockFactory) {
 			this.blockFactory = blockFactory;
