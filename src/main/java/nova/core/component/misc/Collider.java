@@ -78,19 +78,6 @@ public class Collider extends Component {
 		return this;
 	}
 
-	/**
-	 * protected Set<Cuboid> getCollidingBoxes(Cuboid intersect, Optional<Entity> entity) {
-	 * Set<Cuboid> bounds = new HashSet<>();
-	 * Cuboid defaultBound = getBoundingBox();
-	 *
-	 * if (defaultBound.add(block.position()).intersects(intersect)) {
-	 * bounds.add(getBoundingBox());
-	 * }
-	 *
-	 * return bounds;
-	 * }
-	 */
-
 	public static class CollideEvent {
 		public final Entity entity;
 
