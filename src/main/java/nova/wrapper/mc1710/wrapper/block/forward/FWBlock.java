@@ -37,6 +37,7 @@ import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.backward.render.BWModel;
+import nova.wrapper.mc1710.backward.util.BWCuboid;
 import nova.wrapper.mc1710.forward.util.FWCuboid;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
@@ -206,12 +207,22 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	}
 
 	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess access, int x, int y, int z) {
+		Block blockInstance = getBlockInstance(access, new Vector3i(x, y, z));
+		if (blockInstance.has(Collider.class)) {
+			Cuboid cuboid = blockInstance.get(Collider.class).boundingBox.get();
+			setBlockBounds(cuboid.min.xf(), cuboid.min.yf(), cuboid.min.zf(), cuboid.max.xf(), cuboid.max.yf(), cuboid.max.zf());
+		}
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 
 		if (blockInstance.has(Collider.class)) {
-			return new FWCuboid(blockInstance.get(Collider.class).boundingBox.get());
+			Cuboid cuboid = blockInstance.get(Collider.class).boundingBox.get();
+			return new FWCuboid(cuboid.add(new Vector3i(x, y, z)));
 		}
 		return null;
 	}
@@ -221,13 +232,13 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		blockInstance.getOp(Collider.class).ifPresent(
 			collider -> {
-				//new BWCuboid(aabb),
 				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(Game.instance.nativeManager.toNova(entity)));
 
 				list.addAll(
 					boxes
 						.stream()
 						.map(c -> c.add(new Vector3i(x, y, z)))
+						.filter(c -> c.intersects(new BWCuboid(aabb)))
 						.map(FWCuboid::new)
 						.collect(Collectors.toList())
 				);
