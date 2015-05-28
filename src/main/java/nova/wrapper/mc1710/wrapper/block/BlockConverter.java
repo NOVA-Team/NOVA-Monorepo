@@ -8,10 +8,10 @@ import net.minecraft.item.Item;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
+import nova.core.component.Category;
 import nova.core.game.Game;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
-import nova.core.util.Category;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
 import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
@@ -100,16 +100,16 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		NovaMinecraft.proxy.registerBlock(blockWrapper);
 		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
 
-		if (blockWrapper.block instanceof Category && FMLCommonHandler.instance().getSide().isClient()) {
+		if (blockWrapper.block.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 			//Add into creative tab
-			Category category = (Category) blockWrapper.block;
+			Category category = blockWrapper.block.get(Category.class);
 			Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
-				.filter(tab -> tab.getTabLabel().equals(category.getCategory()))
+				.filter(tab -> tab.getTabLabel().equals(category.name))
 				.findFirst();
 			if (first.isPresent()) {
 				blockWrapper.setCreativeTab(first.get());
 			} else {
-				ModCreativeTab tab = new ModCreativeTab(category.getCategory());
+				ModCreativeTab tab = new ModCreativeTab(category.name);
 				blockWrapper.setCreativeTab(tab);
 				tab.item = Item.getItemFromBlock(blockWrapper);
 			}

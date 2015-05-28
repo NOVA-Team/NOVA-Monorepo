@@ -15,7 +15,7 @@ import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
-import nova.core.util.Category;
+import nova.core.component.Category;
 import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
@@ -168,7 +168,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			net.minecraft.block.Block mcBlock = Game.instance.nativeManager.toNative(blockFactory.getDummy());
 			itemWrapper = net.minecraft.item.Item.getItemFromBlock(mcBlock);
 			if (itemWrapper == null) {
-				throw new NovaException("Missing block: " + itemFactory.getID());
+				throw new NovaException("ItemConverter: Missing block: " + itemFactory.getID());
 			}
 		} else {
 			itemWrapper = new FWItem(itemFactory);
@@ -182,16 +182,16 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
 			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
 
-			if (itemFactory.getDummy() instanceof Category && FMLCommonHandler.instance().getSide().isClient()) {
+			if (itemFactory.getDummy().has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
-				Category category = (Category) itemFactory.getDummy();
+				Category category = itemFactory.getDummy().get(Category.class);
 				Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
-					.filter(tab -> tab.getTabLabel().equals(category.getCategory()))
+					.filter(tab -> tab.getTabLabel().equals(category.name))
 					.findFirst();
 				if (first.isPresent()) {
 					itemWrapper.setCreativeTab(first.get());
 				} else {
-					ModCreativeTab tab = new ModCreativeTab(category.getCategory());
+					ModCreativeTab tab = new ModCreativeTab(category.name);
 					itemWrapper.setCreativeTab(tab);
 					tab.item = itemWrapper;
 				}
