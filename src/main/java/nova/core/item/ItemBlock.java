@@ -28,8 +28,8 @@ public class ItemBlock extends Item {
 	public boolean onUse(Entity entity, World world, Vector3i position, Direction side, Vector3d hit) {
 		Vector3i placePos = position.add(side.toVector());
 
-		if (onPrePlace(entity, world, position, side, hit)) {
-			return onPostPlace(entity, world, position, side, hit);
+		if (onPrePlace(entity, world, placePos, side, hit)) {
+			return onPostPlace(entity, world, placePos, side, hit);
 		}
 
 		return false;
