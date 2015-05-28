@@ -1,5 +1,7 @@
 package nova.wrapper.mc1710.wrapper.block.forward;
 
+import java.util.Optional;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -14,18 +16,12 @@ import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.network.netty.MCNetworkManager;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
-import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-
 /**
  * A Minecraft TileEntity to Nova block wrapper
+ * 
  * @author Calclavia
  */
 public class FWTile extends TileEntity {
-
-	private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
 	private String blockID;
 	private Block block;
@@ -40,29 +36,6 @@ public class FWTile extends TileEntity {
 	}
 
 	public Block getBlock() {
-		/**
-		 * If a block does not exist, create one.
-		 */
-		if (block == null) {
-			waitForWorld(() ->
-			{
-				Optional<BlockFactory> blockFactory = Game.instance.blockManager.getFactory(blockID);
-				if (blockFactory.isPresent()) {
-					block = blockFactory.get().makeBlock();
-					block.add(new MCBlockWrapper(new BWWorld(getWorldObj()), new Vector3i(xCoord, yCoord, zCoord)));
-					block.add(new MCBlockTransform(block));
-
-					if (cacheData != null && block instanceof Storable) {
-						((Storable) block).load(cacheData);
-						cacheData = null;
-					}
-
-					block.awakeEvent.publish(new Stateful.AwakeEvent());
-				} else {
-					System.out.println("Error! Invalid NOVA block ID");
-				}
-			});
-		}
 		return block;
 	}
 
@@ -77,58 +50,30 @@ public class FWTile extends TileEntity {
 	@Override
 	public void validate() {
 		super.validate();
-		getBlock();
-		waitForBlock(() -> block.loadEvent.publish(new Stateful.LoadEvent()));
+		Optional<BlockFactory> blockFactory = Game.instance.blockManager.getFactory(blockID);
+		if (blockFactory.isPresent()) {
+			block = blockFactory.get().makeBlock();
+			block.add(new MCBlockWrapper(new BWWorld(getWorldObj()), new Vector3i(xCoord, yCoord, zCoord)));
+			block.add(new MCBlockTransform(block));
+
+			if (cacheData != null && block instanceof Storable) {
+				((Storable) block).load(cacheData);
+				cacheData = null;
+			}
+
+			// TODO Not sure what the awake event is for, doesn't seem to be of
+			// any use.
+			block.awakeEvent.publish(new Stateful.AwakeEvent());
+			block.loadEvent.publish(new Stateful.LoadEvent());
+		} else {
+			System.out.println("Error! Invalid NOVA block ID");
+		}
 	}
 
 	@Override
 	public void invalidate() {
 		block.unloadEvent.publish(new Stateful.UnloadEvent());
 		super.invalidate();
-	}
-
-	/**
-	 * Waits for the world object to be available, then executes a specific action immediately after it is available.
-	 */
-	//TODO: Dump this back into the server thread. Threads also cannot printline.
-	private void waitForWorld(Runnable action) {
-		if (getWorldObj() != null) {
-			action.run();
-		} else {
-			FutureTask<Object> future = new FutureTask<>(() ->
-			{
-				while (getWorldObj() == null) {
-					Thread.sleep(1);
-				}
-
-				action.run();
-				return null;
-			});
-			executor.execute(future);
-		}
-
-	}
-
-	/**
-	 * Waits for when the block instance is not null.
-	 * @param action
-	 */
-	//TODO: Dump this back into the server thread. Threads also cannot printline.
-	private void waitForBlock(Runnable action) {
-		if (getBlock() != null) {
-			action.run();
-		} else {
-			FutureTask<Object> future = new FutureTask<>(() ->
-			{
-				while (getBlock() == null) {
-					Thread.sleep(1);
-				}
-
-				action.run();
-				return null;
-			});
-			executor.execute(future);
-		}
 	}
 
 	/**
@@ -141,6 +86,7 @@ public class FWTile extends TileEntity {
 
 	/**
 	 * Only register tile updates if the block is an instance of Updater.
+	 * 
 	 * @return Whether can update
 	 */
 	@Override
@@ -168,8 +114,9 @@ public class FWTile extends TileEntity {
 		super.readFromNBT(nbt);
 
 		/**
-		 * Because World and Position do not exist during NBT read time,
-		 * we must wait until the block is injected with World and Position data using Future.
+		 * Because World and Position do not exist during NBT read time, we must
+		 * wait until the block is injected with World and Position data using
+		 * Future.
 		 */
 		blockID = nbt.getString("novaID");
 		cacheData = Game.instance.nativeManager.toNova(nbt.getCompoundTag("nova"));
