@@ -29,6 +29,9 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	public final EventBus<BlockRemoveEvent> removeEvent = new EventBus<>();
 	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
 	public final EventBus<LeftClickEvent> leftClickEvent = new EventBus<>();
+	public final EventBus<Stateful.AwakeEvent> awakeEvent = new EventBus<>();
+	public final EventBus<Stateful.LoadEvent> loadEvent = new EventBus<>();
+	public final EventBus<Stateful.UnloadEvent> unloadEvent = new EventBus<>();
 
 	/**
 	 * Called when the block is registered.
