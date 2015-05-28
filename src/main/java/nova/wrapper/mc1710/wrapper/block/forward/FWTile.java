@@ -60,9 +60,6 @@ public class FWTile extends TileEntity {
 			cacheData = null;
 		}
 
-		// TODO Not sure what the awake event is for, doesn't seem to be of
-		// any use.
-		block.awakeEvent.publish(new Stateful.AwakeEvent());
 		block.loadEvent.publish(new Stateful.LoadEvent());
 	}
 
