@@ -124,7 +124,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	 * @return Result of the check
 	 */
 	public boolean intersects(Cuboid other) {
-		return (other.max.x > min.x && other.min.x < max.x) ? ((other.max.y > min.y && other.min.y < max.y) ? other.max.z > min.z && other.min.z < max.z : false) : false;
+		return (other.max.x >= min.x && other.min.x < max.x) ? ((other.max.y >= min.y && other.min.y < max.y) ? other.max.z >= min.z && other.min.z < max.z : false) : false;
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	 * @return Result of the check
 	 */
 	public boolean intersects(Vector3<?> other) {
-		return other.xd() > this.min.x && other.xd() < this.max.x ? (other.yd() > this.min.y && other.yd() < this.max.y ? other.zd() > this.min.z && other.zd() < this.max.z : false) : false;
+		return other.xd() >= this.min.x && other.xd() < this.max.x ? (other.yd() >= this.min.y && other.yd() < this.max.y ? other.zd() >= this.min.z && other.zd() < this.max.z : false) : false;
 	}
 
 	public Cuboid transform(Transformer transform) {
