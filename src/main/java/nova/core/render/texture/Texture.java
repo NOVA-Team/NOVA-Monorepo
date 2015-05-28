@@ -6,7 +6,6 @@ import nova.core.util.transform.vector.Vector2i;
 /**
  * A texture has a file location. All texture must be included in
  * /assets/domain/textures/*
- *
  * @author Calclavia
  */
 public class Texture {
