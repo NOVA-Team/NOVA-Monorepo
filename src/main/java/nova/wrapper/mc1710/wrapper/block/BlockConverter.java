@@ -91,7 +91,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		blockManager.register(airBlock);
 
 		//NOTE: There should NEVER be blocks already registered in preInit() stage of a NativeConverter.
-		blockManager.whenBlockRegistered(event -> registerNovaBlock(event.blockFactory));
+		blockManager.blockRegisteredListeners.add(event -> registerNovaBlock(event.blockFactory));
 	}
 
 	private void registerNovaBlock(BlockFactory blockFactory) {
