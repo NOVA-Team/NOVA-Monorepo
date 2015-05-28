@@ -211,7 +211,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 
 		if (blockInstance.has(Collider.class)) {
-			return new FWCuboid(blockInstance.get(Collider.class).boundingBox);
+			return new FWCuboid(blockInstance.get(Collider.class).boundingBox.get());
 		}
 		return null;
 	}
