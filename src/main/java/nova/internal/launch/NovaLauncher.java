@@ -57,14 +57,29 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 			NovaMod anno2 = o2.getClass().getAnnotation(NovaMod.class);
 
 			// Split string by @ and versions
-			Map<String, String> loadAfter = Arrays.stream(anno1.dependencies())
-				.map(s -> s.split("@", 1))
-				.collect(Collectors.toMap(s -> s[0], s -> s.length > 1 ? s[1] : ""));
+			Map<String, String> loadAfter1 = dependencyToMap(anno1.dependencies());
 
 			// TODO: Compare version requirements.
-			return loadAfter.entrySet().stream().anyMatch(entry -> anno2.id().equals(entry.getKey())) ? 1 : 0;
+			if (loadAfter1.entrySet().stream().anyMatch(entry -> anno2.id().equals(entry.getKey()))) {
+				return 1;
+			}
+
+			// Split string by @ and versions
+			Map<String, String> loadAfter2 = dependencyToMap(anno2.dependencies());
+
+			if (loadAfter2.entrySet().stream().anyMatch(entry -> anno1.id().equals(entry.getKey()))) {
+				return -1;
+			}
+
+			return 0;
 		});
 		Game.instance.logger.info("NOVA Mods Loaded: " + mods.size());
+	}
+
+	public Map<String, String> dependencyToMap(String[] dependencies) {
+		return Arrays.stream(dependencies)
+			.map(s -> s.split("@", 1))
+			.collect(Collectors.toMap(s -> s[0], s -> s.length > 1 ? s[1] : ""));
 	}
 
 	@Override
