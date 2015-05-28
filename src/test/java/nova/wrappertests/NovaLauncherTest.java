@@ -6,36 +6,53 @@ import nova.internal.launch.NovaLauncher;
 import nova.testutils.mod.NoLoadableTestMod;
 import nova.testutils.mod.NonAnnotatedTestMod;
 import nova.testutils.mod.TestMod;
+import nova.wrappertests.depmodules.FakeClientModule;
+import nova.wrappertests.depmodules.FakeGuiModule;
+import nova.wrappertests.depmodules.FakeKeyModule;
+import nova.wrappertests.depmodules.FakeLanguageModule;
+import nova.wrappertests.depmodules.FakeNetworkModule;
+import nova.wrappertests.depmodules.FakeRenderModule;
+import nova.wrappertests.depmodules.FakeSaveModule;
+import nova.wrappertests.depmodules.FakeTickerModule;
 import org.assertj.core.util.Sets;
 import org.junit.Test;
 import se.jbee.inject.bootstrap.Bundle;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public abstract class NovaLauncherTest {
+public class NovaLauncherTest {
 
-	Set<Class<?>> testModClasses = Sets.newLinkedHashSet(
-		TestMod.class,
-		NonAnnotatedTestMod.class,
-		NoLoadableTestMod.class
-	);
+	public Set<Class<?>> getTestModClasses() {
+		return Sets.newLinkedHashSet(
+			TestMod.class,
+			NonAnnotatedTestMod.class,
+			NoLoadableTestMod.class
+		);
+	}
 
-	public abstract List<Class<? extends Bundle>> getModules();
+	public List<Class<? extends Bundle>> getModules() {
+		return Arrays.<Class<? extends Bundle>>asList(
+			FakeClientModule.class,
+			FakeGuiModule.class,
+			FakeKeyModule.class,
+			FakeLanguageModule.class,
+			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.
+			FakeRenderModule.class,
+			FakeSaveModule.class,
+			FakeTickerModule.class
+		);
+	}
 
-	@Test
-	public void testLaunching() {
+	public NovaLauncher createLauncher() {
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 
 		getModules().forEach(diep::install);
 
-		NovaLauncher launcher = new NovaLauncher(diep, testModClasses);
-
-		assertThat(launcher.getModClasses())
-			.hasSize(1)
-			.containsValue(TestMod.class);
+		NovaLauncher launcher = new NovaLauncher(diep, getTestModClasses());
 
 		Game.instance = diep.init();
 
@@ -44,6 +61,18 @@ public abstract class NovaLauncherTest {
 		launcher.preInit();
 		launcher.init();
 		launcher.postInit();
+		return launcher;
+	}
+
+	@Test
+	public void testLaunching() {
+		doLaunchAssert(createLauncher());
+	}
+
+	public void doLaunchAssert(NovaLauncher launcher) {
+		assertThat(launcher.getModClasses())
+			.hasSize(1)
+			.containsValue(TestMod.class);
 	}
 
 	@Test
