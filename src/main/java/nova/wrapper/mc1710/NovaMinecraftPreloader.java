@@ -134,11 +134,10 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 						folderFile = new File(folderLocation.replaceAll("build[\\\\/]classes", "build/resources"));
 						folderFile = new File(folderFile, "assets").isDirectory() ? folderFile : new File(folderLocation);
 					}
-					if (!addedPacks.contains(folderLocation)) {
-						addedPacks.add(folderLocation);
-						packs.add(new NovaFolderResourcePack(folderFile, novaMod.id()));
-						System.out.println("Registered NOVA folder resource pack: " + folderFile.getAbsolutePath());
-					}
+
+					addedPacks.add(folderLocation);
+					packs.add(new NovaFolderResourcePack(folderFile, novaMod.id()));
+					System.out.println("Registered NOVA folder resource pack: " + folderFile.getAbsolutePath());
 				}
 			});
 			resourcePackField.set(FMLClientHandler.instance(), packs);

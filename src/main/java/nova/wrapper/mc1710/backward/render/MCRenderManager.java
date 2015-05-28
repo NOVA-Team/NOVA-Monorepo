@@ -15,6 +15,10 @@ import nova.core.util.transform.vector.Vector2i;
 
 public class MCRenderManager extends RenderManager {
 
+	public static ResourceLocation toResourceLocation(Texture texture) {
+		return new ResourceLocation(texture.domain, texture.getPath());
+	}
+
 	@Override
 	public Vector2i getDimension(Texture texture) {
 		ResourceLocation loc = toResourceLocation(texture);
@@ -32,12 +36,8 @@ public class MCRenderManager extends RenderManager {
 				}
 			}
 		} catch (Exception e) {
-			throw new NovaException("Couldn't load texture " + texture.getResource(), e);
+			throw new NovaException("Couldn't load texture " + texture.getPath(), e);
 		}
 		throw new NullPointerException();
-	}
-
-	public static ResourceLocation toResourceLocation(Texture texture) {
-		return new ResourceLocation(texture.domain, texture.getPath());
 	}
 }
