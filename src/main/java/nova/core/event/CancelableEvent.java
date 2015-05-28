@@ -2,6 +2,11 @@ package nova.core.event;
 
 import nova.core.util.exception.NovaException;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * A base class for an event that may or may not be cancelable, depending on
  * weather a sub event has the {@link CancelableEvent.Cancelable} annotation on.
@@ -29,6 +34,8 @@ public abstract class CancelableEvent implements Cancelable {
 		return canceled;
 	}
 
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
 	public @interface Cancelable {
 
 	}
