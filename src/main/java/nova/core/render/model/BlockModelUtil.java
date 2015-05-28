@@ -1,8 +1,8 @@
 package nova.core.render.model;
 
 import nova.core.block.Block;
-import nova.core.block.component.BlockCollider;
 import nova.core.block.component.StaticBlockRenderer;
+import nova.core.component.misc.Collider;
 import nova.core.render.Color;
 import nova.core.util.Direction;
 import nova.core.util.exception.NovaException;
@@ -22,11 +22,11 @@ public class BlockModelUtil {
 	 * @return This Model
 	 */
 	public static Model drawBlock(Model model, Block block) {
-		Optional<BlockCollider> collider = block.getOp(BlockCollider.class);
+		Optional<Collider> collider = block.getOp(Collider.class);
 		Optional<StaticBlockRenderer> staticRenderer = block.getOp(StaticBlockRenderer.class);
 
 		if (collider.isPresent() && staticRenderer.isPresent()) {
-			Cuboid boundingBox = collider.get().getBoundingBox();
+			Cuboid boundingBox = collider.get().boundingBox;
 			double minX = boundingBox.min.x - 0.5;
 			double minY = boundingBox.min.y - 0.5;
 			double minZ = boundingBox.min.z - 0.5;

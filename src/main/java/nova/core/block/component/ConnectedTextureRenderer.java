@@ -2,6 +2,7 @@ package nova.core.block.component;
 
 import nova.core.block.Block;
 import nova.core.component.Require;
+import nova.core.component.misc.Collider;
 import nova.core.render.model.BlockModelUtil;
 import nova.core.render.model.Face;
 import nova.core.render.model.Model;
@@ -19,7 +20,7 @@ import java.util.function.Supplier;
  * Renders connected texture for a block.
  * @author Calclavia
  */
-@Require(BlockCollider.class)
+@Require(Collider.class)
 public class ConnectedTextureRenderer extends StaticBlockRenderer {
 
 	public final Texture edgeTexture;
@@ -47,7 +48,7 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 		BlockModelUtil.drawBlock(model, block);
 
 		//Render the block edge
-		Cuboid bounds = provider.get(BlockCollider.class).getBoundingBox();
+		Cuboid bounds = provider.get(Collider.class).boundingBox;
 
 		for (int r = 0; r < 4; r++) {
 			Direction relativeDir = Direction.DIRECTIONS[r];

@@ -1,6 +1,6 @@
 package nova.core.block;
 
-import nova.core.block.component.BlockCollider;
+import nova.core.component.misc.Collider;
 
 /**
  * A default block, pre-added with essential components.
@@ -8,6 +8,6 @@ import nova.core.block.component.BlockCollider;
  */
 public abstract class BlockDefault extends Block {
 	public BlockDefault() {
-		add(new BlockCollider(this));
+		add(new Collider());
 	}
 }
