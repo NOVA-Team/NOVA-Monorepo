@@ -22,7 +22,7 @@ public abstract class ComponentProvider {
 	 */
 	public final <C extends Component> C add(C component) {
 		if (has(component.getClass())) {
-			throw new NovaException("Attempt to add two of the same component types: " + component.getClass());
+			throw new NovaException("Attempt to add two of the same component types: " + component.getClass() + " for block: " + this);
 		}
 
 		componentMap.put(component.getClass(), component);
@@ -52,7 +52,10 @@ public abstract class ComponentProvider {
 	}
 
 	public final boolean has(Class<? extends Component> componentType) {
-		return componentMap.containsKey(componentType);
+		return componentMap
+			.keySet()
+			.stream()
+			.anyMatch(componentType::isAssignableFrom);
 	}
 
 	public final <C extends Component> C remove(Class<C> componentType) {
