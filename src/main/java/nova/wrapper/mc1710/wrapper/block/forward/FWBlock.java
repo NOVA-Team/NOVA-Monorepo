@@ -111,7 +111,8 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	public Block getBlockInstance(nova.core.world.World world, Vector3i position) {
 		//TODO: Implement obj args
-		Block block = factory.makeBlock(new MCBlockWrapper(world, position));
+		Block block = factory.makeBlock();
+		block.add(new MCBlockWrapper(world, position));
 		block.add(new MCBlockTransform(block));
 		return block;
 	}
