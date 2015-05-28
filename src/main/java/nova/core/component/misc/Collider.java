@@ -28,14 +28,14 @@ public class Collider extends Component {
 	/**
 	 * A general cuboid that represents the bounds of this object.
 	 */
-	public Cuboid boundingBox = new Cuboid(new Vector3i(0, 0, 0), new Vector3i(1, 1, 1));
+	public Supplier<Cuboid> boundingBox = () -> new Cuboid(new Vector3i(0, 0, 0), new Vector3i(1, 1, 1));
 
 	/**
 	 * The boxes that provide occlusion to the specific block.
 	 */
-	public Function<Optional<Entity>, Set<Cuboid>> occlusionBoxes = opEnt -> Collections.singleton(boundingBox);
+	public Function<Optional<Entity>, Set<Cuboid>> occlusionBoxes = opEnt -> Collections.singleton(boundingBox.get());
 
-	public Function<Optional<Entity>, Set<Cuboid>> selectionBoxes = opEnt -> Collections.singleton(boundingBox);
+	public Function<Optional<Entity>, Set<Cuboid>> selectionBoxes = opEnt -> Collections.singleton(boundingBox.get());
 
 	/**
 	 * Called to check if the block is a cube.
@@ -50,6 +50,10 @@ public class Collider extends Component {
 	public Supplier<Boolean> isOpaqueCube = isCube;
 
 	public Collider setBoundingBox(Cuboid boundingBox) {
+		return setBoundingBox(() -> boundingBox);
+	}
+
+	public Collider setBoundingBox(Supplier<Cuboid> boundingBox) {
 		this.boundingBox = boundingBox;
 		return this;
 	}

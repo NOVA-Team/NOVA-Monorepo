@@ -48,7 +48,7 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 		BlockModelUtil.drawBlock(model, block);
 
 		//Render the block edge
-		Cuboid bounds = provider.get(Collider.class).boundingBox;
+		Cuboid bounds = provider.get(Collider.class).boundingBox.get();
 
 		for (int r = 0; r < 4; r++) {
 			Direction relativeDir = Direction.DIRECTIONS[r];

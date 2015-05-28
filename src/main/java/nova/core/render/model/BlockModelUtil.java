@@ -26,7 +26,7 @@ public class BlockModelUtil {
 		Optional<StaticBlockRenderer> staticRenderer = block.getOp(StaticBlockRenderer.class);
 
 		if (collider.isPresent() && staticRenderer.isPresent()) {
-			Cuboid boundingBox = collider.get().boundingBox;
+			Cuboid boundingBox = collider.get().boundingBox.get();
 			double minX = boundingBox.min.x - 0.5;
 			double minY = boundingBox.min.y - 0.5;
 			double minZ = boundingBox.min.z - 0.5;
