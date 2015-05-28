@@ -17,12 +17,10 @@ public class BlockFactory extends Factory<Block> implements Identifiable {
 
 	/**
 	 * Creates a new instance of this block with blockAccess and position parameters.
-	 * @param wrapper The block wrapper
 	 * @return A new block instance with these parameters.
 	 */
-	public Block makeBlock(Wrapper wrapper, Object... args) {
+	public Block makeBlock(Object... args) {
 		Block newBlock = constructor.apply(args);
-		newBlock.add(wrapper);
 		return newBlock;
 	}
 }

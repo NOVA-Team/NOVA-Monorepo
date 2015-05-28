@@ -23,7 +23,7 @@ import java.util.Set;
  */
 public class FakeWorld extends World {
 
-	private final Map<Vector3i, Block> blockMap = new HashMap<>();
+	public final Map<Vector3i, Block> blockMap = new HashMap<>();
 
 	@Override
 	public void markStaticRender(Vector3i position) {
@@ -48,7 +48,7 @@ public class FakeWorld extends World {
 
 	@Override
 	public boolean setBlock(Vector3i position, BlockFactory blockFactory, Object... args) {
-		Block newBlock = blockFactory.makeBlock(new Wrapper());
+		Block newBlock = blockFactory.makeBlock();
 		BlockTransform component = new BlockTransform();
 		component.setPosition(position);
 		component.setWorld(this);
