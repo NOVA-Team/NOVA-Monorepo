@@ -1,12 +1,9 @@
 package nova.wrapper.mc1710.wrapper.block.forward;
 
-import java.util.Optional;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
-import nova.core.block.BlockFactory;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
 import nova.core.game.Game;
@@ -39,6 +36,10 @@ public class FWTile extends TileEntity {
 		return block;
 	}
 
+	public void setBlock(Block block) {
+		this.block = block;
+	}
+
 	@Override
 	public Packet getDescriptionPacket() {
 		if (block instanceof nova.core.network.PacketHandler) {
@@ -50,24 +51,19 @@ public class FWTile extends TileEntity {
 	@Override
 	public void validate() {
 		super.validate();
-		Optional<BlockFactory> blockFactory = Game.instance.blockManager.getFactory(blockID);
-		if (blockFactory.isPresent()) {
-			block = blockFactory.get().makeBlock();
-			block.add(new MCBlockWrapper(new BWWorld(getWorldObj()), new Vector3i(xCoord, yCoord, zCoord)));
-			block.add(new MCBlockTransform(block));
 
-			if (cacheData != null && block instanceof Storable) {
-				((Storable) block).load(cacheData);
-				cacheData = null;
-			}
+		block.add(new MCBlockWrapper(new BWWorld(getWorldObj()), new Vector3i(xCoord, yCoord, zCoord)));
+		block.add(new MCBlockTransform(block));
 
-			// TODO Not sure what the awake event is for, doesn't seem to be of
-			// any use.
-			block.awakeEvent.publish(new Stateful.AwakeEvent());
-			block.loadEvent.publish(new Stateful.LoadEvent());
-		} else {
-			System.out.println("Error! Invalid NOVA block ID");
+		if (cacheData != null && block instanceof Storable) {
+			((Storable) block).load(cacheData);
+			cacheData = null;
 		}
+
+		// TODO Not sure what the awake event is for, doesn't seem to be of
+		// any use.
+		block.awakeEvent.publish(new Stateful.AwakeEvent());
+		block.loadEvent.publish(new Stateful.LoadEvent());
 	}
 
 	@Override

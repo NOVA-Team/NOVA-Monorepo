@@ -1,11 +1,14 @@
 package nova.wrapper.mc1710.wrapper.block.forward;
 
+import java.util.Optional;
+
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.block.Block;
+import nova.core.block.BlockFactory;
 import nova.core.component.ComponentProvider;
+import nova.core.game.Game;
 import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.asm.lib.ComponentInjector;
-import nova.wrapper.mc1710.wrapper.block.forward.FWTile;
 
 /**
  * @author Vic Nightfall
@@ -17,17 +20,33 @@ public final class FWTileLoader {
 
 	public static FWTile loadTile(NBTTagCompound data) {
 		try {
-			return createWrapperClass(null).newInstance();
+			String blockID = data.getString("novaID");
+			Block block = createBlock(blockID);
+			FWTile tile = createWrapperClass(block).newInstance();
+			tile.setBlock(block);
+			return tile;
 		} catch (Exception e) {
 			throw new NovaException("Fatal error when trying to create a new NOVA tile.", e);
 		}
 	}
 
-	public static FWTile loadTile(Block block) {
+	public static FWTile loadTile(String blockID) {
 		try {
-			return createWrapperClass(block).getConstructor(String.class).newInstance(block.getID());
+			Block block = createBlock(blockID);
+			FWTile tile = createWrapperClass(block).getConstructor(String.class).newInstance(blockID);
+			tile.setBlock(block);
+			return tile;
 		} catch (Exception e) {
 			throw new NovaException("Fatal error when trying to create a new NOVA tile.", e);
+		}
+	}
+
+	private static Block createBlock(String blockID) {
+		Optional<BlockFactory> blockFactory = Game.instance.blockManager.getFactory(blockID);
+		if (blockFactory.isPresent()) {
+			return blockFactory.get().makeBlock();
+		} else {
+			throw new NovaException("Error! Invalid NOVA block ID");
 		}
 	}
 

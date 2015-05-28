@@ -138,7 +138,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
-		return FWTileLoader.loadTile(block);
+		return FWTileLoader.loadTile(block.getID());
 	}
 
 	@Override

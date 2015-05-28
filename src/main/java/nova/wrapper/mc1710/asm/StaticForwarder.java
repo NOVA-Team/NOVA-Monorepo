@@ -18,6 +18,7 @@ import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
  * @author Calclavia
  */
 public class StaticForwarder {
+
 	public static void chunkSetBlockEvent(Chunk chunk, int x, int y, int z, Block oldBlock, int oldMeta, Block newBlock, int newMeta) {
 		// Publish the event
 		Game.instance.eventManager.blockChange.publish(
