@@ -78,7 +78,7 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 	}
 
 	public Vector3d max(Vector3d other) {
-		return max(other);
+		return new Vector3d(Math.max(xd(), other.xd()), Math.max(yd(), other.yd()), Math.max(zd(), other.zd()));
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 	}
 
 	public Vector3d min(Vector3d other) {
-		return min(other);
+		return new Vector3d(Math.min(xd(), other.xd()), Math.min(yd(), other.yd()), Math.min(zd(), other.zd()));
 	}
 
 	@Override
