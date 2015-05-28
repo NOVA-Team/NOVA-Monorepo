@@ -1,6 +1,7 @@
 package nova.wrapper.mc1710.launcher;
 
 import nova.wrapper.mc1710.depmodules.*;
+import nova.wrappertests.depmodules.FakeNetworkModule;
 import se.jbee.inject.bootstrap.Bundle;
 
 import java.util.Arrays;
