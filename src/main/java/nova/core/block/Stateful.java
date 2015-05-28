@@ -9,14 +9,6 @@ package nova.core.block;
  * Storable.
  */
 public interface Stateful {
-
-	/**
-	 * Called when the stateful object is constructed.
-	 */
-	class AwakeEvent {
-
-	}
-
 	/**
 	 * Called when the stateful object loads
 	 */

@@ -14,7 +14,6 @@ import nova.core.world.World;
  */
 public abstract class Entity extends ComponentProvider implements Identifiable, Stateful {
 
-	public final EventBus<AwakeEvent> awakeEvent = new EventBus<>();
 	public final EventBus<Stateful.LoadEvent> loadEvent = new EventBus<>();
 	public final EventBus<Stateful.UnloadEvent> unloadEvent = new EventBus<>();
 
