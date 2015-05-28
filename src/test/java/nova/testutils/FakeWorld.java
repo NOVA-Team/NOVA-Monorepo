@@ -2,6 +2,7 @@ package nova.testutils;
 
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
+import nova.core.component.transform.BlockTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
@@ -37,12 +38,22 @@ public class FakeWorld extends World {
 	@Override
 	public Optional<Block> getBlock(Vector3i position) {
 		//Gives a fake block to represent air
-		return Optional.of(blockMap.getOrDefault(position, new FakeBlock("air")));
+		FakeBlock air = new FakeBlock("air");
+		BlockTransform component = new BlockTransform();
+		component.setPosition(position);
+		component.setWorld(this);
+		air.add(component);
+		return Optional.of(blockMap.getOrDefault(position, air));
 	}
 
 	@Override
 	public boolean setBlock(Vector3i position, BlockFactory blockFactory, Object... args) {
-		blockMap.put(position, blockFactory.makeBlock(new Wrapper()));
+		Block newBlock = blockFactory.makeBlock(new Wrapper());
+		BlockTransform component = new BlockTransform();
+		component.setPosition(position);
+		component.setWorld(this);
+		newBlock.add(component);
+		blockMap.put(position, newBlock);
 		return true;
 	}
 

@@ -1,8 +1,10 @@
 package nova.wrappertests;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.core.block.Block;
 import nova.core.game.Game;
 import nova.internal.launch.NovaLauncher;
+import nova.testutils.FakeBlock;
 import nova.testutils.mod.NoLoadableTestMod;
 import nova.testutils.mod.NonAnnotatedTestMod;
 import nova.testutils.mod.TestMod;
@@ -47,6 +49,10 @@ public class NovaLauncherTest {
 		);
 	}
 
+	/**
+	 * Creates a fake launcher to allow mods to unit test.
+	 * @return
+	 */
 	public NovaLauncher createLauncher() {
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 
@@ -55,6 +61,16 @@ public class NovaLauncherTest {
 		NovaLauncher launcher = new NovaLauncher(diep, getTestModClasses());
 
 		Game.instance = diep.init();
+
+		/**
+		 * Register fake air block
+		 */
+		Game.instance.blockManager.register((args) -> new FakeBlock("air") {
+			@Override
+			public void onRegister() {
+
+			}
+		});
 
 		launcher.generateDependencies();
 		launcher.load();
