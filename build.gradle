@@ -87,6 +87,7 @@ task apiJar(type: Jar) {
 
 javadoc {
 	include 'nova/**'
+	options.tags 'implNotice:a:Implementation Details:'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
