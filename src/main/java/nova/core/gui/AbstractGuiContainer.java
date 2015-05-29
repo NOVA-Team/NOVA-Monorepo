@@ -117,6 +117,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	@Override
 	public void onEvent(GuiEvent event) {
 		super.onEvent(event);
+
 		for (GuiComponent<?, ?> component : getChildComponents()) {
 			component.onEvent(event);
 		}
