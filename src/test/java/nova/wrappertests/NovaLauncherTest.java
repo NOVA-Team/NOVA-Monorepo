@@ -60,12 +60,12 @@ public class NovaLauncherTest {
 
 		NovaLauncher launcher = new NovaLauncher(diep, getTestModClasses());
 
-		Game.instance = diep.init();
+		Game.setInstance(diep.init());
 
 		/**
 		 * Register fake air block
 		 */
-		Game.instance.blockManager.register((args) -> new FakeBlock("air") {
+		Game.getInstance().blockManager().register((args) -> new FakeBlock("air") {
 			@Override
 			public void onRegister() {
 
@@ -101,22 +101,22 @@ public class NovaLauncherTest {
 
 		assertThat(game).isNotNull();
 
-		assertThat(game.logger).isNotNull();
-		assertThat(game.clientManager).isNotNull();
-		assertThat(game.blockManager).isNotNull();
-		assertThat(game.entityManager).isNotNull();
-		assertThat(game.itemManager).isNotNull();
-		assertThat(game.fluidManager).isNotNull();
-		assertThat(game.worldManager).isNotNull();
-		assertThat(game.renderManager).isNotNull();
-		assertThat(game.recipeManager).isNotNull();
-		assertThat(game.craftingRecipeManager).isNotNull();
-		assertThat(game.itemDictionary).isNotNull();
-		assertThat(game.eventManager).isNotNull();
-		assertThat(game.networkManager).isNotNull();
-		assertThat(game.saveManager).isNotNull();
-		assertThat(game.languageManager).isNotNull();
-		assertThat(game.keyManager).isNotNull();
-		assertThat(game.nativeManager).isNotNull();
+		assertThat(game.logger()).isNotNull();
+		assertThat(game.clientManager()).isNotNull();
+		assertThat(game.blockManager()).isNotNull();
+		assertThat(game.entityManager()).isNotNull();
+		assertThat(game.itemManager()).isNotNull();
+		assertThat(game.fluidManager()).isNotNull();
+		assertThat(game.worldManager()).isNotNull();
+		assertThat(game.renderManager()).isNotNull();
+		assertThat(game.recipeManager()).isNotNull();
+		assertThat(game.craftingRecipeManager()).isNotNull();
+		assertThat(game.itemDictionary()).isNotNull();
+		assertThat(game.eventManager()).isNotNull();
+		assertThat(game.networkManager()).isNotNull();
+		assertThat(game.saveManager()).isNotNull();
+		assertThat(game.languageManager()).isNotNull();
+		assertThat(game.keyManager()).isNotNull();
+		assertThat(game.nativeManager()).isNotNull();
 	}
 }

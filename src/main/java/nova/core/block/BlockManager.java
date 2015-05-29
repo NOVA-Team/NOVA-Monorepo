@@ -26,11 +26,11 @@ public class BlockManager extends Manager<Block, BlockFactory> {
 	 * @return
 	 */
 	public Block getAirBlock() {
-		return Game.instance().blockManager().get("air").get();
+		return Game.getInstance().blockManager().get("air").get();
 	}
 
 	public BlockFactory getAirBlockFactory() {
-		return Game.instance().blockManager().getFactory("air").get();
+		return Game.getInstance().blockManager().getFactory("air").get();
 	}
 
 	/**

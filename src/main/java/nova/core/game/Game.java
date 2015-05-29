@@ -63,20 +63,20 @@ public class Game {
 	@Deprecated
 	public final NativeManager nativeManager;
 
+	@Deprecated
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
 	 *
 	 * This is @deprecated, use syncTicker() instead.
 	 */
-	@Deprecated
 	public final UpdateTicker.SynchronizedTicker syncTicker;
 
+	@Deprecated
 	/**
 	 * The thread ticker that runs on NOVA's thread.
 	 *
 	 * This is @deprecated, use threadTicker() instead.
 	 */
-	@Deprecated
 	public final UpdateTicker.ThreadTicker threadTicker;
 
 	// TODO Move somewhere else
@@ -135,8 +135,12 @@ public class Game {
 		logger.info("Game instance created.");
 	}
 
-	public static Game instance() {
+	public static Game getInstance() {
 		return instance;
+	}
+
+	public static void setInstance(Game instance) {
+		Game.instance = instance;
 	}
 
 	public Logger logger() {
@@ -223,5 +227,13 @@ public class Game {
 	 */
 	public final UpdateTicker.ThreadTicker threadTicker() {
 		return threadTicker;
+	}
+
+	public final GuiComponentFactory guiComponentFactory() {
+		return guiComponentFactory;
+	}
+
+	public final GuiManager guiFactory() {
+		return guiFactory;
 	}
 }

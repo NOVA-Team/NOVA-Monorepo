@@ -25,12 +25,12 @@ public class OreItemIngredient implements ItemIngredient {
 
 	@Override
 	public Optional<Collection<String>> getPossibleItemIds() {
-		return Optional.of(Game.instance().itemDictionary().get(name));
+		return Optional.of(Game.getInstance().itemDictionary().get(name));
 	}
 
 	@Override
 	public Optional<Collection<Item>> getExampleItems() {
-		Game game = Game.instance();
+		Game game = Game.getInstance();
 
 		List<Item> result = new ArrayList<Item>();
 
@@ -47,7 +47,7 @@ public class OreItemIngredient implements ItemIngredient {
 
 	@Override
 	public boolean matches(Item item) {
-		return Game.instance().itemDictionary().get(name).contains(item.getID());
+		return Game.getInstance().itemDictionary().get(name).contains(item.getID());
 	}
 
 	@Override
