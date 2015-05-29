@@ -38,7 +38,7 @@ public class FakeNetworkModule extends BinderModule {
 
 		@Override
 		public boolean isServer() {
-			return false;
+			return true;
 		}
 	}
 }
