@@ -22,35 +22,61 @@ import nova.internal.tick.UpdateTicker;
 import org.slf4j.Logger;
 
 public class Game {
+	@Deprecated
 	public static Game instance;
 
+	@Deprecated
 	public final Logger logger;
 
+	@Deprecated
 	public final ClientManager clientManager;
+	@Deprecated
 	public final BlockManager blockManager;
+	@Deprecated
 	public final EntityManager entityManager;
+	@Deprecated
 	public final ItemManager itemManager;
+	@Deprecated
 	public final FluidManager fluidManager;
+	@Deprecated
 	public final WorldManager worldManager;
+	@Deprecated
 	public final RenderManager renderManager;
+	@Deprecated
 	public final RecipeManager recipeManager;
+	@Deprecated
 	public final CraftingRecipeManager craftingRecipeManager;
+	@Deprecated
 	public final ItemDictionary itemDictionary;
+	@Deprecated
 	public final EventManager eventManager;
+	@Deprecated
 	public final NetworkManager networkManager;
+	@Deprecated
 	public final SaveManager saveManager;
+	@Deprecated
 	public final LanguageManager languageManager;
+	@Deprecated
 	public final KeyManager keyManager;
+	@Deprecated
 	public final ComponentManager componentManager;
+	@Deprecated
 	public final NativeManager nativeManager;
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
+	 *
+	 * This is @deprecated, use syncTicker() instead.
 	 */
+	@Deprecated
 	public final UpdateTicker.SynchronizedTicker syncTicker;
+
 	/**
 	 * The thread ticker that runs on NOVA's thread.
+	 *
+	 * This is @deprecated, use threadTicker() instead.
 	 */
+	@Deprecated
 	public final UpdateTicker.ThreadTicker threadTicker;
 
 	// TODO Move somewhere else
@@ -109,93 +135,93 @@ public class Game {
 		logger.info("Game instance created.");
 	}
 
-	public static Game getInstance() {
+	public static Game instance() {
 		return instance;
 	}
 
-	public Logger getLogger() {
+	public Logger logger() {
 		return logger;
 	}
 
-	public ClientManager getClientManager() {
+	public ClientManager clientManager() {
 		return clientManager;
 	}
 
-	public BlockManager getBlockManager() {
+	public BlockManager blockManager() {
 		return blockManager;
 	}
 
-	public EntityManager getEntityManager() {
+	public EntityManager entityManager() {
 		return entityManager;
 	}
 
-	public ItemManager getItemManager() {
+	public ItemManager itemManager() {
 		return itemManager;
 	}
 
-	public FluidManager getFluidManager() {
+	public FluidManager fluidManager() {
 		return fluidManager;
 	}
 
-	public WorldManager getWorldManager() {
+	public WorldManager worldManager() {
 		return worldManager;
 	}
 
-	public RenderManager getRenderManager() {
+	public RenderManager renderManager() {
 		return renderManager;
 	}
 
-	public RecipeManager getRecipeManager() {
+	public RecipeManager recipeManager() {
 		return recipeManager;
 	}
 
-	public CraftingRecipeManager getCraftingRecipeManager() {
+	public CraftingRecipeManager craftingRecipeManager() {
 		return craftingRecipeManager;
 	}
 
-	public ItemDictionary getItemDictionary() {
+	public ItemDictionary itemDictionary() {
 		return itemDictionary;
 	}
 
-	public EventManager getEventManager() {
+	public EventManager eventManager() {
 		return eventManager;
 	}
 
-	public NetworkManager getNetworkManager() {
+	public NetworkManager networkManager() {
 		return networkManager;
 	}
 
-	public SaveManager getSaveManager() {
+	public SaveManager saveManager() {
 		return saveManager;
 	}
 
-	public LanguageManager getLanguageManager() {
+	public LanguageManager languageManager() {
 		return languageManager;
 	}
 
-	public KeyManager getKeyManager() {
+	public KeyManager keyManager() {
 		return keyManager;
 	}
 
-	public ComponentManager getComponentManager() {
+	public ComponentManager componentManager() {
 		return componentManager;
 	}
 
-	public NativeManager getNativeManager() {
+	public NativeManager nativeManager() {
 		return nativeManager;
 	}
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
 	 */
-	public UpdateTicker.SynchronizedTicker getSyncTicker() {
+	public UpdateTicker.SynchronizedTicker syncTicker() {
 		return syncTicker;
 	}
 
 	/**
 	 * The thread ticker that runs on NOVA's thread.
 	 */
-	public final UpdateTicker.ThreadTicker getThreadTicker() {
+	public final UpdateTicker.ThreadTicker threadTicker() {
 		return threadTicker;
 	}
 }
