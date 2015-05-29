@@ -22,40 +22,67 @@ import nova.internal.tick.UpdateTicker;
 import org.slf4j.Logger;
 
 public class Game {
-
+	@Deprecated
 	public static Game instance;
 
+	@Deprecated
 	public final Logger logger;
 
+	@Deprecated
 	public final ClientManager clientManager;
+	@Deprecated
 	public final BlockManager blockManager;
+	@Deprecated
 	public final EntityManager entityManager;
+	@Deprecated
 	public final ItemManager itemManager;
+	@Deprecated
 	public final FluidManager fluidManager;
+	@Deprecated
 	public final WorldManager worldManager;
+	@Deprecated
 	public final RenderManager renderManager;
+	@Deprecated
 	public final RecipeManager recipeManager;
+	@Deprecated
 	public final CraftingRecipeManager craftingRecipeManager;
+	@Deprecated
 	public final ItemDictionary itemDictionary;
+	@Deprecated
 	public final EventManager eventManager;
+	@Deprecated
 	public final NetworkManager networkManager;
+	@Deprecated
 	public final SaveManager saveManager;
+	@Deprecated
 	public final LanguageManager languageManager;
+	@Deprecated
 	public final KeyManager keyManager;
+	@Deprecated
 	public final ComponentManager componentManager;
+	@Deprecated
 	public final NativeManager nativeManager;
 
+	@Deprecated
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
+	 *
+	 * This is @deprecated, use syncTicker() instead.
 	 */
 	public final UpdateTicker.SynchronizedTicker syncTicker;
+
+	@Deprecated
 	/**
 	 * The thread ticker that runs on NOVA's thread.
+	 *
+	 * This is @deprecated, use threadTicker() instead.
 	 */
 	public final UpdateTicker.ThreadTicker threadTicker;
 
 	// TODO Move somewhere else
+	@Deprecated
 	public final GuiComponentFactory guiComponentFactory;
+	@Deprecated
 	public final GuiManager guiFactory;
 
 	private Game(
@@ -108,5 +135,107 @@ public class Game {
 		this.guiFactory = guiFactory;
 
 		logger.info("Game instance created.");
+	}
+
+	public static Game instance() {
+		return instance;
+	}
+
+	public static void inject(Game game) {
+		Game.instance = game;
+	}
+
+	public Logger logger() {
+		return logger;
+	}
+
+	public ClientManager clientManager() {
+		return clientManager;
+	}
+
+	public BlockManager blockManager() {
+		return blockManager;
+	}
+
+	public EntityManager entityManager() {
+		return entityManager;
+	}
+
+	public ItemManager itemManager() {
+		return itemManager;
+	}
+
+	public FluidManager fluidManager() {
+		return fluidManager;
+	}
+
+	public WorldManager worldManager() {
+		return worldManager;
+	}
+
+	public RenderManager renderManager() {
+		return renderManager;
+	}
+
+	public RecipeManager recipeManager() {
+		return recipeManager;
+	}
+
+	public CraftingRecipeManager craftingRecipeManager() {
+		return craftingRecipeManager;
+	}
+
+	public ItemDictionary itemDictionary() {
+		return itemDictionary;
+	}
+
+	public EventManager eventManager() {
+		return eventManager;
+	}
+
+	public NetworkManager networkManager() {
+		return networkManager;
+	}
+
+	public SaveManager saveManager() {
+		return saveManager;
+	}
+
+	public LanguageManager languageManager() {
+		return languageManager;
+	}
+
+	public KeyManager keyManager() {
+		return keyManager;
+	}
+
+	public ComponentManager componentManager() {
+		return componentManager;
+	}
+
+	public NativeManager nativeManager() {
+		return nativeManager;
+	}
+
+	/**
+	 * The synchronized ticker that uses the same thread as the game.
+	 */
+	public UpdateTicker.SynchronizedTicker syncTicker() {
+		return syncTicker;
+	}
+
+	/**
+	 * The thread ticker that runs on NOVA's thread.
+	 */
+	public final UpdateTicker.ThreadTicker threadTicker() {
+		return threadTicker;
+	}
+
+	public final GuiComponentFactory guiComponentFactory() {
+		return guiComponentFactory;
+	}
+
+	public final GuiManager guiFactory() {
+		return guiFactory;
 	}
 }

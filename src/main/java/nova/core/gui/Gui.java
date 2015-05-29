@@ -69,7 +69,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 		if (!sender.hasIdentifer()) {
 			return;
 		}
-		Packet packet = Game.instance.networkManager.newPacket();
+		Packet packet = Game.instance().networkManager().newPacket();
 		GuiEventFactory.instance.constructPacket(event, this, packet, event.getSyncID());
 		getNative().dispatchNetworkEvent(packet);
 	}
