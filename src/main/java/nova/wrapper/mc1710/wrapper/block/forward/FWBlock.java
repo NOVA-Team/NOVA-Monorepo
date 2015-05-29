@@ -224,7 +224,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 			Cuboid cuboid = blockInstance.get(Collider.class).boundingBox.get();
 			return new FWCuboid(cuboid.add(new Vector3i(x, y, z)));
 		}
-		return null;
+		return super.getSelectedBoundingBoxFromPool(world, x, y, z);
 	}
 
 	@Override
