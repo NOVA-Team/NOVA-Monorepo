@@ -223,4 +223,12 @@ public class MathUtil {
 	public static double truncate(double value, int truncation) {
 		return Math.floor(value * truncation) / truncation;
 	}
+
+	public static int log(int x, int base) {
+		return (int) (Math.log(x) / Math.log(base));
+	}
+
+	public static double log(double x, double base) {
+		return Math.log(x) / Math.log(base);
+	}
 }
