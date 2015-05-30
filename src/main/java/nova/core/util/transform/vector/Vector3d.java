@@ -3,6 +3,7 @@ package nova.core.util.transform.vector;
 import com.google.common.math.DoubleMath;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
+import nova.core.util.math.MathUtil;
 import nova.core.util.transform.matrix.Matrix;
 
 /**
@@ -158,6 +159,69 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 
 	public double distance(Vector3i other) {
 		return distance(other.toDouble());
+	}
+
+	public Vector3d YZintercept(Vector3d end, double px) {
+		double dx = end.x - x;
+		double dy = end.y - y;
+		double dz = end.z - z;
+
+		if (dx == 0) {
+			return null;
+		}
+
+		double d = (px - x) / dx;
+		if (MathUtil.isBetween(-1E-5, d, 1E-5)) {
+			return this;
+		}
+
+		if (!MathUtil.isBetween(0, d, 1)) {
+			return null;
+		}
+
+		return new Vector3d(px, y + d * dy, z + d * dz);
+	}
+
+	public Vector3d XZintercept(Vector3d end, double py) {
+		double dx = end.x - x;
+		double dy = end.y - y;
+		double dz = end.z - z;
+
+		if (dy == 0) {
+			return null;
+		}
+
+		double d = (py - y) / dy;
+		if (MathUtil.isBetween(-1E-5, d, 1E-5)) {
+			return this;
+		}
+
+		if (!MathUtil.isBetween(0, d, 1)) {
+			return null;
+		}
+
+		return new Vector3d(x + d * dx, py, z + d * dz);
+	}
+
+	public Vector3d XYintercept(Vector3d end, double pz) {
+		double dx = end.x - x;
+		double dy = end.y - y;
+		double dz = end.z - z;
+
+		if (dz == 0) {
+			return null;
+		}
+
+		double d = (pz - z) / dz;
+		if (MathUtil.isBetween(-1E-5, d, 1E-5)) {
+			return this;
+		}
+
+		if (!MathUtil.isBetween(0, d, 1)) {
+			return null;
+		}
+
+		return new Vector3d(x + d * dx, y + d * dy, pz);
 	}
 
 	@Override

@@ -188,8 +188,8 @@ public class MathUtil {
 	}
 
 	/**
-	 * Linear interpolates between point a and point b
-	 * @param f A percentage value between 0 to 1
+	 * Linear interpolates isBetween point a and point b
+	 * @param f A percentage value isBetween 0 to 1
 	 * @return The interpolated value
 	 */
 	public static double lerp(double a, double b, double f) {
@@ -209,8 +209,8 @@ public class MathUtil {
 	}
 
 	/**
-	 * Clamps a value between -bounds to +bounds
-	 * @return A value capped between two bounds.
+	 * Clamps a value isBetween -bounds to +bounds
+	 * @return A value capped isBetween two bounds.
 	 */
 	public static double absClamp(double value, double bounds) {
 		return min(max(value, -bounds), bounds);
@@ -231,4 +231,12 @@ public class MathUtil {
 	public static double log(double x, double base) {
 		return Math.log(x) / Math.log(base);
 	}
+
+	/**
+	 * @return a <= x <= b
+	 */
+	public static boolean isBetween(double a, double x, double b) {
+		return a <= x && x <= b;
+	}
+
 }

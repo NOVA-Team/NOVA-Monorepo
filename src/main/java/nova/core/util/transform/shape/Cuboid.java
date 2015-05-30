@@ -8,6 +8,7 @@ import nova.core.util.transform.vector.Vector3i;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.function.Consumer;
 
 /**
  * A cuboid is a shape that represents a cube.
@@ -15,6 +16,8 @@ import java.math.RoundingMode;
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class Cuboid extends Shape<Cuboid, Cuboid> {
+	public static final Cuboid zero = new Cuboid(Vector3d.zero, Vector3d.zero);
+	public static final Cuboid one = new Cuboid(Vector3d.zero, Vector3d.one);
 	public final Vector3d min;
 	public final Vector3d max;
 
@@ -138,6 +141,17 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	public Cuboid transform(Transformer transform) {
 		return new Cuboid(transform.transform(min), transform.transform(max));
+	}
+
+	public void forEach(Consumer<Vector3i> consumer) {
+		forEach(vector3d -> consumer.accept(vector3d.toInt()), 1);
+	}
+
+	public void forEach(Consumer<Vector3d> consumer, double step) {
+		for (double x = min.x; x < max.x; x += step)
+			for (double y = min.y; y < max.y; y += step)
+				for (double z = min.z; z < max.z; z += step)
+					consumer.accept(new Vector3d(x, y, z));
 	}
 
 	@Override
