@@ -144,7 +144,7 @@ public class RayTracer {
 	}
 
 	public Optional<RayTraceResult> rayTrace(Cuboid cuboid) {
-		return Optional.ofNullable(doRayTrace(cuboid) ? new RayTraceResult(hitVec, leastDist, Direction.fromOrdinal(hitSide)) : null);
+		return Optional.ofNullable(doRayTrace(cuboid) ? new RayTraceResult(hitVec, leastDist, Direction.fromOrdinal(hitSide), cuboid) : null);
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class RayTracer {
 			.flatMap(tuple ->
 					rayTrace(tuple._2)
 						.stream()
-						.map(r -> new RayTraceBlockResult(r.hit, r.distance, r.side, tuple._1))
+						.map(r -> new RayTraceBlockResult(r.hit, r.distance, r.side, r.hitCuboid, tuple._1))
 			)
 			.sorted()
 			.collect(Collectors.toList());
@@ -192,12 +192,13 @@ public class RayTracer {
 		public final Vector3d hit;
 		public final double distance;
 		public final Direction side;
-		//TODO: The cuboid that was hit
+		public final Cuboid hitCuboid;
 
-		public RayTraceResult(Vector3d hit, double distance, Direction side) {
+		public RayTraceResult(Vector3d hit, double distance, Direction side, Cuboid hitCuboid) {
 			this.hit = hit;
 			this.distance = distance;
 			this.side = side;
+			this.hitCuboid = hitCuboid;
 		}
 
 		@Override
@@ -210,8 +211,8 @@ public class RayTracer {
 	public static class RayTraceBlockResult extends RayTraceResult {
 		public final Block block;
 
-		public RayTraceBlockResult(Vector3d hit, double distance, Direction side, Block block) {
-			super(hit, distance, side);
+		public RayTraceBlockResult(Vector3d hit, double distance, Direction side, Cuboid hitCuboid, Block block) {
+			super(hit, distance, side, hitCuboid);
 			this.block = block;
 		}
 	}
