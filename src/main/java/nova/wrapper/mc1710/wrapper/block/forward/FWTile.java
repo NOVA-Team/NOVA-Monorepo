@@ -15,7 +15,6 @@ import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
 /**
  * A Minecraft TileEntity to Nova block wrapper
- * 
  * @author Calclavia
  */
 public class FWTile extends TileEntity {
@@ -52,8 +51,7 @@ public class FWTile extends TileEntity {
 	public void validate() {
 		super.validate();
 
-		block.add(new MCBlockWrapper(new BWWorld(getWorldObj()), new Vector3i(xCoord, yCoord, zCoord)));
-		block.add(new MCBlockTransform(block));
+		block.add(new MCBlockTransform(block, new BWWorld(getWorldObj()), new Vector3i(xCoord, yCoord, zCoord)));
 
 		if (cacheData != null && block instanceof Storable) {
 			((Storable) block).load(cacheData);
@@ -79,7 +77,6 @@ public class FWTile extends TileEntity {
 
 	/**
 	 * Only register tile updates if the block is an instance of Updater.
-	 * 
 	 * @return Whether can update
 	 */
 	@Override

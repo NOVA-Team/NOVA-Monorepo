@@ -9,21 +9,36 @@ import nova.core.world.World;
  * @author Calclavia
  */
 public class MCBlockTransform extends BlockTransform {
-	public final Block provider;
-	public final MCBlockWrapper wrapper;
 
-	public MCBlockTransform(Block provider) {
-		this.provider = provider;
-		this.wrapper = provider.get(MCBlockWrapper.class);
+	public final Block block;
+	public final World world;
+	public final Vector3i position;
+
+	public MCBlockTransform(Block block, World world, Vector3i position) {
+		this.block = block;
+		this.world = world;
+		this.position = position;
 	}
 
 	@Override
 	public Vector3i position() {
-		return wrapper.position;
+		return position;
 	}
 
 	@Override
 	public World world() {
-		return wrapper.world;
+		return world;
+	}
+
+	@Override
+	public void setWorld(World world) {
+		this.world.removeBlock(position);
+		world.setBlock(position, block.factory());
+	}
+
+	@Override
+	public void setPosition(Vector3i position) {
+		world.removeBlock(position);
+		world.setBlock(position, block.factory());
 	}
 }
