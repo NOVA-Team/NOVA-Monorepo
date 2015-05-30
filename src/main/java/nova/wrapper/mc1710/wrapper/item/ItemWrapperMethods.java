@@ -5,6 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
+import nova.core.block.Block;
+import nova.core.component.renderer.ItemRenderer;
 import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
@@ -12,8 +14,8 @@ import nova.core.util.Direction;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
+import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
-import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,23 +30,21 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
 		Item item = Game.instance.nativeManager.toNova(itemStack);
-
-		item.setCount(itemStack.stackSize)
-			.getTooltips(Optional.of(new BWEntityPlayer(player)), list);
-
+		item.setCount(itemStack.stackSize).tooltipEvent.publish(new Item.TooltipEvent(Optional.of(new BWEntityPlayer(player)), list));
 		getItemFactory().saveItem(item);
 	}
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		Item item = Game.instance.nativeManager.toNova(itemStack);
-		boolean b = item.onUse(new BWEntityPlayer(player), new BWWorld(world), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
+		Item.UseEvent event = new Item.UseEvent(new BWEntityPlayer(player), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
+		item.useEvent.publish(event);
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
-		return b;
+		return event.action;
 	}
 
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		Item item = Game.instance.nativeManager.toNova(itemStack);
-		item.onRightClick(new BWEntityPlayer(player));
+		item.rightClickEvent.publish(new Item.RightClickEvent(new BWEntityPlayer(player)));
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return itemStack;
 	}
@@ -73,7 +73,12 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default void renderItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data) {
-		((Item) Game.instance.nativeManager.toNova(itemStack)).onRender(type.ordinal(), data);
+		Item item = Game.instance.nativeManager.toNova(itemStack);
+		if (item.has(ItemRenderer.class)) {
+			BWModel model = new BWModel();
+			item.get(ItemRenderer.class).onRender.accept(model);
+			model.render();
+		}
 	}
 
 	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
