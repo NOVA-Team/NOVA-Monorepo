@@ -18,9 +18,4 @@ public class StaticRenderer extends Renderer {
 	public StaticRenderer(ComponentProvider provider) {
 		this.provider = provider;
 	}
-
-	public StaticRenderer onRender(Consumer<Model> onRender) {
-		this.onRender = onRender;
-		return this;
-	}
 }

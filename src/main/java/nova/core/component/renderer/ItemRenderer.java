@@ -26,9 +26,4 @@ public class ItemRenderer extends Renderer {
 			provider.getOp(DynamicRenderer.class).ifPresent(c -> c.onRender.accept(model));
 		}
 	}
-
-	public ItemRenderer onRender(Consumer<Model> onRender) {
-		this.onRender = onRender;
-		return this;
-	}
 }
