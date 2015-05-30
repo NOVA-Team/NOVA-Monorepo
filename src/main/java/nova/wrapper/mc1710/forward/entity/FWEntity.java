@@ -23,7 +23,8 @@ public class FWEntity extends net.minecraft.entity.Entity {
 
 	public FWEntity(World world, EntityFactory factory, Object... args) {
 		super(world);
-		this.wrapped = factory.makeEntity(new MCEntityWrapper(this), args);
+		this.wrapped = factory.make(args);
+		wrapped.add(new MCEntityWrapper(this));
 		this.transform = new MCEntityTransform(wrapped);
 		wrapped.components().add(transform);
 		entityInit();

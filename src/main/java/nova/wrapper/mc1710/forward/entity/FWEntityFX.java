@@ -28,7 +28,8 @@ public class FWEntityFX extends EntityFX {
 
 	public FWEntityFX(World world, EntityFactory factory) {
 		super(world, 0, 0, 0);
-		this.wrapped = factory.makeEntity(new MCEntityWrapper(this));
+		this.wrapped = factory.make();
+		wrapped.add(new MCEntityWrapper(this));
 		this.transform = new MCEntityTransform(wrapped);
 		wrapped.components().add(transform);
 	}
@@ -50,7 +51,6 @@ public class FWEntityFX extends EntityFX {
 			model.renderWorld(worldObj);
 		}
 	}
-
 
 	/**
 	 * All methods below here are exactly the same between FWEntity and FWEntityFX.
