@@ -1,15 +1,11 @@
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
-import org.apache.commons.io.IOUtils
-
-import java.nio.charset.Charset
 
 buildscript {
 	repositories {
-		mavenCentral()
-		//mavenLocal()
+		mavenLocal()
 		jcenter()
-
 		maven {
+			name "nova"
 			url 'http://maven.novaapi.net/'
 		}
 	}
@@ -19,43 +15,10 @@ buildscript {
 	}
 }
 
-apply from: 'gradle/modules/utils.gradle'
+apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shared-scripts/java.gradle"
 
-apply plugin: 'java'
-//transform plugin: 'checkstyle'
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
-
-apply plugin: 'sublimeText'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-
-apply plugin: 'jacoco'
-
-
-/*checkstyle {
-    configFile = file('checkstyle.xml')
-    configProperties = [
-        "name": project.name,
-        "organization": project.organization,
-        "year": project.inceptionYear,
-        "suppressions": file('checkstyle-suppressions.xml')
-    ]
-}*/
-
-compileJava {
-	sourceCompatibility = '1.8'
-	options.encoding = 'UTF-8'
-	options.fork = true
-	options.compilerArgs << '-Xlint'
-}
-
-repositories {
-	mavenCentral()
-	maven {
-		url 'http://maven.novaapi.net/'
-	}
-}
 
 dependencies {
 	compile 'com.google.guava:guava:18.0'
@@ -64,35 +27,14 @@ dependencies {
 	compile 'se.jbee:silk-di:0.6'
 	compile 'org.slf4j:slf4j-api:1.7.10'
 
-	testCompile "junit:junit:4.12"
-	testCompile 'org.assertj:assertj-core:3.0.0'
-	testCompile "org.mockito:mockito-core:1.+"
 	testRuntime 'org.slf4j:slf4j-simple:1.7.10'
 
 	//checkstyle 'com.puppycrawl.tools:checkstyle:6.2'
 }
 
-task sourceJar(type: Jar) {
-	from sourceSets.main.java
-	from sourceSets.main.resources
-	classifier = "sources"
-}
-
-task apiJar(type: Jar) {
-	from sourceSets.main.output
-	from sourceSets.main.java
-	classifier = 'api'
-	include 'nova/core/**'
-}
-
 javadoc {
 	include 'nova/**'
 	options.tags 'implNotice:a:Implementation Details:'
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-	from 'build/docs/javadoc'
-	classifier 'javadoc'
 }
 
 shadowJar {
@@ -114,23 +56,17 @@ configurations {
 }
 
 artifacts {
-	archives apiJar
-	archives jar
-	archives javadocJar
 	archives shadowJar
-	archives sourceJar
 	archives wrapperTestJar
 
 	wrapperTests wrapperTestJar
 }
-
 
 publishing {
 	publications {
 		main(MavenPublication) {
 			from components.java
 
-			artifact apiJar
 			artifact javadocJar
 			artifact shadowJar
 			artifact sourceJar
@@ -148,51 +84,10 @@ publishing {
 	}
 }
 
-sublimeText {
-	defaultFileExcludePatterns = ['.project', '.classpath', '.pydevproject']
-	defaultFolderExcludePatterns = ['.gradle', 'bin', 'build', '.settings']
-	generateSublimeJavaClasspath = true
-	generateSublimeJavaSrcpath = true
-	addGradleCompile = true
-}
-
-test {
-	forkEvery = 1
-	maxParallelForks = 4
-
-	exclude "nova/wrappertests/**"
-
-	testLogging {
-		exceptionFormat = 'full'
-	}
-
-	testLogging.showStandardStreams = true
-
-	beforeTest { descriptor ->
-		def classPadded = String.format("%-50s", descriptor.className)
-		logger.lifecycle("Running test ${classPadded} ${descriptor.name}()")
-	}
-}
+test.exclude "nova/wrappertests/**"
 
 eclipse.classpath.file {
-	whenMerged {  cp ->
+	whenMerged { cp ->
 		cp.entries.removeAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }
 	}
 }
-
-jacocoTestReport {
-    reports {
-        xml.enabled = true // coveralls plugin depends on xml format report
-        html.enabled = true
-    }
-}
-
-task checkTestStyle << {
-	sourceSets.test.java.each { file ->
-		if (file.text.contains("import static org.junit.Assert")) {
-			throw new GradleException("File $f.name uses junit assertions, please use assertj assertions! See https://joel-costigliola.github.io/assertj/ to learn about assertj.")
-		}
-	}
-}
-
-test.dependsOn checkTestStyle
