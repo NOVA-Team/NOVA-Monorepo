@@ -3,6 +3,7 @@ package nova.core.util;
 import nova.core.block.Block;
 import nova.core.component.misc.Collider;
 import nova.core.entity.Entity;
+import nova.core.entity.component.Living;
 import nova.core.util.collection.Tuple2;
 import nova.core.util.math.MathUtil;
 import nova.core.util.transform.shape.Cuboid;
@@ -49,7 +50,12 @@ public class RayTracer {
 	 * @return The block the entity is looking at.
 	 */
 	public static List<RayTraceBlockResult> rayTraceBlock(Entity entity, double maxDistance) {
-		return rayTraceBlock(entity.world(), entity.position(), entity.rotation().toZVector(), maxDistance);
+		return rayTraceBlock(
+			entity.world(),
+			entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3d.zero),
+			entity.rotation().toZVector(),
+			maxDistance
+		);
 	}
 
 	public static List<RayTraceBlockResult> rayTraceBlock(World world, Vector3d position, Vector3d look, double maxDistance) {

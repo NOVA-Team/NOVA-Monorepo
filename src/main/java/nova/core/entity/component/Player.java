@@ -6,7 +6,7 @@ import nova.core.inventory.component.InventoryPlayer;
 /**
  * Basic representation of Player
  */
-public abstract class Player extends Component {
+public abstract class Player extends Living {
 	/**
 	 * @return Returns player name that can be used to identify this player
 	 */
