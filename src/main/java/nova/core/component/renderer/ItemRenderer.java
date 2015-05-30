@@ -1,6 +1,5 @@
 package nova.core.component.renderer;
 
-import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
 import nova.core.render.model.Model;
 
@@ -11,15 +10,9 @@ import java.util.function.Consumer;
  * This interface specifies that a block requires custom static item rendering.
  * (That is, called upon item render or network synchronization.)
  */
-public class ItemRenderer extends Component {
+public class ItemRenderer extends Renderer {
 
 	public final ComponentProvider provider;
-
-	/**
-	 * Called when the item of this block is to be rendered.
-	 * model - A {@link Model} to use.
-	 */
-	public Consumer<Model> onRender = this::renderItem;
 
 	public ItemRenderer(ComponentProvider provider) {
 		this.provider = provider;
