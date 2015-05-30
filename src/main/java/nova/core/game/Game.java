@@ -80,7 +80,9 @@ public class Game {
 	public final UpdateTicker.ThreadTicker threadTicker;
 
 	// TODO Move somewhere else
+	@Deprecated
 	public final GuiComponentFactory guiComponentFactory;
+	@Deprecated
 	public final GuiManager guiFactory;
 
 	private Game(
@@ -135,12 +137,12 @@ public class Game {
 		logger.info("Game instance created.");
 	}
 
-	public static Game getInstance() {
+	public static Game instance() {
 		return instance;
 	}
 
-	public static void setInstance(Game instance) {
-		Game.instance = instance;
+	public static void inject(Game game) {
+		Game.instance = game;
 	}
 
 	public Logger logger() {

@@ -64,7 +64,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 			this.hasIdentifier = false;
 		}
 		this.qualifiedName = uniqueID;
-		Game.getInstance().guiComponentFactory.applyNativeComponent(this, nativeClass);
+		Game.instance().guiComponentFactory().applyNativeComponent(this, nativeClass);
 	}
 
 	/**

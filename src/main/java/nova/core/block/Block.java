@@ -37,11 +37,11 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 */
 	public void onRegister() {
 		//Register the itemblock
-		Game.getInstance().itemManager().register((args) -> new ItemBlock(factory()));
+		Game.instance().itemManager().register((args) -> new ItemBlock(factory()));
 	}
 
 	public ItemFactory getItemFactory() {
-		return Game.getInstance().itemManager().getItemFactoryFromBlock(factory());
+		return Game.instance().itemManager().getItemFactoryFromBlock(factory());
 	}
 
 	/**
@@ -50,7 +50,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 * Block class.
 	 */
 	public final BlockFactory factory() {
-		return Game.getInstance().blockManager().getFactory(getID()).get();
+		return Game.instance().blockManager().getFactory(getID()).get();
 	}
 
 	public final BlockTransform transform() {
@@ -95,7 +95,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 * drops.
 	 */
 	public Set<Item> getDrops() {
-		return Collections.singleton(Game.getInstance().itemManager().getItemFromBlock(factory()).makeItem());
+		return Collections.singleton(Game.instance().itemManager().getItemFromBlock(factory()).makeItem());
 	}
 
 	/**

@@ -180,7 +180,7 @@ public @interface NetworkTarget {
 		 */
 		@SuppressWarnings("deprecation")
 		public static Side get() {
-			return Game.getInstance().networkManager().getSide();
+			return Game.instance().networkManager().getSide();
 		}
 	}
 
