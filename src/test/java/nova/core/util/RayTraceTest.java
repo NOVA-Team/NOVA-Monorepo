@@ -13,27 +13,21 @@ import nova.core.util.transform.vector.Vector3i;
 import nova.internal.launch.NovaLauncher;
 import nova.testutils.FakeBlock;
 import nova.testutils.FakeWorld;
+import nova.wrappertests.NovaLauncherTestFactory;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Calclavia
  */
-public class RayTraceTest extends nova.wrappertests.NovaLauncherTest {
-
-	@Override
-	public Set<Class<?>> getTestModClasses() {
-		return Collections.singleton(RayTraceMod.class);
-	}
+public class RayTraceTest {
 
 	@Test
 	public void testRayTrace() {
-		NovaLauncher launcher = createLauncher();
+		NovaLauncher launcher = new NovaLauncherTestFactory(RayTraceMod.class).createLauncher();
 
 		FakeWorld fakeWorld = new FakeWorld();
 
@@ -50,7 +44,7 @@ public class RayTraceTest extends nova.wrappertests.NovaLauncherTest {
 
 	@Test
 	public void testRayTraceEntity() {
-		NovaLauncher launcher = createLauncher();
+		NovaLauncher launcher = new NovaLauncherTestFactory(RayTraceMod.class).createLauncher();
 
 		FakeWorld fakeWorld = new FakeWorld();
 

@@ -49,19 +49,17 @@ public class RayTracer {
 	 * @return The block the entity is looking at.
 	 */
 	public static List<RayTraceBlockResult> rayTraceBlock(Entity entity, double maxDistance) {
-		return rayTraceBlock(entity.world(), entity.position(), entity.rotation().toXVector(), maxDistance);
+		return rayTraceBlock(entity.world(), entity.position(), entity.rotation().toZVector(), maxDistance);
 	}
 
 	public static List<RayTraceBlockResult> rayTraceBlock(World world, Vector3d position, Vector3d look, double maxDistance) {
-		//TODO: Is x Vector correct?
-
 		//TODO: Very inefficient! Consider smaller sample space
-		Cuboid checkRegion = Cuboid.zero.expand(maxDistance);
+		Cuboid checkRegion = Cuboid.zero.expand(maxDistance).add(position);
 		Set<Vector3i> checkPositions = new HashSet<>();
 		checkRegion.forEach(checkPositions::add);
 
 		//All relevant blocks
-		Set<Block> blocks = checkPositions.parallelStream()
+		Set<Block> blocks = checkPositions.stream()
 			.map(world::getBlock)
 			.filter(Optional::isPresent)
 			.map(Optional::get)
@@ -194,6 +192,7 @@ public class RayTracer {
 		public final Vector3d hit;
 		public final double distance;
 		public final Direction side;
+		//TODO: The cuboid that was hit
 
 		public RayTraceResult(Vector3d hit, double distance, Direction side) {
 			this.hit = hit;
