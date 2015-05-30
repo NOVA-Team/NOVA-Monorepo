@@ -145,7 +145,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 
 		public final Vector3d hit;
 
-		//Did this event cause an action?
+		//Did this event cause an action? True if the player's action cancels out events.
 		public boolean action = false;
 
 		/**
@@ -154,7 +154,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 		 * @param position - The position of the block
 		 * @param side - The side the player clicked
 		 * @param hit - The position the player hit on the block
-		 * @return True if the player's action cancels out events.
+		 *
 		 */
 		public UseEvent(Entity entity, Vector3i position, Direction side, Vector3d hit) {
 			this.entity = entity;
