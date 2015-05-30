@@ -73,7 +73,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 
 			return 0;
 		});
-		Game.getInstance().logger().info("NOVA Mods Loaded: " + mods.size());
+		Game.instance().logger().info("NOVA Mods Loaded: " + mods.size());
 	}
 
 	public Map<String, String> dependencyToMap(String[] dependencies) {
@@ -85,7 +85,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 	@Override
 	public void preInit() {
 		// Test integrity of the GuiFactory
-		Game.getInstance().guiComponentFactory.validate();
+		Game.instance().guiComponentFactory().validate();
 		super.preInit();
 	}
 
