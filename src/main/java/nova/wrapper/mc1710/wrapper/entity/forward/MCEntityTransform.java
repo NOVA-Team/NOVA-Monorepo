@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.forward.entity;
+package nova.wrapper.mc1710.wrapper.entity.forward;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;

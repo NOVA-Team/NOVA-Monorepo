@@ -14,9 +14,9 @@ import nova.core.entity.EntityFactory;
 import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
 import nova.wrapper.mc1710.wrapper.block.forward.FWTile;
 import nova.wrapper.mc1710.wrapper.block.forward.FWTileRenderer;
-import nova.wrapper.mc1710.forward.entity.FWEntity;
-import nova.wrapper.mc1710.forward.entity.FWEntityFX;
-import nova.wrapper.mc1710.forward.entity.FWEntityRenderer;
+import nova.wrapper.mc1710.wrapper.entity.forward.FWEntity;
+import nova.wrapper.mc1710.wrapper.entity.forward.FWEntityFX;
+import nova.wrapper.mc1710.wrapper.entity.forward.FWEntityRenderer;
 import nova.wrapper.mc1710.wrapper.item.FWItem;
 import nova.wrapper.mc1710.render.RenderUtility;
 

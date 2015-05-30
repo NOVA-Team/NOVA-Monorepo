@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.forward.entity;
+package nova.wrapper.mc1710.wrapper.entity.forward;
 
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;

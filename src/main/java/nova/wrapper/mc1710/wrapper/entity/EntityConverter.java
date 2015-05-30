@@ -1,12 +1,9 @@
 package nova.wrapper.mc1710.wrapper.entity;
 
-import net.minecraft.entity.player.EntityPlayer;
 import nova.core.entity.Entity;
 import nova.core.nativewrapper.NativeConverter;
-import nova.wrapper.mc1710.backward.entity.BWEntity;
-import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
-import nova.wrapper.mc1710.forward.entity.FWEntity;
-import nova.wrapper.mc1710.forward.entity.MCEntityWrapper;
+import nova.wrapper.mc1710.wrapper.entity.forward.FWEntity;
+import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityWrapper;
 
 public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity> {
 
@@ -27,9 +24,6 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 			return ((FWEntity) mcEntity).wrapped;
 		}
 
-		if (mcEntity instanceof EntityPlayer) {
-			return new BWEntityPlayer((EntityPlayer) mcEntity);
-		}
 		return new BWEntity(mcEntity);
 	}
 

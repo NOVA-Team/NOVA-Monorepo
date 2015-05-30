@@ -1,54 +1,48 @@
-package nova.wrapper.mc1710.forward.entity;
+package nova.wrapper.mc1710.wrapper.entity.forward;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
-import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.util.transform.matrix.MatrixStack;
-import nova.wrapper.mc1710.backward.render.BWModel;
-
-import java.util.Optional;
+import nova.core.game.Game;
+import nova.core.retention.Data;
+import nova.core.retention.Storable;
+import nova.wrapper.mc1710.wrapper.data.DataWrapper;
 
 /**
- * A copy of BWEntity that extends EntityFX
+ * Entity wrapper
  * @author Calclavia
  */
-@SideOnly(Side.CLIENT)
-public class FWEntityFX extends EntityFX {
+public class FWEntity extends net.minecraft.entity.Entity {
 
 	public final Entity wrapped;
 	public final EntityTransform transform;
 
-	public FWEntityFX(World world, EntityFactory factory) {
-		super(world, 0, 0, 0);
-		this.wrapped = factory.make();
+	public FWEntity(World world, EntityFactory factory, Object... args) {
+		super(world);
+		this.wrapped = factory.make(args);
 		wrapped.add(new MCEntityWrapper(this));
 		this.transform = new MCEntityTransform(wrapped);
 		wrapped.components().add(transform);
-	}
-
-	public FWEntityFX(World world, Entity entity) {
-		super(world, 0, 0, 0);
-		this.wrapped = entity;
-		this.transform = new MCEntityTransform(wrapped);
-		wrapped.components().add(transform);
+		entityInit();
 	}
 
 	@Override
-	public void renderParticle(Tessellator tess, float x, float y, float z, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
-		Optional<DynamicRenderer> opRenderer = wrapped.getOp(DynamicRenderer.class);
-		if (opRenderer.isPresent()) {
-			BWModel model = new BWModel();
-			model.matrix = new MatrixStack().translate(x, y, z).rotate(transform.rotation()).getMatrix();
-			opRenderer.get().onRender.accept(model);
-			model.renderWorld(worldObj);
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		if (wrapped instanceof Storable) {
+			((Storable) wrapped).load(Game.instance.nativeManager.toNova(nbt));
+		}
+	}
+
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		if (wrapped instanceof Storable) {
+			Data data = new Data();
+			((Storable) wrapped).save(data);
+			DataWrapper.instance().toNative(nbt, data);
 		}
 	}
 

@@ -13,9 +13,9 @@ import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
-import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
+import nova.wrapper.mc1710.wrapper.entity.BWEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,13 +30,13 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
 		Item item = Game.instance.nativeManager.toNova(itemStack);
-		item.setCount(itemStack.stackSize).tooltipEvent.publish(new Item.TooltipEvent(Optional.of(new BWEntityPlayer(player)), list));
+		item.setCount(itemStack.stackSize).tooltipEvent.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
 		getItemFactory().saveItem(item);
 	}
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		Item item = Game.instance.nativeManager.toNova(itemStack);
-		Item.UseEvent event = new Item.UseEvent(new BWEntityPlayer(player), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
+		Item.UseEvent event = new Item.UseEvent(new BWEntity(player), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
 		item.useEvent.publish(event);
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return event.action;
@@ -44,7 +44,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		Item item = Game.instance.nativeManager.toNova(itemStack);
-		item.rightClickEvent.publish(new Item.RightClickEvent(new BWEntityPlayer(player)));
+		item.rightClickEvent.publish(new Item.RightClickEvent(new BWEntity(player)));
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return itemStack;
 	}

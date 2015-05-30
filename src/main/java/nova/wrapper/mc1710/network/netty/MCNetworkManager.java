@@ -20,13 +20,13 @@ import nova.core.network.PacketHandler;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
-import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
-import nova.wrapper.mc1710.forward.entity.MCEntityWrapper;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.network.MCPacket;
 import nova.wrapper.mc1710.network.discriminator.PacketAbstract;
 import nova.wrapper.mc1710.network.discriminator.PacketBlock;
 import nova.wrapper.mc1710.network.discriminator.PacketEntity;
+import nova.wrapper.mc1710.wrapper.entity.BWEntity;
+import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityWrapper;
 
 import java.util.EnumMap;
 
@@ -93,8 +93,8 @@ public class MCNetworkManager extends NetworkManager {
 
 	@Override
 	public void sendChat(Player player, String message) {
-		if (player instanceof BWEntityPlayer.MCPlayer) {
-			((BWEntityPlayer.MCPlayer) player).entity.addChatMessage(new ChatComponentText(message));
+		if (player instanceof BWEntity.MCPlayer) {
+			((BWEntity.MCPlayer) player).entity.addChatMessage(new ChatComponentText(message));
 		}
 	}
 

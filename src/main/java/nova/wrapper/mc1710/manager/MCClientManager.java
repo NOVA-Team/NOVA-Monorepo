@@ -2,9 +2,8 @@ package nova.wrapper.mc1710.manager;
 
 import net.minecraft.client.Minecraft;
 import nova.core.entity.Entity;
-import nova.core.entity.component.Player;
 import nova.core.game.ClientManager;
-import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
+import nova.wrapper.mc1710.wrapper.entity.BWEntity;
 
 /**
  * @author Calclavia
@@ -13,6 +12,6 @@ public class MCClientManager extends ClientManager {
 
 	@Override
 	public Entity getPlayer() {
-		return new BWEntityPlayer(Minecraft.getMinecraft().thePlayer);
+		return new BWEntity(Minecraft.getMinecraft().thePlayer);
 	}
 }

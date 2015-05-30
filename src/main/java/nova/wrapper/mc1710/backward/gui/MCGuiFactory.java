@@ -13,10 +13,10 @@ import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.factory.GuiManager;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector3i;
-import nova.wrapper.mc1710.backward.entity.BWEntityPlayer;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCGuiScreen;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
+import nova.wrapper.mc1710.wrapper.entity.BWEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +46,10 @@ public class MCGuiFactory extends GuiManager {
 	}
 
 	private void showGui(Gui gui, Entity entity, Vector3i pos, int id) {
-		BWEntityPlayer player = (BWEntityPlayer) entity;
+		BWEntity player = (BWEntity) entity;
 		guiToOpen = Optional.of(gui);
 		if (player.entity.worldObj.isRemote != gui.hasServerSide()) {
-			player.entity.openGui(NovaMinecraft.id, id, player.entity.getEntityWorld(), pos.x, pos.y, pos.z);
+			((EntityPlayer) player.entity).openGui(NovaMinecraft.id, id, ((EntityPlayer) player.entity).getEntityWorld(), pos.x, pos.y, pos.z);
 		}
 	}
 
@@ -73,8 +73,8 @@ public class MCGuiFactory extends GuiManager {
 
 	@Override
 	public Optional<Gui> getActiveGuiImpl(Entity player) {
-		BWEntityPlayer entityPlayer = (BWEntityPlayer) player;
-		Container container = entityPlayer.entity.openContainer;
+		BWEntity entityPlayer = (BWEntity) player;
+		Container container = ((EntityPlayer) entityPlayer.entity).openContainer;
 		if (container instanceof MCContainer) {
 			return Optional.of(((MCContainer) container).getGui().getComponent());
 		}
@@ -88,7 +88,7 @@ public class MCGuiFactory extends GuiManager {
 			if (guiToOpen.isPresent()) {
 				Gui gui = guiToOpen.get();
 				guiToOpen = Optional.empty();
-				gui.bind(new BWEntityPlayer(player), new Vector3i(x, y, z));
+				gui.bind(new BWEntity(player), new Vector3i(x, y, z));
 				return ((MCGui) gui.getNative()).newContainer();
 			}
 			return null;
@@ -109,7 +109,7 @@ public class MCGuiFactory extends GuiManager {
 			if (gui == null)
 				throw new NovaException("Couldn't get client side instance for the provided GUI of id " + id + " !");
 
-			gui.bind(new BWEntityPlayer(player), new Vector3i(x, y, z));
+			gui.bind(new BWEntity(player), new Vector3i(x, y, z));
 
 			MCGui nativeGui = (MCGui) gui.getNative();
 			nativeGui.newContainer();

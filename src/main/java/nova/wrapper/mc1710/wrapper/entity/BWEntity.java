@@ -1,26 +1,34 @@
-package nova.wrapper.mc1710.backward.entity;
+package nova.wrapper.mc1710.wrapper.entity;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import nova.core.component.misc.Damageable;
+import nova.core.entity.Entity;
+import nova.core.entity.component.Living;
 import nova.core.entity.component.Player;
 import nova.core.inventory.component.InventoryPlayer;
+import nova.core.network.NetworkTarget;
+import nova.core.util.transform.vector.Vector3d;
 import nova.wrapper.mc1710.backward.inventory.BWInventory;
+import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityTransform;
+import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityWrapper;
 
 /**
- * A Nova to Minecraft entity wrapper
+ * A Minecraft to NOVA Entity wrapper
  * @author Calclavia
  */
-public class BWEntityPlayer extends BWEntity {
+//TODO: Incomplete. Add more components!
+public class BWEntity extends Entity {
 
-	public final net.minecraft.entity.player.EntityPlayer entity;
-	public final BWInventoryPlayer inventory;
+	public net.minecraft.entity.Entity entity;
 
-	public BWEntityPlayer(net.minecraft.entity.player.EntityPlayer entity) {
-		super(entity);
+	public BWEntity(net.minecraft.entity.Entity entity) {
 		this.entity = entity;
-		this.inventory = new BWInventoryPlayer(entity);
-		add(new MCPlayer(entity));
+		add(new MCEntityWrapper(entity));
+		add(new MCEntityTransform(this));
+
 		add(new Damageable() {
 			@Override
 			public void damage(double amount, DamageType type) {
@@ -30,6 +38,35 @@ public class BWEntityPlayer extends BWEntity {
 				// TODO: Apply other damage source wrappers?
 			}
 		});
+
+		if (entity instanceof EntityLivingBase) {
+			Living living = add(new Living());
+
+			living.faceDisplacement = () -> {
+				if (entity instanceof EntityPlayer) {
+					if (NetworkTarget.Side.get().isClient()) {
+						//compatibility with eye height changing mods
+						return Vector3d.yAxis.multiply(entity.getEyeHeight() - ((EntityPlayer) entity).getDefaultEyeHeight());
+					} else {
+						if (entity instanceof EntityPlayerMP && entity.isSneaking()) {
+							return Vector3d.yAxis.multiply(entity.getEyeHeight() - 0.08);
+						} else {
+							return Vector3d.yAxis.multiply(entity.getEyeHeight());
+						}
+					}
+				}
+				return Vector3d.yAxis.multiply(entity.getEyeHeight());
+			};
+
+			if (entity instanceof EntityPlayer) {
+				add(new MCPlayer((EntityPlayer) entity));
+			}
+		}
+	}
+
+	@Override
+	public String getID() {
+		return entity.getClass().getName();
 	}
 
 	public static class MCPlayer extends Player {
