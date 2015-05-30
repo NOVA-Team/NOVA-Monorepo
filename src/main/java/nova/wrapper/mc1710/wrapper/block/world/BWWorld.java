@@ -60,7 +60,7 @@ public class BWWorld extends World {
 		} else if (mcBlock instanceof FWBlock) {
 			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
 		} else {
-			return Optional.of(new BWBlock(mcBlock));
+			return Optional.of(new BWBlock(mcBlock, this, position));
 		}
 	}
 
