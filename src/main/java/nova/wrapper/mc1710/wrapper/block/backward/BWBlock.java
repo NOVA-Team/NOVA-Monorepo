@@ -17,9 +17,6 @@ import nova.core.retention.Stored;
 import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
-import nova.wrapper.mc1710.backward.util.BWCuboid;
-import nova.wrapper.mc1710.forward.util.FWCuboid;
-import nova.wrapper.mc1710.wrapper.block.forward.MCBlockTransform;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
 import java.util.ArrayList;
@@ -47,18 +44,18 @@ public class BWBlock extends Block implements Storable {
 			.setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
 				mcBlock.addCollisionBoxesToList(
-					Game.instance.nativeManager.toNative(world()),
+					Game.instance().nativeManager().toNative(world()),
 					position().x,
 					position().y,
 					position().z,
-					entity.isPresent() ? new FWCuboid(entity.get().get(Collider.class).boundingBox.get()) : new FWCuboid(Cuboid.one.add(pos)),
+					Game.instance().nativeManager().toNative(entity.isPresent() ? entity.get().get(Collider.class).boundingBox.get() : Cuboid.one.add(pos)),
 					aabbs,
-					entity.isPresent() ? Game.instance.nativeManager.toNative(entity.get()) : null
+					entity.isPresent() ? Game.instance().nativeManager().toNative(entity.get()) : null
 				);
 
 				return aabbs.stream()
-					.map(BWCuboid::new)
-					.map(bwCuboid -> bwCuboid.subtract(pos))
+					.map(aabb -> (Cuboid) Game.instance().nativeManager().toNova(aabb))
+					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			});
 		//TODO: Set selection bounds

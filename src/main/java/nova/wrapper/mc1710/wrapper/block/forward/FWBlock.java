@@ -37,8 +37,6 @@ import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.backward.render.BWModel;
-import nova.wrapper.mc1710.backward.util.BWCuboid;
-import nova.wrapper.mc1710.forward.util.FWCuboid;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
@@ -222,7 +220,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 		if (blockInstance.has(Collider.class)) {
 			Cuboid cuboid = blockInstance.get(Collider.class).boundingBox.get();
-			return new FWCuboid(cuboid.add(new Vector3i(x, y, z)));
+			return Game.instance().nativeManager().toNative(cuboid.add(new Vector3i(x, y, z)));
 		}
 		return super.getSelectedBoundingBoxFromPool(world, x, y, z);
 	}
@@ -238,8 +236,8 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 					boxes
 						.stream()
 						.map(c -> c.add(new Vector3i(x, y, z)))
-						.filter(c -> c.intersects(new BWCuboid(aabb)))
-						.map(FWCuboid::new)
+						.filter(c -> c.intersects((Cuboid) Game.instance().nativeManager().toNova(aabb)))
+						.map(cuboid -> Game.instance().nativeManager().toNative(cuboid))
 						.collect(Collectors.toList())
 				);
 			}

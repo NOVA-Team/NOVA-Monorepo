@@ -33,6 +33,7 @@ import nova.wrapper.mc1710.manager.config.ConfigManager;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
 import nova.wrapper.mc1710.wrapper.block.BlockConverter;
 import nova.wrapper.mc1710.wrapper.block.world.WorldConverter;
+import nova.wrapper.mc1710.wrapper.cuboid.CuboidConverter;
 import nova.wrapper.mc1710.wrapper.data.DataWrapper;
 import nova.wrapper.mc1710.wrapper.entity.EntityConverter;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
@@ -105,6 +106,7 @@ public class NovaMinecraft {
 		Game.instance.nativeManager.registerConverter(new BlockConverter());
 		Game.instance.nativeManager.registerConverter(new ItemConverter());
 		Game.instance.nativeManager.registerConverter(new WorldConverter());
+		Game.instance.nativeManager.registerConverter(new CuboidConverter());
 
 		/**
 		 * Initiate recipe and ore dictionary integration
