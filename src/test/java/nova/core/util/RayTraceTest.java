@@ -52,7 +52,7 @@ public class RayTraceTest {
 
 		Entity entity = fakeWorld.addEntity(RayTraceMod.testEntity);
 		entity.setPosition(new Vector3d(5, 0, 5));
-		entity.setRotation(Quaternion.fromEuler(0, Math.PI / 2, 0));
+		entity.setRotation(Quaternion.fromEuler(0, 0, -Math.PI / 2));
 
 		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults = RayTracer.rayTraceBlock(entity, 10);
 		assertThat(rayTraceBlockResults.size()).isEqualTo(1);
