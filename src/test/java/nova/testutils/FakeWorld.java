@@ -3,6 +3,7 @@ package nova.testutils;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.component.transform.BlockTransform;
+import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
@@ -11,9 +12,9 @@ import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
-import nova.internal.dummy.Wrapper;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -24,6 +25,7 @@ import java.util.Set;
 public class FakeWorld extends World {
 
 	public final Map<Vector3i, Block> blockMap = new HashMap<>();
+	public final Set<Entity> entities = new HashSet<>();
 
 	@Override
 	public void markStaticRender(Vector3i position) {
@@ -59,8 +61,12 @@ public class FakeWorld extends World {
 
 	@Override
 	public Entity addEntity(EntityFactory factory, Object... args) {
-		//TODO: Implement
-		return null;
+		Entity make = factory.make(args);
+		EntityTransform component = new EntityTransform();
+		component.setWorld(this);
+		make.add(component);
+		entities.add(make);
+		return make;
 	}
 
 	@Override
@@ -83,8 +89,7 @@ public class FakeWorld extends World {
 
 	@Override
 	public void removeEntity(Entity entity) {
-		//TODO: Implement
-
+		entities.remove(entity);
 	}
 
 	@Override

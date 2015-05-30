@@ -233,7 +233,7 @@ public class MathUtil {
 	}
 
 	/**
-	 * @return a <= x <= b
+	 * @return True if x is greater than a and less than b
 	 */
 	public static boolean isBetween(double a, double x, double b) {
 		return a <= x && x <= b;

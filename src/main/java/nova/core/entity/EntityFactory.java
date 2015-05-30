@@ -15,9 +15,7 @@ public class EntityFactory extends Factory<Entity> {
 		super(constructor);
 	}
 
-	public Entity makeEntity(Wrapper wrapper, Object... args) {
-		Entity newEntity = constructor.apply(args);
-		newEntity.add(wrapper);
-		return newEntity;
+	public Entity make(Object... args) {
+		return constructor.apply(args);
 	}
 }
