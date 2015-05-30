@@ -95,6 +95,8 @@ publishing {
 	publications {
 		main(MavenPublication) {
 			from components.java
+			
+			artifactId "NovaWrapper-MC1.7.10"
 
 			artifact sourcesJar
 			artifact deobfJar
