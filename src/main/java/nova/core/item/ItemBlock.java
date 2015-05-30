@@ -3,7 +3,6 @@ package nova.core.item;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
-import nova.core.entity.component.Player;
 import nova.core.game.Game;
 import nova.core.util.Direction;
 import nova.core.util.transform.vector.Vector3d;
@@ -22,17 +21,16 @@ public class ItemBlock extends Item {
 
 	public ItemBlock(BlockFactory blockFactory) {
 		this.blockFactory = blockFactory;
-	}
+		useEvent.add(
+			evt ->
+			{
+				Vector3i placePos = evt.position.add(evt.side.toVector());
 
-	@Override
-	public boolean onUse(Entity entity, World world, Vector3i position, Direction side, Vector3d hit) {
-		Vector3i placePos = position.add(side.toVector());
-
-		if (onPrePlace(entity, world, placePos, side, hit)) {
-			return onPostPlace(entity, world, placePos, side, hit);
-		}
-
-		return false;
+				if (onPrePlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit)) {
+					evt.action = onPostPlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit);
+				}
+			}
+		);
 	}
 
 	protected boolean onPrePlace(Entity entity, World world, Vector3i placePos, Direction side, Vector3d hit) {

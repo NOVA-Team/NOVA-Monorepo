@@ -2,6 +2,7 @@ package nova.core.item;
 
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
+import nova.core.event.EventBus;
 import nova.core.game.Game;
 import nova.core.render.Color;
 import nova.core.render.texture.ItemTexture;
@@ -9,13 +10,19 @@ import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
-import nova.core.world.World;
 
 import java.util.List;
 import java.util.Optional;
 
 //TODO: Convert to component system
 public abstract class Item extends ComponentProvider implements Identifiable {
+
+	/**
+	 * Item Events
+	 */
+	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
+	public final EventBus<UseEvent> useEvent = new EventBus<>();
+	public final EventBus<TooltipEvent> tooltipEvent = new EventBus<>();
 
 	/**
 	 * The amount of this item that is present.
@@ -98,44 +105,6 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 	}
 
 	/**
-	 * Gets a list of tooltips for this item.
-	 * @param player {@link Entity} with the component Player attached.
-	 * @param tooltips The tooltip list to add to.
-	 */
-	public void getTooltips(Optional<Entity> player, List<String> tooltips) {
-	}
-
-	/**
-	 * Called when the entity right clicks the item onto the block.
-	 * @param entity - The entity using the item
-	 * @param world - The world of the block
-	 * @param position - The position of the block
-	 * @param side - The side the player clicked
-	 * @param hit - The position the player hit on the block
-	 * @return True if the player's action cancels out events.
-	 */
-	public boolean onUse(Entity entity, World world, Vector3i position, Direction side, Vector3d hit) {
-		return false;
-	}
-
-	/**
-	 * Called when an entity right clicks the item.
-	 * @param entity - The entity right clicking.
-	 */
-	public void onRightClick(Entity entity) {
-
-	}
-
-	/**
-	 * Called when this item is being rendered.
-	 * @param type Type
-	 * @param data Data
-	 */
-	public void onRender(int type, Object... data) {
-
-	}
-
-	/**
 	 * Gets the color multiplier for rendering
 	 * @return The color
 	 */
@@ -149,5 +118,58 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 	 */
 	public Optional<ItemTexture> getTexture() {
 		return Optional.empty();
+	}
+
+	public static class TooltipEvent {
+		public final Optional<Entity> entity;
+		public final List<String> tooltips;
+
+		/**
+		 * Gets a list of tooltips for this item.
+		 * @param entity {@link Entity} with the component Player attached.
+		 * @param tooltips The tooltip list to add to.
+		 */
+		public TooltipEvent(Optional<Entity> entity, List<String> tooltips) {
+			this.entity = entity;
+			this.tooltips = tooltips;
+		}
+	}
+
+	public static class UseEvent {
+		//The entity that right clicked
+		public final Entity entity;
+
+		public final Vector3i position;
+
+		public final Direction side;
+
+		public final Vector3d hit;
+
+		//Did this event cause an action?
+		public boolean action = false;
+
+		/**
+		 * Called when the entity right clicks the item onto the block.
+		 * @param entity - The entity using the item
+		 * @param position - The position of the block
+		 * @param side - The side the player clicked
+		 * @param hit - The position the player hit on the block
+		 * @return True if the player's action cancels out events.
+		 */
+		public UseEvent(Entity entity, Vector3i position, Direction side, Vector3d hit) {
+			this.entity = entity;
+			this.position = position;
+			this.side = side;
+			this.hit = hit;
+		}
+	}
+
+	public static class RightClickEvent {
+		//The entity that right clicked
+		public final Entity entity;
+
+		public RightClickEvent(Entity entity) {
+			this.entity = entity;
+		}
 	}
 }
