@@ -3,6 +3,8 @@ package nova.core.retention;
 import nova.core.component.ComponentProvider;
 import nova.core.util.ReflectionUtil;
 
+import java.util.HashSet;
+
 /**
  * Classes with this interface declare ability to store and load itself.
  * Therefore, classes using this interface must have an empty constructor for new instantiation from load.
@@ -32,8 +34,7 @@ public interface Storable {
 		});
 
 		if (this instanceof ComponentProvider) {
-			((ComponentProvider) this)
-				.components()
+			new HashSet<>(((ComponentProvider) this).components())
 				.stream()
 				.filter(c -> c instanceof Storable)
 				.forEach(c -> ((Storable) c).save(data));
@@ -64,8 +65,7 @@ public interface Storable {
 		});
 
 		if (this instanceof ComponentProvider) {
-			((ComponentProvider) this)
-				.components()
+			new HashSet<>(((ComponentProvider) this).components())
 				.stream()
 				.filter(c -> c instanceof Storable)
 				.forEach(c -> ((Storable) c).load(data));

@@ -4,6 +4,7 @@ import nova.core.component.ComponentProvider;
 import nova.core.util.ReflectionUtil;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * @author Calclavia
@@ -28,8 +29,7 @@ public interface PacketHandler {
 		});
 
 		if (this instanceof ComponentProvider) {
-			((ComponentProvider) this)
-				.components()
+			new HashSet<>(((ComponentProvider) this).components())
 				.stream()
 				.filter(c -> c instanceof PacketHandler)
 				.forEach(c -> ((PacketHandler) c).read(packet));
@@ -54,8 +54,7 @@ public interface PacketHandler {
 		});
 
 		if (this instanceof ComponentProvider) {
-			((ComponentProvider) this)
-				.components()
+			new HashSet<>(((ComponentProvider) this).components())
 				.stream()
 				.filter(c -> c instanceof PacketHandler)
 				.forEach(c -> ((PacketHandler) c).write(packet));
