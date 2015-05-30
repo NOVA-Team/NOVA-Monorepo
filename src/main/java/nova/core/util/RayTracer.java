@@ -29,9 +29,9 @@ public class RayTracer {
 	private Vector3d vec = new Vector3d();
 	private Vector3d vec2 = new Vector3d();
 
-	private Vector3d s_vec = new Vector3d();
-	private double s_dist;
-	private int s_side;
+	private Vector3d hitVec = new Vector3d();
+	private double leastDist;
+	private int hitSide;
 
 	/**
 	 * Creates a ray tracer with a line segment that will be traced.
@@ -54,6 +54,8 @@ public class RayTracer {
 
 	public static List<RayTraceBlockResult> rayTraceBlock(World world, Vector3d position, Vector3d look, double maxDistance) {
 		//TODO: Is x Vector correct?
+
+		//TODO: Very inefficient! Consider smaller sample space
 		Cuboid checkRegion = Cuboid.zero.expand(maxDistance);
 		Set<Vector3i> checkPositions = new HashSet<>();
 		checkRegion.forEach(checkPositions::add);
@@ -66,15 +68,11 @@ public class RayTracer {
 			.filter(block -> block.has(Collider.class))
 			.collect(Collectors.toSet());
 
-		return new RayTracer(position, look.multiply(maxDistance)).rayTraceBlocks(blocks);
+		return new RayTracer(position, position.add(look.multiply(maxDistance))).rayTraceBlocks(blocks);
 	}
 
 	/**
 	 * Traces a side of a cuboid
-	 * @param side
-	 * @param start
-	 * @param end
-	 * @param cuboid
 	 */
 	private void traceSide(int side, Vector3d start, Vector3d end, Cuboid cuboid) {
 		vec = start;
@@ -126,10 +124,11 @@ public class RayTracer {
 
 		vec2 = hit;
 		double dist = vec2.subtract(start).magnitudeSquared();
-		if (dist < s_dist) {
-			s_side = side;
-			s_dist = dist;
-			s_vec = vec;
+
+		if (dist < leastDist) {
+			hitSide = side;
+			leastDist = dist;
+			hitVec = vec;
 		}
 	}
 
@@ -137,17 +136,17 @@ public class RayTracer {
 	 * @return True if the cuboid intersects the ray.
 	 */
 	private boolean doRayTrace(Cuboid cuboid) {
-		s_dist = Double.MAX_VALUE;
-		s_side = -1;
+		leastDist = Double.MAX_VALUE;
+		hitSide = -1;
 
 		for (int i = 0; i < 6; i++)
 			traceSide(i, start, end, cuboid);
 
-		return s_side >= 0;
+		return hitSide >= 0;
 	}
 
 	public Optional<RayTraceResult> rayTrace(Cuboid cuboid) {
-		return Optional.ofNullable(doRayTrace(cuboid) ? new RayTraceResult(s_vec, s_dist, Direction.fromOrdinal(s_side)) : null);
+		return Optional.ofNullable(doRayTrace(cuboid) ? new RayTraceResult(hitVec, leastDist, Direction.fromOrdinal(hitSide)) : null);
 	}
 
 	/**
@@ -172,7 +171,16 @@ public class RayTracer {
 	public List<RayTraceBlockResult> rayTraceBlocks(Set<Block> blocks) {
 		return blocks.stream()
 			.filter(block -> block.has(Collider.class))
-			.map(block -> new Tuple2<>(block, block.get(Collider.class).occlusionBoxes.apply(Optional.empty())))
+			.map(block -> new Tuple2<>(
+					block,
+					block.get(Collider.class)
+						.occlusionBoxes
+						.apply(Optional.empty())
+						.stream()
+						.map(cuboid -> cuboid.add(block.position()))
+						.collect(Collectors.toSet())
+				)
+			)
 			.flatMap(tuple ->
 					rayTrace(tuple._2)
 						.stream()
