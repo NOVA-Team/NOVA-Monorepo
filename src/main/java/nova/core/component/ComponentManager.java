@@ -42,7 +42,7 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 	 * @param <N> The node type
 	 * @return A new node of N type.
 	 */
-	public <N extends Component> N make(Class<N> theInterface, Object... args) {
+	public <N> N make(Class<N> theInterface, Object... args) {
 		Optional<ComponentFactory> first = registry.stream()
 			.filter(n -> theInterface.isAssignableFrom(n.getDummy().getClass()))
 			.findFirst();
