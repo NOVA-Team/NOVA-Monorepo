@@ -40,7 +40,6 @@ public class RayTracer {
 	 */
 	public RayTracer(Entity entity) {
 		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3d.zero), entity.rotation().toZVector()));
-
 	}
 
 	/**
@@ -53,10 +52,24 @@ public class RayTracer {
 		return this;
 	}
 
+	public RayTracer setParallelThreshold(int parallelThreshold) {
+		this.parallelThreshold = parallelThreshold;
+		return this;
+	}
+
+	public boolean doParallel() {
+		return distance > parallelThreshold;
+	}
+
+	public Stream<RayTraceResult> rayTraceAll(World world) {
+		return Stream.concat(rayTraceBlocks(world), rayTraceEntities(world)).sorted();
+	}
+
 	/**
 	 * Check all blocks that are in a line
+	 * @return The blocks ray traced in the order from closest to furthest.
 	 */
-	public List<RayTraceBlockResult> rayTraceBlocks(World world) {
+	public Stream<RayTraceBlockResult> rayTraceBlocks(World world) {
 		//All relevant blocks
 		return rayTraceBlocks(
 			IntStream.range(0, (int) distance + 1)
@@ -72,22 +85,20 @@ public class RayTracer {
 	 * @param blocks Set of blocks
 	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
 	 */
-	public List<RayTraceBlockResult> rayTraceBlocks(Set<Block> blocks) {
+	public Stream<RayTraceBlockResult> rayTraceBlocks(Set<Block> blocks) {
 		return rayTraceBlocks(blocks.stream());
 	}
 
-	public List<RayTraceBlockResult> rayTraceBlocks(Stream<Block> blockStream) {
+	public Stream<RayTraceBlockResult> rayTraceBlocks(Stream<Block> blockStream) {
 		return
-			((distance > parallelThreshold) ? blockStream.parallel() : blockStream)
+			(doParallel() ? blockStream.parallel() : blockStream)
 				.filter(block -> block.has(Collider.class))
 				.flatMap(block -> rayTraceCollider(block, (pos, cuboid) -> new RayTraceBlockResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid, block)))
-				.sorted()
-				.collect(Collectors.toList());
+				.sorted();
 	}
 
-	public List<RayTraceEntityResult> rayTraceEntities(World world) {
+	public Stream<RayTraceEntityResult> rayTraceEntities(World world) {
 		//TODO: Consider smaller check space
-		//TODO: Make unit test
 		return rayTraceEntities(
 			world.getEntities(Cuboid.zero.expand(distance).add(ray.origin))
 				.stream()
@@ -95,13 +106,12 @@ public class RayTracer {
 		);
 	}
 
-	public List<RayTraceEntityResult> rayTraceEntities(Stream<Entity> entityStream) {
+	public Stream<RayTraceEntityResult> rayTraceEntities(Stream<Entity> entityStream) {
 		return
-			((distance > parallelThreshold) ? entityStream.parallel() : entityStream)
+			(doParallel() ? entityStream.parallel() : entityStream)
 				.filter(entity -> entity.has(Collider.class))
 				.flatMap(entity -> rayTraceCollider(entity, (pos, cuboid) -> new RayTraceEntityResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid, entity)))
-				.sorted()
-				.collect(Collectors.toList());
+				.sorted();
 	}
 
 	public <R extends RayTraceResult> Stream<R> rayTraceCollider(ComponentProvider colliderProvider, BiFunction<Vector3d, Cuboid, R> resultMapper) {
@@ -118,12 +128,10 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a set of cuboids
-	 * @param cuboids Set of cuboids
+	 * @param stream A stream of cuboids
 	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
 	 */
-	public List<RayTraceResult> rayTrace(Set<Cuboid> cuboids) {
-		//TODO: Check parallel threshold
-		Stream<Cuboid> stream = (cuboids.size() > parallelThreshold ? cuboids.parallelStream() : cuboids.stream());
+	public List<RayTraceResult> rayTrace(Stream<Cuboid> stream) {
 		return stream
 			.map(this::rayTrace)
 			.filter(Optional::isPresent)

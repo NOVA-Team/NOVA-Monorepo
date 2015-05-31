@@ -24,10 +24,9 @@ public class Profiler {
 		return this;
 	}
 
-	public Profiler end() {
+	public double end() {
 		Game.instance().logger().info(toString());
-		time = System.currentTimeMillis();
-		return this;
+		return elapsed() / 1000d;
 	}
 
 	public long elapsed() {
