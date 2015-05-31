@@ -28,7 +28,7 @@ public class ReflectionUtil {
 	}
 
 	private static Class<?>[] types(Object... args) {
-		return Arrays.stream(args).map(arg -> arg.getClass()).toArray(size -> new Class[size]);
+		return Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
 	}
 
 	static float calculateDistancePrimitive(Class<?> a, Class<?> b) {
@@ -179,6 +179,7 @@ public class ReflectionUtil {
 			// many of the cases.
 			return Optional.of(clazz.getConstructor(parameterTypes));
 		} catch (Exception e) {
+			//NOOP
 		}
 
 		// Aww, snap. Now we have to do it the hard way...
@@ -278,7 +279,7 @@ public class ReflectionUtil {
 	 */
 	public static <T extends Annotation> void forEachAnnotatedField(Class<? extends T> annotation, Class<?> clazz, BiConsumer<Field, T> action) {
 		Arrays.stream(clazz.getDeclaredFields())
-			.filter(f -> f.isAnnotationPresent(annotation))
+			.filter(f -> f.isAnnotationPresent(annotation) && !f.isSynthetic())
 			.forEachOrdered(f -> action.accept(f, f.getAnnotation(annotation)));
 	}
 
@@ -286,8 +287,8 @@ public class ReflectionUtil {
 	 * Gets all the annotated fields of this class, including all the parents
 	 * classes in the order of hierarchy.
 	 * 
-	 * @param annotation
-	 * @param clazz
+	 * @param annotation Your annotation class.
+	 * @param clazz Class to search through.
 	 * @return An ordered map of annotated fields and their annotations from the
 	 *         order of the most sub class to the most super class.
 	 */
@@ -300,7 +301,7 @@ public class ReflectionUtil {
 	// TODO: Cache this?
 	public static <T extends Annotation> void forEachRecursiveAnnotatedField(Class<T> annotation, Class<?> clazz, BiConsumer<Field, T> action) {
 		Arrays.stream(clazz.getDeclaredFields())
-			.filter(f -> f.isAnnotationPresent(annotation))
+			.filter(f -> f.isAnnotationPresent(annotation) && !f.isSynthetic())
 			.forEachOrdered(f -> action.accept(f, f.getAnnotation(annotation)));
 
 		Class<?> superClass = clazz.getSuperclass();
