@@ -1,17 +1,20 @@
 package nova.core.util;
 
 import nova.core.block.Block;
+import nova.core.component.ComponentProvider;
 import nova.core.component.misc.Collider;
+import nova.core.component.transform.WorldTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
 import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.world.World;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -53,7 +56,7 @@ public class RayTracer {
 	/**
 	 * Check all blocks that are in a line
 	 */
-	public List<RayTraceBlockResult> rayTraceBlock(World world) {
+	public List<RayTraceBlockResult> rayTraceBlocks(World world) {
 		//All relevant blocks
 		return rayTraceBlocks(
 			IntStream.range(0, (int) distance + 1)
@@ -77,30 +80,41 @@ public class RayTracer {
 		return
 			((distance > parallelThreshold) ? blockStream.parallel() : blockStream)
 				.filter(block -> block.has(Collider.class))
-				.flatMap(block ->
-						block.get(Collider.class)
-							.occlusionBoxes
-							.apply(Optional.empty())
-							.stream()
-							.map(cuboid -> (Cuboid) cuboid.add(block.position()))
-							.map(cuboid -> rayTrace(cuboid, pos -> new RayTraceBlockResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid, block)))
-							.filter(Optional::isPresent)
-							.map(Optional::get)
-				)
+				.flatMap(block -> rayTraceCollider(block, (pos, cuboid) -> new RayTraceBlockResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid, block)))
 				.sorted()
 				.collect(Collectors.toList());
 	}
 
-	/*
 	public List<RayTraceEntityResult> rayTraceEntities(World world) {
 		//TODO: Consider smaller check space
-		Cuboid checkRegion = Cuboid.zero.expand(distance).add(ray.origin);
-		world.getEntities(checkRegion)
-			.stream()
-			.filter(entity -> entity.has(Collider.class));
+		//TODO: Make unit test
+		return rayTraceEntities(
+			world.getEntities(Cuboid.zero.expand(distance).add(ray.origin))
+				.stream()
+				.filter(entity -> entity.has(Collider.class))
+		);
+	}
 
-		return rayTraceEntities()
-	}*/
+	public List<RayTraceEntityResult> rayTraceEntities(Stream<Entity> entityStream) {
+		return
+			((distance > parallelThreshold) ? entityStream.parallel() : entityStream)
+				.filter(entity -> entity.has(Collider.class))
+				.flatMap(entity -> rayTraceCollider(entity, (pos, cuboid) -> new RayTraceEntityResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid, entity)))
+				.sorted()
+				.collect(Collectors.toList());
+	}
+
+	public <R extends RayTraceResult> Stream<R> rayTraceCollider(ComponentProvider colliderProvider, BiFunction<Vector3d, Cuboid, R> resultMapper) {
+		return
+			colliderProvider.get(Collider.class)
+				.occlusionBoxes
+				.apply(Optional.empty())
+				.stream()
+				.map(cuboid -> cuboid.add((Vector3) colliderProvider.get(WorldTransform.class).position()))
+				.map(cuboid -> rayTrace(cuboid, resultMapper))
+				.filter(Optional::isPresent)
+				.map(Optional::get);
+	}
 
 	/**
 	 * Ray traces a set of cuboids
@@ -119,7 +133,7 @@ public class RayTracer {
 	}
 
 	public Optional<RayTraceResult> rayTrace(Cuboid cuboid) {
-		return rayTrace(cuboid, 0, distance).map(pos -> new RayTraceResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid));
+		return rayTrace(cuboid, (pos, cuboid2) -> new RayTraceResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid));
 	}
 
 	/**
@@ -127,8 +141,8 @@ public class RayTracer {
 	 * @param cuboid The cuboid in absolute world coordinates
 	 * @return The ray trace result if the ray intersects the cuboid
 	 */
-	public <R extends RayTraceResult> Optional<R> rayTrace(Cuboid cuboid, Function<Vector3d, R> resultMapper) {
-		return rayTrace(cuboid, 0, distance).map(resultMapper);
+	public <R extends RayTraceResult> Optional<R> rayTrace(Cuboid cuboid, BiFunction<Vector3d, Cuboid, R> resultMapper) {
+		return rayTrace(cuboid, 0, distance).map(vec -> resultMapper.apply(vec, cuboid));
 	}
 
 	/**
