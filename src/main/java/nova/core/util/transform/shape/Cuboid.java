@@ -24,7 +24,6 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	public final Vector3d max;
 
 	public Cuboid(Vector3d min, Vector3d max) {
-		assert min.compareTo(max) < 0;
 		this.min = min;
 		this.max = max;
 	}
