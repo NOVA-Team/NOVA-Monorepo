@@ -76,6 +76,7 @@ public class RayTracer {
 			IntStream.range(0, (int) distance + 1)
 				.mapToObj(i -> ray.origin.add(ray.dir.multiply(i)).toInt())
 				.flatMap(vec -> Arrays.stream(Direction.DIRECTIONS).map(direction -> vec.add(direction.toVector()))) //Cover a larger area to be safe
+				.distinct()
 				.map(world::getBlock)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
