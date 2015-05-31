@@ -29,7 +29,6 @@ import nova.wrapper.mc1710.depmodules.SaveModule;
 import nova.wrapper.mc1710.depmodules.TickerModule;
 import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityTransform;
 import nova.wrapper.mc1710.wrapper.entity.forward.MCRigidBody;
-import nova.wrapper.mc1710.manager.config.ConfigManager;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
 import nova.wrapper.mc1710.wrapper.block.BlockConverter;
 import nova.wrapper.mc1710.wrapper.block.world.WorldConverter;
@@ -163,11 +162,11 @@ public class NovaMinecraft {
 		nativeConverters.stream().forEachOrdered(Loadable::preInit);
 		launcher.preInit();
 
-		// Initiate config system
-		launcher.getLoadedModMap().forEach((mod, loader) -> {
-			Configuration config = new Configuration(new File(evt.getModConfigurationDirectory(), mod.name()));
-			ConfigManager.instance.sync(config, loader.getClass().getPackage().getName());
-		});
+		// Initiate config system TODO: Storables
+//		launcher.getLoadedModMap().forEach((mod, loader) -> {
+//			Configuration config = new Configuration(new File(evt.getModConfigurationDirectory(), mod.name()));
+//			ConfigManager.instance.sync(config, loader.getClass().getPackage().getName());
+//		});
 
 		proxy.preInit();
 

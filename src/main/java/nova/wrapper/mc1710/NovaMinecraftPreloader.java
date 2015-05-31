@@ -14,7 +14,6 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.resources.IResourcePack;
 import nova.core.loader.NovaMod;
-import nova.wrapper.mc1710.manager.config.ConfigManager;
 import nova.wrapper.mc1710.render.NovaFolderResourcePack;
 import nova.wrapper.mc1710.render.NovaResourcePack;
 import nova.wrapper.mc1710.util.ReflectionUtil;
@@ -90,9 +89,6 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
 			registerResourcePacks();
 		}
-
-		//Cache configs
-		ConfigManager.instance.load(asmData);
 	}
 
 	public void registerResourcePacks() {
