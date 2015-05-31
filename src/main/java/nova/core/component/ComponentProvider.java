@@ -70,7 +70,7 @@ public abstract class ComponentProvider {
 		return (C) componentMap.remove(componentType);
 	}
 
-	public final <C extends Component> Optional<C> getOp(Class<C> componentType) {
+	public final <C> Optional<C> getOp(Class<C> componentType) {
 		Component component = componentMap.get(componentType);
 
 		if (component != null) {
@@ -85,7 +85,7 @@ public abstract class ComponentProvider {
 		}
 	}
 
-	public final <C extends Component> C get(Class<C> componentType) {
+	public final <C> C get(Class<C> componentType) {
 		return getOp(componentType).orElseThrow(() -> new NovaException("Attempt to get component that does not exist: " + componentType));
 	}
 
