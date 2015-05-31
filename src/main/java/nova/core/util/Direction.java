@@ -1,8 +1,11 @@
 package nova.core.util;
 
 import nova.core.util.transform.matrix.Quaternion;
+import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
+
+import java.util.stream.IntStream;
 
 /**
  * Defines basic directions in world.
@@ -43,6 +46,20 @@ public enum Direction {
 			throw new IllegalArgumentException("Direction ID is invalid! The direction ID " + directionID + " is must be between " + (Direction.values.length - 1) + " and 0 inclusive");
 		}
 		return Direction.values[directionID];
+	}
+
+	/**
+	 * @param unitVector The unit vector representing the direction.
+	 * @return The direction based on a unit vector
+	 */
+	public static Direction fromVector(Vector3<?> unitVector) {
+		return fromOrdinal(
+			IntStream.range(0, 6)
+				.boxed()
+				.sorted((o1, o2) -> Double.compare(fromOrdinal(o2).toVector().dot(unitVector), fromOrdinal(o1).toVector().dot(unitVector)))
+				.findFirst()
+				.get()
+		);
 	}
 
 	/**
