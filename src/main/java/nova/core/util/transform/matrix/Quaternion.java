@@ -57,14 +57,22 @@ public class Quaternion implements Transformer, Storable {
 	/**
 	 * The euler angles describe a 3D rotation. The rotation always in radians.
 	 *
-	 * Note: The rotational system Minecraft uses is non-standard. The angles and vector calculations
-	 * have been calibrated to match. DEFINITIONS:
+	 * Conventions:
 	 *
-	 * Yaw: 0 Degrees - Looking at NORTH 90 - Looking at WEST 180 - Looking at SOUTH 270 - Looking at
-	 * EAST
+	 * Yaw:
+	 * 0 Degrees - Looking at NORTH
+	 * 90 - Looking at WEST
+	 * 180 - Looking at SOUTH
+	 * 270 - Looking at EAST
 	 *
-	 * Pitch: 0 Degrees - Looking straight forward towards the horizon. 90 Degrees - Looking straight up
-	 * to the sky. -90 Degrees - Looking straight down to the void.
+	 * Pitch:
+	 * 0 Degrees - Looking straight forward towards the horizon.
+	 * 90 Degrees - Looking straight up to the sky
+	 * -90 Degrees - Looking straight down to the void.
+	 *
+	 * Yaw - Rotation around y-axis (heading)
+	 * Pitch - Rotation around x-axis (bank)
+	 * Roll - Rotation around z-axis (attitude)
 	 * @param euler input {@link Vector3}
 	 * @return resulting {@link Quaternion}
 	 * @author Calclavia
@@ -73,14 +81,18 @@ public class Quaternion implements Transformer, Storable {
 		return fromEuler(euler.xd(), euler.yd(), euler.zd());
 	}
 
+	public static Quaternion fromEuler(double yaw, double pitch) {
+		return fromEuler(yaw, pitch, 0);
+	}
+
 	public static Quaternion fromEuler(double yaw, double pitch, double roll) {
 		// Assuming the angles are in radians.
 		double c1 = Math.cos(yaw / 2);
 		double s1 = Math.sin(yaw / 2);
-		double c2 = Math.cos(pitch / 2);
-		double s2 = Math.sin(pitch / 2);
-		double c3 = Math.cos(roll / 2);
-		double s3 = Math.sin(roll / 2);
+		double c2 = Math.cos(roll / 2);
+		double s2 = Math.sin(roll / 2);
+		double c3 = Math.cos(pitch / 2);
+		double s3 = Math.sin(pitch / 2);
 		double c1c2 = c1 * c2;
 		double s1s2 = s1 * s2;
 		double w = c1c2 * c3 - s1s2 * s3;
@@ -178,14 +190,14 @@ public class Quaternion implements Transformer, Storable {
 
 		// singularity at north pole
 		if (test > 0.499 * unit) {
-			return new Vector3d(2 * Math.atan2(x, w), Math.PI / 2, 0);
+			return new Vector3d(2 * Math.atan2(x, w), 0, Math.PI / 2);
 		}
 
 		// singularity at south pole
 		if (test < -0.499 * unit) {
-			return new Vector3d(-2 * Math.atan2(x, w), -Math.PI / 2, 0);
+			return new Vector3d(-2 * Math.atan2(x, w), 0, -Math.PI / 2);
 		}
-		return new Vector3d(Math.atan2(2 * y * w - 2 * x * z, sqx - sqy - sqz + sqw), Math.asin(2 * test / unit), Math.atan2(2 * x * w - 2 * y * z, -sqx + sqy - sqz + sqw));
+		return new Vector3d(Math.atan2(2 * y * w - 2 * x * z, sqx - sqy - sqz + sqw), Math.atan2(2 * x * w - 2 * y * z, -sqx + sqy - sqz + sqw), Math.asin(2 * test / unit));
 	}
 
 	public Tuple2<Vector3d, Double> toAngleAxis() {
@@ -230,6 +242,14 @@ public class Quaternion implements Transformer, Storable {
 	 */
 	public Vector3d toZVector() {
 		return transform(Vector3d.zAxis);
+	}
+
+	/**
+	 * The default forward for games
+	 * @return A direction vector representing the rotation.
+	 */
+	public Vector3d toForwardVector() {
+		return transform(Vector3d.zAxis.negate());
 	}
 
 	@Override

@@ -43,6 +43,30 @@ public class QuaternionTest {
 	}
 
 	@Test
+	public void testEulerToVector() {
+		Quaternion rot = Quaternion.fromEuler(0, 0, 0);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.zAxis.negate());
+
+		rot = Quaternion.fromEuler(Math.PI / 2, 0, 0);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.xAxis.negate());
+
+		rot = Quaternion.fromEuler(-Math.PI / 2, 0, 0);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.xAxis);
+
+		rot = Quaternion.fromEuler(Math.PI, 0, 0);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.zAxis);
+
+		rot = Quaternion.fromEuler(0, Math.PI / 2, 0);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.yAxis);
+
+		rot = Quaternion.fromEuler(0, 0, Math.PI / 2);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.zAxis.negate());
+
+		rot = Quaternion.fromEuler(Math.PI / 2, Math.PI / 2, 0);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.yAxis);
+	}
+
+	@Test
 	public void testTransform() {
 		Quaternion q0 = Quaternion.fromEuler(0, 0, 0);
 		assertThat(q0.transform(new Vector3d(1, 0, 0))).isEqualTo(new Vector3d(1, 0, 0));
@@ -89,12 +113,12 @@ public class QuaternionTest {
 		assertThat(q.transform(new Vector3d(1, 0, 1))).isEqualTo(new Vector3d(1, 0, 1));
 
 		q = Quaternion.fromEulerDegree(0, 90, 0);
-		assertThat(q.transform(new Vector3d(0, 0, 1))).isEqualTo(new Vector3d(0, 0, 1));
-		assertThat(q.transform(new Vector3d(0, -1, 0))).isEqualTo(new Vector3d(1, 0, 0));
+		assertThat(q.transform(new Vector3d(0, 0, 1))).isEqualTo(new Vector3d(0, -1, 0));
+		assertThat(q.transform(new Vector3d(0, -1, 0))).isEqualTo(new Vector3d(0, 0, -1));
 
 		q = Quaternion.fromEulerDegree(90, 90, 0);
-		assertThat(q.transform(new Vector3d(0, 1, 0))).isEqualTo(new Vector3d(0, 0, 1));
-		assertThat(q.transform(new Vector3d(1, 0, 0))).isEqualTo(new Vector3d(0, 1, 0));
+		assertThat(q.transform(new Vector3d(0, 1, 0))).isEqualTo(new Vector3d(1, 0, 0));
+		assertThat(q.transform(new Vector3d(1, 0, 0))).isEqualTo(new Vector3d(0, 0, -1));
 
 	}
 }

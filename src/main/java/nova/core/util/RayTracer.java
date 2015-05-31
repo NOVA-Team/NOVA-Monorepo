@@ -39,7 +39,7 @@ public class RayTracer {
 	 * @param entity The entity
 	 */
 	public RayTracer(Entity entity) {
-		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3d.zero), entity.rotation().toZVector()));
+		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3d.zero), entity.rotation().toForwardVector()));
 	}
 
 	/**
