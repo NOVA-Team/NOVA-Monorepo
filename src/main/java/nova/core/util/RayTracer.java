@@ -11,6 +11,7 @@ import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.world.World;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -74,6 +75,7 @@ public class RayTracer {
 		return rayTraceBlocks(
 			IntStream.range(0, (int) distance + 1)
 				.mapToObj(i -> ray.origin.add(ray.dir.multiply(i)).toInt())
+				.flatMap(vec -> Arrays.stream(Direction.DIRECTIONS).map(direction -> vec.add(direction.toVector()))) //Cover a larger area to be safe
 				.map(world::getBlock)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
@@ -172,15 +174,15 @@ public class RayTracer {
 	public Optional<Vector3d> rayTrace(Cuboid cuboid, double minDist, double maxDist) {
 		//X
 		Vector3d bbox = ray.signDirX ? cuboid.max : cuboid.min;
-		double txMin = (ray.dir.x == 0) ? minDist : (bbox.x - ray.origin.x) * ray.invDir.x;
+		double txMin = (Math.abs(ray.dir.x) < 0.0000001) ? minDist : (bbox.x - ray.origin.x) * ray.invDir.x;
 		bbox = ray.signDirX ? cuboid.min : cuboid.max;
-		double txMax = (ray.dir.x == 0) ? maxDist : (bbox.x - ray.origin.x) * ray.invDir.x;
+		double txMax = (Math.abs(ray.dir.x) < 0.0000001) ? maxDist : (bbox.x - ray.origin.x) * ray.invDir.x;
 
 		//Y
 		bbox = ray.signDirY ? cuboid.max : cuboid.min;
-		double tyMin = (ray.dir.y == 0) ? minDist : (bbox.y - ray.origin.y) * ray.invDir.y;
+		double tyMin = (Math.abs(ray.dir.y) < 0.0000001) ? minDist : (bbox.y - ray.origin.y) * ray.invDir.y;
 		bbox = ray.signDirY ? cuboid.min : cuboid.max;
-		double tyMax = (ray.dir.y == 0) ? maxDist : (bbox.y - ray.origin.y) * ray.invDir.y;
+		double tyMax = (Math.abs(ray.dir.y) < 0.0000001) ? maxDist : (bbox.y - ray.origin.y) * ray.invDir.y;
 
 		if ((txMin > tyMax) || (tyMin > txMax)) {
 			return Optional.empty();
@@ -194,9 +196,9 @@ public class RayTracer {
 
 		//Z
 		bbox = ray.signDirZ ? cuboid.max : cuboid.min;
-		double tzMin = (ray.dir.z == 0) ? minDist : (bbox.z - ray.origin.z) * ray.invDir.z;
+		double tzMin = (Math.abs(ray.dir.z) < 0.0000001) ? minDist : (bbox.z - ray.origin.z) * ray.invDir.z;
 		bbox = ray.signDirZ ? cuboid.min : cuboid.max;
-		double tzMax = (ray.dir.z == 0) ? maxDist : (bbox.z - ray.origin.z) * ray.invDir.z;
+		double tzMax = (Math.abs(ray.dir.z) < 0.0000001) ? maxDist : (bbox.z - ray.origin.z) * ray.invDir.z;
 
 		if ((txMin > tzMax) || (tzMin > txMax)) {
 			return Optional.empty();

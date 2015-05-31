@@ -102,9 +102,10 @@ public class RayTraceTest {
 
 		Entity entity = fakeWorld.addEntity(RayTraceMod.testEntity);
 		entity.setPosition(new Vector3d(5, 0, 5));
-		entity.setRotation(Quaternion.fromEuler(0, 0, -Math.PI / 2));
+		entity.setRotation(Quaternion.fromEuler(0, Math.PI / 2, 0));
 
-		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults = new RayTracer(entity).setDistance(10).rayTraceBlocks(fakeWorld).collect(Collectors.toList());
+		RayTracer rayTracer = new RayTracer(entity).setDistance(10);
+		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults = rayTracer.rayTraceBlocks(fakeWorld).collect(Collectors.toList());
 		assertThat(rayTraceBlockResults.size()).isEqualTo(1);
 	}
 
