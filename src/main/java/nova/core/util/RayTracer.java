@@ -4,167 +4,64 @@ import nova.core.block.Block;
 import nova.core.component.misc.Collider;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
-import nova.core.util.collection.Tuple2;
-import nova.core.util.math.MathUtil;
 import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Ray tracing for cuboids.
- * Based on ChickenBone's Chicken Code Library ray tracer
- * @author Calclavia, ChickenBones
+ * @author Calclavia
  */
+//TODO: Add ray trace masks
 public class RayTracer {
 
-	private final Vector3d start;
-	private final Vector3d end;
+	public final Ray ray;
+	public double distance;
+	public int parallelThreshold = 1000;
 
-	private Vector3d vec = new Vector3d();
-	private Vector3d vec2 = new Vector3d();
-
-	private Vector3d hitVec = new Vector3d();
-	private double leastDist;
-	private int hitSide;
-
-	/**
-	 * Creates a ray tracer with a line segment that will be traced.
-	 * @param start Start of the line segment
-	 * @param end End of the line segment
-	 */
-	public RayTracer(Vector3d start, Vector3d end) {
-		this.start = start;
-		this.end = end;
+	public RayTracer(Ray ray) {
+		this.ray = ray;
 	}
 
 	/**
 	 * Does an entity look ray trace to see which block the entity is looking at.
 	 * @param entity The entity
-	 * @return The block the entity is looking at.
 	 */
-	public static List<RayTraceBlockResult> rayTraceBlock(Entity entity, double maxDistance) {
-		return rayTraceBlock(
-			entity.world(),
-			entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3d.zero),
-			entity.rotation().toZVector(),
-			maxDistance
-		);
+	public RayTracer(Entity entity) {
+		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3d.zero), entity.rotation().toZVector()));
+
 	}
 
-	public static List<RayTraceBlockResult> rayTraceBlock(World world, Vector3d position, Vector3d look, double maxDistance) {
-		//TODO: Very inefficient! Consider smaller sample space
-		Cuboid checkRegion = Cuboid.zero.expand(maxDistance).add(position);
-		Set<Vector3i> checkPositions = new HashSet<>();
-		checkRegion.forEach(checkPositions::add);
+	/**
+	 * Sets the distance of the ray
+	 * @param distance Distance in meters
+	 * @return This
+	 */
+	public RayTracer setDistance(double distance) {
+		this.distance = distance;
+		return this;
+	}
 
+	/**
+	 * Check all blocks that are in a line
+	 */
+	public List<RayTraceBlockResult> rayTraceBlock(World world) {
 		//All relevant blocks
-		Set<Block> blocks = checkPositions.stream()
-			.map(world::getBlock)
-			.filter(Optional::isPresent)
-			.map(Optional::get)
-			.filter(block -> block.has(Collider.class))
-			.collect(Collectors.toSet());
-
-		return new RayTracer(position, position.add(look.multiply(maxDistance))).rayTraceBlocks(blocks);
-	}
-
-	/**
-	 * Traces a side of a cuboid
-	 */
-	private void traceSide(int side, Vector3d start, Vector3d end, Cuboid cuboid) {
-		vec = start;
-		Vector3d hit = null;
-		switch (side) {
-			case 0:
-				hit = vec.XZintercept(end, cuboid.min.y);
-				break;
-			case 1:
-				hit = vec.XZintercept(end, cuboid.max.y);
-				break;
-			case 2:
-				hit = vec.XYintercept(end, cuboid.min.z);
-				break;
-			case 3:
-				hit = vec.XYintercept(end, cuboid.max.z);
-				break;
-			case 4:
-				hit = vec.YZintercept(end, cuboid.min.x);
-				break;
-			case 5:
-				hit = vec.YZintercept(end, cuboid.max.x);
-				break;
-		}
-		if (hit == null) {
-			return;
-		}
-
-		switch (side) {
-			case 0:
-			case 1:
-				if (!MathUtil.isBetween(cuboid.min.x, hit.x, cuboid.max.x) || !MathUtil.isBetween(cuboid.min.z, hit.z, cuboid.max.z)) {
-					return;
-				}
-				break;
-			case 2:
-			case 3:
-				if (!MathUtil.isBetween(cuboid.min.x, hit.x, cuboid.max.x) || !MathUtil.isBetween(cuboid.min.y, hit.y, cuboid.max.y)) {
-					return;
-				}
-				break;
-			case 4:
-			case 5:
-				if (!MathUtil.isBetween(cuboid.min.y, hit.y, cuboid.max.y) || !MathUtil.isBetween(cuboid.min.z, hit.z, cuboid.max.z)) {
-					return;
-				}
-				break;
-		}
-
-		vec2 = hit;
-		double dist = vec2.subtract(start).magnitudeSquared();
-
-		if (dist < leastDist) {
-			hitSide = side;
-			leastDist = dist;
-			hitVec = vec;
-		}
-	}
-
-	/**
-	 * @return True if the cuboid intersects the ray.
-	 */
-	private boolean doRayTrace(Cuboid cuboid) {
-		leastDist = Double.MAX_VALUE;
-		hitSide = -1;
-
-		for (int i = 0; i < 6; i++)
-			traceSide(i, start, end, cuboid);
-
-		return hitSide >= 0;
-	}
-
-	public Optional<RayTraceResult> rayTrace(Cuboid cuboid) {
-		return Optional.ofNullable(doRayTrace(cuboid) ? new RayTraceResult(hitVec, leastDist, Direction.fromOrdinal(hitSide), cuboid) : null);
-	}
-
-	/**
-	 * Ray traces a set of cuboids
-	 * @param cuboids Set of cuboids
-	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
-	 */
-	public List<RayTraceResult> rayTrace(Set<Cuboid> cuboids) {
-		return cuboids.stream()
-			.map(this::rayTrace)
-			.filter(Optional::isPresent)
-			.map(Optional::get)
-			.sorted()
-			.collect(Collectors.toList());
+		return rayTraceBlocks(
+			IntStream.range(0, (int) distance + 1)
+				.mapToObj(i -> ray.origin.add(ray.dir.multiply(i)).toInt())
+				.map(world::getBlock)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+		);
 	}
 
 	/**
@@ -173,25 +70,151 @@ public class RayTracer {
 	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
 	 */
 	public List<RayTraceBlockResult> rayTraceBlocks(Set<Block> blocks) {
-		return blocks.stream()
-			.filter(block -> block.has(Collider.class))
-			.map(block -> new Tuple2<>(
-					block,
-					block.get(Collider.class)
-						.occlusionBoxes
-						.apply(Optional.empty())
-						.stream()
-						.map(cuboid -> cuboid.add(block.position()))
-						.collect(Collectors.toSet())
+		return rayTraceBlocks(blocks.stream());
+	}
+
+	public List<RayTraceBlockResult> rayTraceBlocks(Stream<Block> blockStream) {
+		return
+			((distance > parallelThreshold) ? blockStream.parallel() : blockStream)
+				.filter(block -> block.has(Collider.class))
+				.flatMap(block ->
+						block.get(Collider.class)
+							.occlusionBoxes
+							.apply(Optional.empty())
+							.stream()
+							.map(cuboid -> (Cuboid) cuboid.add(block.position()))
+							.map(cuboid -> rayTrace(cuboid, pos -> new RayTraceBlockResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid, block)))
+							.filter(Optional::isPresent)
+							.map(Optional::get)
 				)
-			)
-			.flatMap(tuple ->
-					rayTrace(tuple._2)
-						.stream()
-						.map(r -> new RayTraceBlockResult(r.hit, r.distance, r.side, r.hitCuboid, tuple._1))
-			)
+				.sorted()
+				.collect(Collectors.toList());
+	}
+
+	/*
+	public List<RayTraceEntityResult> rayTraceEntities(World world) {
+		//TODO: Consider smaller check space
+		Cuboid checkRegion = Cuboid.zero.expand(distance).add(ray.origin);
+		world.getEntities(checkRegion)
+			.stream()
+			.filter(entity -> entity.has(Collider.class));
+
+		return rayTraceEntities()
+	}*/
+
+	/**
+	 * Ray traces a set of cuboids
+	 * @param cuboids Set of cuboids
+	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
+	 */
+	public List<RayTraceResult> rayTrace(Set<Cuboid> cuboids) {
+		//TODO: Check parallel threshold
+		Stream<Cuboid> stream = (cuboids.size() > parallelThreshold ? cuboids.parallelStream() : cuboids.stream());
+		return stream
+			.map(this::rayTrace)
+			.filter(Optional::isPresent)
+			.map(Optional::get)
 			.sorted()
 			.collect(Collectors.toList());
+	}
+
+	public Optional<RayTraceResult> rayTrace(Cuboid cuboid) {
+		return rayTrace(cuboid, 0, distance).map(pos -> new RayTraceResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid));
+	}
+
+	/**
+	 * Ray traces a cuboid
+	 * @param cuboid The cuboid in absolute world coordinates
+	 * @return The ray trace result if the ray intersects the cuboid
+	 */
+	public <R extends RayTraceResult> Optional<R> rayTrace(Cuboid cuboid, Function<Vector3d, R> resultMapper) {
+		return rayTrace(cuboid, 0, distance).map(resultMapper);
+	}
+
+	/**
+	 * Calculates intersection with the given ray between a certain distance
+	 * interval.
+	 * <p>
+	 * Ray-box intersection is using IEEE numerical properties to ensure the
+	 * test is both robust and efficient, as described in:
+	 * <br>
+	 * <code>Amy Williams, Steve Barrus, R. Keith Morley, and Peter Shirley: "An
+	 * Efficient and Robust Ray-Box Intersection Algorithm" Journal of graphics
+	 * tools, 10(1):49-54, 2005</code>
+	 * @param cuboid The cuboid to trace
+	 * @param minDist The minimum distance
+	 * @param maxDist The maximum distance
+	 * @return intersection point on the bounding box (only the first is
+	 * returned) or null if no intersection
+	 */
+	public Optional<Vector3d> rayTrace(Cuboid cuboid, double minDist, double maxDist) {
+		//X
+		Vector3d bbox = ray.signDirX ? cuboid.max : cuboid.min;
+		double txMin = (ray.dir.x == 0) ? minDist : (bbox.x - ray.origin.x) * ray.invDir.x;
+		bbox = ray.signDirX ? cuboid.min : cuboid.max;
+		double txMax = (ray.dir.x == 0) ? maxDist : (bbox.x - ray.origin.x) * ray.invDir.x;
+
+		//Y
+		bbox = ray.signDirY ? cuboid.max : cuboid.min;
+		double tyMin = (ray.dir.y == 0) ? minDist : (bbox.y - ray.origin.y) * ray.invDir.y;
+		bbox = ray.signDirY ? cuboid.min : cuboid.max;
+		double tyMax = (ray.dir.y == 0) ? maxDist : (bbox.y - ray.origin.y) * ray.invDir.y;
+
+		if ((txMin > tyMax) || (tyMin > txMax)) {
+			return Optional.empty();
+		}
+		if (tyMin > txMin) {
+			txMin = tyMin;
+		}
+		if (tyMax < txMax) {
+			txMax = tyMax;
+		}
+
+		//Z
+		bbox = ray.signDirZ ? cuboid.max : cuboid.min;
+		double tzMin = (ray.dir.z == 0) ? minDist : (bbox.z - ray.origin.z) * ray.invDir.z;
+		bbox = ray.signDirZ ? cuboid.min : cuboid.max;
+		double tzMax = (ray.dir.z == 0) ? maxDist : (bbox.z - ray.origin.z) * ray.invDir.z;
+
+		if ((txMin > tzMax) || (tzMin > txMax)) {
+			return Optional.empty();
+		}
+		if (tzMin > txMin) {
+			txMin = tzMin;
+		}
+		if (tzMax < txMax) {
+			txMax = tzMax;
+		}
+		if ((txMin < maxDist) && (txMax > minDist)) {
+			return Optional.of(ray.origin.add(ray.dir.multiply(txMin)));
+		}
+		return Optional.empty();
+	}
+
+	public static class Ray {
+		public final Vector3d origin;
+		public final Vector3d dir;
+		public final Vector3d invDir;
+		public final boolean signDirX;
+		public final boolean signDirY;
+		public final boolean signDirZ;
+
+		/**
+		 * @param origin The ray's beginning
+		 * @param dir The ray's direction (unit vector)
+		 */
+		public Ray(Vector3d origin, Vector3d dir) {
+			this.origin = origin;
+			this.dir = dir;
+			this.invDir = dir.reciprocal();
+			this.signDirX = invDir.x < 0;
+			this.signDirY = invDir.y < 0;
+			this.signDirZ = invDir.z < 0;
+		}
+
+		public static Ray fromInterval(Vector3d start, Vector3d end) {
+			return new Ray(start, end.subtract(start).normalize());
+		}
 	}
 
 	public static class RayTraceResult implements Comparable<RayTraceResult> {
@@ -220,6 +243,15 @@ public class RayTracer {
 		public RayTraceBlockResult(Vector3d hit, double distance, Direction side, Cuboid hitCuboid, Block block) {
 			super(hit, distance, side, hitCuboid);
 			this.block = block;
+		}
+	}
+
+	public static class RayTraceEntityResult extends RayTraceResult {
+		public final Entity entity;
+
+		public RayTraceEntityResult(Vector3d hit, double distance, Direction side, Cuboid hitCuboid, Entity entity) {
+			super(hit, distance, side, hitCuboid);
+			this.entity = entity;
 		}
 	}
 }

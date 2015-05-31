@@ -1,5 +1,6 @@
 package nova.core.util.transform.shape;
 
+import nova.core.util.Direction;
 import nova.core.util.transform.vector.Transformer;
 import nova.core.util.transform.vector.Vector3;
 import nova.core.util.transform.vector.Vector3d;
@@ -8,6 +9,7 @@ import nova.core.util.transform.vector.Vector3i;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -22,6 +24,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	public final Vector3d max;
 
 	public Cuboid(Vector3d min, Vector3d max) {
+		assert min.compareTo(max) < 0;
 		this.min = min;
 		this.max = max;
 	}
@@ -140,7 +143,9 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	}
 
 	public Cuboid transform(Transformer transform) {
-		return new Cuboid(transform.transform(min), transform.transform(max));
+		Vector3d transMin = transform.transform(min);
+		Vector3d transMax = transform.transform(max);
+		return new Cuboid(transMin.min(transMax), transMax.max(transMin));
 	}
 
 	public void forEach(Consumer<Vector3i> consumer) {
@@ -152,6 +157,10 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 			for (double y = min.y; y < max.y; y += step)
 				for (double z = min.z; z < max.z; z += step)
 					consumer.accept(new Vector3d(x, y, z));
+	}
+
+	public Direction sideOf(Vector3d position) {
+		return Direction.fromVector(position.subtract(center()).normalize());
 	}
 
 	@Override

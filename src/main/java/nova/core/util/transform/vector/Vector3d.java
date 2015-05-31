@@ -6,6 +6,8 @@ import nova.core.retention.Stored;
 import nova.core.util.math.MathUtil;
 import nova.core.util.transform.matrix.Matrix;
 
+import java.util.Random;
+
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that
  * holds an x, y and z value.
@@ -19,7 +21,6 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 	public static final Vector3d xAxis = new Vector3d(1, 0, 0);
 	public static final Vector3d yAxis = new Vector3d(0, 1, 0);
 	public static final Vector3d zAxis = new Vector3d(0, 0, 1);
-
 	@Stored
 	public final double x, y, z;
 
@@ -31,6 +32,16 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+
+	/**
+	 * @return Creates a random unit vector
+	 */
+	public static Vector3d random() {
+		Random random = new Random();
+		return new Vector3d(random.nextDouble(), random.nextDouble(), random.nextDouble())
+			.multiply(2)
+			.subtract(1);
 	}
 
 	@Override
@@ -153,75 +164,16 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 		return new Vector3i(xi(), yi(), zi());
 	}
 
+	public double[] toArray() {
+		return new double[] { x, y, z };
+	}
+
 	public Vector3d abs() {
 		return new Vector3d(Math.abs(x), Math.abs(y), Math.abs(z));
 	}
 
 	public double distance(Vector3i other) {
 		return distance(other.toDouble());
-	}
-
-	public Vector3d YZintercept(Vector3d end, double px) {
-		double dx = end.x - x;
-		double dy = end.y - y;
-		double dz = end.z - z;
-
-		if (dx == 0) {
-			return null;
-		}
-
-		double d = (px - x) / dx;
-		if (MathUtil.isBetween(-1E-5, d, 1E-5)) {
-			return this;
-		}
-
-		if (!MathUtil.isBetween(0, d, 1)) {
-			return null;
-		}
-
-		return new Vector3d(px, y + d * dy, z + d * dz);
-	}
-
-	public Vector3d XZintercept(Vector3d end, double py) {
-		double dx = end.x - x;
-		double dy = end.y - y;
-		double dz = end.z - z;
-
-		if (dy == 0) {
-			return null;
-		}
-
-		double d = (py - y) / dy;
-		if (MathUtil.isBetween(-1E-5, d, 1E-5)) {
-			return this;
-		}
-
-		if (!MathUtil.isBetween(0, d, 1)) {
-			return null;
-		}
-
-		return new Vector3d(x + d * dx, py, z + d * dz);
-	}
-
-	public Vector3d XYintercept(Vector3d end, double pz) {
-		double dx = end.x - x;
-		double dy = end.y - y;
-		double dz = end.z - z;
-
-		if (dz == 0) {
-			return null;
-		}
-
-		double d = (pz - z) / dz;
-		if (MathUtil.isBetween(-1E-5, d, 1E-5)) {
-			return this;
-		}
-
-		if (!MathUtil.isBetween(0, d, 1)) {
-			return null;
-		}
-
-		return new Vector3d(x + d * dx, y + d * dy, pz);
 	}
 
 	@Override
