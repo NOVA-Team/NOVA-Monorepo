@@ -24,7 +24,7 @@ public class ShapelessRecipeBasic extends ShapelessRecipes {
 	private final ShapelessCraftingRecipe recipe;
 
 	public ShapelessRecipeBasic(ItemStack[] ingredients, ShapelessCraftingRecipe recipe) {
-		super(recipe.getNominalOutput().isPresent() ? Game.instance.nativeManager.toNative(recipe.getNominalOutput().get()) : null, Arrays.asList(ingredients));
+		super(recipe.getNominalOutput().isPresent() ? Game.instance().nativeManager().toNative(recipe.getNominalOutput().get()) : null, Arrays.asList(ingredients));
 
 		this.recipe = recipe;
 	}
@@ -38,7 +38,7 @@ public class ShapelessRecipeBasic extends ShapelessRecipes {
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
 		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
 		if (craftingResult.isPresent()) {
-			return Game.instance.nativeManager.toNative(craftingResult.get());
+			return Game.instance().nativeManager().toNative(craftingResult.get());
 		}
 		return null;
 	}

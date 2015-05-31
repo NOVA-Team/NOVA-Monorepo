@@ -43,7 +43,7 @@ public final class FWTileLoader {
 	}
 
 	private static Block createBlock(String blockID) {
-		Optional<BlockFactory> blockFactory = Game.instance.blockManager.getFactory(blockID);
+		Optional<BlockFactory> blockFactory = Game.instance().blockManager().getFactory(blockID);
 		if (blockFactory.isPresent()) {
 			return blockFactory.get().makeBlock();
 		} else {

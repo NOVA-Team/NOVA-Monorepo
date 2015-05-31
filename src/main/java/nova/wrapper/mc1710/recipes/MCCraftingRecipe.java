@@ -27,7 +27,7 @@ public class MCCraftingRecipe implements CraftingRecipe {
 
     @Override
 	public Optional<Item> getCraftingResult(CraftingGrid craftingGrid) {
-		return Game.instance.nativeManager.toNova(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid)));
+		return Game.instance().nativeManager().toNova(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid)));
 	}
 
     @Override
@@ -37,6 +37,6 @@ public class MCCraftingRecipe implements CraftingRecipe {
 
     @Override
 	public Optional<Item> getNominalOutput() {
-		return Game.instance.nativeManager.toNova(recipe.getRecipeOutput());
+		return Game.instance().nativeManager().toNova(recipe.getRecipeOutput());
 	}
 }

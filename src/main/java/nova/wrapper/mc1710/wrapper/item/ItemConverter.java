@@ -36,7 +36,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	private final HashBiMap<ItemFactory, MinecraftItemMapping> map = HashBiMap.create();
 
 	public static ItemConverter instance() {
-		return (ItemConverter) Game.instance.nativeManager.getNative(Item.class, ItemStack.class);
+		return (ItemConverter) Game.instance().nativeManager().getNative(Item.class, ItemStack.class);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		} else {
 			ItemFactory itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
 
-			Data data = itemStack.getTagCompound() != null ? Game.instance.nativeManager.toNova(itemStack.getTagCompound()) : new Data();
+			Data data = itemStack.getTagCompound() != null ? Game.instance().nativeManager().toNova(itemStack.getTagCompound()) : new Data();
 			if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
 				data.put("damage", itemStack.getItemDamage());
 			}
@@ -85,7 +85,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		if (item instanceof BWItem) {
 			return ((BWItem) item).makeItemStack(item.count());
 		} else {
-			ItemFactory itemFactory = Game.instance.itemManager.getItem(item.getID()).get();
+			ItemFactory itemFactory = Game.instance().itemManager().getItem(item.getID()).get();
 			WrappedNBTTagCompound tag = new WrappedNBTTagCompound(item);
 
 			MinecraftItemMapping mapping = get(itemFactory);
@@ -113,7 +113,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	public ItemStack toNative(String id) {
-		return toNative(Game.instance.itemManager.getItem(id).get().makeItem().setCount(1));
+		return toNative(Game.instance().itemManager().getItem(id).get().makeItem().setCount(1));
 	}
 
 	public MinecraftItemMapping get(ItemFactory item) {
@@ -129,7 +129,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	 */
 	public net.minecraft.item.ItemStack updateMCItemStack(ItemStack itemStack, nova.core.item.Item item) {
 		itemStack.stackSize = item.count();
-		itemStack.setTagCompound(Game.instance.nativeManager.toNative(item.factory().saveItem(item)));
+		itemStack.setTagCompound(Game.instance().nativeManager().toNative(item.factory().saveItem(item)));
 		return itemStack;
 	}
 
@@ -143,7 +143,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	private void registerNOVAItemsToMinecraft() {
-		ItemManager itemManager = Game.instance.itemManager;
+		ItemManager itemManager = Game.instance().itemManager();
 
 		//There should be no items registered during Native Converter preInit()
 		//	itemManager.registry.forEach(this::registerNOVAItem);
@@ -165,7 +165,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 		if (itemFactory.getDummy() instanceof ItemBlock) {
 			BlockFactory blockFactory = ((ItemBlock) (itemFactory.getDummy())).blockFactory;
-			net.minecraft.block.Block mcBlock = Game.instance.nativeManager.toNative(blockFactory.getDummy());
+			net.minecraft.block.Block mcBlock = Game.instance().nativeManager().toNative(blockFactory.getDummy());
 			itemWrapper = net.minecraft.item.Item.getItemFromBlock(mcBlock);
 			if (itemWrapper == null) {
 				throw new NovaException("ItemConverter: Missing block: " + itemFactory.getID());
@@ -210,7 +210,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	private void registerSubtypeResolution() {
-		Game.instance.itemManager.whenIDNotFound(this::onIDNotFound);
+		Game.instance().itemManager().whenIDNotFound(this::onIDNotFound);
 	}
 
 	private void onIDNotFound(ItemIDNotFoundEvent event) {
@@ -247,7 +247,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		MCItemFactory itemFactory = new MCItemFactory(item, meta);
 		map.put(itemFactory, mapping);
 
-		Game.instance.itemManager.register(itemFactory);
+		Game.instance().itemManager().register(itemFactory);
 
 		return itemFactory;
 	}

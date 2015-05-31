@@ -42,7 +42,7 @@ public class FWTile extends TileEntity {
 	@Override
 	public Packet getDescriptionPacket() {
 		if (block instanceof nova.core.network.PacketHandler) {
-			return ((MCNetworkManager) Game.instance.networkManager).toMCPacket(((MCNetworkManager) Game.instance.networkManager).getBlockPacket(0, (nova.core.network.PacketHandler) block));
+			return ((MCNetworkManager) Game.instance().networkManager()).toMCPacket(((MCNetworkManager) Game.instance().networkManager()).getBlockPacket(0, (nova.core.network.PacketHandler) block));
 		}
 		return null;
 	}
@@ -94,7 +94,7 @@ public class FWTile extends TileEntity {
 			if (block instanceof Storable) {
 				Data data = new Data();
 				((Storable) block).save(data);
-				nbt.setTag("nova", Game.instance.nativeManager.toNative(data));
+				nbt.setTag("nova", Game.instance().nativeManager().toNative(data));
 			}
 		}
 	}
@@ -109,6 +109,6 @@ public class FWTile extends TileEntity {
 		 * Future.
 		 */
 		blockID = nbt.getString("novaID");
-		cacheData = Game.instance.nativeManager.toNova(nbt.getCompoundTag("nova"));
+		cacheData = Game.instance().nativeManager().toNova(nbt.getCompoundTag("nova"));
 	}
 }

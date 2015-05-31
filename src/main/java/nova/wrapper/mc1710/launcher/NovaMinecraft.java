@@ -95,17 +95,17 @@ public class NovaMinecraft {
 		proxy.registerResourcePacks(modClasses);
 		launcher = new NovaLauncher(diep, modClasses);
 
-		Game.instance = diep.init();
+		Game.inject(diep.init());
 
 		/**
 		 * Register native converters
 		 */
-		Game.instance.nativeManager.registerConverter(new DataWrapper());
-		Game.instance.nativeManager.registerConverter(new EntityConverter());
-		Game.instance.nativeManager.registerConverter(new BlockConverter());
-		Game.instance.nativeManager.registerConverter(new ItemConverter());
-		Game.instance.nativeManager.registerConverter(new WorldConverter());
-		Game.instance.nativeManager.registerConverter(new CuboidConverter());
+		Game.instance().nativeManager().registerConverter(new DataWrapper());
+		Game.instance().nativeManager().registerConverter(new EntityConverter());
+		Game.instance().nativeManager().registerConverter(new BlockConverter());
+		Game.instance().nativeManager().registerConverter(new ItemConverter());
+		Game.instance().nativeManager().registerConverter(new WorldConverter());
+		Game.instance().nativeManager().registerConverter(new CuboidConverter());
 
 		/**
 		 * Initiate recipe and ore dictionary integration
@@ -116,8 +116,8 @@ public class NovaMinecraft {
 		/**
 		 * Set up components
 		 */
-		Game.instance.componentManager.register(args -> args.length > 0 ? new MCRigidBody((ComponentProvider) args[0]) : new MCRigidBody(null));
-		Game.instance.componentManager.register(args -> args.length > 0 ? new MCEntityTransform((ComponentProvider) args[0]) : new MCEntityTransform(null));
+		Game.instance().componentManager().register(args -> args.length > 0 ? new MCRigidBody((ComponentProvider) args[0]) : new MCRigidBody(null));
+		Game.instance().componentManager().register(args -> args.length > 0 ? new MCEntityTransform((ComponentProvider) args[0]) : new MCEntityTransform(null));
 
 		/**
 		 * Download dependencies
@@ -158,7 +158,7 @@ public class NovaMinecraft {
 		nativeLoader.load();
 
 		nativeLoader.preInit();
-		nativeConverters = Game.instance.nativeManager.getNativeConverters().stream().filter(n -> n instanceof Loadable).map(n -> (Loadable) n).collect(Collectors.toSet());
+		nativeConverters = Game.instance().nativeManager().getNativeConverters().stream().filter(n -> n instanceof Loadable).map(n -> (Loadable) n).collect(Collectors.toSet());
 		nativeConverters.stream().forEachOrdered(Loadable::preInit);
 		launcher.preInit();
 
@@ -175,7 +175,7 @@ public class NovaMinecraft {
 		 */
 		MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
 		FMLCommonHandler.instance().bus().register(new FMLEventHandler());
-		MinecraftForge.EVENT_BUS.register(Game.instance.saveManager);
+		MinecraftForge.EVENT_BUS.register(Game.instance().saveManager());
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new MCGuiFactory.GuiHandler());
 	}
@@ -198,12 +198,12 @@ public class NovaMinecraft {
 
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
-		Game.instance.eventManager.serverStarting.publish(new EventManager.EmptyEvent());
+		Game.instance().eventManager().serverStarting.publish(new EventManager.EmptyEvent());
 	}
 
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent event) {
-		Game.instance.eventManager.serverStopping.publish(new EventManager.EmptyEvent());
+		Game.instance().eventManager().serverStopping.publish(new EventManager.EmptyEvent());
 	}
 
 }

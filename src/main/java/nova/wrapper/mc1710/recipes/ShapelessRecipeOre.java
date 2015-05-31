@@ -17,7 +17,7 @@ public class ShapelessRecipeOre extends ShapelessOreRecipe {
 	private final ShapelessCraftingRecipe recipe;
 
 	public ShapelessRecipeOre(Object[] ingredients, ShapelessCraftingRecipe recipe) {
-		super((ItemStack) Game.instance.nativeManager.toNative(recipe.getNominalOutput().get()), ingredients);
+		super((ItemStack) Game.instance().nativeManager().toNative(recipe.getNominalOutput().get()), ingredients);
 
 		this.recipe = recipe;
 	}
@@ -31,7 +31,7 @@ public class ShapelessRecipeOre extends ShapelessOreRecipe {
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
 		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
 		if (craftingResult.isPresent()) {
-			return ((ItemStack) Game.instance.nativeManager.toNative(craftingResult.get())).copy();
+			return ((ItemStack) Game.instance().nativeManager().toNative(craftingResult.get())).copy();
 		}
 		return null;
 	}

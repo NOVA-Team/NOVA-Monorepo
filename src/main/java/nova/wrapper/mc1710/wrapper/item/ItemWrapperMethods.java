@@ -29,13 +29,13 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	ItemFactory getItemFactory();
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
-		Item item = Game.instance.nativeManager.toNova(itemStack);
+		Item item = Game.instance().nativeManager().toNova(itemStack);
 		item.setCount(itemStack.stackSize).tooltipEvent.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
 		getItemFactory().saveItem(item);
 	}
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		Item item = Game.instance.nativeManager.toNova(itemStack);
+		Item item = Game.instance().nativeManager().toNova(itemStack);
 		Item.UseEvent event = new Item.UseEvent(new BWEntity(player), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
 		item.useEvent.publish(event);
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
@@ -43,7 +43,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		Item item = Game.instance.nativeManager.toNova(itemStack);
+		Item item = Game.instance().nativeManager().toNova(itemStack);
 		item.rightClickEvent.publish(new Item.RightClickEvent(new BWEntity(player)));
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return itemStack;
@@ -57,7 +57,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default IIcon getIcon(ItemStack itemStack, int pass) {
-		Item item = Game.instance.nativeManager.toNova(itemStack);
+		Item item = Game.instance().nativeManager().toNova(itemStack);
 		if (item.getTexture().isPresent()) {
 			return RenderUtility.instance.getIcon(item.getTexture().get());
 		}
@@ -73,7 +73,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default void renderItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data) {
-		Item item = Game.instance.nativeManager.toNova(itemStack);
+		Item item = Game.instance().nativeManager().toNova(itemStack);
 		if (item.has(ItemRenderer.class)) {
 			BWModel model = new BWModel();
 			item.get(ItemRenderer.class).onRender.accept(model);
@@ -82,6 +82,6 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
-		return ((Item) Game.instance.nativeManager.toNova(itemStack)).colorMultiplier().argb();
+		return ((Item) Game.instance().nativeManager().toNova(itemStack)).colorMultiplier().argb();
 	}
 }

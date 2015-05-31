@@ -33,7 +33,7 @@ public class FWEntity extends net.minecraft.entity.Entity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		if (wrapped instanceof Storable) {
-			((Storable) wrapped).load(Game.instance.nativeManager.toNova(nbt));
+			((Storable) wrapped).load(Game.instance().nativeManager().toNova(nbt));
 		}
 	}
 

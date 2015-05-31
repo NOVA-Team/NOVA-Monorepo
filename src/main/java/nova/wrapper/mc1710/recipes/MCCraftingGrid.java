@@ -108,7 +108,7 @@ public class MCCraftingGrid implements CraftingGrid {
 					if (stacks[i] == null)
                         numberOfStacks++;
 
-					stacks[i] = Game.instance.nativeManager.toNova(original[i]);
+					stacks[i] = Game.instance().nativeManager().toNova(original[i]);
 				} else {
 					if (stacks[i] != null)
                         numberOfStacks--;
@@ -162,7 +162,7 @@ public class MCCraftingGrid implements CraftingGrid {
 		int ix = y * width + x;
 		if (!stack.equals(stacks[ix])) {
 			if (stack.isPresent()) {
-				inventory.setInventorySlotContents(ix, Game.instance.nativeManager.toNative(stack.get()));
+				inventory.setInventorySlotContents(ix, Game.instance().nativeManager().toNative(stack.get()));
 
                 if (stacks[ix] == null) {
                     numberOfStacks++;
@@ -194,7 +194,7 @@ public class MCCraftingGrid implements CraftingGrid {
             if (stacks[i] == null)
                 numberOfStacks++;
 
-			inventory.setInventorySlotContents(i, Game.instance.nativeManager.toNative(stack.get()));
+			inventory.setInventorySlotContents(i, Game.instance().nativeManager().toNative(stack.get()));
 			stacks[i] = stack.get();
         }
 

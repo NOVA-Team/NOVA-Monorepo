@@ -63,7 +63,7 @@ public class BWBlock extends Block implements Storable {
 
 	@Override
 	public ItemFactory getItemFactory() {
-		return Game.instance.nativeManager.toNova(Item.getItemFromBlock(mcBlock));
+		return Game.instance().nativeManager().toNova(Item.getItemFromBlock(mcBlock));
 	}
 
 	private IBlockAccess getMcBlockAccess() {
@@ -94,7 +94,7 @@ public class BWBlock extends Block implements Storable {
 		if (tileEntity != null) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			tileEntity.writeToNBT(nbt);
-			data.putAll(Game.instance.nativeManager.toNova(nbt));
+			data.putAll(Game.instance().nativeManager().toNova(nbt));
 		}
 	}
 
@@ -104,7 +104,7 @@ public class BWBlock extends Block implements Storable {
 
 		TileEntity tileEntity = getTileEntity();
 		if (tileEntity != null) {
-			tileEntity.writeToNBT(Game.instance.nativeManager.toNative(data));
+			tileEntity.writeToNBT(Game.instance().nativeManager().toNative(data));
 		}
 	}
 }

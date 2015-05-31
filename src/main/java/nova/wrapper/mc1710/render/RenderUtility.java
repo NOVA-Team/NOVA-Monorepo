@@ -95,9 +95,9 @@ public class RenderUtility {
 	@SubscribeEvent
 	public void preTextureHook(TextureStitchEvent.Pre event) {
 		if (event.map.getTextureType() == 0) {
-			Game.instance.renderManager.blockTextures.forEach(t -> registerIcon(t, event));
+			Game.instance().renderManager().blockTextures.forEach(t -> registerIcon(t, event));
 		} else if (event.map.getTextureType() == 1) {
-			Game.instance.renderManager.itemTextures.forEach(t -> registerIcon(t, event));
+			Game.instance().renderManager().itemTextures.forEach(t -> registerIcon(t, event));
 		}
 	}
 
@@ -111,7 +111,7 @@ public class RenderUtility {
 	}
 
 	public void loadModels() {
-		Game.instance.renderManager.modelProviders.forEach(m -> {
+		Game.instance().renderManager().modelProviders.forEach(m -> {
 			ResourceLocation resource = new ResourceLocation(m.domain, "models/" + m.name + "." + m.getType());
 			try {
 				IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
