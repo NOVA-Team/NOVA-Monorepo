@@ -53,12 +53,12 @@ public class NovaLauncherTestFactory {
 
 		NovaLauncher launcher = new NovaLauncher(diep, new HashSet<>(Arrays.asList(modClasses)));
 
-		Game.instance = diep.init();
+		Game.inject(diep.init());
 
 		/**
 		 * Register fake air block
 		 */
-		Game.instance.blockManager.register((args) -> new FakeBlock("air") {
+		Game.instance().blockManager().register((args) -> new FakeBlock("air") {
 			@Override
 			public void onRegister() {
 
