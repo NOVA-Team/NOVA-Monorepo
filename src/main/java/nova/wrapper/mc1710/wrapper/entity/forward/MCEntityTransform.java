@@ -60,7 +60,7 @@ public class MCEntityTransform extends EntityTransform {
 
 	@Override
 	public Quaternion rotation() {
-		return Quaternion.fromEuler(Math.toRadians(-mcEntity.rotationYaw), -Math.toRadians(mcEntity.rotationPitch), 0);
+		return Quaternion.fromEuler(-Math.toRadians(mcEntity.rotationYaw) - Math.PI, -Math.toRadians(mcEntity.rotationPitch));
 	}
 
 	@Override
