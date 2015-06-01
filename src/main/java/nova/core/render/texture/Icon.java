@@ -10,28 +10,28 @@ import nova.core.util.transform.vector.Vector2d;
 public class Icon {
 
 	protected Texture texture;
-	protected Vector2d uv;
-	protected Vector2d dimension;
+	protected Vector2d minUV;
+	protected Vector2d maxUV;
 
 	/** Package private constructor for Texture **/
 	Icon() {
 	}
 
-	public Icon(Texture texture, Vector2d uv, Vector2d dimension) {
+	public Icon(Texture texture, Vector2d minUV, Vector2d maxUV) {
 		this.texture = texture;
-		this.uv = uv;
-		this.dimension = dimension;
+		this.minUV = minUV;
+		this.maxUV = maxUV;
 	}
 
 	public Texture texture() {
 		return texture;
 	}
 
-	public Vector2d uv() {
-		return uv;
+	public Vector2d minUV() {
+		return minUV;
 	}
 
-	public Vector2d dimension() {
-		return dimension;
+	public Vector2d maxUV() {
+		return maxUV;
 	}
 }

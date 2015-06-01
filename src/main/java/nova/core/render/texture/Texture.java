@@ -23,8 +23,8 @@ public class Texture extends Icon {
 		this.dimension = Game.render().getDimension(this);
 
 		super.texture = this;
-		super.dimension = Vector2d.one;
-		super.uv = Vector2d.zero;
+		super.minUV = Vector2d.one;
+		super.maxUV = Vector2d.zero;
 	}
 
 	public String getResource() {

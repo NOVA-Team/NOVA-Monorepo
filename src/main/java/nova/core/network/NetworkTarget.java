@@ -110,7 +110,6 @@ public @interface NetworkTarget {
 		 * @return current side
 		 * @see NetworkManager#getSide()
 		 */
-		@SuppressWarnings("deprecation")
 		public static Side get() {
 			return Game.network().getSide();
 		}
