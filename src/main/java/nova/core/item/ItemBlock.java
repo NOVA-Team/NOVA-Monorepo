@@ -35,7 +35,7 @@ public class ItemBlock extends Item {
 
 	protected boolean onPrePlace(Entity entity, World world, Vector3i placePos, Direction side, Vector3d hit) {
 		Optional<Block> checkBlock = world.getBlock(placePos);
-		if (checkBlock.isPresent() && checkBlock.get().factory().equals(Game.blockManager().getAirBlockFactory())) {
+		if (checkBlock.isPresent() && checkBlock.get().factory().equals(Game.blocks().getAirBlockFactory())) {
 			return world.setBlock(placePos, blockFactory);
 		}
 		return false;

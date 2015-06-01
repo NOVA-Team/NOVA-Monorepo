@@ -33,7 +33,7 @@ public class OreItemIngredient implements ItemIngredient {
 		List<Item> result = new ArrayList<Item>();
 
 		Game.itemDictionary().get(name)
-			.forEach(itemId -> result.add(Game.itemManager().get(itemId).get()));
+			.forEach(itemId -> result.add(Game.items().get(itemId).get()));
 
 		return Optional.of(result);
 	}

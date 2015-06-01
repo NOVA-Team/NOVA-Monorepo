@@ -10,7 +10,7 @@ import java.util.Map;
  * A manager that handles external file saving.
  * @author Calclavia
  */
-public abstract class SaveManager {
+public abstract class RetentionManager {
 
 	/**
 	 * A map of objects to be saved to disk.

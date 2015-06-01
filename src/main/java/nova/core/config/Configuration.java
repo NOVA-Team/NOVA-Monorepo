@@ -143,7 +143,7 @@ public class Configuration {
 				ConfigValue val = ConfigValueFactory.fromAnyRef(entry.getValue()._1);
 				String comment = entry.getValue()._2;
 				if (!"".equals(comment)) {
-					//TODO: Maybe comment = Game.instance.languageManager.translate(comment); ?
+					//TODO: Maybe comment = Game.instance.language.translate(comment); ?
 					if (!val.origin().comments().contains(comment)) {
 						addComment(val, comment);
 					}

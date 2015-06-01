@@ -9,7 +9,7 @@ import nova.core.gui.GuiEvent.MouseEvent;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseButton;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseState;
 import nova.core.gui.GuiEvent.MouseWheelEvent;
-import nova.core.gui.KeyManager.Key;
+import nova.core.gui.InputManager.Key;
 import nova.core.gui.Outline;
 import nova.core.gui.factory.GuiEventFactory;
 import nova.core.gui.render.text.TextMetrics;

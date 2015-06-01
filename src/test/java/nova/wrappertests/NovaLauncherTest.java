@@ -39,20 +39,20 @@ public class NovaLauncherTest extends NovaLauncherTestFactory {
 
 		assertThat(game.logger()).isNotNull();
 		assertThat(game.clientManager()).isNotNull();
-		assertThat(game.blockManager()).isNotNull();
-		assertThat(game.entityManager()).isNotNull();
-		assertThat(game.itemManager()).isNotNull();
-		assertThat(game.fluidManager()).isNotNull();
-		assertThat(game.worldManager()).isNotNull();
-		assertThat(game.renderManager()).isNotNull();
-		assertThat(game.recipeManager()).isNotNull();
-		assertThat(game.craftingRecipeManager()).isNotNull();
+		assertThat(game.blocks()).isNotNull();
+		assertThat(game.entities()).isNotNull();
+		assertThat(game.items()).isNotNull();
+		assertThat(game.fluids()).isNotNull();
+		assertThat(game.worlds()).isNotNull();
+		assertThat(game.render()).isNotNull();
+		assertThat(game.recipes()).isNotNull();
+		assertThat(game.craftingRecipes()).isNotNull();
 		assertThat(game.itemDictionary()).isNotNull();
-		assertThat(game.eventManager()).isNotNull();
-		assertThat(game.networkManager()).isNotNull();
-		assertThat(game.saveManager()).isNotNull();
-		assertThat(game.languageManager()).isNotNull();
-		assertThat(game.keyManager()).isNotNull();
-		assertThat(game.nativeManager()).isNotNull();
+		assertThat(game.events()).isNotNull();
+		assertThat(game.network()).isNotNull();
+		assertThat(game.retention()).isNotNull();
+		assertThat(game.language()).isNotNull();
+		assertThat(game.input()).isNotNull();
+		assertThat(game.natives()).isNotNull();
 	}
 }

@@ -118,13 +118,13 @@ public class RayTraceTest {
 
 		@Override
 		public void preInit() {
-			solid = Game.blockManager().register(args -> {
+			solid = Game.blocks().register(args -> {
 				FakeBlock solid = new FakeBlock("solid");
 				solid.add(new Collider());
 				return solid;
 			});
 
-			testEntity = Game.entityManager().register(objects -> new Entity() {
+			testEntity = Game.entities().register(objects -> new Entity() {
 				@Override
 				public String getID() {
 					return "test";

@@ -5,7 +5,7 @@ import nova.core.component.ComponentManager;
 import nova.core.entity.EntityManager;
 import nova.core.event.GlobalEvents;
 import nova.core.fluid.FluidManager;
-import nova.core.gui.KeyManager;
+import nova.core.gui.InputManager;
 import nova.core.gui.factory.GuiComponentFactory;
 import nova.core.gui.factory.GuiManager;
 import nova.core.item.ItemDictionary;
@@ -16,7 +16,7 @@ import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
 import nova.core.util.LanguageManager;
-import nova.core.util.SaveManager;
+import nova.core.util.RetentionManager;
 import nova.core.world.WorldManager;
 import nova.internal.tick.UpdateTicker;
 
@@ -40,9 +40,9 @@ public class Game {
 	private final ItemDictionary itemDictionary;
 	private final GlobalEvents eventManager;
 	private final NetworkManager networkManager;
-	private final SaveManager saveManager;
+	private final RetentionManager retentionManager;
 	private final LanguageManager languageManager;
-	private final KeyManager keyManager;
+	private final InputManager inputManager;
 	private final ComponentManager componentManager;
 	private final NativeManager nativeManager;
 
@@ -77,9 +77,9 @@ public class Game {
 			ItemDictionary itemDictionary,
 			GlobalEvents eventManager,
 			NetworkManager networkManager,
-			SaveManager saveManager,
+		RetentionManager retentionManager,
 			LanguageManager languageManager,
-			KeyManager keyManager,
+		InputManager inputManager,
 			NativeManager nativeManager,
 			ComponentManager componentManager,
 			UpdateTicker.SynchronizedTicker syncTicker,
@@ -100,9 +100,9 @@ public class Game {
 		this.itemDictionary = itemDictionary;
 		this.eventManager = eventManager;
 		this.networkManager = networkManager;
-		this.saveManager = saveManager;
+		this.retentionManager = retentionManager;
 		this.languageManager = languageManager;
-		this.keyManager = keyManager;
+		this.inputManager = inputManager;
 		this.nativeManager = nativeManager;
 		this.componentManager = componentManager;
 
@@ -127,35 +127,35 @@ public class Game {
 		return instance.clientManager;
 	}
 
-	public static BlockManager blockManager() {
+	public static BlockManager blocks() {
 		return instance.blockManager;
 	}
 
-	public static EntityManager entityManager() {
+	public static EntityManager entities() {
 		return instance.entityManager;
 	}
 
-	public static ItemManager itemManager() {
+	public static ItemManager items() {
 		return instance.itemManager;
 	}
 
-	public static FluidManager fluidManager() {
+	public static FluidManager fluids() {
 		return instance.fluidManager;
 	}
 
-	public static WorldManager worldManager() {
+	public static WorldManager worlds() {
 		return instance.worldManager;
 	}
 
-	public static RenderManager renderManager() {
+	public static RenderManager render() {
 		return instance.renderManager;
 	}
 
-	public static RecipeManager recipeManager() {
+	public static RecipeManager recipes() {
 		return instance.recipeManager;
 	}
 
-	public static CraftingRecipeManager craftingRecipeManager() {
+	public static CraftingRecipeManager craftingRecipes() {
 		return instance.craftingRecipeManager;
 	}
 
@@ -163,31 +163,31 @@ public class Game {
 		return instance.itemDictionary;
 	}
 
-	public static GlobalEvents eventManager() {
+	public static GlobalEvents events() {
 		return instance.eventManager;
 	}
 
-	public static NetworkManager networkManager() {
+	public static NetworkManager network() {
 		return instance.networkManager;
 	}
 
-	public static SaveManager saveManager() {
-		return instance.saveManager;
+	public static RetentionManager retention() {
+		return instance.retentionManager;
 	}
 
-	public static LanguageManager languageManager() {
+	public static LanguageManager language() {
 		return instance.languageManager;
 	}
 
-	public static KeyManager keyManager() {
-		return instance.keyManager;
+	public static InputManager input() {
+		return instance.inputManager;
 	}
 
-	public static ComponentManager componentManager() {
+	public static ComponentManager components() {
 		return instance.componentManager;
 	}
 
-	public static NativeManager nativeManager() {
+	public static NativeManager natives() {
 		return instance.nativeManager;
 	}
 
@@ -205,11 +205,11 @@ public class Game {
 		return instance.threadTicker;
 	}
 
-	public static GuiComponentFactory guiComponentFactory() {
+	public static GuiComponentFactory guiComponent() {
 		return instance.guiComponentFactory;
 	}
 
-	public static GuiManager guiFactory() {
+	public static GuiManager gui() {
 		return instance.guiFactory;
 	}
 }

@@ -6,13 +6,13 @@ import com.google.common.collect.HashBiMap;
  * Maps native key strokes to the internal NOVA key enum.
  *
  * @author Vic Nightfall
- * @see KeyManager.Key
+ * @see InputManager.Key
  */
-public abstract class KeyManager {
+public abstract class InputManager {
 
 	protected HashBiMap<Integer, Key> keys = HashBiMap.create(Key.values().length);
 
-	protected KeyManager() {
+	protected InputManager() {
 		mapKeys();
 	}
 

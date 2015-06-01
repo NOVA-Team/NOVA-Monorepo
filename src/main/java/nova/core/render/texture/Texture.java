@@ -18,7 +18,7 @@ public class Texture {
 	public Texture(String domain, String resource) {
 		this.domain = domain;
 		this.resource = resource;
-		this.dimension = Game.renderManager().getDimension(this);
+		this.dimension = Game.render().getDimension(this);
 	}
 
 	public String getResource() {

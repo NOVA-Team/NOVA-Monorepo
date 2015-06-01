@@ -4,7 +4,7 @@ import nova.core.block.Block;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Player;
 import nova.core.event.CancelableEvent;
-import nova.core.gui.KeyManager.Key;
+import nova.core.gui.InputManager.Key;
 import nova.core.gui.render.Graphics;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;

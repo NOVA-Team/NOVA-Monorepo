@@ -85,7 +85,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 	@Override
 	public void preInit() {
 		// Test integrity of the GuiFactory
-		Game.guiComponentFactory().validate();
+		Game.guiComponent().validate();
 		super.preInit();
 	}
 

@@ -93,10 +93,33 @@ public @interface NetworkTarget {
 		NONE;
 
 		/**
+		 * Checks if the current execution environment is of the desired side.
+		 *
+		 * @param side desired {@link Side}
+		 * @throws IllegalSideException if the side doesn't match
+		 */
+		public static void assertSide(Side side) {
+			Side current = get();
+			if (side != current) {
+				throw new IllegalSideException(current, Thread.currentThread().getStackTrace()[2]);
+			}
+		}
+
+		/**
+		 * Returns the {@link Side} of the current execution environment.
+		 * @return current side
+		 * @see NetworkManager#getSide()
+		 */
+		@SuppressWarnings("deprecation")
+		public static Side get() {
+			return Game.network().getSide();
+		}
+
+		/**
 		 * Check if the given side is a valid target for this side. This is
 		 * given if the provided side is either the opposing side or of type
 		 * {@link #BOTH}.
-		 * 
+		 *
 		 * @param otherSide side to check for
 		 * @return {@code true} if otherSide is a valid target.
 		 */
@@ -107,7 +130,7 @@ public @interface NetworkTarget {
 		/**
 		 * Check if the provided side is the server side, shorthand for
 		 * {@code side == Side.SERVER}.
-		 * 
+		 *
 		 * @return {@code true} if the current side is SERVER.
 		 */
 		public boolean isServer() {
@@ -117,7 +140,7 @@ public @interface NetworkTarget {
 		/**
 		 * Check if the provided side is the client side, shorthand for
 		 * {@code side == Side.CLIENT}.
-		 * 
+		 *
 		 * @return {@code true} if the current side is CLIENT.
 		 */
 		public boolean isClient() {
@@ -127,7 +150,7 @@ public @interface NetworkTarget {
 		/**
 		 * Returns the opposite side, {@link #SERVER} for {@link #CLIENT} and
 		 * vice-visa. {@link #BOTH} and {@link #NONE} remain unchanged.
-		 * 
+		 *
 		 * @return Opposite side
 		 */
 		public Side opposite() {
@@ -140,7 +163,7 @@ public @interface NetworkTarget {
 		 * Reduce is used to mark an object that was sent over the network as
 		 * already processed from the opposing side. Especially used for
 		 * {@link #BOTH}.
-		 * 
+		 *
 		 * @return reduced scope, without the opposite side
 		 * @see SidedEventBus
 		 */
@@ -151,36 +174,13 @@ public @interface NetworkTarget {
 
 		/**
 		 * Shorthand for {@code Side.assertSide(this)}
-		 * 
+		 *
 		 * @see #assertSide(Side)
 		 */
 		public void assertSide() {
 			Side current = get();
 			if (this != current)
 				throw new IllegalSideException(this, Thread.currentThread().getStackTrace()[2]);
-		}
-
-		/**
-		 * Checks if the current execution environment is of the desired side.
-		 * 
-		 * @param side desired {@link Side}
-		 * @throws IllegalSideException if the side doesn't match
-		 */
-		public static void assertSide(Side side) {
-			Side current = get();
-			if (side != current)
-				throw new IllegalSideException(current, Thread.currentThread().getStackTrace()[2]);
-		}
-
-		/**
-		 * Returns the {@link Side} of the current execution environment.
-		 * 
-		 * @return current side
-		 * @see NetworkManager#getSide()
-		 */
-		@SuppressWarnings("deprecation")
-		public static Side get() {
-			return Game.networkManager().getSide();
 		}
 	}
 

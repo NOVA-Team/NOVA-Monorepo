@@ -1,7 +1,7 @@
 package nova.wrappertests.depmodules;
 
 import nova.core.retention.Storable;
-import nova.core.util.SaveManager;
+import nova.core.util.RetentionManager;
 import se.jbee.inject.bind.BinderModule;
 
 import java.io.File;
@@ -13,10 +13,10 @@ public class FakeSaveModule extends BinderModule {
 
 	@Override
 	protected void declare() {
-		bind(SaveManager.class).to(FakeSaveManager.class);
+		bind(RetentionManager.class).to(FakeRetentionManager.class);
 	}
 
-	public static class FakeSaveManager extends SaveManager {
+	public static class FakeRetentionManager extends RetentionManager {
 		@Override
 		public void save(String filename, Storable storable) {
 

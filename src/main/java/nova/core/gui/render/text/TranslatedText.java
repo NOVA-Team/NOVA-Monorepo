@@ -16,7 +16,7 @@ public final class TranslatedText extends FormattedText {
 
 	@Override
 	public String getText() {
-		return Game.languageManager().translate(super.getText());
+		return Game.language().translate(super.getText());
 	}
 
 	@Override
