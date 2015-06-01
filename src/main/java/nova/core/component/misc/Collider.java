@@ -68,6 +68,11 @@ public class Collider extends Component {
 		return this;
 	}
 
+	public Collider setSelectionBoxes(Function<Optional<Entity>, Set<Cuboid>> selectionBoxes) {
+		this.selectionBoxes = selectionBoxes;
+		return this;
+	}
+
 	public Collider isCube(boolean is) {
 		isCube = () -> is;
 		return this;
