@@ -19,94 +19,72 @@ import nova.core.util.LanguageManager;
 import nova.core.util.SaveManager;
 import nova.core.world.WorldManager;
 import nova.internal.tick.UpdateTicker;
+
 import org.slf4j.Logger;
 
 public class Game {
-	@Deprecated
-	public static Game instance;
 
-	@Deprecated
-	public final Logger logger;
+	private static Game instance;
 
-	@Deprecated
-	public final ClientManager clientManager;
-	@Deprecated
-	public final BlockManager blockManager;
-	@Deprecated
-	public final EntityManager entityManager;
-	@Deprecated
-	public final ItemManager itemManager;
-	@Deprecated
-	public final FluidManager fluidManager;
-	@Deprecated
-	public final WorldManager worldManager;
-	@Deprecated
-	public final RenderManager renderManager;
-	@Deprecated
-	public final RecipeManager recipeManager;
-	@Deprecated
-	public final CraftingRecipeManager craftingRecipeManager;
-	@Deprecated
-	public final ItemDictionary itemDictionary;
-	@Deprecated
-	public final GlobalEvents eventManager;
-	@Deprecated
-	public final NetworkManager networkManager;
-	@Deprecated
-	public final SaveManager saveManager;
-	@Deprecated
-	public final LanguageManager languageManager;
-	@Deprecated
-	public final KeyManager keyManager;
-	@Deprecated
-	public final ComponentManager componentManager;
-	@Deprecated
-	public final NativeManager nativeManager;
+	private final Logger logger;
 
-	@Deprecated
+	private final ClientManager clientManager;
+	private final BlockManager blockManager;
+	private final EntityManager entityManager;
+	private final ItemManager itemManager;
+	private final FluidManager fluidManager;
+	private final WorldManager worldManager;
+	private final RenderManager renderManager;
+	private final RecipeManager recipeManager;
+	private final CraftingRecipeManager craftingRecipeManager;
+	private final ItemDictionary itemDictionary;
+	private final GlobalEvents eventManager;
+	private final NetworkManager networkManager;
+	private final SaveManager saveManager;
+	private final LanguageManager languageManager;
+	private final KeyManager keyManager;
+	private final ComponentManager componentManager;
+	private final NativeManager nativeManager;
+
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
 	 *
 	 * This is @deprecated, use syncTicker() instead.
 	 */
-	public final UpdateTicker.SynchronizedTicker syncTicker;
+	private final UpdateTicker.SynchronizedTicker syncTicker;
 
-	@Deprecated
 	/**
 	 * The thread ticker that runs on NOVA's thread.
 	 *
 	 * This is @deprecated, use threadTicker() instead.
 	 */
-	public final UpdateTicker.ThreadTicker threadTicker;
+	private final UpdateTicker.ThreadTicker threadTicker;
 
-	// TODO Move somewhere else
-	@Deprecated
-	public final GuiComponentFactory guiComponentFactory;
-	@Deprecated
-	public final GuiManager guiFactory;
+	private final GuiComponentFactory guiComponentFactory;
+	private final GuiManager guiFactory;
 
 	private Game(
-		Logger logger,
-		ClientManager clientManager,
-		BlockManager blockManager,
-		EntityManager entityManager,
-		ItemManager itemManager,
-		FluidManager fluidManager,
-		WorldManager worldManager,
-		RenderManager renderManager,
-		RecipeManager recipeManager,
-		CraftingRecipeManager craftingRecipeManager,
-		ItemDictionary itemDictionary,
-		GlobalEvents eventManager,
-		NetworkManager networkManager,
-		SaveManager saveManager,
-		LanguageManager languageManager,
-		KeyManager keyManager,
-		NativeManager nativeManager,
-		ComponentManager componentManager,
-		UpdateTicker.SynchronizedTicker syncTicker,
-		UpdateTicker.ThreadTicker threadTicker,
-		GuiComponentFactory guiComponentFactory, GuiManager guiFactory) {
+			Logger logger,
+			ClientManager clientManager,
+			BlockManager blockManager,
+			EntityManager entityManager,
+			ItemManager itemManager,
+			FluidManager fluidManager,
+			WorldManager worldManager,
+			RenderManager renderManager,
+			RecipeManager recipeManager,
+			CraftingRecipeManager craftingRecipeManager,
+			ItemDictionary itemDictionary,
+			GlobalEvents eventManager,
+			NetworkManager networkManager,
+			SaveManager saveManager,
+			LanguageManager languageManager,
+			KeyManager keyManager,
+			NativeManager nativeManager,
+			ComponentManager componentManager,
+			UpdateTicker.SynchronizedTicker syncTicker,
+			UpdateTicker.ThreadTicker threadTicker,
+			GuiComponentFactory guiComponentFactory, GuiManager guiFactory) {
 
 		this.logger = logger;
 
@@ -137,105 +115,101 @@ public class Game {
 		logger.info("Game instance created.");
 	}
 
-	public static Game instance() {
-		return instance;
-	}
-
 	public static void inject(Game game) {
 		Game.instance = game;
 	}
 
-	public Logger logger() {
-		return logger;
+	public static Logger logger() {
+		return instance.logger;
 	}
 
-	public ClientManager clientManager() {
-		return clientManager;
+	public static ClientManager clientManager() {
+		return instance.clientManager;
 	}
 
-	public BlockManager blockManager() {
-		return blockManager;
+	public static BlockManager blockManager() {
+		return instance.blockManager;
 	}
 
-	public EntityManager entityManager() {
-		return entityManager;
+	public static EntityManager entityManager() {
+		return instance.entityManager;
 	}
 
-	public ItemManager itemManager() {
-		return itemManager;
+	public static ItemManager itemManager() {
+		return instance.itemManager;
 	}
 
-	public FluidManager fluidManager() {
-		return fluidManager;
+	public static FluidManager fluidManager() {
+		return instance.fluidManager;
 	}
 
-	public WorldManager worldManager() {
-		return worldManager;
+	public static WorldManager worldManager() {
+		return instance.worldManager;
 	}
 
-	public RenderManager renderManager() {
-		return renderManager;
+	public static RenderManager renderManager() {
+		return instance.renderManager;
 	}
 
-	public RecipeManager recipeManager() {
-		return recipeManager;
+	public static RecipeManager recipeManager() {
+		return instance.recipeManager;
 	}
 
-	public CraftingRecipeManager craftingRecipeManager() {
-		return craftingRecipeManager;
+	public static CraftingRecipeManager craftingRecipeManager() {
+		return instance.craftingRecipeManager;
 	}
 
-	public ItemDictionary itemDictionary() {
-		return itemDictionary;
+	public static ItemDictionary itemDictionary() {
+		return instance.itemDictionary;
 	}
 
-	public GlobalEvents eventManager() {
-		return eventManager;
+	public static GlobalEvents eventManager() {
+		return instance.eventManager;
 	}
 
-	public NetworkManager networkManager() {
-		return networkManager;
+	public static NetworkManager networkManager() {
+		return instance.networkManager;
 	}
 
-	public SaveManager saveManager() {
-		return saveManager;
+	public static SaveManager saveManager() {
+		return instance.saveManager;
 	}
 
-	public LanguageManager languageManager() {
-		return languageManager;
+	public static LanguageManager languageManager() {
+		return instance.languageManager;
 	}
 
-	public KeyManager keyManager() {
-		return keyManager;
+	public static KeyManager keyManager() {
+		return instance.keyManager;
 	}
 
-	public ComponentManager componentManager() {
-		return componentManager;
+	public static ComponentManager componentManager() {
+		return instance.componentManager;
 	}
 
-	public NativeManager nativeManager() {
-		return nativeManager;
+	public static NativeManager nativeManager() {
+		return instance.nativeManager;
 	}
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
 	 */
-	public UpdateTicker.SynchronizedTicker syncTicker() {
-		return syncTicker;
+	public static UpdateTicker.SynchronizedTicker syncTicker() {
+		return instance.syncTicker;
 	}
 
 	/**
 	 * The thread ticker that runs on NOVA's thread.
 	 */
-	public final UpdateTicker.ThreadTicker threadTicker() {
-		return threadTicker;
+	public static UpdateTicker.ThreadTicker threadTicker() {
+		return instance.threadTicker;
 	}
 
-	public final GuiComponentFactory guiComponentFactory() {
-		return guiComponentFactory;
+	public static GuiComponentFactory guiComponentFactory() {
+		return instance.guiComponentFactory;
 	}
 
-	public final GuiManager guiFactory() {
-		return guiFactory;
+	public static GuiManager guiFactory() {
+		return instance.guiFactory;
 	}
 }

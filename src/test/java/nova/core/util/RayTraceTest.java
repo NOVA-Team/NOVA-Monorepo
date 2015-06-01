@@ -70,7 +70,7 @@ public class RayTraceTest {
 	public void testRayTraceEfficiency() {
 		int maxTestSize = 10000;
 
-		Game.instance().logger().info("Generating random world with block count: " + maxTestSize);
+		Game.logger().info("Generating random world with block count: " + maxTestSize);
 
 		/**
 		 * Generate a random world
@@ -81,14 +81,14 @@ public class RayTraceTest {
 			.mapToObj(value -> Vector3d.random().multiply(random.nextInt(maxTestSize)).toInt())
 			.forEach(pos -> fakeWorld.setBlock(pos, RayTraceMod.solid));
 
-		Game.instance().logger().info("World Generated");
+		Game.logger().info("World Generated");
 
 		for (int size = 0; size <= maxTestSize; size += 200) {
 			/**
 			 * Do random ray trace
 			 */
 			RayTracer rayTracer = new RayTracer(new RayTracer.Ray(new Vector3d(0, 5, 5), new Vector3d(1, 0, 0))).setDistance(size);
-			Game.instance().logger().info("Ray tracing with threading: " + rayTracer.doParallel());
+			Game.logger().info("Ray tracing with threading: " + rayTracer.doParallel());
 			Profiler start = new Profiler("Ray Trace " + size).start();
 			rayTracer.rayTraceBlocks(fakeWorld).findFirst();
 			start.end();
@@ -118,13 +118,13 @@ public class RayTraceTest {
 
 		@Override
 		public void preInit() {
-			solid = Game.instance().blockManager().register(args -> {
+			solid = Game.blockManager().register(args -> {
 				FakeBlock solid = new FakeBlock("solid");
 				solid.add(new Collider());
 				return solid;
 			});
 
-			testEntity = Game.instance().entityManager().register(objects -> new Entity() {
+			testEntity = Game.entityManager().register(objects -> new Entity() {
 				@Override
 				public String getID() {
 					return "test";

@@ -1,6 +1,8 @@
 package nova.bootstrap;
 
-import com.google.common.collect.Sets;
+import java.util.Optional;
+import java.util.Set;
+
 import nova.core.depmodules.CoreBundle;
 import nova.core.game.Game;
 import se.jbee.inject.Dependency;
@@ -9,8 +11,7 @@ import se.jbee.inject.bootstrap.Bootstrap;
 import se.jbee.inject.bootstrap.BootstrapperBundle;
 import se.jbee.inject.bootstrap.Bundle;
 
-import java.util.Optional;
-import java.util.Set;
+import com.google.common.collect.Sets;
 
 public class DependencyInjectionEntryPoint {
 
@@ -39,7 +40,8 @@ public class DependencyInjectionEntryPoint {
 	}
 
 	/**
-	 * Installs bundle in core Injector. Works until, finalization later throws {@link IllegalStateException}.
+	 * Installs bundle in core Injector. Works until, finalization later throws
+	 * {@link IllegalStateException}.
 	 *
 	 * @param bundle Bundle
 	 */
@@ -51,7 +53,8 @@ public class DependencyInjectionEntryPoint {
 	}
 
 	/**
-	 * Removes bundle from core Injector. Works until finalization, later throws {@link IllegalStateException}.
+	 * Removes bundle from core Injector. Works until finalization, later throws
+	 * {@link IllegalStateException}.
 	 *
 	 * @param bundle Bundle
 	 * @return whether module being uninstalled was installed.
@@ -64,11 +67,12 @@ public class DependencyInjectionEntryPoint {
 	}
 
 	/**
-	 * In this method modules added to DependencyInjectionEntryPoint are
-	 * being installed in core injector. Alternating module composition in core injector after initialization
-	 * is not possible.
+	 * In this method modules added to DependencyInjectionEntryPoint are being
+	 * installed in core injector. Alternating module composition in core
+	 * injector after initialization is not possible.
 	 *
-	 * @return Game instance {@link Game}. Use it for future injections and general management. {@link Game#instance}
+	 * @return Game instance {@link Game}. Use it for future injections and
+	 *         general management.
 	 */
 	public Game init() {
 		if (state != State.PREINIT) {

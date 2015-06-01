@@ -25,7 +25,7 @@ public class Profiler {
 	}
 
 	public double end() {
-		Game.instance().logger().info(toString());
+		Game.logger().info(toString());
 		return elapsed() / 1000d;
 	}
 

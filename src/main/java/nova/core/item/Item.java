@@ -34,7 +34,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 	 * @return The {@link nova.core.item.ItemFactory} that refers to this Block class.
 	 */
 	public final ItemFactory factory() {
-		return Game.instance().itemManager().getItem(this.getID()).get();
+		return Game.itemManager().getItem(this.getID()).get();
 	}
 
 	public int getMaxCount() {

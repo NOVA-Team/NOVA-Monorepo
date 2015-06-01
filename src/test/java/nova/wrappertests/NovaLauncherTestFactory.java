@@ -58,7 +58,7 @@ public class NovaLauncherTestFactory {
 		/**
 		 * Register fake air block
 		 */
-		Game.instance().blockManager().register((args) -> new FakeBlock("air") {
+		Game.blockManager().register((args) -> new FakeBlock("air") {
 			@Override
 			public void onRegister() {
 
