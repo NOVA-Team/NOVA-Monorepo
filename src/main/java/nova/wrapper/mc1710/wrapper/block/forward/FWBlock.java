@@ -169,11 +169,11 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, net.minecraft.block.Block block, int i) {
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		Block.BlockRemoveEvent evt = new Block.BlockRemoveEvent(Optional.empty());
 		blockInstance.removeEvent.publish(evt);
-		super.breakBlock(world, x, y, z, block, i);
+		return evt.result;
 	}
 
 	@Override
