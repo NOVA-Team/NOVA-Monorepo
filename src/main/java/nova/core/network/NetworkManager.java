@@ -43,7 +43,6 @@ public abstract class NetworkManager {
 	 * 
 	 * @return active side
 	 */
-	@Deprecated
 	public final Side getSide() {
 		return isClient() ? Side.CLIENT : Side.SERVER;
 	}
@@ -53,7 +52,6 @@ public abstract class NetworkManager {
 	 * 
 	 * @return true if the active side is {@link Side#CLIENT}
 	 */
-	@Deprecated
 	public final boolean isClient() {
 		return !isServer();
 	}
@@ -63,6 +61,5 @@ public abstract class NetworkManager {
 	 * 
 	 * @return true if the active side is {@link Side#SERVER}
 	 */
-	@Deprecated
 	public abstract boolean isServer();
 }
