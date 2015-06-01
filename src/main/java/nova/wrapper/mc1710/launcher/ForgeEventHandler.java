@@ -37,5 +37,6 @@ public class ForgeEventHandler {
 
 		event.useBlock = Event.Result.values()[evt.useBlock.ordinal()];
 		event.useItem = Event.Result.values()[evt.useItem.ordinal()];
+		event.setCanceled(evt.isCanceled());
 	}
 }
