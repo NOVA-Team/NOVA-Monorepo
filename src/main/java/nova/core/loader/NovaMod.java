@@ -45,6 +45,14 @@ public @interface NovaMod {
 	String novaVersion();
 
 	/**
+	 * The domains used by the mod for its assets.
+	 * These domain names are used to load the assets from file.
+	 * The assets should be placed in assets/domain/*
+	 * @return An array of domain names.
+	 */
+	String[] domains() default {};
+
+	/**
 	 * An array of the dependencies for this mod. The mod will load after all the dependencies are loaded.
 	 *
 	 * String format:
