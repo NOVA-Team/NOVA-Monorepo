@@ -32,6 +32,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	public final EventBus<BlockRemoveEvent> removeEvent = new EventBus<>();
 	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
 	public final EventBus<LeftClickEvent> leftClickEvent = new EventBus<>();
+
 	/**
 	 * Called when the block is registered.
 	 */
@@ -167,15 +168,20 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 
 	public static class BlockRemoveEvent {
 		/**
-		 * The entity that removed the block
+		 * The entity that is removing the block
 		 */
-		public final Optional<Entity> by;
+		public final Optional<Entity> entity;
 
 		/**
-		 * Called when the block is removed.
+		 * {@code true} if the block can be removed
 		 */
-		public BlockRemoveEvent(Optional<Entity> by) {
-			this.by = by;
+		public boolean result = true;
+
+		/**
+		 * Called when the block is about to be removed.
+		 */
+		public BlockRemoveEvent(Optional<Entity> entity) {
+			this.entity = entity;
 		}
 	}
 
