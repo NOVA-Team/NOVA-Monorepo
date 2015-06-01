@@ -6,13 +6,21 @@ import nova.core.deps.Dependency;
 import nova.core.deps.MavenDependency;
 import nova.core.game.Game;
 import nova.core.loader.NovaMod;
+import nova.core.util.exception.NovaException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,27 +60,35 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 	public void load() {
 		super.load();
 
-		Collections.sort(orderedMods, (o1, o2) -> {
-			NovaMod anno1 = o1.getClass().getAnnotation(NovaMod.class);
-			NovaMod anno2 = o2.getClass().getAnnotation(NovaMod.class);
+		TopologicalSort.DirectedGraph<NovaMod> modGraph = new TopologicalSort.DirectedGraph<>();
 
-			// Split string by @ and versions
-			Map<String, String> loadAfter1 = dependencyToMap(anno1.dependencies());
+		mods.keySet().forEach(modGraph::addNode);
 
-			// TODO: Compare version requirements.
-			if (loadAfter1.entrySet().stream().anyMatch(entry -> anno2.id().equals(entry.getKey()))) {
-				return 1;
+		//Create directed graph edges.
+		mods.keySet().forEach(
+			mod -> {
+				Map<String, String> depMap = dependencyToMap(mod.dependencies());
+				depMap.forEach((id, version) -> {
+					Optional<NovaMod> dependent = mods.keySet()
+						.stream()
+						.filter(m2 -> m2.id().equals(id))
+						.findFirst();
+
+					// TODO: Compare version requirements.
+					if (dependent.isPresent()) {
+						modGraph.addEdge(dependent.get(), mod);
+					}
+				});
 			}
+		);
 
-			// Split string by @ and versions
-			Map<String, String> loadAfter2 = dependencyToMap(anno2.dependencies());
+		orderedMods.clear();
 
-			if (loadAfter2.entrySet().stream().anyMatch(entry -> anno1.id().equals(entry.getKey()))) {
-				return -1;
-			}
+		TopologicalSort.topologicalSort(modGraph)
+			.stream()
+			.map(mods::get)
+			.forEachOrdered(orderedMods::add);
 
-			return 0;
-		});
 		Game.logger().info("NOVA Mods Loaded: " + mods.size());
 	}
 
@@ -120,6 +136,138 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 		}
 
 		neededDeps.put(mod.getAnnotation(NovaMod.class), deps);
+	}
+
+	//TODO: Separate into Util library
+	public static class TopologicalSort {
+		/**
+		 * Sort the input graph into a topologically sorted list
+		 *
+		 * Uses the reverse depth first search as outlined in ...
+		 * @param graph
+		 * @return The sorted mods list.
+		 */
+		public static <T> List<T> topologicalSort(DirectedGraph<T> graph) {
+			DirectedGraph<T> rGraph = reverse(graph);
+			List<T> sortedResult = new ArrayList<T>();
+			Set<T> visitedNodes = new HashSet<T>();
+			// A list of "fully explored" nodes. Leftovers in here indicate cycles in the graph
+			Set<T> expandedNodes = new HashSet<T>();
+
+			for (T node : rGraph) {
+				explore(node, rGraph, sortedResult, visitedNodes, expandedNodes);
+			}
+
+			return sortedResult;
+		}
+
+		public static <T> DirectedGraph<T> reverse(DirectedGraph<T> graph) {
+			DirectedGraph<T> result = new DirectedGraph<T>();
+
+			for (T node : graph) {
+				result.addNode(node);
+			}
+
+			for (T from : graph) {
+				for (T to : graph.edgesFrom(from)) {
+					result.addEdge(to, from);
+				}
+			}
+
+			return result;
+		}
+
+		public static <T> void explore(T node, DirectedGraph<T> graph, List<T> sortedResult, Set<T> visitedNodes, Set<T> expandedNodes) {
+			// Have we been here before?
+			if (visitedNodes.contains(node)) {
+				// And have completed this node before
+				if (expandedNodes.contains(node)) {
+					// Then we're fine
+					return;
+				}
+
+				throw new NovaException("There was a cycle detected in the input graph, sorting is not possible", node);
+			}
+
+			// Visit this node
+			visitedNodes.add(node);
+
+			// Recursively explore inbound edges
+			for (T inbound : graph.edgesFrom(node)) {
+				explore(inbound, graph, sortedResult, visitedNodes, expandedNodes);
+			}
+
+			// Add ourselves now
+			sortedResult.add(node);
+			// And mark ourselves as explored
+			expandedNodes.add(node);
+		}
+
+		public static class DirectedGraph<T> implements Iterable<T> {
+			private final Map<T, SortedSet<T>> graph = new HashMap<T, SortedSet<T>>();
+			private List<T> orderedNodes = new ArrayList<T>();
+
+			public boolean addNode(T node) {
+				// Ignore nodes already added
+				if (graph.containsKey(node)) {
+					return false;
+				}
+
+				orderedNodes.add(node);
+				graph.put(node, new TreeSet<>((o1, o2) -> orderedNodes.indexOf(o1) - orderedNodes.indexOf(o2)));
+				return true;
+			}
+
+			public void addEdge(T from, T to) {
+				if (!(graph.containsKey(from) && graph.containsKey(to))) {
+					throw new NoSuchElementException("Missing nodes from graph: " + from + " to " + to);
+				}
+
+				graph.get(from).add(to);
+			}
+
+			public void removeEdge(T from, T to) {
+				if (!(graph.containsKey(from) && graph.containsKey(to))) {
+					throw new NoSuchElementException("Missing nodes from graph: " + from + " to " + to);
+				}
+
+				graph.get(from).remove(to);
+			}
+
+			public boolean edgeExists(T from, T to) {
+				if (!(graph.containsKey(from) && graph.containsKey(to))) {
+					throw new NoSuchElementException("Missing nodes from graph: " + from + " to " + to);
+				}
+
+				return graph.get(from).contains(to);
+			}
+
+			public Set<T> edgesFrom(T from) {
+				if (!graph.containsKey(from)) {
+					throw new NoSuchElementException("Missing node from graph");
+				}
+
+				return Collections.unmodifiableSortedSet(graph.get(from));
+			}
+
+			@Override
+			public Iterator<T> iterator() {
+				return orderedNodes.iterator();
+			}
+
+			public int size() {
+				return graph.size();
+			}
+
+			public boolean isEmpty() {
+				return graph.isEmpty();
+			}
+
+			@Override
+			public String toString() {
+				return graph.toString();
+			}
+		}
 	}
 
 }
