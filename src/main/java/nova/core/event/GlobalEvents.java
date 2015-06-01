@@ -1,6 +1,7 @@
 package nova.core.event;
 
 import nova.core.block.Block;
+import nova.core.entity.Entity;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
 
@@ -61,13 +62,15 @@ public class GlobalEvents {
 	public static class PlayerInteractEvent extends Event {
 		public final World world;
 		public final Vector3i position;
+		public final Entity player;
 		public final Action action;
 		public Result useBlock = Result.DEFAULT;
 		public Result useItem = Result.DEFAULT;
 
-		public PlayerInteractEvent(World world, Vector3i position, Action action) {
+		public PlayerInteractEvent(World world, Vector3i position, Entity player, Action action) {
 			this.world = world;
 			this.position = position;
+			this.player = player;
 			this.action = action;
 		}
 
