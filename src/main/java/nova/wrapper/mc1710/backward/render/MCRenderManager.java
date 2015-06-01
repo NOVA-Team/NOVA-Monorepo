@@ -38,6 +38,7 @@ public class MCRenderManager extends RenderManager {
 		} catch (Exception e) {
 			throw new NovaException("Couldn't load texture " + texture.getPath(), e);
 		}
-		throw new NullPointerException();
+		if (texture == null || loc == null)
+			throw new NullPointerException();
 	}
 }
