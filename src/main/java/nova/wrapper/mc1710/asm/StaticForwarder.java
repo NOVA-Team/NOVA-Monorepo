@@ -21,7 +21,7 @@ public class StaticForwarder {
 
 	public static void chunkSetBlockEvent(Chunk chunk, int x, int y, int z, Block oldBlock, int oldMeta, Block newBlock, int newMeta) {
 		// Publish the event
-		Game.instance().eventManager().blockChange.publish(
+		Game.eventManager().blockChange.publish(
 			new GlobalEvents.BlockChangeEvent(new BWWorld(chunk.worldObj), new Vector3i((chunk.xPosition << 4) + x, y, (chunk.zPosition << 4) + z), new BWBlock(oldBlock), new BWBlock(newBlock))
 			);
 	}

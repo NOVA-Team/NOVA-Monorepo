@@ -39,13 +39,13 @@ public class MCSaveManager extends SaveManager {
 	public void save(String filename, Storable storable) {
 		Data saveMap = new Data();
 		storable.save(saveMap);
-		saveFile(filename, Game.instance().nativeManager().toNative(saveMap));
+		saveFile(filename, Game.nativeManager().toNative(saveMap));
 	}
 
 	@Override
 	public void load(String filename, Storable storable) {
 		NBTTagCompound nbt = loadFile(filename);
-		storable.load(Game.instance().nativeManager().toNova(nbt));
+		storable.load(Game.nativeManager().toNova(nbt));
 	}
 
 	/**

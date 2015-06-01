@@ -16,7 +16,7 @@ import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 public class ForgeEventHandler {
 	@SubscribeEvent
 	public void onOreRegister(OreDictionary.OreRegisterEvent event) {
-		ItemDictionary novaItemDictionary = Game.instance().itemDictionary();
+		ItemDictionary novaItemDictionary = Game.itemDictionary();
 
 		String id = ItemConverter.instance().getNovaItem(event.Ore).getID();
 		if (!novaItemDictionary.get(event.Name).contains(id)) {
@@ -27,13 +27,13 @@ public class ForgeEventHandler {
 	@SubscribeEvent
 	public void playerInteractEvent(PlayerInteractEvent event) {
 		GlobalEvents.PlayerInteractEvent evt = new GlobalEvents.PlayerInteractEvent(
-			Game.instance().nativeManager().toNova(event.world),
+			Game.nativeManager().toNova(event.world),
 			new Vector3i(event.x, event.y, event.z),
 			Game.instance().nativeManager().toNova(event.entityPlayer),
 			GlobalEvents.PlayerInteractEvent.Action.values()[event.action.ordinal()]
 		);
 
-		Game.instance().eventManager().playerInteract.publish(evt);
+		Game.eventManager().playerInteract.publish(evt);
 
 		event.useBlock = Event.Result.values()[evt.useBlock.ordinal()];
 		event.useItem = Event.Result.values()[evt.useItem.ordinal()];

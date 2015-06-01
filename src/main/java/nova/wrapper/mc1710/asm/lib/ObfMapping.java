@@ -26,7 +26,7 @@ public class ObfMapping {
 		try {
 			obf = ((LaunchClassLoader) ObfMapping.class.getClassLoader()).getClassBytes("net.minecraft.world.World") == null;
 		} catch (IOException iox) {
-			Game.instance().logger().error(iox.getMessage());
+			Game.logger().error(iox.getMessage());
 		}
 		obfuscated = obf;
 	}
