@@ -11,24 +11,20 @@ import java.text.MessageFormat;
  */
 public class MavenDependency {
 
-	final URL repoURL;
+	final String repoURL;
 	final String groupID;
 	final String artifactID;
 	final String version;
 	final String classifier;
 	final String ext;
 
-	public MavenDependency(URL mavenRepo,
+	public MavenDependency(String mavenRepo,
 	                       String groupId,
 	                       String artifactId,
 	                       String version,
 	                       String classifier,
 	                       String ext) {
-		try {
-			this.repoURL = mavenRepo == null ? new URL("http://maven.novaapi.net/") : mavenRepo;
-		} catch (MalformedURLException e) {
-			throw new NovaException("HOLY WTF THIS IS SO TOTALLY BROKEN AND YOU SHOULD FORCE EVERY NOVACORE DEV TO COMMIT SEPPUKU", e);
-		}
+		this.repoURL = mavenRepo.isEmpty() ? "http://maven.novaapi.net/" : mavenRepo;
 
 		this.groupID = groupId;
 		this.artifactID = artifactId;
@@ -39,11 +35,7 @@ public class MavenDependency {
 	}
 
 	public MavenDependency(Dependency annotation) {
-		try {
-			this.repoURL = new URL(annotation.mavenRepo());
-		} catch (MalformedURLException e) {
-			throw new NovaException(e);
-		}
+		this.repoURL = annotation.mavenRepo();
 
 		this.groupID = annotation.groupId();
 		this.artifactID = annotation.artifactId();
@@ -54,7 +46,7 @@ public class MavenDependency {
 	}
 
 	public String getDir() {
-		return this.groupID.replaceAll(".", "/") + "/" + this.artifactID;
+		return this.groupID.replaceAll(".", "/") + "/" + this.artifactID + "/" + this.version;
 	}
 
 	public String getPath() {
@@ -68,7 +60,7 @@ public class MavenDependency {
 
 	public URL getDownloadURL() {
 		try {
-			return new URL(this.repoURL, getPath());
+			return new URL(this.repoURL + getPath());
 		} catch (MalformedURLException e) {
 			throw new NovaException(e);
 		}
