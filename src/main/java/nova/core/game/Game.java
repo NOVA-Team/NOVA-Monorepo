@@ -3,7 +3,7 @@ package nova.core.game;
 import nova.core.block.BlockManager;
 import nova.core.component.ComponentManager;
 import nova.core.entity.EntityManager;
-import nova.core.event.EventManager;
+import nova.core.event.GlobalEvents;
 import nova.core.fluid.FluidManager;
 import nova.core.gui.KeyManager;
 import nova.core.gui.factory.GuiComponentFactory;
@@ -49,7 +49,7 @@ public class Game {
 	@Deprecated
 	public final ItemDictionary itemDictionary;
 	@Deprecated
-	public final EventManager eventManager;
+	public final GlobalEvents eventManager;
 	@Deprecated
 	public final NetworkManager networkManager;
 	@Deprecated
@@ -97,7 +97,7 @@ public class Game {
 		RecipeManager recipeManager,
 		CraftingRecipeManager craftingRecipeManager,
 		ItemDictionary itemDictionary,
-		EventManager eventManager,
+		GlobalEvents eventManager,
 		NetworkManager networkManager,
 		SaveManager saveManager,
 		LanguageManager languageManager,
@@ -189,7 +189,7 @@ public class Game {
 		return itemDictionary;
 	}
 
-	public EventManager eventManager() {
+	public GlobalEvents eventManager() {
 		return eventManager;
 	}
 

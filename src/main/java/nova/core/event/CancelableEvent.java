@@ -10,10 +10,9 @@ import java.lang.annotation.Target;
 /**
  * A base class for an event that may or may not be cancelable, depending on
  * weather a sub event has the {@link CancelableEvent.Cancelable} annotation on.
- * 
  * @author Vic Nightfall
  */
-public abstract class CancelableEvent implements Cancelable {
+public abstract class CancelableEvent extends Event implements Cancelable {
 
 	private boolean canceled;
 	private boolean isCancelable;
@@ -24,8 +23,9 @@ public abstract class CancelableEvent implements Cancelable {
 
 	@Override
 	public void cancel() {
-		if (!isCancelable)
+		if (!isCancelable) {
 			throw new NovaException("Attempted to cancel an uncancelable event " + getClass() + " !");
+		}
 		canceled = true;
 	}
 

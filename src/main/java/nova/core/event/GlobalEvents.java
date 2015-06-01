@@ -8,21 +8,26 @@ import nova.core.world.World;
  * General event manager that handles basic events
  * @author Calclavia
  */
-public class EventManager {
+public class GlobalEvents {
 	/**
 	 * Called when the server starts
 	 */
-	public EventBus<EmptyEvent> serverStarting = new EventBus<>();
+	public EventBus<Event> serverStarting = new EventBus<>();
 
 	/**
 	 * Called when the server stops
 	 */
-	public EventBus<EmptyEvent> serverStopping = new EventBus<>();
+	public EventBus<Event> serverStopping = new EventBus<>();
 
 	/**
 	 * Called when a block is changed (set block) in the world.
 	 */
 	public EventBus<BlockChangeEvent> blockChange = new EventBus<>();
+
+	/**
+	 * Called when a player interacts
+	 */
+	public EventBus<PlayerInteractEvent> playerInteract = new EventBus<>();
 
 	public static class BlockEvent extends CancelableEvent {
 		//The world
@@ -53,7 +58,23 @@ public class EventManager {
 		}
 	}
 
-	public static class EmptyEvent {
+	public static class PlayerInteractEvent extends Event {
+		public final World world;
+		public final Vector3i position;
+		public final Action action;
+		public Result useBlock = Result.DEFAULT;
+		public Result useItem = Result.DEFAULT;
 
+		public PlayerInteractEvent(World world, Vector3i position, Action action) {
+			this.world = world;
+			this.position = position;
+			this.action = action;
+		}
+
+		public enum Action {
+			RIGHT_CLICK_AIR,
+			RIGHT_CLICK_BLOCK,
+			LEFT_CLICK_BLOCK
+		}
 	}
 }
