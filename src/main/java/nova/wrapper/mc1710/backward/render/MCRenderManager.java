@@ -24,7 +24,7 @@ public class MCRenderManager extends RenderManager {
 		ResourceLocation loc = toResourceLocation(texture);
 
 		try {
-			ImageInputStream in = ImageIO.createImageInputStream(Minecraft.getMinecraft().mcResourceManager.getResource(loc).getInputStream());
+			ImageInputStream in = ImageIO.createImageInputStream(Minecraft.getMinecraft().getResourceManager().getResource(loc).getInputStream());
 			Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
 			if (readers.hasNext()) {
 				ImageReader reader = readers.next();
@@ -39,6 +39,6 @@ public class MCRenderManager extends RenderManager {
 			throw new NovaException("Couldn't load texture " + texture.getPath(), e);
 		}
 		if (texture == null || loc == null)
-			throw new NullPointerException();
+			throw new NullPointerException("Texture given is null");
 	}
 }
