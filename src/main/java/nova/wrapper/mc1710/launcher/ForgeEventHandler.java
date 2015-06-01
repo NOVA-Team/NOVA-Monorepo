@@ -27,13 +27,13 @@ public class ForgeEventHandler {
 	@SubscribeEvent
 	public void playerInteractEvent(PlayerInteractEvent event) {
 		GlobalEvents.PlayerInteractEvent evt = new GlobalEvents.PlayerInteractEvent(
-			Game.nativeManager().toNova(event.world),
+			Game.natives().toNova(event.world),
 			new Vector3i(event.x, event.y, event.z),
-			Game.nativeManager().toNova(event.entityPlayer),
+			Game.natives().toNova(event.entityPlayer),
 			GlobalEvents.PlayerInteractEvent.Action.values()[event.action.ordinal()]
 		);
 
-		Game.eventManager().playerInteract.publish(evt);
+		Game.events().playerInteract.publish(evt);
 
 		event.useBlock = Event.Result.values()[evt.useBlock.ordinal()];
 		event.useItem = Event.Result.values()[evt.useItem.ordinal()];

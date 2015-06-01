@@ -35,7 +35,7 @@ public class MinecraftRecipeRegistry {
     public void registerRecipes() {
         long startTime = System.currentTimeMillis();
 
-		RecipeManager recipeManager = Game.recipeManager();
+		RecipeManager recipeManager = Game.recipes();
 
         List<IRecipe> recipes = (List<IRecipe>) CraftingManager.getInstance().getRecipeList();
         for (IRecipe recipe : recipes) {
@@ -94,7 +94,7 @@ public class MinecraftRecipeRegistry {
         backwardWrappers.put(recipe, novaRecipe);
         forwardWrappers.put(novaRecipe, recipe);
 
-		Game.recipeManager().addRecipe(novaRecipe);
+		Game.recipes().addRecipe(novaRecipe);
 	}
 
     private void onMinecraftRecipeRemoved(IRecipe recipe) {
@@ -103,7 +103,7 @@ public class MinecraftRecipeRegistry {
         forwardWrappers.remove(novaRecipe);
         backwardWrappers.remove(recipe);
 
-		Game.recipeManager().removeRecipe(novaRecipe);
+		Game.recipes().removeRecipe(novaRecipe);
 	}
 
     private class RecipeListWrapper extends AbstractList<IRecipe> {

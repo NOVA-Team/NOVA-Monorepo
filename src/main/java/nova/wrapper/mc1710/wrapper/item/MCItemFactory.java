@@ -33,7 +33,7 @@ public class MCItemFactory extends ItemFactory {
 	@Override
 	public Item makeItem(Data data, Object... args) {
 		int meta = (Integer) data.getOrDefault("damage", this.meta);
-		NBTTagCompound nbtData = Game.nativeManager().toNative(data);
+		NBTTagCompound nbtData = Game.natives().toNative(data);
 		return new BWItem(item, meta, nbtData);
 	}
 
@@ -45,7 +45,7 @@ public class MCItemFactory extends ItemFactory {
 
 		BWItem mcItem = (BWItem) item;
 
-		Data result = Game.nativeManager().toNova(mcItem.getTag());
+		Data result = Game.natives().toNova(mcItem.getTag());
 		if (result == null) {
 			result = new Data();
 		}

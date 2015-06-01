@@ -5,7 +5,6 @@ import nova.core.game.Game;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingGrid;
 import nova.core.recipes.crafting.CraftingRecipe;
-import nova.wrapper.mc1710.util.WrapUtility;
 
 import java.util.Optional;
 
@@ -27,7 +26,7 @@ public class MCCraftingRecipe implements CraftingRecipe {
 
     @Override
 	public Optional<Item> getCraftingResult(CraftingGrid craftingGrid) {
-		return Game.nativeManager().toNova(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid)));
+		return Game.natives().toNova(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid)));
 	}
 
     @Override
@@ -37,6 +36,6 @@ public class MCCraftingRecipe implements CraftingRecipe {
 
     @Override
 	public Optional<Item> getNominalOutput() {
-		return Game.nativeManager().toNova(recipe.getRecipeOutput());
+		return Game.natives().toNova(recipe.getRecipeOutput());
 	}
 }

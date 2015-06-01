@@ -26,7 +26,7 @@ public class NovaCraftingRecipe implements IRecipe {
 	public ItemStack getCraftingResult(InventoryCrafting inventoryCrafting) {
 		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventoryCrafting));
 		if (craftingResult.isPresent()) {
-			return Game.nativeManager().toNative(craftingResult.get());
+			return Game.natives().toNative(craftingResult.get());
 		} else {
 			return null;
 		}
@@ -41,7 +41,7 @@ public class NovaCraftingRecipe implements IRecipe {
 	public ItemStack getRecipeOutput() {
 		Optional<Item> nominalOutput = recipe.getNominalOutput();
 		if (nominalOutput.isPresent()) {
-			return Game.nativeManager().toNative(nominalOutput.get());
+			return Game.natives().toNative(nominalOutput.get());
 		}
 		return null;
 	}

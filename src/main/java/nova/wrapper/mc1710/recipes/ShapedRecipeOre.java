@@ -23,7 +23,7 @@ public class ShapedRecipeOre extends ShapedOreRecipe {
 	private final ShapedCraftingRecipe recipe;
 
 	public ShapedRecipeOre(Object[] contents, ShapedCraftingRecipe recipe) {
-		super((ItemStack) Game.nativeManager().toNative(recipe.getNominalOutput().get()), contents);
+		super((ItemStack) Game.natives().toNative(recipe.getNominalOutput().get()), contents);
 
 		this.recipe = recipe;
 	}
@@ -37,7 +37,7 @@ public class ShapedRecipeOre extends ShapedOreRecipe {
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
 		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
 		if (craftingResult.isPresent()) {
-			return ((ItemStack) Game.nativeManager().toNative(craftingResult.get())).copy();
+			return ((ItemStack) Game.natives().toNative(craftingResult.get())).copy();
 		}
 		return null;
 	}

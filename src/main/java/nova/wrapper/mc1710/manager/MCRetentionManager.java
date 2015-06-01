@@ -10,7 +10,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import nova.core.game.Game;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
-import nova.core.util.SaveManager;
+import nova.core.util.RetentionManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,7 @@ import java.io.FileOutputStream;
  * A manager that handles external file saving.
  * @author Calclavia
  */
-public class MCSaveManager extends SaveManager {
+public class MCRetentionManager extends RetentionManager {
 
 	/**
 	 * Last time that the queueSave manager tried to queueSave a file
@@ -39,13 +39,13 @@ public class MCSaveManager extends SaveManager {
 	public void save(String filename, Storable storable) {
 		Data saveMap = new Data();
 		storable.save(saveMap);
-		saveFile(filename, Game.nativeManager().toNative(saveMap));
+		saveFile(filename, Game.natives().toNative(saveMap));
 	}
 
 	@Override
 	public void load(String filename, Storable storable) {
 		NBTTagCompound nbt = loadFile(filename);
-		storable.load(Game.nativeManager().toNova(nbt));
+		storable.load(Game.natives().toNova(nbt));
 	}
 
 	/**

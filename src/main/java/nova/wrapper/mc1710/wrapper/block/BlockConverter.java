@@ -32,7 +32,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	public final HashMap<BlockFactory, net.minecraft.block.Block> blockFactoryMap = new HashMap<>();
 
 	public static BlockConverter instance() {
-		return (BlockConverter) Game.nativeManager().getNative(Block.class, net.minecraft.block.Block.class);
+		return (BlockConverter) Game.natives().getNative(Block.class, net.minecraft.block.Block.class);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	 * Register all Nova blocks
 	 */
 	public void preInit() {
-		BlockManager blockManager = Game.blockManager();
+		BlockManager blockManager = Game.blocks();
 
 		//Register air block
 		BlockFactory airBlock = new BlockFactory((args) -> new BWBlock(Blocks.air) {

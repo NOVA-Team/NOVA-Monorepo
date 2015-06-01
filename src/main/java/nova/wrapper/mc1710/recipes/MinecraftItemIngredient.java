@@ -9,6 +9,6 @@ import nova.core.recipes.crafting.SpecificItemIngredient;
  */
 public class MinecraftItemIngredient extends SpecificItemIngredient {
 	public MinecraftItemIngredient(net.minecraft.item.ItemStack itemStack) {
-		super(((Item) Game.nativeManager().toNova(itemStack)).getID());
+		super(((Item) Game.natives().toNova(itemStack)).getID());
 	}
 }

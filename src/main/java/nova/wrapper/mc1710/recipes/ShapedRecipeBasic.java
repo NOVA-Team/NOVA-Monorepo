@@ -16,7 +16,7 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 	private final ShapedCraftingRecipe recipe;
 
 	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedCraftingRecipe recipe) {
-		super(recipe.getWidth(), recipe.getHeight(), basicInputs, recipe.getNominalOutput().isPresent() ? Game.nativeManager().toNative(recipe.getNominalOutput().get()) : null);
+		super(recipe.getWidth(), recipe.getHeight(), basicInputs, recipe.getNominalOutput().isPresent() ? Game.natives().toNative(recipe.getNominalOutput().get()) : null);
 
 		this.recipe = recipe;
 	}
@@ -30,7 +30,7 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
 		Optional<nova.core.item.Item> result = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
 		if (result.isPresent()) {
-			return Game.nativeManager().toNative(result.get());
+			return Game.natives().toNative(result.get());
 		}
 		return null;
 	}

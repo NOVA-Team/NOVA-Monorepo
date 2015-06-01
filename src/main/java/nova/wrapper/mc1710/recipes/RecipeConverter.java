@@ -15,7 +15,6 @@ import nova.core.recipes.crafting.ShapedCraftingRecipe;
 import nova.core.recipes.crafting.ShapelessCraftingRecipe;
 import nova.core.recipes.crafting.SpecificItemIngredient;
 import nova.wrapper.mc1710.util.ReflectionUtil;
-import nova.wrapper.mc1710.util.WrapUtility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +65,7 @@ public class RecipeConverter {
         if (ingredient == null) {
             return null;
         } else if (ingredient instanceof ItemStack) {
-			return new SpecificItemIngredient(((Item) Game.nativeManager().toNova(ingredient)).getID());
+			return new SpecificItemIngredient(((Item) Game.natives().toNova(ingredient)).getID());
 		} else if (ingredient instanceof String) {
             return new OreItemIngredient((String) ingredient);
         } else if (ingredient instanceof List) {
@@ -91,7 +90,7 @@ public class RecipeConverter {
 
     private static ItemStack wrapSpecific(SpecificItemIngredient ingredient) {
         for (Item item : ingredient.getExampleItems().get()) {
-			return Game.nativeManager().toNative(item.factory().makeItem());
+			return Game.natives().toNative(item.factory().makeItem());
 		}
 
         throw new AssertionError("this can't be!");
@@ -195,7 +194,7 @@ public class RecipeConverter {
 		if (recipeOutput == null)
 			output = null;
 		else {
-			output = Game.nativeManager().toNova(recipeOutput);
+			output = Game.natives().toNova(recipeOutput);
 		}
 
         if (recipe instanceof ShapelessRecipes) {

@@ -180,7 +180,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		MovingObjectPosition mop = player.rayTrace(10, 1);
-		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.nativeManager().toNova(player), Direction.fromOrdinal(mop.sideHit), new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(mop.sideHit), new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
 		blockInstance.leftClickEvent.publish(evt);
 	}
 
@@ -192,7 +192,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		Block.RightClickEvent evt = new Block.RightClickEvent(Game.nativeManager().toNova(player), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
+		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
 		blockInstance.rightClickEvent.publish(evt);
 		return evt.result;
 	}
@@ -200,7 +200,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		blockInstance.getOp(Collider.class).ifPresent(collider -> collider.collideEvent.publish(new Collider.CollideEvent(Game.nativeManager().toNova(entity))));
+		blockInstance.getOp(Collider.class).ifPresent(collider -> collider.collideEvent.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
 	}
 
 	@Override
@@ -219,7 +219,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 		if (blockInstance.has(Collider.class)) {
 			Cuboid cuboid = blockInstance.get(Collider.class).boundingBox.get();
-			return Game.nativeManager().toNative(cuboid.add(new Vector3i(x, y, z)));
+			return Game.natives().toNative(cuboid.add(new Vector3i(x, y, z)));
 		}
 		return super.getSelectedBoundingBoxFromPool(world, x, y, z);
 	}
@@ -229,14 +229,14 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		blockInstance.getOp(Collider.class).ifPresent(
 			collider -> {
-				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(Game.nativeManager().toNova(entity)));
+				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(Game.natives().toNova(entity)));
 
 				list.addAll(
 					boxes
 						.stream()
 						.map(c -> c.add(new Vector3i(x, y, z)))
-						.filter(c -> c.intersects((Cuboid) Game.nativeManager().toNova(aabb)))
-						.map(cuboid -> Game.nativeManager().toNative(cuboid))
+						.filter(c -> c.intersects((Cuboid) Game.natives().toNova(aabb)))
+						.map(cuboid -> Game.natives().toNative(cuboid))
 						.collect(Collectors.toList())
 				);
 			}

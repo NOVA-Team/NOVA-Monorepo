@@ -24,7 +24,7 @@ import java.util.Set;
 public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 
 	public static DataWrapper instance() {
-		return (DataWrapper) Game.nativeManager().getNative(Data.class, NBTTagCompound.class);
+		return (DataWrapper) Game.natives().getNative(Data.class, NBTTagCompound.class);
 	}
 
 	@Override
