@@ -3,6 +3,7 @@ package nova.wrapper.mc1710.render;
 import com.google.common.base.Charsets;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.util.ResourceLocation;
+import scala.actors.threadpool.Arrays;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -15,16 +16,19 @@ import java.util.Set;
 
 public class NovaFolderResourcePack extends FolderResourcePack {
 	private final String modid;
+	private final String[] domains;
 
-	public NovaFolderResourcePack(File file, String modid) {
+	public NovaFolderResourcePack(File file, String modid, String[] domains) {
 		super(file);
 		this.modid = modid;
+		this.domains = domains;
 	}
 
 	@Override
 	public Set<String> getResourceDomains() {
-		HashSet<String> domains = new HashSet<>();
+		Set<String> domains = new HashSet<>();
 		domains.add(modid);
+		domains.addAll(Arrays.asList(this.domains));
 		return domains;
 	}
 

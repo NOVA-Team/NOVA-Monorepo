@@ -116,7 +116,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 					fn = fn.substring(0, fn.indexOf('!')).replaceFirst("file:", "");
 					if (!addedPacks.contains(fn)) {
 						addedPacks.add(fn);
-						packs.add(new NovaResourcePack(new File(fn), novaMod.id()));
+						packs.add(new NovaResourcePack(new File(fn), novaMod.id(), novaMod.domains()));
 						System.out.println("Registered NOVA jar resource pack: " + fn);
 					}
 				} else {
@@ -132,7 +132,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 					}
 
 					addedPacks.add(folderLocation);
-					packs.add(new NovaFolderResourcePack(folderFile, novaMod.id()));
+					packs.add(new NovaFolderResourcePack(folderFile, novaMod.id(), novaMod.domains()));
 					System.out.println("Registered NOVA folder resource pack: " + folderFile.getAbsolutePath());
 				}
 			});
