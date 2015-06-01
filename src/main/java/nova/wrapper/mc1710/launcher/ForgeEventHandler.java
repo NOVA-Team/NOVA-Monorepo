@@ -29,7 +29,7 @@ public class ForgeEventHandler {
 		GlobalEvents.PlayerInteractEvent evt = new GlobalEvents.PlayerInteractEvent(
 			Game.nativeManager().toNova(event.world),
 			new Vector3i(event.x, event.y, event.z),
-			Game.instance().nativeManager().toNova(event.entityPlayer),
+			Game.nativeManager().toNova(event.entityPlayer),
 			GlobalEvents.PlayerInteractEvent.Action.values()[event.action.ordinal()]
 		);
 
