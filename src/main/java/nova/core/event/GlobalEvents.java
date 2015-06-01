@@ -59,7 +59,8 @@ public class GlobalEvents {
 		}
 	}
 
-	public static class PlayerInteractEvent extends Event {
+	@CancelableEvent.Cancelable
+	public static class PlayerInteractEvent extends CancelableEvent {
 		public final World world;
 		public final Vector3i position;
 		public final Entity player;
