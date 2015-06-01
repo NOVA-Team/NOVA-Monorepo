@@ -15,7 +15,7 @@ import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.component.ComponentProvider;
 import nova.core.deps.DepDownloader;
 import nova.core.deps.MavenDependency;
-import nova.core.event.EventManager;
+import nova.core.event.GlobalEvents;
 import nova.core.game.Game;
 import nova.core.loader.Loadable;
 import nova.core.loader.NativeLoader;
@@ -214,12 +214,12 @@ public class NovaMinecraft {
 
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
-		Game.instance().eventManager().serverStarting.publish(new EventManager.EmptyEvent());
+		Game.instance().eventManager().serverStarting.publish(new GlobalEvents.EmptyEvent());
 	}
 
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent event) {
-		Game.instance().eventManager().serverStopping.publish(new EventManager.EmptyEvent());
+		Game.instance().eventManager().serverStopping.publish(new GlobalEvents.EmptyEvent());
 	}
 
 }

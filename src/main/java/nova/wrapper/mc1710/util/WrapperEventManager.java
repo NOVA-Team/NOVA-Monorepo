@@ -1,7 +1,7 @@
 package nova.wrapper.mc1710.util;
 
 import nova.core.event.EventBus;
-import nova.core.event.EventManager;
+import nova.core.event.GlobalEvents;
 import nova.core.util.Direction;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
@@ -23,7 +23,7 @@ public class WrapperEventManager {
 	//Called when asked if a block can connect to Redstone
 	public final EventBus<RedstoneConnectEvent> onCanConnect = new EventBus<>();
 
-	public static class RedstoneConnectEvent extends EventManager.BlockEvent {
+	public static class RedstoneConnectEvent extends GlobalEvents.BlockEvent {
 		public final Direction direction;
 		public boolean canConnect;
 
@@ -33,7 +33,7 @@ public class WrapperEventManager {
 		}
 	}
 
-	public static class RedstoneEvent extends EventManager.BlockEvent {
+	public static class RedstoneEvent extends GlobalEvents.BlockEvent {
 		public final Direction direction;
 		public int power;
 
