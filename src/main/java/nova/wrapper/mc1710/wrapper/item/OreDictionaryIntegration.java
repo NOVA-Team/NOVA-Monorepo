@@ -21,7 +21,7 @@ public class OreDictionaryIntegration {
 	private OreDictionaryIntegration() {}
 
 	public void registerOreDictionary() {
-		ItemDictionary novaItemDictionary = Game.instance().itemDictionary();
+		ItemDictionary novaItemDictionary = Game.itemDictionary();
 
 		for (String oredictEntry : novaItemDictionary.keys()) {
 			for (String oreValue : novaItemDictionary.get(oredictEntry)) {

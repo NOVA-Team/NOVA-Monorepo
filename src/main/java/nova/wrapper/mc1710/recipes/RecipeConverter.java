@@ -66,7 +66,7 @@ public class RecipeConverter {
         if (ingredient == null) {
             return null;
         } else if (ingredient instanceof ItemStack) {
-			return new SpecificItemIngredient(((Item) Game.instance().nativeManager().toNova(ingredient)).getID());
+			return new SpecificItemIngredient(((Item) Game.nativeManager().toNova(ingredient)).getID());
 		} else if (ingredient instanceof String) {
             return new OreItemIngredient((String) ingredient);
         } else if (ingredient instanceof List) {
@@ -91,7 +91,7 @@ public class RecipeConverter {
 
     private static ItemStack wrapSpecific(SpecificItemIngredient ingredient) {
         for (Item item : ingredient.getExampleItems().get()) {
-			return Game.instance().nativeManager().toNative(item.factory().makeItem());
+			return Game.nativeManager().toNative(item.factory().makeItem());
 		}
 
         throw new AssertionError("this can't be!");
@@ -195,7 +195,7 @@ public class RecipeConverter {
 		if (recipeOutput == null)
 			output = null;
 		else {
-			output = Game.instance().nativeManager().toNova(recipeOutput);
+			output = Game.nativeManager().toNova(recipeOutput);
 		}
 
         if (recipe instanceof ShapelessRecipes) {

@@ -109,7 +109,7 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 	@Override
 	public void dispatchNetworkEvent(Packet packet) {
 		// TODO I think the NetworkManager should be able to do this
-		MCNetworkManager manager = (MCNetworkManager) Game.instance().networkManager();
+		MCNetworkManager manager = (MCNetworkManager) Game.networkManager();
 		manager.sendToServer(new PacketGui(packet));
 	}
 
@@ -228,7 +228,7 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 			boolean state = Keyboard.getEventKeyState();
 			int key = Keyboard.getEventKey();
 			char ch = Keyboard.getEventCharacter();
-			onKeyPressed(Game.instance().keyManager().getKey(key), ch, state);
+			onKeyPressed(Game.keyManager().getKey(key), ch, state);
 			if (state)
 				keyTyped(ch, key);
 

@@ -44,17 +44,17 @@ public class BWBlock extends Block implements Storable {
 			.setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
 				mcBlock.addCollisionBoxesToList(
-					Game.instance().nativeManager().toNative(world()),
+					Game.nativeManager().toNative(world()),
 					position().x,
 					position().y,
 					position().z,
-					Game.instance().nativeManager().toNative(entity.isPresent() ? entity.get().get(Collider.class).boundingBox.get() : Cuboid.one.add(pos)),
+					Game.nativeManager().toNative(entity.isPresent() ? entity.get().get(Collider.class).boundingBox.get() : Cuboid.one.add(pos)),
 					aabbs,
-					entity.isPresent() ? Game.instance().nativeManager().toNative(entity.get()) : null
+					entity.isPresent() ? Game.nativeManager().toNative(entity.get()) : null
 				);
 
 				return aabbs.stream()
-					.map(aabb -> (Cuboid) Game.instance().nativeManager().toNova(aabb))
+					.map(aabb -> (Cuboid) Game.nativeManager().toNova(aabb))
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			});
@@ -63,7 +63,7 @@ public class BWBlock extends Block implements Storable {
 
 	@Override
 	public ItemFactory getItemFactory() {
-		return Game.instance().nativeManager().toNova(Item.getItemFromBlock(mcBlock));
+		return Game.nativeManager().toNova(Item.getItemFromBlock(mcBlock));
 	}
 
 	private IBlockAccess getMcBlockAccess() {
@@ -94,7 +94,7 @@ public class BWBlock extends Block implements Storable {
 		if (tileEntity != null) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			tileEntity.writeToNBT(nbt);
-			data.putAll(Game.instance().nativeManager().toNova(nbt));
+			data.putAll(Game.nativeManager().toNova(nbt));
 		}
 	}
 
@@ -104,7 +104,7 @@ public class BWBlock extends Block implements Storable {
 
 		TileEntity tileEntity = getTileEntity();
 		if (tileEntity != null) {
-			tileEntity.writeToNBT(Game.instance().nativeManager().toNative(data));
+			tileEntity.writeToNBT(Game.nativeManager().toNative(data));
 		}
 	}
 }

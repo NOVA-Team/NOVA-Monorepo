@@ -14,7 +14,7 @@ public class FMLEventHandler {
 	@SubscribeEvent
 	public void tickEnd(TickEvent.ServerTickEvent event) {
 		if (event.phase == TickEvent.Phase.END) {
-			Game.instance().syncTicker().update();
+			Game.syncTicker().update();
 		}
 	}
 }
