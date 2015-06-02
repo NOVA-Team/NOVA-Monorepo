@@ -1,5 +1,6 @@
 package nova.core.inventory;
 
+import nova.core.component.Component;
 import nova.core.item.Item;
 import nova.core.network.Packet;
 import nova.core.network.PacketHandler;
@@ -14,7 +15,7 @@ import java.util.stream.IntStream;
 /**
  * This class provides implementation of {@link Inventory}
  */
-public class InventorySimple implements Inventory, Storable, PacketHandler {
+public class InventorySimple extends Component implements Inventory, Storable, PacketHandler {
 
 	public BiFunction<Integer, Item, Boolean> isItemValidForSlot = (slot, item) -> true;
 	private Item[] items;

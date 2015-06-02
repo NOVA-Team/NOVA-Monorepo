@@ -56,7 +56,7 @@ public abstract class ComponentProvider {
 		return component;
 	}
 
-	public final boolean has(Class<? extends Component> componentType) {
+	public final boolean has(Class<?> componentType) {
 		return componentMap
 			.keySet()
 			.stream()
