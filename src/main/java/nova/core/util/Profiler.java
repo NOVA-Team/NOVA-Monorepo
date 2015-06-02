@@ -44,6 +44,6 @@ public class Profiler {
 
 	@Override
 	public String toString() {
-		return name + " took " + ((System.currentTimeMillis() - time) / 1000d) + " seconds";
+		return name + " took " + (elapsed() / 1000d) + " seconds";
 	}
 }
