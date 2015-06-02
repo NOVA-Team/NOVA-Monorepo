@@ -9,7 +9,8 @@ import nova.core.render.model.Model;
 import nova.core.render.model.StaticCubeTextureCoordinates;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
-import nova.core.util.collection.Tuple2;
+import nova.core.util.RotationUtil;
+import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.shape.Cuboid;
 
 import java.util.Arrays;
@@ -24,20 +25,29 @@ import java.util.function.Supplier;
 public class ConnectedTextureRenderer extends StaticBlockRenderer {
 
 	public final Texture edgeTexture;
-	public final int[] sideRotMap = new int[] { 3, 4, 2, 5, 3, 5, 2, 4, 1, 5, 0, 4, 1, 4, 0, 5, 1, 2, 0, 3, 1, 3, 0, 2 };
 	private final Block block;
+
 	/**
 	 * The mask the represents which sides the block should render its connected texture.
+	 * E.g: 000000 will render all directions
 	 */
-	public Supplier<Integer> sideMask;
+	public Supplier<Integer> connectMask;
+
+	/**
+	 * A mask of which sides the connected texture renderer should render.
+	 * Each bit corresponds to a direction.
+	 * E.g: 000011 will render top and bottom
+	 */
+	public int faceMask = 0xff;
 
 	public ConnectedTextureRenderer(Block provider, Texture edgeTexture) {
 		super(provider);
 		this.block = provider;
-		sideMask = () -> Arrays.stream(Direction.DIRECTIONS)
-			.map(d -> new Tuple2<>(d, block.world().getBlock(block.position().add(d.toVector()))))
-			.filter(kv -> kv._2.isPresent() && kv._2.get().getID().equals(block.getID()))
-			.reduce(0, (b, a) -> b | (1 << a._1.ordinal()), (b, a) -> a | b);
+		connectMask = () ->
+			Arrays.stream(Direction.DIRECTIONS)
+				.filter(d -> block.world().getBlock(block.position().add(d.toVector())).get().sameType(block))
+				.map(d -> 1 << d.ordinal())
+				.reduce(0, (b, a) -> a | b);
 
 		onRender = this::renderStatic;
 		this.edgeTexture = edgeTexture;
@@ -48,18 +58,34 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 		BlockModelUtil.drawBlock(model, block);
 
 		//Render the block edge
-		Cuboid bounds = provider.get(Collider.class).boundingBox.get().add(block.position());
+		for (Direction dir : Direction.DIRECTIONS)
+			if ((faceMask & (1 << dir.ordinal())) != 0) {
+				renderFace(dir, model);
+			}
+	}
 
+	public ConnectedTextureRenderer setFaceMask(int faceMask) {
+		this.faceMask = faceMask;
+		return this;
+	}
+
+	//Apply connected texture on top face
+	protected void renderFace(Direction direction, Model model) {
 		for (int r = 0; r < 4; r++) {
-			Direction relativeDir = Direction.DIRECTIONS[r];
+			Cuboid bound = provider.get(Collider.class).boundingBox.get()
+				.subtract(0.5) //Correct translation
+				.add(direction.toVector().toDouble().multiply(r * 0.0001d)); //Lift up texture slightly, preventing z-fighting
 
-			if ((sideMask.get() & (1 << relativeDir.ordinal())) == 0) {
-				Direction absDir = Direction.fromOrdinal(sideRotMap[relativeDir.ordinal() << 2 | r]);
+			Direction absDir = Direction.fromOrdinal(RotationUtil.rotateSide(direction.opposite().ordinal(), r));
 
-				if ((sideMask.get() & (1 << absDir.ordinal())) == 0) {
-					Face face = BlockModelUtil.drawDir(absDir, model, bounds.min.x, bounds.min.y, bounds.min.z, bounds.max.x, bounds.max.y, bounds.max.z, StaticCubeTextureCoordinates.instance);
-					face.texture = Optional.of(edgeTexture);
-				}
+			int mask = connectMask.get();
+			if ((mask & (1 << absDir.ordinal())) == 0) {
+				Model innerModel = new Model();
+				innerModel.rotate(Quaternion.fromAxis(direction.toVector(), Math.PI / 2 * r));
+				Face face = BlockModelUtil.drawDir(direction, innerModel, bound.min.x, bound.min.y, bound.min.z, bound.max.x, bound.max.y, bound.max.z, StaticCubeTextureCoordinates.instance);
+				face.texture = Optional.of(edgeTexture);
+				//TODO: Support colors
+				model.children.add(innerModel);
 			}
 		}
 	}
