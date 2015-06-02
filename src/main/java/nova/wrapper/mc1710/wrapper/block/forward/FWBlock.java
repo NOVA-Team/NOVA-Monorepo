@@ -40,7 +40,6 @@ import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
-import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -122,6 +121,30 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		if (!player.capabilities.isCreativeMode) {
 			harvestedBlocks.put(new BlockPosition(world, x, y, z), getBlockInstance(world, new Vector3i(x, y, z)));
 		}
+	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+		Block blockInstance;
+
+		// see onBlockHarvested for why the harvestedBlocks hack exists
+		// this method will be called exactly once after destroying the block
+		BlockPosition position = new BlockPosition(world, x, y, z);
+		if (harvestedBlocks.containsKey(position)) {
+			blockInstance = harvestedBlocks.remove(position);
+		} else {
+			blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+		}
+
+		Block.DropEvent event = new Block.DropEvent(blockInstance);
+		blockInstance.dropEvent.publish(event);
+
+		return new ArrayList<>(
+			event.drops
+				.stream()
+				.map(item -> (ItemStack) Game.natives().toNative(item))
+				.collect(Collectors.toCollection(ArrayList::new))
+		);
 	}
 
 	@Override
@@ -244,25 +267,6 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 				);
 			}
 		);
-	}
-
-	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		Block block;
-
-		// see onBlockHarvested for why the harvestedBlocks hack exists
-		// this method will be called exactly once after destroying the block
-		BlockPosition position = new BlockPosition(world, x, y, z);
-		if (harvestedBlocks.containsKey(position)) {
-			block = harvestedBlocks.remove(position);
-		} else {
-			block = getBlockInstance(world, new Vector3i(x, y, z));
-		}
-
-		return block.getDrops()
-			.stream()
-			.map(ItemConverter.instance()::toNative)
-			.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	@Override
