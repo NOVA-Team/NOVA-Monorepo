@@ -171,9 +171,12 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		Block.BlockRemoveEvent evt = new Block.BlockRemoveEvent(Optional.empty());
+		Block.BlockRemoveEvent evt = new Block.BlockRemoveEvent(Optional.of(Game.natives().toNova(player)));
 		blockInstance.removeEvent.publish(evt);
-		return evt.result;
+		if (evt.result) {
+			return super.removedByPlayer(world, player, x, y, z, willHarvest);
+		}
+		return false;
 	}
 
 	@Override
