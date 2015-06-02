@@ -1,7 +1,6 @@
 package nova.core.component.renderer;
 
 import nova.core.component.ComponentProvider;
-import nova.core.render.model.Model;
 
 import java.util.Optional;
 
@@ -11,19 +10,18 @@ import java.util.Optional;
  */
 public class ItemRenderer extends Renderer {
 
-	public final ComponentProvider provider;
+	public ItemRenderer() {
 
-	public ItemRenderer(ComponentProvider provider) {
-		this.provider = provider;
-		onRender = this::renderItem;
 	}
 
-	protected void renderItem(Model model) {
-		Optional<StaticRenderer> opComponent = provider.getOp(StaticRenderer.class);
-		if (opComponent.isPresent()) {
-			opComponent.get().onRender.accept(model);
-		} else {
-			provider.getOp(DynamicRenderer.class).ifPresent(c -> c.onRender.accept(model));
-		}
+	public ItemRenderer(ComponentProvider provider) {
+		onRender = model -> {
+			Optional<StaticRenderer> opComponent = provider.getOp(StaticRenderer.class);
+			if (opComponent.isPresent()) {
+				opComponent.get().onRender.accept(model);
+			} else {
+				provider.getOp(DynamicRenderer.class).ifPresent(c -> c.onRender.accept(model));
+			}
+		};
 	}
 }
