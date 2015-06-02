@@ -10,9 +10,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * A component that defines a connection with another.
+ * A component that defines a connection with another.  C is the connector type
  * @author Calclavia
- * @tparam C The connector type
  */
 public class Connectable<C> extends Component {
 
