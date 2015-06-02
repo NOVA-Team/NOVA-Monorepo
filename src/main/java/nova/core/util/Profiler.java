@@ -13,7 +13,7 @@ public class Profiler {
 
 	public final String name;
 	private final List<Long> lapped = new ArrayList<>();
-	private Long time;
+	private long time;
 
 	public Profiler(String name) {
 		this.name = name;
