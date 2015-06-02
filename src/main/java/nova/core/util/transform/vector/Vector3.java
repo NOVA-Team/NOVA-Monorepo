@@ -55,6 +55,14 @@ public abstract class Vector3<O extends Vector3<O>> extends Vector<Vector3<O>, O
 		return (O) multiply(other);
 	}
 
+	public boolean $greater(double value) {
+		return xd() > value && xd() > value && xd() > value;
+	}
+
+	public boolean $less(double value) {
+		return xd() < value && xd() < value && xd() < value;
+	}
+
 	public O transform(Transformer transform) {
 		return (O) transform.transform(this);
 	}
