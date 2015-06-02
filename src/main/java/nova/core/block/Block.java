@@ -33,6 +33,8 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
 	public final EventBus<LeftClickEvent> leftClickEvent = new EventBus<>();
 
+	public final EventBus<DropEvent> dropEvent = new EventBus<>();
+
 	/**
 	 * Called when the block is registered.
 	 */
@@ -88,15 +90,6 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 */
 	public final int z() {
 		return position().z;
-	}
-
-	/**
-	 * Called to get the drops of this block.
-	 * @return A collection of {@link nova.core.item.Item}s that this block
-	 * drops.
-	 */
-	public Set<Item> getDrops() {
-		return Collections.singleton(Game.items().getItemFromBlock(factory()).makeItem());
 	}
 
 	/**
@@ -243,4 +236,12 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		}
 	}
 
+	public static class DropEvent {
+
+		public Set<Item> drops;
+
+		public DropEvent(Block block) {
+			this.drops = Collections.singleton(Game.items().getItemFromBlock(block.factory()).makeItem());
+		}
+	}
 }
