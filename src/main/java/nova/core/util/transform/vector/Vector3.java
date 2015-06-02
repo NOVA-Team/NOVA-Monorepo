@@ -56,11 +56,19 @@ public abstract class Vector3<O extends Vector3<O>> extends Vector<Vector3<O>, O
 	}
 
 	public boolean $greater(double value) {
-		return xd() > value && xd() > value && xd() > value;
+		return xd() > value && yd() > value && zd() > value;
+	}
+
+	public boolean $greater$equal(double value) {
+		return xd() >= value && yd() >= value && zd() >= value;
 	}
 
 	public boolean $less(double value) {
-		return xd() < value && xd() < value && xd() < value;
+		return xd() < value && yd() < value && zd() < value;
+	}
+
+	public boolean $less$equal(double value) {
+		return xd() <= value && yd() <= value && zd() <= value;
 	}
 
 	public O transform(Transformer transform) {
