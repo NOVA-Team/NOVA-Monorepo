@@ -61,6 +61,10 @@ public abstract class Entity extends ComponentProvider implements Identifiable, 
 		transform().setPosition(pos);
 	}
 
+	public void setScale(Vector3d scale) {
+		transform().setScale(scale);
+	}
+
 	public void setPivot(Vector3d pivot) {
 		transform().setPivot(pivot);
 	}
