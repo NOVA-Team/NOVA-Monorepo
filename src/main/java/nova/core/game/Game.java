@@ -19,7 +19,6 @@ import nova.core.util.LanguageManager;
 import nova.core.util.RetentionManager;
 import nova.core.world.WorldManager;
 import nova.internal.tick.UpdateTicker;
-
 import org.slf4j.Logger;
 
 public class Game {
@@ -28,6 +27,7 @@ public class Game {
 
 	private final Logger logger;
 
+	private final GameInfo gameInfo;
 	private final ClientManager clientManager;
 	private final BlockManager blockManager;
 	private final EntityManager entityManager;
@@ -64,30 +64,32 @@ public class Game {
 	private final GuiManager guiFactory;
 
 	private Game(
-			Logger logger,
-			ClientManager clientManager,
-			BlockManager blockManager,
-			EntityManager entityManager,
-			ItemManager itemManager,
-			FluidManager fluidManager,
-			WorldManager worldManager,
-			RenderManager renderManager,
-			RecipeManager recipeManager,
-			CraftingRecipeManager craftingRecipeManager,
-			ItemDictionary itemDictionary,
-			GlobalEvents eventManager,
-			NetworkManager networkManager,
+		Logger logger,
+		GameInfo gameInfo,
+		ClientManager clientManager,
+		BlockManager blockManager,
+		EntityManager entityManager,
+		ItemManager itemManager,
+		FluidManager fluidManager,
+		WorldManager worldManager,
+		RenderManager renderManager,
+		RecipeManager recipeManager,
+		CraftingRecipeManager craftingRecipeManager,
+		ItemDictionary itemDictionary,
+		GlobalEvents eventManager,
+		NetworkManager networkManager,
 		RetentionManager retentionManager,
-			LanguageManager languageManager,
+		LanguageManager languageManager,
 		InputManager inputManager,
-			NativeManager nativeManager,
-			ComponentManager componentManager,
-			UpdateTicker.SynchronizedTicker syncTicker,
-			UpdateTicker.ThreadTicker threadTicker,
-			GuiComponentFactory guiComponentFactory, GuiManager guiFactory) {
+		NativeManager nativeManager,
+		ComponentManager componentManager,
+		UpdateTicker.SynchronizedTicker syncTicker,
+		UpdateTicker.ThreadTicker threadTicker,
+		GuiComponentFactory guiComponentFactory, GuiManager guiFactory) {
 
 		this.logger = logger;
 
+		this.gameInfo = gameInfo;
 		this.clientManager = clientManager;
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
@@ -117,6 +119,10 @@ public class Game {
 
 	public static void inject(Game game) {
 		Game.instance = game;
+	}
+
+	public static GameInfo info() {
+		return instance.gameInfo;
 	}
 
 	public static Logger logger() {
