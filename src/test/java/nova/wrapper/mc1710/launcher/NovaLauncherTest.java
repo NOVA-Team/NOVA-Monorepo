@@ -1,6 +1,13 @@
 package nova.wrapper.mc1710.launcher;
 
-import nova.wrapper.mc1710.depmodules.*;
+import nova.wrapper.mc1710.depmodules.ClientModule;
+import nova.wrapper.mc1710.depmodules.GameInfoModule;
+import nova.wrapper.mc1710.depmodules.GuiModule;
+import nova.wrapper.mc1710.depmodules.KeyModule;
+import nova.wrapper.mc1710.depmodules.LanguageModule;
+import nova.wrapper.mc1710.depmodules.RenderModule;
+import nova.wrapper.mc1710.depmodules.SaveModule;
+import nova.wrapper.mc1710.depmodules.TickerModule;
 import nova.wrappertests.depmodules.FakeNetworkModule;
 import se.jbee.inject.bootstrap.Bundle;
 
@@ -22,7 +29,8 @@ public class NovaLauncherTest extends nova.wrappertests.NovaLauncherTest {
 			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.
 			RenderModule.class,
 			SaveModule.class,
-			TickerModule.class
+			TickerModule.class,
+			GameInfoModule.class
 		);
 	}
 }
