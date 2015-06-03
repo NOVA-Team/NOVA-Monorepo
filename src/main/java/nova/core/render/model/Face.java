@@ -21,7 +21,7 @@ public class Face implements Cloneable {
 	//The texture that is to be rendered on this face.
 	public Optional<Texture> texture = Optional.empty();
 	//The brightness value defines how bright the face should be rendered. The default value will let NOVA decide the brightness based on the world surroundings.
-	protected double brightness = -1;
+	public double brightness = -1;
 
 	/**
 	 * Binds a specific texture to this artist.
