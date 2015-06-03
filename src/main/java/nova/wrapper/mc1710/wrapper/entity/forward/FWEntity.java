@@ -4,12 +4,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
+import nova.core.component.misc.Collider;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.game.Game;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
+import nova.core.util.transform.shape.Cuboid;
 import nova.wrapper.mc1710.wrapper.data.DataWrapper;
 
 /**
@@ -65,6 +67,22 @@ public class FWEntity extends net.minecraft.entity.Entity {
 
 		if (wrapped instanceof Updater) {
 			((Updater) wrapped).update(deltaTime);
+		}
+
+		//Wrap entity collider
+		if (wrapped.has(Collider.class)) {
+			Collider collider = wrapped.get(Collider.class);
+
+			//Transform cuboid based on entity.
+			Cuboid size = collider
+				.boundingBox
+				.get()
+				.multiply(transform.scale());
+
+			//Sadly Minecraft doesn't support rotated cuboids. And fixed x-z sizes. We take average..
+			float width = (float) ((size.max.x - size.min.x) + (size.max.z - size.min.z)) / 2;
+			float height = (float) (size.max.y - size.min.y);
+			setSize(width, height);
 		}
 
 		/**
