@@ -48,7 +48,7 @@ public class RayTraceTest {
 		fakeWorld.setBlock(new Vector3i(5, 5, 5), RayTraceMod.solid);
 
 		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults1 =
-			new RayTracer(new RayTracer.Ray(new Vector3d(5, 0, 5), new Vector3d(0, 1, 0)))
+			new RayTracer(new Ray(new Vector3d(5, 0, 5), new Vector3d(0, 1, 0)))
 				.setDistance(6)
 				.rayTraceBlocks(fakeWorld)
 				.collect(Collectors.toList());
@@ -57,7 +57,7 @@ public class RayTraceTest {
 		assertThat(rayTraceBlockResults1.get(0).block.position()).isEqualTo(new Vector3i(5, 5, 5));
 
 		fakeWorld.setBlock(new Vector3i(6, 5, 5), RayTraceMod.solid);
-		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults2 = new RayTracer(new RayTracer.Ray(new Vector3d(0, 5, 5), new Vector3d(1, 0, 0)))
+		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults2 = new RayTracer(new Ray(new Vector3d(0, 5, 5), new Vector3d(1, 0, 0)))
 			.setDistance(7)
 			.rayTraceBlocks(fakeWorld)
 			.collect(Collectors.toList());
@@ -87,7 +87,7 @@ public class RayTraceTest {
 			/**
 			 * Do random ray trace
 			 */
-			RayTracer rayTracer = new RayTracer(new RayTracer.Ray(new Vector3d(0, 5, 5), new Vector3d(1, 0, 0))).setDistance(size);
+			RayTracer rayTracer = new RayTracer(new Ray(new Vector3d(0, 5, 5), new Vector3d(1, 0, 0))).setDistance(size);
 			Game.logger().info("Ray tracing with threading: " + rayTracer.doParallel());
 			Profiler start = new Profiler("Ray Trace " + size).start();
 			rayTracer.rayTraceBlocks(fakeWorld).findFirst();
