@@ -32,6 +32,10 @@ public class EntityTransform extends WorldTransform<Vector3d> {
 		this.pivot = pivot;
 	}
 
+	public void setScale(Vector3d scale) {
+		this.scale = scale;
+	}
+
 	public Quaternion rotation() {
 		return rotation;
 	}
