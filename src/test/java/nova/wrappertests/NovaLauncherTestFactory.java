@@ -5,6 +5,7 @@ import nova.core.game.Game;
 import nova.internal.launch.NovaLauncher;
 import nova.testutils.FakeBlock;
 import nova.wrappertests.depmodules.FakeClientModule;
+import nova.wrappertests.depmodules.FakeGameInfoModule;
 import nova.wrappertests.depmodules.FakeGuiModule;
 import nova.wrappertests.depmodules.FakeKeyModule;
 import nova.wrappertests.depmodules.FakeLanguageModule;
@@ -38,7 +39,8 @@ public class NovaLauncherTestFactory {
 			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.
 			FakeRenderModule.class,
 			FakeSaveModule.class,
-			FakeTickerModule.class
+			FakeTickerModule.class,
+			FakeGameInfoModule.class
 		);
 	}
 

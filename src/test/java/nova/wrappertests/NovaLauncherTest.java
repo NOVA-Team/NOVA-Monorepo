@@ -54,5 +54,6 @@ public class NovaLauncherTest extends NovaLauncherTestFactory {
 		assertThat(game.language()).isNotNull();
 		assertThat(game.input()).isNotNull();
 		assertThat(game.natives()).isNotNull();
+		assertThat(game.info()).isNotNull();
 	}
 }
