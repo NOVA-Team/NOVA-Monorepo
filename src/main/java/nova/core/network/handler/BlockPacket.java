@@ -23,9 +23,9 @@ import java.util.Optional;
 public class BlockPacket implements PacketType<Block> {
 
 	@Override
-	public Block read(Packet packet) {
+	public void read(Packet packet) {
 		Entity entity = packet.player().entity();
-		Vector3i position = packet.read(Vector3i.class);
+		Vector3i position = new Vector3i(packet.readInt(), packet.readInt(), packet.readInt());
 
 		Optional<Block> opBlock = entity.world().getBlock(position);
 
@@ -33,7 +33,7 @@ public class BlockPacket implements PacketType<Block> {
 			Block block = opBlock.get();
 			if (block instanceof PacketHandler) {
 				((PacketHandler) block).read(packet);
-				return block;
+				return;
 			}
 		}
 		throw new NovaException("Failed to receive packet to block at " + position);
@@ -43,7 +43,9 @@ public class BlockPacket implements PacketType<Block> {
 	public void write(Block block, Packet packet) {
 		if (block instanceof PacketHandler) {
 			Vector3i position = block.position();
-			packet.write(position);
+			packet.writeInt(position.x);
+			packet.writeInt(position.y);
+			packet.writeInt(position.z);
 			((PacketHandler) block).write(packet);
 			return;
 		}
@@ -52,8 +54,8 @@ public class BlockPacket implements PacketType<Block> {
 	}
 
 	@Override
-	public Class<Block> handler() {
-		return Block.class;
+	public boolean isHandlerFor(Object block) {
+		return block instanceof Block;
 	}
 }
 

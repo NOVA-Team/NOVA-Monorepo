@@ -45,16 +45,20 @@ public abstract class NetworkManager {
 		return handlers.get(id);
 	}
 
+	public int getPacketTypeID(PacketType<?> type) {
+		return handlers.indexOf(type);
+	}
+
 	/**
 	 * Gets the packet type that handles a PacketHandler
 	 *
 	 * @param handler The packet handler
 	 * @return The packet type for the packet handler
 	 */
-	public PacketType<?> getPacketType(PacketHandler handler) {
+	public PacketType<?> getPacketType(Object handler) {
 		Optional<PacketType<?>> first = handlers
 			.stream()
-			.filter(type -> type.handler().isAssignableFrom(handler.getClass()))
+			.filter(type -> type.isHandlerFor(handler))
 			.findFirst();
 
 		if (first.isPresent()) {
@@ -65,14 +69,30 @@ public abstract class NetworkManager {
 	}
 
 	/**
-	 * Sends a new custom packet.
+	 * Sends a packet based on a sender.
 	 *
 	 * @param sender The packet handler sending the packet
 	 * @param packet The packet to send
 	 */
-	public void sendPacket(PacketHandler sender, Packet packet) {
-		packet.write(packet.getID());
+	public void sendPacket(Object sender, Packet packet) {
+		writePacket(sender, packet);
+		sendPacket(packet);
+	}
+
+	/**
+	 * Sends a new custom packet without any overhead.
+	 * This method directly sends the packet. It will not write the PacketType ID, which will cause an error unless the ID is written to the packet already.
+	 *
+	 * @param packet The packet to send
+	 */
+	public abstract void sendPacket(Packet packet);
+
+	public Packet writePacket(Object sender, Packet packet) {
+		int packetTypeID = getPacketTypeID(getPacketType(sender));
+		packet.writeInt(packetTypeID);
+		packet.writeInt(packet.getID());
 		((PacketType) getPacketType(sender)).write(sender, packet);
+		return packet;
 	}
 
 	/**
@@ -80,7 +100,7 @@ public abstract class NetworkManager {
 	 *
 	 * @param sender {@link PacketHandler}
 	 */
-	public final void sync(PacketHandler sender) {
+	public final void sync(Object sender) {
 		sync(0, sender);
 	}
 
@@ -90,7 +110,7 @@ public abstract class NetworkManager {
 	 * @param id The packet ID
 	 * @param sender sender {@link nova.core.network.PacketHandler}
 	 */
-	public void sync(int id, PacketHandler sender) {
+	public void sync(int id, Object sender) {
 		Packet packet = newPacket();
 		packet.setID(id);
 		sendPacket(sender, packet);

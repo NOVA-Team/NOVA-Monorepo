@@ -19,7 +19,7 @@ import java.util.Optional;
 public class EntityPacket implements PacketType<Entity> {
 
 	@Override
-	public Entity read(Packet packet) {
+	public void read(Packet packet) {
 		Entity playerEntity = packet.player().entity();
 
 		String uuid = packet.readString();
@@ -29,7 +29,7 @@ public class EntityPacket implements PacketType<Entity> {
 			Entity entity = op.get();
 			if (entity instanceof PacketHandler) {
 				((PacketHandler) entity).read(packet);
-				return entity;
+				return;
 			}
 		}
 		throw new NovaException("Failed to receive packet to entity with UID" + uuid);
@@ -47,8 +47,8 @@ public class EntityPacket implements PacketType<Entity> {
 	}
 
 	@Override
-	public Class<Entity> handler() {
-		return Entity.class;
+	public boolean isHandlerFor(Object handler) {
+		return handler instanceof Entity;
 	}
 }
 

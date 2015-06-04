@@ -9,9 +9,9 @@ import nova.core.network.Packet;
  */
 public interface PacketType<HANDLER> {
 
-	HANDLER read(Packet packet);
+	void read(Packet packet);
 
 	void write(HANDLER handler, Packet packet);
 
-	Class<HANDLER> handler();
+	boolean isHandlerFor(Object handler);
 }

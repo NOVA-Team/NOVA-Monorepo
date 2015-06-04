@@ -3,7 +3,6 @@ package nova.wrappertests.depmodules;
 import nova.core.entity.component.Player;
 import nova.core.network.NetworkManager;
 import nova.core.network.Packet;
-import nova.core.network.PacketHandler;
 import se.jbee.inject.bind.BinderModule;
 
 /**
@@ -22,12 +21,7 @@ public class FakeNetworkModule extends BinderModule {
 		}
 
 		@Override
-		public void sendPacket(PacketHandler sender, Packet packet) {
-
-		}
-
-		@Override
-		public void sync(int id, PacketHandler sender) {
+		public void sendPacket(Packet packet) {
 
 		}
 
