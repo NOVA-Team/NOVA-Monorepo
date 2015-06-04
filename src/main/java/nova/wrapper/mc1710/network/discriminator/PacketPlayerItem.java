@@ -11,6 +11,7 @@ import nova.wrapper.mc1710.network.MCPacket;
  * A packet handler for players who are currently holding their item.
  * @author Calclavia
  */
+//TODO: Move to NOVA Core
 public class PacketPlayerItem extends PacketAbstract {
 	public int slotId;
 

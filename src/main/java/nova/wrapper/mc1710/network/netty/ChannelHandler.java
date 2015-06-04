@@ -1,13 +1,11 @@
 package nova.wrapper.mc1710.network.netty;
 
+import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import nova.wrapper.mc1710.network.discriminator.PacketAbstract;
-import nova.wrapper.mc1710.network.discriminator.PacketBlock;
-import nova.wrapper.mc1710.network.discriminator.PacketEntity;
 import nova.wrapper.mc1710.network.discriminator.PacketGui;
 import nova.wrapper.mc1710.network.discriminator.PacketPlayerItem;
-import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 
 /**
  * Handles the channel and discriminators.

@@ -9,6 +9,7 @@ import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
 import nova.wrapper.mc1710.network.MCPacket;
 
+//TODO: Integrate with NOVA
 public class PacketGui extends PacketAbstract {
 
 	private MCPacket wrapped;
@@ -38,7 +39,7 @@ public class PacketGui extends PacketAbstract {
 		if (player.openContainer instanceof MCContainer) {
 			((MCContainer) player.openContainer).getGui().onNetworkEvent(wrapped);
 		} else {
-			throw new NovaException("Recieved an invalid GUI event packet, server side not present!");
+			throw new NovaException("Received an invalid GUI event packet, server side not present!");
 		}
 	}
 }

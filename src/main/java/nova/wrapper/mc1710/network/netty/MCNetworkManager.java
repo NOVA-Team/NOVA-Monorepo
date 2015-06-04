@@ -12,26 +12,21 @@ import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import nova.core.block.Block;
-import nova.core.entity.Entity;
 import nova.core.entity.component.Player;
 import nova.core.network.NetworkManager;
 import nova.core.network.PacketHandler;
-import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.network.MCPacket;
+import nova.wrapper.mc1710.network.discriminator.NovaPacket;
 import nova.wrapper.mc1710.network.discriminator.PacketAbstract;
-import nova.wrapper.mc1710.network.discriminator.PacketBlock;
-import nova.wrapper.mc1710.network.discriminator.PacketEntity;
 import nova.wrapper.mc1710.wrapper.entity.BWEntity;
-import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityWrapper;
 
 import java.util.EnumMap;
 
 /**
  * The implementation of NetworkManager that will be injected.
+ *
  * @author Calclavia
  * @since 26/05/14
  */
@@ -50,20 +45,9 @@ public class MCNetworkManager extends NetworkManager {
 
 	@Override
 	public void sendPacket(PacketHandler sender, nova.core.network.Packet packet) {
-		PacketAbstract discriminator;
-
-		if (sender instanceof Block) {
-			Vector3i position = ((Block) sender).position();
-			discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
-		} else if (sender instanceof Entity) {
-			Entity entity = (Entity) sender;
-			discriminator = new PacketEntity(entity.get(MCEntityWrapper.class).wrapper);
-
-		} else {
-			throw new NovaException("Fail to send packet as the PacketHandler is of invalid type.");
-		}
-		//Write packet ID
-		discriminator.data.writeInt(packet.getID());
+		super.sendPacket(sender, packet);
+		PacketAbstract discriminator = new NovaPacket();
+		//Write packet
 		discriminator.data.writeBytes(((MCPacket) packet).buf);
 
 		if (isServer()) {
@@ -79,16 +63,6 @@ public class MCNetworkManager extends NetworkManager {
 		packet.setID(id);
 		sender.write(packet);
 		sendPacket(sender, packet);
-	}
-
-	public PacketBlock getBlockPacket(int id, PacketHandler sender) {
-		Vector3i position = ((Block) sender).position();
-		PacketBlock discriminator = new PacketBlock(position.xi(), position.yi(), position.zi());
-		MCPacket mcPacket = new MCPacket(discriminator.data);
-		mcPacket.setID(id);
-		discriminator.data.writeInt(id);
-		sender.write(mcPacket);
-		return discriminator;
 	}
 
 	@Override
@@ -129,6 +103,7 @@ public class MCNetworkManager extends NetworkManager {
 
 	/**
 	 * sends to all clients connected to the server
+	 *
 	 * @param packet the packet to send.
 	 */
 	public void sendToAll(PacketAbstract packet) {
