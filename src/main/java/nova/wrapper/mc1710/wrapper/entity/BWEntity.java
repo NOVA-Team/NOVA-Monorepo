@@ -17,6 +17,7 @@ import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityWrapper;
 
 /**
  * A Minecraft to NOVA Entity wrapper
+ *
  * @author Calclavia
  */
 //TODO: Incomplete. Add more components!
@@ -59,7 +60,7 @@ public class BWEntity extends Entity {
 			};
 
 			if (entity instanceof EntityPlayer) {
-				add(new MCPlayer((EntityPlayer) entity));
+				add(new MCPlayer(this));
 			}
 		}
 	}
@@ -70,12 +71,19 @@ public class BWEntity extends Entity {
 	}
 
 	public static class MCPlayer extends Player {
+		public final BWEntity bwEntity;
 		public final net.minecraft.entity.player.EntityPlayer entity;
 		public final BWInventoryPlayer inventory;
 
-		public MCPlayer(EntityPlayer entity) {
-			this.entity = entity;
+		public MCPlayer(BWEntity bwEntity) {
+			this.bwEntity = bwEntity;
+			this.entity = (EntityPlayer) bwEntity.entity;
 			this.inventory = new BWInventoryPlayer(entity);
+		}
+
+		@Override
+		public Entity entity() {
+			return bwEntity;
 		}
 
 		@Override

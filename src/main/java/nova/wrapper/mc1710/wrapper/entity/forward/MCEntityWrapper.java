@@ -17,6 +17,6 @@ public class MCEntityWrapper extends Wrapper implements UniqueIdentifiable {
 
 	@Override
 	public String getUniqueID() {
-		return wrapper.getUniqueID().toString();
+		return wrapper.getEntityId() + "";
 	}
 }
