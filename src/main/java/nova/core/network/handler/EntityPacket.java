@@ -38,7 +38,7 @@ public class EntityPacket implements PacketType<Entity> {
 	@Override
 	public void write(Entity entity, Packet packet) {
 		if (entity instanceof PacketHandler) {
-			packet.write(entity.getUID());
+			packet.write(entity.getUniqueID());
 			((PacketHandler) entity).write(packet);
 			return;
 		}

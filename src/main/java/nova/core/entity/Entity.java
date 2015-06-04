@@ -73,4 +73,10 @@ public abstract class Entity extends ComponentProvider implements UniqueIdentifi
 	public void setRotation(Quaternion rotation) {
 		transform().setRotation(rotation);
 	}
+
+	@Override
+	public String getUniqueID() {
+		//TODO: Is this safe?
+		return get(UniqueIdentifiable.class).getUniqueID();
+	}
 }

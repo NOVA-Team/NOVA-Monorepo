@@ -10,5 +10,5 @@ public interface UniqueIdentifiable {
 	 *
 	 * @return the ID
 	 */
-	String getUID();
+	String getUniqueID();
 }
