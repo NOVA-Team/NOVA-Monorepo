@@ -8,6 +8,6 @@ public class EntityTexture extends Texture {
 
 	@Override
 	public String getPath() {
-		return "textures/entity/" + super.getPath();
+		return "textures/entities/" + super.getPath();
 	}
 }
