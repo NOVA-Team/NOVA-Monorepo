@@ -3,7 +3,6 @@ package nova.core.item;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
-import nova.core.game.Game;
 import nova.core.util.Direction;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
@@ -13,6 +12,7 @@ import java.util.Optional;
 
 /**
  * An ItemBlock is an Item that is meant to be used to place blocks.
+ *
  * @author Calclavia
  */
 public class ItemBlock extends Item {
@@ -24,10 +24,14 @@ public class ItemBlock extends Item {
 		useEvent.add(
 			evt ->
 			{
-				Vector3i placePos = evt.position.add(evt.side.toVector());
+				Optional<Block> opBlock = evt.entity.world().getBlock(evt.position);
 
-				if (onPrePlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit)) {
-					evt.action = onPostPlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit);
+				if (opBlock.isPresent()) {
+					Block block = opBlock.get();
+					Vector3i placePos = block.shouldDisplacePlacement() ? evt.position.add(evt.side.toVector()) : evt.position;
+					if (onPrePlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit)) {
+						evt.action = onPostPlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit);
+					}
 				}
 			}
 		);
@@ -35,7 +39,7 @@ public class ItemBlock extends Item {
 
 	protected boolean onPrePlace(Entity entity, World world, Vector3i placePos, Direction side, Vector3d hit) {
 		Optional<Block> checkBlock = world.getBlock(placePos);
-		if (checkBlock.isPresent() && checkBlock.get().factory().equals(Game.blocks().getAirBlockFactory())) {
+		if (checkBlock.isPresent() && checkBlock.get().canReplace()) {
 			return world.setBlock(placePos, blockFactory);
 		}
 		return false;

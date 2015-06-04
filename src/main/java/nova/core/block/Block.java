@@ -111,6 +111,24 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	}
 
 	/**
+	 * Checks if this block can be replaced.
+	 * @return True if this block can be replaced.
+	 */
+	public boolean canReplace() {
+		return false;
+	}
+
+	/**
+	 * Called when an ItemBlock tries to place a block in this position whether to displace the place position or not.
+	 * If the ItemBlock does not displace the position, it will replace this block.
+	 *
+	 * @return True if by right clicking on this block, the placement of the new block should be displaced.
+	 */
+	public boolean shouldDisplacePlacement() {
+		return true;
+	}
+
+	/**
 	 * Block Events
 	 */
 	@CancelableEvent.Cancelable
