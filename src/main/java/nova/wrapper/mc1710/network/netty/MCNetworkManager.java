@@ -44,8 +44,8 @@ public class MCNetworkManager extends NetworkManager {
 	}
 
 	@Override
-	public void sendPacket(PacketHandler sender, nova.core.network.Packet packet) {
-		super.sendPacket(sender, packet);
+	public void sendPacket(nova.core.network.Packet packet) {
+		//Wrap the packet in NOVA's discriminator
 		PacketAbstract discriminator = new NovaPacket();
 		//Write packet
 		discriminator.data.writeBytes(((MCPacket) packet).buf);
@@ -57,12 +57,15 @@ public class MCNetworkManager extends NetworkManager {
 		}
 	}
 
-	@Override
-	public void sync(int id, PacketHandler sender) {
+	public PacketAbstract writePacket(int id, PacketHandler sender) {
+		PacketAbstract discriminator = new NovaPacket();
 		nova.core.network.Packet packet = newPacket();
 		packet.setID(id);
-		sender.write(packet);
-		sendPacket(sender, packet);
+
+		//Write packet
+		writePacket(sender, packet);
+		discriminator.data.writeBytes(((MCPacket) packet).buf);
+		return discriminator;
 	}
 
 	@Override

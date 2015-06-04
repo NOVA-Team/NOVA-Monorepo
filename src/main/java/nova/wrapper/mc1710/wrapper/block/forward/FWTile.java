@@ -42,7 +42,7 @@ public class FWTile extends TileEntity {
 	@Override
 	public Packet getDescriptionPacket() {
 		if (block instanceof nova.core.network.PacketHandler) {
-			return ((MCNetworkManager) Game.network()).toMCPacket(((MCNetworkManager) Game.network()).getBlockPacket(0, (nova.core.network.PacketHandler) block));
+			return ((MCNetworkManager) Game.network()).toMCPacket(((MCNetworkManager) Game.network()).writePacket(0, (nova.core.network.PacketHandler) block));
 		}
 		return null;
 	}
