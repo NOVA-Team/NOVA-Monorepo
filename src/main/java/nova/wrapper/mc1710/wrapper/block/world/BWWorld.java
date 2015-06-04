@@ -14,12 +14,12 @@ import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
-import nova.wrapper.mc1710.wrapper.entity.BWEntity;
-import nova.wrapper.mc1710.wrapper.entity.forward.FWEntity;
-import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityWrapper;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
+import nova.wrapper.mc1710.wrapper.entity.BWEntity;
+import nova.wrapper.mc1710.wrapper.entity.forward.FWEntity;
+import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityWrapper;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -27,6 +27,7 @@ import java.util.Set;
 
 /**
  * The backwards world wrapper.
+ *
  * @author Calclavia
  */
 public class BWWorld extends World {
@@ -108,6 +109,11 @@ public class BWWorld extends World {
 		EntityItem entityItem = new EntityItem(world(), position.x, position.y, position.z, Game.natives().toNative(item));
 		world().spawnEntityInWorld(entityItem);
 		return new BWEntity(entityItem);
+	}
+
+	@Override
+	public Optional<Entity> getEntity(String uniqueID) {
+		return Optional.ofNullable(Game.natives().toNova(world().getEntityByID(Integer.parseInt(uniqueID))));
 	}
 
 	@Override
