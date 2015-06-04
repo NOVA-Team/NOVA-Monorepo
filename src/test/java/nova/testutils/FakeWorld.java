@@ -70,6 +70,13 @@ public class FakeWorld extends World {
 	}
 
 	@Override
+	public Optional<Entity> getEntity(String UUID) {
+		return entities.stream()
+			.filter(entity -> entity.getUniqueID().equals(UUID))
+			.findAny();
+	}
+
+	@Override
 	public Entity addEntity(Vector3d position, Item item) {
 		//TODO: Implement
 		return null;
