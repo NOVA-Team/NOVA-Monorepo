@@ -332,6 +332,11 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		return event.power;
 	}
 
+	@Override
+	public String getUnlocalizedName() {
+		return super.getUnlocalizedName().replaceFirst("tile", "block");
+	}
+
 	/**
 	 * Rendering forwarding
 	 */
