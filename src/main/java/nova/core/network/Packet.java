@@ -205,6 +205,10 @@ public interface Packet {
 		return this;
 	}
 
+	Packet writeBytes(byte[] array);
+
+	byte[] readBytes(int length);
+
 	/**
 	 * Gets a boolean at the current {@code readerIndex} and increases
 	 * the {@code readerIndex} by {@code 1} in this buffer.

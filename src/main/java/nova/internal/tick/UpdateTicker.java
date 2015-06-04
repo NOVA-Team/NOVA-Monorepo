@@ -2,7 +2,9 @@ package nova.internal.tick;
 
 import nova.core.component.Updater;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -18,7 +20,7 @@ public class UpdateTicker {
 	 */
 	private final Set<Updater> updaters = Collections.newSetFromMap(new WeakHashMap<>());
 
-	private final Set<Runnable> preEvents = Collections.newSetFromMap(new WeakHashMap<>());
+	private final List<Runnable> preEvents = new ArrayList<>();
 
 	/**
 	 * The last update time.
