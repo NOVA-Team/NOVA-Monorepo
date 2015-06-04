@@ -3,20 +3,21 @@ package nova.wrapper.mc1710.network.netty;
 import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import nova.wrapper.mc1710.network.discriminator.NovaPacket;
 import nova.wrapper.mc1710.network.discriminator.PacketAbstract;
 import nova.wrapper.mc1710.network.discriminator.PacketGui;
 import nova.wrapper.mc1710.network.discriminator.PacketPlayerItem;
 
 /**
  * Handles the channel and discriminators.
+ *
  * @author Calclavia
  */
 public class ChannelHandler extends FMLIndexedMessageToMessageCodec<PacketAbstract> {
 	public ChannelHandler() {
-		addDiscriminator(0, PacketBlock.class);
-		addDiscriminator(1, PacketEntity.class);
-		addDiscriminator(3, PacketPlayerItem.class);
-		addDiscriminator(4, PacketGui.class);
+		addDiscriminator(0, NovaPacket.class);
+		addDiscriminator(1, PacketPlayerItem.class);
+		addDiscriminator(2, PacketGui.class);
 	}
 
 	@Override

@@ -42,7 +42,7 @@ public class NovaPacket extends PacketAbstract {
 	public void handle(EntityPlayer player) {
 		MCNetworkManager network = (MCNetworkManager) Game.network();
 		PacketType<?> packetType = network.getPacketType(data.readInt());
-		MCPacket packet = new MCPacket(data);
+		MCPacket packet = new MCPacket(data, Game.natives().toNova(player));
 		//Set the ID of the packet
 		packet.setID(packet.readInt());
 		packetType.read(packet);
