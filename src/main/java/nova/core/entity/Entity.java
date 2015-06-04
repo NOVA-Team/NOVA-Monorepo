@@ -5,6 +5,7 @@ import nova.core.component.ComponentProvider;
 import nova.core.component.transform.EntityTransform;
 import nova.core.event.EventBus;
 import nova.core.util.Identifiable;
+import nova.core.util.UniqueIdentifiable;
 import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.world.World;
@@ -12,7 +13,7 @@ import nova.core.world.World;
 /**
  * An entity is an object in the world that has a position.
  */
-public abstract class Entity extends ComponentProvider implements Identifiable, Stateful {
+public abstract class Entity extends ComponentProvider implements UniqueIdentifiable, Identifiable, Stateful {
 
 	public final EventBus<Stateful.LoadEvent> loadEvent = new EventBus<>();
 	public final EventBus<Stateful.UnloadEvent> unloadEvent = new EventBus<>();

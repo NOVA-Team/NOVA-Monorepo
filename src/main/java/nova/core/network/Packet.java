@@ -1,5 +1,6 @@
 package nova.core.network;
 
+import nova.core.entity.component.Player;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.exception.NovaException;
@@ -27,6 +28,11 @@ public interface Packet {
 	 * @return The packet itself.
 	 */
 	Packet setID(int id);
+
+	/**
+	 * The player sending the packet
+	 */
+	Player player();
 
 	/**
 	 * Writes an arbitrary object, automatically finding the relevant class.

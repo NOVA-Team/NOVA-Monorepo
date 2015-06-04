@@ -88,6 +88,13 @@ public abstract class World implements Identifiable {
 	public abstract void removeEntity(Entity entity);
 
 	/**
+	 * Gets an entity based on its UUID
+	 * @param UUID The entity's unique ID
+	 * @return The entity or empty if the entity does not exist.
+	 */
+	public abstract Optional<Entity> getEntity(String UUID);
+
+	/**
 	 * Gets a set of entities within a certain bound
 	 * @param bound The boundary
 	 * @return A set of entities.

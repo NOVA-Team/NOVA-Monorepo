@@ -1,6 +1,6 @@
 package nova.core.entity.component;
 
-import nova.core.component.Component;
+import nova.core.entity.Entity;
 import nova.core.inventory.component.InventoryPlayer;
 
 /**
@@ -11,6 +11,11 @@ public abstract class Player extends Living {
 	 * @return Returns player name that can be used to identify this player
 	 */
 	public abstract String getUsername();
+
+	/**
+	 * @return The entity of the player
+	 */
+	public abstract Entity entity();
 
 	/**
 	 * @return Returns the ID representing the player.
