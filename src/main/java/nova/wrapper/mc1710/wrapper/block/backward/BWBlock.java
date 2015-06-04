@@ -1,5 +1,6 @@
 package nova.wrapper.mc1710.wrapper.block.backward;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -79,6 +80,23 @@ public class BWBlock extends Block implements Storable {
 			mcTileEntity = getMcBlockAccess().getTileEntity(x(), y(), z());
 		}
 		return mcTileEntity;
+	}
+
+	@Override
+	public boolean canReplace() {
+		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) getMcBlockAccess(), x(), y(), z());
+	}
+
+	@Override
+	public boolean shouldDisplacePlacement() {
+		if (mcBlock == Blocks.snow_layer && (getMcBlockAccess().getBlockMetadata(x(), y(), z()) & 7) < 1) {
+			return false;
+		}
+
+		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable(getMcBlockAccess(), x(), y(), z())) {
+			return false;
+		}
+		return super.shouldDisplacePlacement();
 	}
 
 	@Override

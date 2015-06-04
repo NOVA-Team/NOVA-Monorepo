@@ -83,6 +83,11 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 			}
 
 			@Override
+			public boolean canReplace() {
+				return true;
+			}
+
+			@Override
 			public String getID() {
 				return "air";
 			}
