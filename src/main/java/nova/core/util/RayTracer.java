@@ -185,6 +185,7 @@ public class RayTracer {
 		bbox = ray.signDirY ? cuboid.min : cuboid.max;
 		double tyMax = (Math.abs(ray.dir.y) < 0.0000001) ? maxDist : (bbox.y - ray.origin.y) * ray.invDir.y;
 
+		//TODO: Is it >= or >?
 		if ((txMin > tyMax) || (tyMin > txMax)) {
 			return Optional.empty();
 		}

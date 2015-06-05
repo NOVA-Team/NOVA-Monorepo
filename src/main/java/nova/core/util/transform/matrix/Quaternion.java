@@ -38,6 +38,7 @@ import java.math.RoundingMode;
 
 /**
  * All rotation operations operate in radians.
+ *
  * @author Calclavia, ChickenBones
  */
 public class Quaternion implements Transformer, Storable {
@@ -73,6 +74,7 @@ public class Quaternion implements Transformer, Storable {
 	 * Yaw - Rotation around y-axis (heading)
 	 * Pitch - Rotation around x-axis (bank)
 	 * Roll - Rotation around z-axis (attitude)
+	 *
 	 * @param euler input {@link Vector3}
 	 * @return resulting {@link Quaternion}
 	 * @author Calclavia
@@ -83,6 +85,19 @@ public class Quaternion implements Transformer, Storable {
 
 	public static Quaternion fromEuler(double yaw, double pitch) {
 		return fromEuler(yaw, pitch, 0);
+	}
+
+	/**
+	 * Calculates a Quaternion from a direction vector.
+	 * Note this rotation is NOT relative, and may not be appropriate for all directions
+	 *
+	 * @param direction A unit vector
+	 * @return The quaternion
+	 */
+	public static Quaternion fromDirection(Vector3d direction) {
+		double yaw = Math.atan2(direction.y, direction.x);
+		double pitch = Math.asin(direction.z);
+		return fromEuler(yaw, pitch);
 	}
 
 	public static Quaternion fromEuler(double yaw, double pitch, double roll) {
@@ -108,6 +123,7 @@ public class Quaternion implements Transformer, Storable {
 
 	/**
 	 * Returns a quaternion from Angle Axis rotation.
+	 *
 	 * @param axis Axis {@link Vector3}
 	 * @param angle Angle in radians
 	 * @return The Quaternion representation of the angle axis rotation.
@@ -144,6 +160,7 @@ public class Quaternion implements Transformer, Storable {
 	 * using the associative property of quaternions and the fact that (q2*q1)'=q1'* q2' (see conjugate function) then we get:
 	 *
 	 * x3 = (q2*q1) * x * (q2*q1)'
+	 *
 	 * @param q - The quaternion to multiply with
 	 * @return The new Quaternion
 	 */
@@ -246,6 +263,7 @@ public class Quaternion implements Transformer, Storable {
 
 	/**
 	 * The default forward for games
+	 *
 	 * @return A direction vector representing the rotation.
 	 */
 	public Vector3d toForwardVector() {
