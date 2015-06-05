@@ -11,11 +11,11 @@ import nova.core.util.transform.vector.Vector3d;
  *
  * Position
  * Velocity
+ *
  * @author Calclavia
  */
 public class MCRigidBody extends RigidBody {
 	private Entity entity;
-	private net.minecraft.entity.Entity mcEntity;
 
 	/**
 	 * Translation
@@ -32,8 +32,11 @@ public class MCRigidBody extends RigidBody {
 		//TODO: This nullable provider is horrible. Change this.
 		if (provider != null) {
 			entity = (nova.core.entity.Entity) provider;
-			mcEntity = entity.get(MCEntityTransform.class).wrapper;
 		}
+	}
+
+	private net.minecraft.entity.Entity mcEntity() {
+		return entity.get(MCEntityTransform.class).wrapper;
 	}
 
 	@Override
@@ -45,7 +48,7 @@ public class MCRigidBody extends RigidBody {
 	void updateTranslation(double deltaTime) {
 		//Integrate velocity to displacement
 		Vector3d displacement = velocity().multiply(deltaTime);
-		mcEntity.moveEntity(displacement.x, displacement.y, displacement.z);
+		mcEntity().moveEntity(displacement.x, displacement.y, displacement.z);
 
 		//Integrate netForce to velocity
 		setVelocity(velocity().add(netForce.divide(mass()).multiply(deltaTime)));
@@ -79,14 +82,14 @@ public class MCRigidBody extends RigidBody {
 
 	@Override
 	public Vector3d getVelocity() {
-		return new Vector3d(mcEntity.motionX, mcEntity.motionY, mcEntity.motionZ);
+		return new Vector3d(mcEntity().motionX, mcEntity().motionY, mcEntity().motionZ);
 	}
 
 	@Override
 	public void setVelocity(Vector3d velocity) {
-		mcEntity.motionX = velocity.x;
-		mcEntity.motionY = velocity.y;
-		mcEntity.motionZ = velocity.z;
+		mcEntity().motionX = velocity.x;
+		mcEntity().motionY = velocity.y;
+		mcEntity().motionZ = velocity.z;
 	}
 
 	@Override
