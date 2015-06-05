@@ -35,6 +35,9 @@ public class Model implements Iterable<Model>, Cloneable {
 
 	public Vector2d textureOffset = Vector2d.zero;
 
+	public int blendSFactor = -1;
+	public int blendDFactor = -1;
+
 	public Model(String name) {
 		this.name = Objects.requireNonNull(name, "Model name cannot be null!");
 	}
