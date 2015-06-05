@@ -26,6 +26,8 @@ public class FWEntityFX extends EntityFX {
 	public final Entity wrapped;
 	public final EntityTransform transform;
 
+	boolean firstTick = true;
+
 	public FWEntityFX(World world, EntityFactory factory) {
 		super(world, 0, 0, 0);
 		this.wrapped = factory.make();
@@ -44,6 +46,13 @@ public class FWEntityFX extends EntityFX {
 
 	@Override
 	public void renderParticle(Tessellator tess, float p_70539_2_, float x, float y, float z, float p_70539_6_, float p_70539_7_) {
+		if (firstTick) {
+			prevPosX = posX;
+			prevPosY = posY;
+			prevPosZ = posZ;
+			setPosition(posX, posY, posZ);
+			firstTick = false;
+		}
 		float f11 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) p_70539_2_ - interpPosX);
 		float f12 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) p_70539_2_ - interpPosY);
 		float f13 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) p_70539_2_ - interpPosZ);

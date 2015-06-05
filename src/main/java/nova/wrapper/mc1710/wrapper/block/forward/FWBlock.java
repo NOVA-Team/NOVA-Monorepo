@@ -255,7 +255,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
 		blockInstance.getOp(Collider.class).ifPresent(
 			collider -> {
-				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(Game.natives().toNova(entity)));
+				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(entity != null ? Game.natives().toNova(entity) : null));
 
 				list.addAll(
 					boxes

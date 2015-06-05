@@ -22,6 +22,7 @@ public class FWEntity extends net.minecraft.entity.Entity {
 
 	public final Entity wrapped;
 	public final EntityTransform transform;
+	boolean firstTick = true;
 
 	public FWEntity(World world, EntityFactory factory, Object... args) {
 		super(world);
@@ -56,15 +57,19 @@ public class FWEntity extends net.minecraft.entity.Entity {
 		//MC calls entityInit() before we finish wrapping, so this variable is required to check if wrapped exists.
 		if (wrapped != null) {
 			wrapped.loadEvent.publish(new Stateful.LoadEvent());
-			prevPosX = posX;
-			prevPosY = posY;
-			prevPosZ = posZ;
-			setPosition(posX, posY, posZ);
 		}
 	}
 
 	@Override
 	public void onUpdate() {
+		if (firstTick) {
+			prevPosX = posX;
+			prevPosY = posY;
+			prevPosZ = posZ;
+			setPosition(posX, posY, posZ);
+			firstTick = false;
+		}
+
 		super.onUpdate();
 		double deltaTime = 0.05;
 
