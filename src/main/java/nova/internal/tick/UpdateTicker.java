@@ -27,7 +27,7 @@ public class UpdateTicker {
 	 */
 	private long last;
 
-	private long deltaTime;
+	private double deltaTime;
 
 	public UpdateTicker() {
 		last = System.currentTimeMillis();
@@ -65,7 +65,7 @@ public class UpdateTicker {
 
 		long current = System.currentTimeMillis();
 		//The time in milliseconds between the last update and this one.
-		deltaTime = (last - current) / 1000;
+		deltaTime = (current - last) / 1000d;
 		synchronized (updaters) {
 			updaters.parallelStream().forEach(t -> t.update(deltaTime));
 		}

@@ -78,8 +78,8 @@ public class Data extends HashMap<String, Object> {
 	public static Object unserialize(Data data) {
 		try {
 			Class clazz = (Class) Class.forName((String) data.get("class"));
-			if (Enum.class.isAssignableFrom(clazz)) {
-				return Enum.valueOf((Class<Enum>) clazz, data.get("value"));
+			if (clazz.isEnum()) {
+				return Enum.valueOf(clazz, data.get("value"));
 			} else {
 				return unserialize(clazz, data);
 			}
