@@ -3,7 +3,7 @@
 [![Tests](https://img.shields.io/jenkins/t/http/jenkins.magik6k.net/NovaAPI.svg?style=flat-square)](http://jenkins.magik6k.net/job/NovaAPI/lastCompletedBuild/testReport/)
 
 Nova API
----------------
+========
 NOVA is a voxel game modding framework designed to allow mods to be run across different voxel games.
 
 NOVA is licensed under the LGPL v3 License.
@@ -22,11 +22,11 @@ For all libraries we use, include it in your IDE as a jar library.
 * AssertJ
 
 Formatting
----------------
+----------
 Any contributions should use the NOVA formatter. Instructions for applying to IDEA and Eclipse formatters can be found [here](http://novaapi.net/docs/NOVA%20Development/Formatting/).
 
 Removing merge commits
----------------
+----------------------
 Merge commits happen when you `git pull` with local commits. An example is [here](http://git.io/bseX).
 These can be avoided by running `git pull --rebase`. Of course you don't want to do this every time:
 
