@@ -56,6 +56,10 @@ public class FWEntity extends net.minecraft.entity.Entity {
 		//MC calls entityInit() before we finish wrapping, so this variable is required to check if wrapped exists.
 		if (wrapped != null) {
 			wrapped.loadEvent.publish(new Stateful.LoadEvent());
+			prevPosX = posX;
+			prevPosY = posY;
+			prevPosZ = posZ;
+			setPosition(posX, posY, posZ);
 		}
 	}
 
