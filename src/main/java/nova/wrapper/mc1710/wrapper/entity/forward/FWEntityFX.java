@@ -1,22 +1,22 @@
 package nova.wrapper.mc1710.wrapper.entity.forward;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
-import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.util.transform.matrix.MatrixStack;
+import nova.core.render.RenderManager;
 import nova.core.util.transform.shape.Cuboid;
-import nova.wrapper.mc1710.backward.render.BWModel;
-
-import java.util.Optional;
+import nova.wrapper.mc1710.render.RenderUtility;
 
 /**
  * A copy of BWEntity that extends EntityFX
@@ -34,6 +34,7 @@ public class FWEntityFX extends EntityFX {
 		this.wrapped = factory.make();
 		this.transform = new MCEntityTransform(this);
 		wrapped.add(transform);
+		entityInit();
 	}
 
 	public FWEntityFX(World world, Entity entity) {
@@ -41,17 +42,19 @@ public class FWEntityFX extends EntityFX {
 		this.wrapped = entity;
 		this.transform = new MCEntityTransform(this);
 		wrapped.add(transform);
+		entityInit();
 	}
 
 	@Override
-	public void renderParticle(Tessellator tess, float x, float y, float z, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
-		Optional<DynamicRenderer> opRenderer = wrapped.getOp(DynamicRenderer.class);
-		if (opRenderer.isPresent()) {
-			BWModel model = new BWModel();
-			model.matrix = new MatrixStack().translate(x, y, z).rotate(transform.rotation()).getMatrix();
-			opRenderer.get().onRender.accept(model);
-			model.renderWorld(worldObj);
-		}
+	public void renderParticle(Tessellator tess, float p_70539_2_, float x, float y, float z, float p_70539_6_, float p_70539_7_) {
+		float f11 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) p_70539_2_ - interpPosX);
+		float f12 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) p_70539_2_ - interpPosY);
+		float f13 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) p_70539_2_ - interpPosZ);
+
+		Tessellator.instance.draw();
+		FWEntityRenderer.render(this, wrapped, f11, f12, f13);
+		Tessellator.instance.startDrawingQuads();
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderUtility.particleResource);
 	}
 
 	/**
@@ -68,6 +71,9 @@ public class FWEntityFX extends EntityFX {
 
 	@Override
 	public void onUpdate() {
+		//TODO: Minecraft's collision is messed up (gets concurrent problems)
+		this.noClip = true;
+		this.particleAge = 0;
 		super.onUpdate();
 		double deltaTime = 0.05;
 

@@ -96,7 +96,9 @@ public class BWWorld extends World {
 
 	@Override
 	public void removeEntity(Entity entity) {
-		world().removeEntity(entity.get(MCEntityTransform.class).wrapper);
+		net.minecraft.entity.Entity wrapper = entity.get(MCEntityTransform.class).wrapper;
+		wrapper.setDead();
+		world().removeEntity(wrapper);
 	}
 
 	@Override

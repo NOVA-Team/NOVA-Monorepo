@@ -85,7 +85,7 @@ public class BWModel extends Model {
 		render(Optional.empty());
 	}
 
-	public void render(Optional<RenderManager> entityTextureLoader) {
+	public void render(Optional<RenderManager> entityRenderManager) {
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.setColorRGBA_F(1, 1, 1, 1);
 
@@ -107,11 +107,11 @@ public class BWModel extends Model {
 					tessellator.setNormal(face.normal.xf(), face.normal.yf(), face.normal.zf());
 
 					if (face.texture.isPresent()) {
-						if (entityTextureLoader.isPresent()) {
+						if (entityRenderManager.isPresent()) {
 							if (face.texture.get() instanceof EntityTexture) {
 								//We're not working on an atlas, so just do... this.
 								Texture t = face.texture.get();
-								entityTextureLoader.get().renderEngine.bindTexture(new ResourceLocation(t.domain, "textures/entity/" + t.resource + ".png"));
+								entityRenderManager.get().renderEngine.bindTexture(new ResourceLocation(t.domain, "textures/entities/" + t.resource + ".png"));
 							}
 						}
 						IIcon icon = RenderUtility.instance.getIcon(face.texture.get());

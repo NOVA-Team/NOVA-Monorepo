@@ -20,6 +20,8 @@ public class MCEntityTransform extends EntityTransform {
 
 	public MCEntityTransform(net.minecraft.entity.Entity wrapper) {
 		this.wrapper = wrapper;
+		this.setPivot(Vector3d.zero);
+		this.setScale(Vector3d.one);
 	}
 
 	@Override
