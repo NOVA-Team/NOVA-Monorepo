@@ -34,11 +34,11 @@ public class FWEntityRenderer extends Render {
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
 			model.matrix = new MatrixStack()
-				.translate(entity.pivot())
-					//.rotate(entity.rotation())
-				.translate(entity.pivot().negate())
-				.scale(entity.scale())
 				.translate(x, y, z)
+				.scale(entity.scale())
+				.translate(entity.pivot())
+				.rotate(entity.rotation())
+				.translate(entity.pivot().negate())
 				.getMatrix();
 
 			opRenderer.get().onRender.accept(model);

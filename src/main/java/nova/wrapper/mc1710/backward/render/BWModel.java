@@ -35,7 +35,7 @@ public class BWModel extends Model {
 					if (face.getBrightness() >= 0) {
 						// Brightness is defined as: skyLight << 20 | blockLight
 						// << 4
-						tessellator.setBrightness((int) face.getBrightness());
+						tessellator.setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
 					} else {
 						// Determine nearest adjacent block.
 						Vector3i nearestPos = face.getCenter().add(face.normal.divide(2)).floor();
@@ -98,7 +98,7 @@ public class BWModel extends Model {
 					// Brightness is defined as: skyLight << 20 | blockLight <<
 					// 4
 					if (face.getBrightness() >= 0) {
-						tessellator.setBrightness((int) face.getBrightness());
+						tessellator.setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
 					} else {
 						// Determine nearest adjacent block.
 						tessellator.setBrightness(15 << 20 | 11 << 4);

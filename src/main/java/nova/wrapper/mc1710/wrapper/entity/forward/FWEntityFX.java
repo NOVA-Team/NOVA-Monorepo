@@ -1,12 +1,10 @@
 package nova.wrapper.mc1710.wrapper.entity.forward;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
@@ -14,7 +12,6 @@ import nova.core.component.misc.Collider;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.render.RenderManager;
 import nova.core.util.transform.shape.Cuboid;
 import nova.wrapper.mc1710.render.RenderUtility;
 
@@ -66,6 +63,7 @@ public class FWEntityFX extends EntityFX {
 		//MC calls entityInit() before we finish wrapping, so this variable is required to check if wrapped exists.
 		if (wrapped != null) {
 			wrapped.loadEvent.publish(new Stateful.LoadEvent());
+			setPosition(posX, posY, posZ);
 		}
 	}
 
