@@ -1,8 +1,11 @@
 package nova.wrapper.mc1710.wrapper.block.world;
 
+import nova.core.game.Game;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.util.exception.NovaException;
 import nova.core.world.World;
+
+import java.util.Optional;
 
 /**
  * @author Calclavia
@@ -20,6 +23,11 @@ public class WorldConverter implements NativeConverter<World, net.minecraft.worl
 
 	@Override
 	public World toNova(net.minecraft.world.World nativeObj) {
+		Optional<World> opWorld = Game.worlds().findWorld(nativeObj.provider.getDimensionName());
+		if (opWorld.isPresent()) {
+			return opWorld.get();
+		}
+
 		return new BWWorld(nativeObj);
 	}
 

@@ -3,6 +3,7 @@ package nova.wrapper.mc1710.launcher;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import nova.core.event.GlobalEvents;
 import nova.core.game.Game;
@@ -14,6 +15,16 @@ import nova.wrapper.mc1710.wrapper.item.ItemConverter;
  * @author Stan, Calclavia
  */
 public class ForgeEventHandler {
+	@SubscribeEvent
+	public void worldUnload(WorldEvent.Load evt) {
+		Game.worlds().sidedWorlds().add(Game.natives().toNova(evt.world));
+	}
+
+	@SubscribeEvent
+	public void worldLoad(WorldEvent.Unload evt) {
+		Game.worlds().sidedWorlds().remove(Game.natives().toNova(evt.world));
+	}
+
 	@SubscribeEvent
 	public void onOreRegister(OreDictionary.OreRegisterEvent event) {
 		ItemDictionary novaItemDictionary = Game.itemDictionary();
