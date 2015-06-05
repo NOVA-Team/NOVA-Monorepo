@@ -10,4 +10,5 @@ public class EntityTexture extends Texture {
 	public String getPath() {
 		return "textures/entities/" + super.getPath();
 	}
+
 }
