@@ -11,8 +11,14 @@ import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.render.RenderUtility;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Optional;
+
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_SMOOTH;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glShadeModel;
 
 /**
  * @author Calclavia
@@ -66,7 +72,8 @@ public class BWModel extends Model {
 					tessellator.setNormal(face.normal.xf(), face.normal.yf(), face.normal.zf());
 
 					if (face.texture.isPresent()) {
-						IIcon icon = RenderUtility.instance.getIcon(face.texture.get());
+						Texture texture = face.texture.get();
+						IIcon icon = RenderUtility.instance.getIcon(texture);
 						face.vertices.forEach(v -> {
 							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 							tessellator.addVertexWithUV(v.vec.x, v.vec.y, v.vec.z, icon.getInterpolatedU(16 * v.uv.x), icon.getInterpolatedV(16 * v.uv.y));
@@ -92,7 +99,9 @@ public class BWModel extends Model {
 		/**
 		 * Convert textures and UV into Minecraft equivalent.
 		 */
-		flatten().forEach(model ->
+		flatten().forEach(
+			model ->
+			{
 				model.faces.forEach(face ->
 				{
 					// Brightness is defined as: skyLight << 20 | blockLight <<
@@ -114,7 +123,8 @@ public class BWModel extends Model {
 								entityRenderManager.get().renderEngine.bindTexture(new ResourceLocation(t.domain, "textures/entities/" + t.resource + ".png"));
 							}
 						}
-						IIcon icon = RenderUtility.instance.getIcon(face.texture.get());
+						Texture texture = face.texture.get();
+						IIcon icon = RenderUtility.instance.getIcon(texture);
 						face.vertices.forEach(v -> {
 							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 							if (icon != null) {
@@ -129,7 +139,8 @@ public class BWModel extends Model {
 							tessellator.addVertex(v.vec.x, v.vec.y, v.vec.z);
 						});
 					}
-				})
+				});
+			}
 		);
 	}
 

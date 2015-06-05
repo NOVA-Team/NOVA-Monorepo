@@ -10,8 +10,14 @@ import nova.core.component.renderer.DynamicRenderer;
 import nova.core.util.transform.matrix.MatrixStack;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Optional;
+
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_SMOOTH;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glShadeModel;
 
 /**
  * Renders entities.
@@ -42,13 +48,20 @@ public class FWEntityRenderer extends Render {
 				.getMatrix();
 
 			opRenderer.get().onRender.accept(model);
-			RenderUtility.enableBlending();
+
+			if (model.blendSFactor > 0 && model.blendDFactor > 0) {
+				glShadeModel(GL_SMOOTH);
+				glEnable(GL_BLEND);
+				GL11.glBlendFunc(model.blendSFactor, model.blendDFactor);
+			}
 
 			Tessellator.instance.startDrawingQuads();
 			model.render(Optional.of(RenderManager.instance));
 			Tessellator.instance.draw();
 
-			RenderUtility.disableBlending();
+			if (model.blendSFactor > 0 && model.blendDFactor > 0) {
+				RenderUtility.disableBlending();
+			}
 		}
 	}
 
