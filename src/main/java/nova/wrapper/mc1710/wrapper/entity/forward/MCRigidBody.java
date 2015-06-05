@@ -32,7 +32,7 @@ public class MCRigidBody extends RigidBody {
 		//TODO: This nullable provider is horrible. Change this.
 		if (provider != null) {
 			entity = (nova.core.entity.Entity) provider;
-			mcEntity = entity.get(MCEntityWrapper.class).wrapper;
+			mcEntity = entity.get(MCEntityTransform.class).wrapper;
 		}
 	}
 

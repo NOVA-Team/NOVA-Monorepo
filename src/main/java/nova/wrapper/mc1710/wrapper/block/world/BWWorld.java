@@ -19,7 +19,7 @@ import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
 import nova.wrapper.mc1710.wrapper.entity.BWEntity;
 import nova.wrapper.mc1710.wrapper.entity.forward.FWEntity;
-import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityWrapper;
+import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityTransform;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -96,7 +96,7 @@ public class BWWorld extends World {
 
 	@Override
 	public void removeEntity(Entity entity) {
-		world().removeEntity(entity.get(MCEntityWrapper.class).wrapper);
+		world().removeEntity(entity.get(MCEntityTransform.class).wrapper);
 	}
 
 	@Override

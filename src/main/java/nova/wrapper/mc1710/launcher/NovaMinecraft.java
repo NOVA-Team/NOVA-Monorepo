@@ -117,7 +117,6 @@ public class NovaMinecraft {
 			 * Set up components
 			 */
 			Game.components().register(args -> args.length > 0 ? new MCRigidBody((ComponentProvider) args[0]) : new MCRigidBody(null));
-			Game.components().register(args -> args.length > 0 ? new MCEntityTransform((ComponentProvider) args[0]) : new MCEntityTransform(null));
 
 			/**
 			 * Download dependencies

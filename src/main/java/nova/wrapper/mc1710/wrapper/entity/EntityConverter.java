@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.wrapper.entity;
 import nova.core.entity.Entity;
 import nova.core.nativewrapper.NativeConverter;
 import nova.wrapper.mc1710.wrapper.entity.forward.FWEntity;
-import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityWrapper;
+import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityTransform;
 
 public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity> {
 
@@ -29,10 +29,10 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 
 	@Override
 	public net.minecraft.entity.Entity toNative(Entity novaObj) {
-		MCEntityWrapper wrapper = novaObj.get(MCEntityWrapper.class);
+		MCEntityTransform transform = novaObj.get(MCEntityTransform.class);
 
-		if (wrapper.wrapper instanceof FWEntity) {
-			return wrapper.wrapper;
+		if (transform.wrapper instanceof FWEntity) {
+			return transform.wrapper;
 		}
 
 		throw new IllegalArgumentException("Entity wrapper is invalid (where did this object come from?)");

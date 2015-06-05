@@ -13,7 +13,6 @@ import nova.core.network.NetworkTarget;
 import nova.core.util.transform.vector.Vector3d;
 import nova.wrapper.mc1710.backward.inventory.BWInventory;
 import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityTransform;
-import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityWrapper;
 
 /**
  * A Minecraft to NOVA Entity wrapper
@@ -27,8 +26,7 @@ public class BWEntity extends Entity {
 
 	public BWEntity(net.minecraft.entity.Entity entity) {
 		this.entity = entity;
-		add(new MCEntityWrapper(entity));
-		add(new MCEntityTransform(this));
+		add(new MCEntityTransform(entity));
 
 		add(new Damageable() {
 			@Override
