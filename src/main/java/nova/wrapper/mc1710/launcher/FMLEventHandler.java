@@ -17,4 +17,11 @@ public class FMLEventHandler {
 			Game.syncTicker().update();
 		}
 	}
+
+	@SubscribeEvent
+	public void tickEnd(TickEvent.ClientTickEvent event) {
+		if (event.phase == TickEvent.Phase.END) {
+			Game.syncTicker().update();
+		}
+	}
 }
