@@ -34,14 +34,15 @@ public class FWEntityFX extends EntityFX {
 		this.wrapped = factory.make();
 		wrapped.add(new MCEntityWrapper(this));
 		this.transform = new MCEntityTransform(wrapped);
-		wrapped.components().add(transform);
+		wrapped.add(transform);
 	}
 
 	public FWEntityFX(World world, Entity entity) {
 		super(world, 0, 0, 0);
 		this.wrapped = entity;
+		wrapped.add(new MCEntityWrapper(this));
 		this.transform = new MCEntityTransform(wrapped);
-		wrapped.components().add(transform);
+		wrapped.add(transform);
 	}
 
 	@Override

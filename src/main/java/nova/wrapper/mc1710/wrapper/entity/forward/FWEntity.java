@@ -28,7 +28,7 @@ public class FWEntity extends net.minecraft.entity.Entity {
 		this.wrapped = factory.make(args);
 		wrapped.add(new MCEntityWrapper(this));
 		this.transform = new MCEntityTransform(wrapped);
-		wrapped.components().add(transform);
+		wrapped.add(transform);
 		entityInit();
 	}
 

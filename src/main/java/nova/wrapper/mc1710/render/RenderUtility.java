@@ -13,6 +13,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelFormatException;
 import nova.core.game.Game;
 import nova.core.render.texture.Texture;
+import nova.core.util.exception.NovaException;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -85,11 +86,16 @@ public class RenderUtility {
 	}
 
 	public IIcon getIcon(Texture texture) {
-		return iconMap.get(texture);
+		if (iconMap.containsKey(texture)) {
+			return iconMap.get(texture);
+		}
+
+		throw new NovaException("Texture cannot be found: " + texture);
 	}
 
 	/**
 	 * Handles NOVA texture registration.
+	 *
 	 * @param event Event
 	 */
 	@SubscribeEvent
