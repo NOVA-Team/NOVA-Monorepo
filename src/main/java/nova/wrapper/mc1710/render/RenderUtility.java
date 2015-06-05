@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -102,6 +103,8 @@ public class RenderUtility {
 	public void preTextureHook(TextureStitchEvent.Pre event) {
 		if (event.map.getTextureType() == 0) {
 			Game.render().blockTextures.forEach(t -> registerIcon(t, event));
+			//TODO: This is HACKS. We should create custom sprite sheets for entities.
+			Game.render().entityTextures.forEach(t -> registerIcon(t, event));
 		} else if (event.map.getTextureType() == 1) {
 			Game.render().itemTextures.forEach(t -> registerIcon(t, event));
 		}
@@ -116,7 +119,8 @@ public class RenderUtility {
 
 	}
 
-	public void loadModels() {
+	public void preInit() {
+		//Load models
 		Game.render().modelProviders.forEach(m -> {
 			ResourceLocation resource = new ResourceLocation(m.domain, "models/" + m.name + "." + m.getType());
 			try {
