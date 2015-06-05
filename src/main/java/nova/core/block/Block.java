@@ -259,7 +259,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		public Set<Item> drops;
 
 		public DropEvent(Block block) {
-			this.drops = Collections.singleton(Game.items().getItemFromBlock(block.factory()).makeItem());
+			this.drops = Collections.singleton(block.getItemFactory().makeItem());
 		}
 	}
 }
