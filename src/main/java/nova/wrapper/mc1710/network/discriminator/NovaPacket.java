@@ -42,12 +42,16 @@ public class NovaPacket extends PacketAbstract {
 	}
 
 	public void handle(EntityPlayer player) {
-		MCNetworkManager network = (MCNetworkManager) Game.network();
-		PacketType<?> packetType = network.getPacketType(data.readInt());
-		int subId = data.readInt();
-		MCPacket packet = new MCPacket(data.slice(), ((Entity) Game.natives().toNova(player)).get(Player.class));
-		//Set the ID of the packet
-		packet.setID(subId);
-		packetType.read(packet);
+		try {
+			MCNetworkManager network = (MCNetworkManager) Game.network();
+			PacketType<?> packetType = network.getPacketType(data.readInt());
+			int subId = data.readInt();
+			MCPacket packet = new MCPacket(data.slice(), ((Entity) Game.natives().toNova(player)).get(Player.class));
+			//Set the ID of the packet
+			packet.setID(subId);
+			packetType.read(packet);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
