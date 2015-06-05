@@ -102,6 +102,20 @@ public class MCPacket implements Packet {
 	}
 
 	@Override
+	public Packet writeBytes(byte[] array) {
+		buf.writeBytes(array);
+		return this;
+	}
+
+	@Override
+	public byte[] readBytes(int length) {
+		byte[] array = new byte[length];
+		for (int i = 0; i < length; i++)
+			array[i] = buf.readByte();
+		return array;
+	}
+
+	@Override
 	public boolean readBoolean() {
 		return buf.readBoolean();
 	}
