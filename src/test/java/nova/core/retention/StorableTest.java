@@ -1,6 +1,5 @@
 package nova.core.retention;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +11,7 @@ public class StorableTest {
     @Test
     public void testSingleStorable() {
         class TestCase implements Storable {
-            @Stored
+            @Store
             private int value = 0;
         }
         TestCase test = new TestCase();
@@ -30,10 +29,10 @@ public class StorableTest {
     @Test
     public void testKeyStorable() {
         class TestCase implements Storable {
-            @Stored(key = "int")
+            @Store(key = "int")
             private int integer = 0;
 
-            @Stored(key = "str")
+            @Store(key = "str")
             private String string = "";
         }
         TestCase test = new TestCase();
@@ -51,7 +50,7 @@ public class StorableTest {
     }
 
     public static class SubTestCase implements Storable {
-        @Stored
+        @Store
         private int value = 0;
 
         SubTestCase() {}
@@ -61,7 +60,7 @@ public class StorableTest {
     public void testRecursiveStorable() {
 
         class TestCase implements Storable {
-            @Stored
+            @Store
             private SubTestCase sub;
         }
 
@@ -81,10 +80,10 @@ public class StorableTest {
     @Test
     public void testMultipleStorable() {
         class TestCase implements Storable {
-            @Stored
+            @Store
             private int integer = 0;
 
-            @Stored
+            @Store
             private String string = "";
         }
         TestCase test = new TestCase();

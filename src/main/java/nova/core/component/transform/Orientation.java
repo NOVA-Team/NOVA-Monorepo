@@ -13,7 +13,7 @@ import nova.core.network.Syncable;
 import nova.core.network.Sync;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
-import nova.core.retention.Stored;
+import nova.core.retention.Store;
 import nova.core.util.Direction;
 import nova.core.util.RayTracer;
 import nova.core.util.transform.vector.Vector3d;
@@ -40,7 +40,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	 * The direction the block is facing.
 	 */
 	@Sync
-	@Stored
+	@Store
 	protected Direction orientation = Direction.UNKNOWN;
 
 	public Orientation(ComponentProvider provider) {

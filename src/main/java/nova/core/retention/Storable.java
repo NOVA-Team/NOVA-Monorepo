@@ -17,7 +17,7 @@ public interface Storable {
 	 * @param data The data object to put values in.
 	 */
 	default void save(Data data) {
-		ReflectionUtil.forEachRecursiveAnnotatedField(Stored.class, getClass(), (field, annotation) -> {
+		ReflectionUtil.forEachRecursiveAnnotatedField(Store.class, getClass(), (field, annotation) -> {
 			try {
 				field.setAccessible(true);
 				String name = annotation.key();
@@ -33,7 +33,7 @@ public interface Storable {
 	}
 
 	default void load(Data data) {
-		ReflectionUtil.forEachRecursiveAnnotatedField(Stored.class, getClass(), (field, annotation) -> {
+		ReflectionUtil.forEachRecursiveAnnotatedField(Store.class, getClass(), (field, annotation) -> {
 			String name = annotation.key();
 			if (name.isEmpty()) {
 				name = field.getName();

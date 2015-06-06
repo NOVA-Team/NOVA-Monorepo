@@ -2,8 +2,7 @@ package nova.core.util.transform.vector;
 
 import com.google.common.math.DoubleMath;
 import nova.core.retention.Storable;
-import nova.core.retention.Stored;
-import nova.core.util.math.MathUtil;
+import nova.core.retention.Store;
 import nova.core.util.transform.matrix.Matrix;
 
 import java.util.Random;
@@ -21,7 +20,7 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 	public static final Vector3d xAxis = new Vector3d(1, 0, 0);
 	public static final Vector3d yAxis = new Vector3d(0, 1, 0);
 	public static final Vector3d zAxis = new Vector3d(0, 0, 1);
-	@Stored
+	@Store
 	public final double x, y, z;
 
 	public Vector3d() {

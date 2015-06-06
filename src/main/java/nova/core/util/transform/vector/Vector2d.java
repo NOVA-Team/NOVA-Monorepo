@@ -1,7 +1,7 @@
 package nova.core.util.transform.vector;
 
 import nova.core.retention.Storable;
-import nova.core.retention.Stored;
+import nova.core.retention.Store;
 import nova.core.util.transform.matrix.Matrix;
 
 /**
@@ -15,7 +15,7 @@ public class Vector2d extends Vector2<Vector2d> implements Storable {
 	public static final Vector2d xAxis = new Vector2d(1, 0);
 	public static final Vector2d yAxis = new Vector2d(0, 1);
 
-	@Stored
+	@Store
 	public final double x, y;
 
 	public Vector2d(double x, double y) {

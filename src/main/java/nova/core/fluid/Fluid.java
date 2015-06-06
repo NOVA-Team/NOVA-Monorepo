@@ -2,7 +2,7 @@ package nova.core.fluid;
 
 import nova.core.block.BlockFactory;
 import nova.core.retention.Storable;
-import nova.core.retention.Stored;
+import nova.core.retention.Store;
 import nova.core.util.Identifiable;
 
 import java.util.Optional;
@@ -15,12 +15,12 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	/**
 	 * The ID of the fluid. Optional string for auxiliary constructor.
 	 */
-	@Stored(key = "id")
+	@Store(key = "id")
 	private String id;
 	/**
 	 * Fluid amount is measured in liters.
 	 */
-	@Stored(key = "amount")
+	@Store(key = "amount")
 	private int amount = 1;
 
 	/**

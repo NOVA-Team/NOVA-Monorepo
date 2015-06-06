@@ -26,7 +26,7 @@ package nova.core.util.transform.matrix;
 
 import com.google.common.math.DoubleMath;
 import nova.core.retention.Storable;
-import nova.core.retention.Stored;
+import nova.core.retention.Store;
 import nova.core.util.collection.Tuple2;
 import nova.core.util.transform.vector.Transformer;
 import nova.core.util.transform.vector.Vector3;
@@ -45,7 +45,7 @@ public class Quaternion implements Transformer, Storable {
 
 	public static final Quaternion identity = new Quaternion(0, 0, 0, 1);
 
-	@Stored
+	@Store
 	public final double x, y, z, w;
 
 	public Quaternion(double x, double y, double z, double w) {
