@@ -3,7 +3,7 @@ package nova.core.network.handler;
 import nova.core.block.Block;
 import nova.core.entity.Entity;
 import nova.core.network.Packet;
-import nova.core.network.PacketHandler;
+import nova.core.network.Syncable;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector3i;
 
@@ -20,7 +20,7 @@ import java.util.Optional;
  *
  * @author Calclavia
  */
-public class BlockPacket implements PacketType<Block> {
+public class BlockPacket implements PacketHandler<Block> {
 
 	@Override
 	public void read(Packet packet) {
@@ -31,8 +31,8 @@ public class BlockPacket implements PacketType<Block> {
 
 		if (opBlock.isPresent()) {
 			Block block = opBlock.get();
-			if (block instanceof PacketHandler) {
-				((PacketHandler) block).read(packet);
+			if (block instanceof Syncable) {
+				((Syncable) block).read(packet);
 				return;
 			}
 		}
@@ -41,12 +41,12 @@ public class BlockPacket implements PacketType<Block> {
 
 	@Override
 	public void write(Block block, Packet packet) {
-		if (block instanceof PacketHandler) {
+		if (block instanceof Syncable) {
 			Vector3i position = block.position();
 			packet.writeInt(position.x);
 			packet.writeInt(position.y);
 			packet.writeInt(position.z);
-			((PacketHandler) block).write(packet);
+			((Syncable) block).write(packet);
 			return;
 		}
 

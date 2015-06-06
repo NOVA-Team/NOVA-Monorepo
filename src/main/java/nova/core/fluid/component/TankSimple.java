@@ -2,7 +2,7 @@ package nova.core.fluid.component;
 
 import nova.core.fluid.Fluid;
 import nova.core.network.Packet;
-import nova.core.network.PacketHandler;
+import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * This class provides basic implementation of {@link Tank}
  */
-public class TankSimple implements Tank, Storable, PacketHandler {
+public class TankSimple implements Tank, Storable, Syncable {
 
 	private Optional<Fluid> containedFluid = Optional.empty();
 	private int capacity;

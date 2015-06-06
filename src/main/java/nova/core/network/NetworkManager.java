@@ -4,7 +4,7 @@ import nova.core.entity.component.Player;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.handler.BlockPacket;
 import nova.core.network.handler.EntityPacket;
-import nova.core.network.handler.PacketType;
+import nova.core.network.handler.PacketHandler;
 import nova.core.util.exception.NovaException;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 public abstract class NetworkManager {
 
-	private final List<PacketType<?>> handlers = new ArrayList<>();
+	private final List<PacketHandler<?>> handlers = new ArrayList<>();
 
 	public NetworkManager() {
 		register(new BlockPacket());
@@ -31,7 +31,7 @@ public abstract class NetworkManager {
 	 *
 	 * @param type An ID is assigned to the packet handler
 	 */
-	public int register(PacketType<?> type) {
+	public int register(PacketHandler<?> type) {
 		handlers.add(type);
 		return handlers.size() - 1;
 	}
@@ -41,11 +41,11 @@ public abstract class NetworkManager {
 	 */
 	public abstract Packet newPacket();
 
-	public PacketType<?> getPacketType(int id) {
+	public PacketHandler<?> getPacketType(int id) {
 		return handlers.get(id);
 	}
 
-	public int getPacketTypeID(PacketType<?> type) {
+	public int getPacketTypeID(PacketHandler<?> type) {
 		return handlers.indexOf(type);
 	}
 
@@ -55,8 +55,8 @@ public abstract class NetworkManager {
 	 * @param handler The packet handler
 	 * @return The packet type for the packet handler
 	 */
-	public PacketType<?> getPacketType(Object handler) {
-		Optional<PacketType<?>> first = handlers
+	public PacketHandler<?> getPacketType(Object handler) {
+		Optional<PacketHandler<?>> first = handlers
 			.stream()
 			.filter(type -> type.isHandlerFor(handler))
 			.findFirst();
@@ -91,14 +91,14 @@ public abstract class NetworkManager {
 		int packetTypeID = getPacketTypeID(getPacketType(sender));
 		packet.writeInt(packetTypeID);
 		packet.writeInt(packet.getID());
-		((PacketType) getPacketType(sender)).write(sender, packet);
+		((PacketHandler) getPacketType(sender)).write(sender, packet);
 		return packet;
 	}
 
 	/**
 	 * Syncs a PacketHandler between server and client.
 	 *
-	 * @param sender {@link PacketHandler}
+	 * @param sender {@link Syncable}
 	 */
 	public final void sync(Object sender) {
 		sync(0, sender);
@@ -108,7 +108,7 @@ public abstract class NetworkManager {
 	 * Syncs a PacketHandler between server and client, with a specific packet ID
 	 *
 	 * @param id The packet ID
-	 * @param sender sender {@link nova.core.network.PacketHandler}
+	 * @param sender sender {@link Syncable}
 	 */
 	public void sync(int id, Object sender) {
 		Packet packet = newPacket();

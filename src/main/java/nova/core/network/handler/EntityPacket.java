@@ -2,7 +2,7 @@ package nova.core.network.handler;
 
 import nova.core.entity.Entity;
 import nova.core.network.Packet;
-import nova.core.network.PacketHandler;
+import nova.core.network.Syncable;
 import nova.core.util.exception.NovaException;
 
 import java.util.Optional;
@@ -16,7 +16,7 @@ import java.util.Optional;
  *
  * @author Calclavia
  */
-public class EntityPacket implements PacketType<Entity> {
+public class EntityPacket implements PacketHandler<Entity> {
 
 	@Override
 	public void read(Packet packet) {
@@ -27,8 +27,8 @@ public class EntityPacket implements PacketType<Entity> {
 
 		if (op.isPresent()) {
 			Entity entity = op.get();
-			if (entity instanceof PacketHandler) {
-				((PacketHandler) entity).read(packet);
+			if (entity instanceof Syncable) {
+				((Syncable) entity).read(packet);
 				return;
 			}
 		}
@@ -37,9 +37,9 @@ public class EntityPacket implements PacketType<Entity> {
 
 	@Override
 	public void write(Entity entity, Packet packet) {
-		if (entity instanceof PacketHandler) {
+		if (entity instanceof Syncable) {
 			packet.write(entity.getUniqueID());
-			((PacketHandler) entity).write(packet);
+			((Syncable) entity).write(packet);
 			return;
 		}
 

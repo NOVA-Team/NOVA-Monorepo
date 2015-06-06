@@ -13,7 +13,7 @@ import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.gui.render.Graphics;
 import nova.core.network.NetworkTarget.Side;
-import nova.core.network.PacketHandler;
+import nova.core.network.Syncable;
 import nova.core.util.Identifiable;
 import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector2i;
@@ -33,7 +33,7 @@ import java.util.UUID;
  * @param <T> {@link NativeGuiComponent} type
  */
 @SuppressWarnings("unchecked")
-public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, PacketHandler {
+public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends NativeGuiComponent> implements Identifiable, EventListener<GuiEvent>, Syncable {
 
 	private final boolean hasIdentifier;
 	private final String uniqueID;

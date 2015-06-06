@@ -3,11 +3,11 @@ package nova.core.network.handler;
 import nova.core.network.Packet;
 
 /**
- * A packet type handles a certain type of PacketHandlers.
+ * A packet handler handles a certain type of objects.
  *
  * @author Calclavia
  */
-public interface PacketType<HANDLER> {
+public interface PacketHandler<HANDLER> {
 
 	void read(Packet packet);
 

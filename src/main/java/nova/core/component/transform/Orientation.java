@@ -9,7 +9,7 @@ import nova.core.event.Event;
 import nova.core.event.EventBus;
 import nova.core.game.Game;
 import nova.core.network.Packet;
-import nova.core.network.PacketHandler;
+import nova.core.network.Syncable;
 import nova.core.network.Sync;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
@@ -25,7 +25,7 @@ import java.util.Optional;
  *
  * @author Calclavia
  */
-public class Orientation extends Component implements Storable, Stateful, PacketHandler {
+public class Orientation extends Component implements Storable, Stateful, Syncable {
 
 	public final ComponentProvider provider;
 

@@ -65,8 +65,8 @@ public interface Packet {
 			writeEnum((Enum) data);
 		} else if (data instanceof Data) {
 			writeData((Data) data);
-		} else if (data instanceof PacketHandler) {
-			((PacketHandler) data).write(this);
+		} else if (data instanceof Syncable) {
+			((Syncable) data).write(this);
 		} else if (data instanceof Storable) {
 			writeStorable((Storable) data);
 		} else if (data instanceof Collection) {
@@ -331,7 +331,7 @@ public interface Packet {
 		return Enum.valueOf(type, readString());
 	}
 
-	default PacketHandler readPacketHandler(PacketHandler handler) {
+	default Syncable readPacketHandler(Syncable handler) {
 		handler.read(this);
 		return handler;
 	}
@@ -410,7 +410,7 @@ public interface Packet {
 			return (T) readString();
 		}
 		//Special data types that all convert into Data.
-		else if (PacketHandler.class.isAssignableFrom(clazz)) {
+		else if (Syncable.class.isAssignableFrom(clazz)) {
 			throw new NovaException("Attempt to read PacketHandler object by its class");
 		} else if (Enum.class.isAssignableFrom(clazz)) {
 			return (T) readEnum();

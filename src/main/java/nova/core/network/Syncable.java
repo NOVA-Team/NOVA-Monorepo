@@ -7,7 +7,7 @@ import java.util.Arrays;
 /**
  * @author Calclavia
  */
-public interface PacketHandler {
+public interface Syncable {
 
 	/**
 	 * Reads a packet.
@@ -20,8 +20,8 @@ public interface PacketHandler {
 				try {
 					field.setAccessible(true);
 					Object o = field.get(this);
-					if (o instanceof PacketHandler) {
-						((PacketHandler) o).read(packet);
+					if (o instanceof Syncable) {
+						((Syncable) o).read(packet);
 					} else {
 						field.set(this, packet.read(field.getType()));
 					}
