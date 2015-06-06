@@ -15,7 +15,7 @@ import nova.core.game.Game;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
-import nova.core.retention.Stored;
+import nova.core.retention.Store;
 import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class BWBlock extends Block implements Storable {
 	public final net.minecraft.block.Block mcBlock;
-	@Stored
+	@Store
 	public int metadata;
 	private TileEntity mcTileEntity;
 
