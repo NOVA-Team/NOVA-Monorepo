@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseButton;
@@ -32,7 +32,7 @@ import java.util.Optional;
 
 /**
  * Minecraft implementation of the NOVA GUI System
- * 
+ *
  * @author Vic Nightfall
  */
 public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiComponent {

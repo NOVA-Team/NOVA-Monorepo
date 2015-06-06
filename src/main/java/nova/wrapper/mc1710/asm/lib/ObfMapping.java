@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.asm.lib;
 import com.google.common.base.Objects;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import nova.core.game.Game;
+import nova.internal.Game;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.tree.AbstractInsnNode;

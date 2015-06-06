@@ -5,7 +5,7 @@ import java.util.Optional;
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.asm.lib.ComponentInjector;
 

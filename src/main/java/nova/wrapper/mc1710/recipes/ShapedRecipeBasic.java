@@ -4,7 +4,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.world.World;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.recipes.crafting.ShapedCraftingRecipe;
 
 import java.util.Optional;

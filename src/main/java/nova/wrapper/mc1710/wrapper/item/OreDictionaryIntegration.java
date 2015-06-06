@@ -2,7 +2,7 @@ package nova.wrapper.mc1710.wrapper.item;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemDictionary;
 import nova.core.util.Dictionary;

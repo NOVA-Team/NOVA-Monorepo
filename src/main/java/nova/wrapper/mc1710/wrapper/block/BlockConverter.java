@@ -9,7 +9,7 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.component.Category;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;

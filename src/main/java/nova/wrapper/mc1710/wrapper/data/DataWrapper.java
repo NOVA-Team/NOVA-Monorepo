@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 

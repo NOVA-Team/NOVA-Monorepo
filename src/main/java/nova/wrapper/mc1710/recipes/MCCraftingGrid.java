@@ -8,7 +8,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import nova.core.entity.component.Player;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.recipes.crafting.CraftingGrid;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.util.ReflectionUtil;
@@ -91,7 +91,7 @@ public class MCCraftingGrid implements CraftingGrid {
 			return result;
 		}
 	}
-	
+
 	private void update() {
 		if (inventory.getSizeInventory() != original.length) {
 			width = height = (int) Math.sqrt(inventory.getSizeInventory());
@@ -99,7 +99,7 @@ public class MCCraftingGrid implements CraftingGrid {
 			original = new ItemStack[stacks.length];
 			numberOfStacks = 0;
 		}
-		
+
 		for (int i = 0; i < inventory.getSizeInventory(); i++) {
 			if (changed(i)) {
 				//System.out.println("Slot " + i + " changed");
@@ -119,7 +119,7 @@ public class MCCraftingGrid implements CraftingGrid {
 		}
 		//System.out.println("Num stack count: " + numberOfStacks);
 	}
-	
+
 	@Override
 	public Optional<Player> getPlayer() {
 		return player;
@@ -139,7 +139,7 @@ public class MCCraftingGrid implements CraftingGrid {
 	public int getHeight() {
 		return height;
 	}
-	
+
 	@Override
 	public int countFilledStacks() {
 		return numberOfStacks;
@@ -158,7 +158,7 @@ public class MCCraftingGrid implements CraftingGrid {
 	@Override
 	public boolean setStack(int x, int y, Optional<nova.core.item.Item> stack) {
 		//System.out.println("SetStack(" + x + ", " + y + ") " + stack);
-		
+
 		int ix = y * width + x;
 		if (!stack.equals(stacks[ix])) {
 			if (stack.isPresent()) {
@@ -222,7 +222,7 @@ public class MCCraftingGrid implements CraftingGrid {
 
 		if (original[i] != null && stacks[i].count() != original[i].stackSize)
 			return true;
-		
+
 		return false;
 	}
 }

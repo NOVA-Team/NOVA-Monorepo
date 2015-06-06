@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.chunk.Chunk;
 import nova.core.event.GlobalEvents;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.wrapper.block.forward.FWTile;
@@ -14,7 +14,7 @@ import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
 /**
  * Static forwarder forwards injected methods.
- * 
+ *
  * @author Calclavia
  */
 public class StaticForwarder {
@@ -28,7 +28,7 @@ public class StaticForwarder {
 
 	/**
 	 * Used to inject forwarded TileEntites
-	 * 
+	 *
 	 * @param data
 	 * @param clazz
 	 * @return

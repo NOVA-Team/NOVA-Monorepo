@@ -2,7 +2,7 @@ package nova.wrapper.mc1710.recipes;
 
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.recipes.RecipeAddedEvent;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.RecipeRemovedEvent;

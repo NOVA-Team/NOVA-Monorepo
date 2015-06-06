@@ -1,7 +1,7 @@
 package nova.wrapper.mc1710.wrapper.item;
 
 import net.minecraft.nbt.NBTTagCompound;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;

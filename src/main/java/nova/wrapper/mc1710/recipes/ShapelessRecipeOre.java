@@ -4,7 +4,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.ShapelessCraftingRecipe;
 

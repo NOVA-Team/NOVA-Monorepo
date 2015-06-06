@@ -2,7 +2,7 @@ package nova.wrapper.mc1710.launcher;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import nova.core.game.Game;
+import nova.internal.Game;
 
 /**
  * Handles FML events and forwards them to NOVA.

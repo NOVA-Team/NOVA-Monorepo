@@ -1,6 +1,6 @@
 package nova.wrapper.mc1710.wrapper.block.world;
 
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.util.exception.NovaException;
 import nova.core.world.World;

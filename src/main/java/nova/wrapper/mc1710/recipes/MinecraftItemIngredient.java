@@ -1,6 +1,6 @@
 package nova.wrapper.mc1710.recipes;
 
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.SpecificItemIngredient;
 
