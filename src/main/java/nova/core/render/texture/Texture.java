@@ -4,6 +4,8 @@ import nova.internal.Game;
 import nova.core.util.transform.vector.Vector2d;
 import nova.core.util.transform.vector.Vector2i;
 
+import java.util.Optional;
+
 /**
  * A texture has a file location. All texture must be included in
  * /assets/domain/textures/*
@@ -33,6 +35,10 @@ public class Texture extends Icon {
 
 	public String getPath() {
 		return resource + ".png";
+	}
+	
+	public Optional<Texture> optional() {
+		return Optional.of(this);
 	}
 
 	@Override
