@@ -10,6 +10,7 @@ import java.util.Random;
 /**
  * A double implementation of Vector3. Vector3 is an immutable quantity that
  * holds an x, y and z value.
+ *
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
@@ -41,6 +42,10 @@ public class Vector3d extends Vector3<Vector3d> implements Storable {
 		return new Vector3d(random.nextDouble(), random.nextDouble(), random.nextDouble())
 			.multiply(2)
 			.subtract(1);
+	}
+
+	public final double dot(Vector3d other) {
+		return xd() * other.xd() + yd() * other.yd() + zd() * other.zd();
 	}
 
 	@Override

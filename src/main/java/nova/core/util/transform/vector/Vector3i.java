@@ -28,6 +28,10 @@ public class Vector3i extends Vector3<Vector3i> implements Storable {
 		this.z = z;
 	}
 
+	public final double dot(Vector3i other) {
+		return xd() * other.xd() + yd() * other.yd() + zd() * other.zd();
+	}
+
 	@Override
 	public Vector3i add(Vector3 other) {
 		return new Vector3i(x + other.xi(), y + other.yi(), z + other.zi());
