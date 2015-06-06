@@ -157,6 +157,7 @@ public interface Packet {
 
 	Packet writeString(String value);
 
+	//TODO: Packet handler is bad at reading/writing enums for unknown reasons
 	default Packet writeEnum(Enum data) {
 		writeString(data.getClass().getName());
 		writeString(data.name());
@@ -293,7 +294,8 @@ public interface Packet {
 
 	default Enum readEnum() {
 		try {
-			Class<? extends Enum> className = (Class) Class.forName(readString());
+			String enumClassName = readString();
+			Class<? extends Enum> className = (Class) Class.forName(enumClassName);
 			return readEnum(className);
 		} catch (Exception e) {
 			throw new NovaException("Failed to read enum.", e);

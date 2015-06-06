@@ -5,19 +5,31 @@ import nova.core.block.Stateful;
 import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
+import nova.core.event.Event;
+import nova.core.event.EventBus;
+import nova.core.game.Game;
+import nova.core.network.Packet;
+import nova.core.network.PacketHandler;
 import nova.core.network.Sync;
+import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Stored;
 import nova.core.util.Direction;
+import nova.core.util.RayTracer;
 import nova.core.util.transform.vector.Vector3d;
+
+import java.util.Optional;
 
 /**
  * A component that is applied to providers with discrete orientations.
+ *
  * @author Calclavia
  */
-public class Orientation extends Component implements Storable, Stateful {
+public class Orientation extends Component implements Storable, Stateful, PacketHandler {
 
 	public final ComponentProvider provider;
+
+	public final EventBus<Event> onOrientationChange = new EventBus<>();
 
 	/**
 	 * The allowed rotation directions the block can face.
@@ -29,7 +41,7 @@ public class Orientation extends Component implements Storable, Stateful {
 	 */
 	@Sync
 	@Stored
-	public Direction orientation = Direction.UNKNOWN;
+	protected Direction orientation = Direction.UNKNOWN;
 
 	public Orientation(ComponentProvider provider) {
 		this.provider = provider;
@@ -37,9 +49,33 @@ public class Orientation extends Component implements Storable, Stateful {
 
 	public Orientation hookBlockEvents() {
 		if (provider instanceof Block) {
-			((Block) provider).placeEvent.add(evt -> orientation = calculateDirection(evt.placer));
-			((Block) provider).rightClickEvent.add(evt -> rotate(evt.side.ordinal(), evt.position));
+			((Block) provider).placeEvent.add(
+				evt ->
+				{
+					if (Game.network().isServer()) {
+						setOrientation(calculateDirection(evt.placer));
+					}
+				}
+			);
+			((Block) provider).rightClickEvent.add(
+				evt ->
+				{
+					if (Game.network().isServer()) {
+						rotate(evt.side.ordinal(), evt.position);
+					}
+				}
+			);
 		}
+		return this;
+	}
+
+	public Direction orientation() {
+		return orientation;
+	}
+
+	public Orientation setOrientation(Direction orientation) {
+		this.orientation = orientation;
+		onOrientationChange.publish(new Event());
 		return this;
 	}
 
@@ -55,24 +91,15 @@ public class Orientation extends Component implements Storable, Stateful {
 
 	public Direction calculateDirection(Entity entity) {
 		if (provider instanceof Block) {
-			if (Math.abs(entity.position().x - ((Block) provider).x()) < 2 && Math.abs(entity.position().z - ((Block) provider).z()) < 2) {
-				double height = entity.position().y + 1.82D;//- entity.yOffset
+			Optional<RayTracer.RayTraceBlockResult> hit = new RayTracer(entity)
+				.setDistance(7)
+				.rayTraceBlocks(entity.world())
+				.filter(res -> res.block != provider)
+				.findFirst();
 
-				if (canRotate(1) && height - ((Block) provider).y() > 2.0D) {
-					return Direction.UP;
-				}
-				if (canRotate(0) && ((Block) provider).y() - height > 0.0D) {
-					return Direction.DOWN;
-				}
+			if (hit.isPresent()) {
+				return (isFlip) ? hit.get().side.opposite() : hit.get().side;
 			}
-
-			int playerSide = (int) Math.floor(entity.rotation().toEuler().x * 4 / (Math.PI * 2) + 0.5D) & 3;
-			int returnSide = (playerSide == 0 && canRotate(2)) ? 2 : ((playerSide == 1 && canRotate(5)) ? 5 : (playerSide == 2 && canRotate(3) ? 3 : ((playerSide == 3 && canRotate(4)) ? 4 : 0)));
-
-			if (isFlip) {
-				return Direction.fromOrdinal(returnSide).opposite();
-			}
-			return Direction.fromOrdinal(returnSide);
 		}
 
 		return Direction.UNKNOWN;
@@ -93,7 +120,8 @@ public class Orientation extends Component implements Storable, Stateful {
 		int result = getSideToRotate(side, hit);
 
 		if (result != -1) {
-			orientation = Direction.fromOrdinal(result);
+			setOrientation(Direction.fromOrdinal(result));
+			onOrientationChange.publish(new Event());
 			return true;
 		}
 
@@ -247,5 +275,25 @@ public class Orientation extends Component implements Storable, Stateful {
 				break;
 		}
 		return -1;
+	}
+
+	@Override
+	public void save(Data data) {
+		data.put("orientation", orientation.ordinal());
+	}
+
+	@Override
+	public void load(Data data) {
+		orientation = Direction.fromOrdinal(data.get("orientation"));
+	}
+
+	@Override
+	public void read(Packet packet) {
+		setOrientation(Direction.fromOrdinal(packet.readInt()));
+	}
+
+	@Override
+	public void write(Packet packet) {
+		packet.writeInt(orientation.ordinal());
 	}
 }
