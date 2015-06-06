@@ -1,10 +1,8 @@
 package nova.core.network;
 
-import nova.core.component.ComponentProvider;
 import nova.core.util.ReflectionUtil;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
 /**
  * @author Calclavia
@@ -13,6 +11,7 @@ public interface PacketHandler {
 
 	/**
 	 * Reads a packet.
+	 *
 	 * @param packet - data encoded into the packet.
 	 */
 	default void read(Packet packet) {
@@ -20,24 +19,23 @@ public interface PacketHandler {
 			if (Arrays.stream(annotation.ids()).anyMatch(i -> i == packet.getID())) {
 				try {
 					field.setAccessible(true);
-					field.set(this, packet.read(field.getType()));
+					Object o = field.get(this);
+					if (o instanceof PacketHandler) {
+						((PacketHandler) o).read(packet);
+					} else {
+						field.set(this, packet.read(field.getType()));
+					}
 					field.setAccessible(false);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}
 			}
 		});
-
-		if (this instanceof ComponentProvider) {
-			new HashSet<>(((ComponentProvider) this).components())
-				.stream()
-				.filter(c -> c instanceof PacketHandler)
-				.forEach(c -> ((PacketHandler) c).read(packet));
-		}
 	}
 
 	/**
 	 * Writes a packet based on the arguments.
+	 *
 	 * @param packet - data encoded into the packet
 	 */
 	default void write(Packet packet) {
@@ -52,13 +50,6 @@ public interface PacketHandler {
 				}
 			}
 		});
-
-		if (this instanceof ComponentProvider) {
-			new HashSet<>(((ComponentProvider) this).components())
-				.stream()
-				.filter(c -> c instanceof PacketHandler)
-				.forEach(c -> ((PacketHandler) c).write(packet));
-		}
 	}
 
 }

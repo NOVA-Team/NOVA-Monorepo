@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 
 /**
  * A packet of data that is writable or readable.
+ *
  * @author Calclavia
  */
 public interface Packet {
@@ -25,6 +26,7 @@ public interface Packet {
 
 	/**
 	 * Sets the ID of this packet, allowing it to be sent accordingly.
+	 *
 	 * @return The packet itself.
 	 */
 	Packet setID(int id);
@@ -36,6 +38,7 @@ public interface Packet {
 
 	/**
 	 * Writes an arbitrary object, automatically finding the relevant class.
+	 *
 	 * @param data Object to write
 	 * @return This packet
 	 */
@@ -62,8 +65,12 @@ public interface Packet {
 			writeEnum((Enum) data);
 		} else if (data instanceof Data) {
 			writeData((Data) data);
+		} else if (data instanceof PacketHandler) {
+			((PacketHandler) data).write(this);
 		} else if (data instanceof Storable) {
 			writeStorable((Storable) data);
+		} else if (data instanceof Collection) {
+			writeCollection((Collection) data);
 		} else if (data instanceof Collection) {
 			writeCollection((Collection) data);
 		} else {
@@ -80,6 +87,7 @@ public interface Packet {
 	/**
 	 * Sets the specified boolean at the current {@code writerIndex}
 	 * and increases the {@code writerIndex} by {@code 1} in this buffer.
+	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 1}
@@ -90,6 +98,7 @@ public interface Packet {
 	 * Sets the specified byte at the current {@code writerIndex}
 	 * and increases the {@code writerIndex} by {@code 1} in this buffer.
 	 * The 24 high-order bits of the specified value are ignored.
+	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 1}
@@ -100,6 +109,7 @@ public interface Packet {
 	 * Sets the specified 16-bit short integer at the current
 	 * {@code writerIndex} and increases the {@code writerIndex} by {@code 2}
 	 * in this buffer.  The 16 high-order bits of the specified value are ignored.
+	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 2}
@@ -109,6 +119,7 @@ public interface Packet {
 	/**
 	 * Sets the specified 32-bit integer at the current {@code writerIndex}
 	 * and increases the {@code writerIndex} by {@code 4} in this buffer.
+	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 4}
@@ -119,6 +130,7 @@ public interface Packet {
 	 * Sets the specified 64-bit long integer at the current
 	 * {@code writerIndex} and increases the {@code writerIndex} by {@code 8}
 	 * in this buffer.
+	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 8}
@@ -129,6 +141,7 @@ public interface Packet {
 	 * Sets the specified 2-byte UTF-16 character at the current
 	 * {@code writerIndex} and increases the {@code writerIndex} by {@code 2}
 	 * in this buffer.  The 16 high-order bits of the specified value are ignored.
+	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 2}
@@ -139,6 +152,7 @@ public interface Packet {
 	 * Sets the specified 32-bit floating point number at the current
 	 * {@code writerIndex} and increases the {@code writerIndex} by {@code 4}
 	 * in this buffer.
+	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 4}
@@ -149,6 +163,7 @@ public interface Packet {
 	 * Sets the specified 64-bit floating point number at the current
 	 * {@code writerIndex} and increases the {@code writerIndex} by {@code 8}
 	 * in this buffer.
+	 *
 	 * @param value Data to write
 	 * @return This packet
 	 * @throws IndexOutOfBoundsException if {@code this.writableBytes} is less than {@code 8}
@@ -213,6 +228,7 @@ public interface Packet {
 	/**
 	 * Gets a boolean at the current {@code readerIndex} and increases
 	 * the {@code readerIndex} by {@code 1} in this buffer.
+	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 1}
 	 */
@@ -221,6 +237,7 @@ public interface Packet {
 	/**
 	 * Gets a byte at the current {@code readerIndex} and increases
 	 * the {@code readerIndex} by {@code 1} in this buffer.
+	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 1}
 	 */
@@ -229,6 +246,7 @@ public interface Packet {
 	/**
 	 * Gets an unsigned byte at the current {@code readerIndex} and increases
 	 * the {@code readerIndex} by {@code 1} in this buffer.
+	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 1}
 	 */
@@ -237,6 +255,7 @@ public interface Packet {
 	/**
 	 * Gets a 16-bit short integer at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 2} in this buffer.
+	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 2}
 	 */
@@ -245,6 +264,7 @@ public interface Packet {
 	/**
 	 * Gets a 32-bit integer at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 4} in this buffer.
+	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 4}
 	 */
@@ -253,6 +273,7 @@ public interface Packet {
 	/**
 	 * Gets an unsigned 32-bit integer at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 4} in this buffer.
+	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 4}
 	 */
@@ -261,6 +282,7 @@ public interface Packet {
 	/**
 	 * Gets a 64-bit integer at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 8} in this buffer.
+	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 8}
 	 */
@@ -269,6 +291,7 @@ public interface Packet {
 	/**
 	 * Gets a 2-byte UTF-16 character at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 2} in this buffer.
+	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 2}
 	 */
@@ -277,6 +300,7 @@ public interface Packet {
 	/**
 	 * Gets a 32-bit floating point number at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 4} in this buffer.
+	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 4}
 	 */
@@ -285,6 +309,7 @@ public interface Packet {
 	/**
 	 * Gets a 64-bit floating point number at the current {@code readerIndex}
 	 * and increases the {@code readerIndex} by {@code 8} in this buffer.
+	 *
 	 * @return Data read from this packet
 	 * @throws IndexOutOfBoundsException if {@code this.readableBytes} is less than {@code 8}
 	 */
@@ -304,6 +329,11 @@ public interface Packet {
 
 	default Enum readEnum(Class<? extends Enum> type) {
 		return Enum.valueOf(type, readString());
+	}
+
+	default PacketHandler readPacketHandler(PacketHandler handler) {
+		handler.read(this);
+		return handler;
 	}
 
 	/**
@@ -380,7 +410,9 @@ public interface Packet {
 			return (T) readString();
 		}
 		//Special data types that all convert into Data.
-		else if (Enum.class.isAssignableFrom(clazz)) {
+		else if (PacketHandler.class.isAssignableFrom(clazz)) {
+			throw new NovaException("Attempt to read PacketHandler object by its class");
+		} else if (Enum.class.isAssignableFrom(clazz)) {
 			return (T) readEnum();
 		} else if (Data.class.isAssignableFrom(clazz)) {
 			return (T) readData();
