@@ -1,6 +1,6 @@
 package nova.core.render.texture;
 
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.util.transform.vector.Vector2d;
 import nova.core.util.transform.vector.Vector2i;
 

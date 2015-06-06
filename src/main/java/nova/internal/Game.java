@@ -1,10 +1,12 @@
-package nova.core.game;
+package nova.internal;
 
 import nova.core.block.BlockManager;
 import nova.core.component.ComponentManager;
 import nova.core.entity.EntityManager;
 import nova.core.event.GlobalEvents;
 import nova.core.fluid.FluidManager;
+import nova.core.game.ClientManager;
+import nova.core.game.GameInfo;
 import nova.core.gui.InputManager;
 import nova.core.gui.factory.GuiComponentFactory;
 import nova.core.gui.factory.GuiManager;

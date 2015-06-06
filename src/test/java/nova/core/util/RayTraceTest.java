@@ -4,7 +4,7 @@ import nova.core.block.BlockFactory;
 import nova.core.component.misc.Collider;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
 import nova.core.util.transform.matrix.Quaternion;

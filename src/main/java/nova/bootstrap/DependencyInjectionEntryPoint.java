@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import nova.core.depmodules.CoreBundle;
-import nova.core.game.Game;
+import nova.internal.Game;
 import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
 import se.jbee.inject.bootstrap.Bootstrap;

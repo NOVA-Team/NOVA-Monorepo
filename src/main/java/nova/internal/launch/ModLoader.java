@@ -1,7 +1,7 @@
 package nova.internal.launch;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.loader.Loadable;
 import nova.core.util.exception.NovaException;
 

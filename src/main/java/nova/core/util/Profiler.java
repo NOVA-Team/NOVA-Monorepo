@@ -1,6 +1,6 @@
 package nova.core.util;
 
-import nova.core.game.Game;
+import nova.internal.Game;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,7 +7,7 @@ import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.event.Event;
 import nova.core.event.EventBus;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.network.Packet;
 import nova.core.network.Syncable;
 import nova.core.network.Sync;
