@@ -7,6 +7,7 @@ import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
 import nova.core.game.Game;
+import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.transform.vector.Vector3i;
@@ -41,8 +42,8 @@ public class FWTile extends TileEntity {
 
 	@Override
 	public Packet getDescriptionPacket() {
-		if (block instanceof nova.core.network.PacketHandler) {
-			return ((MCNetworkManager) Game.network()).toMCPacket(((MCNetworkManager) Game.network()).writePacket(0, (nova.core.network.PacketHandler) block));
+		if (block instanceof Syncable) {
+			return ((MCNetworkManager) Game.network()).toMCPacket(((MCNetworkManager) Game.network()).writePacket(0, (Syncable) block));
 		}
 		return null;
 	}

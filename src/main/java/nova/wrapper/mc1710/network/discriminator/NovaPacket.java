@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Player;
 import nova.core.game.Game;
-import nova.core.network.handler.PacketType;
+import nova.core.network.handler.PacketHandler;
 import nova.wrapper.mc1710.network.MCPacket;
 import nova.wrapper.mc1710.network.netty.MCNetworkManager;
 
@@ -44,12 +44,12 @@ public class NovaPacket extends PacketAbstract {
 	public void handle(EntityPlayer player) {
 		try {
 			MCNetworkManager network = (MCNetworkManager) Game.network();
-			PacketType<?> packetType = network.getPacketType(data.readInt());
+			PacketHandler<?> packetHandler = network.getPacketType(data.readInt());
 			int subId = data.readInt();
 			MCPacket packet = new MCPacket(data.slice(), ((Entity) Game.natives().toNova(player)).get(Player.class));
 			//Set the ID of the packet
 			packet.setID(subId);
-			packetType.read(packet);
+			packetHandler.read(packet);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

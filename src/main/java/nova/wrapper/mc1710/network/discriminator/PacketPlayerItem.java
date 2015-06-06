@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import nova.core.network.PacketHandler;
+import nova.core.network.Syncable;
 import nova.wrapper.mc1710.network.MCPacket;
 
 /**
@@ -43,10 +43,10 @@ public class PacketPlayerItem extends PacketAbstract {
 	public void handleClientSide(EntityPlayer player) {
 		ItemStack stack = player.inventory.getStackInSlot(this.slotId);
 
-		if (stack != null && stack.getItem() instanceof PacketHandler) {
+		if (stack != null && stack.getItem() instanceof Syncable) {
 			MCPacket mcPacket = new MCPacket(data);
 			mcPacket.setID(data.readInt());
-			((PacketHandler) stack.getItem()).read(mcPacket);
+			((Syncable) stack.getItem()).read(mcPacket);
 		}
 	}
 
@@ -54,10 +54,10 @@ public class PacketPlayerItem extends PacketAbstract {
 	public void handleServerSide(EntityPlayer player) {
 		ItemStack stack = player.inventory.getStackInSlot(this.slotId);
 
-		if (stack != null && stack.getItem() instanceof PacketHandler) {
+		if (stack != null && stack.getItem() instanceof Syncable) {
 			MCPacket mcPacket = new MCPacket(data);
 			mcPacket.setID(data.readInt());
-			((PacketHandler) stack.getItem()).read(mcPacket);
+			((Syncable) stack.getItem()).read(mcPacket);
 		}
 	}
 }

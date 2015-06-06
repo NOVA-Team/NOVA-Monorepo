@@ -14,7 +14,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import nova.core.entity.component.Player;
 import nova.core.network.NetworkManager;
-import nova.core.network.PacketHandler;
+import nova.core.network.Syncable;
 import nova.core.util.transform.vector.Vector3d;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.network.MCPacket;
@@ -57,7 +57,7 @@ public class MCNetworkManager extends NetworkManager {
 		}
 	}
 
-	public PacketAbstract writePacket(int id, PacketHandler sender) {
+	public PacketAbstract writePacket(int id, Syncable sender) {
 		PacketAbstract discriminator = new NovaPacket();
 		nova.core.network.Packet packet = newPacket();
 		packet.setID(id);
