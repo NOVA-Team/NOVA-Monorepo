@@ -4,7 +4,7 @@ import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.deps.Dependencies;
 import nova.core.deps.Dependency;
 import nova.core.deps.MavenDependency;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.loader.NovaMod;
 import nova.core.util.exception.NovaException;
 

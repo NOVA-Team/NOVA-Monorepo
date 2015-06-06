@@ -4,7 +4,7 @@ import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.SidedEventBus;
 import nova.core.event.SidedEventBus.SidedEvent;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.ComponentEvent.ResizeEvent;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Defines a basic gui component. A component can be added to
  * {@link AbstractGuiContainer}, the root container is a {@link Gui}.
- * 
+ *
  * A component may or may not specify a unique identifier, but keep in mind that
  * they won't be able to receive any events on the {@link Side#SERVER server}
  * side if none is present.
@@ -75,7 +75,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * <p>
 	 * Implement this or use an empty string.
 	 * </p>
-	 * 
+	 *
 	 * @param nativeClass
 	 */
 	public GuiComponent(Class<T> nativeClass) {
@@ -201,7 +201,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * Call this when the component's state has changed and needs to be
 	 * re-rendered. The native component is requested to infer
 	 * {@link #render(int, int, Graphics)} after.
-	 * 
+	 *
 	 * @see #revalidate()
 	 */
 	protected void repaint() {
@@ -211,7 +211,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	/**
 	 * Call this when the component's state has changed and the parent layout
 	 * has to be refreshed.
-	 * 
+	 *
 	 * @see #repaint()
 	 */
 	protected void revalidate() {
@@ -222,7 +222,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	/**
 	 * Returns the native component element for this component. <b>This should
 	 * only be used by the wrapper!</b>
-	 * 
+	 *
 	 * @return Native component element
 	 */
 	public T getNative() {
@@ -303,7 +303,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	/**
 	 * Special handling for mouse events, the position has to be relative to the
 	 * parent component.
-	 * 
+	 *
 	 * @param event {@link MouseEvent}
 	 */
 	public void onMouseEvent(MouseEvent event) {
@@ -400,7 +400,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	/**
 	 * Returns true if all parent elements declare a unique identifier
-	 * 
+	 *
 	 * @return hasIdentifier
 	 */
 	protected final boolean hasIdentifierRecursive() {

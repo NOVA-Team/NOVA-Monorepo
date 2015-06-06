@@ -2,7 +2,7 @@ package nova.core.gui;
 
 import nova.core.entity.Entity;
 import nova.core.entity.component.Player;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.GuiEvent.BindEvent;

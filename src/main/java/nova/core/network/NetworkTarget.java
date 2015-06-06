@@ -7,14 +7,14 @@ import java.lang.annotation.Target;
 
 import nova.core.entity.Entity;
 import nova.core.event.SidedEventBus;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.gui.Gui;
 import nova.core.util.exception.NovaException;
 import nova.core.world.World;
 
 /**
  * A NetworkTarget specifies the target of a {@link Packet} or event.
- * 
+ *
  * @author Vic Nightfall
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -23,7 +23,7 @@ public @interface NetworkTarget {
 
 	/**
 	 * Side on which to process the object.
-	 * 
+	 *
 	 * @return side
 	 */
 	public Side value();
@@ -35,13 +35,13 @@ public @interface NetworkTarget {
 	 * on the server or client side. Some methods may only be run on a specific
 	 * side, see {@link #assertSide(Side)}.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * <b>Design your NOVA mod with two different sides in mind, or they might
 	 * only run client side and crash your game when attempting to run the mod
 	 * on the server side!</b>
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * By convention, {@link Sided} is used to mark a sided type. Any reference
 	 * to it from the wrong side, be it in form of a variable, a method call, or
@@ -49,7 +49,7 @@ public @interface NetworkTarget {
 	 * crash your game, causing an {@link IllegalSideException},
 	 * {@link ReflectiveOperationException} or <i>worse</i>.
 	 * </p>
-	 * 
+	 *
 	 * @author Vic Nightfall
 	 */
 	public static enum Side {
@@ -60,7 +60,7 @@ public @interface NetworkTarget {
 		 * {@link #SERVER} side using {@link Packet Packets} or internal
 		 * synchronizing methods as provided by {@link Gui}, {@link Entity} and
 		 * others.
-		 * 
+		 *
 		 * @see NetworkTarget
 		 * @see NetworkManager
 		 * @see #SERVER
@@ -73,7 +73,7 @@ public @interface NetworkTarget {
 		 * the {@link #CLIENT}, every interaction with the game world has to be
 		 * synchronized in order to see the effects on the client. The server
 		 * doesn't handle rendering usually.
-		 * 
+		 *
 		 * @see NetworkTarget
 		 * @see NetworkManager
 		 * @see #CLIENT
@@ -186,7 +186,7 @@ public @interface NetworkTarget {
 	/**
 	 * An IllegalSideException indicates that a piece of code was called from
 	 * the wrong {@link Side}.
-	 * 
+	 *
 	 * @author Vic Nightfall
 	 * @see Sided
 	 * @see Side

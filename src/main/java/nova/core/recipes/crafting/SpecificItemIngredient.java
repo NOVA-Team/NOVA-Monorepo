@@ -1,6 +1,6 @@
 package nova.core.recipes.crafting;
 
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.exception.NovaException;

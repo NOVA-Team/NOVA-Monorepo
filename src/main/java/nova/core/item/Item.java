@@ -3,7 +3,7 @@ package nova.core.item;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.event.EventBus;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.core.render.Color;
 import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;

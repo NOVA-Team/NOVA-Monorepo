@@ -1,7 +1,7 @@
 package nova.wrappertests;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.core.game.Game;
+import nova.internal.Game;
 import nova.internal.launch.NovaLauncher;
 import nova.testutils.mod.NoLoadableTestMod;
 import nova.testutils.mod.NonAnnotatedTestMod;
