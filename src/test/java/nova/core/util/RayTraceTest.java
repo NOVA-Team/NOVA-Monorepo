@@ -67,6 +67,26 @@ public class RayTraceTest {
 	}
 
 	@Test
+	public void testRayTraceTunnel() {
+		Vector3i start = new Vector3i(2, 7, 3);
+
+		//Create a tunnel
+		for (int i = 0; i < 5; i++)
+			for (int d = 0; d < 4; d++)
+				fakeWorld.setBlock(start.add(Direction.fromOrdinal(d).toVector()), RayTraceMod.solid);
+
+		fakeWorld.setBlock(new Vector3i(5, 7, 3), RayTraceMod.solid);
+
+		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults1 =
+			new RayTracer(new Ray(new Vector3d(0, 7, 3), new Vector3d(1, 0, 0)))
+				.setDistance(10)
+				.rayTraceBlocks(fakeWorld)
+				.collect(Collectors.toList());
+
+		assertThat(rayTraceBlockResults1).hasSize(1);
+	}
+
+	@Test
 	public void testRayTraceEfficiency() {
 		int maxTestSize = 10000;
 
