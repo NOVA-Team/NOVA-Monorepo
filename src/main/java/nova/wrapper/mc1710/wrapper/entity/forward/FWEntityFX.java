@@ -50,6 +50,8 @@ public class FWEntityFX extends EntityFX {
 			prevPosX = posX;
 			prevPosY = posY;
 			prevPosZ = posZ;
+			prevRotationYaw = rotationYaw;
+			prevRotationPitch = rotationPitch;
 			setPosition(posX, posY, posZ);
 			firstTick = false;
 		}
@@ -75,6 +77,8 @@ public class FWEntityFX extends EntityFX {
 			prevPosX = posX;
 			prevPosY = posY;
 			prevPosZ = posZ;
+			prevRotationYaw = rotationYaw;
+			prevRotationPitch = rotationPitch;
 			setPosition(posX, posY, posZ);
 		}
 	}
