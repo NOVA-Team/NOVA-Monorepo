@@ -95,8 +95,8 @@ public class Quaternion implements Transformer, Storable {
 	 * @return The quaternion
 	 */
 	public static Quaternion fromDirection(Vector3d direction) {
-		double yaw = Math.atan2(direction.y, direction.x);
-		double pitch = Math.asin(direction.z);
+		double yaw = Math.atan2(direction.z, direction.x);
+		double pitch = Math.asin(direction.y);
 		return fromEuler(yaw, pitch);
 	}
 
