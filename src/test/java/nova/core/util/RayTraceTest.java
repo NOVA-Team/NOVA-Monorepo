@@ -90,35 +90,6 @@ public class RayTraceTest {
 	}
 
 	@Test
-	public void testRayTraceEfficiency() {
-		int maxTestSize = 10000;
-
-		Game.logger().info("Generating random world with block count: " + maxTestSize);
-
-		/**
-		 * Generate a random world
-		 */
-		Random random = new Random();
-
-		IntStream.range(0, 500)
-			.mapToObj(value -> Vector3d.random().multiply(random.nextInt(maxTestSize)).toInt())
-			.forEach(pos -> fakeWorld.setBlock(pos, RayTraceMod.solid));
-
-		Game.logger().info("World Generated");
-
-		for (int size = 0; size <= maxTestSize; size += 200) {
-			/**
-			 * Do random ray trace
-			 */
-			RayTracer rayTracer = new RayTracer(new Ray(new Vector3d(0, 5, 5), new Vector3d(1, 0, 0))).setDistance(size);
-			Game.logger().info("Ray tracing with threading: " + rayTracer.doParallel());
-			Profiler start = new Profiler("Ray Trace " + size).start();
-			rayTracer.rayTraceBlocks(fakeWorld).findFirst();
-			start.end();
-		}
-	}
-
-	@Test
 	public void testRayTraceEntity() {
 		fakeWorld.setBlock(new Vector3i(5, 5, 5), RayTraceMod.solid);
 
