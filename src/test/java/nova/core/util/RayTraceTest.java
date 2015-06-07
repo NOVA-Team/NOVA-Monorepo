@@ -84,7 +84,9 @@ public class RayTraceTest {
 				.collect(Collectors.toList());
 
 		assertThat(rayTraceBlockResults1).hasSize(1);
-		assertThat(rayTraceBlockResults1.get(0).block.position()).isEqualTo(new Vector3i(5, 7, 3));
+		RayTracer.RayTraceBlockResult rayTraceBlockResult = rayTraceBlockResults1.get(0);
+		assertThat(rayTraceBlockResult.block.position()).isEqualTo(new Vector3i(5, 7, 3));
+		assertThat(rayTraceBlockResult.hit).isEqualTo(new Vector3d(5, 7.5, 3.5));
 	}
 
 	@Test
