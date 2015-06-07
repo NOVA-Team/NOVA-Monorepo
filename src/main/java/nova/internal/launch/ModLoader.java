@@ -162,7 +162,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				mod.preInit();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during pre initialization phase", t);
-				throw new InitialisationException(t);
+				throw new InitializationException(t);
 			}
 		});
 	}
@@ -174,7 +174,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				mod.init();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during initialization phase", t);
-				throw new InitialisationException(t);
+				throw new InitializationException(t);
 			}
 		});
 	}
@@ -186,7 +186,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				mod.postInit();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during post initialization phase", t);
-				throw new InitialisationException(t);
+				throw new InitializationException(t);
 			}
 		});
 	}

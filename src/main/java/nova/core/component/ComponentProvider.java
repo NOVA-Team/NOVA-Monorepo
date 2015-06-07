@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 public abstract class ComponentProvider {
 
-	public EventBus<ComponentAdded>   onComponentAdded   = new EventBus<>();
+	public EventBus<ComponentAdded> onComponentAdded = new EventBus<>();
 	public EventBus<ComponentRemoved> onComponentRemoved = new EventBus<>();
 
 	private Map<Class<? extends Component>, Component> componentMap = new HashMap<>();
@@ -71,7 +71,7 @@ public abstract class ComponentProvider {
 	 * @param componentType the component type to check.
 	 * @return true if the component exists on the provider.
 	 */
-	public final boolean has(Class<? extends Component> componentType) {
+	public final boolean has(Class<?> componentType) {
 		return componentMap.keySet().stream()
 			.anyMatch(componentType::isAssignableFrom);
 	}
@@ -100,7 +100,7 @@ public abstract class ComponentProvider {
 	 * @return the optional of the component found or {@code Optional.empty()}
 	 * if the component was not found.
 	 */
-	public final <C extends Component> Optional<C> getOp(Class<C> componentType) {
+	public final <C> Optional<C> getOp(Class<C> componentType) {
 		Component component = componentMap.get(componentType);
 
 		if (component != null) {
@@ -120,7 +120,7 @@ public abstract class ComponentProvider {
 	 * @return the component.
 	 * @throws ComponentException if the component doesn't exist.
 	 */
-	public final <C extends Component> C get(Class<C> componentType) {
+	public final <C> C get(Class<C> componentType) {
 		return getOp(componentType).orElseThrow(() -> new ComponentException("Attempt to get component that does not exist: %s", componentType));
 	}
 

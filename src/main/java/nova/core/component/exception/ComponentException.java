@@ -8,9 +8,9 @@ import nova.core.util.NovaException;
  */
 public class ComponentException extends NovaException {
 
-	public Class<? extends Component> component;
+	public Class<?> component;
 
-	public ComponentException(String message, Class<? extends Component> component) {
+	public ComponentException(String message, Class<?> component) {
 		super(message, component);
 		this.component = component;
 	}
