@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 /**
  * Ray tracing for cuboids.
+ *
  * @author Calclavia
  */
 //TODO: Add ray trace masks
@@ -37,6 +38,7 @@ public class RayTracer {
 
 	/**
 	 * Does an entity look ray trace to see which block the entity is looking at.
+	 *
 	 * @param entity The entity
 	 */
 	public RayTracer(Entity entity) {
@@ -45,6 +47,7 @@ public class RayTracer {
 
 	/**
 	 * Sets the distance of the ray
+	 *
 	 * @param distance Distance in meters
 	 * @return This
 	 */
@@ -68,6 +71,7 @@ public class RayTracer {
 
 	/**
 	 * Check all blocks that are in a line
+	 *
 	 * @return The blocks ray traced in the order from closest to furthest.
 	 */
 	public Stream<RayTraceBlockResult> rayTraceBlocks(World world) {
@@ -85,6 +89,7 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a set of blocks
+	 *
 	 * @param blocks Set of blocks
 	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
 	 */
@@ -131,6 +136,7 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a set of cuboids
+	 *
 	 * @param stream A stream of cuboids
 	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
 	 */
@@ -149,6 +155,7 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a cuboid
+	 *
 	 * @param cuboid The cuboid in absolute world coordinates
 	 * @return The ray trace result if the ray intersects the cuboid
 	 */
@@ -166,6 +173,7 @@ public class RayTracer {
 	 * <code>Amy Williams, Steve Barrus, R. Keith Morley, and Peter Shirley: "An
 	 * Efficient and Robust Ray-Box Intersection Algorithm" Journal of graphics
 	 * tools, 10(1):49-54, 2005</code>
+	 *
 	 * @param cuboid The cuboid to trace
 	 * @param minDist The minimum distance
 	 * @param maxDist The maximum distance
@@ -173,46 +181,56 @@ public class RayTracer {
 	 * returned) or null if no intersection
 	 */
 	public Optional<Vector3d> rayTrace(Cuboid cuboid, double minDist, double maxDist) {
-		//X
-		Vector3d bbox = ray.signDirX ? cuboid.max : cuboid.min;
-		double txMin = (Math.abs(ray.dir.x) < 0.0000001) ? minDist : (bbox.x - ray.origin.x) * ray.invDir.x;
+		Vector3d bbox;
+
+		double tMin;
+		double tMax;
+
+		bbox = ray.signDirX ? cuboid.max : cuboid.min;
+		tMin = (bbox.x - ray.origin.x) * ray.invDir.x;
 		bbox = ray.signDirX ? cuboid.min : cuboid.max;
-		double txMax = (Math.abs(ray.dir.x) < 0.0000001) ? maxDist : (bbox.x - ray.origin.x) * ray.invDir.x;
+		tMax = (bbox.x - ray.origin.x) * ray.invDir.x;
 
 		//Y
 		bbox = ray.signDirY ? cuboid.max : cuboid.min;
-		double tyMin = (Math.abs(ray.dir.y) < 0.0000001) ? minDist : (bbox.y - ray.origin.y) * ray.invDir.y;
+		double tyMin = (bbox.y - ray.origin.y) * ray.invDir.y;
 		bbox = ray.signDirY ? cuboid.min : cuboid.max;
-		double tyMax = (Math.abs(ray.dir.y) < 0.0000001) ? maxDist : (bbox.y - ray.origin.y) * ray.invDir.y;
+		double tyMax = (bbox.y - ray.origin.y) * ray.invDir.y;
 
-		if ((txMin > tyMax) || (tyMin > txMax)) {
+		//Check with the current tMin and tMax to see if the clipping is out of bounds
+		if ((tMin > tyMax) || (tyMin > tMax)) {
 			return Optional.empty();
 		}
-		if (tyMin > txMin) {
-			txMin = tyMin;
-		}
-		if (tyMax < txMax) {
-			txMax = tyMax;
-		}
 
-		//Z
+		//Reset tMin and tMax
+		if (tyMin > tMin) {
+			tMin = tyMin;
+		}
+		if (tyMax < tMax) {
+			tMax = tyMax;
+		}
 		bbox = ray.signDirZ ? cuboid.max : cuboid.min;
-		double tzMin = (Math.abs(ray.dir.z) < 0.0000001) ? minDist : (bbox.z - ray.origin.z) * ray.invDir.z;
+		double tzMin = (bbox.z - ray.origin.z) * ray.invDir.z;
 		bbox = ray.signDirZ ? cuboid.min : cuboid.max;
-		double tzMax = (Math.abs(ray.dir.z) < 0.0000001) ? maxDist : (bbox.z - ray.origin.z) * ray.invDir.z;
+		double tzMax = (bbox.z - ray.origin.z) * ray.invDir.z;
 
-		if ((txMin > tzMax) || (tzMin > txMax)) {
+		//Check with the current tMin and tMax to see if the clipping is out of bounds
+		if ((tMin > tzMax) || (tzMin > tMax)) {
 			return Optional.empty();
 		}
-		if (tzMin > txMin) {
-			txMin = tzMin;
+
+		//Reset tMin and tMax
+		if (tzMin > tMin) {
+			tMin = tzMin;
 		}
-		if (tzMax < txMax) {
-			txMax = tzMax;
+		if (tzMax < tMax) {
+			tMax = tzMax;
 		}
-		if ((txMin < maxDist) && (txMax > minDist)) {
-			return Optional.of(ray.origin.add(ray.dir.multiply(txMin)));
+
+		if ((tMin < maxDist) && (tMax > minDist)) {
+			return Optional.of(ray.origin.add(ray.dir.multiply(tMin)));
 		}
+
 		return Optional.empty();
 	}
 

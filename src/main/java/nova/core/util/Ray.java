@@ -9,6 +9,11 @@ public class Ray {
 	public final Vector3d origin;
 	public final Vector3d dir;
 	public final Vector3d invDir;
+
+	public final boolean ignoreX;
+	public final boolean ignoreY;
+	public final boolean ignoreZ;
+
 	public final boolean signDirX;
 	public final boolean signDirY;
 	public final boolean signDirZ;
@@ -24,6 +29,10 @@ public class Ray {
 		this.signDirX = invDir.x < 0;
 		this.signDirY = invDir.y < 0;
 		this.signDirZ = invDir.z < 0;
+
+		this.ignoreX = Math.abs(dir.x) < 0.0000001;
+		this.ignoreY = Math.abs(dir.y) < 0.0000001;
+		this.ignoreZ = Math.abs(dir.z) < 0.0000001;
 	}
 
 	public static Ray fromInterval(Vector3d start, Vector3d end) {
