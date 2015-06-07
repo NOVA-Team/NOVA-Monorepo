@@ -1,12 +1,12 @@
 package nova.core.di;
 
-import java.util.function.Supplier;
-
 import se.jbee.inject.bind.BinderModule;
+
+import java.util.function.Supplier;
 
 public class DICoreModule extends BinderModule {
 
-	
+
 	@Override
 	protected void declare() {
 

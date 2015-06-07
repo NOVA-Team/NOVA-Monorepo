@@ -1,10 +1,11 @@
 package nova.core.di;
 
-import static se.jbee.inject.util.ToString.describe;
 import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
 import se.jbee.inject.Supplier;
 import se.jbee.inject.bootstrap.SuppliedBy;
+
+import static se.jbee.inject.util.ToString.describe;
 
 final class SupplierSupplier implements Supplier<java.util.function.Supplier<?>> {
 

@@ -1,6 +1,6 @@
 package nova.core.gui.render;
 
-import nova.core.util.exception.NovaException;
+import nova.core.render.RenderException;
 import nova.core.util.transform.shape.Rectangle;
 import nova.core.util.transform.vector.Vector2d;
 
@@ -8,13 +8,13 @@ import nova.core.util.transform.vector.Vector2d;
  * A Shape2D is a polygon mesh in 2D space. It defines an array of
  * {@link Vertex2D} and can be drawn to a {@link Canvas} with a {@link Graphics}
  * object.
- * 
+ *
  * @author Vic Nightfall
  */
 public interface Shape2D {
-	
+
 	public int size();
-	
+
 	public Vertex2D[] vertices();
 
 	public default Vector2d centroid() {
@@ -59,10 +59,10 @@ public interface Shape2D {
 
 		public PolygonShape(Vertex2D... vertices) {
 			if (vertices.length < 3)
-				throw new NovaException("A polygon must contain at least 3 vertices!");
+				throw new RenderException("A polygon must contain at least 3 vertices!");
 			this.vertices = vertices;
 		}
-		
+
 		@Override
 		public int size() {
 			return vertices.length;

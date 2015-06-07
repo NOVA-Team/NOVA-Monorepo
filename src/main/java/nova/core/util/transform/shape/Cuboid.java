@@ -9,7 +9,6 @@ import nova.core.util.transform.vector.Vector3i;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**

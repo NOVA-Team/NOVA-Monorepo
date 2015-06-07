@@ -3,10 +3,10 @@ package nova.core.block;
 import nova.core.event.CancelableEvent;
 import nova.core.event.CancelableEventBus;
 import nova.core.event.EventBus;
-import nova.internal.Game;
 import nova.core.item.ItemManager;
 import nova.core.util.Manager;
 import nova.core.util.Registry;
+import nova.internal.Game;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

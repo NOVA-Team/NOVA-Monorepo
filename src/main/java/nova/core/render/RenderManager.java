@@ -1,14 +1,14 @@
 package nova.core.render;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import nova.core.render.model.ModelProvider;
 import nova.core.render.texture.BlockTexture;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
 import nova.core.util.transform.vector.Vector2i;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Calclavia

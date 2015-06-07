@@ -1,7 +1,5 @@
 package nova.core.event;
 
-import nova.core.util.exception.NovaException;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,7 +22,7 @@ public abstract class CancelableEvent extends Event implements Cancelable {
 	@Override
 	public void cancel() {
 		if (!isCancelable) {
-			throw new NovaException("Attempted to cancel an uncancelable event " + getClass() + " !");
+			throw new EventCancelException("Attempted to cancel an uncancellable event %s !", getClass());
 		}
 		canceled = true;
 	}

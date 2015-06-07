@@ -1,10 +1,10 @@
 package nova.core.gui.factory;
 
-import java.util.HashMap;
-import java.util.function.Function;
-
 import nova.core.gui.GuiComponent;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
+
+import java.util.HashMap;
+import java.util.function.Function;
 
 // TODO verify completeness, support for optional native components.
 public abstract class GuiComponentFactory {

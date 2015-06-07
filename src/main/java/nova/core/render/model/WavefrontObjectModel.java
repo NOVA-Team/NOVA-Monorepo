@@ -1,6 +1,6 @@
 package nova.core.render.model;
 
-import nova.core.util.exception.NovaException;
+import nova.core.render.RenderException;
 import nova.core.util.transform.vector.Vector2d;
 import nova.core.util.transform.vector.Vector3d;
 
@@ -83,7 +83,7 @@ public class WavefrontObjectModel extends ModelProvider {
 			}
 			model.children.add(currentModel);
 		} catch (IOException e) {
-			throw new NovaException("Model " + name + " could not be read", e);
+			throw new RenderException("Model " + name + " could not be read", e);
 		} finally {
 			try {
 				reader.close();
@@ -122,10 +122,10 @@ public class WavefrontObjectModel extends ModelProvider {
 					return new Vector3d(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]));
 				}
 			} catch (NumberFormatException e) {
-				throw new NovaException(String.format("Number formatting error at line %d", lineNumber), e);
+				throw new RenderException(String.format("Number formatting error at line %d", lineNumber), e);
 			}
 		} else {
-			throw new NovaException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
 		}
 		return null;
 	}
@@ -139,10 +139,10 @@ public class WavefrontObjectModel extends ModelProvider {
 					return new Vector2d(Float.parseFloat(tokens[0]), 1 - Float.parseFloat(tokens[1]));
 				}
 			} catch (NumberFormatException e) {
-				throw new NovaException(String.format("Number formatting error at line %d", lineNumber), e);
+				throw new RenderException(String.format("Number formatting error at line %d", lineNumber), e);
 			}
 		} else {
-			throw new NovaException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
 		}
 		return null;
 	}
@@ -156,10 +156,10 @@ public class WavefrontObjectModel extends ModelProvider {
 					return new Vector3d(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]));
 				}
 			} catch (NumberFormatException e) {
-				throw new NovaException(String.format("Number formatting error at line %d", lineNumber), e);
+				throw new RenderException(String.format("Number formatting error at line %d", lineNumber), e);
 			}
 		} else {
-			throw new NovaException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
 		}
 		return null;
 	}
@@ -203,10 +203,10 @@ public class WavefrontObjectModel extends ModelProvider {
 				}
 				face.normal = calculateNormal(face);
 			} else {
-				throw new NovaException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+				throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
 			}
 		} else {
-			throw new NovaException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
 		}
 		return face;
 	}
@@ -218,7 +218,7 @@ public class WavefrontObjectModel extends ModelProvider {
 				return new Model(trimmedLine);
 			}
 		} else {
-			throw new NovaException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
 		}
 		return null;
 	}

@@ -1,19 +1,11 @@
 package nova.core.config;
 
 import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigRenderOptions;
-import com.typesafe.config.ConfigValue;
-import com.typesafe.config.ConfigValueFactory;
+import com.typesafe.config.*;
 import nova.core.util.ReflectionUtil;
 import nova.core.util.collection.Tuple2;
-import nova.core.util.exception.NovaException;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,11 +13,7 @@ import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Configuration {
@@ -39,7 +27,7 @@ public class Configuration {
 	 * Hard reflection to add comments for HOCON rendering
 	 */
 
-	private static Field originField = null;
+	private static Field  originField    = null;
 	private static Method appendComments = null;
 	private static Class<?> abstractConfigValueClass;
 
@@ -78,10 +66,11 @@ public class Configuration {
 		Map<String, Tuple2<Object, String>> defaults = new HashMap<>();
 
 		if (!holder.getClass().isAnnotationPresent(ConfigHolder.class)) {
-			throw new NovaException("No @ConfigHolder annotation on your config class!");
+			throw new nova.core.config.ConfigException("No @ConfigHolder annotation on your config class!");
 		}
 
 		boolean scanHolders = holder.getClass().getAnnotation(ConfigHolder.class).value();
+
 		Map<Field, Config> fields;
 
 		if (holder.getClass().getAnnotation(ConfigHolder.class).useAll()) {
@@ -108,7 +97,7 @@ public class Configuration {
 						e.printStackTrace();
 					}
 				} else {
-					throw new NovaException("Scanning inner-objects is disabled for `%s`", path);
+					throw new nova.core.config.ConfigException("Scanning inner-objects is disabled for `%s`", path);
 				}
 			} else {
 				Object def = null;
@@ -130,7 +119,7 @@ public class Configuration {
 					try {
 						field.set(holder, value);
 					} catch (IllegalArgumentException e) {
-						throw new NovaException("Field `%s` is of the wrong type!", field.getName());
+						throw new nova.core.config.ConfigException("Field `%s` is of the wrong type!", field.getName());
 					} catch (IllegalAccessException e) {
 						e.printStackTrace();
 					}
@@ -159,7 +148,7 @@ public class Configuration {
 	 * Loads config data from HOCON string.
 	 *
 	 * @param configData Valid HOCON config.
-	 * @param holder Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
+	 * @param holder     Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
 	 * @return Full config with added default data, represented as string.
 	 */
 	public static String load(String configData, Object holder) {
@@ -179,7 +168,7 @@ public class Configuration {
 	 * If file do not exist - creates it and writes all defaults.
 	 *
 	 * @param configFile File to load config from.
-	 * @param holder Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
+	 * @param holder     Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
 	 */
 	@SuppressWarnings("ResultOfMethodCallIgnored") // mkdirs and createNewFile
 	public static void load(File configFile, Object holder) {
@@ -218,7 +207,7 @@ public class Configuration {
 	/**
 	 * Shortcut to load configs from URL.
 	 *
-	 * @param url Given URL.
+	 * @param url    Given URL.
 	 * @param holder Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
 	 */
 	public static void load(URL url, Object holder) {
@@ -232,7 +221,7 @@ public class Configuration {
 	/**
 	 * Shortcut to load configs from URI. Just uses URI#toURL, be warned.
 	 *
-	 * @param uri Given URI.
+	 * @param uri    Given URI.
 	 * @param holder Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
 	 */
 	public static void load(URI uri, Object holder) {

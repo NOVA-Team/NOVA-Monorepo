@@ -1,10 +1,10 @@
 package nova.core.event;
 
-import java.util.HashMap;
-
 import nova.core.network.NetworkTarget;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Syncable;
+
+import java.util.HashMap;
 
 /**
  * {@link EventBus} that can differentiate {@link NetworkTarget NetworkTargets}

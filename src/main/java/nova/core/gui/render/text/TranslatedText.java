@@ -1,8 +1,8 @@
 package nova.core.gui.render.text;
 
-import java.util.function.Consumer;
-
 import nova.internal.Game;
+
+import java.util.function.Consumer;
 
 public final class TranslatedText extends FormattedText {
 

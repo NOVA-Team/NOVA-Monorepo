@@ -1,9 +1,9 @@
 package nova.core.recipes.crafting;
 
-import nova.internal.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
-import nova.core.util.exception.NovaException;
+import nova.core.util.RegistrationException;
+import nova.internal.Game;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -85,6 +85,6 @@ public class SpecificItemIngredient implements ItemIngredient {
 			return itemFactory.get().makeItem();
 		}
 
-		throw new NovaException("Missing item: " + itemId);
+		throw new RegistrationException("Missing item: " + itemId);
 	}
 }

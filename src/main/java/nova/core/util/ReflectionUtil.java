@@ -1,20 +1,14 @@
 package nova.core.util;
 
+import com.google.common.collect.ObjectArrays;
+import com.google.common.primitives.Primitives;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
-
-import nova.core.util.exception.NovaException;
-
-import com.google.common.collect.ObjectArrays;
-import com.google.common.primitives.Primitives;
 
 public class ReflectionUtil {
 
@@ -190,7 +184,7 @@ public class ReflectionUtil {
 					int comp = compareDistance(consA, consB, parameterTypes);
 					if (comp == 0) {
 						// Found an ambiguous constructor
-						throw new NovaException("Found an ambigious constructor.");
+						throw new ReflectionException("Found an ambigious constructor.");
 					}
 					return comp;
 				})
@@ -241,7 +235,7 @@ public class ReflectionUtil {
 				}
 			}
 		} catch (Exception e) {
-			throw new NovaException(e);
+			throw new ReflectionException(e);
 		}
 	}
 
@@ -253,7 +247,7 @@ public class ReflectionUtil {
 				return clazz.newInstance();
 			}
 		} catch (Exception e) {
-			throw new NovaException(e);
+			throw new ReflectionException(e);
 		}
 	}
 
@@ -264,14 +258,14 @@ public class ReflectionUtil {
 			}
 			return clazz.newInstance();
 		} catch (Exception e) {
-			throw new NovaException(e);
+			throw new ReflectionException(e);
 		}
 	}
 
 	/**
 	 * Invokes an action on each field annotated with specified annotation of
 	 * given object
-	 * 
+	 *
 	 * @param <T> Annotation type
 	 * @param annotation Annotation type
 	 * @param clazz Class to scan
@@ -286,7 +280,7 @@ public class ReflectionUtil {
 	/**
 	 * Gets all the annotated fields of this class, including all the parents
 	 * classes in the order of hierarchy.
-	 * 
+	 *
 	 * @param annotation Your annotation class.
 	 * @param clazz Class to search through.
 	 * @return An ordered map of annotated fields and their annotations from the
@@ -308,6 +302,28 @@ public class ReflectionUtil {
 
 		if (superClass != null) {
 			forEachRecursiveAnnotatedField(annotation, superClass, action);
+		}
+	}
+
+	public static class ReflectionException extends NovaException {
+		public ReflectionException() {
+			super();
+		}
+
+		public ReflectionException(String message, Object... parameters) {
+			super(message, parameters);
+		}
+
+		public ReflectionException(String message) {
+			super(message);
+		}
+
+		public ReflectionException(String message, Throwable cause) {
+			super(message, cause);
+		}
+
+		public ReflectionException(Throwable cause) {
+			super(cause);
 		}
 	}
 }

@@ -3,12 +3,7 @@ package nova.core.recipes.crafting;
 import nova.core.item.Item;
 import nova.core.util.transform.vector.Vector2i;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Contains a single shaped crafting recipe. Can contain custom crafting logic.

@@ -2,11 +2,7 @@ package nova.internal.tick;
 
 import nova.core.component.Updater;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 
 /**
  * The update ticker is responsible for ticking Update objects.

@@ -4,7 +4,6 @@ import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.SidedEventBus;
 import nova.core.event.SidedEventBus.SidedEvent;
-import nova.internal.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.ComponentEvent.ResizeEvent;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
@@ -15,8 +14,8 @@ import nova.core.gui.render.Graphics;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Syncable;
 import nova.core.util.Identifiable;
-import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector2i;
+import nova.internal.Game;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -330,7 +329,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	public <EVENT extends ComponentEvent> O onEvent(ComponentEventListener<EVENT, O> listener, Class<EVENT> clazz, Side side) {
 		if (side == Side.SERVER && !hasIdentifierRecursive())
-			throw new NovaException("Components without unique identifier can't recieve events on the server side!");
+			throw new GuiComponentException("Components without unique identifier can't recieve events on the server side!");
 		componentEventBus.add(listener, clazz, side);
 		return (O) this;
 	}
@@ -341,7 +340,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	public <EVENT extends ComponentEvent> O onEvent(EventListener<EVENT> listener, Class<EVENT> clazz, Side side) {
 		if (side == Side.SERVER && !hasIdentifierRecursive())
-			throw new NovaException("Components without unique identifier can't recieve events on the server side!");
+			throw new GuiComponentException("Components without unique identifier can't recieve events on the server side!");
 		componentEventBus.add(listener, clazz, side);
 		return (O) this;
 	}

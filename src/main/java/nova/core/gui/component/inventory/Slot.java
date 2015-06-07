@@ -5,15 +5,15 @@ import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.BindEvent;
 import nova.core.gui.nativeimpl.NativeSlot;
 import nova.core.inventory.Inventory;
+import nova.core.inventory.InventoryException;
 import nova.core.inventory.ItemFilter;
 import nova.core.item.Item;
-import nova.core.util.exception.NovaException;
 
 import java.util.Optional;
 
 /**
  * A slot is a {@link GuiComponent} that can hold {@link Item Items}.
- * 
+ *
  * @author Vic Nightfall
  */
 public class Slot extends GuiComponent<Slot, NativeSlot> {
@@ -29,7 +29,7 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 	 * {@link Inventory} the slot will apply to, has to be specified on the
 	 * parent GUI with the {@link BindEvent} and
 	 * {@link Gui#addInventory(String, Inventory)}
-	 * 
+	 *
 	 * @param uniqueID
 	 * @param inventoryID
 	 * @param slotID
@@ -47,7 +47,7 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 	 * {@link Inventory} the slot will apply to, has to be specified on the
 	 * parent GUI with the {@link BindEvent} and
 	 * {@link Gui#addInventory(String, Inventory)}
-	 * 
+	 *
 	 * @param inventoryID
 	 * @param slotID
 	 */
@@ -124,7 +124,7 @@ public class Slot extends GuiComponent<Slot, NativeSlot> {
 	protected void onBind(BindEvent event) {
 		inventory = event.gui.getInventory(inventoryID);
 		if (inventory == null) {
-			throw new NovaException("Unsupplied inventory \"" + inventoryID + "\" for Slot " + getID());
+			throw new InventoryException("Unsupplied inventory \"" + inventoryID + "\" for Slot " + getID());
 		}
 	}
 }

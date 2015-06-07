@@ -7,16 +7,16 @@ import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.event.Event;
 import nova.core.event.EventBus;
-import nova.internal.Game;
 import nova.core.network.Packet;
-import nova.core.network.Syncable;
 import nova.core.network.Sync;
+import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.Direction;
 import nova.core.util.RayTracer;
 import nova.core.util.transform.vector.Vector3d;
+import nova.internal.Game;
 
 import java.util.Optional;
 

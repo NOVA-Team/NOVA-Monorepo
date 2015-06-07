@@ -3,13 +3,13 @@ package nova.core.item;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.event.EventBus;
-import nova.internal.Game;
 import nova.core.render.Color;
 import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
+import nova.internal.Game;
 
 import java.util.List;
 import java.util.Optional;

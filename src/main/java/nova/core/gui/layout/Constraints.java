@@ -1,12 +1,12 @@
 package nova.core.gui.layout;
 
+import nova.core.util.ReflectionUtil;
+
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-
-import nova.core.util.ReflectionUtil;
 
 /**
  * <p>
@@ -14,13 +14,13 @@ import nova.core.util.ReflectionUtil;
  * public field of the constraints has to be either immutable or implement
  * {@link Cloneable}.
  * </p>
- * 
+ *
  * <p>
  * You can use a lambda consumer with {@link #of(Consumer)} to change the
  * constraints inline. <b>In order to use a contraints object, use
  * {@link #clone()} first!</b>
  * </p>
- * 
+ *
  * @author Vic Nightfall
  * @param <O> Self reference
  */
@@ -29,7 +29,7 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	/**
 	 * Constraints object for the {@link BorderLayout}. Has an optional
 	 * {@link Anchor} field.
-	 * 
+	 *
 	 * @author Vic Nightfall
 	 */
 	public static class BorderConstraints extends Constraints<BorderConstraints> {
@@ -107,12 +107,12 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	/**
 	 * Creates a new constraint based on an array of properties. It will try to
 	 * choose a valid constructor for the passed arguments and invoke it.
-	 * 
+	 *
 	 * @param <T> constraints type
 	 * @param clazz constraints class
 	 * @param parameters array of object passed to a constructor of the class
 	 * @return instanced constraints object
-	 * 
+	 *
 	 * @throws IllegalArgumentException if there is no matching constructor for
 	 *         the given set of arguments
 	 */
@@ -129,7 +129,7 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	/**
 	 * Checks if all public fields of the given constraints object are provided
 	 * at runtime, e.g none of the fields have a {@code null} pointer.
-	 * 
+	 *
 	 * @param constraints
 	 * @throws NullPointerException if any of the fields are not supplied
 	 */
@@ -142,7 +142,7 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	/**
 	 * Allows to modify this constraints object from a passed lambda consumer,
 	 * inline.
-	 * 
+	 *
 	 * <pre>
 	 * <code>
 	 * constraints.of(c -&gt; {
@@ -152,7 +152,7 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 	 * })
 	 * </code>
 	 * </pre>
-	 * 
+	 *
 	 * @param consumer consumer that accepts this constrains object
 	 * @return modified constraints.
 	 * @throws NullPointerException if the Constraints object contains any null

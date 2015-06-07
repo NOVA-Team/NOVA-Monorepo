@@ -1,9 +1,9 @@
 package nova.core.network.handler;
 
 import nova.core.entity.Entity;
+import nova.core.network.NetworkException;
 import nova.core.network.Packet;
 import nova.core.network.Syncable;
-import nova.core.util.exception.NovaException;
 
 import java.util.Optional;
 
@@ -32,7 +32,7 @@ public class EntityPacket implements PacketHandler<Entity> {
 				return;
 			}
 		}
-		throw new NovaException("Failed to receive packet to entity with UID" + uuid);
+		throw new NetworkException("Failed to receive packet to entity with UID" + uuid);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class EntityPacket implements PacketHandler<Entity> {
 			return;
 		}
 
-		throw new NovaException("Failed to send packet for entity: " + entity);
+		throw new NetworkException("Failed to send packet for entity: " + entity);
 	}
 
 	@Override

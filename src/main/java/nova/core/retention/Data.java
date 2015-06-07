@@ -1,7 +1,5 @@
 package nova.core.retention;
 
-import nova.core.util.exception.NovaException;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -84,7 +82,7 @@ public class Data extends HashMap<String, Object> {
 				return unserialize(clazz, data);
 			}
 		} catch (Exception e) {
-			throw new NovaException(e);
+			throw new DataException(e);
 		}
 
 	}
@@ -101,7 +99,7 @@ public class Data extends HashMap<String, Object> {
 			storableObj.load(data);
 			return storableObj;
 		} catch (Exception e) {
-			throw new NovaException(e);
+			throw new DataException(e);
 		}
 	}
 
@@ -148,7 +146,7 @@ public class Data extends HashMap<String, Object> {
 			Class<T> enumClass = (Class) Class.forName(enumData.className);
 			return Enum.valueOf(enumClass, enumData.get("value"));
 		} catch (Exception e) {
-			throw new NovaException(e);
+			throw new DataException(e);
 		}
 	}
 
@@ -160,7 +158,7 @@ public class Data extends HashMap<String, Object> {
 			obj.load(storableData);
 			return obj;
 		} catch (Exception e) {
-			throw new NovaException(e);
+			throw new DataException(e);
 		}
 	}
 

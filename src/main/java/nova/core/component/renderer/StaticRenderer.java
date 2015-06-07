@@ -2,9 +2,6 @@ package nova.core.component.renderer;
 
 import nova.core.block.component.StaticBlockRenderer;
 import nova.core.component.ComponentProvider;
-import nova.core.render.model.Model;
-
-import java.util.function.Consumer;
 
 /**
  * This interface specifies that a block requires custom static rendering.

@@ -2,9 +2,9 @@ package nova.core.network.handler;
 
 import nova.core.block.Block;
 import nova.core.entity.Entity;
+import nova.core.network.NetworkException;
 import nova.core.network.Packet;
 import nova.core.network.Syncable;
-import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector3i;
 
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class BlockPacket implements PacketHandler<Block> {
 				return;
 			}
 		}
-		throw new NovaException("Failed to receive packet to block at " + position);
+		throw new NetworkException("Failed to receive packet to block at " + position);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class BlockPacket implements PacketHandler<Block> {
 			return;
 		}
 
-		throw new NovaException("Failed to send packet for block: " + block);
+		throw new NetworkException("Failed to send packet for block: " + block);
 	}
 
 	@Override

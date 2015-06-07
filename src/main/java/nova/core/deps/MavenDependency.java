@@ -1,7 +1,5 @@
 package nova.core.deps;
 
-import nova.core.util.exception.NovaException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -62,7 +60,7 @@ public class MavenDependency {
 		try {
 			return new URL(this.repoURL + getPath());
 		} catch (MalformedURLException e) {
-			throw new NovaException(e);
+			throw new DependencyException(e);
 		}
 	}
 }

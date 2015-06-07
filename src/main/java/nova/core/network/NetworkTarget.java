@@ -1,16 +1,16 @@
 package nova.core.network;
 
+import nova.core.entity.Entity;
+import nova.core.event.SidedEventBus;
+import nova.core.gui.Gui;
+import nova.core.util.NovaException;
+import nova.core.world.World;
+import nova.internal.Game;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import nova.core.entity.Entity;
-import nova.core.event.SidedEventBus;
-import nova.internal.Game;
-import nova.core.gui.Gui;
-import nova.core.util.exception.NovaException;
-import nova.core.world.World;
 
 /**
  * A NetworkTarget specifies the target of a {@link Packet} or event.
