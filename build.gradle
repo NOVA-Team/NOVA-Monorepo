@@ -51,6 +51,14 @@ task wrapperTestJar(type: Jar) {
 	classifier = "wrappertests"
 }
 
+task apiJar(type: Jar) {
+	from(sourceSets.main.output) {
+		include "nova/core/**"
+	}
+
+	classifier = "api"
+}
+
 configurations {
 	wrapperTests
 }
@@ -58,6 +66,7 @@ configurations {
 artifacts {
 	archives shadowJar
 	archives wrapperTestJar
+	archives apiJar
 
 	wrapperTests wrapperTestJar
 }
@@ -71,6 +80,7 @@ publishing {
 			artifact shadowJar
 			artifact sourceJar
 			artifact wrapperTestJar
+			artifact apiJar
 
 			pom.withXml(writePom(project.properties))
 		}
