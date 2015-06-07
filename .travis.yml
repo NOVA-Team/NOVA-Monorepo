@@ -12,7 +12,8 @@ script:
 
 cache:
   directories:
-  - ~/.gradle
+  - ~/.gradle/caches/
+  - ~/.gradle/wrapper/
 
 notifications:
   email: false
