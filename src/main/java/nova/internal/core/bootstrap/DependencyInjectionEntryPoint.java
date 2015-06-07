@@ -89,7 +89,7 @@ public class DependencyInjectionEntryPoint {
 		PREINIT, POSTINIT
 	}
 
-	private static final class DIEPBundle extends BootstrapperBundle {
+	public static final class DIEPBundle extends BootstrapperBundle {
 
 		private static Set<Class<? extends Bundle>> bundles;
 

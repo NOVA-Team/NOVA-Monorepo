@@ -61,6 +61,8 @@ public class Game {
 	 */
 	private final UpdateTicker.ThreadTicker threadTicker;
 
+	private Optional<Injector> injector;
+
 	private Game(
 		Logger logger,
 		GameInfo gameInfo,
@@ -111,7 +113,6 @@ public class Game {
 
 	public static void inject(DependencyInjectionEntryPoint diep) {
 		instance = diep.init();
-		injector = diep.getInjector().get();
 	}
 
 	public static GameInfo info() {
@@ -203,4 +204,13 @@ public class Game {
 	public static UpdateTicker.ThreadTicker threadTicker() {
 		return instance.threadTicker;
 	}
+
+	public static Optional<Injector> injector() {
+		return instance.injector;
+	}
+
+	public static void changeInjector(Optional<Injector> newInjector) {
+		instance.injector = newInjector;
+	}
+
 }
