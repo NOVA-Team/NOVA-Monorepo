@@ -1,10 +1,11 @@
 package nova.core.render;
 
+import nova.core.util.NovaException;
 import nova.core.util.transform.vector.Vector3d;
 
 /**
  * Arbitrary immutable color object. Holds a color in argb space.
- * 
+ *
  * @author Vic Nightfall
  */
 public class Color {
@@ -102,7 +103,7 @@ public class Color {
 
 	public static Color rgba(int rgba) {
 		int alpha = rgba & 0xFF;
-		int argb = rgba << 8;
+		int argb  = rgba << 8;
 		argb |= alpha << 24;
 		return argb(argb);
 	}
@@ -110,12 +111,12 @@ public class Color {
 	public static Color hsl(float h, float s, float l) {
 
 		if (s == 0) {
-			int c = (int)(l * 255);
+			int c = (int) (l * 255);
 			return rgbc(c, c, c);
 		}
-		
+
 		float t1 = 0;
-		if(l < 0.5F) {
+		if (l < 0.5F) {
 			t1 = l * (1 + s);
 		} else {
 			t1 = l + s - l * s;
@@ -161,7 +162,7 @@ public class Color {
 
 	public int rgba() {
 		int alpha = value & 0xFF000000;
-		int rgba = value << 8;
+		int rgba  = value << 8;
 		rgba |= alpha >> 24;
 		return rgba;
 	}
@@ -233,7 +234,7 @@ public class Color {
 	public Color blend(Color color) {
 		int aA = alpha();
 		int aB = color.alpha();
-		
+
 		int r = (int) ((red()   * aA / 255F) + (color.red()   * aB * (255F - aA) / (255F * 255F)));
 		int g = (int) ((green() * aA / 255F) + (color.green() * aB * (255F - aA) / (255F * 255F)));
 		int b = (int) ((blue()  * aA / 255F) + (color.blue()  * aB * (255F - aA) / (255F * 255F)));
@@ -270,7 +271,7 @@ public class Color {
 		float r = redf();
 		float g = greenf();
 		float b = bluef();
-		
+
 		float min = Math.min(Math.min(r, g), b);
 		float max = Math.max(Math.max(r, g), b);
 
@@ -350,17 +351,17 @@ public class Color {
 
 		return hue(r, g, b, min, max);
 	}
-	
+
 	public Color lighting(float l) {
 		Vector3d hsl = hsl();
 		return hsl(hsl.xf(), hsl.yf(), l).alpha(alpha());
 	}
-	
+
 	public Color saturation(float s) {
 		Vector3d hsl = hsl();
 		return hsl(hsl.xf(), s, hsl.zf()).alpha(alpha());
 	}
-	
+
 	public Color hue(float h) {
 		Vector3d hsl = hsl();
 		return hsl(h, hsl.yf(), hsl.zf()).alpha(alpha());
@@ -368,7 +369,7 @@ public class Color {
 
 	public Color complementary() {
 		Vector3d hsl = hsl();
-		float h = hsl.yf() + 180F;
+		float    h   = hsl.yf() + 180F;
 		return hsl(h, hsl.yf(), hsl.zf()).alpha(alpha());
 	}
 
@@ -386,7 +387,7 @@ public class Color {
 		return value == ((Color) obj).value;
 	}
 
-	public static class ColorRangeException extends RuntimeException {
+	public static class ColorRangeException extends NovaException {
 
 		private static final long serialVersionUID = 2757542930752922957L;
 

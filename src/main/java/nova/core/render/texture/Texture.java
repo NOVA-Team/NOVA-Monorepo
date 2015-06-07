@@ -1,8 +1,8 @@
 package nova.core.render.texture;
 
-import nova.internal.Game;
 import nova.core.util.transform.vector.Vector2d;
 import nova.core.util.transform.vector.Vector2i;
+import nova.internal.Game;
 
 /**
  * A texture has a file location. All texture must be included in

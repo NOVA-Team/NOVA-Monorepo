@@ -2,6 +2,7 @@ package nova.core.component;
 
 import nova.core.util.Factory;
 import nova.core.util.Manager;
+import nova.core.util.RegistrationException;
 import nova.core.util.Registry;
 
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 		if (first.isPresent()) {
 			return (N) first.get().make(args);
 		} else {
-			throw new IllegalArgumentException("Attempt to create node that is not registered: " + theInterface);
+			throw new RegistrationException("Attempt to create node that is not registered: " + theInterface);
 		}
 	}
 

@@ -1,12 +1,12 @@
 package nova.core.recipes.crafting;
 
+import nova.core.item.Item;
+import nova.internal.Game;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import nova.internal.Game;
-import nova.core.item.Item;
 
 /**
  * @author Stan

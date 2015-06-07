@@ -1,22 +1,14 @@
 package nova.internal.launch;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.internal.Game;
 import nova.core.loader.Loadable;
-import nova.core.util.exception.NovaException;
+import nova.internal.Game;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -170,7 +162,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				mod.preInit();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during pre initialization phase", t);
-				throw new NovaException(t);
+				throw new InitialisationException(t);
 			}
 		});
 	}
@@ -182,7 +174,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				mod.init();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during initialization phase", t);
-				throw new NovaException(t);
+				throw new InitialisationException(t);
 			}
 		});
 	}
@@ -194,7 +186,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				mod.postInit();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during post initialization phase", t);
-				throw new NovaException(t);
+				throw new InitialisationException(t);
 			}
 		});
 	}

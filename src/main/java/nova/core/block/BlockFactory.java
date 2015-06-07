@@ -2,7 +2,6 @@ package nova.core.block;
 
 import nova.core.util.Factory;
 import nova.core.util.Identifiable;
-import nova.internal.dummy.Wrapper;
 
 import java.util.function.Function;
 

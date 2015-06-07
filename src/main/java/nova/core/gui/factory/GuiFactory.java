@@ -1,10 +1,10 @@
 package nova.core.gui.factory;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import nova.core.gui.Gui;
 import nova.core.util.Factory;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class GuiFactory extends Factory<Gui> {
 

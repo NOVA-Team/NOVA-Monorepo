@@ -4,13 +4,13 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.internal.Game;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.shape.Cuboid;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
+import nova.internal.Game;
 
 import java.util.Optional;
 import java.util.Set;

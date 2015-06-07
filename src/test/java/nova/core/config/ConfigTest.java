@@ -1,6 +1,6 @@
 package nova.core.config;
 
-import nova.core.util.exception.NovaException;
+import nova.core.util.NovaException;
 import org.junit.Test;
 
 import java.util.Arrays;

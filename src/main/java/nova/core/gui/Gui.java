@@ -2,7 +2,6 @@ package nova.core.gui;
 
 import nova.core.entity.Entity;
 import nova.core.entity.component.Player;
-import nova.internal.Game;
 import nova.core.gui.ComponentEvent.ComponentEventListener;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.GuiEvent.BindEvent;
@@ -15,6 +14,7 @@ import nova.core.inventory.component.InventoryPlayer;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;
 import nova.core.util.transform.vector.Vector3i;
+import nova.internal.Game;
 
 import java.util.HashMap;
 import java.util.Objects;

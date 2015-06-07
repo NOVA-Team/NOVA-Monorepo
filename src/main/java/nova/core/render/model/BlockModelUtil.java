@@ -4,8 +4,8 @@ import nova.core.block.Block;
 import nova.core.block.component.StaticBlockRenderer;
 import nova.core.component.misc.Collider;
 import nova.core.render.Color;
+import nova.core.render.RenderException;
 import nova.core.util.Direction;
-import nova.core.util.exception.NovaException;
 import nova.core.util.transform.shape.Cuboid;
 
 import java.util.Optional;
@@ -221,7 +221,7 @@ public class BlockModelUtil {
 				return drawWest(model, minX, minY, minZ, maxX, maxY, maxZ, textureCoordinates);
 		}
 
-		throw new NovaException("Invalid direction!");
+		throw new RenderException("Invalid draw direction!");
 	}
 
 	public static Model drawCube(

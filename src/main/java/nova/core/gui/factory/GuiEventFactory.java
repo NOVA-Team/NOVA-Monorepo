@@ -1,11 +1,11 @@
 package nova.core.gui.factory;
 
+import nova.core.event.EventException;
 import nova.core.gui.ComponentEvent;
 import nova.core.gui.ComponentEvent.SidedComponentEvent;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiComponent;
 import nova.core.network.Packet;
-import nova.core.util.exception.NovaException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,14 +39,14 @@ public class GuiEventFactory {
 		int eventSubID = packet.readInt();
 
 		if (eventID < 0 || eventID >= networkEvents.size())
-			throw new NovaException(String.format("Illegal event type %s at GUI %s", eventID, parentGui));
+			throw new EventException(String.format("Illegal event type %s at GUI %s", eventID, parentGui));
 		if (!qualifiedName.startsWith(parentGui.getID()))
-			throw new NovaException(String.format("Component \"%s\" does not specify an applicable qualified name for GUI \"%s\"", qualifiedName, parentGui));
+			throw new EventException(String.format("Component \"%s\" does not specify an applicable qualified name for GUI \"%s\"", qualifiedName, parentGui));
 
 		qualifiedName = qualifiedName.substring(parentGui.getID().length() + 1);
 		Optional<GuiComponent<?, ?>> component = parentGui.getChildElement(qualifiedName);
 		if (!component.isPresent()) {
-			throw new NovaException(String.format("Received an event for a non-existent component \"%s\" at GUI \"%s\"", qualifiedName, parentGui));
+			throw new EventException(String.format("Received an event for a non-existent component \"%s\" at GUI \"%s\"", qualifiedName, parentGui));
 		}
 
 		E event = (E) networkEvents.get(eventID).apply(component.get());
@@ -57,7 +57,7 @@ public class GuiEventFactory {
 
 	public void constructPacket(SidedComponentEvent event, Gui parentGui, Packet packet, int subID) {
 		if (!networkEventsReverse.containsKey(event.getClass()))
-			throw new NovaException(String.format("Unknown event %s at GUI \"%s\". Register with registerNetworkEvent!", event.getClass(), packet));
+			throw new EventException(String.format("Unknown event %s at GUI \"%s\". Register with registerNetworkEvent!", event.getClass(), packet));
 		packet.writeInt(networkEventsReverse.get(event.getClass()));
 		packet.writeString(event.component.getQualifiedName());
 		packet.writeInt(subID);

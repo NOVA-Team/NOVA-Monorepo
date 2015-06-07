@@ -1,10 +1,10 @@
 package nova.core.network;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import nova.core.network.NetworkTarget.IllegalSideException;
 import nova.core.network.NetworkTarget.Side;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 // TODO source only or should we modify the ClassLoader to reject sided methods?
 /**
@@ -12,7 +12,7 @@ import nova.core.network.NetworkTarget.Side;
  * that it should only be used on the specified side. <b>Referencing such a type
  * will most likely trigger an {@link IllegalSideException} or will malfunction
  * at worst!</b>
- * 
+ *
  * @author Vic Nightfall
  */
 @Retention(RetentionPolicy.SOURCE)

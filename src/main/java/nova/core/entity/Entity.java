@@ -77,6 +77,7 @@ public abstract class Entity extends ComponentProvider implements UniqueIdentifi
 	@Override
 	public String getUniqueID() {
 		//TODO: Is this safe?
+		// I'm not sure what to do here
 		return get(UniqueIdentifiable.class).getUniqueID();
 	}
 }

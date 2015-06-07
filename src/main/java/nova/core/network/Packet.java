@@ -3,13 +3,8 @@ package nova.core.network;
 import nova.core.entity.component.Player;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
-import nova.core.util.exception.NovaException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -323,7 +318,7 @@ public interface Packet {
 			Class<? extends Enum> className = (Class) Class.forName(enumClassName);
 			return readEnum(className);
 		} catch (Exception e) {
-			throw new NovaException("Failed to read enum.", e);
+			throw new NetworkException("Failed to read enum.", e);
 		}
 	}
 
@@ -411,7 +406,7 @@ public interface Packet {
 		}
 		//Special data types that all convert into Data.
 		else if (Syncable.class.isAssignableFrom(clazz)) {
-			throw new NovaException("Attempt to read PacketHandler object by its class");
+			throw new NetworkException("Attempt to read PacketHandler object by its class");
 		} else if (Enum.class.isAssignableFrom(clazz)) {
 			return (T) readEnum();
 		} else if (Data.class.isAssignableFrom(clazz)) {

@@ -5,7 +5,6 @@ import nova.core.network.NetworkTarget.Side;
 import nova.core.network.handler.BlockPacket;
 import nova.core.network.handler.EntityPacket;
 import nova.core.network.handler.PacketHandler;
-import nova.core.util.exception.NovaException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ public abstract class NetworkManager {
 		if (first.isPresent()) {
 			return first.get();
 		} else {
-			throw new NovaException("Invalid packet sender: " + handler);
+			throw new NetworkException("Invalid packet sender: " + handler);
 		}
 	}
 

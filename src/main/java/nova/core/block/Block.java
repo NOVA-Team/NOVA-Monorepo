@@ -5,7 +5,6 @@ import nova.core.component.transform.BlockTransform;
 import nova.core.entity.Entity;
 import nova.core.event.CancelableEvent;
 import nova.core.event.EventBus;
-import nova.internal.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
@@ -14,6 +13,7 @@ import nova.core.util.Identifiable;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
+import nova.internal.Game;
 
 import java.util.Collections;
 import java.util.Optional;

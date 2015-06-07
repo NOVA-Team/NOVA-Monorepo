@@ -1,9 +1,9 @@
-package nova.core.util.exception;
+package nova.core.util;
 
 /**
  * General exception that can be thrown by Nova internals
  */
-public class NovaException extends RuntimeException {
+public abstract class NovaException extends RuntimeException {
 	private static final long serialVersionUID = -2692979724920608046L;
 
 	public NovaException() {
@@ -12,7 +12,7 @@ public class NovaException extends RuntimeException {
 
 	/**
 	 * Formatted with {@link String#format(String, Object...)}
-	 * 
+	 *
 	 * @param message
 	 * @param parameters
 	 */

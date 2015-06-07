@@ -4,7 +4,6 @@ import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.layout.Constraints.FlowLayoutConstraints;
-import nova.core.util.exception.NovaException;
 import nova.core.util.math.MathUtil;
 import nova.core.util.transform.vector.Vector2i;
 
@@ -44,7 +43,7 @@ public class FlowLayout extends AbstractGuiLayout<FlowLayoutConstraints> {
 	@Override
 	protected void addImpl(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, FlowLayoutConstraints constraints) {
 		if (components.contains(component))
-			throw new NovaException("Tried to add " + component.getID() + " which was already present.");
+			throw new LayoutException("Tried to add " + component.getID() + " which was already present.");
 		components.add(component);
 	}
 

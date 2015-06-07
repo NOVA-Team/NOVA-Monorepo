@@ -4,7 +4,6 @@ import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.layout.Constraints.BorderConstraints;
-import nova.core.util.exception.NovaException;
 import nova.core.util.math.MathUtil;
 import nova.core.util.transform.vector.Vector2i;
 
@@ -96,7 +95,7 @@ public class BorderLayout extends AbstractGuiLayout<BorderConstraints> {
 	@Override
 	protected void addImpl(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, BorderConstraints constraints) {
 		if (components.containsKey(constraints))
-			throw new NovaException("BorderLayout doesn't allow multiple elements taking up the same region!");
+			throw new LayoutException("BorderLayout doesn't allow multiple elements taking up the same region!");
 		components.put(constraints.region, component);
 	}
 

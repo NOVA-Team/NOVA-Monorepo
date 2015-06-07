@@ -8,8 +8,8 @@ import nova.core.network.NetworkTarget.IllegalSideException;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Sided;
 import nova.core.util.Manager;
+import nova.core.util.RegistrationException;
 import nova.core.util.Registry;
-import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector3i;
 
 import java.util.ArrayList;
@@ -63,8 +63,7 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 	 * @see #showGui(Gui, Entity, Vector3i)
 	 */
 	public void showGui(String identifier, Entity entity, Vector3i position) {
-
-		GuiFactory factory = getFactory(identifier).orElseThrow(() -> new NovaException(String.format("No GUI called %s registered!", identifier)));
+		GuiFactory factory = getFactory(identifier).orElseThrow(() -> new RegistrationException(String.format("No GUI called %s registered!", identifier)));
 		showGui(factory.makeGUI(), entity, position);
 	}
 

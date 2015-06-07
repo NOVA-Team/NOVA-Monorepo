@@ -1,9 +1,9 @@
 package nova.core.depmodules;
 
 import nova.core.di.NovaScopes;
-import nova.internal.Game;
 import nova.core.util.Dictionary;
 import nova.core.util.Registry;
+import nova.internal.Game;
 import se.jbee.inject.bind.BinderModule;
 import se.jbee.inject.util.Scoped;
 

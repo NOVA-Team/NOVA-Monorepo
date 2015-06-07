@@ -1,7 +1,5 @@
 package nova.core.util;
 
-import nova.core.util.exception.NovaException;
-
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -20,7 +18,7 @@ public class ClassLoaderUtil {
 		try {
 			addURL.invoke(ClassLoader.getSystemClassLoader(), url);
 		} catch (Throwable t) {
-			throw new NovaException("Failed to add " + url + " to the classpath");
+			throw new ClassLoaderException("Failed to add " + url + " to the classpath");
 		}
 	}
 
@@ -28,7 +26,7 @@ public class ClassLoaderUtil {
 		try {
 			addURLToClassPath(file.toURI().toURL());
 		} catch (MalformedURLException e) {
-			throw new NovaException("Failed to convert " + file.getAbsolutePath() + " to URL");
+			throw new ClassLoaderException("Failed to convert " + file.getAbsolutePath() + " to URL");
 		}
 	}
 
@@ -38,7 +36,29 @@ public class ClassLoaderUtil {
 			m.setAccessible(true);
 			addURL = m;
 		} catch (NoSuchMethodException e) {
-			throw new NovaException("URLClassLoader has no addURL method. All of my wat.", e);
+			throw new ClassLoaderException("URLClassLoader has no addURL method. All of my wat.", e);
+		}
+	}
+
+	public static class ClassLoaderException extends NovaException {
+		public ClassLoaderException() {
+			super();
+		}
+
+		public ClassLoaderException(String message, Object... parameters) {
+			super(message, parameters);
+		}
+
+		public ClassLoaderException(String message) {
+			super(message);
+		}
+
+		public ClassLoaderException(String message, Throwable cause) {
+			super(message, cause);
+		}
+
+		public ClassLoaderException(Throwable cause) {
+			super(cause);
 		}
 	}
 }

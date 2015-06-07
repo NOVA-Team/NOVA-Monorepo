@@ -1,6 +1,5 @@
 package nova.core.gui.layout;
 
-import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector2;
 import nova.core.util.transform.vector.Vector2d;
 import nova.core.util.transform.vector.Vector2i;
@@ -10,7 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * {@link Constraints} for relative positioning.
- * 
+ *
  * @author Vic Nightfall
  */
 public class RelativePosition extends Constraints<RelativePosition> {
@@ -114,7 +113,7 @@ public class RelativePosition extends Constraints<RelativePosition> {
 				throw new IllegalArgumentException();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new NovaException("Invalid relative position \"" + str + "\"");
+			throw new LayoutException("Invalid relative position \"" + str + "\"");
 		}
 	}
 

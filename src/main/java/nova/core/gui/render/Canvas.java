@@ -3,8 +3,8 @@ package nova.core.gui.render;
 import nova.core.gui.Outline;
 import nova.core.gui.Spacing;
 import nova.core.render.Color;
+import nova.core.render.RenderException;
 import nova.core.render.texture.Texture;
-import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector2i;
 
 import java.util.Stack;
@@ -13,7 +13,7 @@ import java.util.Stack;
  * A canvas is an object that can be drawn onto in 2D space. The content might
  * be back buffered, depends on the context. Use {@link #isBuffered()} to check.
  * A {@link Graphics} object can be used to draw onto a canvas.
- * 
+ *
  * @author Vic Nightfall
  */
 public abstract class Canvas {
@@ -97,13 +97,13 @@ public abstract class Canvas {
 
 	public void push() {
 		if (stack.size() >= MAX_STACK_DEPTH)
-			throw new NovaException("Canvas stack overflow! Max: " + MAX_STACK_DEPTH);
+			throw new RenderException("Canvas stack overflow! Max: " + MAX_STACK_DEPTH);
 		stack.push(state.clone());
 	}
 
 	public void pop() {
 		if (stack.size() == 0)
-			throw new NovaException("Canvas stack underflow!");
+			throw new RenderException("Canvas stack underflow!");
 		state = stack.pop();
 	}
 

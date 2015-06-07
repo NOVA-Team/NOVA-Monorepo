@@ -1,7 +1,6 @@
 package nova.core.entity;
 
 import nova.core.util.Factory;
-import nova.internal.dummy.Wrapper;
 
 import java.util.function.Function;
 

@@ -2,7 +2,7 @@ package nova.core.nativewrapper;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import nova.core.util.exception.NovaException;
+import nova.core.util.NovaException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +71,7 @@ public class NativeManager {
 			return nativeConverter;
 		}
 
-		throw new NovaException("Cannot find native converter for: " + novaClass);
+		throw new NativeException("Cannot find native converter for: " + novaClass);
 	}
 
 	private NativeConverter findConverter(Map<Class<?>, NativeConverter> map, Object obj) {
@@ -93,7 +93,7 @@ public class NativeManager {
 	public <T> T toNova(Object nativeObject) {
 		NativeConverter converter = findConverter(nativeConverters, nativeObject);
 		if (converter == null) {
-			throw new NovaException("NativeManager.toNova: Converter for " + nativeObject + " with class " + nativeObject.getClass() + " does not exist!");
+			throw new NativeException("NativeManager.toNova: Converter for " + nativeObject + " with class " + nativeObject.getClass() + " does not exist!");
 		}
 
 		return (T) converter.toNova(nativeObject);
@@ -105,7 +105,7 @@ public class NativeManager {
 	public <T> T toNative(Object novaObject) {
 		NativeConverter converter = findConverter(novaConverters, novaObject);
 		if (converter == null) {
-			throw new NovaException("NativeManager.toNative: Converter for " + novaObject + " with class " + novaObject.getClass() + " does not exist!");
+			throw new NativeException("NativeManager.toNative: Converter for " + novaObject + " with class " + novaObject.getClass() + " does not exist!");
 		}
 
 		return (T) converter.toNative(novaObject);
@@ -113,5 +113,27 @@ public class NativeManager {
 
 	public List<NativeConverter> getNativeConverters() {
 		return converters;
+	}
+
+	public static class NativeException extends NovaException {
+		public NativeException() {
+			super();
+		}
+
+		public NativeException(String message, Object... parameters) {
+			super(message, parameters);
+		}
+
+		public NativeException(String message) {
+			super(message);
+		}
+
+		public NativeException(String message, Throwable cause) {
+			super(message, cause);
+		}
+
+		public NativeException(Throwable cause) {
+			super(cause);
+		}
 	}
 }

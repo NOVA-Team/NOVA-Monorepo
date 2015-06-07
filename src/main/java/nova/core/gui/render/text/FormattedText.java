@@ -1,5 +1,8 @@
 package nova.core.gui.render.text;
 
+import nova.core.render.Color;
+import nova.core.render.RenderException;
+
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
@@ -10,15 +13,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import nova.core.render.Color;
-import nova.core.util.exception.NovaException;
-
 /**
  * An object that holds text and the format to apply to it. A
  * {@link TextRenderer} can be used to draw formatted text. It is <i>highly</i>
  * recommended to store the instance of Formatted text so that the wrapper can
  * cache it.
- * 
+ *
  * @author Vic Nightfall
  */
 public class FormattedText implements Iterable<FormattedText> {
@@ -97,7 +97,7 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * with an {@code \} character. The case is taken into account, only
 	 * lowercase characters are permitted for tags.
 	 * </p>
-	 * 
+	 *
 	 * <table>
 	 * <caption><b>The formatting codes applied are as follows:</b></caption>
 	 * <tr>
@@ -153,7 +153,7 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * "The quick brown fox jumps over the lazy dog"</td>
 	 * </tr>
 	 * </table>
-	 * 
+	 *
 	 * @param string String to parse
 	 * @return FormattedText instance
 	 */
@@ -208,14 +208,14 @@ public class FormattedText implements Iterable<FormattedText> {
 					}
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
-					throw new NovaException("Failed to parse color at index " + matcher.start() + ": '" + matcher.group(3) + "'.");
+					throw new RenderException("Failed to parse color at index " + matcher.start() + ": '" + matcher.group(3) + "'.");
 				}
 			} else if (matcher.group(6) != null) {
 				format = format.clone();
 				try {
 					format.size = Integer.parseInt(matcher.group(6));
 				} catch (NumberFormatException e) {
-					throw new NovaException("Failed to parse size at index " + matcher.start() + ": '" + matcher.group(6) + "'.");
+					throw new RenderException("Failed to parse size at index " + matcher.start() + ": '" + matcher.group(6) + "'.");
 				}
 			}
 			index = end;

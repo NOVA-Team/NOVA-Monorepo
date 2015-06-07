@@ -4,23 +4,11 @@ import nova.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.deps.Dependencies;
 import nova.core.deps.Dependency;
 import nova.core.deps.MavenDependency;
-import nova.internal.Game;
 import nova.core.loader.NovaMod;
-import nova.core.util.exception.NovaException;
+import nova.core.util.NovaException;
+import nova.internal.Game;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -186,7 +174,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 					return;
 				}
 
-				throw new NovaException("There was a cycle detected in the input graph, sorting is not possible", node);
+				throw new NovaException("There was a cycle detected in the input graph, sorting is not possible", node) {};
 			}
 
 			// Visit this node
