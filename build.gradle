@@ -61,6 +61,7 @@ task apiJar(type: Jar) {
 
 configurations {
 	wrapperTests
+	api
 }
 
 artifacts {
@@ -69,6 +70,8 @@ artifacts {
 	archives apiJar
 
 	wrapperTests wrapperTestJar
+
+	api apiJar
 }
 
 publishing {
