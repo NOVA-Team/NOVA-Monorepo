@@ -4,7 +4,6 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import nova.core.entity.component.Player;
 import nova.core.network.Packet;
-import nova.core.util.exception.NovaException;
 
 /**
  * Wraps ByteBuf into a NOVA Packet.
@@ -30,7 +29,7 @@ public class MCPacket implements Packet {
 	@Override
 	public Player player() {
 		if (player == null) {
-			throw new NovaException("Attempt to get player in packet when it does not exist!");
+			throw new RuntimeException("Attempt to get player in packet when it does not exist!");
 		}
 
 		return player;

@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
+import nova.core.gui.GuiException;
 import nova.core.network.Packet;
-import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
 import nova.wrapper.mc1710.network.MCPacket;
 
@@ -39,7 +39,7 @@ public class PacketGui extends PacketAbstract {
 		if (player.openContainer instanceof MCContainer) {
 			((MCContainer) player.openContainer).getGui().onNetworkEvent(wrapped);
 		} else {
-			throw new NovaException("Received an invalid GUI event packet, server side not present!");
+			throw new GuiException("Received an invalid GUI event packet, server side not present!");
 		}
 	}
 }

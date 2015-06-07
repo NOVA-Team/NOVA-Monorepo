@@ -1,5 +1,16 @@
 package nova.wrapper.mc1710.asm.lib;
 
+import nova.core.component.Component;
+import nova.core.component.ComponentProvider;
+import nova.core.component.Passthrough;
+import nova.core.network.NetworkTarget.Side;
+import nova.core.util.ClassLoaderUtil;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.ClassNode;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -9,26 +20,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import nova.core.component.Component;
-import nova.core.component.ComponentProvider;
-import nova.core.component.Passthrough;
-import nova.core.network.NetworkTarget.Side;
-import nova.core.util.exception.NovaException;
-
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.ClassNode;
-
 /**
  * The ComponentInjector is capable of creating dynamic classes that implement a
  * specified super class and implement the interfaces specified by
  * {@link Component} and {@link Passthrough}.
- * 
- * @author Vic Nightfall
  *
  * @param <T>
+ * @author Vic Nightfall
  */
 public class ComponentInjector<T> implements Opcodes {
 
@@ -53,9 +51,10 @@ public class ComponentInjector<T> implements Opcodes {
 				List<Class<? extends Component>> componentClazzes = components.stream().map(c -> c.getClass()).collect(Collectors.toList());
 				System.out.println(Side.get() + " " + componentClazzes);
 				if (cache.containsKey(componentClazzes))
-					// Cached class
+				// Cached class
+				{
 					return inject(cache.get(componentClazzes).getConstructor(typeArgs).newInstance(args), provider);
-				else {
+				} else {
 					Class<? extends T> clazz = construct(componentClazzes);
 					cache.put(componentClazzes, clazz);
 					return inject(clazz.getConstructor(typeArgs).newInstance(args), provider);
@@ -67,7 +66,7 @@ public class ComponentInjector<T> implements Opcodes {
 				return baseClazz.getConstructor(typeArgs).newInstance(args);
 			}
 		} catch (Exception e) {
-			throw new NovaException("Failed to construct wrapper class for " + baseClazz, e);
+			throw new ClassLoaderUtil.ClassLoaderException("Failed to construct wrapper class for " + baseClazz, e);
 		}
 	}
 
@@ -89,13 +88,14 @@ public class ComponentInjector<T> implements Opcodes {
 				try {
 					intf = Class.forName(pt.value());
 				} catch (ClassNotFoundException exec) {
-					throw new NovaException("Invalid passthrough \"%s\" on component %s, the specified interface doesn't exist.", pt.value(), component);
+					throw new ClassLoaderUtil.ClassLoaderException("Invalid passthrough \"%s\" on component %s, the specified interface doesn't exist.", pt.value(), component);
 				}
 				if (!intf.isAssignableFrom(component)) {
-					throw new NovaException("Invalid passthrough \"%s\" on component %s, the specified interface isn't implemented.", pt.value(), component);
+					throw new ClassLoaderUtil.ClassLoaderException("Invalid passthrough \"%s\" on component %s, the specified interface isn't implemented.", pt.value(), component);
 				}
-				if (intfComponentMap.containsKey(intf))
-					throw new NovaException("Duplicate Passthrough interface found: %s (%s, %s)", pt.value(), component, intfComponentMap.get(intf));
+				if (intfComponentMap.containsKey(intf)) {
+					throw new ClassLoaderUtil.ClassLoaderException("Duplicate Passthrough interface found: %s (%s, %s)", pt.value(), component, intfComponentMap.get(intf));
+				}
 				intfComponentMap.put(intf, component);
 			}
 		}
@@ -114,8 +114,9 @@ public class ComponentInjector<T> implements Opcodes {
 			int mod = constructor.getModifiers();
 			String descr = Type.getConstructorDescriptor(constructor);
 
-			if (Modifier.isFinal(mod) || Modifier.isPrivate(mod))
+			if (Modifier.isFinal(mod) || Modifier.isPrivate(mod)) {
 				continue;
+			}
 			MethodVisitor mv = clazzNode.visitMethod(mod, "<init>", descr, null, ASMHelper.getExceptionTypes(constructor));
 
 			// Call super constructor

@@ -6,7 +6,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import nova.core.block.BlockFactory;
-import nova.internal.Game;
+import nova.core.component.Category;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
@@ -15,8 +15,8 @@ import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
-import nova.core.component.Category;
-import nova.core.util.exception.NovaException;
+import nova.internal.Game;
+import nova.internal.launch.InitializationException;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
 
@@ -26,6 +26,7 @@ import java.util.Set;
 
 /**
  * The main class responsible for wrapping items.
+ *
  * @author Calclavia, Stan Hebben
  */
 public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable {
@@ -90,7 +91,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 			MinecraftItemMapping mapping = get(itemFactory);
 			if (mapping == null) {
-				throw new NovaException("Missing mapping for " + itemFactory.getID());
+				throw new InitializationException("Missing mapping for " + itemFactory.getID());
 			}
 
 			ItemStack result = new ItemStack(mapping.item, item.count(), mapping.meta);
@@ -104,7 +105,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 		MinecraftItemMapping mapping = get(itemFactory);
 		if (mapping == null) {
-			throw new NovaException("Missing mapping for " + itemFactory.getID());
+			throw new InitializationException("Missing mapping for " + itemFactory.getID());
 		}
 
 		ItemStack result = new ItemStack(mapping.item, 1, mapping.meta);
@@ -155,8 +156,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	private void registerNOVAItem(ItemFactory itemFactory) {
-		if (map.containsKey(itemFactory))
-		{
+		if (map.containsKey(itemFactory)) {
 			// just a safeguard - don't map stuff twice
 			return;
 		}
@@ -168,7 +168,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.getDummy());
 			itemWrapper = net.minecraft.item.Item.getItemFromBlock(mcBlock);
 			if (itemWrapper == null) {
-				throw new NovaException("ItemConverter: Missing block: " + itemFactory.getID());
+				throw new InitializationException("ItemConverter: Missing block: " + itemFactory.getID());
 			}
 		} else {
 			itemWrapper = new FWItem(itemFactory);
@@ -238,8 +238,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 	private ItemFactory registerMinecraftMapping(net.minecraft.item.Item item, int meta) {
 		MinecraftItemMapping mapping = new MinecraftItemMapping(item, meta);
-		if (map.inverse().containsKey(mapping))
-		{
+		if (map.inverse().containsKey(mapping)) {
 			// don't register twice, return the factory instead
 			return map.inverse().get(mapping);
 		}

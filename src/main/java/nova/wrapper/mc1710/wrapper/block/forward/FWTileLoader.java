@@ -1,13 +1,12 @@
 package nova.wrapper.mc1710.wrapper.block.forward;
 
-import java.util.Optional;
-
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.internal.Game;
-import nova.core.util.exception.NovaException;
 import nova.wrapper.mc1710.asm.lib.ComponentInjector;
+
+import java.util.Optional;
 
 /**
  * @author Vic Nightfall
@@ -27,7 +26,7 @@ public final class FWTileLoader {
 			tile.setBlock(block);
 			return tile;
 		} catch (Exception e) {
-			throw new NovaException("Fatal error when trying to create a new NOVA tile.", e);
+			throw new RuntimeException("Fatal error when trying to create a new NOVA tile.", e);
 		}
 	}
 
@@ -38,7 +37,7 @@ public final class FWTileLoader {
 			tile.setBlock(block);
 			return tile;
 		} catch (Exception e) {
-			throw new NovaException("Fatal error when trying to create a new NOVA tile.", e);
+			throw new RuntimeException("Fatal error when trying to create a new NOVA tile.", e);
 		}
 	}
 
@@ -47,7 +46,7 @@ public final class FWTileLoader {
 		if (blockFactory.isPresent()) {
 			return blockFactory.get().makeBlock();
 		} else {
-			throw new NovaException("Error! Invalid NOVA block ID");
+			throw new RuntimeException("Error! Invalid NOVA block ID");
 		}
 	}
 }

@@ -1,9 +1,8 @@
 package nova.wrapper.mc1710.wrapper.block.world;
 
-import nova.internal.Game;
 import nova.core.nativewrapper.NativeConverter;
-import nova.core.util.exception.NovaException;
 import nova.core.world.World;
+import nova.internal.Game;
 
 import java.util.Optional;
 
@@ -37,6 +36,7 @@ public class WorldConverter implements NativeConverter<World, net.minecraft.worl
 			return ((BWWorld) novaObj).world();
 		}
 
-		throw new NovaException("Attempt to convert a world that is not a BWWorld!");
+		//TODO: Right exception?
+		throw new RuntimeException("Attempt to convert a world that is not a BWWorld!");
 	}
 }

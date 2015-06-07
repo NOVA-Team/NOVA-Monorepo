@@ -9,9 +9,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
 import nova.core.entity.Entity;
 import nova.core.gui.Gui;
+import nova.core.gui.GuiException;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.factory.GuiManager;
-import nova.core.util.exception.NovaException;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCGuiScreen;
@@ -35,7 +35,7 @@ public class MCGuiFactory extends GuiManager {
 
 	@Override
 	public void showGui(String identifier, Entity entity, Vector3i pos) {
-		GuiFactory factory = getFactory(identifier).orElseThrow(() -> new NovaException(String.format("No GUI called %s registered!", identifier)));
+		GuiFactory factory = getFactory(identifier).orElseThrow(() -> new GuiException(String.format("No GUI called %s registered!", identifier)));
 		Gui gui = factory.makeGUI();
 		showGui(gui, entity, pos, idMappedFactories.indexOf(factory));
 	}
@@ -106,8 +106,9 @@ public class MCGuiFactory extends GuiManager {
 				// Try to get the client side GUI from the id mapping
 				gui = idMappedFactories.get(id).makeGUI();
 			}
-			if (gui == null)
-				throw new NovaException("Couldn't get client side instance for the provided GUI of id " + id + " !");
+			if (gui == null) {
+				throw new GuiException("Couldn't get client side instance for the provided GUI of id " + id + " !");
+			}
 
 			gui.bind(new BWEntity(player), new Vector3i(x, y, z));
 

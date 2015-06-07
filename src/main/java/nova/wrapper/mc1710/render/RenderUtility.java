@@ -11,9 +11,9 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelFormatException;
-import nova.internal.Game;
+import nova.core.render.RenderException;
 import nova.core.render.texture.Texture;
-import nova.core.util.exception.NovaException;
+import nova.internal.Game;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -90,7 +90,7 @@ public class RenderUtility {
 			return iconMap.get(texture);
 		}
 
-		throw new NovaException("Texture cannot be found: " + texture);
+		throw new RenderException("Texture cannot be found: " + texture);
 	}
 
 	/**

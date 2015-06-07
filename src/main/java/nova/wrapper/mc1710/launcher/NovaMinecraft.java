@@ -16,10 +16,10 @@ import nova.core.component.ComponentProvider;
 import nova.core.deps.DepDownloader;
 import nova.core.deps.MavenDependency;
 import nova.core.event.Event;
-import nova.internal.Game;
 import nova.core.loader.Loadable;
 import nova.core.loader.NativeLoader;
-import nova.core.util.exception.NovaException;
+import nova.internal.Game;
+import nova.internal.launch.InitializationException;
 import nova.internal.launch.ModLoader;
 import nova.internal.launch.NovaLauncher;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
@@ -179,7 +179,7 @@ public class NovaMinecraft {
 		} catch (Exception e) {
 			System.out.println("Error during preInit");
 			e.printStackTrace();
-			throw new NovaException(e);
+			throw new InitializationException(e);
 		}
 	}
 
@@ -194,7 +194,7 @@ public class NovaMinecraft {
 		} catch (Exception e) {
 			System.out.println("Error during init");
 			e.printStackTrace();
-			throw new NovaException(e);
+			throw new InitializationException(e);
 		}
 	}
 
@@ -208,7 +208,7 @@ public class NovaMinecraft {
 		} catch (Exception e) {
 			System.out.println("Error during postInit");
 			e.printStackTrace();
-			throw new NovaException(e);
+			throw new InitializationException(e);
 		}
 	}
 

@@ -1,17 +1,16 @@
 package nova.wrapper.mc1710.backward.render;
 
-import java.util.Iterator;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import nova.core.render.RenderException;
+import nova.core.render.RenderManager;
+import nova.core.render.texture.Texture;
+import nova.core.util.transform.vector.Vector2i;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import nova.core.render.RenderManager;
-import nova.core.render.texture.Texture;
-import nova.core.util.exception.NovaException;
-import nova.core.util.transform.vector.Vector2i;
+import java.util.Iterator;
 
 public class MCRenderManager extends RenderManager {
 
@@ -36,8 +35,8 @@ public class MCRenderManager extends RenderManager {
 				}
 			}
 		} catch (Exception e) {
-			throw new NovaException("Couldn't load texture " + texture.getPath(), e);
+			throw new RenderException("Couldn't load texture " + texture.getPath(), e);
 		}
-		return new Vector2i(16,16);
+		return new Vector2i(16, 16);
 	}
 }
