@@ -1,13 +1,16 @@
 package nova.core.render.model;
 
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.matrix.Matrix4x4;
-import nova.core.util.transform.matrix.MatrixStack;
-import nova.core.util.transform.matrix.Quaternion;
+import nova.core.util.math.MatrixStack;
 import nova.core.util.transform.vector.Vector2d;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.Spliterator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -25,7 +28,7 @@ public class Model implements Iterable<Model>, Cloneable {
 	public final Set<Face> faces = new HashSet<>();
 	public final Set<Model> children = new HashSet<>();
 
-	public Matrix4x4 matrix = Matrix4x4.IDENTITY;
+	public MatrixStack matrix = new MatrixStack();
 
 	public Vector2d textureOffset = Vector2d.zero;
 
@@ -78,34 +81,6 @@ public class Model implements Iterable<Model>, Cloneable {
 		return flatten(new MatrixStack());
 	}
 
-	public Model translate(Vector3D vec) {
-		return translate(vec.getX(), vec.getY(), vec.getZ());
-	}
-
-	public Model translate(double x, double y, double z) {
-		matrix = new MatrixStack().loadMatrix(matrix).translate(x, y, z).getMatrix();
-		return this;
-	}
-
-	public Model scale(Vector3D vec) {
-		return scale(vec.getX(), vec.getY(), vec.getZ());
-	}
-
-	public Model scale(double x, double y, double z) {
-		matrix = new MatrixStack().loadMatrix(matrix).scale(x, y, z).getMatrix();
-		return this;
-	}
-
-	public Model rotate(Quaternion quat) {
-		matrix = new MatrixStack().loadMatrix(matrix).rotate(quat).getMatrix();
-		return this;
-	}
-
-	public Model rotate(Vector3D vec, double angle) {
-		matrix = new MatrixStack().loadMatrix(matrix).rotate(vec, angle).getMatrix();
-		return this;
-	}
-
 	/**
 	 * Combines child models with names into one model with its children being the children selected.
 	 * @param newModelName The new name for the model
@@ -146,11 +121,12 @@ public class Model implements Iterable<Model>, Cloneable {
 		Set<Model> models = new HashSet<>();
 
 		matrixStack.pushMatrix();
-		matrixStack.transform(matrix);
+		matrixStack.transform(matrix.getMatrix());
 		//Create a new model with transformation applied.
 		Model transformedModel = clone();
 		transformedModel.faces.stream().forEach(f -> {
-				f.normal = f.normal; //TODO normal matrix;
+				//TODO: Check if normal is correct.
+				f.normal = matrixStack.apply(f.normal);
 				f.vertices.forEach(v -> v.vec = matrixStack.apply(v.vec));
 			}
 		);

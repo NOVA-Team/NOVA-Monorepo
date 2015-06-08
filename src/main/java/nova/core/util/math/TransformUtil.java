@@ -1,28 +1,16 @@
-package nova.core.util.transform.matrix;
+package nova.core.util.math;
 
-import com.google.common.math.DoubleMath;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 
-public final class MatrixUtil {
+public final class TransformUtil {
 
-	private MatrixUtil() {
-	}
-
-	/**
-	 * Identity matrix.
-	 */
-	public static RealMatrix identity(int size) {
-		Array2DRowRealMatrix array2DRowRealMatrix = new Array2DRowRealMatrix(size, size);
-		for (int i = 0; i < size; i++)
-			array2DRowRealMatrix.setEntry(i, i, 1);
-		return array2DRowRealMatrix;
+	private TransformUtil() {
 	}
 
 	/**
 	 * Creates translation matrix.
-	 *
 	 * @param x translation.
 	 * @param y translation.
 	 * @param z translation.
@@ -38,7 +26,6 @@ public final class MatrixUtil {
 
 	/**
 	 * Creates translation matrix.
-	 *
 	 * @param translationVector which components are translation parameters.
 	 * @return translation matrix.
 	 */
@@ -48,7 +35,6 @@ public final class MatrixUtil {
 
 	/**
 	 * Creates scale matrix.
-	 *
 	 * @param x scale.
 	 * @param y scale.
 	 * @param z scale.
@@ -64,7 +50,6 @@ public final class MatrixUtil {
 
 	/**
 	 * Creates scale matrix.
-	 *
 	 * @param scaleVector which components are scale parameters.
 	 * @return scale matrix.
 	 */
@@ -72,4 +57,18 @@ public final class MatrixUtil {
 		return scaleMatrix(scaleVector.getX(), scaleVector.getY(), scaleVector.getZ());
 	}
 
+	/**
+	 * Transform vector by this matrix.
+	 * @param vector to be transformed.
+	 * @param m The 4x4 matrix to transform the vector by
+	 * @return transformed vector.
+	 */
+	public static Vector3D transform(Vector3D vector, RealMatrix m) {
+		double x, y, z, w;
+		x = m.getEntry(0, 0) * vector.getX() + m.getEntry(1, 0) * vector.getY() + m.getEntry(2, 0) * vector.getZ() + m.getEntry(3, 0);
+		y = m.getEntry(0, 1) * vector.getX() + m.getEntry(1, 1) * vector.getY() + m.getEntry(2, 1) * vector.getZ() + m.getEntry(3, 1);
+		z = m.getEntry(0, 2) * vector.getX() + m.getEntry(1, 2) * vector.getY() + m.getEntry(2, 2) * vector.getZ() + m.getEntry(3, 2);
+		w = m.getEntry(0, 3) * vector.getX() + m.getEntry(1, 3) * vector.getY() + m.getEntry(2, 3) * vector.getZ() + m.getEntry(3, 3);
+		return new Vector3D(x / w, y / w, z / w);
+	}
 }

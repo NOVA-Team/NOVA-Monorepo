@@ -3,7 +3,7 @@ package nova.core.entity.component;
 import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
 import nova.core.component.Updater;
-import nova.core.util.transform.matrix.Quaternion;
+import nova.core.util.transform.matrix.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
@@ -27,7 +27,7 @@ public abstract class RigidBody extends Component implements Updater {
 	 * Rotation
 	 */
 	private double angularDrag = 0;
-	private Quaternion angularVelocity = Quaternion.identity;
+	private Rotation angularVelocity = Rotation.identity;
 
 	public RigidBody(ComponentProvider provider) {
 		this.provider = provider;
@@ -85,11 +85,11 @@ public abstract class RigidBody extends Component implements Updater {
 		this.angularDrag = angularDrag;
 	}
 
-	public Quaternion getAngularVelocity() {
+	public Rotation getAngularVelocity() {
 		return angularVelocity;
 	}
 
-	public void setAngularVelocity(Quaternion angularVelocity) {
+	public void setAngularVelocity(Rotation angularVelocity) {
 		this.angularVelocity = angularVelocity;
 	}
 
@@ -125,7 +125,7 @@ public abstract class RigidBody extends Component implements Updater {
 		return getAngularDrag();
 	}
 
-	public final Quaternion angularVelocity() {
+	public final Rotation angularVelocity() {
 		return getAngularVelocity();
 	}
 

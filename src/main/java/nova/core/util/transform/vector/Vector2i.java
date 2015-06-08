@@ -7,7 +7,6 @@ import nova.core.util.transform.matrix.Matrix;
 /**
  * A double implementation of Vector2. Vector2 is an immutable quantity that
  * holds an x, y and z value.
- *
  * @author Calclavia
  */
 @SuppressWarnings("rawtypes")
@@ -101,6 +100,7 @@ public class Vector2i extends Vector2<Vector2i> implements Storable {
 	public Matrix toMatrix() {
 		return new Matrix(new double[][] { { x }, { y } });
 	}
+
 	@Override
 	public String toString() {
 		return "[Vector2d] " + x + ", " + y;

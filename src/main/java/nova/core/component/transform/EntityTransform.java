@@ -1,6 +1,6 @@
 package nova.core.component.transform;
 
-import nova.core.util.transform.matrix.Quaternion;
+import nova.core.util.transform.matrix.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
@@ -12,7 +12,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 public class EntityTransform extends WorldTransform<Vector3D> {
 
 	//The rotation of the transform. Can never be null.
-	private Quaternion rotation;
+	private Rotation rotation;
 
 	//The scale of the transform. Can never be null.
 	private Vector3D scale;
@@ -36,11 +36,11 @@ public class EntityTransform extends WorldTransform<Vector3D> {
 		this.scale = scale;
 	}
 
-	public Quaternion rotation() {
+	public Rotation rotation() {
 		return rotation;
 	}
 
-	public void setRotation(Quaternion rotation) {
+	public void setRotation(Rotation rotation) {
 		this.rotation = rotation;
 	}
 }

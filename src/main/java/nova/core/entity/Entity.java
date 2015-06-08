@@ -6,9 +6,9 @@ import nova.core.component.transform.EntityTransform;
 import nova.core.event.EventBus;
 import nova.core.util.Identifiable;
 import nova.core.util.UniqueIdentifiable;
-import nova.core.util.transform.matrix.Quaternion;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import nova.core.util.transform.matrix.Rotation;
 import nova.core.world.World;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * An entity is an object in the world that has a position.
@@ -38,7 +38,7 @@ public abstract class Entity extends ComponentProvider implements UniqueIdentifi
 		return transform().pivot();
 	}
 
-	public final Quaternion rotation() {
+	public final Rotation rotation() {
 		return transform().rotation();
 	}
 
@@ -70,7 +70,7 @@ public abstract class Entity extends ComponentProvider implements UniqueIdentifi
 		transform().setPivot(pivot);
 	}
 
-	public void setRotation(Quaternion rotation) {
+	public void setRotation(Rotation rotation) {
 		transform().setRotation(rotation);
 	}
 

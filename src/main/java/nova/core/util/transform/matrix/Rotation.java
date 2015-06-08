@@ -40,14 +40,14 @@ import java.math.RoundingMode;
  *
  * @author Calclavia, ChickenBones
  */
-public class Quaternion implements Transformer, Storable {
+public class Rotation implements Transformer, Storable {
 
-	public static final Quaternion identity = new Quaternion(0, 0, 0, 1);
+	public static final Rotation identity = new Rotation(0, 0, 0, 1);
 
 	@Store
 	public final double x, y, z, w;
 
-	public Quaternion(double x, double y, double z, double w) {
+	public Rotation(double x, double y, double z, double w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -75,14 +75,14 @@ public class Quaternion implements Transformer, Storable {
 	 * Roll - Rotation around z-axis (attitude)
 	 *
 	 * @param euler input {@link Vector3D}
-	 * @return resulting {@link Quaternion}
+	 * @return resulting {@link Rotation}
 	 * @author Calclavia
 	 */
-	public static Quaternion fromEuler(Vector3D euler) {
+	public static Rotation fromEuler(Vector3D euler) {
 		return fromEuler(euler.getX(), euler.getY(), euler.getZ());
 	}
 
-	public static Quaternion fromEuler(double yaw, double pitch) {
+	public static Rotation fromEuler(double yaw, double pitch) {
 		return fromEuler(yaw, pitch, 0);
 	}
 
@@ -93,13 +93,13 @@ public class Quaternion implements Transformer, Storable {
 	 * @param direction A unit vector
 	 * @return The quaternion
 	 */
-	public static Quaternion fromDirection(Vector3D direction) {
+	public static Rotation fromDirection(Vector3D direction) {
 		double yaw = Math.atan2(direction.getZ(), direction.getX());
 		double pitch = Math.asin(direction.getY());
 		return fromEuler(yaw, pitch);
 	}
 
-	public static Quaternion fromEuler(double yaw, double pitch, double roll) {
+	public static Rotation fromEuler(double yaw, double pitch, double roll) {
 		// Assuming the angles are in radians.
 		double c1 = Math.cos(yaw / 2);
 		double s1 = Math.sin(yaw / 2);
@@ -113,10 +113,10 @@ public class Quaternion implements Transformer, Storable {
 		double x = c1c2 * s3 + s1s2 * c3;
 		double y = s1 * c2 * c3 + c1 * s2 * s3;
 		double z = c1 * s2 * c3 - s1 * c2 * s3;
-		return new Quaternion(x, y, z, w);
+		return new Rotation(x, y, z, w);
 	}
 
-	public static Quaternion fromEulerDegree(double yaw, double pitch, double roll) {
+	public static Rotation fromEulerDegree(double yaw, double pitch, double roll) {
 		return fromEuler(Math.toRadians(yaw), Math.toRadians(pitch), Math.toRadians(roll));
 	}
 
@@ -127,22 +127,22 @@ public class Quaternion implements Transformer, Storable {
 	 * @param angle Angle in radians
 	 * @return The Quaternion representation of the angle axis rotation.
 	 */
-	public static Quaternion fromAxis(Vector3D axis, double angle) {
+	public static Rotation fromAxis(Vector3D axis, double angle) {
 		return fromAxis(axis.getX(), axis.getY(), axis.getZ(), angle);
 	}
 
-	public static Quaternion fromAxis(double ax, double ay, double az, double angle) {
+	public static Rotation fromAxis(double ax, double ay, double az, double angle) {
 		angle *= 0.5;
 		double d4 = Math.sin(angle);
-		return new Quaternion(ax * d4, ay * d4, az * d4, Math.cos(angle));
+		return new Rotation(ax * d4, ay * d4, az * d4, Math.cos(angle));
 	}
 
-	public Quaternion multiply(Quaternion q) {
+	public Rotation multiply(Rotation q) {
 		double d = w * q.w - x * q.x - y * q.y - z * q.z;
 		double d1 = w * q.x + x * q.w - y * q.z + z * q.y;
 		double d2 = w * q.y + x * q.z + y * q.w - z * q.x;
 		double d3 = w * q.z - x * q.y + y * q.x + z * q.w;
-		return new Quaternion(d1, d2, d3, d);
+		return new Rotation(d1, d2, d3, d);
 	}
 
 	/**
@@ -163,15 +163,15 @@ public class Quaternion implements Transformer, Storable {
 	 * @param q - The quaternion to crossProduct with
 	 * @return The new Quaternion
 	 */
-	public Quaternion rightMultiply(Quaternion q) {
+	public Rotation rightMultiply(Rotation q) {
 		double d = w * q.w - x * q.x - y * q.y - z * q.z;
 		double d1 = w * q.x + x * q.w + y * q.z - z * q.y;
 		double d2 = w * q.y - x * q.z + y * q.w + z * q.x;
 		double d3 = w * q.z + x * q.y - y * q.x + z * q.w;
-		return new Quaternion(d1, d2, d3, d);
+		return new Rotation(d1, d2, d3, d);
 	}
 
-	public Quaternion $times(Quaternion q) {
+	public Rotation $times(Rotation q) {
 		return multiply(q);
 	}
 
@@ -179,13 +179,13 @@ public class Quaternion implements Transformer, Storable {
 		return Math.sqrt(x * x + y * y + z * z + w * w);
 	}
 
-	public Quaternion scale(double factor) {
-		return new Quaternion(x * factor, y * factor, z * factor, w * factor);
+	public Rotation scale(double factor) {
+		return new Rotation(x * factor, y * factor, z * factor, w * factor);
 	}
 
-	public Quaternion normalize() {
+	public Rotation normalize() {
 		double d = magnitude();
-		return new Quaternion(x / d, y / d, z / d, w / d);
+		return new Rotation(x / d, y / d, z / d, w / d);
 	}
 
 	@Override
@@ -217,7 +217,7 @@ public class Quaternion implements Transformer, Storable {
 	}
 
 	public Tuple2<Vector3D, Double> toAngleAxis() {
-		Quaternion normalQuat = this;
+		Rotation normalQuat = this;
 
 		// if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalised
 		if (normalQuat.w > 1) {
@@ -271,8 +271,8 @@ public class Quaternion implements Transformer, Storable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof Quaternion) {
-			Quaternion other = ((Quaternion) obj);
+		if (obj instanceof Rotation) {
+			Rotation other = ((Rotation) obj);
 			return DoubleMath.fuzzyEquals(this.x, other.x, 0.000001) && DoubleMath.fuzzyEquals(this.y, other.y, 0.000001) && DoubleMath.fuzzyEquals(this.z, other.z, 0.000001) && DoubleMath.fuzzyEquals(this.w, other.w, 0.000001);
 		}
 		return this == obj;

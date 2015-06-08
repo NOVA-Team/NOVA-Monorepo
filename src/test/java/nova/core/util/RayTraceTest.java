@@ -6,13 +6,13 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
-import nova.core.util.transform.matrix.Quaternion;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import nova.core.util.transform.matrix.Rotation;
 import nova.internal.Game;
 import nova.internal.launch.NovaLauncher;
 import nova.testutils.FakeBlock;
 import nova.testutils.FakeWorld;
 import nova.wrappertests.NovaLauncherTestFactory;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -92,7 +92,7 @@ public class RayTraceTest {
 
 		Entity entity = fakeWorld.addEntity(RayTraceMod.testEntity);
 		entity.setPosition(new Vector3D(5.1, 0, 5.1));
-		entity.setRotation(Quaternion.fromEuler(0, Math.PI / 2, 0));
+		entity.setRotation(Rotation.fromEuler(0, Math.PI / 2, 0));
 
 		RayTracer rayTracer = new RayTracer(entity).setDistance(10);
 		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults = rayTracer.rayTraceBlocks(fakeWorld).collect(Collectors.toList());

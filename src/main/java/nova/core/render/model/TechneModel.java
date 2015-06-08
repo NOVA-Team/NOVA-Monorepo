@@ -1,7 +1,7 @@
 package nova.core.render.model;
 
 import nova.core.render.RenderException;
-import nova.core.util.transform.matrix.MatrixStack;
+import nova.core.util.math.MatrixStack;
 import nova.core.util.transform.vector.Vector2d;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.w3c.dom.Document;

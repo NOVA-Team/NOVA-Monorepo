@@ -1,7 +1,6 @@
 package nova.core.util;
 
-import nova.core.util.transform.matrix.Quaternion;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.stream.IntStream;
@@ -10,23 +9,23 @@ import java.util.stream.IntStream;
  * Defines basic directions in world.
  */
 public enum Direction {
-	DOWN(0, -1, 0, Quaternion.fromAxis(Vector3D.PLUS_I, -Math.PI / 2)),
-	UP(0, 1, 0, Quaternion.fromAxis(Vector3D.PLUS_I, Math.PI / 2)),
-	NORTH(0, 0, -1, Quaternion.fromAxis(Vector3D.PLUS_J, -Math.PI)),
-	SOUTH(0, 0, 1, Quaternion.fromAxis(Vector3D.PLUS_J, 0)),
-	WEST(-1, 0, 0, Quaternion.fromAxis(Vector3D.PLUS_J, Math.PI / 2)),
-	EAST(1, 0, 0, Quaternion.fromAxis(Vector3D.PLUS_J, -Math.PI / 2)),
-	UNKNOWN(0, 0, 0, Quaternion.identity);
+	DOWN(0, -1, 0, new Rotation(Vector3D.PLUS_I, -Math.PI / 2)),
+	UP(0, 1, 0, new Rotation(Vector3D.PLUS_I, Math.PI / 2)),
+	NORTH(0, 0, -1, new Rotation(Vector3D.PLUS_J, -Math.PI)),
+	SOUTH(0, 0, 1, new Rotation(Vector3D.PLUS_J, 0)),
+	WEST(-1, 0, 0, new Rotation(Vector3D.PLUS_J, Math.PI / 2)),
+	EAST(1, 0, 0, new Rotation(Vector3D.PLUS_J, -Math.PI / 2)),
+	UNKNOWN(0, 0, 0, Rotation.IDENTITY);
 
 	public static final Direction[] DIRECTIONS = new Direction[] {
 		DOWN, UP, NORTH, SOUTH, WEST, EAST
 	};
 	private static final Direction[] values = Direction.values();
 	public final int x, y, z;
-	public final Quaternion rotation;
+	public final Rotation rotation;
 	private final Vector3D vector;
 
-	Direction(int x, int y, int z, Quaternion rotation) {
+	Direction(int x, int y, int z, Rotation rotation) {
 		this.x = x;
 		this.y = y;
 		this.z = z;

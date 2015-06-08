@@ -10,7 +10,6 @@ import nova.core.render.model.StaticCubeTextureCoordinates;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.RotationUtil;
-import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.shape.Cuboid;
 
 import java.util.Arrays;
@@ -81,7 +80,7 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 			int mask = connectMask.get();
 			if ((mask & (1 << absDir.ordinal())) == 0) {
 				Model innerModel = new Model();
-				innerModel.rotate(Quaternion.fromAxis(direction.toVector(), Math.PI / 2 * r));
+				innerModel.matrix.rotate(direction.toVector(), Math.PI / 2 * r);
 				Face face = BlockModelUtil.drawDir(direction, innerModel, bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ(), StaticCubeTextureCoordinates.instance);
 				face.texture = Optional.of(edgeTexture);
 				//TODO: Support colors

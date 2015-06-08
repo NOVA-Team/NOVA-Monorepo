@@ -1,7 +1,7 @@
-package nova.core.util.transform.matrix;
+package nova.core.util.math;
 
-import nova.core.util.collection.Tuple2;
 import nova.core.util.transform.vector.Transformer;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -10,59 +10,54 @@ import java.util.Stack;
 
 public class MatrixStack implements Transformer {
 
-	private final Stack<Matrix4x4> stack = new Stack<>();
-	private RealMatrix current = MatrixUtil.identity(4);
-	MatrixUtils
+	private final Stack<RealMatrix> stack = new Stack<>();
+	private RealMatrix current = MatrixUtils.createRealIdentityMatrix(4);
 
 	/**
 	 * Replaces current transformation matrix by an identity matrix.
 	 */
 	public void loadIdentity() {
-		current = Matrix4x4.IDENTITY;
+		current = MatrixUtils.createRealIdentityMatrix(4);
 	}
 
 	/**
 	 * Replaces current transformation matrix by an identity current.
 	 */
-	public MatrixStack loadMatrix(Matrix4x4 matrix) {
+	public MatrixStack loadMatrix(RealMatrix matrix) {
 		current = matrix;
 		return this;
 	}
 
 	/**
 	 * Exposes current transformation matrix.
-	 *
 	 * @return current transformation matrix.
 	 */
-	public Matrix4x4 getMatrix() {
+	public RealMatrix getMatrix() {
 		return current;
 	}
 
 	/**
 	 * Transforms current matrix with give matrix.
-	 *
 	 * @param matrix to transform current matrix.
 	 */
-	public MatrixStack transform(Matrix4x4 matrix) {
-		current = current.rightMultiply(matrix);
+	public MatrixStack transform(RealMatrix matrix) {
+		current = current.preMultiply(matrix);
 		return this;
 	}
 
 	/**
 	 * Translates current transformation matrix.
-	 *
 	 * @param x translation.
 	 * @param y translation.
 	 * @param z translation.
 	 */
 	public MatrixStack translate(double x, double y, double z) {
-		current = current.rightMultiply(MatrixUtil.translationMatrix(x, y, z));
+		current = current.preMultiply(TransformUtil.translationMatrix(x, y, z));
 		return this;
 	}
 
 	/**
 	 * Translates current transformation matrix.
-	 *
 	 * @param translateVector vector of translation.
 	 */
 	public MatrixStack translate(Vector3D translateVector) {
@@ -70,37 +65,33 @@ public class MatrixStack implements Transformer {
 		return this;
 	}
 
-	public MatrixStack rotate(Quaternion quaternion) {
-		Tuple2<Vector3D, Double> axisAnglePair = quaternion.toAngleAxis();
-		return rotate(axisAnglePair._1, axisAnglePair._2);
-	}
-
-	/**
-	 * Rotates transformation matrix around rotateVector axis by angle radians.
-	 *
-	 * @param rotateVector Vector serving as rotation axis.
-	 * @param angle in radians.
-	 */
-	public MatrixStack rotate(Vector3D rotateVector, double angle) {
-		current = current.rightMultiply(MatrixUtil.rotationMatrix(rotateVector, angle));
+	public MatrixStack rotate(Rotation rotation) {
+		current = current.preMultiply(MatrixUtils.createRealMatrix(rotation.getMatrix()));
 		return this;
 	}
 
 	/**
+	 * Rotates transformation matrix around rotateVector axis by angle radians.
+	 * @param rotateVector Vector serving as rotation axis.
+	 * @param angle in radians.
+	 */
+	public MatrixStack rotate(Vector3D rotateVector, double angle) {
+		return rotate(new Rotation(rotateVector, angle));
+	}
+
+	/**
 	 * Scales current transformation matrix.
-	 *
 	 * @param x scale.
 	 * @param y scale.
 	 * @param z scale.
 	 */
 	public MatrixStack scale(double x, double y, double z) {
-		current = current.rightMultiply(MatrixUtil.scaleMatrix(x, y, z));
+		current = current.preMultiply(TransformUtil.scaleMatrix(x, y, z));
 		return this;
 	}
 
 	/**
 	 * Scales current transformation matrix.
-	 *
 	 * @param scaleVector scale vector.
 	 */
 	public MatrixStack scale(Vector3D scaleVector) {
@@ -126,12 +117,11 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Called to transform a vector.
-	 *
 	 * @param vec - The vector being transformed
 	 * @return The transformed vector by current matrix.
 	 */
 	@Override
 	public Vector3D apply(Vector3D vec) {
-		return current.apply(vec);
+		return TransformUtil.transform(vec, current);
 	}
 }
