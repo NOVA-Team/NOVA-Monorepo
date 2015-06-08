@@ -2,7 +2,11 @@ package nova.core.render.model;
 
 import nova.core.render.texture.Texture;
 import nova.core.util.math.MatrixStack;
+import nova.core.util.math.TransformUtil;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.math3.linear.LUDecomposition;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -124,9 +128,14 @@ public class Model implements Iterable<Model>, Cloneable {
 		matrixStack.transform(matrix.getMatrix());
 		//Create a new model with transformation applied.
 		Model transformedModel = clone();
+		// correct formula for Normal Matrix is transpose(inverse(mat3(model_mat))
+		// we have to augemnt that to 4x4
+		RealMatrix normalMatrix3x3 = new LUDecomposition(matrixStack.getMatrix().getSubMatrix(0, 2, 0, 2), 1e-5).getSolver().getInverse().transpose();
+		RealMatrix normalMatrix = MatrixUtils.createRealMatrix(4, 4);
+		normalMatrix.setSubMatrix(normalMatrix3x3.getData(), 0, 0);
+		normalMatrix.setEntry(3, 3, 1);
 		transformedModel.faces.stream().forEach(f -> {
-				//TODO: Check if normal is correct.
-				f.normal = matrixStack.apply(f.normal);
+				f.normal = TransformUtil.transform(f.normal, normalMatrix);
 				f.vertices.forEach(v -> v.vec = matrixStack.apply(v.vec));
 			}
 		);
