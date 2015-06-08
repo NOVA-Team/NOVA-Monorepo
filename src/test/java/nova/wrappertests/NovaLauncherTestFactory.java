@@ -1,8 +1,8 @@
 package nova.wrappertests;
 
 import nova.bootstrap.DependencyInjectionEntryPoint;
-import nova.internal.Game;
-import nova.internal.launch.NovaLauncher;
+import nova.internal.core.Game;
+import nova.internal.core.launch.NovaLauncher;
 import nova.testutils.FakeBlock;
 import nova.wrappertests.depmodules.FakeClientModule;
 import nova.wrappertests.depmodules.FakeGameInfoModule;

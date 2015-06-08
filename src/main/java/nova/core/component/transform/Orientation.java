@@ -16,7 +16,7 @@ import nova.core.retention.Store;
 import nova.core.util.Direction;
 import nova.core.util.RayTracer;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.Optional;
 

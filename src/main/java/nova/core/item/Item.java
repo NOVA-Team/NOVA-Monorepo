@@ -8,7 +8,7 @@ import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,8 +1,8 @@
 package nova.core.util;
 
 import nova.core.util.math.Vector3DUtil;
-import nova.internal.Game;
-import nova.internal.launch.NovaLauncher;
+import nova.internal.core.Game;
+import nova.internal.core.launch.NovaLauncher;
 import nova.testutils.FakeWorld;
 import nova.wrappertests.NovaLauncherTestFactory;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;

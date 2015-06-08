@@ -1,7 +1,7 @@
 package nova.core.recipes.crafting;
 
 import nova.core.item.Item;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.ArrayList;
 import java.util.Collection;

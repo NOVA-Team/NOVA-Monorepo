@@ -12,7 +12,7 @@ import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.Collections;
 import java.util.Optional;

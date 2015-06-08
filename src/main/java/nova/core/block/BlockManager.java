@@ -6,7 +6,7 @@ import nova.core.event.EventBus;
 import nova.core.item.ItemManager;
 import nova.core.util.Manager;
 import nova.core.util.Registry;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

@@ -14,7 +14,7 @@ import nova.core.gui.render.Graphics;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Syncable;
 import nova.core.util.Identifiable;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Optional;

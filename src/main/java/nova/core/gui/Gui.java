@@ -14,7 +14,7 @@ import nova.core.inventory.component.InventoryPlayer;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.HashMap;
 import java.util.Objects;

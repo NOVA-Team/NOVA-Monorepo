@@ -1,7 +1,7 @@
 package nova.core.render.texture;
 
 import nova.core.util.math.Vector2DUtil;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**

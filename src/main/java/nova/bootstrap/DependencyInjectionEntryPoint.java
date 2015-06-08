@@ -1,8 +1,8 @@
 package nova.bootstrap;
 
 import com.google.common.collect.Sets;
-import nova.core.depmodules.CoreBundle;
-import nova.internal.Game;
+import nova.internal.core.depmodules.CoreBundle;
+import nova.internal.core.Game;
 import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
 import se.jbee.inject.bootstrap.Bootstrap;
