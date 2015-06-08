@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.chunk.Chunk;
 import nova.core.event.GlobalEvents;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.util.transform.vector.Vector3i;
 import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.wrapper.block.forward.FWTile;

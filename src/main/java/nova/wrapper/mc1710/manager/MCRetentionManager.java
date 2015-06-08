@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.world.WorldEvent;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.RetentionManager;

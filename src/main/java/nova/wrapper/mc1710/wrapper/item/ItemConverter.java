@@ -15,8 +15,8 @@ import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
-import nova.internal.Game;
-import nova.internal.launch.InitializationException;
+import nova.internal.core.Game;
+import nova.internal.core.launch.InitializationException;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
 

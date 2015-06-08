@@ -8,7 +8,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import nova.core.entity.component.Player;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.recipes.crafting.CraftingGrid;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.util.ReflectionUtil;

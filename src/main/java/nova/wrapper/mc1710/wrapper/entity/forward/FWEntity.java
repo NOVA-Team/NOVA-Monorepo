@@ -8,7 +8,7 @@ import nova.core.component.misc.Collider;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.transform.shape.Cuboid;

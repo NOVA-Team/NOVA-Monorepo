@@ -11,7 +11,7 @@ import nova.core.block.Block;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
 import nova.core.component.transform.BlockTransform;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;

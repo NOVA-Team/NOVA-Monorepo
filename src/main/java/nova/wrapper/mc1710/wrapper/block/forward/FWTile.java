@@ -6,7 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;

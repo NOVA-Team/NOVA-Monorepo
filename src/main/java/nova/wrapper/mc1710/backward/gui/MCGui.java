@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.gui.Gui;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.GuiEvent.MouseEvent.EnumMouseButton;
