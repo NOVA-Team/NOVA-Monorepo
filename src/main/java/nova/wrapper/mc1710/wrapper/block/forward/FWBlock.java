@@ -28,18 +28,17 @@ import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
-import nova.internal.Game;
 import nova.core.render.texture.Texture;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.transform.matrix.MatrixStack;
 import nova.core.util.transform.shape.Cuboid;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
+import nova.internal.Game;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -55,6 +54,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
 
 /**
  * A Minecraft to Nova block wrapper
+ *
  * @author Calclavia
  */
 public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
@@ -87,16 +87,16 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		}
 	}
 
-	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3i position) {
+	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3D position) {
 		/**
 		 * If this block has a TileEntity, forward the method into the Stateful
 		 * block. Otherwise, create a new instance of the block and forward the
 		 * methods over.
 		 */
 		if (hasTileEntity(0)) {
-			FWTile tileWrapper = (FWTile) access.getTileEntity(position.x, position.y, position.z);
+			FWTile tileWrapper = (FWTile) access.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ());
 			if (tileWrapper != null && tileWrapper.getBlock() != null) {
-				return ((FWTile) access.getTileEntity(position.x, position.y, position.z)).getBlock();
+				return ((FWTile) access.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ())).getBlock();
 			}
 
 			System.out.println("Error: Block in TileWrapper is null.");
@@ -105,7 +105,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	}
 
-	private Block getBlockInstance(nova.core.world.World world, Vector3i position) {
+	private Block getBlockInstance(nova.core.world.World world, Vector3D position) {
 		// TODO: Implement obj args
 		Block block = factory.makeBlock();
 		block.add(new MCBlockTransform(block, world, position));
@@ -119,7 +119,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		// hack is needed because the player sets the block to air *before*
 		// getting the drops. woo good logic from mojang.
 		if (!player.capabilities.isCreativeMode) {
-			harvestedBlocks.put(new BlockPosition(world, x, y, z), getBlockInstance(world, new Vector3i(x, y, z)));
+			harvestedBlocks.put(new BlockPosition(world, x, y, z), getBlockInstance(world, new Vector3D(x, y, z)));
 		}
 	}
 
@@ -133,7 +133,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		if (harvestedBlocks.containsKey(position)) {
 			blockInstance = harvestedBlocks.remove(position);
 		} else {
-			blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+			blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		}
 
 		Block.DropEvent event = new Block.DropEvent(blockInstance);
@@ -160,7 +160,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public IIcon getIcon(IBlockAccess access, int x, int y, int z, int side) {
-		Block blockInstance = getBlockInstance(access, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		Optional<StaticBlockRenderer> opRenderer = blockInstance.getOp(StaticBlockRenderer.class);
 		if (opRenderer.isPresent()) {
 			Optional<Texture> texture = opRenderer.get().texture.apply(Direction.values()[side]);
@@ -185,7 +185,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, net.minecraft.block.Block otherBlock) {
-		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		// Minecraft does not provide the neighbor :(
 		Block.NeighborChangeEvent evt = new Block.NeighborChangeEvent(Optional.empty());
 		blockInstance.neighborChangeEvent.publish(evt);
@@ -193,7 +193,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		Block.BlockRemoveEvent evt = new Block.BlockRemoveEvent(Optional.of(Game.natives().toNova(player)));
 		blockInstance.removeEvent.publish(evt);
 		if (evt.result) {
@@ -204,9 +204,9 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
-		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		MovingObjectPosition mop = player.rayTrace(10, 1);
-		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(mop.sideHit), new Vector3d(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(mop.sideHit), new Vector3D(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
 		blockInstance.leftClickEvent.publish(evt);
 	}
 
@@ -217,42 +217,42 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
-		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
+		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
+		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ));
 		blockInstance.rightClickEvent.publish(evt);
 		return evt.result;
 	}
 
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
-		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		blockInstance.getOp(Collider.class).ifPresent(collider -> collider.collideEvent.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
 	}
 
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess access, int x, int y, int z) {
-		Block blockInstance = getBlockInstance(access, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		if (blockInstance.has(Collider.class)) {
 			Cuboid cuboid = blockInstance.get(Collider.class).boundingBox.get();
-			setBlockBounds(cuboid.min.xf(), cuboid.min.yf(), cuboid.min.zf(), cuboid.max.xf(), cuboid.max.yf(), cuboid.max.zf());
+			setBlockBounds((float) cuboid.min.getX(), (float) cuboid.min.getY(), (float) cuboid.min.getZ(), (float) cuboid.max.getX(), (float) cuboid.max.getY(), (float) cuboid.max.getZ());
 		}
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 
 		if (blockInstance.has(Collider.class)) {
 			Cuboid cuboid = blockInstance.get(Collider.class).boundingBox.get();
-			return Game.natives().toNative(cuboid.add(new Vector3i(x, y, z)));
+			return Game.natives().toNative(cuboid.add(new Vector3D(x, y, z)));
 		}
 		return super.getSelectedBoundingBoxFromPool(world, x, y, z);
 	}
 
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List list, Entity entity) {
-		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		blockInstance.getOp(Collider.class).ifPresent(
 			collider -> {
 				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(entity != null ? Game.natives().toNova(entity) : null));
@@ -260,7 +260,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 				list.addAll(
 					boxes
 						.stream()
-						.map(c -> c.add(new Vector3i(x, y, z)))
+						.map(c -> c.add(new Vector3D(x, y, z)))
 						.filter(c -> c.intersects((Cuboid) Game.natives().toNova(aabb)))
 						.map(cuboid -> Game.natives().toNative(cuboid))
 						.collect(Collectors.toList())
@@ -298,7 +298,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public int getLightValue(IBlockAccess access, int x, int y, int z) {
-		Block blockInstance = getBlockInstance(access, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		Optional<LightEmitter> opEmitter = blockInstance.getOp(LightEmitter.class);
 
 		if (opEmitter.isPresent()) {
@@ -310,7 +310,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public boolean canConnectRedstone(IBlockAccess access, int x, int y, int z, int side) {
-		Block blockInstance = getBlockInstance(access, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		WrapperEventManager.RedstoneConnectEvent event = new WrapperEventManager.RedstoneConnectEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
 		WrapperEventManager.instance.onCanConnect.publish(event);
 		return event.canConnect;
@@ -318,7 +318,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public int isProvidingWeakPower(IBlockAccess access, int x, int y, int z, int side) {
-		Block blockInstance = getBlockInstance(access, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		WrapperEventManager.RedstoneEvent event = new WrapperEventManager.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
 		WrapperEventManager.instance.onWeakPower.publish(event);
 		return event.power;
@@ -326,7 +326,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public int isProvidingStrongPower(IBlockAccess access, int x, int y, int z, int side) {
-		Block blockInstance = getBlockInstance(access, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		WrapperEventManager.RedstoneEvent event = new WrapperEventManager.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
 		WrapperEventManager.instance.onStrongPower.publish(event);
 		return event.power;
@@ -366,7 +366,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
-		Block blockInstance = getBlockInstance(world, new Vector3i(x, y, z));
+		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		Optional<StaticRenderer> opRenderer = blockInstance.getOp(StaticRenderer.class);
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
@@ -407,11 +407,11 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public float getExplosionResistance(Entity expEntity, World world, int x, int y, int z, double explosionX, double p_explosionresistance, double explosionY) {
 		// TODO: Maybe do something with these parameters.
-		return (float) getBlockInstance(world, new Vector3i(x, y, z)).getResistance() * 30;
+		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getResistance() * 30;
 	}
 
 	@Override
 	public float getBlockHardness(World world, int x, int y, int z) {
-		return (float) getBlockInstance(world, new Vector3i(x, y, z)).getHardness() * 2;
+		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getHardness() * 2;
 	}
 }

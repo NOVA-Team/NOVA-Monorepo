@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import nova.core.entity.component.Player;
 import nova.core.network.NetworkManager;
 import nova.core.network.Syncable;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.network.MCPacket;
 import nova.wrapper.mc1710.network.discriminator.NovaPacket;
@@ -120,8 +120,8 @@ public class MCNetworkManager extends NetworkManager {
 		this.channelEnumMap.get(Side.SERVER).writeAndFlush(message);
 	}
 
-	public void sendToAllAround(PacketAbstract message, World world, Vector3d point, double range) {
-		sendToAllAround(message, world, point.xd(), point.yd(), point.zd(), range);
+	public void sendToAllAround(PacketAbstract message, World world, Vector3D point, double range) {
+		sendToAllAround(message, world, point.getX(), point.getY(), point.getZ(), range);
 	}
 
 	public void sendToAllAround(PacketAbstract message, TileEntity tile) {

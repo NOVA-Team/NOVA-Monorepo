@@ -11,15 +11,15 @@ import nova.core.block.Block;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
 import nova.core.component.transform.BlockTransform;
-import nova.internal.Game;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.transform.shape.Cuboid;
-import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
+import nova.internal.Game;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class BWBlock extends Block implements Storable {
 		this.mcBlock = block;
 	}
 
-	public BWBlock(net.minecraft.block.Block block, World world, Vector3i pos) {
+	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
 		BlockTransform transform = add(new BlockTransform());
 		transform.setWorld(world);
@@ -47,9 +47,9 @@ public class BWBlock extends Block implements Storable {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
 				mcBlock.addCollisionBoxesToList(
 					Game.natives().toNative(world()),
-					position().x,
-					position().y,
-					position().z,
+					(int) position().getX(),
+					(int) position().getY(),
+					(int) position().getZ(),
 					Game.natives().toNative(entity.isPresent() ? entity.get().get(Collider.class).boundingBox.get() : Cuboid.one.add(pos)),
 					aabbs,
 					entity.isPresent() ? Game.natives().toNative(entity.get()) : null

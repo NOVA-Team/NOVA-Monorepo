@@ -10,8 +10,7 @@ import nova.internal.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.wrapper.entity.BWEntity;
@@ -35,7 +34,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		Item item = Game.natives().toNova(itemStack);
-		Item.UseEvent event = new Item.UseEvent(new BWEntity(player), new Vector3i(x, y, z), Direction.fromOrdinal(side), new Vector3d(hitX, hitY, hitZ));
+		Item.UseEvent event = new Item.UseEvent(new BWEntity(player), new Vector3D(x, y, z), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ));
 		item.useEvent.publish(event);
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return event.action;

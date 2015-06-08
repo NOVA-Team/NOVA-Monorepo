@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.util;
 import nova.core.event.EventBus;
 import nova.core.event.GlobalEvents;
 import nova.core.util.Direction;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
 
 /**
@@ -27,7 +27,7 @@ public class WrapperEventManager {
 		public final Direction direction;
 		public boolean canConnect;
 
-		public RedstoneConnectEvent(World world, Vector3i position, Direction direction) {
+		public RedstoneConnectEvent(World world, Vector3D position, Direction direction) {
 			super(world, position);
 			this.direction = direction;
 		}
@@ -37,7 +37,7 @@ public class WrapperEventManager {
 		public final Direction direction;
 		public int power;
 
-		public RedstoneEvent(World world, Vector3i position, Direction direction) {
+		public RedstoneEvent(World world, Vector3D position, Direction direction) {
 			super(world, position);
 			this.direction = direction;
 		}

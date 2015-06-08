@@ -102,12 +102,12 @@ public class FWEntityFX extends EntityFX {
 			//Transform cuboid based on entity.
 			Cuboid size = collider
 				.boundingBox
-				.get()
-				.multiply(transform.scale());
+				.get();
+			//	.scalarMultiply(transform.scale());
 
 			//Sadly Minecraft doesn't support rotated cuboids. And fixed x-z sizes. We take average..
-			float width = (float) ((size.max.x - size.min.x) + (size.max.z - size.min.z)) / 2;
-			float height = (float) (size.max.y - size.min.y);
+			float width = (float) ((size.max.getX() - size.min.getX()) + (size.max.getZ() - size.min.getZ())) / 2;
+			float height = (float) (size.max.getY() - size.min.getY());
 			setSize(width, height);
 		}
 

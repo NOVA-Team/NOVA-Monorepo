@@ -8,7 +8,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import nova.core.event.GlobalEvents;
 import nova.internal.Game;
 import nova.core.item.ItemDictionary;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 
 /**
@@ -39,7 +39,7 @@ public class ForgeEventHandler {
 	public void playerInteractEvent(PlayerInteractEvent event) {
 		GlobalEvents.PlayerInteractEvent evt = new GlobalEvents.PlayerInteractEvent(
 			Game.natives().toNova(event.world),
-			new Vector3i(event.x, event.y, event.z),
+			new Vector3D(event.x, event.y, event.z),
 			Game.natives().toNova(event.entityPlayer),
 			GlobalEvents.PlayerInteractEvent.Action.values()[event.action.ordinal()]
 		);

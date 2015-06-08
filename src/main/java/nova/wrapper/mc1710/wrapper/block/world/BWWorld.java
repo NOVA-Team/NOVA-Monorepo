@@ -7,19 +7,18 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.internal.Game;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
 import nova.core.util.transform.shape.Cuboid;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
+import nova.internal.Game;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
 import nova.wrapper.mc1710.wrapper.entity.BWEntity;
 import nova.wrapper.mc1710.wrapper.entity.forward.FWEntity;
 import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityTransform;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -44,18 +43,18 @@ public class BWWorld extends World {
 	}
 
 	@Override
-	public void markStaticRender(Vector3i position) {
-		world().markBlockForUpdate(position.x, position.y, position.z);
+	public void markStaticRender(Vector3D position) {
+		world().markBlockForUpdate((int) position.getX(), (int) position.getY(), (int) position.getZ());
 	}
 
 	@Override
-	public void markChange(Vector3i position) {
-		world().notifyBlockChange(position.x, position.y, position.z, access.getBlock(position.x, position.y, position.z));
+	public void markChange(Vector3D position) {
+		world().notifyBlockChange((int) position.getX(), (int) position.getY(), (int) position.getZ(), access.getBlock((int) position.getX(), (int) position.getY(), (int) position.getZ()));
 	}
 
 	@Override
-	public Optional<Block> getBlock(Vector3i position) {
-		net.minecraft.block.Block mcBlock = access.getBlock(position.x, position.y, position.z);
+	public Optional<Block> getBlock(Vector3D position) {
+		net.minecraft.block.Block mcBlock = access.getBlock((int) position.getX(), (int) position.getY(), (int) position.getZ());
 		if (mcBlock == null || mcBlock == Blocks.air) {
 			return Optional.of(Game.blocks().getAirBlock());
 		} else if (mcBlock instanceof FWBlock) {
@@ -66,15 +65,15 @@ public class BWWorld extends World {
 	}
 
 	@Override
-	public boolean setBlock(Vector3i position, BlockFactory blockFactory, Object... args) {
+	public boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args) {
 		//TODO: Implement object arguments
 		net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.getDummy());
-		return world().setBlock(position.x, position.y, position.z, mcBlock != null ? mcBlock : Blocks.air);
+		return world().setBlock((int) position.getX(), (int) position.getY(), (int) position.getZ(), mcBlock != null ? mcBlock : Blocks.air);
 	}
 
 	@Override
-	public boolean removeBlock(Vector3i position) {
-		return world().setBlockToAir(position.x, position.y, position.z);
+	public boolean removeBlock(Vector3D position) {
+		return world().setBlockToAir((int) position.getX(), (int) position.getY(), (int) position.getZ());
 	}
 
 	@Override
@@ -103,12 +102,12 @@ public class BWWorld extends World {
 
 	@Override
 	public Set<Entity> getEntities(Cuboid bound) {
-		return new HashSet(world().getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(bound.min.x, bound.min.y, bound.min.z, bound.max.x, bound.max.y, bound.max.z)));
+		return new HashSet(world().getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ())));
 	}
 
 	@Override
-	public Entity addEntity(Vector3d position, Item item) {
-		EntityItem entityItem = new EntityItem(world(), position.x, position.y, position.z, Game.natives().toNative(item));
+	public Entity addEntity(Vector3D position, Item item) {
+		EntityItem entityItem = new EntityItem(world(), position.getX(), position.getY(), position.getZ(), Game.natives().toNative(item));
 		world().spawnEntityInWorld(entityItem);
 		return new BWEntity(entityItem);
 	}
@@ -124,8 +123,8 @@ public class BWWorld extends World {
 	}
 
 	@Override
-	public void playSoundAtPosition(Vector3d position, Sound sound) {
+	public void playSoundAtPosition(Vector3D position, Sound sound) {
 		//TODO: This may not work!
-		world().playSound(position.x, position.y, position.z, sound.getID(), sound.pitch, sound.volume, false);
+		world().playSound(position.getX(), position.getY(), position.getZ(), sound.getID(), sound.pitch, sound.volume, false);
 	}
 }

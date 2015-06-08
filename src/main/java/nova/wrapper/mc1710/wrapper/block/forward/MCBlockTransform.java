@@ -2,7 +2,7 @@ package nova.wrapper.mc1710.wrapper.block.forward;
 
 import nova.core.block.Block;
 import nova.core.component.transform.BlockTransform;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
 
 /**
@@ -12,16 +12,16 @@ public class MCBlockTransform extends BlockTransform {
 
 	public final Block block;
 	public final World world;
-	public final Vector3i position;
+	public final Vector3D position;
 
-	public MCBlockTransform(Block block, World world, Vector3i position) {
+	public MCBlockTransform(Block block, World world, Vector3D position) {
 		this.block = block;
 		this.world = world;
 		this.position = position;
 	}
 
 	@Override
-	public Vector3i position() {
+	public Vector3D position() {
 		return position;
 	}
 
@@ -37,7 +37,7 @@ public class MCBlockTransform extends BlockTransform {
 	}
 
 	@Override
-	public void setPosition(Vector3i position) {
+	public void setPosition(Vector3D position) {
 		world.removeBlock(position);
 		world.setBlock(position, block.factory());
 	}

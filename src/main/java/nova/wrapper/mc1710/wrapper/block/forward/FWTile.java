@@ -10,7 +10,7 @@ import nova.internal.Game;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.wrapper.mc1710.network.netty.MCNetworkManager;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 
@@ -52,7 +52,7 @@ public class FWTile extends TileEntity {
 	public void validate() {
 		super.validate();
 
-		block.add(new MCBlockTransform(block, new BWWorld(getWorldObj()), new Vector3i(xCoord, yCoord, zCoord)));
+		block.add(new MCBlockTransform(block, new BWWorld(getWorldObj()), new Vector3D(xCoord, yCoord, zCoord)));
 
 		if (cacheData != null && block instanceof Storable) {
 			((Storable) block).load(cacheData);

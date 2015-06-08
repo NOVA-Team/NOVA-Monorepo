@@ -12,7 +12,7 @@ import nova.core.gui.Gui;
 import nova.core.gui.GuiException;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.factory.GuiManager;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCGuiScreen;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
@@ -34,22 +34,22 @@ public class MCGuiFactory extends GuiManager {
 	}
 
 	@Override
-	public void showGui(String identifier, Entity entity, Vector3i pos) {
+	public void showGui(String identifier, Entity entity, Vector3D pos) {
 		GuiFactory factory = getFactory(identifier).orElseThrow(() -> new GuiException(String.format("No GUI called %s registered!", identifier)));
 		Gui gui = factory.makeGUI();
 		showGui(gui, entity, pos, idMappedFactories.indexOf(factory));
 	}
 
 	@Override
-	protected void showGui(Gui gui, Entity entity, Vector3i pos) {
+	protected void showGui(Gui gui, Entity entity, Vector3D pos) {
 		showGui(gui, entity, pos, -1);
 	}
 
-	private void showGui(Gui gui, Entity entity, Vector3i pos, int id) {
+	private void showGui(Gui gui, Entity entity, Vector3D pos, int id) {
 		BWEntity player = (BWEntity) entity;
 		guiToOpen = Optional.of(gui);
 		if (player.entity.worldObj.isRemote != gui.hasServerSide()) {
-			((EntityPlayer) player.entity).openGui(NovaMinecraft.id, id, ((EntityPlayer) player.entity).getEntityWorld(), pos.x, pos.y, pos.z);
+			((EntityPlayer) player.entity).openGui(NovaMinecraft.id, id, ((EntityPlayer) player.entity).getEntityWorld(), (int) pos.getX(), (int) pos.getY(), (int) pos.getZ());
 		}
 	}
 
@@ -88,7 +88,7 @@ public class MCGuiFactory extends GuiManager {
 			if (guiToOpen.isPresent()) {
 				Gui gui = guiToOpen.get();
 				guiToOpen = Optional.empty();
-				gui.bind(new BWEntity(player), new Vector3i(x, y, z));
+				gui.bind(new BWEntity(player), new Vector3D(x, y, z));
 				return ((MCGui) gui.getNative()).newContainer();
 			}
 			return null;
@@ -110,7 +110,7 @@ public class MCGuiFactory extends GuiManager {
 				throw new GuiException("Couldn't get client side instance for the provided GUI of id " + id + " !");
 			}
 
-			gui.bind(new BWEntity(player), new Vector3i(x, y, z));
+			gui.bind(new BWEntity(player), new Vector3D(x, y, z));
 
 			MCGui nativeGui = (MCGui) gui.getNative();
 			nativeGui.newContainer();

@@ -4,7 +4,7 @@ import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.entity.component.RigidBody;
 import nova.core.util.transform.matrix.Quaternion;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * Based on the Euler Integration because Minecraft stores the following values:
@@ -20,12 +20,12 @@ public class MCRigidBody extends RigidBody {
 	/**
 	 * Translation
 	 */
-	private Vector3d netForce = Vector3d.zero;
+	private Vector3D netForce = Vector3D.ZERO;
 
 	/**
 	 * Rotation
 	 */
-	private Vector3d netTorque = Vector3d.zero;
+	private Vector3D netTorque = Vector3D.ZERO;
 
 	public MCRigidBody(ComponentProvider provider) {
 		super(provider);
@@ -47,19 +47,19 @@ public class MCRigidBody extends RigidBody {
 
 	void updateTranslation(double deltaTime) {
 		//Integrate velocity to displacement
-		Vector3d displacement = velocity().multiply(deltaTime);
-		mcEntity().moveEntity(displacement.x, displacement.y, displacement.z);
+		Vector3D displacement = velocity().scalarMultiply(deltaTime);
+		mcEntity().moveEntity(displacement.getX(), displacement.getY(), displacement.getZ());
 
 		//Integrate netForce to velocity
-		setVelocity(velocity().add(netForce.divide(mass()).multiply(deltaTime)));
+		setVelocity(velocity().add(netForce.scalarMultiply(1 / mass()).scalarMultiply(deltaTime)));
 
 		//Clear net force
-		netForce = Vector3d.zero;
+		netForce = Vector3D.ZERO;
 
 		//Apply drag
-		addForce(velocity().negate().multiply(drag()));
+		addForce(velocity().negate().scalarMultiply(drag()));
 		//Apply gravity
-		addForce(gravity().multiply(mass()));
+		addForce(gravity().scalarMultiply(mass()));
 	}
 
 	void updateRotation(double deltaTime) {
@@ -70,40 +70,40 @@ public class MCRigidBody extends RigidBody {
 		entity.transform().setRotation(entity.rotation().rightMultiply(deltaRotation));
 
 		//Integrate torque to angular velocity
-		setAngularVelocity(angularVelocity().rightMultiply(Quaternion.fromEuler(netTorque.multiply(deltaTime))));
+		setAngularVelocity(angularVelocity().rightMultiply(Quaternion.fromEuler(netTorque.scalarMultiply(deltaTime))));
 
 		//Clear net torque
-		netTorque = Vector3d.zero;
+		netTorque = Vector3D.ZERO;
 
 		//Apply drag
-		Vector3d eulerAngularVel = angularVelocity().toEuler();
-		addTorque(eulerAngularVel.negate().multiply(angularDrag()));
+		Vector3D eulerAngularVel = angularVelocity().toEuler();
+		addTorque(eulerAngularVel.negate().scalarMultiply(angularDrag()));
 	}
 
 	@Override
-	public Vector3d getVelocity() {
-		return new Vector3d(mcEntity().motionX, mcEntity().motionY, mcEntity().motionZ);
+	public Vector3D getVelocity() {
+		return new Vector3D(mcEntity().motionX, mcEntity().motionY, mcEntity().motionZ);
 	}
 
 	@Override
-	public void setVelocity(Vector3d velocity) {
-		mcEntity().motionX = velocity.x;
-		mcEntity().motionY = velocity.y;
-		mcEntity().motionZ = velocity.z;
+	public void setVelocity(Vector3D velocity) {
+		mcEntity().motionX = velocity.getX();
+		mcEntity().motionY = velocity.getY();
+		mcEntity().motionZ = velocity.getZ();
 	}
 
 	@Override
-	public void addForce(Vector3d force, Vector3d position) {
+	public void addForce(Vector3D force, Vector3D position) {
 		//TODO: implement
 	}
 
 	@Override
-	public void addTorque(Vector3d torque) {
+	public void addTorque(Vector3D torque) {
 		//TODO: implement
 	}
 
 	@Override
-	public void addForce(Vector3d force) {
-		netForce = netForce.add(force.divide(mass()));
+	public void addForce(Vector3D force) {
+		netForce = netForce.add(force.scalarMultiply(1 / mass()));
 	}
 }

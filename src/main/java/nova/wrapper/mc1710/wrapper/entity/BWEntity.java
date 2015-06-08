@@ -10,7 +10,7 @@ import nova.core.entity.component.Living;
 import nova.core.entity.component.Player;
 import nova.core.inventory.component.InventoryPlayer;
 import nova.core.network.NetworkTarget;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.wrapper.mc1710.backward.inventory.BWInventory;
 import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityTransform;
 
@@ -45,16 +45,16 @@ public class BWEntity extends Entity {
 				if (entity instanceof EntityPlayer) {
 					if (NetworkTarget.Side.get().isClient()) {
 						//compatibility with eye height changing mods
-						return Vector3d.yAxis.multiply(entity.getEyeHeight() - ((EntityPlayer) entity).getDefaultEyeHeight());
+						return Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight() - ((EntityPlayer) entity).getDefaultEyeHeight());
 					} else {
 						if (entity instanceof EntityPlayerMP && entity.isSneaking()) {
-							return Vector3d.yAxis.multiply(entity.getEyeHeight() - 0.08);
+							return Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight() - 0.08);
 						} else {
-							return Vector3d.yAxis.multiply(entity.getEyeHeight());
+							return Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight());
 						}
 					}
 				}
-				return Vector3d.yAxis.multiply(entity.getEyeHeight());
+				return Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight());
 			};
 
 			if (entity instanceof EntityPlayer) {
