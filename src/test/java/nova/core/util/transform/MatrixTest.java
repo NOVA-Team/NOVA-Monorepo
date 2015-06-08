@@ -207,7 +207,7 @@ public class MatrixTest {
 
 	@Test
 	public void testTransform() {
-		assertThat(Matrix.identity(4).transform(new Vector3D(2, 3, 4))).isEqualTo(new Vector3D(2, 3, 4));
+		assertThat(Matrix.identity(4).apply(new Vector3D(2, 3, 4))).isEqualTo(new Vector3D(2, 3, 4));
 	}
 
 	@Test

@@ -30,7 +30,6 @@ import nova.core.retention.Store;
 import nova.core.util.collection.Tuple2;
 import nova.core.util.transform.vector.Transformer;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -190,7 +189,7 @@ public class Quaternion implements Transformer, Storable {
 	}
 
 	@Override
-	public Vector3D transform(Vector3D vec) {
+	public Vector3D apply(Vector3D vec) {
 		double vX = w * w * vec.getX() + 2 * y * w * vec.getZ() - 2 * z * w * vec.getY() + x * x * vec.getX() + 2 * y * x * vec.getY() + 2 * z * x * vec.getZ() - z * z * vec.getX() - y * y * vec.getX();
 		double vY = 2 * x * y * vec.getX() + y * y * vec.getY() + 2 * z * y * vec.getZ() + 2 * w * z * vec.getX() - z * z * vec.getY() + w * w * vec.getY() - 2 * x * w * vec.getZ() - x * x * vec.getY();
 		double vZ = 2 * x * z * vec.getX() + 2 * y * z * vec.getY() + z * z * vec.getZ() - 2 * w * y * vec.getX() - y * y * vec.getZ() + 2 * w * x * vec.getY() - x * x * vec.getZ() + w * w * vec.getZ();
@@ -244,21 +243,21 @@ public class Quaternion implements Transformer, Storable {
 	 * @return A direction vector representing the rotation.
 	 */
 	public Vector3D toXVector() {
-		return transform(Vector3D.PLUS_I);
+		return apply(Vector3D.PLUS_I);
 	}
 
 	/**
 	 * @return A direction vector representing the rotation.
 	 */
 	public Vector3D toYVector() {
-		return transform(Vector3D.PLUS_J);
+		return apply(Vector3D.PLUS_J);
 	}
 
 	/**
 	 * @return A direction vector representing the rotation.
 	 */
 	public Vector3D toZVector() {
-		return transform(Vector3D.PLUS_K);
+		return apply(Vector3D.PLUS_K);
 	}
 
 	/**
@@ -267,7 +266,7 @@ public class Quaternion implements Transformer, Storable {
 	 * @return A direction vector representing the rotation.
 	 */
 	public Vector3D toForwardVector() {
-		return transform(Vector3D.PLUS_K.negate());
+		return apply(Vector3D.PLUS_K.negate());
 	}
 
 	@Override

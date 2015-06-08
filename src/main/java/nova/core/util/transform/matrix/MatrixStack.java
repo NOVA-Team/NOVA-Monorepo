@@ -3,14 +3,16 @@ package nova.core.util.transform.matrix;
 import nova.core.util.collection.Tuple2;
 import nova.core.util.transform.vector.Transformer;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.util.Stack;
 
 public class MatrixStack implements Transformer {
 
 	private final Stack<Matrix4x4> stack = new Stack<>();
-	private Matrix4x4 current = Matrix4x4.IDENTITY;
+	private RealMatrix current = MatrixUtil.identity(4);
+	MatrixUtils
 
 	/**
 	 * Replaces current transformation matrix by an identity matrix.
@@ -54,7 +56,7 @@ public class MatrixStack implements Transformer {
 	 * @param z translation.
 	 */
 	public MatrixStack translate(double x, double y, double z) {
-		current = current.rightMultiply(MatrixHelper.translationMatrix(x, y, z));
+		current = current.rightMultiply(MatrixUtil.translationMatrix(x, y, z));
 		return this;
 	}
 
@@ -80,7 +82,7 @@ public class MatrixStack implements Transformer {
 	 * @param angle in radians.
 	 */
 	public MatrixStack rotate(Vector3D rotateVector, double angle) {
-		current = current.rightMultiply(MatrixHelper.rotationMatrix(rotateVector, angle));
+		current = current.rightMultiply(MatrixUtil.rotationMatrix(rotateVector, angle));
 		return this;
 	}
 
@@ -92,7 +94,7 @@ public class MatrixStack implements Transformer {
 	 * @param z scale.
 	 */
 	public MatrixStack scale(double x, double y, double z) {
-		current = current.rightMultiply(MatrixHelper.scaleMatrix(x, y, z));
+		current = current.rightMultiply(MatrixUtil.scaleMatrix(x, y, z));
 		return this;
 	}
 
@@ -129,7 +131,7 @@ public class MatrixStack implements Transformer {
 	 * @return The transformed vector by current matrix.
 	 */
 	@Override
-	public Vector3D transform(Vector3D vec) {
-		return current.transform(vec);
+	public Vector3D apply(Vector3D vec) {
+		return current.apply(vec);
 	}
 }

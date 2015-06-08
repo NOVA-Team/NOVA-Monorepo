@@ -4,7 +4,6 @@ import nova.core.util.Direction;
 import nova.core.util.math.VectorUtil;
 import nova.core.util.transform.vector.Transformer;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -130,8 +129,8 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	}
 
 	public Cuboid transform(Transformer transform) {
-		Vector3D transMin = transform.transform(min);
-		Vector3D transMax = transform.transform(max);
+		Vector3D transMin = transform.apply(min);
+		Vector3D transMax = transform.apply(max);
 		return new Cuboid(VectorUtil.min(transMin, transMax), VectorUtil.min(transMax, transMin));
 	}
 

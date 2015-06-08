@@ -13,5 +13,5 @@ public interface Transformer {
 	 * @param vec - The vector being transformed
 	 * @return The transformed vector.
 	 */
-	Vector3D transform(Vector3D vec);
+	Vector3D apply(Vector3D vec);
 }

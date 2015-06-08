@@ -397,7 +397,7 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	 * @return transformed vector.
 	 */
 	@Override
-	public Vector3D transform(Vector3D vector) {
+	public Vector3D apply(Vector3D vector) {
 		assert isSquare() && rows == 4;
 
 		double x, y, z, w;

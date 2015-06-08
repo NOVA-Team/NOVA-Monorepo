@@ -151,7 +151,7 @@ public class Model implements Iterable<Model>, Cloneable {
 		Model transformedModel = clone();
 		transformedModel.faces.stream().forEach(f -> {
 				f.normal = f.normal; //TODO normal matrix;
-				f.vertices.forEach(v -> v.vec = matrixStack.transform(v.vec));
+				f.vertices.forEach(v -> v.vec = matrixStack.apply(v.vec));
 			}
 		);
 

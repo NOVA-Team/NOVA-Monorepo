@@ -11,14 +11,7 @@ import java.util.Arrays;
  */
 public class Matrix4x4 extends Matrix implements Cloneable, Transformer {
 
-	/**
-	 * Identity matrix.
-	 */
-	public static Matrix4x4 IDENTITY = new Matrix4x4(new double[][] {
-		{ 1, 0, 0, 0 },
-		{ 0, 1, 0, 0 },
-		{ 0, 0, 1, 0 },
-		{ 0, 0, 0, 1 } });
+
 	/**
 	 * 4x4 array [row][column]
 	 */
@@ -99,7 +92,7 @@ public class Matrix4x4 extends Matrix implements Cloneable, Transformer {
 	 * @return transformed vector.
 	 */
 	@Override
-	public Vector3D transform(Vector3D vector) {
+	public Vector3D apply(Vector3D vector) {
 		double x,y,z,w;
 		x = mat[0][0] * vector.getX() + mat[1][0] * vector.getY() + mat[2][0] * vector.getZ() + mat[3][0];
 		y = mat[0][1] * vector.getX() + mat[1][1] * vector.getY() + mat[2][1] * vector.getZ() + mat[3][1];

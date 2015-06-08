@@ -72,7 +72,7 @@ public class Matrix4x4Test {
 
 	@Test
 	public void testTransform() {
-		assertThat(Matrix4x4.IDENTITY.transform(new Vector3D(2, 3, 4))).isEqualTo(new Vector3D(2, 3, 4));
+		assertThat(Matrix4x4.IDENTITY.apply(new Vector3D(2, 3, 4))).isEqualTo(new Vector3D(2, 3, 4));
 	}
 
 	@Test
