@@ -52,6 +52,8 @@ public class ItemBlock extends Item {
 			opBlock.get().placeEvent.publish(new Block.BlockPlaceEvent(entity, side, hit, this));
 		}
 
+		addCount(-1);
+
 		return true;
 	}
 
