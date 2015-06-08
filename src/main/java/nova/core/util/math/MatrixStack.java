@@ -79,7 +79,10 @@ public class MatrixStack implements Transformer {
 	}
 
 	public MatrixStack rotate(Rotation rotation) {
-		current = current.preMultiply(MatrixUtils.createRealMatrix(rotation.getMatrix()));
+		RealMatrix rotMat = MatrixUtils.createRealMatrix(4, 4);
+		rotMat.setSubMatrix(rotation.getMatrix(), 0, 0);
+		rotMat.setEntry(3, 3, 1);
+		current = current.preMultiply(rotMat);
 		return this;
 	}
 

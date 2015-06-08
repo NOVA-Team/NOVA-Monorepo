@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import java.util.EmptyStackException;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.asserts.AlmostEqualAssertion.assertThat;
 
 public class MatrixStackTest {
 	MatrixStack ms;
@@ -59,13 +59,13 @@ public class MatrixStackTest {
 		ms.scale(Vector3DUtil.ONE.scalarMultiply(2));
 		ms.pushMatrix();
 		ms.rotate(Vector3D.PLUS_J, Math.PI / 2);
-		assertThat(ms.apply(Vector3D.PLUS_K)).isEqualTo(new Vector3D(-1, 1, 1));
+		assertThat(ms.apply(Vector3D.PLUS_K)).isAlmostEqualTo(new Vector3D(-1, 1, 1));
 
 		ms.popMatrix();
 		ms.transform(MatrixUtils.createRealMatrix(new Rotation(Vector3D.PLUS_J, Math.PI / 2).getMatrix()));
-		assertThat(ms.apply(Vector3D.PLUS_K)).isEqualTo(new Vector3D(-1, 1, 1));
+		assertThat(ms.apply(Vector3D.PLUS_K)).isAlmostEqualTo(new Vector3D(-1, 1, 1));
 
-		assertThat(ms.apply(Vector3DUtil.ONE)).isEqualTo(ms.apply(Vector3DUtil.ONE));
+		assertThat(ms.apply(Vector3DUtil.ONE)).isAlmostEqualTo(ms.apply(Vector3DUtil.ONE));
 
 	}
 

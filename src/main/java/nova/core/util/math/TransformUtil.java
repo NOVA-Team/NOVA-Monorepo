@@ -71,4 +71,18 @@ public final class TransformUtil {
 		w = m.getEntry(0, 3) * vector.getX() + m.getEntry(1, 3) * vector.getY() + m.getEntry(2, 3) * vector.getZ() + m.getEntry(3, 3);
 		return new Vector3D(x / w, y / w, z / w);
 	}
+
+	/**
+	 * Transform vector by this matrix.
+	 * @param vector to be transformed.
+	 * @param m The 4x4 matrix to transform the vector by
+	 * @return transformed vector.
+	 */
+	public static Vector3D transformDirectionless(Vector3D vector, RealMatrix m) {
+		double x, y, z, w;
+		x = m.getEntry(0, 0) * vector.getX() + m.getEntry(1, 0) * vector.getY() + m.getEntry(2, 0) * vector.getZ();
+		y = m.getEntry(0, 1) * vector.getX() + m.getEntry(1, 1) * vector.getY() + m.getEntry(2, 1) * vector.getZ();
+		z = m.getEntry(0, 2) * vector.getX() + m.getEntry(1, 2) * vector.getY() + m.getEntry(2, 2) * vector.getZ();
+		return new Vector3D(x, y, z);
+	}
 }

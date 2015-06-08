@@ -8,7 +8,7 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.junit.Test;
 
 import static java.lang.Math.PI;
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.asserts.AlmostEqualAssertion.assertThat;
 
 public class TransformUtilTest {
 	@Test
@@ -35,7 +35,7 @@ public class TransformUtilTest {
 	@Test
 	public void testRotate() {
 		Vector3D start = Vector3D.PLUS_K;
-		assertThat(TransformUtil.transform(start, MatrixUtils.createRealMatrix(new Rotation(Vector3D.PLUS_J, -PI / 2).getMatrix()))).isEqualTo(Vector3D.PLUS_I);
-		assertThat(TransformUtil.transform(start, MatrixUtils.createRealMatrix(new Rotation(Vector3D.PLUS_J.scalarMultiply(2), -PI / 2).getMatrix()))).isEqualTo(Vector3D.PLUS_I);
+		assertThat(TransformUtil.transformDirectionless(start, MatrixUtils.createRealMatrix(new Rotation(Vector3D.PLUS_J, -PI / 2).getMatrix()))).isAlmostEqualTo(Vector3D.PLUS_I);
+		assertThat(TransformUtil.transformDirectionless(start, MatrixUtils.createRealMatrix(new Rotation(Vector3D.PLUS_J.scalarMultiply(2), -PI / 2).getMatrix()))).isAlmostEqualTo(Vector3D.PLUS_I);
 	}
 }
