@@ -71,7 +71,7 @@ public class BWModel extends Model {
 						IIcon icon = RenderUtility.instance.getIcon(texture);
 						face.vertices.forEach(v -> {
 							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
-							tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.x), icon.getInterpolatedV(16 * v.uv.y));
+							tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
 						});
 					} else {
 						face.vertices.forEach(v -> {
@@ -123,9 +123,9 @@ public class BWModel extends Model {
 						face.vertices.forEach(v -> {
 							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 							if (icon != null) {
-								tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.x), icon.getInterpolatedV(16 * v.uv.y));
+								tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
 							} else {
-								tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.x, v.uv.y);
+								tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
 							}
 						});
 					} else {

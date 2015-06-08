@@ -3,6 +3,8 @@ package nova.wrapper.mc1710.wrapper.entity.forward;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.entity.component.RigidBody;
+import nova.core.util.math.RotationUtil;
+import nova.core.util.math.Vector3DUtil;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -11,7 +13,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  *
  * Position
  * Velocity
- *
  * @author Calclavia
  */
 public class MCRigidBody extends RigidBody {
@@ -66,17 +67,17 @@ public class MCRigidBody extends RigidBody {
 
 		//Integrate angular velocity to angular displacement
 		Rotation angularVel = angularVelocity();
-		Rotation deltaRotation = angularVel.scale(deltaTime);
-		entity.transform().setRotation(entity.rotation().rightMultiply(deltaRotation));
+		Rotation deltaRotation = RotationUtil.slerp(Rotation.IDENTITY, angularVel, deltaTime);
+		entity.transform().setRotation(entity.rotation().applyTo(deltaRotation));
 
 		//Integrate torque to angular velocity
-		setAngularVelocity(angularVelocity().rightMultiply(new Rotation(RotationUtil.DEFAULT_ORDER, netTorque.scalarMultiply(deltaTime))));
+		setAngularVelocity(angularVelocity().applyTo(new Rotation(Vector3DUtil.FORWARD, netTorque.scalarMultiply(deltaTime))));
 
 		//Clear net torque
 		netTorque = Vector3D.ZERO;
 
 		//Apply drag
-		Vector3D eulerAngularVel = angularVelocity().toEuler();
+		Vector3D eulerAngularVel = angularVelocity().applyInverseTo(Vector3DUtil.FORWARD);
 		addTorque(eulerAngularVel.negate().scalarMultiply(angularDrag()));
 	}
 

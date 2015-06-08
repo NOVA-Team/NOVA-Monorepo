@@ -6,7 +6,6 @@ import nova.core.gui.render.text.FormattedText.TextFormat;
 import nova.core.gui.render.text.TextRenderer;
 import nova.core.gui.render.text.TextRenderer.RenderedText;
 import nova.wrapper.mc1710.backward.gui.text.IText.Text;
-
 import org.lwjgl.opengl.GL11;
 
 class SimpleParagraph extends AbstractParagraph<Text> implements RenderedText {
@@ -51,11 +50,11 @@ class SimpleParagraph extends AbstractParagraph<Text> implements RenderedText {
 		for (int i = 0; i < lines.size(); i++) {
 			Line<Text> line = lines.get(i);
 			if (i == 0) {
-				yOffset += line.getDimensions().y;
+				yOffset += line.getDimensions().getY();
 			}
 			xOffset = textRenderer.drawText(line.text, x, y, xOffset, yOffset);
 			if (i + 1 < lines.size()) {
-				yOffset += lines.get(i + 1).getDimensions().y + 1;
+				yOffset += lines.get(i + 1).getDimensions().getY() + 1;
 				xOffset = 0;
 			}
 		}

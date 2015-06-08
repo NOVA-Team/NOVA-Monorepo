@@ -9,7 +9,7 @@ import java.util.List;
 
 interface IText {
 
-	public Vector2D getDimensions();
+	Vector2D getDimensions();
 
 	static class Text implements IText {
 
@@ -38,14 +38,18 @@ interface IText {
 
 		private String addFormat(String text, TextFormat format) {
 			StringBuilder builder = new StringBuilder();
-			if (format.bold)
+			if (format.bold) {
 				builder.append("\u00A7l");
-			if (format.italic)
+			}
+			if (format.italic) {
 				builder.append("\u00A7o");
-			if (format.strikethrough)
+			}
+			if (format.strikethrough) {
 				builder.append("\u00A7m");
-			if (format.underline)
+			}
+			if (format.underline) {
 				builder.append("\u00A7n");
+			}
 
 			builder.append(text);
 			builder.append("\u00A7r");
@@ -65,10 +69,10 @@ interface IText {
 		@Override
 		public Vector2D getDimensions() {
 			double width = 0, height = 0;
-			for (T text : text) {
+			for (T text : this.text) {
 				Vector2D dim = text.getDimensions();
-				height = Math.max(height, dim.y);
-				width += dim.x;
+				height = Math.max(height, dim.getY());
+				width += dim.getX();
 			}
 			return new Vector2D(width, height);
 		}
@@ -86,10 +90,10 @@ interface IText {
 		@Override
 		public Vector2D getDimensions() {
 			double width = 0, height = 0;
-			for (Text text : text) {
+			for (Text text : this.text) {
 				Vector2D dim = text.getDimensions();
-				height = Math.max(height, dim.y);
-				width += dim.x;
+				height = Math.max(height, dim.getY());
+				width += dim.getX();
 			}
 			return new Vector2D(width, height);
 		}

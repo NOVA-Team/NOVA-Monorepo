@@ -370,7 +370,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Optional<StaticRenderer> opRenderer = blockInstance.getOp(StaticRenderer.class);
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
-			model.matrix = new MatrixStack().translate(x + 0.5, y + 0.5, z + 0.5).getMatrix();
+			model.matrix = new MatrixStack().translate(x + 0.5, y + 0.5, z + 0.5);
 			opRenderer.get().onRender.accept(model);
 			model.renderWorld(world);
 		}

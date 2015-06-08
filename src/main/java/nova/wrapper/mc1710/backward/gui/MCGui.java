@@ -32,7 +32,6 @@ import java.util.Optional;
 
 /**
  * Minecraft implementation of the NOVA GUI System
- *
  * @author Vic Nightfall
  */
 public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiComponent {
@@ -125,7 +124,7 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 
 			Vector2D size = getOutline().getDimension();
 			Vector2D position = getOutline().getPosition();
-			GuiUtils.drawGUIWindow(position.x - 4, position.y - 4, size.getX() + 8, size.getY() + 8);
+			GuiUtils.drawGUIWindow((int) position.getX() - 4, (int) position.getY() - 4, (int) size.getX() + 8, (int) size.getY() + 8);
 		}
 
 		Outline guiOutline = getOutline();
@@ -229,8 +228,9 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 			int key = Keyboard.getEventKey();
 			char ch = Keyboard.getEventCharacter();
 			onKeyPressed(Game.input().getKey(key), ch, state);
-			if (state)
+			if (state) {
 				keyTyped(ch, key);
+			}
 
 			this.mc.func_152348_aa();
 		}
@@ -246,8 +246,9 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 
 			fontRendererObj = mc.fontRenderer;
 			MCCanvas canvas = new MCCanvas(width, height, Tessellator.instance, scaledresolution.getScaleFactor());
-			if (textRenderer == null)
+			if (textRenderer == null) {
 				textRenderer = new MCTextRenderer(fontRendererObj, canvas);
+			}
 
 			textRenderer.setCanvas(canvas);
 			graphics = new Graphics(canvas, textRenderer);
@@ -261,8 +262,8 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 				if (preferredSize.isPresent()) {
 					// Set the size to the preferred size and center the GUI
 					Vector2D size = preferredSize.get();
-					int xOffset = width / 2 - size.getX() / 2;
-					int yOffset = height / 2 - size.getY() / 2;
+					int xOffset = (int) (width / 2 - size.getX() / 2);
+					int yOffset = (int) (height / 2 - size.getY() / 2);
 					setOutline(getOutline().setPosition(new Vector2D(xOffset, yOffset)).setDimension(size));
 				}
 				onResized(oldOutline);

@@ -19,8 +19,8 @@ abstract class AbstractParagraph<T extends IText> implements IText, RenderedText
 		double width = 0, height = 0;
 		for (IText t2 : lines) {
 			Vector2D dim = t2.getDimensions();
-			width = Math.max(height, dim.x);
-			height += dim.y;
+			width = Math.max(height, dim.getX());
+			height += dim.getY();
 		}
 		dimensions = new Vector2D(width, height);
 	}

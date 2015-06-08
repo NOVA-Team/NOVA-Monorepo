@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import nova.core.component.renderer.DynamicRenderer;
-import nova.core.util.math.MatrixStack;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
 import org.lwjgl.opengl.GL11;
@@ -20,7 +19,6 @@ import static org.lwjgl.opengl.GL11.glShadeModel;
 
 /**
  * Renders entities.
- *
  * @author Calclavia
  */
 public class FWEntityRenderer extends Render {
@@ -38,13 +36,12 @@ public class FWEntityRenderer extends Render {
 
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
-			model.matrix = new MatrixStack()
+			model.matrix
 				.translate(x, y, z)
 				.scale(entity.scale())
 				.translate(entity.pivot())
 				.rotate(entity.rotation())
-				.translate(entity.pivot().negate())
-				.getMatrix();
+				.translate(entity.pivot().negate());
 
 			opRenderer.get().onRender.accept(model);
 

@@ -3,14 +3,14 @@ package nova.wrapper.mc1710.wrapper.entity.forward;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
 import nova.core.component.transform.EntityTransform;
+import nova.core.util.math.RotationUtil;
 import nova.core.util.math.Vector3DUtil;
 import nova.core.world.World;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Arrays;
-
-org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 
 /**
  * Wraps Transform3d used in entity
@@ -60,13 +60,13 @@ public class MCEntityTransform extends EntityTransform {
 
 	@Override
 	public Rotation rotation() {
-		return new Rotation(RotationUtil.DEFAULT_ORDER, -Math.toRadians(wrapper.rotationYaw) - Math.PI, -Math.toRadians(wrapper.rotationPitch));
+		return new Rotation(RotationUtil.DEFAULT_ORDER, -Math.toRadians(wrapper.rotationYaw) - Math.PI, -Math.toRadians(wrapper.rotationPitch), 0);
 	}
 
 	@Override
 	public void setRotation(Rotation rotation) {
-		Vector3D euler = rotation.toEuler();
-		wrapper.rotationYaw = (float) Math.toDegrees(euler.getX());
-		wrapper.rotationPitch = (float) Math.toDegrees(euler.getY());
+		double[] euler = rotation.getAngles(RotationUtil.DEFAULT_ORDER);
+		wrapper.rotationYaw = (float) Math.toDegrees(euler[0]);
+		wrapper.rotationPitch = (float) Math.toDegrees(euler[1]);
 	}
 }

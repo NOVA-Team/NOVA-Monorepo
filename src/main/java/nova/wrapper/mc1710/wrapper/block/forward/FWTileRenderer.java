@@ -24,7 +24,7 @@ public class FWTileRenderer extends TileEntitySpecialRenderer {
 		Optional<DynamicRenderer> opRenderer = block.getOp(DynamicRenderer.class);
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
-			model.translate(x + 0.5, y + 0.5, z + 0.5);
+			model.matrix.translate(x + 0.5, y + 0.5, z + 0.5);
 			opRenderer.get().onRender.accept(model);
 			bindTexture(TextureMap.locationBlocksTexture);
 			RenderUtility.enableBlending();

@@ -30,7 +30,7 @@ public class MCTextRenderer implements TextRenderer {
 	protected int drawText(List<Text> text, int x, int y, int xOffset, int yOffset) {
 		for (Text sub : text) {
 			drawText(sub, x, y, xOffset, yOffset);
-			xOffset += sub.getDimensions().x + 1;
+			xOffset += sub.getDimensions().getX() + 1;
 		}
 		return xOffset;
 	}
