@@ -3,9 +3,8 @@ package nova.wrapper.mc1710.wrapper.entity.forward;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.entity.component.RigidBody;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-
-org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 
 /**
  * Based on the Euler Integration because Minecraft stores the following values:
