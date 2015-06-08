@@ -2,7 +2,7 @@ package nova.core.util.transform;
 
 import nova.core.util.transform.matrix.Matrix;
 import nova.core.util.transform.vector.Vector2d;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -207,7 +207,7 @@ public class MatrixTest {
 
 	@Test
 	public void testTransform() {
-		assertThat(Matrix.identity(4).transform(new Vector3d(2, 3, 4))).isEqualTo(new Vector3d(2, 3, 4));
+		assertThat(Matrix.identity(4).transform(new Vector3D(2, 3, 4))).isEqualTo(new Vector3D(2, 3, 4));
 	}
 
 	@Test

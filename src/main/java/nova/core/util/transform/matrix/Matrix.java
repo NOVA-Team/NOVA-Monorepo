@@ -5,8 +5,8 @@ import com.google.common.hash.Hashing;
 import com.google.common.math.DoubleMath;
 import nova.core.util.transform.Operator;
 import nova.core.util.transform.vector.Transformer;
-import nova.core.util.transform.vector.Vector3;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Arrays;
 
@@ -136,7 +136,6 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	 *
 	 * @return C = A * B
 	 */
-	@Override
 	public Matrix multiply(Matrix B) {
 		Matrix A = this;
 		assert A.columns == B.rows;
@@ -398,15 +397,15 @@ public class Matrix extends Operator<Matrix, Matrix> implements Cloneable, Trans
 	 * @return transformed vector.
 	 */
 	@Override
-	public Vector3d transform(Vector3<?> vector) {
+	public Vector3D transform(Vector3D vector) {
 		assert isSquare() && rows == 4;
 
 		double x, y, z, w;
-		x = mat[0][0] * vector.xd() + mat[1][0] * vector.yd() + mat[2][0] * vector.zd() + mat[3][0];
-		y = mat[0][1] * vector.xd() + mat[1][1] * vector.yd() + mat[2][1] * vector.zd() + mat[3][1];
-		z = mat[0][2] * vector.xd() + mat[1][2] * vector.yd() + mat[2][2] * vector.zd() + mat[3][2];
-		w = mat[0][3] * vector.xd() + mat[1][3] * vector.yd() + mat[2][3] * vector.zd() + mat[3][3];
-		return new Vector3d(x / w, y / w, z / w);
+		x = mat[0][0] * vector.getX() + mat[1][0] * vector.getY() + mat[2][0] * vector.getZ() + mat[3][0];
+		y = mat[0][1] * vector.getX() + mat[1][1] * vector.getY() + mat[2][1] * vector.getZ() + mat[3][1];
+		z = mat[0][2] * vector.getX() + mat[1][2] * vector.getY() + mat[2][2] * vector.getZ() + mat[3][2];
+		w = mat[0][3] * vector.getX() + mat[1][3] * vector.getY() + mat[2][3] * vector.getZ() + mat[3][3];
+		return new Vector3D(x / w, y / w, z / w);
 	}
 
 	public boolean isAlmostZero(double tolerance) {

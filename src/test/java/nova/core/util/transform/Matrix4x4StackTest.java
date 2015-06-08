@@ -1,9 +1,10 @@
 package nova.core.util.transform;
 
+import nova.core.util.math.VectorUtil;
 import nova.core.util.transform.matrix.Matrix4x4;
 import nova.core.util.transform.matrix.MatrixHelper;
 import nova.core.util.transform.matrix.MatrixStack;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,17 +53,17 @@ public class Matrix4x4StackTest {
 
 	@Test
 	public void testTransforms() {
-		ms.translate(Vector3d.one);
-		ms.scale(Vector3d.one.multiply(2));
+		ms.translate(VectorUtil.ONE);
+		ms.scale(VectorUtil.ONE.scalarMultiply(2));
 		ms.pushMatrix();
-		ms.rotate(Vector3d.yAxis, Math.PI / 2);
-		assertThat(ms.transform(Vector3d.zAxis)).isEqualTo(new Vector3d(-1, 1, 1));
+		ms.rotate(Vector3D.PLUS_J, Math.PI / 2);
+		assertThat(ms.transform(Vector3D.PLUS_K)).isEqualTo(new Vector3D(-1, 1, 1));
 
 		ms.popMatrix();
-		ms.transform(MatrixHelper.rotationMatrix(Vector3d.yAxis, Math.PI / 2));
-		assertThat(ms.transform(Vector3d.zAxis)).isEqualTo(new Vector3d(-1, 1, 1));
+		ms.transform(MatrixHelper.rotationMatrix(Vector3D.PLUS_J, Math.PI / 2));
+		assertThat(ms.transform(Vector3D.PLUS_K)).isEqualTo(new Vector3D(-1, 1, 1));
 
-		assertThat(ms.transform(Vector3d.one)).isEqualTo(ms.getMatrix().transform(Vector3d.one));
+		assertThat(ms.transform(VectorUtil.ONE)).isEqualTo(ms.getMatrix().transform(VectorUtil.ONE));
 
 	}
 

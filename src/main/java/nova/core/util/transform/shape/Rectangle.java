@@ -86,11 +86,6 @@ public class Rectangle<T extends Vector2<T>> extends Shape<Rectangle<T>, Rectang
 	}
 
 	@Override
-	public Rectangle<T> multiply(Rectangle<T> other) {
-		return new Rectangle<T>(min.multiply(other.min), max.multiply(other.max));
-	}
-
-	@Override
 	public Rectangle<T> multiply(double other) {
 		return new Rectangle<T>(min.multiply(other), max.multiply(other));
 	}

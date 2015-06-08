@@ -2,7 +2,7 @@ package nova.core.event;
 
 import nova.core.block.Block;
 import nova.core.entity.Entity;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
 
 /**
@@ -34,9 +34,9 @@ public class GlobalEvents {
 		//The world
 		public final World world;
 		//The position of the block
-		public final Vector3i position;
+		public final Vector3D position;
 
-		public BlockEvent(World world, Vector3i position) {
+		public BlockEvent(World world, Vector3D position) {
 			this.world = world;
 			this.position = position;
 		}
@@ -52,7 +52,7 @@ public class GlobalEvents {
 		//The block that was set to in this position
 		public final Block newBlock;
 
-		public BlockChangeEvent(World world, Vector3i position, Block oldBlock, Block newBlock) {
+		public BlockChangeEvent(World world, Vector3D position, Block oldBlock, Block newBlock) {
 			super(world, position);
 			this.newBlock = newBlock;
 			this.oldBlock = oldBlock;
@@ -62,13 +62,13 @@ public class GlobalEvents {
 	@CancelableEvent.Cancelable
 	public static class PlayerInteractEvent extends CancelableEvent {
 		public final World world;
-		public final Vector3i position;
+		public final Vector3D position;
 		public final Entity player;
 		public final Action action;
 		public Result useBlock = Result.DEFAULT;
 		public Result useItem = Result.DEFAULT;
 
-		public PlayerInteractEvent(World world, Vector3i position, Entity player, Action action) {
+		public PlayerInteractEvent(World world, Vector3D position, Entity player, Action action) {
 			this.world = world;
 			this.position = position;
 			this.player = player;

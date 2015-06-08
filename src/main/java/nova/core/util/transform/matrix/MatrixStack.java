@@ -2,8 +2,8 @@ package nova.core.util.transform.matrix;
 
 import nova.core.util.collection.Tuple2;
 import nova.core.util.transform.vector.Transformer;
-import nova.core.util.transform.vector.Vector3;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Stack;
 
@@ -63,13 +63,13 @@ public class MatrixStack implements Transformer {
 	 *
 	 * @param translateVector vector of translation.
 	 */
-	public MatrixStack translate(Vector3<?> translateVector) {
-		translate(translateVector.xd(), translateVector.yd(), translateVector.zd());
+	public MatrixStack translate(Vector3D translateVector) {
+		translate(translateVector.getX(), translateVector.getY(), translateVector.getZ());
 		return this;
 	}
 
 	public MatrixStack rotate(Quaternion quaternion) {
-		Tuple2<Vector3d, Double> axisAnglePair = quaternion.toAngleAxis();
+		Tuple2<Vector3D, Double> axisAnglePair = quaternion.toAngleAxis();
 		return rotate(axisAnglePair._1, axisAnglePair._2);
 	}
 
@@ -79,7 +79,7 @@ public class MatrixStack implements Transformer {
 	 * @param rotateVector Vector serving as rotation axis.
 	 * @param angle in radians.
 	 */
-	public MatrixStack rotate(Vector3<?> rotateVector, double angle) {
+	public MatrixStack rotate(Vector3D rotateVector, double angle) {
 		current = current.rightMultiply(MatrixHelper.rotationMatrix(rotateVector, angle));
 		return this;
 	}
@@ -101,8 +101,8 @@ public class MatrixStack implements Transformer {
 	 *
 	 * @param scaleVector scale vector.
 	 */
-	public MatrixStack scale(Vector3<?> scaleVector) {
-		scale(scaleVector.xd(), scaleVector.yd(), scaleVector.zd());
+	public MatrixStack scale(Vector3D scaleVector) {
+		scale(scaleVector.getX(), scaleVector.getY(), scaleVector.getZ());
 		return this;
 	}
 
@@ -129,7 +129,7 @@ public class MatrixStack implements Transformer {
 	 * @return The transformed vector by current matrix.
 	 */
 	@Override
-	public Vector3d transform(Vector3<?> vec) {
+	public Vector3D transform(Vector3D vec) {
 		return current.transform(vec);
 	}
 }

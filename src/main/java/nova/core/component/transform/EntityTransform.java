@@ -1,7 +1,7 @@
 package nova.core.component.transform;
 
 import nova.core.util.transform.matrix.Quaternion;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * A 3D transform.
@@ -9,30 +9,30 @@ import nova.core.util.transform.vector.Vector3d;
  * Note that the implemented Transform3d for entities require a constructor with type ComponentProvider.
  * @author Calclavia
  */
-public class EntityTransform extends WorldTransform<Vector3d> {
+public class EntityTransform extends WorldTransform<Vector3D> {
 
 	//The rotation of the transform. Can never be null.
 	private Quaternion rotation;
 
 	//The scale of the transform. Can never be null.
-	private Vector3d scale;
+	private Vector3D scale;
 
 	//The center of rotation.
-	private Vector3d pivot;
+	private Vector3D pivot;
 
-	public Vector3d scale() {
+	public Vector3D scale() {
 		return scale;
 	}
 
-	public Vector3d pivot() {
+	public Vector3D pivot() {
 		return pivot;
 	}
 
-	public void setPivot(Vector3d pivot) {
+	public void setPivot(Vector3D pivot) {
 		this.pivot = pivot;
 	}
 
-	public void setScale(Vector3d scale) {
+	public void setScale(Vector3D scale) {
 		this.scale = scale;
 	}
 

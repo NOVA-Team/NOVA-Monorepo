@@ -4,7 +4,7 @@ import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
 import nova.core.component.Updater;
 import nova.core.util.transform.matrix.Quaternion;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * A rigid body component for entity physics.
@@ -20,8 +20,8 @@ public abstract class RigidBody extends Component implements Updater {
 	 * Translation
 	 */
 	private double drag = 0;
-	private Vector3d velocity = Vector3d.zero;
-	private Vector3d gravity = new Vector3d(0, -9.81, 0);
+	private Vector3D velocity = Vector3D.ZERO;
+	private Vector3D gravity = new Vector3D(0, -9.81, 0);
 
 	/**
 	 * Rotation
@@ -47,11 +47,11 @@ public abstract class RigidBody extends Component implements Updater {
 	/**
 	 * Velocity is how fast the body is moving
 	 */
-	public Vector3d getVelocity() {
+	public Vector3D getVelocity() {
 		return velocity;
 	}
 
-	public void setVelocity(Vector3d velocity) {
+	public void setVelocity(Vector3D velocity) {
 		this.velocity = velocity;
 	}
 
@@ -66,11 +66,11 @@ public abstract class RigidBody extends Component implements Updater {
 	/**
 	 * Gravity is an acceleration.
 	 */
-	public Vector3d getGravity() {
+	public Vector3D getGravity() {
 		return gravity;
 	}
 
-	public void setGravity(Vector3d gravity) {
+	public void setGravity(Vector3D gravity) {
 		this.gravity = gravity;
 	}
 
@@ -96,11 +96,11 @@ public abstract class RigidBody extends Component implements Updater {
 	/**
 	 * Forces
 	 */
-	public abstract void addForce(Vector3d force);
+	public abstract void addForce(Vector3D force);
 
-	public abstract void addForce(Vector3d force, Vector3d position);
+	public abstract void addForce(Vector3D force, Vector3D position);
 
-	public abstract void addTorque(Vector3d torque);
+	public abstract void addTorque(Vector3D torque);
 
 	/**
 	 * Scala sugar coating
@@ -109,7 +109,7 @@ public abstract class RigidBody extends Component implements Updater {
 		return getMass();
 	}
 
-	public final Vector3d velocity() {
+	public final Vector3D velocity() {
 		return getVelocity();
 	}
 
@@ -117,7 +117,7 @@ public abstract class RigidBody extends Component implements Updater {
 		return getDrag();
 	}
 
-	public final Vector3d gravity() {
+	public final Vector3D gravity() {
 		return getGravity();
 	}
 

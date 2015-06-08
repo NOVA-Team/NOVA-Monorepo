@@ -9,8 +9,7 @@ import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
 import nova.core.util.transform.shape.Cuboid;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
 
 import java.util.HashMap;
@@ -24,21 +23,21 @@ import java.util.Set;
  */
 public class FakeWorld extends World {
 
-	public final Map<Vector3i, Block> blockMap = new HashMap<>();
+	public final Map<Vector3D, Block> blockMap = new HashMap<>();
 	public final Set<Entity> entities = new HashSet<>();
 
 	@Override
-	public void markStaticRender(Vector3i position) {
+	public void markStaticRender(Vector3D position) {
 
 	}
 
 	@Override
-	public void markChange(Vector3i position) {
+	public void markChange(Vector3D position) {
 
 	}
 
 	@Override
-	public Optional<Block> getBlock(Vector3i position) {
+	public Optional<Block> getBlock(Vector3D position) {
 		//Gives a fake block to represent air
 		FakeBlock air = new FakeBlock("air");
 		BlockTransform component = new BlockTransform();
@@ -49,7 +48,7 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public boolean setBlock(Vector3i position, BlockFactory blockFactory, Object... args) {
+	public boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args) {
 		Block newBlock = blockFactory.makeBlock();
 		BlockTransform component = new BlockTransform();
 		component.setPosition(position);
@@ -77,7 +76,7 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public Entity addEntity(Vector3d position, Item item) {
+	public Entity addEntity(Vector3D position, Item item) {
 		//TODO: Implement
 		return null;
 	}
@@ -106,7 +105,7 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public void playSoundAtPosition(Vector3d position, Sound sound) {
+	public void playSoundAtPosition(Vector3D position, Sound sound) {
 		//TODO: Implement
 	}
 

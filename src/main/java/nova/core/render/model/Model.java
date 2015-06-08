@@ -5,7 +5,7 @@ import nova.core.util.transform.matrix.Matrix4x4;
 import nova.core.util.transform.matrix.MatrixStack;
 import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector2d;
-import nova.core.util.transform.vector.Vector3;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -78,8 +78,8 @@ public class Model implements Iterable<Model>, Cloneable {
 		return flatten(new MatrixStack());
 	}
 
-	public Model translate(Vector3<?> vec) {
-		return translate(vec.xd(), vec.yd(), vec.zd());
+	public Model translate(Vector3D vec) {
+		return translate(vec.getX(), vec.getY(), vec.getZ());
 	}
 
 	public Model translate(double x, double y, double z) {
@@ -87,8 +87,8 @@ public class Model implements Iterable<Model>, Cloneable {
 		return this;
 	}
 
-	public Model scale(Vector3<?> vec) {
-		return scale(vec.xd(), vec.yd(), vec.zd());
+	public Model scale(Vector3D vec) {
+		return scale(vec.getX(), vec.getY(), vec.getZ());
 	}
 
 	public Model scale(double x, double y, double z) {
@@ -101,7 +101,7 @@ public class Model implements Iterable<Model>, Cloneable {
 		return this;
 	}
 
-	public Model rotate(Vector3<?> vec, double angle) {
+	public Model rotate(Vector3D vec, double angle) {
 		matrix = new MatrixStack().loadMatrix(matrix).rotate(vec, angle).getMatrix();
 		return this;
 	}

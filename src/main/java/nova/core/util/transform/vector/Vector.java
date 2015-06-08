@@ -4,7 +4,7 @@ import nova.core.util.transform.Operator;
 
 /**
  * Represents an abstract vector with its mathematical operators.
- * Vector3 and Vector2 may extend this. Requires the Vector self type as a generic parameter.
+ * Vector3D and Vector2 may extend this. Requires the Vector self type as a generic parameter.
  * @param <I> -describeme-
  * @param <O> -describeme-
  * @author Calclavia
@@ -16,7 +16,7 @@ public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operat
 	 * @param other The other vector
 	 * @return The dot product
 	 */
-	public abstract double dot(I other);
+	public abstract double dotProduct(I other);
 
 	public final double distance(I other) {
 		return Math.sqrt(distanceSquared(other));
@@ -35,7 +35,7 @@ public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operat
 	}
 
 	public final double magnitudeSquared() {
-		return dot((I) this);
+		return dotProduct((I) this);
 	}
 
 	/**
@@ -44,7 +44,7 @@ public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operat
 	 * @return Angle
 	 */
 	public final double angle(I other) {
-		return Math.acos(dot(other) / (magnitude() * other.magnitude()));
+		return Math.acos(dotProduct(other) / (magnitude() * other.magnitude()));
 	}
 
 	/**
@@ -82,6 +82,6 @@ public abstract class Vector<I extends Vector<I, O>, O extends I> extends Operat
 	}
 
 	public double $dot$times(I v) {
-		return dot(v);
+		return dotProduct(v);
 	}
 }

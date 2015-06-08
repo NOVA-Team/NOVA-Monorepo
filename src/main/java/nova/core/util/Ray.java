@@ -1,14 +1,15 @@
 package nova.core.util;
 
-import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.math.VectorUtil;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * @author Calclavia
  */
 public class Ray {
-	public final Vector3d origin;
-	public final Vector3d dir;
-	public final Vector3d invDir;
+	public final Vector3D origin;
+	public final Vector3D dir;
+	public final Vector3D invDir;
 
 	public final boolean ignoreX;
 	public final boolean ignoreY;
@@ -22,20 +23,20 @@ public class Ray {
 	 * @param origin The ray's beginning
 	 * @param dir The ray's direction (unit vector)
 	 */
-	public Ray(Vector3d origin, Vector3d dir) {
+	public Ray(Vector3D origin, Vector3D dir) {
 		this.origin = origin;
 		this.dir = dir;
-		this.invDir = dir.reciprocal();
-		this.signDirX = invDir.x < 0;
-		this.signDirY = invDir.y < 0;
-		this.signDirZ = invDir.z < 0;
+		this.invDir = VectorUtil.reciprocal(dir);
+		this.signDirX = invDir.getX() < 0;
+		this.signDirY = invDir.getY() < 0;
+		this.signDirZ = invDir.getZ() < 0;
 
-		this.ignoreX = Math.abs(dir.x) < 0.0000001;
-		this.ignoreY = Math.abs(dir.y) < 0.0000001;
-		this.ignoreZ = Math.abs(dir.z) < 0.0000001;
+		this.ignoreX = Math.abs(dir.getX()) < 0.0000001;
+		this.ignoreY = Math.abs(dir.getY()) < 0.0000001;
+		this.ignoreZ = Math.abs(dir.getZ()) < 0.0000001;
 	}
 
-	public static Ray fromInterval(Vector3d start, Vector3d end) {
+	public static Ray fromInterval(Vector3D start, Vector3D end) {
 		return new Ray(start, end.subtract(start).normalize());
 	}
 }

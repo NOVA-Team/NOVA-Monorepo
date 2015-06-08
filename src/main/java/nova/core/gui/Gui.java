@@ -13,7 +13,7 @@ import nova.core.inventory.Inventory;
 import nova.core.inventory.component.InventoryPlayer;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.internal.Game;
 
 import java.util.HashMap;
@@ -79,7 +79,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	 * @param entity Entity which interacted to display this GUI
 	 * @param position block position
 	 */
-	public void bind(Entity entity, Vector3i position) {
+	public void bind(Entity entity, Vector3D position) {
 		inventoryMap.clear();
 		playerInventory = entity.get(Player.class).getInventory();
 		onEvent(new GuiEvent.BindEvent(this, entity, position));

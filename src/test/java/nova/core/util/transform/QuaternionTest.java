@@ -1,7 +1,8 @@
 package nova.core.util.transform;
 
+import nova.core.util.math.VectorUtil;
 import nova.core.util.transform.matrix.Quaternion;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,90 +36,90 @@ public class QuaternionTest {
 
 	@Test
 	public void testNoTransform() {
-		assertThat(Quaternion.fromEuler(0, 0, 0).transform(Vector3d.one)).isEqualTo(Vector3d.one);
+		assertThat(Quaternion.fromEuler(0, 0, 0).transform(VectorUtil.ONE)).isEqualTo(VectorUtil.ONE);
 
 		for (Quaternion quaternion : quaternions) {
-			assertThat(quaternion.transform(Vector3d.zero)).isEqualTo(Vector3d.zero);
+			assertThat(quaternion.transform(Vector3D.ZERO)).isEqualTo(Vector3D.ZERO);
 		}
 	}
 
 	@Test
 	public void testEulerToVector() {
 		Quaternion rot = Quaternion.fromEuler(0, 0, 0);
-		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.zAxis.negate());
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3D.PLUS_K.negate());
 
 		rot = Quaternion.fromEuler(Math.PI / 2, 0, 0);
-		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.xAxis.negate());
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3D.PLUS_I.negate());
 
 		rot = Quaternion.fromEuler(-Math.PI / 2, 0, 0);
-		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.xAxis);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3D.PLUS_I);
 
 		rot = Quaternion.fromEuler(Math.PI, 0, 0);
-		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.zAxis);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3D.PLUS_K);
 
 		rot = Quaternion.fromEuler(0, Math.PI / 2, 0);
-		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.yAxis);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3D.PLUS_J);
 
 		rot = Quaternion.fromEuler(0, 0, Math.PI / 2);
-		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.zAxis.negate());
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3D.PLUS_K.negate());
 
 		rot = Quaternion.fromEuler(Math.PI / 2, Math.PI / 2, 0);
-		assertThat(rot.toForwardVector()).isEqualTo(Vector3d.yAxis);
+		assertThat(rot.toForwardVector()).isEqualTo(Vector3D.PLUS_J);
 	}
 
 	@Test
 	public void testTransform() {
 		Quaternion q0 = Quaternion.fromEuler(0, 0, 0);
-		assertThat(q0.transform(new Vector3d(1, 0, 0))).isEqualTo(new Vector3d(1, 0, 0));
-		assertThat(q0.transform(new Vector3d(1, 1, 0))).isEqualTo(new Vector3d(1, 1, 0));
-		assertThat(q0.transform(new Vector3d(1, 0, 1))).isEqualTo(new Vector3d(1, 0, 1));
+		assertThat(q0.transform(new Vector3D(1, 0, 0))).isEqualTo(new Vector3D(1, 0, 0));
+		assertThat(q0.transform(new Vector3D(1, 1, 0))).isEqualTo(new Vector3D(1, 1, 0));
+		assertThat(q0.transform(new Vector3D(1, 0, 1))).isEqualTo(new Vector3D(1, 0, 1));
 
 		Quaternion q = Quaternion.fromEulerDegree(90, 0, 0);
-		assertThat(q.transform(new Vector3d(0, 0, 1))).isEqualTo(new Vector3d(1, 0, 0));
-		assertThat(q.transform(new Vector3d(0, 0, -1))).isEqualTo(new Vector3d(-1, 0, 0));
-		assertThat(q.transform(new Vector3d(-1, 0, 0))).isEqualTo(new Vector3d(0, 0, 1));
-		assertThat(q.transform(new Vector3d(1, 0, 0))).isEqualTo(new Vector3d(0, 0, -1));
+		assertThat(q.transform(new Vector3D(0, 0, 1))).isEqualTo(new Vector3D(1, 0, 0));
+		assertThat(q.transform(new Vector3D(0, 0, -1))).isEqualTo(new Vector3D(-1, 0, 0));
+		assertThat(q.transform(new Vector3D(-1, 0, 0))).isEqualTo(new Vector3D(0, 0, 1));
+		assertThat(q.transform(new Vector3D(1, 0, 0))).isEqualTo(new Vector3D(0, 0, -1));
 
-		assertThat(q.transform(new Vector3d(0, 0, 0.5))).isEqualTo(new Vector3d(0.5, 0, 0));
-		assertThat(q.transform(new Vector3d(1, 0, 1))).isEqualTo(new Vector3d(1, 0, -1));
+		assertThat(q.transform(new Vector3D(0, 0, 0.5))).isEqualTo(new Vector3D(0.5, 0, 0));
+		assertThat(q.transform(new Vector3D(1, 0, 1))).isEqualTo(new Vector3D(1, 0, -1));
 
 		q = Quaternion.fromEulerDegree(-90, 0, 0);
 
-		assertThat(q.transform(new Vector3d(0, 0, 1))).isEqualTo(new Vector3d(-1, 0, 0));
-		assertThat(q.transform(new Vector3d(0, 0, -1))).isEqualTo(new Vector3d(1, 0, 0));
-		assertThat(q.transform(new Vector3d(-1, 0, 0))).isEqualTo(new Vector3d(0, 0, -1));
-		assertThat(q.transform(new Vector3d(1, 0, 0))).isEqualTo(new Vector3d(0, 0, 1));
+		assertThat(q.transform(new Vector3D(0, 0, 1))).isEqualTo(new Vector3D(-1, 0, 0));
+		assertThat(q.transform(new Vector3D(0, 0, -1))).isEqualTo(new Vector3D(1, 0, 0));
+		assertThat(q.transform(new Vector3D(-1, 0, 0))).isEqualTo(new Vector3D(0, 0, -1));
+		assertThat(q.transform(new Vector3D(1, 0, 0))).isEqualTo(new Vector3D(0, 0, 1));
 
-		assertThat(q.transform(new Vector3d(0, 0, 0.5))).isEqualTo(new Vector3d(-0.5, 0, 0));
-		assertThat(q.transform(new Vector3d(1, 0, 1))).isEqualTo(new Vector3d(-1, 0, 1));
+		assertThat(q.transform(new Vector3D(0, 0, 0.5))).isEqualTo(new Vector3D(-0.5, 0, 0));
+		assertThat(q.transform(new Vector3D(1, 0, 1))).isEqualTo(new Vector3D(-1, 0, 1));
 
 		q = Quaternion.fromEulerDegree(180, 0, 0);
 
-		assertThat(q.transform(new Vector3d(1, 0, 0))).isEqualTo(new Vector3d(-1, 0, 0));
-		assertThat(q.transform(new Vector3d(-1, 0, 0))).isEqualTo(new Vector3d(1, 0, 0));
-		assertThat(q.transform(new Vector3d(0, 0, 1))).isEqualTo(new Vector3d(0, 0, -1));
-		assertThat(q.transform(new Vector3d(0, 0, -1))).isEqualTo(new Vector3d(0, 0, 1));
+		assertThat(q.transform(new Vector3D(1, 0, 0))).isEqualTo(new Vector3D(-1, 0, 0));
+		assertThat(q.transform(new Vector3D(-1, 0, 0))).isEqualTo(new Vector3D(1, 0, 0));
+		assertThat(q.transform(new Vector3D(0, 0, 1))).isEqualTo(new Vector3D(0, 0, -1));
+		assertThat(q.transform(new Vector3D(0, 0, -1))).isEqualTo(new Vector3D(0, 0, 1));
 
-		assertThat(q.transform(new Vector3d(0, 0, 0.5))).isEqualTo(new Vector3d(0, 0, -0.5));
-		assertThat(q.transform(new Vector3d(1, 0, 1))).isEqualTo(new Vector3d(-1, 0, -1));
+		assertThat(q.transform(new Vector3D(0, 0, 0.5))).isEqualTo(new Vector3D(0, 0, -0.5));
+		assertThat(q.transform(new Vector3D(1, 0, 1))).isEqualTo(new Vector3D(-1, 0, -1));
 
 		q = Quaternion.fromEulerDegree(360, 0, 0);
 
-		assertThat(q.transform(new Vector3d(1, 0, 0))).isEqualTo(new Vector3d(1, 0, 0));
-		assertThat(q.transform(new Vector3d(-1, 0, 0))).isEqualTo(new Vector3d(-1, 0, 0));
-		assertThat(q.transform(new Vector3d(0, 0, 1))).isEqualTo(new Vector3d(0, 0, 1));
-		assertThat(q.transform(new Vector3d(0, 0, -1))).isEqualTo(new Vector3d(0, 0, -1));
+		assertThat(q.transform(new Vector3D(1, 0, 0))).isEqualTo(new Vector3D(1, 0, 0));
+		assertThat(q.transform(new Vector3D(-1, 0, 0))).isEqualTo(new Vector3D(-1, 0, 0));
+		assertThat(q.transform(new Vector3D(0, 0, 1))).isEqualTo(new Vector3D(0, 0, 1));
+		assertThat(q.transform(new Vector3D(0, 0, -1))).isEqualTo(new Vector3D(0, 0, -1));
 
-		assertThat(q.transform(new Vector3d(0, 0, 0.5))).isEqualTo(new Vector3d(0, 0, 0.5));
-		assertThat(q.transform(new Vector3d(1, 0, 1))).isEqualTo(new Vector3d(1, 0, 1));
+		assertThat(q.transform(new Vector3D(0, 0, 0.5))).isEqualTo(new Vector3D(0, 0, 0.5));
+		assertThat(q.transform(new Vector3D(1, 0, 1))).isEqualTo(new Vector3D(1, 0, 1));
 
 		q = Quaternion.fromEulerDegree(0, 90, 0);
-		assertThat(q.transform(new Vector3d(0, 0, 1))).isEqualTo(new Vector3d(0, -1, 0));
-		assertThat(q.transform(new Vector3d(0, -1, 0))).isEqualTo(new Vector3d(0, 0, -1));
+		assertThat(q.transform(new Vector3D(0, 0, 1))).isEqualTo(new Vector3D(0, -1, 0));
+		assertThat(q.transform(new Vector3D(0, -1, 0))).isEqualTo(new Vector3D(0, 0, -1));
 
 		q = Quaternion.fromEulerDegree(90, 90, 0);
-		assertThat(q.transform(new Vector3d(0, 1, 0))).isEqualTo(new Vector3d(1, 0, 0));
-		assertThat(q.transform(new Vector3d(1, 0, 0))).isEqualTo(new Vector3d(0, 0, -1));
+		assertThat(q.transform(new Vector3D(0, 1, 0))).isEqualTo(new Vector3D(1, 0, 0));
+		assertThat(q.transform(new Vector3D(1, 0, 0))).isEqualTo(new Vector3D(0, 0, -1));
 
 	}
 }

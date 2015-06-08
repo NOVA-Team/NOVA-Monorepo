@@ -1,7 +1,7 @@
 package nova.core.util.transform.vector;
 
 /**
- * An abstract Vector3 class that is extended by both Vector3i and Vector3d
+ * An abstract Vector3D class that is extended by both Vector3i and Vector3d
  *
  * @param <O> -describeme-
  * @author Calclavia
@@ -27,7 +27,7 @@ public abstract class Vector2<O extends Vector2<O>> extends Vector<Vector2<O>, O
 	public abstract double yd();
 
 	@Override
-	public double dot(Vector2 other) {
+	public double dotProduct(Vector2 other) {
 		return xd() * other.xd() + yd() * other.yd();
 	}
 

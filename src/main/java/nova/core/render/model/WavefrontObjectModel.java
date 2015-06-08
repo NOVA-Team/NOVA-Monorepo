@@ -2,7 +2,7 @@ package nova.core.render.model;
 
 import nova.core.render.RenderException;
 import nova.core.util.transform.vector.Vector2d;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class WavefrontObjectModel extends ModelProvider {
 	//A map of all models generated with their names
 	private final Model model = new Model();
 	private Model currentModel = null;
-	private ArrayList<Vector3d> vertices = new ArrayList<>();
+	private ArrayList<Vector3D> vertices = new ArrayList<>();
 	private ArrayList<Vector2d> textureCoordinates = new ArrayList<>();
 
 	public WavefrontObjectModel(String domain, String name) {
@@ -53,7 +53,7 @@ public class WavefrontObjectModel extends ModelProvider {
 				if (currentLine.startsWith("#") || currentLine.length() == 0) {
 					continue;
 				} else if (currentLine.startsWith("v ")) {
-					Vector3d vertex = parseToVertex(currentLine, lineCount);
+					Vector3D vertex = parseToVertex(currentLine, lineCount);
 					if (vertex != null) {
 						vertices.add(vertex);
 					}
@@ -111,15 +111,15 @@ public class WavefrontObjectModel extends ModelProvider {
 		return "obj";
 	}
 
-	private Vector3d parseToVertex(String line, int lineNumber) {
+	private Vector3D parseToVertex(String line, int lineNumber) {
 		if (isValid(line, vertexPattern)) {
 			line = line.substring(line.indexOf(" ") + 1);
 			String[] tokens = line.split(" ");
 			try {
 				if (tokens.length == 2) {
-					return new Vector3d(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), 0);
+					return new Vector3D(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), 0);
 				} else if (tokens.length == 3) {
-					return new Vector3d(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]));
+					return new Vector3D(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]));
 				}
 			} catch (NumberFormatException e) {
 				throw new RenderException(String.format("Number formatting error at line %d", lineNumber), e);
@@ -147,13 +147,13 @@ public class WavefrontObjectModel extends ModelProvider {
 		return null;
 	}
 
-	private Vector3d parseToVertexNormal(String line, int lineNumber) {
+	private Vector3D parseToVertexNormal(String line, int lineNumber) {
 		if (isValid(line, vertexNormalPattern)) {
 			line = line.substring(line.indexOf(" ") + 1);
 			String[] tokens = line.split(" ");
 			try {
 				if (tokens.length == 3) {
-					return new Vector3d(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]));
+					return new Vector3D(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]));
 				}
 			} catch (NumberFormatException e) {
 				throw new RenderException(String.format("Number formatting error at line %d", lineNumber), e);
@@ -223,14 +223,14 @@ public class WavefrontObjectModel extends ModelProvider {
 		return null;
 	}
 
-	private Vector3d calculateNormal(Face face) {
+	private Vector3D calculateNormal(Face face) {
 		Vertex firstEntry = face.vertices.get(0);
 		Vertex secondEntry = face.vertices.get(1);
 		Vertex thirdEntry = face.vertices.get(1);
-		Vector3d v1 = new Vector3d(secondEntry.vec.x - firstEntry.vec.x, secondEntry.vec.y - firstEntry.vec.y, secondEntry.vec.z - firstEntry.vec.z);
-		Vector3d v2 = new Vector3d(thirdEntry.vec.x - firstEntry.vec.x, thirdEntry.vec.y - firstEntry.vec.y, thirdEntry.vec.z - firstEntry.vec.z);
+		Vector3D v1 = new Vector3D(secondEntry.vec.getX() - firstEntry.vec.getX(), secondEntry.vec.getY() - firstEntry.vec.getY(), secondEntry.vec.getZ() - firstEntry.vec.getZ());
+		Vector3D v2 = new Vector3D(thirdEntry.vec.getX() - firstEntry.vec.getX(), thirdEntry.vec.getY() - firstEntry.vec.getY(), thirdEntry.vec.getZ() - firstEntry.vec.getZ());
 
-		return v1.cross(v2).normalize();
+		return v1.crossProduct(v2).normalize();
 	}
 
 	/**

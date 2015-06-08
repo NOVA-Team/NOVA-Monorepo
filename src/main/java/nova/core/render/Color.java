@@ -1,7 +1,7 @@
 package nova.core.render;
 
 import nova.core.util.NovaException;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * Arbitrary immutable color object. Holds a color in argb space.
@@ -14,19 +14,19 @@ public class Color {
 	// TODO Document me!
 	// TODO Test me!
 
-	public static final Color white     = rgb(255, 255, 255);
+	public static final Color white = rgb(255, 255, 255);
 	public static final Color lightGray = rgb(192, 192, 192);
-	public static final Color gray      = rgb(128, 128, 128);
-	public static final Color darkGray  = rgb( 64,  64,  64);
-	public static final Color black     = rgb(  0,   0,   0);
-	public static final Color red       = rgb(255,   0,   0);
-	public static final Color pink      = rgb(255, 175, 175);
-	public static final Color orange    = rgb(255, 200,   0);
-	public static final Color yellow    = rgb(255, 255,   0);
-	public static final Color green     = rgb(  0, 255,   0);
-	public static final Color magenta   = rgb(255,   0, 255);
-	public static final Color cyan      = rgb(  0, 255, 255);
-	public static final Color blue      = rgb(  0,   0, 255);
+	public static final Color gray = rgb(128, 128, 128);
+	public static final Color darkGray = rgb(64, 64, 64);
+	public static final Color black = rgb(0, 0, 0);
+	public static final Color red = rgb(255, 0, 0);
+	public static final Color pink = rgb(255, 175, 175);
+	public static final Color orange = rgb(255, 200, 0);
+	public static final Color yellow = rgb(255, 255, 0);
+	public static final Color green = rgb(0, 255, 0);
+	public static final Color magenta = rgb(255, 0, 255);
+	public static final Color cyan = rgb(0, 255, 255);
+	public static final Color blue = rgb(0, 0, 255);
 
 	private final int value;
 
@@ -42,11 +42,11 @@ public class Color {
 		return rgba(red, green, blue, 255);
 	}
 
-	public static Color rgbfc(float red, float green, float blue) {
+	public static Color rgbfc(double red, double green, double blue) {
 		return rgbafc(red, green, blue, 1F);
 	}
 
-	public static Color rgbf(float red, float green, float blue) {
+	public static Color rgbf(double red, double green, double blue) {
 		return rgbaf(red, green, blue, 1F);
 	}
 
@@ -64,16 +64,17 @@ public class Color {
 	}
 
 	public static Color rgba(int red, int green, int blue, int alpha) {
-		if (red > 255 || red < 0 || green > 255 || green < 0 || blue > 255 || blue < 0 || alpha > 255 || blue < 0)
+		if (red > 255 || red < 0 || green > 255 || green < 0 || blue > 255 || blue < 0 || alpha > 255 || blue < 0) {
 			throw new ColorRangeException(red, green, blue, alpha);
+		}
 		return rgbac(red, green, blue, alpha);
 	}
 
-	public static Color rgbafc(float red, float green, float blue, float alpha) {
+	public static Color rgbafc(double red, double green, double blue, double alpha) {
 		return rgbac((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255));
 	}
 
-	public static Color rgbaf(float red, float green, float blue, float alpha) {
+	public static Color rgbaf(double red, double green, double blue, double alpha) {
 		return rgba((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255));
 	}
 
@@ -84,8 +85,9 @@ public class Color {
 	}
 
 	public static Color rgba(int rgb, int alpha) {
-		if (alpha > 255 || alpha < 0)
+		if (alpha > 255 || alpha < 0) {
 			throw new ColorRangeException(alpha);
+		}
 		return rgbac(rgb, alpha);
 	}
 
@@ -103,44 +105,44 @@ public class Color {
 
 	public static Color rgba(int rgba) {
 		int alpha = rgba & 0xFF;
-		int argb  = rgba << 8;
+		int argb = rgba << 8;
 		argb |= alpha << 24;
 		return argb(argb);
 	}
 
-	public static Color hsl(float h, float s, float l) {
+	public static Color hsl(double h, double s, double l) {
 
 		if (s == 0) {
 			int c = (int) (l * 255);
 			return rgbc(c, c, c);
 		}
 
-		float t1 = 0;
+		double t1 = 0;
 		if (l < 0.5F) {
 			t1 = l * (1 + s);
 		} else {
 			t1 = l + s - l * s;
 		}
-		float t2 = 2 * l - t1;
+		double t2 = 2 * l - t1;
 
 		h = (h % 360F) / 360F;
 
-		float tr = h + 1 / 3F;
-		float tg = h;
-		float tb = h - 1 / 3F;
+		double tr = h + 1 / 3F;
+		double tg = h;
+		double tb = h - 1 / 3F;
 
 		tr = tr > 1 ? tr - 1 : tr < 0 ? tr + 1 : tr;
 		tg = tg > 1 ? tg - 1 : tg < 0 ? tg + 1 : tg;
 		tb = tb > 1 ? tb - 1 : tb < 0 ? tb + 1 : tb;
 
-		float r = constructColor(tr, t1, t2);
-		float g = constructColor(tg, t1, t2);
-		float b = constructColor(tb, t1, t2);
+		double r = constructColor(tr, t1, t2);
+		double g = constructColor(tg, t1, t2);
+		double b = constructColor(tb, t1, t2);
 
 		return rgbfc(r, g, b);
 	}
 
-	private static float constructColor(float c, float t1, float t2) {
+	private static double constructColor(double c, double t1, double t2) {
 		if (6 * c < 1) {
 			return t2 + (t1 - t2) * 6 * c;
 		} else if (2 * c < 1) {
@@ -152,8 +154,8 @@ public class Color {
 		}
 	}
 
-	public static Color hsl(Vector3d hsl) {
-		return hsl(hsl.xf(), hsl.yf(), hsl.zf());
+	public static Color hsl(Vector3D hsl) {
+		return hsl(hsl.getX(), hsl.getY(), hsl.getZ());
 	}
 
 	public int argb() {
@@ -162,7 +164,7 @@ public class Color {
 
 	public int rgba() {
 		int alpha = value & 0xFF000000;
-		int rgba  = value << 8;
+		int rgba = value << 8;
 		rgba |= alpha >> 24;
 		return rgba;
 	}
@@ -235,9 +237,9 @@ public class Color {
 		int aA = alpha();
 		int aB = color.alpha();
 
-		int r = (int) ((red()   * aA / 255F) + (color.red()   * aB * (255F - aA) / (255F * 255F)));
+		int r = (int) ((red() * aA / 255F) + (color.red() * aB * (255F - aA) / (255F * 255F)));
 		int g = (int) ((green() * aA / 255F) + (color.green() * aB * (255F - aA) / (255F * 255F)));
-		int b = (int) ((blue()  * aA / 255F) + (color.blue()  * aB * (255F - aA) / (255F * 255F)));
+		int b = (int) ((blue() * aA / 255F) + (color.blue() * aB * (255F - aA) / (255F * 255F)));
 		int a = (int) (aA + (aB * (255F - aA) / 255F));
 		return rgbac(r, g, b, a);
 	}
@@ -266,7 +268,7 @@ public class Color {
 		return rgbac(255 - red(), 255 - green(), 255 - blue(), alpha());
 	}
 
-	public Vector3d hsl() {
+	public Vector3D hsl() {
 
 		float r = redf();
 		float g = greenf();
@@ -279,7 +281,7 @@ public class Color {
 		float s = saturation(min, max, l);
 		float h = hue(r, g, b, min, max);
 
-		return new Vector3d(h, s, l);
+		return new Vector3D(h, s, l);
 	}
 
 	private float lighting(float min, float max) {
@@ -309,8 +311,9 @@ public class Color {
 		}
 
 		h *= 60;
-		if (h < 0)
+		if (h < 0) {
 			h += 360;
+		}
 
 		return h;
 	}
@@ -353,24 +356,24 @@ public class Color {
 	}
 
 	public Color lighting(float l) {
-		Vector3d hsl = hsl();
-		return hsl(hsl.xf(), hsl.yf(), l).alpha(alpha());
+		Vector3D hsl = hsl();
+		return hsl(hsl.getX(), hsl.getY(), l).alpha(alpha());
 	}
 
 	public Color saturation(float s) {
-		Vector3d hsl = hsl();
-		return hsl(hsl.xf(), s, hsl.zf()).alpha(alpha());
+		Vector3D hsl = hsl();
+		return hsl(hsl.getX(), s, hsl.getZ()).alpha(alpha());
 	}
 
 	public Color hue(float h) {
-		Vector3d hsl = hsl();
-		return hsl(h, hsl.yf(), hsl.zf()).alpha(alpha());
+		Vector3D hsl = hsl();
+		return hsl(h, hsl.getY(), hsl.getZ()).alpha(alpha());
 	}
 
 	public Color complementary() {
-		Vector3d hsl = hsl();
-		float    h   = hsl.yf() + 180F;
-		return hsl(h, hsl.yf(), hsl.zf()).alpha(alpha());
+		Vector3D hsl = hsl();
+		double h = hsl.getY() + 180F;
+		return hsl(h, hsl.getY(), hsl.getZ()).alpha(alpha());
 	}
 
 	@Override
@@ -380,10 +383,12 @@ public class Color {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null || obj.getClass() != Color.class)
+		}
+		if (obj == null || obj.getClass() != Color.class) {
 			return false;
+		}
 		return value == ((Color) obj).value;
 	}
 

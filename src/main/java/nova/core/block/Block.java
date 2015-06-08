@@ -10,8 +10,7 @@ import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
 import nova.internal.Game;
 
@@ -64,7 +63,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		return transform().world();
 	}
 
-	public final Vector3i position() {
+	public final Vector3D position() {
 		return transform().position();
 	}
 
@@ -73,7 +72,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 * @return The x co-ordinate of the block.
 	 */
 	public final int x() {
-		return position().x;
+		return (int) position().getX();
 	}
 
 	/**
@@ -81,7 +80,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 * @return The y co-ordinate of the block.
 	 */
 	public final int y() {
-		return position().y;
+		return (int) position().getY();
 	}
 
 	/**
@@ -89,7 +88,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 * @return The z co-ordinate of the block.
 	 */
 	public final int z() {
-		return position().z;
+		return (int) position().getZ();
 	}
 
 	/**
@@ -133,13 +132,13 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 */
 	@CancelableEvent.Cancelable
 	public static class NeighborChangeEvent extends CancelableEvent {
-		public final Optional<Vector3i> neighborPosition;
+		public final Optional<Vector3D> neighborPosition;
 
 		/**
 		 * Called when a block next to this one changes (removed, placed, etc...).
 		 * @param neighborPosition The position of the block that changed.
 		 */
-		public NeighborChangeEvent(Optional<Vector3i> neighborPosition) {
+		public NeighborChangeEvent(Optional<Vector3D> neighborPosition) {
 			this.neighborPosition = neighborPosition;
 		}
 	}
@@ -159,7 +158,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		/**
 		 * Where the player clicked on the block for placement.
 		 */
-		public final Vector3d hit;
+		public final Vector3D hit;
 
 		/**
 		 * The item used to place this block.
@@ -169,7 +168,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		/**
 		 * Called when the block is placed.
 		 */
-		public BlockPlaceEvent(Entity placer, Direction side, Vector3d hit, Item item) {
+		public BlockPlaceEvent(Entity placer, Direction side, Vector3D hit, Item item) {
 			this.placer = placer;
 			this.side = side;
 			this.hit = hit;
@@ -211,14 +210,14 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		/**
 		 * The position it was clicked.
 		 */
-		public final Vector3d position;
+		public final Vector3D position;
 
 		/**
 		 * {@code true} if the right click action does something.
 		 */
 		public boolean result = false;
 
-		public RightClickEvent(Entity entity, Direction side, Vector3d position) {
+		public RightClickEvent(Entity entity, Direction side, Vector3D position) {
 			this.entity = entity;
 			this.side = side;
 			this.position = position;
@@ -240,14 +239,14 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		/**
 		 * The position it was clicked.
 		 */
-		public final Vector3d position;
+		public final Vector3D position;
 
 		/**
 		 * {@code true} if the right click action does something.
 		 */
 		public boolean result = false;
 
-		public LeftClickEvent(Entity entity, Direction side, Vector3d position) {
+		public LeftClickEvent(Entity entity, Direction side, Vector3D position) {
 			this.entity = entity;
 			this.side = side;
 			this.position = position;

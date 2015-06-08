@@ -1,7 +1,7 @@
 package nova.core.render.model;
 
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class Face implements Cloneable {
 	//The vertices that make up this face.
 	public final List<Vertex> vertices = new ArrayList<>();
 	//The normal (or direction) this face is facing. Normals must be unit vectors.
-	public Vector3d normal = Vector3d.zero;
+	public Vector3D normal = Vector3D.ZERO;
 	//The texture that is to be rendered on this face.
 	public Optional<Texture> texture = Optional.empty();
 	//The brightness value defines how bright the face should be rendered. The default value will let NOVA decide the brightness based on the world surroundings.
@@ -45,18 +45,19 @@ public class Face implements Cloneable {
 
 	/**
 	 * Gets the center of this face.
+	 *
 	 * @return Center
 	 */
-	public Vector3d getCenter() {
+	public Vector3D getCenter() {
 		if (vertices.size() >= 3) {
 			return vertices
 				.stream()
 				.map(v -> v.vec)
-				.reduce(Vector3d.zero, (a, b) -> a.add(b))
-				.divide(vertices.size());
+				.reduce(Vector3D.ZERO, (a, b) -> a.add(b))
+				.scalarMultiply(1 / vertices.size());
 		}
 
-		return Vector3d.zero;
+		return Vector3D.ZERO;
 	}
 
 	@Override

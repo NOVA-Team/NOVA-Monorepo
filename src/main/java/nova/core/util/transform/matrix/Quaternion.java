@@ -29,8 +29,8 @@ import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.collection.Tuple2;
 import nova.core.util.transform.vector.Transformer;
-import nova.core.util.transform.vector.Vector3;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -75,12 +75,12 @@ public class Quaternion implements Transformer, Storable {
 	 * Pitch - Rotation around x-axis (bank)
 	 * Roll - Rotation around z-axis (attitude)
 	 *
-	 * @param euler input {@link Vector3}
+	 * @param euler input {@link Vector3D}
 	 * @return resulting {@link Quaternion}
 	 * @author Calclavia
 	 */
-	public static Quaternion fromEuler(Vector3<?> euler) {
-		return fromEuler(euler.xd(), euler.yd(), euler.zd());
+	public static Quaternion fromEuler(Vector3D euler) {
+		return fromEuler(euler.getX(), euler.getY(), euler.getZ());
 	}
 
 	public static Quaternion fromEuler(double yaw, double pitch) {
@@ -94,9 +94,9 @@ public class Quaternion implements Transformer, Storable {
 	 * @param direction A unit vector
 	 * @return The quaternion
 	 */
-	public static Quaternion fromDirection(Vector3d direction) {
-		double yaw = Math.atan2(direction.z, direction.x);
-		double pitch = Math.asin(direction.y);
+	public static Quaternion fromDirection(Vector3D direction) {
+		double yaw = Math.atan2(direction.getZ(), direction.getX());
+		double pitch = Math.asin(direction.getY());
 		return fromEuler(yaw, pitch);
 	}
 
@@ -124,12 +124,12 @@ public class Quaternion implements Transformer, Storable {
 	/**
 	 * Returns a quaternion from Angle Axis rotation.
 	 *
-	 * @param axis Axis {@link Vector3}
+	 * @param axis Axis {@link Vector3D}
 	 * @param angle Angle in radians
 	 * @return The Quaternion representation of the angle axis rotation.
 	 */
-	public static Quaternion fromAxis(Vector3<?> axis, double angle) {
-		return fromAxis(axis.xd(), axis.yd(), axis.zd(), angle);
+	public static Quaternion fromAxis(Vector3D axis, double angle) {
+		return fromAxis(axis.getX(), axis.getY(), axis.getZ(), angle);
 	}
 
 	public static Quaternion fromAxis(double ax, double ay, double az, double angle) {
@@ -147,7 +147,7 @@ public class Quaternion implements Transformer, Storable {
 	}
 
 	/**
-	 * Use right multiply for compound operations.
+	 * Use right crossProduct for compound operations.
 	 *
 	 * We can for pure rotations, for instance if the first rotation is q1 we have:
 	 *
@@ -161,7 +161,7 @@ public class Quaternion implements Transformer, Storable {
 	 *
 	 * x3 = (q2*q1) * x * (q2*q1)'
 	 *
-	 * @param q - The quaternion to multiply with
+	 * @param q - The quaternion to crossProduct with
 	 * @return The new Quaternion
 	 */
 	public Quaternion rightMultiply(Quaternion q) {
@@ -190,14 +190,14 @@ public class Quaternion implements Transformer, Storable {
 	}
 
 	@Override
-	public Vector3d transform(Vector3<?> vec) {
-		double vX = w * w * vec.xd() + 2 * y * w * vec.zd() - 2 * z * w * vec.yd() + x * x * vec.xd() + 2 * y * x * vec.yd() + 2 * z * x * vec.zd() - z * z * vec.xd() - y * y * vec.xd();
-		double vY = 2 * x * y * vec.xd() + y * y * vec.yd() + 2 * z * y * vec.zd() + 2 * w * z * vec.xd() - z * z * vec.yd() + w * w * vec.yd() - 2 * x * w * vec.zd() - x * x * vec.yd();
-		double vZ = 2 * x * z * vec.xd() + 2 * y * z * vec.yd() + z * z * vec.zd() - 2 * w * y * vec.xd() - y * y * vec.zd() + 2 * w * x * vec.yd() - x * x * vec.zd() + w * w * vec.zd();
-		return new Vector3d(vX, vY, vZ);
+	public Vector3D transform(Vector3D vec) {
+		double vX = w * w * vec.getX() + 2 * y * w * vec.getZ() - 2 * z * w * vec.getY() + x * x * vec.getX() + 2 * y * x * vec.getY() + 2 * z * x * vec.getZ() - z * z * vec.getX() - y * y * vec.getX();
+		double vY = 2 * x * y * vec.getX() + y * y * vec.getY() + 2 * z * y * vec.getZ() + 2 * w * z * vec.getX() - z * z * vec.getY() + w * w * vec.getY() - 2 * x * w * vec.getZ() - x * x * vec.getY();
+		double vZ = 2 * x * z * vec.getX() + 2 * y * z * vec.getY() + z * z * vec.getZ() - 2 * w * y * vec.getX() - y * y * vec.getZ() + 2 * w * x * vec.getY() - x * x * vec.getZ() + w * w * vec.getZ();
+		return new Vector3D(vX, vY, vZ);
 	}
 
-	public Vector3d toEuler() {
+	public Vector3D toEuler() {
 		double sqw = w * w;
 		double sqx = x * x;
 		double sqy = y * y;
@@ -207,17 +207,17 @@ public class Quaternion implements Transformer, Storable {
 
 		// singularity at north pole
 		if (test > 0.499 * unit) {
-			return new Vector3d(2 * Math.atan2(x, w), 0, Math.PI / 2);
+			return new Vector3D(2 * Math.atan2(x, w), 0, Math.PI / 2);
 		}
 
 		// singularity at south pole
 		if (test < -0.499 * unit) {
-			return new Vector3d(-2 * Math.atan2(x, w), 0, -Math.PI / 2);
+			return new Vector3D(-2 * Math.atan2(x, w), 0, -Math.PI / 2);
 		}
-		return new Vector3d(Math.atan2(2 * y * w - 2 * x * z, sqx - sqy - sqz + sqw), Math.atan2(2 * x * w - 2 * y * z, -sqx + sqy - sqz + sqw), Math.asin(2 * test / unit));
+		return new Vector3D(Math.atan2(2 * y * w - 2 * x * z, sqx - sqy - sqz + sqw), Math.atan2(2 * x * w - 2 * y * z, -sqx + sqy - sqz + sqw), Math.asin(2 * test / unit));
 	}
 
-	public Tuple2<Vector3d, Double> toAngleAxis() {
+	public Tuple2<Vector3D, Double> toAngleAxis() {
 		Quaternion normalQuat = this;
 
 		// if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalised
@@ -233,9 +233,9 @@ public class Quaternion implements Transformer, Storable {
 			// test to avoid divide by zero, s is always positive due to sqrt
 			// if s close to zero then direction of axis not important
 			// if it is important that axis is normalised then replace with x=1; y=z=0;
-			return new Tuple2<>(new Vector3d(normalQuat.x, normalQuat.y, normalQuat.z), 2 * Math.acos(w));
+			return new Tuple2<>(new Vector3D(normalQuat.x, normalQuat.y, normalQuat.z), 2 * Math.acos(w));
 		} else {
-			return new Tuple2<>(new Vector3d(normalQuat.x / s, normalQuat.y / s, normalQuat.z / s), 2 * Math.acos(w));
+			return new Tuple2<>(new Vector3D(normalQuat.x / s, normalQuat.y / s, normalQuat.z / s), 2 * Math.acos(w));
 		}
 
 	}
@@ -243,22 +243,22 @@ public class Quaternion implements Transformer, Storable {
 	/**
 	 * @return A direction vector representing the rotation.
 	 */
-	public Vector3d toXVector() {
-		return transform(Vector3d.xAxis);
+	public Vector3D toXVector() {
+		return transform(Vector3D.PLUS_I);
 	}
 
 	/**
 	 * @return A direction vector representing the rotation.
 	 */
-	public Vector3d toYVector() {
-		return transform(Vector3d.yAxis);
+	public Vector3D toYVector() {
+		return transform(Vector3D.PLUS_J);
 	}
 
 	/**
 	 * @return A direction vector representing the rotation.
 	 */
-	public Vector3d toZVector() {
-		return transform(Vector3d.zAxis);
+	public Vector3D toZVector() {
+		return transform(Vector3D.PLUS_K);
 	}
 
 	/**
@@ -266,8 +266,8 @@ public class Quaternion implements Transformer, Storable {
 	 *
 	 * @return A direction vector representing the rotation.
 	 */
-	public Vector3d toForwardVector() {
-		return transform(Vector3d.zAxis.negate());
+	public Vector3D toForwardVector() {
+		return transform(Vector3D.PLUS_K.negate());
 	}
 
 	@Override
