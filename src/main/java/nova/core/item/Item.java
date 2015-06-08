@@ -52,7 +52,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 	 * @param size New size
 	 */
 	public Item setCount(int size) {
-		count = Math.max(Math.min(getMaxCount(), size), 1);
+		count = Math.max(Math.min(getMaxCount(), size), 0);
 		return this;
 	}
 

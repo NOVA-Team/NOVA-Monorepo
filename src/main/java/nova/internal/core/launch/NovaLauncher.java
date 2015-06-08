@@ -1,6 +1,6 @@
 package nova.internal.core.launch;
 
-import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.deps.Dependencies;
 import nova.core.deps.Dependency;
 import nova.core.deps.MavenDependency;
