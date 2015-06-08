@@ -1,6 +1,7 @@
 package nova.core.util.math;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.util.FastMath;
 
 import java.util.Random;
 
@@ -23,11 +24,11 @@ public class Vector3DUtil {
 	}
 
 	public static Vector3D max(Vector3D a, Vector3D b) {
-		return new Vector3D(Math.max(a.getX(), b.getX()), Math.max(a.getY(), b.getY()), Math.max(a.getZ(), b.getZ()));
+		return new Vector3D(FastMath.max(a.getX(), b.getX()), FastMath.max(a.getY(), b.getY()), FastMath.max(a.getZ(), b.getZ()));
 	}
 
 	public static Vector3D min(Vector3D a, Vector3D b) {
-		return new Vector3D(Math.min(a.getX(), b.getX()), Math.min(a.getY(), b.getY()), Math.min(a.getZ(), b.getZ()));
+		return new Vector3D(FastMath.min(a.getX(), b.getX()), FastMath.min(a.getY(), b.getY()), FastMath.min(a.getZ(), b.getZ()));
 	}
 
 	public static Vector3D cartesianProduct(Vector3D a, Vector3D b) {
@@ -59,10 +60,14 @@ public class Vector3DUtil {
 	}
 
 	public static Vector3D round(Vector3D vec) {
-		return new Vector3D(Math.round(vec.getX()), Math.round(vec.getY()), Math.round(vec.getZ()));
+		return new Vector3D(FastMath.round(vec.getX()), FastMath.round(vec.getY()), FastMath.round(vec.getZ()));
 	}
 
 	public static Vector3D floor(Vector3D vec) {
 		return new Vector3D((int) vec.getX(), (int) vec.getY(), (int) vec.getZ());
+	}
+
+	public static Vector3D abs(Vector3D vec) {
+		return new Vector3D(FastMath.abs(vec.getX()), FastMath.abs(vec.getY()), FastMath.abs(vec.getZ()));
 	}
 }
