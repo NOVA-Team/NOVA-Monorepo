@@ -6,7 +6,7 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingRecipe;
 import nova.core.recipes.crafting.ItemIngredient;

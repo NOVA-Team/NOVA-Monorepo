@@ -1,7 +1,7 @@
 package nova.wrapper.mc1710.recipes;
 
 import net.minecraft.item.crafting.IRecipe;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingGrid;
 import nova.core.recipes.crafting.CraftingRecipe;

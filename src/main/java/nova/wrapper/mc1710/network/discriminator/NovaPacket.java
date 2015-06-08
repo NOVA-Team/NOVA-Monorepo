@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Player;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.network.handler.PacketHandler;
 import nova.wrapper.mc1710.network.MCPacket;
 import nova.wrapper.mc1710.network.netty.MCNetworkManager;

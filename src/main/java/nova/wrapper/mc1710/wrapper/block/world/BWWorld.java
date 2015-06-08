@@ -7,6 +7,7 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
+import nova.internal.core.Game;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;

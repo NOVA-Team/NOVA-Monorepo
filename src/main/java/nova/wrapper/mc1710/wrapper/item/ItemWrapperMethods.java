@@ -6,7 +6,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 import nova.core.component.renderer.ItemRenderer;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;

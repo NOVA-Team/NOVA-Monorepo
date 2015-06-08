@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.wrapper.block.forward;
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.wrapper.mc1710.asm.lib.ComponentInjector;
 
 import java.util.Optional;

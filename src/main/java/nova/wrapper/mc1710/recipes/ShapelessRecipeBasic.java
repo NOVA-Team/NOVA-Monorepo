@@ -10,7 +10,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.world.World;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.ShapelessCraftingRecipe;
 

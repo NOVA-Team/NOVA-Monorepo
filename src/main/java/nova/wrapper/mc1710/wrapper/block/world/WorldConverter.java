@@ -2,7 +2,7 @@ package nova.wrapper.mc1710.wrapper.block.world;
 
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.world.World;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.Optional;
 

@@ -6,7 +6,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import nova.core.event.GlobalEvents;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.core.item.ItemDictionary;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;

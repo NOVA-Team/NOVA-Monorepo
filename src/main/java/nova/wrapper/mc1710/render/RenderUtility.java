@@ -13,7 +13,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelFormatException;
 import nova.core.render.RenderException;
 import nova.core.render.texture.Texture;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
