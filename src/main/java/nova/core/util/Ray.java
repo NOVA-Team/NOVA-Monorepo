@@ -1,6 +1,6 @@
 package nova.core.util;
 
-import nova.core.util.math.VectorUtil;
+import nova.core.util.math.Vector3DUtil;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
@@ -26,7 +26,7 @@ public class Ray {
 	public Ray(Vector3D origin, Vector3D dir) {
 		this.origin = origin;
 		this.dir = dir;
-		this.invDir = VectorUtil.reciprocal(dir);
+		this.invDir = Vector3DUtil.reciprocal(dir);
 		this.signDirX = invDir.getX() < 0;
 		this.signDirY = invDir.getY() < 0;
 		this.signDirZ = invDir.getZ() < 0;

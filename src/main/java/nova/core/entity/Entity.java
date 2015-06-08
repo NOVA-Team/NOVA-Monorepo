@@ -6,8 +6,8 @@ import nova.core.component.transform.EntityTransform;
 import nova.core.event.EventBus;
 import nova.core.util.Identifiable;
 import nova.core.util.UniqueIdentifiable;
-import nova.core.util.transform.matrix.Rotation;
 import nova.core.world.World;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**

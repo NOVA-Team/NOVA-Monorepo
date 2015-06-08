@@ -1,11 +1,11 @@
 package nova.core.util;
 
-import nova.core.util.math.VectorUtil;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import nova.core.util.math.Vector3DUtil;
 import nova.internal.Game;
 import nova.internal.launch.NovaLauncher;
 import nova.testutils.FakeWorld;
 import nova.wrappertests.NovaLauncherTestFactory;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -26,8 +26,8 @@ public class RayTraceEfficiencyTest {
         Random random = new Random();
 
         IntStream.range(0, 500)
-            .mapToObj(value -> VectorUtil.random().scalarMultiply(random.nextInt(maxTestSize)))
-                .forEach(pos -> fakeWorld.setBlock(pos, RayTraceTest.RayTraceMod.solid));
+			.mapToObj(value -> Vector3DUtil.random().scalarMultiply(random.nextInt(maxTestSize)))
+			.forEach(pos -> fakeWorld.setBlock(pos, RayTraceTest.RayTraceMod.solid));
 
         Game.logger().info("World Generated");
 

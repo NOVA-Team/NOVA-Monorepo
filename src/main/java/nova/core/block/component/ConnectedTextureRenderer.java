@@ -9,8 +9,8 @@ import nova.core.render.model.Model;
 import nova.core.render.model.StaticCubeTextureCoordinates;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
-import nova.core.util.RotationUtil;
-import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.math.RotationUtil;
+import nova.core.util.shape.Cuboid;
 
 import java.util.Arrays;
 import java.util.Optional;

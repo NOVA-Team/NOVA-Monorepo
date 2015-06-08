@@ -5,7 +5,7 @@ import nova.core.render.texture.BlockTexture;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,5 +41,5 @@ public abstract class RenderManager {
 	}
 
 	@Deprecated
-	public abstract Vector2i getDimension(Texture texture);
+	public abstract Vector2D getDimension(Texture texture);
 }

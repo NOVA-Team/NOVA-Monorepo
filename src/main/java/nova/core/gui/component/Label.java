@@ -4,8 +4,7 @@ import nova.core.gui.GuiComponent;
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.gui.render.Graphics;
 import nova.core.gui.render.text.FormattedText;
-import nova.core.util.transform.vector.Vector2d;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Optional;
 
@@ -51,13 +50,13 @@ public class Label extends GuiComponent<Label, NativeGuiComponent> {
 	}
 
 	@Override
-	public Optional<Vector2i> getMinimumSize() {
-		Optional<Vector2i> inherited = super.getMinimumSize();
+	public Optional<Vector2D> getMinimumSize() {
+		Optional<Vector2D> inherited = super.getMinimumSize();
 		if (inherited.isPresent())
 			return inherited;
 		if (getParentGui().isPresent()) {
-			Vector2d dimensions = getParentGui().get().getTextMetrics().getBounds(getText());
-			return Optional.of(new Vector2i(dimensions.xi(), dimensions.yi()));
+			org.apache.commons.math3.geometry.euclidean.twod.Vector2D dimensions = getParentGui().get().getTextMetrics().getBounds(getText());
+			return Optional.of(new Vector2D(dimensions.getX(), dimensions.getY()));
 		}
 		return inherited;
 	}

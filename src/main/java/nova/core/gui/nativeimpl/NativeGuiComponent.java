@@ -3,7 +3,7 @@ package nova.core.gui.nativeimpl;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
 import nova.core.gui.render.Graphics;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ public interface NativeGuiComponent {
 	 *
 	 * @return preferred size of the native component
 	 */
-	public default Optional<Vector2i> getPreferredSize() {
+	public default Optional<Vector2D> getPreferredSize() {
 		return Optional.empty();
 	}
 
@@ -39,7 +39,7 @@ public interface NativeGuiComponent {
 	 *
 	 * @return minimal size of the native component
 	 */
-	public default Optional<Vector2i> getMinimumSize() {
+	public default Optional<Vector2D> getMinimumSize() {
 		return getPreferredSize();
 	}
 
@@ -49,7 +49,7 @@ public interface NativeGuiComponent {
 	 *
 	 * @return maximal size of the native component
 	 */
-	public default Optional<Vector2i> getMaximumSize() {
+	public default Optional<Vector2D> getMaximumSize() {
 		return getPreferredSize();
 	}
 

@@ -1,6 +1,6 @@
 package nova.core.component.transform;
 
-import nova.core.util.transform.matrix.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**

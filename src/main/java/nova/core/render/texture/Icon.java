@@ -1,6 +1,6 @@
 package nova.core.render.texture;
 
-import nova.core.util.transform.vector.Vector2d;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
  * An Icon defines a sub-area of a {@link Texture}.
@@ -10,14 +10,14 @@ import nova.core.util.transform.vector.Vector2d;
 public class Icon {
 
 	protected Texture texture;
-	protected Vector2d minUV;
-	protected Vector2d maxUV;
+	protected Vector2D minUV;
+	protected Vector2D maxUV;
 
 	/** Package private constructor for Texture **/
 	Icon() {
 	}
 
-	public Icon(Texture texture, Vector2d minUV, Vector2d maxUV) {
+	public Icon(Texture texture, Vector2D minUV, Vector2D maxUV) {
 		this.texture = texture;
 		this.minUV = minUV;
 		this.maxUV = maxUV;
@@ -27,11 +27,11 @@ public class Icon {
 		return texture;
 	}
 
-	public Vector2d minUV() {
+	public Vector2D minUV() {
 		return minUV;
 	}
 
-	public Vector2d maxUV() {
+	public Vector2D maxUV() {
 		return maxUV;
 	}
 }

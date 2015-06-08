@@ -6,14 +6,18 @@ import nova.core.gui.layout.BorderLayout;
 import nova.core.gui.layout.Constraints;
 import nova.core.gui.layout.GuiLayout;
 import nova.core.gui.nativeimpl.NativeContainer;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
  * This class provides container for {@link GuiComponent}
- *
  * @param <O> Self reference
  * @param <T> {@link NativeContainer} type
  */
@@ -41,10 +45,9 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	/**
 	 * Returns a child {@link GuiComponent} based on its qualified name.
-	 *
 	 * @param qualifiedName qualified name of the sub component
 	 * @return The requested {@link GuiComponent} or {@code null} if not
-	 *         present.
+	 * present.
 	 * @see GuiComponent#getQualifiedName()
 	 * @see AbstractGuiContainer#getChildElement(String, Class)
 	 */
@@ -68,12 +71,11 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	/**
 	 * Will return a child component that matches the provided subclass of
 	 * {@link GuiComponent}.
-	 *
 	 * @param <E> type of the requested {@link GuiComponent}
 	 * @param qualifiedName qualified name of the sub component
 	 * @param clazz class of the requested {@link GuiComponent}
 	 * @return The requested {@link GuiComponent} or {@code null} if not present
-	 *         / the type doesn't match.
+	 * / the type doesn't match.
 	 */
 	@SuppressWarnings("unchecked")
 	public <E extends GuiComponent<?, ?>> Optional<E> getChildElement(String qualifiedName, Class<E> clazz) {
@@ -88,7 +90,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * Sets layout of this container. Changing the layout while any sub
 	 * components are already added to the container might lead to unexpected
 	 * behavior.
-	 *
 	 * @param layout {@link GuiLayout} to set
 	 * @return This GuiContainer
 	 * @throws NullPointerException if the provided layout is {@code null}.
@@ -105,7 +106,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	/**
 	 * Processes an event, i.e. sends it to each children
-	 *
 	 * @param event {@link GuiEvent} to process
 	 */
 	@Override
@@ -123,15 +123,14 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 		for (GuiComponent<?, ?> component : getChildComponents()) {
 			// Change the mouse position to be relative to the child component's
 			// outline.
-			Vector2i position = component.getOutline().getPosition();
-			component.onMouseEvent(new MouseEvent(event.mouseX - position.x, event.mouseY - position.y, event.button, event.state));
+			Vector2D position = component.getOutline().getPosition();
+			component.onMouseEvent(new MouseEvent(event.mouseX - (int) position.getX(), event.mouseY - (int) position.getY(), event.button, event.state));
 		}
 	}
 
 	/**
 	 * Adds every component from the given {@link Iterable} to this container,
 	 * applying the given parameters.
-	 *
 	 * @param components
 	 * @param properties
 	 * @return this
@@ -147,7 +146,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * Adds every component from the given {@link Iterable} to this container,
 	 * The given {@link Constraints} object will be passed to the supplied
 	 * consumer for every component, in sequence.
-	 *
 	 * @param components
 	 * @param constraint
 	 * @param consumer
@@ -166,7 +164,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 
 	/**
 	 * Adds {@link GuiComponent} to this container.
-	 *
 	 * @param component {@link GuiCanvas} to add
 	 * @param properties Properties for the Layout
 	 * @return this
@@ -197,7 +194,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	 * Removes {@link GuiComponent}. Shouldn't be used unless really needed as
 	 * it requires the sub component to update its qualified name using
 	 * updateQualifiedName().
-	 *
 	 * @param component {@link GuiComponent} to remove
 	 * @return This GuiContainer
 	 */
@@ -222,7 +218,6 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	/**
 	 * Called when the size changed to update the positions of the child
 	 * components.
-	 *
 	 * @see GuiLayout#revalidate(AbstractGuiContainer)
 	 */
 	@Override
@@ -231,7 +226,7 @@ public abstract class AbstractGuiContainer<O extends AbstractGuiContainer<O, T>,
 	}
 
 	@Override
-	public Optional<Vector2i> getMinimumSize() {
+	public Optional<Vector2D> getMinimumSize() {
 		return Optional.of(super.getMinimumSize().orElse(layout.getMinimumSize(this)));
 	}
 

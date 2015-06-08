@@ -3,7 +3,8 @@ package nova.core.gui.layout;
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
-import nova.core.util.transform.vector.Vector2i;
+import nova.core.util.math.Vector2DUtil;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Objects;
 
@@ -45,27 +46,27 @@ public abstract class AbstractGuiLayout<T extends Constraints<T>> implements Gui
 	protected abstract void addImpl(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, T constraints);
 
 	// TODO Document as needed by possible custom layouts.
-	protected final Vector2i getPreferredSizeOf(GuiComponent<?, ?> component) {
-		return component != null ? component.getPreferredSize().orElse(component.getMinimumSize().orElse(Vector2i.zero)) : Vector2i.zero;
+	protected final Vector2D getPreferredSizeOf(GuiComponent<?, ?> component) {
+		return component != null ? component.getPreferredSize().orElse(component.getMinimumSize().orElse(Vector2D.ZERO)) : Vector2D.ZERO;
 	}
 
-	protected final Vector2i getMaximumSizeOf(GuiComponent<?, ?> component) {
-		return component != null ? component.getPreferredSize().orElse(component.getMaximumSize().orElse(Vector2i.max)) : Vector2i.zero;
+	protected final Vector2D getMaximumSizeOf(GuiComponent<?, ?> component) {
+		return component != null ? component.getPreferredSize().orElse(component.getMaximumSize().orElse(Vector2DUtil.ONE)) : Vector2D.ZERO;
 	}
 
-	protected final Vector2i getMiniumSizeOf(GuiComponent<?, ?> component) {
-		return component != null ? component.getMinimumSize().orElse(Vector2i.zero) : Vector2i.zero;
+	protected final Vector2D getMiniumSizeOf(GuiComponent<?, ?> component) {
+		return component != null ? component.getMinimumSize().orElse(Vector2D.ZERO) : Vector2D.ZERO;
 	}
 
 	@SuppressWarnings("deprecation")
-	protected final void setSizeOf(GuiComponent<?, ?> component, Vector2i size) {
+	protected final void setSizeOf(GuiComponent<?, ?> component, Vector2D size) {
 		if (component != null) {
 			component.setOutlineNative(component.getOutline().setDimension(size));
 		}
 	}
 
 	@SuppressWarnings("deprecation")
-	protected final void setPositionOf(GuiComponent<?, ?> component, Vector2i position) {
+	protected final void setPositionOf(GuiComponent<?, ?> component, Vector2D position) {
 		if (component != null) {
 			component.setOutlineNative(component.getOutline().setPosition(position));
 		}

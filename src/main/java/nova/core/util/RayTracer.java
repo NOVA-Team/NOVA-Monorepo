@@ -6,7 +6,7 @@ import nova.core.component.misc.Collider;
 import nova.core.component.transform.WorldTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
-import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 
 /**
  * Ray tracing for cuboids.
- *
  * @author Calclavia
  */
 //TODO: Add ray trace masks
@@ -37,16 +36,14 @@ public class RayTracer {
 
 	/**
 	 * Does an entity look ray trace to see which block the entity is looking at.
-	 *
 	 * @param entity The entity
 	 */
 	public RayTracer(Entity entity) {
-		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3D.ZERO), entity.rotation().toForwardVector()));
+		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3D.ZERO), entity.rotation().applyTo(Vector3D.MINUS_J)));
 	}
 
 	/**
 	 * Sets the distance of the ray
-	 *
 	 * @param distance Distance in meters
 	 * @return This
 	 */
@@ -70,7 +67,6 @@ public class RayTracer {
 
 	/**
 	 * Check all blocks that are in a line
-	 *
 	 * @return The blocks ray traced in the order from closest to furthest.
 	 */
 	public Stream<RayTraceBlockResult> rayTraceBlocks(World world) {
@@ -88,7 +84,6 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a set of blocks
-	 *
 	 * @param blocks Set of blocks
 	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
 	 */
@@ -135,7 +130,6 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a set of cuboids
-	 *
 	 * @param stream A stream of cuboids
 	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
 	 */
@@ -154,7 +148,6 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a cuboid
-	 *
 	 * @param cuboid The cuboid in absolute world coordinates
 	 * @return The ray trace result if the ray intersects the cuboid
 	 */
@@ -172,7 +165,6 @@ public class RayTracer {
 	 * <code>Amy Williams, Steve Barrus, R. Keith Morley, and Peter Shirley: "An
 	 * Efficient and Robust Ray-Box Intersection Algorithm" Journal of graphics
 	 * tools, 10(1):49-54, 2005</code>
-	 *
 	 * @param cuboid The cuboid to trace
 	 * @param minDist The minimum distance
 	 * @param maxDist The maximum distance

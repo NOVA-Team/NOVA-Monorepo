@@ -6,7 +6,7 @@ import nova.core.component.misc.Collider;
 import nova.core.render.Color;
 import nova.core.render.RenderException;
 import nova.core.util.Direction;
-import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.shape.Cuboid;
 
 import java.util.Optional;
 

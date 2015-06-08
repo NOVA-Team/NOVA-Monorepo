@@ -8,9 +8,9 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
-import nova.core.util.transform.shape.Cuboid;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.HashMap;
 import java.util.HashSet;

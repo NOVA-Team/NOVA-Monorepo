@@ -1,8 +1,8 @@
 package nova.core.render.model;
 
 import nova.core.render.RenderException;
-import nova.core.util.transform.vector.Vector2d;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class WavefrontObjectModel extends ModelProvider {
 	private final Model model = new Model();
 	private Model currentModel = null;
 	private ArrayList<Vector3D> vertices = new ArrayList<>();
-	private ArrayList<Vector2d> textureCoordinates = new ArrayList<>();
+	private ArrayList<Vector2D> textureCoordinates = new ArrayList<>();
 
 	public WavefrontObjectModel(String domain, String name) {
 		super(domain, name);
@@ -58,7 +58,7 @@ public class WavefrontObjectModel extends ModelProvider {
 						vertices.add(vertex);
 					}
 				} else if (currentLine.startsWith("vt ")) {
-					Vector2d textureCoordinate = parseTextureCoordinate(currentLine, lineCount);
+					Vector2D textureCoordinate = parseTextureCoordinate(currentLine, lineCount);
 					if (textureCoordinate != null) {
 						textureCoordinates.add(textureCoordinate);
 					}
@@ -130,13 +130,13 @@ public class WavefrontObjectModel extends ModelProvider {
 		return null;
 	}
 
-	private Vector2d parseTextureCoordinate(String line, int lineNumber) {
+	private Vector2D parseTextureCoordinate(String line, int lineNumber) {
 		if (isValid(line, textureCoordinatePattern)) {
 			line = line.substring(line.indexOf(" ") + 1);
 			String[] tokens = line.split(" ");
 			try {
 				if (tokens.length >= 2) {
-					return new Vector2d(Float.parseFloat(tokens[0]), 1 - Float.parseFloat(tokens[1]));
+					return new Vector2D(Float.parseFloat(tokens[0]), 1 - Float.parseFloat(tokens[1]));
 				}
 			} catch (NumberFormatException e) {
 				throw new RenderException(String.format("Number formatting error at line %d", lineNumber), e);
@@ -192,14 +192,14 @@ public class WavefrontObjectModel extends ModelProvider {
 			else if (isValid(line, face_V_VN_Pattern)) {
 				for (int i = 0; i < tokens.length; ++i) {
 					subTokens = tokens[i].split("//");
-					face.drawVertex(new Vertex(vertices.get(Integer.parseInt(subTokens[0]) - 1), Vector2d.zero));
+					face.drawVertex(new Vertex(vertices.get(Integer.parseInt(subTokens[0]) - 1), Vector2D.ZERO));
 				}
 				face.normal = calculateNormal(face);
 			}
 			// f v1 v2 v3 ...
 			else if (isValid(line, face_V_Pattern)) {
 				for (int i = 0; i < tokens.length; ++i) {
-					face.drawVertex(new Vertex(vertices.get(Integer.parseInt(tokens[i]) - 1), Vector2d.zero));
+					face.drawVertex(new Vertex(vertices.get(Integer.parseInt(tokens[i]) - 1), Vector2D.ZERO));
 				}
 				face.normal = calculateNormal(face);
 			} else {
@@ -249,12 +249,12 @@ public class WavefrontObjectModel extends ModelProvider {
 		return globalMatcher.matches();
 	}
 
-	private Vector2d getTexVec(int index) {
+	private Vector2D getTexVec(int index) {
 		try {
 			return textureCoordinates.get(index);
 		} catch (IndexOutOfBoundsException e) {
 			System.err.println("[OBJ]: Can't get textureCoordinate " + index + "! Is this model corrupted?");
-			return Vector2d.zero;
+			return Vector2D.ZERO;
 		}
 	}
 

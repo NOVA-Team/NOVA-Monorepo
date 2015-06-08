@@ -1,6 +1,5 @@
 package nova.core.util.math;
 
-import nova.core.util.transform.vector.Transformer;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.linear.MatrixUtils;
@@ -10,8 +9,22 @@ import java.util.Stack;
 
 public class MatrixStack implements Transformer {
 
-	private final Stack<RealMatrix> stack = new Stack<>();
+	private final Stack<RealMatrix> stack;
 	private RealMatrix current = MatrixUtils.createRealIdentityMatrix(4);
+
+	public MatrixStack() {
+		this.stack = new Stack<>();
+	}
+
+	public MatrixStack(MatrixStack clone) {
+		this.stack = (Stack) clone.stack.clone();
+		this.current = clone.current.copy();
+	}
+
+	public MatrixStack(RealMatrix current) {
+		this.stack = new Stack<>();
+		this.current = current;
+	}
 
 	/**
 	 * Replaces current transformation matrix by an identity matrix.

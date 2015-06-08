@@ -2,7 +2,7 @@ package nova.core.render.model;
 
 import nova.core.render.texture.Texture;
 import nova.core.util.math.MatrixStack;
-import nova.core.util.transform.vector.Vector2d;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,7 +30,7 @@ public class Model implements Iterable<Model>, Cloneable {
 
 	public MatrixStack matrix = new MatrixStack();
 
-	public Vector2d textureOffset = Vector2d.zero;
+	public Vector2D textureOffset = Vector2D.ZERO;
 
 	public int blendSFactor = -1;
 	public int blendDFactor = -1;
@@ -143,7 +143,7 @@ public class Model implements Iterable<Model>, Cloneable {
 		Model model = new Model(name);
 		model.faces.addAll(faces.stream().map(Face::clone).collect(Collectors.toSet()));
 		model.children.addAll(children.stream().map(Model::clone).collect(Collectors.toSet()));
-		model.matrix = matrix;
+		model.matrix = new MatrixStack(matrix);
 		model.textureOffset = textureOffset;
 		return model;
 	}
