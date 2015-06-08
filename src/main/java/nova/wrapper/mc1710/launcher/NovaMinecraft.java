@@ -11,7 +11,7 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.common.MinecraftForge;
-import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.component.ComponentProvider;
 import nova.internal.core.deps.DepDownloader;
 import nova.core.deps.MavenDependency;
