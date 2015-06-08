@@ -1,6 +1,6 @@
 package nova.internal.core.launch;
 
-import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.loader.Loadable;
 import nova.internal.core.Game;
 

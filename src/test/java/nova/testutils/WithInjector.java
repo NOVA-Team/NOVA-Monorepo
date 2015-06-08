@@ -1,6 +1,6 @@
 package nova.testutils;
 
-import nova.bootstrap.DependencyInjectionEntryPoint;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import org.junit.Before;
 import se.jbee.inject.Injector;
 

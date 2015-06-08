@@ -1,4 +1,4 @@
-package nova.bootstrap;
+package nova.internal.core.bootstrap;
 
 import com.google.common.collect.Sets;
 import nova.internal.core.depmodules.CoreBundle;
