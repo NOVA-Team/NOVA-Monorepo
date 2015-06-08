@@ -12,7 +12,7 @@ import nova.core.gui.Outline;
 import nova.core.gui.component.Button;
 import nova.core.gui.nativeimpl.NativeButton;
 import nova.core.gui.render.Graphics;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Optional;
@@ -54,9 +54,9 @@ public class MCButton extends MCGuiComponent<Button> implements NativeButton, Dr
 	}
 
 	@Override
-	public Optional<Vector2i> getMinimumSize() {
+	public Optional<Vector2D> getMinimumSize() {
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-		return fontRenderer != null ? Optional.of(new Vector2i(fontRenderer.getStringWidth(button.displayString) + 10, fontRenderer.FONT_HEIGHT + 10)) : Optional.empty();
+		return fontRenderer != null ? Optional.of(new Vector2D(fontRenderer.getStringWidth(button.displayString) + 10, fontRenderer.FONT_HEIGHT + 10)) : Optional.empty();
 	}
 
 	@Override

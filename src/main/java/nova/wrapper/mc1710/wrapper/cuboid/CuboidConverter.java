@@ -2,7 +2,7 @@ package nova.wrapper.mc1710.wrapper.cuboid;
 
 import net.minecraft.util.AxisAlignedBB;
 import nova.core.nativewrapper.NativeConverter;
-import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.shape.Cuboid;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**

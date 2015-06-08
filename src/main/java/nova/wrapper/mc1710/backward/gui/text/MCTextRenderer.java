@@ -5,9 +5,9 @@ import nova.core.gui.render.text.FormattedText;
 import nova.core.gui.render.text.TextRenderer;
 import nova.core.render.Color;
 import nova.core.util.math.MathUtil;
-import nova.core.util.transform.vector.Vector2d;
 import nova.wrapper.mc1710.backward.gui.MCCanvas;
 import nova.wrapper.mc1710.backward.gui.text.IText.Text;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -75,13 +75,13 @@ public class MCTextRenderer implements TextRenderer {
 	}
 
 	@Override
-	public Vector2d getBounds(String str) {
+	public Vector2D getBounds(String str) {
 		int height = 0, width = 0;
 		for (String line : str.split("%n|\n")) {
 			width = MathUtil.max(width, fontrenderer.getStringWidth(line));
 			height += fontrenderer.FONT_HEIGHT;
 		}
-		return new Vector2d(width, height);
+		return new Vector2D(width, height);
 	}
 
 	@Override

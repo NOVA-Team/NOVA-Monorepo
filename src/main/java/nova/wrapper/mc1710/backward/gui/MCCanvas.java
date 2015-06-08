@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import nova.core.gui.Spacing;
 import nova.core.gui.render.Canvas;
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.opengl.GL11;
 
 public class MCCanvas extends Canvas {
@@ -19,7 +19,7 @@ public class MCCanvas extends Canvas {
 	}
 
 	public MCCanvas(int width, int height, Tessellator tessellator, float scale) {
-		super(new Vector2i(width, height), false);
+		super(new Vector2D(width, height), false);
 		this.tessellator = tessellator;
 		this.scale = scale;
 	}

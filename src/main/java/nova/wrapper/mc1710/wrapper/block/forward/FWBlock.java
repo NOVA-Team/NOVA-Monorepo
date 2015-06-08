@@ -32,7 +32,7 @@ import nova.core.render.texture.Texture;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.math.MatrixStack;
-import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.shape.Cuboid;
 import nova.internal.Game;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;

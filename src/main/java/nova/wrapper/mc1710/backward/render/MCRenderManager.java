@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import nova.core.render.RenderException;
 import nova.core.render.RenderManager;
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -19,7 +19,7 @@ public class MCRenderManager extends RenderManager {
 	}
 
 	@Override
-	public Vector2i getDimension(Texture texture) {
+	public Vector2D getDimension(Texture texture) {
 		ResourceLocation loc = toResourceLocation(texture);
 
 		try {
@@ -29,7 +29,7 @@ public class MCRenderManager extends RenderManager {
 				ImageReader reader = readers.next();
 				try {
 					reader.setInput(in);
-					return new Vector2i(reader.getWidth(0), reader.getHeight(0));
+					return new Vector2D(reader.getWidth(0), reader.getHeight(0));
 				} finally {
 					reader.dispose();
 				}
@@ -37,6 +37,6 @@ public class MCRenderManager extends RenderManager {
 		} catch (Exception e) {
 			throw new RenderException("Couldn't load texture " + texture.getPath(), e);
 		}
-		return new Vector2i(16, 16);
+		return new Vector2D(16, 16);
 	}
 }

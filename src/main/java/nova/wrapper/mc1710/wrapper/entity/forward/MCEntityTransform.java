@@ -3,13 +3,14 @@ package nova.wrapper.mc1710.wrapper.entity.forward;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
 import nova.core.component.transform.EntityTransform;
-import nova.core.util.math.VectorUtil;
-import nova.core.util.transform.matrix.Rotation;
+import nova.core.util.math.Vector3DUtil;
 import nova.core.world.World;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Arrays;
+
+org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 
 /**
  * Wraps Transform3d used in entity
@@ -21,7 +22,7 @@ public class MCEntityTransform extends EntityTransform {
 	public MCEntityTransform(net.minecraft.entity.Entity wrapper) {
 		this.wrapper = wrapper;
 		this.setPivot(Vector3D.ZERO);
-		this.setScale(VectorUtil.ONE);
+		this.setScale(Vector3DUtil.ONE);
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class MCEntityTransform extends EntityTransform {
 
 	@Override
 	public Rotation rotation() {
-		return Rotation.fromEuler(-Math.toRadians(wrapper.rotationYaw) - Math.PI, -Math.toRadians(wrapper.rotationPitch));
+		return new Rotation(RotationUtil.DEFAULT_ORDER, -Math.toRadians(wrapper.rotationYaw) - Math.PI, -Math.toRadians(wrapper.rotationPitch));
 	}
 
 	@Override

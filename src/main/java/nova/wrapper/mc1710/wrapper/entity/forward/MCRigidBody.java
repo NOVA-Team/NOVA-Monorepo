@@ -3,8 +3,9 @@ package nova.wrapper.mc1710.wrapper.entity.forward;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.entity.component.RigidBody;
-import nova.core.util.transform.matrix.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
+org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 
 /**
  * Based on the Euler Integration because Minecraft stores the following values:
@@ -70,7 +71,7 @@ public class MCRigidBody extends RigidBody {
 		entity.transform().setRotation(entity.rotation().rightMultiply(deltaRotation));
 
 		//Integrate torque to angular velocity
-		setAngularVelocity(angularVelocity().rightMultiply(Rotation.fromEuler(netTorque.scalarMultiply(deltaTime))));
+		setAngularVelocity(angularVelocity().rightMultiply(new Rotation(RotationUtil.DEFAULT_ORDER, netTorque.scalarMultiply(deltaTime))));
 
 		//Clear net torque
 		netTorque = Vector3D.ZERO;

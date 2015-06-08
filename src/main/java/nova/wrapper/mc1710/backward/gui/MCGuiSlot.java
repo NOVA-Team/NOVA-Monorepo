@@ -8,11 +8,11 @@ import net.minecraft.item.ItemStack;
 import nova.core.gui.component.inventory.Slot;
 import nova.core.gui.nativeimpl.NativeSlot;
 import nova.core.gui.render.Graphics;
-import nova.core.util.transform.vector.Vector2i;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCGuiScreen;
 import nova.wrapper.mc1710.forward.inventory.FWInventory;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Optional;
@@ -60,8 +60,8 @@ public class MCGuiSlot extends MCGuiComponent<Slot> implements NativeSlot, Drawa
 	}
 
 	@Override
-	public Optional<Vector2i> getPreferredSize() {
-		return Optional.of(new Vector2i(18, 18));
+	public Optional<Vector2D> getPreferredSize() {
+		return Optional.of(new Vector2D(18, 18));
 	}
 
 	@Override

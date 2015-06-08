@@ -9,7 +9,7 @@ import net.minecraft.world.IBlockAccess;
 import nova.core.render.model.Model;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
-import nova.core.util.math.VectorUtil;
+import nova.core.util.math.Vector3DUtil;
 import nova.wrapper.mc1710.render.RenderUtility;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -39,17 +39,17 @@ public class BWModel extends Model {
 						tessellator.setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
 					} else {
 						// Determine nearest adjacent block.
-						Vector3D nearestPos = VectorUtil.floor(face.getCenter().add(face.normal.scalarMultiply(0.5)));
+						Vector3D nearestPos = Vector3DUtil.floor(face.getCenter().add(face.normal.scalarMultiply(0.5)));
 						Block block = blockAccess.getBlock((int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ());
 						try {
 							int brightness = block.getMixedBrightnessForBlock(blockAccess, (int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ());
 
 							// TODO: Add Ambient Occlusion
 
-							/*int aoBrightnessXYNN = block.getMixedBrightnessForBlock(blockAccess, translation.xi() - 1, translation.yi(), translation.zi());
-							int aoBrightnessYZNN = block.getMixedBrightnessForBlock(blockAccess, translation.xi(), translation.yi(), translation.zi() - 1);
-							int aoBrightnessYZNP = block.getMixedBrightnessForBlock(blockAccess, translation.xi(), translation.yi(), translation.zi() + 1);
-							int aoBrightnessXYPN = block.getMixedBrightnessForBlock(blockAccess, translation.xi() + 1, translation.yi(), translation.zi());
+							/*int aoBrightnessXYNN = block.getMixedBrightnessForBlock(blockAccess, translation.getX() - 1, translation.getY(), translation.zi());
+							int aoBrightnessYZNN = block.getMixedBrightnessForBlock(blockAccess, translation.getX(), translation.getY(), translation.zi() - 1);
+							int aoBrightnessYZNP = block.getMixedBrightnessForBlock(blockAccess, translation.getX(), translation.getY(), translation.zi() + 1);
+							int aoBrightnessXYPN = block.getMixedBrightnessForBlock(blockAccess, translation.getX() + 1, translation.getY(), translation.zi());
 
 							int brightnessTopLeft = getAoBrightness(aoBrightnessXYZNNP, this.aoBrightnessXYNN, this.aoBrightnessYZNP, i1);
 							int brightnessTopRight = getAoBrightness(aoBrightnessYZNP, this.aoBrightnessXYZPNP, this.aoBrightnessXYPN, i1);

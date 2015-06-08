@@ -15,7 +15,7 @@ import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
-import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.internal.Game;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;

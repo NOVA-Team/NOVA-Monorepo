@@ -2,37 +2,37 @@ package nova.wrapper.mc1710.backward.gui.text;
 
 import net.minecraft.client.gui.FontRenderer;
 import nova.core.gui.render.text.FormattedText.TextFormat;
-import nova.core.util.transform.vector.Vector2d;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.ArrayList;
 import java.util.List;
 
 interface IText {
 
-	public Vector2d getDimensions();
+	public Vector2D getDimensions();
 
 	static class Text implements IText {
 
 		final TextFormat format;
 		String text;
-		Vector2d dimensions;
+		Vector2D dimensions;
 
 		Text(String text, TextFormat format, FontRenderer fontrenderer) {
 			this.text = addFormat(text, format);
 			this.format = format;
 			float scale = format.size / (float) fontrenderer.FONT_HEIGHT;
-			this.dimensions = new Vector2d(fontrenderer.getStringWidth(this.text) * scale, fontrenderer.FONT_HEIGHT * scale);
+			this.dimensions = new Vector2D(fontrenderer.getStringWidth(this.text) * scale, fontrenderer.FONT_HEIGHT * scale);
 		}
 
 		Text append(String text, TextFormat format, FontRenderer fontrenderer) {
 			this.text += addFormat(text, format);
 			float scale = format.size / (float) fontrenderer.FONT_HEIGHT;
-			this.dimensions = new Vector2d(fontrenderer.getStringWidth(this.text) * scale, fontrenderer.FONT_HEIGHT * scale);
+			this.dimensions = new Vector2D(fontrenderer.getStringWidth(this.text) * scale, fontrenderer.FONT_HEIGHT * scale);
 			return this;
 		}
 
 		@Override
-		public Vector2d getDimensions() {
+		public Vector2D getDimensions() {
 			return dimensions;
 		}
 
@@ -63,14 +63,14 @@ interface IText {
 		}
 
 		@Override
-		public Vector2d getDimensions() {
+		public Vector2D getDimensions() {
 			double width = 0, height = 0;
 			for (T text : text) {
-				Vector2d dim = text.getDimensions();
+				Vector2D dim = text.getDimensions();
 				height = Math.max(height, dim.y);
 				width += dim.x;
 			}
-			return new Vector2d(width, height);
+			return new Vector2D(width, height);
 		}
 	}
 
@@ -84,14 +84,14 @@ interface IText {
 		}
 
 		@Override
-		public Vector2d getDimensions() {
+		public Vector2D getDimensions() {
 			double width = 0, height = 0;
 			for (Text text : text) {
-				Vector2d dim = text.getDimensions();
+				Vector2D dim = text.getDimensions();
 				height = Math.max(height, dim.y);
 				width += dim.x;
 			}
-			return new Vector2d(width, height);
+			return new Vector2D(width, height);
 		}
 	}
 }

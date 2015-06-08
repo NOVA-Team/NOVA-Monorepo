@@ -4,11 +4,11 @@ import net.minecraft.inventory.IInventory;
 import nova.core.gui.component.inventory.PlayerInventory;
 import nova.core.gui.nativeimpl.NativePlayerInventory;
 import nova.core.gui.render.Graphics;
-import nova.core.util.transform.vector.Vector2i;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
 import nova.wrapper.mc1710.backward.gui.MCGui.MCGuiScreen;
 import nova.wrapper.mc1710.backward.gui.MCGuiSlot.MCSlot;
 import nova.wrapper.mc1710.backward.inventory.BWInventory;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +23,8 @@ public class MCGuiPlayerInventory extends MCGuiComponent<PlayerInventory> implem
 	}
 
 	@Override
-	public Optional<Vector2i> getPreferredSize() {
-		return Optional.of(new Vector2i(162, 80));
+	public Optional<Vector2D> getPreferredSize() {
+		return Optional.of(new Vector2D(162, 80));
 	}
 
 	@Override
