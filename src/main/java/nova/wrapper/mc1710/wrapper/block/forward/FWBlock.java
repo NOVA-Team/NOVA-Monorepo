@@ -28,13 +28,12 @@ import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
-import nova.internal.core.Game;
 import nova.core.render.texture.Texture;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.math.MatrixStack;
 import nova.core.util.shape.Cuboid;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
@@ -55,7 +54,6 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
 
 /**
  * A Minecraft to Nova block wrapper
- *
  * @author Calclavia
  */
 public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {

@@ -11,14 +11,13 @@ import nova.core.block.Block;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
 import nova.core.component.transform.BlockTransform;
-import nova.internal.core.Game;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 

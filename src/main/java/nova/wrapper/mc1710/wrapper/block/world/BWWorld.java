@@ -7,12 +7,11 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.internal.core.Game;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
 import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
@@ -27,7 +26,6 @@ import java.util.Set;
 
 /**
  * The backwards world wrapper.
- *
  * @author Calclavia
  */
 public class BWWorld extends World {
