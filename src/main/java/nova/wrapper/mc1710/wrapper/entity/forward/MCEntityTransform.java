@@ -4,10 +4,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
 import nova.core.component.transform.EntityTransform;
 import nova.core.util.math.VectorUtil;
-import nova.core.util.transform.matrix.Quaternion;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import nova.core.util.transform.matrix.Rotation;
 import nova.core.world.World;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Arrays;
 
@@ -58,12 +58,12 @@ public class MCEntityTransform extends EntityTransform {
 	}
 
 	@Override
-	public Quaternion rotation() {
-		return Quaternion.fromEuler(-Math.toRadians(wrapper.rotationYaw) - Math.PI, -Math.toRadians(wrapper.rotationPitch));
+	public Rotation rotation() {
+		return Rotation.fromEuler(-Math.toRadians(wrapper.rotationYaw) - Math.PI, -Math.toRadians(wrapper.rotationPitch));
 	}
 
 	@Override
-	public void setRotation(Quaternion rotation) {
+	public void setRotation(Rotation rotation) {
 		Vector3D euler = rotation.toEuler();
 		wrapper.rotationYaw = (float) Math.toDegrees(euler.getX());
 		wrapper.rotationPitch = (float) Math.toDegrees(euler.getY());

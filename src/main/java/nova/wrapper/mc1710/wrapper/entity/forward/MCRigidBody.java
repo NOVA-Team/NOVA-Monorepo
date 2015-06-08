@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.wrapper.entity.forward;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.entity.component.RigidBody;
-import nova.core.util.transform.matrix.Quaternion;
+import nova.core.util.transform.matrix.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
@@ -65,12 +65,12 @@ public class MCRigidBody extends RigidBody {
 	void updateRotation(double deltaTime) {
 
 		//Integrate angular velocity to angular displacement
-		Quaternion angularVel = angularVelocity();
-		Quaternion deltaRotation = angularVel.scale(deltaTime);
+		Rotation angularVel = angularVelocity();
+		Rotation deltaRotation = angularVel.scale(deltaTime);
 		entity.transform().setRotation(entity.rotation().rightMultiply(deltaRotation));
 
 		//Integrate torque to angular velocity
-		setAngularVelocity(angularVelocity().rightMultiply(Quaternion.fromEuler(netTorque.scalarMultiply(deltaTime))));
+		setAngularVelocity(angularVelocity().rightMultiply(Rotation.fromEuler(netTorque.scalarMultiply(deltaTime))));
 
 		//Clear net torque
 		netTorque = Vector3D.ZERO;
