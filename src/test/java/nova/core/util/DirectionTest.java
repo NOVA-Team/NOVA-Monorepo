@@ -3,7 +3,7 @@ package nova.core.util;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 /**
  * @author Calclavia

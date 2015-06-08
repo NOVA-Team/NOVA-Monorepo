@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static nova.testutils.asserts.AlmostEqualAssertion.assertThat;
-import static nova.testutils.asserts.AlmostEqualAssertion.assertThatDouble;
+import static nova.testutils.NovaAssertions.assertThat;
+import static nova.testutils.NovaAssertions.assertThatDouble;
 
 public class VectorTests {
 

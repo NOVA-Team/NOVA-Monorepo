@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import java.util.EmptyStackException;
 
-import static nova.testutils.asserts.AlmostEqualAssertion.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 public class MatrixStackTest {
 	MatrixStack ms;

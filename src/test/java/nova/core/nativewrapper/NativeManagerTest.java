@@ -2,7 +2,7 @@ package nova.core.nativewrapper;
 
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 public class NativeManagerTest {
 	public static class Type1 {

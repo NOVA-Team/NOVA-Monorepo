@@ -1,4 +1,4 @@
-package nova.testutils.asserts;
+package nova.testutils;
 
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -6,7 +6,7 @@ import org.assertj.core.api.AbstractAssert;
 
 import org.assertj.core.api.Assertions;
 
-public abstract class AlmostEqualAssertion extends Assertions{
+public abstract class NovaAssertions extends Assertions{
 
 
 

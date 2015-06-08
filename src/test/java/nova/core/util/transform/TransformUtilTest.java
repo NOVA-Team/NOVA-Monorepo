@@ -8,7 +8,7 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.junit.Test;
 
 import static java.lang.Math.PI;
-import static nova.testutils.asserts.AlmostEqualAssertion.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 public class TransformUtilTest {
 	@Test
