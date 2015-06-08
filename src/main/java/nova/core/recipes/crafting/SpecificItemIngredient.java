@@ -3,7 +3,7 @@ package nova.core.recipes.crafting;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.RegistrationException;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.Collection;
 import java.util.Collections;

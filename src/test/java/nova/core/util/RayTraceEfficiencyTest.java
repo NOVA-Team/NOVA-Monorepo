@@ -1,8 +1,8 @@
 package nova.core.util;
 
 import nova.core.util.transform.vector.Vector3d;
-import nova.internal.Game;
-import nova.internal.launch.NovaLauncher;
+import nova.internal.core.Game;
+import nova.internal.core.launch.NovaLauncher;
 import nova.testutils.FakeWorld;
 import nova.wrappertests.NovaLauncherTestFactory;
 

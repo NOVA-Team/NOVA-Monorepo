@@ -9,8 +9,8 @@ import nova.core.loader.NovaMod;
 import nova.core.util.transform.matrix.Quaternion;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
-import nova.internal.Game;
-import nova.internal.launch.NovaLauncher;
+import nova.internal.core.Game;
+import nova.internal.core.launch.NovaLauncher;
 import nova.testutils.FakeBlock;
 import nova.testutils.FakeWorld;
 import nova.wrappertests.NovaLauncherTestFactory;
@@ -19,9 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

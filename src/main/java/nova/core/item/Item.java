@@ -9,7 +9,7 @@ import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.vector.Vector3d;
 import nova.core.util.transform.vector.Vector3i;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.List;
 import java.util.Optional;

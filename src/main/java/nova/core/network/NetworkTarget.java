@@ -5,7 +5,7 @@ import nova.core.event.SidedEventBus;
 import nova.core.gui.Gui;
 import nova.core.util.NovaException;
 import nova.core.world.World;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

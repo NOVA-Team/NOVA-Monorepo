@@ -16,7 +16,7 @@ import nova.core.retention.Store;
 import nova.core.util.Direction;
 import nova.core.util.RayTracer;
 import nova.core.util.transform.vector.Vector3d;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.Optional;
 

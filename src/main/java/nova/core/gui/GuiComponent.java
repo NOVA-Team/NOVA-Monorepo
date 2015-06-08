@@ -15,7 +15,7 @@ import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Syncable;
 import nova.core.util.Identifiable;
 import nova.core.util.transform.vector.Vector2i;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.Optional;
 import java.util.UUID;

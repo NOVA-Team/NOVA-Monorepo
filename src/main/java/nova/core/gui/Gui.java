@@ -14,7 +14,7 @@ import nova.core.inventory.component.InventoryPlayer;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;
 import nova.core.util.transform.vector.Vector3i;
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.HashMap;
 import java.util.Objects;

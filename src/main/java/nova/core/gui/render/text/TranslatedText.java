@@ -1,6 +1,6 @@
 package nova.core.gui.render.text;
 
-import nova.internal.Game;
+import nova.internal.core.Game;
 
 import java.util.function.Consumer;
 

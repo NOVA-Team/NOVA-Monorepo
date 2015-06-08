@@ -1,6 +1,6 @@
 package nova.wrappertests.depmodules;
 
-import nova.internal.tick.UpdateTicker;
+import nova.internal.core.tick.UpdateTicker;
 import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
 import se.jbee.inject.Supplier;
