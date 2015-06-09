@@ -60,6 +60,6 @@ public class VectorTests {
 
 		assertThat(Vector2DUtil.reciprocal(v1)).isEqualTo(new Vector2D(1 / v1.getX(), 1 / v1.getY()));
 
-		assertThat(v1.dotProduct(v2)).isEqualTo(v1.getX() * v2.getX() + v1.getY() * v2.getY());
+		assertThatDouble(v1.dotProduct(v2)).isAlmostEqualTo(v1.getX() * v2.getX() + v1.getY() * v2.getY());
 	}
 }
