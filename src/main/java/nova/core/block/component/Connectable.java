@@ -22,7 +22,7 @@ public class Connectable<C> extends Component {
 	 */
 	public Function<C, Boolean> canConnect = C -> true;
 
-	public Supplier<Set<C>> connections = () -> Collections.emptySet();
+	public Supplier<Set<C>> connections = Collections::emptySet;
 
 	public Connectable setCanConnect(Function<C, Boolean> canConnect) {
 		this.canConnect = canConnect;

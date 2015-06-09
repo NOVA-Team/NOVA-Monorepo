@@ -141,7 +141,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	}
 
 	public void forEach(Consumer<Vector3D> consumer) {
-		forEach(vector3d -> consumer.accept(vector3d), 1);
+		forEach(consumer::accept, 1);
 	}
 
 	public void forEach(Consumer<Vector3D> consumer, double step) {

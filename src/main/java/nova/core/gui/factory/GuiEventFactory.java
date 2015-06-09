@@ -24,7 +24,7 @@ public class GuiEventFactory {
 	}
 
 	public void registerNetworkEvents() {
-		registerNetworkEvent((component) -> new ComponentEvent.ActionEvent(component));
+		registerNetworkEvent(ComponentEvent.ActionEvent::new);
 	}
 
 	public <E extends SidedComponentEvent> void registerNetworkEvent(Function<GuiComponent<?, ?>, E> supplier) {

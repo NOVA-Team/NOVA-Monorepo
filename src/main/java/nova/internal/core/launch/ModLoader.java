@@ -136,6 +136,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 										try {
 											f.set(loadable, diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(f.getType())));
 										} catch (Exception e) {
+											e.printStackTrace();
 										}
 									}
 									f.setAccessible(false);

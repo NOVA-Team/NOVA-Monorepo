@@ -22,9 +22,7 @@ public interface ItemFilter extends Predicate<Item> {
 	 * @return ItemFilter
 	 */
 	static ItemFilter of(Item item) {
-		return (other) -> {
-			return item.sameItemType(other);
-		};
+		return item::sameItemType;
 	}
 
 	/**

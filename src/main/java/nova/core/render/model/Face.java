@@ -53,7 +53,7 @@ public class Face implements Cloneable {
 			return vertices
 				.stream()
 				.map(v -> v.vec)
-				.reduce(Vector3D.ZERO, (a, b) -> a.add(b))
+				.reduce(Vector3D.ZERO, Vector3D::add)
 				.scalarMultiply(1f / vertices.size());
 		}
 
