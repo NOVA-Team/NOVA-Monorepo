@@ -19,7 +19,7 @@ import java.util.function.Function;
  */
 public class ComponentManager extends Manager<Component, ComponentManager.ComponentFactory> {
 
-	private Map<Class<Component>, String> classToComponent = new HashMap<>();
+	private Map<Class<? extends Component>, String> classToComponent = new HashMap<>();
 
 	private ComponentManager(Registry<ComponentFactory> registry) {
 		super(registry);
@@ -32,7 +32,7 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 
 	@Override
 	public ComponentFactory register(ComponentFactory factory) {
-		classToComponent.put((Class<Component>) factory.getDummy().getClass(), factory.getID());
+		classToComponent.put(factory.getDummy().getClass(), factory.getID());
 		return super.register(factory);
 	}
 
@@ -43,6 +43,7 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 	 * @param <N> The node type
 	 * @return A new node of N type.
 	 */
+	@SuppressWarnings("unchecked")
 	public <N> N make(Class<N> theInterface, Object... args) {
 		Optional<ComponentFactory> first = registry.stream()
 			.filter(n -> theInterface.isAssignableFrom(n.getDummy().getClass()))

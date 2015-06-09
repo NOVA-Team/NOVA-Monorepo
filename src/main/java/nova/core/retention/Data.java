@@ -27,7 +27,7 @@ import java.util.Map;
 //TODO: Add collection and array support
 public class Data extends HashMap<String, Object> {
 
-	public static Class[] dataTypes = {
+	public static Class<?>[] dataTypes = {
 		Boolean.class,
 		Byte.class,
 		Short.class,
@@ -126,8 +126,7 @@ public class Data extends HashMap<String, Object> {
 			enumData.put("value", ((Enum) value).name());
 			value = enumData;
 		} else if (value instanceof Storable) {
-			Data storableData = serialize((Storable) value);
-			value = storableData;
+			value = serialize((Storable) value);
 		}
 
 		return super.put(key, value);
@@ -136,6 +135,7 @@ public class Data extends HashMap<String, Object> {
 	/**
 	 * A pre-cast version of get.
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T get(String key) {
 		return (T) super.get(key);
 	}

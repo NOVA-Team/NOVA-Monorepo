@@ -45,9 +45,10 @@ public abstract class ComponentProvider {
 	 * @param component The component to add.
 	 * @return the component.
 	 */
+	@SuppressWarnings("unchecked")
 	public final <C extends Component> C getOrAdd(C component) {
 		if (has(component.getClass())) {
-			return (C) get(component.getClass());
+			return get((Class<C>) component.getClass());
 		}
 
 		componentMap.put(component.getClass(), component);
@@ -83,14 +84,15 @@ public abstract class ComponentProvider {
 	 * @return the component removed.
 	 * @throws ComponentException when the component dies not exist.
 	 */
+	@SuppressWarnings("unchecked")
 	public final <C extends Component> C remove(Class<C> componentType) {
 		if (!has(componentType)) {
 			throw new ComponentException("Attempt to remove component that does not exist: %s", componentType);
 		}
 
-		Component component = componentMap.remove(componentType);
+		C component = (C) componentMap.remove(componentType);
 		onComponentRemoved.publish(new ComponentRemoved(component));
-		return (C) component;
+		return component;
 	}
 
 	/**
@@ -100,7 +102,8 @@ public abstract class ComponentProvider {
 	 * @return the optional of the component found or {@code Optional.empty()}
 	 * if the component was not found.
 	 */
-	public final <C> Optional<C> getOp(Class<C> componentType) {
+	@SuppressWarnings("unchecked")
+	public final <C extends Component> Optional<C> getOp(Class<C> componentType) {
 		Component component = componentMap.get(componentType);
 
 		if (component != null) {
@@ -120,7 +123,7 @@ public abstract class ComponentProvider {
 	 * @return the component.
 	 * @throws ComponentException if the component doesn't exist.
 	 */
-	public final <C> C get(Class<C> componentType) {
+	public final <C extends Component> C get(Class<C> componentType) {
 		return getOp(componentType).orElseThrow(() -> new ComponentException("Attempt to get component that does not exist: %s", componentType));
 	}
 
