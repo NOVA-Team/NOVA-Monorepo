@@ -23,10 +23,10 @@ public class MatrixUtil {
         return augmented;
     }
 
-    public static RealMatrix augmentWithIdenetity(RealMatrix matrix, int dimensions) {
+    public static RealMatrix augmentWithIdentity(RealMatrix matrix, int dimensions) {
 
         RealMatrix augmented = augment(matrix, dimensions, dimensions);
-        for (int i = MathUtil.max(matrix.getRowDimension(), matrix.getColumnDimension()); i <= dimensions; i++) {
+        for (int i = MathUtil.max(matrix.getRowDimension(), matrix.getColumnDimension()) + 1; i <= dimensions; i++) {
             augmented.setEntry(i - 1, i - 1, 1);
         }
 

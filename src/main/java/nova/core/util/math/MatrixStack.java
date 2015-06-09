@@ -55,7 +55,7 @@ public class MatrixStack implements Transformer {
 	 */
 	public MatrixStack transform(RealMatrix matrix) {
 
-		current = current.preMultiply(MatrixUtil.augmentWithIdenetity(matrix, 4));
+		current = current.preMultiply(MatrixUtil.augmentWithIdentity(matrix, 4));
 		return this;
 	}
 
