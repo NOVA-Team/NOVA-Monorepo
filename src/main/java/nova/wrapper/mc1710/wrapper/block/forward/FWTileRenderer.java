@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.component.renderer.DynamicRenderer;
-import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
+import nova.wrapper.mc1710.wrapper.render.BWModel;
 
 import java.util.Optional;
 

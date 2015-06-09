@@ -1,8 +1,8 @@
-package nova.wrapper.mc1710.backward.gui;
+package nova.wrapper.mc1710.wrapper.gui;
 
 import nova.core.gui.nativeimpl.NativeGuiComponent;
 import nova.core.gui.render.Graphics;
-import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
+import nova.wrapper.mc1710.wrapper.gui.MCGui.MCContainer;
 
 public interface DrawableGuiComponent extends NativeGuiComponent {
 

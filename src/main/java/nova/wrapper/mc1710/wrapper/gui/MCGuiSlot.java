@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.gui;
+package nova.wrapper.mc1710.wrapper.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 import nova.core.gui.component.inventory.Slot;
 import nova.core.gui.nativeimpl.NativeSlot;
 import nova.core.gui.render.Graphics;
-import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
-import nova.wrapper.mc1710.backward.gui.MCGui.MCGuiScreen;
-import nova.wrapper.mc1710.forward.inventory.FWInventory;
+import nova.wrapper.mc1710.wrapper.gui.MCGui.MCContainer;
+import nova.wrapper.mc1710.wrapper.gui.MCGui.MCGuiScreen;
+import nova.wrapper.mc1710.wrapper.inventory.FWInventory;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.opengl.GL11;

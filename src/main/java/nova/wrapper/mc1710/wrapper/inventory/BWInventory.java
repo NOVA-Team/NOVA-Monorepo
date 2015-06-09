@@ -1,16 +1,16 @@
-package nova.wrapper.mc1710.backward.inventory;
-
-import java.util.Optional;
+package nova.wrapper.mc1710.wrapper.inventory;
 
 import net.minecraft.inventory.IInventory;
 import nova.core.inventory.Inventory;
 import nova.core.item.Item;
 
+import java.util.Optional;
+
 public class BWInventory implements Inventory {
-	public final IInventory mcInventory;
+	public final IInventory wrapped;
 
 	public BWInventory(IInventory mcInventory) {
-		this.mcInventory = mcInventory;
+		this.wrapped = mcInventory;
 	}
 
 	@Override
@@ -25,11 +25,11 @@ public class BWInventory implements Inventory {
 
 	@Override
 	public int size() {
-		return mcInventory.getSizeInventory();
+		return wrapped.getSizeInventory();
 	}
 
 	@Override
 	public void markChanged() {
-		mcInventory.markDirty();
+		wrapped.markDirty();
 	}
 }

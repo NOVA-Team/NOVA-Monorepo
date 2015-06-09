@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import nova.core.component.renderer.DynamicRenderer;
-import nova.wrapper.mc1710.backward.render.BWModel;
 import nova.wrapper.mc1710.render.RenderUtility;
+import nova.wrapper.mc1710.wrapper.render.BWModel;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Optional;

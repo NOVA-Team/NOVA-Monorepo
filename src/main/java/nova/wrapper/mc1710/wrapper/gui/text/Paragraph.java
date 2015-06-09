@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.gui.text;
+package nova.wrapper.mc1710.wrapper.gui.text;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.gui.FontRenderer;
@@ -6,7 +6,7 @@ import nova.core.gui.render.text.FormattedText;
 import nova.core.gui.render.text.FormattedText.TextFormat;
 import nova.core.gui.render.text.TextRenderer;
 import nova.core.gui.render.text.TextRenderer.RenderedText;
-import nova.wrapper.mc1710.backward.gui.text.IText.Word;
+import nova.wrapper.mc1710.wrapper.gui.text.IText.Word;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;

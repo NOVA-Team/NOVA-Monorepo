@@ -1,11 +1,11 @@
-package nova.wrapper.mc1710.backward.gui.text;
+package nova.wrapper.mc1710.wrapper.gui.text;
 
 import net.minecraft.client.gui.FontRenderer;
 import nova.core.gui.render.text.FormattedText;
 import nova.core.gui.render.text.FormattedText.TextFormat;
 import nova.core.gui.render.text.TextRenderer;
 import nova.core.gui.render.text.TextRenderer.RenderedText;
-import nova.wrapper.mc1710.backward.gui.text.IText.Text;
+import nova.wrapper.mc1710.wrapper.gui.text.IText.Text;
 import org.lwjgl.opengl.GL11;
 
 class SimpleParagraph extends AbstractParagraph<Text> implements RenderedText {

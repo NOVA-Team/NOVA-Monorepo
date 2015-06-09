@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.gui;
+package nova.wrapper.mc1710.wrapper.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;

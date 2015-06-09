@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.forward.inventory;
+package nova.wrapper.mc1710.wrapper.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -8,20 +8,20 @@ import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 
 public class FWInventory implements IInventory {
 
-	private final Inventory inventory;
+	public final Inventory wrapped;
 
 	public FWInventory(Inventory inventory) {
-		this.inventory = inventory;
+		this.wrapped = inventory;
 	}
 
 	@Override
 	public int getSizeInventory() {
-		return inventory.size();
+		return wrapped.size();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return ItemConverter.instance().toNative(inventory.get(slot).orElse(null));
+		return ItemConverter.instance().toNative(wrapped.get(slot).orElse(null));
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class FWInventory implements IInventory {
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inventory.set(slot, stack != null ? ItemConverter.instance().getNovaItem(stack) : null);
+		wrapped.set(slot, stack != null ? ItemConverter.instance().getNovaItem(stack) : null);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class FWInventory implements IInventory {
 
 	@Override
 	public void markDirty() {
-		inventory.markChanged();
+		wrapped.markChanged();
 	}
 
 	@Override

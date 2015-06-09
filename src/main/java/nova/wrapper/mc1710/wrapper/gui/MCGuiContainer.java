@@ -1,7 +1,4 @@
-package nova.wrapper.mc1710.backward.gui;
-
-import java.util.ArrayList;
-import java.util.List;
+package nova.wrapper.mc1710.wrapper.gui;
 
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
@@ -9,7 +6,10 @@ import nova.core.gui.Outline;
 import nova.core.gui.nativeimpl.NativeContainer;
 import nova.core.gui.render.Canvas;
 import nova.core.gui.render.Graphics;
-import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
+import nova.wrapper.mc1710.wrapper.gui.MCGui.MCContainer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MCGuiContainer extends MCGuiComponent<AbstractGuiContainer<?, ?>> implements NativeContainer {
 

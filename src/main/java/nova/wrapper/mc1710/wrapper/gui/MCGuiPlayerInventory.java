@@ -1,13 +1,13 @@
-package nova.wrapper.mc1710.backward.gui;
+package nova.wrapper.mc1710.wrapper.gui;
 
 import net.minecraft.inventory.IInventory;
 import nova.core.gui.component.inventory.PlayerInventory;
 import nova.core.gui.nativeimpl.NativePlayerInventory;
 import nova.core.gui.render.Graphics;
-import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
-import nova.wrapper.mc1710.backward.gui.MCGui.MCGuiScreen;
-import nova.wrapper.mc1710.backward.gui.MCGuiSlot.MCSlot;
-import nova.wrapper.mc1710.backward.inventory.BWInventory;
+import nova.wrapper.mc1710.wrapper.gui.MCGui.MCContainer;
+import nova.wrapper.mc1710.wrapper.gui.MCGui.MCGuiScreen;
+import nova.wrapper.mc1710.wrapper.gui.MCGuiSlot.MCSlot;
+import nova.wrapper.mc1710.wrapper.inventory.BWInventory;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class MCGuiPlayerInventory extends MCGuiComponent<PlayerInventory> implem
 
 	@Override
 	public void onAddedToContainer(MCContainer container) {
-		IInventory inventory = ((BWInventory) getComponent().getInventory()).mcInventory;
+		IInventory inventory = ((BWInventory) getComponent().getInventory()).wrapped;
 		slots.clear();
 
 		for (int j = 0; j < 3; j++) {

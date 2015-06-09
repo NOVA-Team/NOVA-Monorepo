@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.gui;
+package nova.wrapper.mc1710.wrapper.gui;
 
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;

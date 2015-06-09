@@ -6,8 +6,8 @@ import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import nova.core.gui.GuiException;
 import nova.core.network.Packet;
-import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
 import nova.wrapper.mc1710.network.MCPacket;
+import nova.wrapper.mc1710.wrapper.gui.MCGui.MCContainer;
 
 //TODO: Integrate with NOVA
 public class PacketGui extends PacketAbstract {

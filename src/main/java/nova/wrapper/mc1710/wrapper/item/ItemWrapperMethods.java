@@ -6,14 +6,14 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 import nova.core.component.renderer.ItemRenderer;
-import nova.internal.core.Game;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import nova.wrapper.mc1710.backward.render.BWModel;
+import nova.internal.core.Game;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.wrapper.entity.BWEntity;
+import nova.wrapper.mc1710.wrapper.render.BWModel;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.List;
 import java.util.Optional;

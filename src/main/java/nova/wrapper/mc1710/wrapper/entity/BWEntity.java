@@ -10,9 +10,9 @@ import nova.core.entity.component.Living;
 import nova.core.entity.component.Player;
 import nova.core.inventory.component.InventoryPlayer;
 import nova.core.network.NetworkTarget;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import nova.wrapper.mc1710.backward.inventory.BWInventory;
 import nova.wrapper.mc1710.wrapper.entity.forward.MCEntityTransform;
+import nova.wrapper.mc1710.wrapper.inventory.BWInventory;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * A Minecraft to NOVA Entity wrapper

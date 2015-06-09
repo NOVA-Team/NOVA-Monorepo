@@ -11,19 +11,18 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.common.MinecraftForge;
-import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.component.ComponentProvider;
-import nova.internal.core.deps.DepDownloader;
 import nova.core.deps.MavenDependency;
 import nova.core.event.Event;
 import nova.core.loader.Loadable;
 import nova.core.loader.NativeLoader;
 import nova.internal.core.Game;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
+import nova.internal.core.deps.DepDownloader;
 import nova.internal.core.launch.InitializationException;
 import nova.internal.core.launch.ModLoader;
 import nova.internal.core.launch.NovaLauncher;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
-import nova.wrapper.mc1710.backward.gui.MCGuiFactory;
 import nova.wrapper.mc1710.depmodules.ClientModule;
 import nova.wrapper.mc1710.depmodules.GameInfoModule;
 import nova.wrapper.mc1710.depmodules.GuiModule;
@@ -40,6 +39,8 @@ import nova.wrapper.mc1710.wrapper.cuboid.CuboidConverter;
 import nova.wrapper.mc1710.wrapper.data.DataWrapper;
 import nova.wrapper.mc1710.wrapper.entity.EntityConverter;
 import nova.wrapper.mc1710.wrapper.entity.forward.MCRigidBody;
+import nova.wrapper.mc1710.wrapper.gui.MCGuiFactory;
+import nova.wrapper.mc1710.wrapper.inventory.InventoryConverter;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.wrapper.item.OreDictionaryIntegration;
 
@@ -105,6 +106,7 @@ public class NovaMinecraft {
 			Game.natives().registerConverter(new ItemConverter());
 			Game.natives().registerConverter(new WorldConverter());
 			Game.natives().registerConverter(new CuboidConverter());
+			Game.natives().registerConverter(new InventoryConverter());
 
 			/**
 			 * Initiate recipe and ore dictionary integration

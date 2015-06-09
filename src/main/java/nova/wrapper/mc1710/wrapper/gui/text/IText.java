@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.gui.text;
+package nova.wrapper.mc1710.wrapper.gui.text;
 
 import net.minecraft.client.gui.FontRenderer;
 import nova.core.gui.render.text.FormattedText.TextFormat;

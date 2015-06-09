@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.render;
+package nova.wrapper.mc1710.wrapper.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;

@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.gui.text;
+package nova.wrapper.mc1710.wrapper.gui.text;
 
 import nova.core.gui.render.text.TextRenderer.RenderedText;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;

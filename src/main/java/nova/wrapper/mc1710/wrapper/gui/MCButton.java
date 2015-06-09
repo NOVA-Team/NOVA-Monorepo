@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.gui;
+package nova.wrapper.mc1710.wrapper.gui;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.common.FMLCommonHandler;

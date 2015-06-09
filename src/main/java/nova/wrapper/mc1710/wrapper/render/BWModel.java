@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.render;
+package nova.wrapper.mc1710.wrapper.render;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;

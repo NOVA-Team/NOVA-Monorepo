@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.gui;
+package nova.wrapper.mc1710.wrapper.gui;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.client.Minecraft;
@@ -12,11 +12,11 @@ import nova.core.gui.Gui;
 import nova.core.gui.GuiException;
 import nova.core.gui.factory.GuiFactory;
 import nova.core.gui.factory.GuiManager;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import nova.wrapper.mc1710.backward.gui.MCGui.MCContainer;
-import nova.wrapper.mc1710.backward.gui.MCGui.MCGuiScreen;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.wrapper.entity.BWEntity;
+import nova.wrapper.mc1710.wrapper.gui.MCGui.MCContainer;
+import nova.wrapper.mc1710.wrapper.gui.MCGui.MCGuiScreen;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
 import java.util.List;

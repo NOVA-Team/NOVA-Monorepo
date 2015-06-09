@@ -1,4 +1,4 @@
-package nova.wrapper.mc1710.backward.gui;
+package nova.wrapper.mc1710.wrapper.gui;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -21,9 +21,9 @@ import nova.core.gui.render.Graphics;
 import nova.core.gui.render.text.TextMetrics;
 import nova.core.network.Packet;
 import nova.internal.core.Game;
-import nova.wrapper.mc1710.backward.gui.text.MCTextRenderer;
 import nova.wrapper.mc1710.network.discriminator.PacketGui;
 import nova.wrapper.mc1710.network.netty.MCNetworkManager;
+import nova.wrapper.mc1710.wrapper.gui.text.MCTextRenderer;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;

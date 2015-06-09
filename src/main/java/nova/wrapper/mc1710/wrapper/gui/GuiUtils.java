@@ -1,10 +1,9 @@
-package nova.wrapper.mc1710.backward.gui;
+package nova.wrapper.mc1710.wrapper.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
-
 import org.lwjgl.opengl.GL11;
 
 public class GuiUtils {
