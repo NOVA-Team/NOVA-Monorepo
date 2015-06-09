@@ -17,8 +17,8 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class Cuboid extends Shape<Cuboid, Cuboid> {
-	public static final Cuboid zero = new Cuboid(Vector3D.ZERO, Vector3D.ZERO);
-	public static final Cuboid one = new Cuboid(Vector3D.ZERO, Vector3DUtil.ONE);
+	public static final Cuboid ZERO = new Cuboid(Vector3D.ZERO, Vector3D.ZERO);
+	public static final Cuboid ONE = new Cuboid(Vector3D.ZERO, Vector3DUtil.ONE);
 	public final Vector3D min;
 	public final Vector3D max;
 

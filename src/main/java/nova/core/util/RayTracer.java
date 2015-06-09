@@ -103,7 +103,7 @@ public class RayTracer {
 	public Stream<RayTraceEntityResult> rayTraceEntities(World world) {
 		//TODO: Consider smaller check space
 		return rayTraceEntities(
-			world.getEntities(Cuboid.zero.expand(distance).add(ray.origin))
+			world.getEntities(Cuboid.ZERO.expand(distance).add(ray.origin))
 				.stream()
 				.filter(entity -> entity.has(Collider.class))
 		);
