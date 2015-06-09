@@ -13,7 +13,7 @@ public class Vector3DUtil {
 
 	public static final Vector3D ONE = new Vector3D(1, 1, 1);
 	public static final Vector3D CENTER = new Vector3D(0.5, 0.5, 0.5);
-	public static final Vector3D FORWARD = Vector3D.MINUS_J;
+	public static final Vector3D FORWARD = Vector3D.MINUS_K;
 
 	/**
 	 * @return Creates a random unit vector

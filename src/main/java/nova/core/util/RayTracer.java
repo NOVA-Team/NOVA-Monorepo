@@ -6,6 +6,7 @@ import nova.core.component.misc.Collider;
 import nova.core.component.transform.WorldTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
+import nova.core.util.math.Vector3DUtil;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -39,7 +40,7 @@ public class RayTracer {
 	 * @param entity The entity
 	 */
 	public RayTracer(Entity entity) {
-		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3D.ZERO), entity.rotation().applyTo(Vector3D.MINUS_J)));
+		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3D.ZERO), entity.rotation().applyTo(Vector3DUtil.FORWARD)));
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class RayTracer {
 		return rayTraceBlocks(
 			IntStream.range(0, (int) distance + 1)
 				.mapToObj(i -> ray.origin.add(ray.dir.scalarMultiply(i)))
-				.flatMap(vec -> Arrays.stream(Direction.DIRECTIONS).map(direction -> vec.add(direction.toVector()))) //Cover a larger area to be safe
+				.flatMap(vec -> Arrays.stream(Direction.DIRECTIONS).map(direction -> Vector3DUtil.floor(vec.add(direction.toVector())))) //Cover a larger area to be safe
 				.distinct()
 				.map(world::getBlock)
 				.filter(Optional::isPresent)
