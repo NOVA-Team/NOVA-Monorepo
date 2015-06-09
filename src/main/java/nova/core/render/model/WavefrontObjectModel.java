@@ -42,11 +42,11 @@ public class WavefrontObjectModel extends ModelProvider {
 	@Override
 	public void load(InputStream stream) {
 
-		BufferedReader reader = null;
+
 		String currentLine;
 		int lineCount = 0;
-		try {
-			reader = new BufferedReader(new InputStreamReader(stream));
+		try(BufferedReader reader = new BufferedReader(new InputStreamReader(stream))){
+
 			while ((currentLine = reader.readLine()) != null) {
 				lineCount++;
 				currentLine = currentLine.replaceAll("\\s+", " ").trim();
@@ -86,12 +86,9 @@ public class WavefrontObjectModel extends ModelProvider {
 			throw new RenderException("Model " + name + " could not be read", e);
 		} finally {
 			try {
-				reader.close();
 				stream.close();
-				this.cleanUp();
-			} catch (IOException e) {
-
-			}
+			} catch (IOException e) {}
+			this.cleanUp();
 		}
 	}
 
