@@ -124,7 +124,7 @@ public abstract class ComponentProvider {
 	 * @return the component.
 	 * @throws ComponentException if the component doesn't exist.
 	 */
-	public final <C extends Component> C get(Class<C> componentType) {
+	public final <C> C get(Class<C> componentType) {
 		return getOp(componentType).orElseThrow(() -> new ComponentException("Attempt to get component that does not exist: %s", componentType));
 	}
 
