@@ -103,17 +103,18 @@ public abstract class ComponentProvider {
 	 * if the component was not found.
 	 */
 	@SuppressWarnings("unchecked")
-	public final <C extends Component> Optional<C> getOp(Class<C> componentType) {
-		Component component = componentMap.get(componentType);
-
-		if (component != null) {
-			return Optional.of((C) component);
-		} else {
-			return componentMap.values().stream()
-				.filter(c -> componentType.isAssignableFrom(c.getClass()))
-				.map(componentType::cast)
-				.findFirst();
+	public final <C> Optional<C> getOp(Class<C> componentType) {
+		if (componentType.isAssignableFrom(Component.class)) {
+			Component component = componentMap.get(componentType.asSubclass(Component.class));
+			if (component != null) {
+				return Optional.of((C) component);
+			}
 		}
+		return componentMap.values().stream()
+			.filter(c -> componentType.isAssignableFrom(c.getClass()))
+			.map(componentType::cast)
+			.findFirst();
+
 	}
 
 	/**
