@@ -33,9 +33,7 @@ public interface ItemFilter extends Predicate<Item> {
 	 * @return ItemFilter
 	 */
 	static ItemFilter of(String id) {
-		return (other) -> {
-			return id.equals(other.getID());
-		};
+		return (other) -> id.equals(other.getID());
 	}
 
 	/**
@@ -45,8 +43,6 @@ public interface ItemFilter extends Predicate<Item> {
 	 * @return
 	 */
 	static ItemFilter of(int amount) {
-		return (other) -> {
-			return other.count() >= amount;
-		};
+		return (other) -> other.count() >= amount;
 	}
 }

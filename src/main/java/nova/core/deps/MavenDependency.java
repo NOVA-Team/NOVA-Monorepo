@@ -44,7 +44,7 @@ public class MavenDependency {
 	}
 
 	public String getDir() {
-		return this.groupID.replaceAll(".", "/") + "/" + this.artifactID + "/" + this.version;
+		return this.groupID.replaceAll("\\.", "/") + "/" + this.artifactID + "/" + this.version;
 	}
 
 	public String getPath() {
