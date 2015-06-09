@@ -71,7 +71,10 @@ public class MCRigidBody extends RigidBody {
 		entity.transform().setRotation(entity.rotation().applyTo(deltaRotation));
 
 		//Integrate torque to angular velocity
-		setAngularVelocity(angularVelocity().applyTo(new Rotation(Vector3DUtil.FORWARD, netTorque.scalarMultiply(deltaTime))));
+		Vector3D torque = netTorque.scalarMultiply(deltaTime);
+		if (!Vector3D.ZERO.equals(torque)) {
+			setAngularVelocity(angularVelocity().applyTo(new Rotation(Vector3DUtil.FORWARD, torque)));
+		}
 
 		//Clear net torque
 		netTorque = Vector3D.ZERO;
