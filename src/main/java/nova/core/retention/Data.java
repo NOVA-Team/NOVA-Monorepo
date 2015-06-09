@@ -1,5 +1,8 @@
 package nova.core.retention;
 
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,7 +44,9 @@ public class Data extends HashMap<String, Object> {
 		Enum.class,
 		Storable.class,
 		Data.class,
-		Collection.class };
+		Collection.class,
+		Vector3D.class,
+		Vector2D.class };
 
 	public String className;
 

@@ -163,6 +163,7 @@ public class Color {
 	}
 
 	public int rgba() {
+		//TODO: This is bugged.
 		int alpha = value & 0xFF000000;
 		int rgba = value << 8;
 		rgba |= alpha >> 24;
