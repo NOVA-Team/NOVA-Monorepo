@@ -84,7 +84,7 @@ public class FormattedText implements Iterable<FormattedText> {
 		return text;
 	}
 
-	public static Pattern pattern = Pattern.compile("(?<!\\\\)(?:\\\\\\\\)*(&([^;]{2});|&cr(([-+]?\\d+)|(\\#[0-F0-f]+));|&sz(\\d+);)");
+	public static Pattern pattern = Pattern.compile("(?<!\\\\)(?:\\\\\\\\)*(&([^;]{2});|&cr(([-+]?\\d+)|(#[0-F0-f]+));|&sz(\\d+);)");
 
 	// TODO Support for localization
 	/**
