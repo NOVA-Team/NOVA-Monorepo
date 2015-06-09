@@ -14,7 +14,7 @@ public enum Anchor {
 	public final int axis;
 	public final Vector2D offset;
 
-	private Anchor(int axis, Vector2D offset) {
+	Anchor(int axis, Vector2D offset) {
 		this.axis = axis;
 		this.offset = offset;
 	}

@@ -39,12 +39,12 @@ public class GuiEvent extends CancelableEvent {
 			this.state = state;
 		}
 
-		public static enum EnumMouseButton {
-			LEFT, RIGHT, MIDDLE;
+		public enum EnumMouseButton {
+			LEFT, RIGHT, MIDDLE
 		}
 
-		public static enum EnumMouseState {
-			UP, DOWN, CLICK, DOUBLECLICK;
+		public enum EnumMouseState {
+			UP, DOWN, CLICK, DOUBLECLICK
 		}
 	}
 
@@ -71,8 +71,8 @@ public class GuiEvent extends CancelableEvent {
 			this.state = state;
 		}
 
-		public static enum EnumKeyState {
-			UP, DOWN, TYPE;
+		public enum EnumKeyState {
+			UP, DOWN, TYPE
 		}
 	}
 

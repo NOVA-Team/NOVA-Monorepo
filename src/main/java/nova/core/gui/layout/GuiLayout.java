@@ -19,13 +19,13 @@ public interface GuiLayout {
 	 *
 	 * @param container Container instance
 	 */
-	public void revalidate(AbstractGuiContainer<?, ?> container);
+	void revalidate(AbstractGuiContainer<?, ?> container);
 
-	public void add(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, Object... parameters);
+	void add(GuiComponent<?, ?> component, AbstractGuiContainer<?, ?> parent, Object... parameters);
 
-	public void remove(GuiComponent<?, ?> component);
+	void remove(GuiComponent<?, ?> component);
 
-	public default Vector2D getMinimumSize(GuiComponent<?, ?> component) {
+	default Vector2D getMinimumSize(GuiComponent<?, ?> component) {
 		return Vector2D.ZERO;
 	}
 }

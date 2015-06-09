@@ -119,7 +119,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 	}
 
 	@FunctionalInterface
-	public static interface NetworkEventProcessor {
+	public interface NetworkEventProcessor {
 
 		/**
 		 * Gets called if the parent {@link SidedEventBus.SidedEventListener}
@@ -127,7 +127,7 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 		 *
 		 * @param event The event
 		 */
-		public void handleEvent(SidedEvent event);
+		void handleEvent(SidedEvent event);
 	}
 
 	/**
@@ -137,9 +137,9 @@ public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
 	 *
 	 * @author Vic Nightfall
 	 */
-	public static interface SidedEvent extends Syncable {
+	public interface SidedEvent extends Syncable {
 
-		public default Side getTarget() {
+		default Side getTarget() {
 			NetworkTarget target = getClass().getAnnotation(NetworkTarget.class);
 			return target != null ? target.value() : Side.BOTH;
 		}

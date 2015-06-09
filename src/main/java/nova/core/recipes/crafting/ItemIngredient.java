@@ -18,7 +18,7 @@ public interface ItemIngredient {
 	 * @param itemId item ID
 	 * @return ingredient
 	 */
-	public static ItemIngredient forItem(String itemId) {
+	static ItemIngredient forItem(String itemId) {
 		return new SpecificItemIngredient(itemId);
 	}
 
@@ -28,7 +28,7 @@ public interface ItemIngredient {
 	 * @param id dictionary entry ID
 	 * @return ingredient
 	 */
-	public static ItemIngredient forDictionary(String id) {
+	static ItemIngredient forDictionary(String id) {
 		return new OreItemIngredient(id);
 	}
 
@@ -38,7 +38,7 @@ public interface ItemIngredient {
 	 *
 	 * @return possible items
 	 */
-	public Optional<Collection<String>> getPossibleItemIds();
+	Optional<Collection<String>> getPossibleItemIds();
 
 	/**
 	 * Returns a list of example items. This list could be used to render
@@ -46,7 +46,7 @@ public interface ItemIngredient {
 	 *
 	 * @return example items
 	 */
-	public Optional<Collection<Item>> getExampleItems();
+	Optional<Collection<Item>> getExampleItems();
 
 	/**
 	 * Checks if this ingredient is a subset of another ingredient. An
@@ -56,7 +56,7 @@ public interface ItemIngredient {
 	 * @param ingredient The another ingredient
 	 * @return Result of the check
 	 */
-	public boolean isSubsetOf(ItemIngredient ingredient);
+	boolean isSubsetOf(ItemIngredient ingredient);
 
 	/**
 	 * Checks if this ingredient matches the given item.
@@ -64,14 +64,14 @@ public interface ItemIngredient {
 	 * @param item Item to check
 	 * @return Whether the item matches or not
 	 */
-	public boolean matches(Item item);
+	boolean matches(Item item);
 
 	/**
 	 * Returns the ingredient tag. Ingredients can be tagged to make them easy to read from recipe functions.
 	 *
 	 * @return ingredient tag
 	 */
-	public Optional<String> getTag();
+	Optional<String> getTag();
 
 	/**
 	 * Performs any necessary actions when this ingredient is consumed due to crafting a single item. May return a
@@ -81,5 +81,5 @@ public interface ItemIngredient {
 	 * @param craftingGrid {@link CraftingGrid} used
 	 * @return Resulting {@link Item}
 	 */
-	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid);
+	Item consumeOnCrafting(Item original, CraftingGrid craftingGrid);
 }

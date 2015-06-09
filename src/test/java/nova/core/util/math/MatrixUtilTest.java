@@ -32,6 +32,6 @@ public class MatrixUtilTest {
                 .isEqualTo(MatrixUtils.createRealMatrix(new double[][]{{1, 2}, {3, 4}}));
     }
 
+}
 
-    }
 

@@ -17,5 +17,5 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.SOURCE)
 public @interface Sided {
-	public Side value();
+	Side value();
 }

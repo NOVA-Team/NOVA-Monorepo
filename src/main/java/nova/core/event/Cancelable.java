@@ -11,12 +11,12 @@ public interface Cancelable {
 	/**
 	 * Cancels an event. Sets the canceled flag.
 	 */
-	public void cancel();
+	void cancel();
 
 	/**
 	 * Checks if the canceled flag has been set.
 	 *
 	 * @return canceled status
 	 */
-	public boolean isCanceled();
+	boolean isCanceled();
 }

@@ -12,28 +12,28 @@ import java.util.Optional;
  * @author Stan Hebben
  */
 public interface CraftingGrid {
-	public static final String topologySquare = "square";
-	public static final String typeCrafting = "crafting";
+	String topologySquare = "square";
+	String typeCrafting = "crafting";
 
 	/**
 	 * Represents the player that is currently using this crafting grid. Can be null.
 	 * @return crafting grid player
 	 */
-	public Optional<Player> getPlayer();
+	Optional<Player> getPlayer();
 
 	/**
 	 * Returns the total size of this crafting grid. For a square crafting grid, this is width x height. Note that the
 	 * size can be less than width x height in the case of non-square crafting grid (but never more).
 	 * @return The size
 	 */
-	public int size();
+	int size();
 
 	/**
 	 * Gets the stack in a specified slot. Can be null if empty.
 	 * @param slot slot index
 	 * @return item stack in the given slot
 	 */
-	public Optional<Item> getStack(int slot);
+	Optional<Item> getStack(int slot);
 
 	/**
 	 * Modifies the stack in the given slot. If the modification is not possible, this method returns null. If modification
@@ -46,19 +46,19 @@ public interface CraftingGrid {
 	 * @param Item item stack to be set
 	 * @return true if modification was successful, false otherwise
 	 */
-	public boolean setStack(int slot, Optional<Item> Item);
+	boolean setStack(int slot, Optional<Item> Item);
 
 	/**
 	 * Gets the width of the crafting grid. For a non-square grid,, this should return the highest acceptable x-value + 1.
 	 * @return crafting grid width
 	 */
-	public int getWidth();
+	int getWidth();
 
 	/**
 	 * Gets the height of the crafting grid. For a non-square grid, this should return the highest acceptable y-value + 1.
 	 * @return crafting grid height
 	 */
-	public int getHeight();
+	int getHeight();
 
 	/**
 	 * Gets the stack at the given (x, y) position. Returns null if there is no stack at that position.
@@ -66,7 +66,7 @@ public interface CraftingGrid {
 	 * @param y y position
 	 * @return stack at the given position
 	 */
-	public Optional<Item> getStack(int x, int y);
+	Optional<Item> getStack(int x, int y);
 
 	/**
 	 * Sets the stack at the given (x, y) position.
@@ -75,34 +75,34 @@ public interface CraftingGrid {
 	 * @param Item stack to be set
 	 * @return true if the modification is successful, false otherwise
 	 */
-	public boolean setStack(int x, int y, Optional<Item> Item);
+	boolean setStack(int x, int y, Optional<Item> Item);
 
 	/**
 	 * Gives back a certain item. In the case of a player's crafting grid, this would typically go back to the player's
 	 * inventory. Machines may implement this method differently.
 	 * @param Item The {@link Item}
 	 */
-	public void giveBack(Item Item);
+	void giveBack(Item Item);
 
 	/**
 	 * Gets the topology of the crafting grid. For a square grid, this should be CraftingGrid.TOPOLOGY_SQUARE. Other
 	 * kinds of grids may return a different value.
 	 * @return crafting grid topology
 	 */
-	public String getTopology();
+	String getTopology();
 
 	/**
 	 * Gets the type of crafting grid. For a crafting recipe, this should return CraftingGrid.TYPE_CRAFTING. Other
 	 * machines or crafting tables (with a separate set of recipes) may return a different value.
 	 * @return crafting grid type0
 	 */
-	public String getType();
+	String getType();
 
 	/**
 	 * Counts the number of filled stacks in this crafting grid.
 	 * @return number of non-empty stacks in this crafting grid
 	 */
-	public default int countFilledStacks() {
+	default int countFilledStacks() {
 		int filledStacks = 0;
 		for (int i = 0; i < size(); i++) {
 			if (getStack(i).isPresent()) {
@@ -117,7 +117,7 @@ public interface CraftingGrid {
 	 * empty.
 	 * @return first non-empty item
 	 */
-	public default Optional<Item> getFirstNonEmptyItem() {
+	default Optional<Item> getFirstNonEmptyItem() {
 		for (int i = 0; i < size(); i++) {
 			Optional<Item> stackInSlot = getStack(i);
 			if (stackInSlot.isPresent()) {
@@ -133,7 +133,7 @@ public interface CraftingGrid {
 	 * grid is completely empty.
 	 * @return first non-empty item position
 	 */
-	public default Optional<Vector2D> getFirstNonEmptyPosition() {
+	default Optional<Vector2D> getFirstNonEmptyPosition() {
 		for (int y = 0; y < getHeight(); y++) {
 			for (int x = 0; x < getWidth(); x++) {
 				if (getStack(x, y).isPresent()) {

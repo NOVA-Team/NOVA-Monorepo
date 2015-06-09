@@ -4,51 +4,51 @@ package nova.core.render.model;
  * @author Stan
  */
 public interface CubeTextureCoordinates {
-	public double getTopMinU();
+	double getTopMinU();
 
-	public double getTopMinV();
+	double getTopMinV();
 
-	public double getTopMaxU();
+	double getTopMaxU();
 
-	public double getTopMaxV();
+	double getTopMaxV();
 
-	public double getBottomMinU();
+	double getBottomMinU();
 
-	public double getBottomMinV();
+	double getBottomMinV();
 
-	public double getBottomMaxU();
+	double getBottomMaxU();
 
-	public double getBottomMaxV();
+	double getBottomMaxV();
 
-	public double getWestMinU();
+	double getWestMinU();
 
-	public double getWestMinV();
+	double getWestMinV();
 
-	public double getWestMaxU();
+	double getWestMaxU();
 
-	public double getWestMaxV();
+	double getWestMaxV();
 
-	public double getEastMinU();
+	double getEastMinU();
 
-	public double getEastMinV();
+	double getEastMinV();
 
-	public double getEastMaxU();
+	double getEastMaxU();
 
-	public double getEastMaxV();
+	double getEastMaxV();
 
-	public double getNorthMinU();
+	double getNorthMinU();
 
-	public double getNorthMinV();
+	double getNorthMinV();
 
-	public double getNorthMaxU();
+	double getNorthMaxU();
 
-	public double getNorthMaxV();
+	double getNorthMaxV();
 
-	public double getSouthMinU();
+	double getSouthMinU();
 
-	public double getSouthMinV();
+	double getSouthMinV();
 
-	public double getSouthMaxU();
+	double getSouthMaxU();
 
-	public double getSouthMaxV();
+	double getSouthMaxV();
 }

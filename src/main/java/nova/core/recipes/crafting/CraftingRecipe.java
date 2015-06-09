@@ -19,7 +19,7 @@ public interface CraftingRecipe extends Recipe {
 	 * @param craftingGrid crafting grid to read from
 	 * @return true if a crafting operation would return a valid result
 	 */
-	public boolean matches(CraftingGrid craftingGrid);
+	boolean matches(CraftingGrid craftingGrid);
 
 	/**
 	 * Calculates the crafting result for the given crafting grid. Does not
@@ -28,14 +28,14 @@ public interface CraftingRecipe extends Recipe {
 	 * @param craftingGrid crafting grid
 	 * @return crafting result, empty if the recipe doesn't match
 	 */
-	public Optional<Item> getCraftingResult(CraftingGrid craftingGrid);
+	Optional<Item> getCraftingResult(CraftingGrid craftingGrid);
 
 	/**
 	 * Gets a nominal (example) output for this recipe. Used in recipe display.
 	 *
 	 * @return example output
 	 */
-	public Optional<Item> getNominalOutput();
+	Optional<Item> getNominalOutput();
 
 	/**
 	 * Consumes items for the crafting of a single item. Removes items and
@@ -44,7 +44,7 @@ public interface CraftingRecipe extends Recipe {
 	 *
 	 * @param craftingGrid crafting grid to modify
 	 */
-	public void consumeItems(CraftingGrid craftingGrid);
+	void consumeItems(CraftingGrid craftingGrid);
 
 	/**
 	 * Gets the possible items for this recipe in the first non-empty recipe
@@ -53,7 +53,7 @@ public interface CraftingRecipe extends Recipe {
 	 *
 	 * @return The items
 	 */
-	public default Optional<Collection<String>> getPossibleItemsInFirstSlot() {
+	default Optional<Collection<String>> getPossibleItemsInFirstSlot() {
 		return Optional.empty();
 	}
 }

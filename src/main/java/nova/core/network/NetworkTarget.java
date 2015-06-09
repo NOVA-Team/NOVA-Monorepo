@@ -26,7 +26,7 @@ public @interface NetworkTarget {
 	 *
 	 * @return side
 	 */
-	public Side value();
+	Side value();
 
 	/**
 	 * <p>
@@ -52,7 +52,7 @@ public @interface NetworkTarget {
 	 *
 	 * @author Vic Nightfall
 	 */
-	public static enum Side {
+	enum Side {
 		/**
 		 * The client side. The client usually handles rendering and has no
 		 * access to the remote {@link World} or {@link Entity Entities}. Any
@@ -191,7 +191,7 @@ public @interface NetworkTarget {
 	 * @see Sided
 	 * @see Side
 	 */
-	public static class IllegalSideException extends NovaException {
+	class IllegalSideException extends NovaException {
 
 		private static final long serialVersionUID = -2732640693411842097L;
 

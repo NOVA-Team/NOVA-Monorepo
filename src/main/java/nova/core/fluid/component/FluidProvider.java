@@ -15,14 +15,14 @@ public interface FluidProvider {
 	 * @param simulate Whether to simulate the extraction
 	 * @return Extracted {@link Fluid}
 	 */
-	public Optional<Fluid> removeFluid(int amount, boolean simulate);
+	Optional<Fluid> removeFluid(int amount, boolean simulate);
 
 	/**
 	 * Attempt to extract fluid from this FluidProvider
 	 * @param amount Amount of fluid to extract
 	 * @return Extracted {@link Fluid}
 	 */
-	default public Optional<Fluid> removeFluid(int amount) {
+	default Optional<Fluid> removeFluid(int amount) {
 		return removeFluid(amount, false);
 	}
 }

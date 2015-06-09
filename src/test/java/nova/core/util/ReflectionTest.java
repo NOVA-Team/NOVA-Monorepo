@@ -24,11 +24,15 @@ public class ReflectionTest {
 	}
 	
 	static class TestClass {
-		public TestClass(double a, double b, double c) {};	
-		public TestClass(Double a, Double b, Double c) {};
-		public TestClass(double a, double b, int c) {};
-		public TestClass(float... f) {};
-		public TestClass(Object... a) {};
+		public TestClass(double a, double b, double c) {}
+
+		public TestClass(Double a, Double b, Double c) {}
+
+		public TestClass(double a, double b, int c) {}
+
+		public TestClass(float... f) {}
+
+		public TestClass(Object... a) {}
 	}
 	
 	@Test
