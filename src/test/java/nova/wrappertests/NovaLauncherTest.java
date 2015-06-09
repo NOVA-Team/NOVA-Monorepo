@@ -36,24 +36,5 @@ public class NovaLauncherTest extends NovaLauncherTestFactory {
 		Game game = diep.init();
 
 		assertThat(game).isNotNull();
-
-		assertThat(game.logger()).isNotNull();
-		assertThat(game.clientManager()).isNotNull();
-		assertThat(game.blocks()).isNotNull();
-		assertThat(game.entities()).isNotNull();
-		assertThat(game.items()).isNotNull();
-		assertThat(game.fluids()).isNotNull();
-		assertThat(game.worlds()).isNotNull();
-		assertThat(game.render()).isNotNull();
-		assertThat(game.recipes()).isNotNull();
-		assertThat(game.craftingRecipes()).isNotNull();
-		assertThat(game.itemDictionary()).isNotNull();
-		assertThat(game.events()).isNotNull();
-		assertThat(game.network()).isNotNull();
-		assertThat(game.retention()).isNotNull();
-		assertThat(game.language()).isNotNull();
-		assertThat(game.input()).isNotNull();
-		assertThat(game.natives()).isNotNull();
-		assertThat(game.info()).isNotNull();
 	}
 }
