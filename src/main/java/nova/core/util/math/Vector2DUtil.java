@@ -1,6 +1,7 @@
 package nova.core.util.math;
 
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.math3.util.FastMath;
 
 import java.util.Random;
 
@@ -22,11 +23,11 @@ public class Vector2DUtil {
 	}
 
 	public static Vector2D max(Vector2D a, Vector2D b) {
-		return new Vector2D(Math.max(a.getX(), b.getX()), Math.max(a.getY(), b.getY()));
+		return new Vector2D(FastMath.max(a.getX(), b.getX()), FastMath.max(a.getY(), b.getY()));
 	}
 
 	public static Vector2D min(Vector2D a, Vector2D b) {
-		return new Vector2D(Math.min(a.getX(), b.getX()), Math.min(a.getY(), b.getY()));
+		return new Vector2D(FastMath.min(a.getX(), b.getX()), FastMath.min(a.getY(), b.getY()));
 	}
 
 	public static Vector2D midpoint(Vector2D a, Vector2D b) {
@@ -42,10 +43,14 @@ public class Vector2DUtil {
 	}
 
 	public static Vector2D round(Vector2D vec) {
-		return new Vector2D(Math.round(vec.getX()), Math.round(vec.getY()));
+		return new Vector2D(FastMath.round(vec.getX()), FastMath.round(vec.getY()));
+	}
+
+	public static Vector2D ceil(Vector2D vec) {
+		return new Vector2D(FastMath.ceil(vec.getX()), FastMath.ceil(vec.getY()));
 	}
 
 	public static Vector2D floor(Vector2D vec) {
-		return new Vector2D((int) vec.getX(), (int) vec.getY());
+		return new Vector2D(FastMath.floor(vec.getX()), FastMath.floor(vec.getY()));
 	}
 }

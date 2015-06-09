@@ -63,8 +63,12 @@ public class Vector3DUtil {
 		return new Vector3D(FastMath.round(vec.getX()), FastMath.round(vec.getY()), FastMath.round(vec.getZ()));
 	}
 
+	public static Vector3D ceil(Vector3D vec) {
+		return new Vector3D(FastMath.ceil(vec.getX()), FastMath.ceil(vec.getY()), FastMath.ceil(vec.getZ()));
+	}
+
 	public static Vector3D floor(Vector3D vec) {
-		return new Vector3D((int) vec.getX(), (int) vec.getY(), (int) vec.getZ());
+		return new Vector3D(FastMath.floor(vec.getX()), FastMath.floor(vec.getY()), FastMath.floor(vec.getZ()));
 	}
 
 	public static Vector3D abs(Vector3D vec) {
