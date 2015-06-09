@@ -1,4 +1,6 @@
-package nova.core.util.transform.vector;
+package nova.core.util.math;
+
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * An interface applied to objects that can act as vector transformers.
@@ -11,5 +13,5 @@ public interface Transformer {
 	 * @param vec - The vector being transformed
 	 * @return The transformed vector.
 	 */
-	Vector3d transform(Vector3<?> vec);
+	Vector3D apply(Vector3D vec);
 }

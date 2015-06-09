@@ -10,7 +10,7 @@ import nova.core.network.Sided;
 import nova.core.util.Manager;
 import nova.core.util.RegistrationException;
 import nova.core.util.Registry;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -60,9 +60,9 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 	 * @param identifier Unique identifier for the GUI
 	 * @param entity {@link Entity} which opened the GUI
 	 * @param position The block coordinate on which to open the GUI
-	 * @see #showGui(Gui, Entity, Vector3i)
+	 * @see #showGui(Gui, Entity, Vector3D)
 	 */
-	public void showGui(String identifier, Entity entity, Vector3i position) {
+	public void showGui(String identifier, Entity entity, Vector3D position) {
 		GuiFactory factory = getFactory(identifier).orElseThrow(() -> new RegistrationException(String.format("No GUI called %s registered!", identifier)));
 		showGui(factory.makeGUI(), entity, position);
 	}
@@ -78,19 +78,19 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 	 * <b>have</b> to call this on <i>both</i> sides on order create a matching
 	 * GUI on the server side if the provided GUI wasn't registered. This should
 	 * only be used for client side GUIs, the usage of
-	 * {@link #showGui(String, Entity, Vector3i)} is recommended.
+	 * {@link #showGui(String, Entity, Vector3D)} is recommended.
 	 * </p>
 	 * @param modID Id of the {@link NovaMod} that wants to show the GUI
 	 * @param gui GUI to to display
 	 * @param entity {@link Entity} which opened the GUI
 	 * @param position The block coordinate on which to open the GUI
-	 * @see #showGui(String, Entity, Vector3i)
+	 * @see #showGui(String, Entity, Vector3D)
 	 */
-	public void showGui(String modID, Gui gui, Entity entity, Vector3i position) {
+	public void showGui(String modID, Gui gui, Entity entity, Vector3D position) {
 		showGui(gui, entity, position);
 	}
 
-	protected void showGui(Gui gui, Entity entity, Vector3i position) {
+	protected void showGui(Gui gui, Entity entity, Vector3D position) {
 		gui.bind(entity, position);
 	}
 

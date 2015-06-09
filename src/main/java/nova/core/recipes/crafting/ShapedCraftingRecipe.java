@@ -1,9 +1,14 @@
 package nova.core.recipes.crafting;
 
 import nova.core.item.Item;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Contains a single shaped crafting recipe. Can contain custom crafting logic.
@@ -17,7 +22,6 @@ import java.util.*;
  * <p>
  * Two kinds of recipes can be defined: basic or advanced. Basic recipes always return the same item, while advanced
  * recipes have their output defined by a lambda expression. RecipeFunctions will receive information about the
- *
  * @author Stan Hebben
  */
 public class ShapedCraftingRecipe implements CraftingRecipe {
@@ -46,7 +50,6 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 	/**
 	 * Defines a basic structured crafting recipe, using a format string.
-	 *
 	 * @param output Output {@link Item} of the recipe
 	 * @param format Format
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
@@ -58,7 +61,6 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 	/**
 	 * Defines a basic structured crafting recipe, possibly mirrored, using a format string.
-	 *
 	 * @param output Output {@link Item} of the recipe
 	 * @param format Format
 	 * @param mirrored Whether this recipe is mirrored
@@ -70,7 +72,6 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 	/**
 	 * Defines an advanced crafting recipe, using a format string.
-	 *
 	 * @param nominalOutput Nominal output of the recipe
 	 * @param recipeFunction {@link RecipeFunction}
 	 * @param format Format
@@ -125,7 +126,6 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 	/**
 	 * Defines a basic crafting recipe, using a 2D ingredients array.
-	 *
 	 * @param output Output {@link Item} of the recipe
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
 	 * @param mirrored Whether this recipe is mirrored
@@ -136,7 +136,6 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 	/**
 	 * Defines an advanced crafting recipe, using a 2D ingredients array.
-	 *
 	 * @param nominalOutput Nominal output of the recipe
 	 * @param recipeFunction {@link RecipeFunction}
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
@@ -307,7 +306,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	}
 
 	private ShapedMapping findIngredientMapping(CraftingGrid craftingGrid, boolean mirrored) {
-		Optional<Vector2i> optOffset = craftingGrid.getFirstNonEmptyPosition();
+		Optional<Vector2D> optOffset = craftingGrid.getFirstNonEmptyPosition();
 		if (!optOffset.isPresent()) {
 			return null;
 		}
@@ -357,9 +356,9 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 		public final int offsetY;
 		public final Item[] Items;
 
-		private ShapedMapping(Vector2i offset) {
-			this.offsetX = offset.x;
-			this.offsetY = offset.y;
+		private ShapedMapping(Vector2D offset) {
+			this.offsetX = (int) offset.getX();
+			this.offsetY = (int) offset.getY();
 			this.Items = new Item[ingredients.length];
 		}
 
@@ -376,10 +375,10 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	}
 
 	private class NonMirroredMapping extends ShapedMapping {
-		public NonMirroredMapping(Vector2i firstItemOffset) {
-			super(new Vector2i(
-				firstItemOffset.x - posx[0],
-				firstItemOffset.y - posy[0]));
+		public NonMirroredMapping(Vector2D firstItemOffset) {
+			super(new Vector2D(
+				firstItemOffset.getX() - posx[0],
+				firstItemOffset.getY() - posy[0]));
 		}
 
 		public Optional<Item> getStack(CraftingGrid craftingGrid, int ingredient) {
@@ -397,12 +396,12 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	}
 
 	private class MirroredMapping extends ShapedMapping {
-		public MirroredMapping(Vector2i firstItemOffset, int craftingGridWidth) {
-			super(new Vector2i(
+		public MirroredMapping(Vector2D firstItemOffset, int craftingGridWidth) {
+			super(new Vector2D(
 				// dark magic converting the offset of the first non-empty item slot to the mapping offset
 				// in a mirrored recipe mapping
-				(craftingGridWidth - posx[lastIngredientIndexOnFirstLine] - 1) - (firstItemOffset.x - posx[0]),
-				firstItemOffset.y - posy[0]));
+				(craftingGridWidth - posx[lastIngredientIndexOnFirstLine] - 1) - (firstItemOffset.getX() - posx[0]),
+				firstItemOffset.getY() - posy[0]));
 		}
 
 		public Optional<Item> getStack(CraftingGrid craftingGrid, int ingredient) {

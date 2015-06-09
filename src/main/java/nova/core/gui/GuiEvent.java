@@ -6,7 +6,7 @@ import nova.core.entity.component.Player;
 import nova.core.event.CancelableEvent;
 import nova.core.gui.InputManager.Key;
 import nova.core.gui.render.Graphics;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
 
 import java.util.Optional;
@@ -94,11 +94,11 @@ public class GuiEvent extends CancelableEvent {
 		public final Gui gui;
 		public final Entity entity;
 		public final Player player;
-		public final Vector3i position;
+		public final Vector3D position;
 		public final World world;
 		public final Optional<Block> block;
 
-		public BindEvent(Gui gui, Entity entity, Vector3i position) {
+		public BindEvent(Gui gui, Entity entity, Vector3D position) {
 			this.gui = gui;
 			this.entity = entity;
 			this.position = position;

@@ -1,34 +1,30 @@
 package nova.core.gui.render.text;
 
-import nova.core.util.transform.vector.Vector2d;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
  * Generic interface for a TextRenderer. A TextRenderer can draw text to the
  * screen, in the form of {@link FormattedText} or arbitrary text.
- * 
  * @author Vic Nightfall
  */
 public interface TextRenderer extends TextMetrics {
 
-	public default void drawCenteredString(int x, int y, FormattedText text, Vector2i dim) {
-		Vector2d tdim = getBounds(text);
-		drawString(dim.x / 2 - tdim.xi() / 2, dim.y / 2 - tdim.yi() / 2, text);
+	public default void drawCenteredString(int x, int y, FormattedText text, Vector2D dim) {
+		org.apache.commons.math3.geometry.euclidean.twod.Vector2D tdim = getBounds(text);
+		drawString((int) (dim.getX() / 2 - tdim.getX() / 2), (int) (dim.getY() / 2 - tdim.getY() / 2), text);
 	}
 
-	public default void drawCenteredString(int x, int y, String text, Vector2i dim) {
-		Vector2d tdim = getBounds(text);
-		drawString(dim.x / 2 - tdim.xi() / 2, dim.y / 2 - tdim.yi() / 2, text);
+	public default void drawCenteredString(int x, int y, String text, Vector2D dim) {
+		org.apache.commons.math3.geometry.euclidean.twod.Vector2D tdim = getBounds(text);
+		drawString((int) (dim.getX() / 2 - tdim.getX() / 2), (int) (dim.getY() / 2 - tdim.getY() / 2), text);
 	}
 
 	/**
 	 * Renders {@link FormattedText} to the screen. Performs a line wrap at
 	 * {@code %n} and {@code \n}.
-	 * 
 	 * @param x x position
 	 * @param y y position
 	 * @param str FormattedText to render
-	 * 
 	 * @see TextRenderer#drawString(int, int, FormattedText, int)
 	 * @see TextRenderer#drawCutString(int, int, FormattedText, int)
 	 */
@@ -41,7 +37,6 @@ public interface TextRenderer extends TextMetrics {
 	 * {@code %n} and {@code \n}. It also jumps to a new line when the text is
 	 * longer than the provided width, wraps per word. <b>Any repeating
 	 * whitespace will not be taken into account!</b>
-	 * 
 	 * @param x x position
 	 * @param y y position
 	 * @param str FormattedText to render
@@ -57,7 +52,6 @@ public interface TextRenderer extends TextMetrics {
 	 * ". An example would be: "{@code Donaudampfschiff}" - "
 	 * {@code Donau...chiff}". The wrapping substrings should have the same
 	 * amount of characters. This should only be used on small text.
-	 * 
 	 * @param x x position
 	 * @param y y position
 	 * @param str FormattedText to render
@@ -72,11 +66,9 @@ public interface TextRenderer extends TextMetrics {
 	 * except that it takes a String as argument. Keep in mind that the wrapper
 	 * might apply unwanted formatting to the provided text, so using
 	 * {@link FormattedText} is the <i>safe</i> way.
-	 * 
 	 * @param x x position
 	 * @param y y position
 	 * @param str Text to render
-	 * 
 	 * @see #drawString(int, int, FormattedText)
 	 */
 	public void drawString(int x, int y, String str);
@@ -88,12 +80,10 @@ public interface TextRenderer extends TextMetrics {
 	 * formatting to the provided text, so using {@link FormattedText} is the
 	 * <i>safe</i> way. <b>Any repeating whitespace will not be taken into
 	 * account!</b>
-	 * 
 	 * @param x x position
 	 * @param y y position
 	 * @param str Text to render
 	 * @param width size on which to wrap the text
-	 * 
 	 * @see #drawString(int, int, FormattedText, int)
 	 */
 	public void drawString(int x, int y, String str, int width);
@@ -104,12 +94,10 @@ public interface TextRenderer extends TextMetrics {
 	 * a String as argument. Keep in mind that the wrapper might apply unwanted
 	 * formatting to the provided text, so using {@link FormattedText} is the
 	 * <i>safe</i> way.
-	 * 
 	 * @param x x position
 	 * @param y y position
 	 * @param str Text to render
 	 * @param width size on which to wrap the text
-	 * 
 	 * @see #drawCutString(int, int, FormattedText, int)
 	 */
 	public void drawCutString(int x, int y, String str, int width);
@@ -119,19 +107,17 @@ public interface TextRenderer extends TextMetrics {
 	 * the draw order, shapes with a higher z index will draw first. If you
 	 * leave the z index untouched, the shapes will draw in the order they were
 	 * queried, so what gets drawn last will be topmost.
-	 * 
 	 * @param zIndex z index
 	 */
 	public void setZIndex(int zIndex);
 
 	/**
 	 * Interface to provide information for cached {@link FormattedText}.
-	 * 
 	 * @author Vic Nightfall
 	 */
 	public static interface RenderedText {
 
-		public Vector2d getDimensions();
+		public org.apache.commons.math3.geometry.euclidean.twod.Vector2D getDimensions();
 
 		public void draw(int x, int y, TextRenderer renderer);
 	}

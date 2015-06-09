@@ -9,9 +9,8 @@ import nova.core.render.model.Model;
 import nova.core.render.model.StaticCubeTextureCoordinates;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
-import nova.core.util.RotationUtil;
-import nova.core.util.transform.matrix.Quaternion;
-import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.math.RotationUtil;
+import nova.core.util.shape.Cuboid;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -74,15 +73,15 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 		for (int r = 0; r < 4; r++) {
 			Cuboid bound = provider.get(Collider.class).boundingBox.get()
 				.subtract(0.5) //Correct translation
-				.add(direction.toVector().toDouble().multiply(r * 0.0001d)); //Lift up texture slightly, preventing z-fighting
+				.add(direction.toVector().scalarMultiply(r * 0.0001d)); //Lift up texture slightly, preventing z-fighting
 
 			Direction absDir = Direction.fromOrdinal(RotationUtil.rotateSide(direction.opposite().ordinal(), r));
 
 			int mask = connectMask.get();
 			if ((mask & (1 << absDir.ordinal())) == 0) {
 				Model innerModel = new Model();
-				innerModel.rotate(Quaternion.fromAxis(direction.toVector(), Math.PI / 2 * r));
-				Face face = BlockModelUtil.drawDir(direction, innerModel, bound.min.x, bound.min.y, bound.min.z, bound.max.x, bound.max.y, bound.max.z, StaticCubeTextureCoordinates.instance);
+				innerModel.matrix.rotate(direction.toVector(), Math.PI / 2 * r);
+				Face face = BlockModelUtil.drawDir(direction, innerModel, bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ(), StaticCubeTextureCoordinates.instance);
 				face.texture = Optional.of(edgeTexture);
 				//TODO: Support colors
 				model.children.add(innerModel);

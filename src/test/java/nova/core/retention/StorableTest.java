@@ -2,7 +2,7 @@ package nova.core.retention;
 
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 /**
  * Created by magik6k on 4/18/15.

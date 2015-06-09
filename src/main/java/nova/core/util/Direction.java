@@ -1,9 +1,7 @@
 package nova.core.util;
 
-import nova.core.util.transform.matrix.Quaternion;
-import nova.core.util.transform.vector.Vector3;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.stream.IntStream;
 
@@ -11,27 +9,27 @@ import java.util.stream.IntStream;
  * Defines basic directions in world.
  */
 public enum Direction {
-	DOWN(0, -1, 0, Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)),
-	UP(0, 1, 0, Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2)),
-	NORTH(0, 0, -1, Quaternion.fromAxis(Vector3d.yAxis, -Math.PI)),
-	SOUTH(0, 0, 1, Quaternion.fromAxis(Vector3d.yAxis, 0)),
-	WEST(-1, 0, 0, Quaternion.fromAxis(Vector3d.yAxis, Math.PI / 2)),
-	EAST(1, 0, 0, Quaternion.fromAxis(Vector3d.yAxis, -Math.PI / 2)),
-	UNKNOWN(0, 0, 0, Quaternion.identity);
+	DOWN(0, -1, 0, new Rotation(Vector3D.PLUS_I, -Math.PI / 2)),
+	UP(0, 1, 0, new Rotation(Vector3D.PLUS_I, Math.PI / 2)),
+	NORTH(0, 0, -1, new Rotation(Vector3D.PLUS_J, -Math.PI)),
+	SOUTH(0, 0, 1, new Rotation(Vector3D.PLUS_J, 0)),
+	WEST(-1, 0, 0, new Rotation(Vector3D.PLUS_J, Math.PI / 2)),
+	EAST(1, 0, 0, new Rotation(Vector3D.PLUS_J, -Math.PI / 2)),
+	UNKNOWN(0, 0, 0, Rotation.IDENTITY);
 
 	public static final Direction[] DIRECTIONS = new Direction[] {
 		DOWN, UP, NORTH, SOUTH, WEST, EAST
 	};
 	private static final Direction[] values = Direction.values();
 	public final int x, y, z;
-	public final Quaternion rotation;
-	private final Vector3i vector;
+	public final Rotation rotation;
+	private final Vector3D vector;
 
-	Direction(int x, int y, int z, Quaternion rotation) {
+	Direction(int x, int y, int z, Rotation rotation) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.vector = new Vector3i(x, y, z);
+		this.vector = new Vector3D(x, y, z);
 		this.rotation = rotation;
 	}
 
@@ -52,11 +50,11 @@ public enum Direction {
 	 * @param unitVector The unit vector representing the direction.
 	 * @return The direction based on a unit vector
 	 */
-	public static Direction fromVector(Vector3<?> unitVector) {
+	public static Direction fromVector(Vector3D unitVector) {
 		return fromOrdinal(
 			IntStream.range(0, 6)
 				.boxed()
-				.sorted((o1, o2) -> Double.compare(fromOrdinal(o2).toVector().dot(unitVector), fromOrdinal(o1).toVector().dot(unitVector)))
+				.sorted((o1, o2) -> Double.compare(fromOrdinal(o2).toVector().dotProduct(unitVector), fromOrdinal(o1).toVector().dotProduct(unitVector)))
 				.findFirst()
 				.get()
 		);
@@ -74,9 +72,9 @@ public enum Direction {
 	}
 
 	/**
-	 * @return This Direction represented as {@link Vector3i}
+	 * @return This Direction represented as {@link Vector3D}
 	 */
-	public Vector3i toVector() {
+	public Vector3D toVector() {
 		return vector;
 	}
 }

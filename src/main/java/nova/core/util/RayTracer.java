@@ -6,10 +6,10 @@ import nova.core.component.misc.Collider;
 import nova.core.component.transform.WorldTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
-import nova.core.util.transform.shape.Cuboid;
-import nova.core.util.transform.vector.Vector3;
-import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.math.Vector3DUtil;
+import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 
 /**
  * Ray tracing for cuboids.
- *
  * @author Calclavia
  */
 //TODO: Add ray trace masks
@@ -38,16 +37,14 @@ public class RayTracer {
 
 	/**
 	 * Does an entity look ray trace to see which block the entity is looking at.
-	 *
 	 * @param entity The entity
 	 */
 	public RayTracer(Entity entity) {
-		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3d.zero), entity.rotation().toForwardVector()));
+		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3D.ZERO), entity.rotation().applyTo(Vector3DUtil.FORWARD)));
 	}
 
 	/**
 	 * Sets the distance of the ray
-	 *
 	 * @param distance Distance in meters
 	 * @return This
 	 */
@@ -71,15 +68,14 @@ public class RayTracer {
 
 	/**
 	 * Check all blocks that are in a line
-	 *
 	 * @return The blocks ray traced in the order from closest to furthest.
 	 */
 	public Stream<RayTraceBlockResult> rayTraceBlocks(World world) {
 		//All relevant blocks
 		return rayTraceBlocks(
 			IntStream.range(0, (int) distance + 1)
-				.mapToObj(i -> ray.origin.add(ray.dir.multiply(i)).toInt())
-				.flatMap(vec -> Arrays.stream(Direction.DIRECTIONS).map(direction -> vec.add(direction.toVector()))) //Cover a larger area to be safe
+				.mapToObj(i -> ray.origin.add(ray.dir.scalarMultiply(i)))
+				.flatMap(vec -> Arrays.stream(Direction.DIRECTIONS).map(direction -> Vector3DUtil.floor(vec.add(direction.toVector())))) //Cover a larger area to be safe
 				.distinct()
 				.map(world::getBlock)
 				.filter(Optional::isPresent)
@@ -89,7 +85,6 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a set of blocks
-	 *
 	 * @param blocks Set of blocks
 	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
 	 */
@@ -108,7 +103,7 @@ public class RayTracer {
 	public Stream<RayTraceEntityResult> rayTraceEntities(World world) {
 		//TODO: Consider smaller check space
 		return rayTraceEntities(
-			world.getEntities(Cuboid.zero.expand(distance).add(ray.origin))
+			world.getEntities(Cuboid.ZERO.expand(distance).add(ray.origin))
 				.stream()
 				.filter(entity -> entity.has(Collider.class))
 		);
@@ -122,13 +117,13 @@ public class RayTracer {
 				.sorted();
 	}
 
-	public <R extends RayTraceResult> Stream<R> rayTraceCollider(ComponentProvider colliderProvider, BiFunction<Vector3d, Cuboid, R> resultMapper) {
+	public <R extends RayTraceResult> Stream<R> rayTraceCollider(ComponentProvider colliderProvider, BiFunction<Vector3D, Cuboid, R> resultMapper) {
 		return
 			colliderProvider.get(Collider.class)
 				.occlusionBoxes
 				.apply(Optional.empty())
 				.stream()
-				.map(cuboid -> cuboid.add((Vector3) colliderProvider.get(WorldTransform.class).position()))
+				.map(cuboid -> cuboid.add((Vector3D) colliderProvider.get(WorldTransform.class).position()))
 				.map(cuboid -> rayTrace(cuboid, resultMapper))
 				.filter(Optional::isPresent)
 				.map(Optional::get);
@@ -136,7 +131,6 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a set of cuboids
-	 *
 	 * @param stream A stream of cuboids
 	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
 	 */
@@ -155,11 +149,10 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a cuboid
-	 *
 	 * @param cuboid The cuboid in absolute world coordinates
 	 * @return The ray trace result if the ray intersects the cuboid
 	 */
-	public <R extends RayTraceResult> Optional<R> rayTrace(Cuboid cuboid, BiFunction<Vector3d, Cuboid, R> resultMapper) {
+	public <R extends RayTraceResult> Optional<R> rayTrace(Cuboid cuboid, BiFunction<Vector3D, Cuboid, R> resultMapper) {
 		return rayTrace(cuboid, 0, distance).map(vec -> resultMapper.apply(vec, cuboid));
 	}
 
@@ -173,29 +166,28 @@ public class RayTracer {
 	 * <code>Amy Williams, Steve Barrus, R. Keith Morley, and Peter Shirley: "An
 	 * Efficient and Robust Ray-Box Intersection Algorithm" Journal of graphics
 	 * tools, 10(1):49-54, 2005</code>
-	 *
 	 * @param cuboid The cuboid to trace
 	 * @param minDist The minimum distance
 	 * @param maxDist The maximum distance
 	 * @return intersection point on the bounding box (only the first is
 	 * returned) or null if no intersection
 	 */
-	public Optional<Vector3d> rayTrace(Cuboid cuboid, double minDist, double maxDist) {
-		Vector3d bbox;
+	public Optional<Vector3D> rayTrace(Cuboid cuboid, double minDist, double maxDist) {
+		Vector3D bbox;
 
 		double tMin;
 		double tMax;
 
 		bbox = ray.signDirX ? cuboid.max : cuboid.min;
-		tMin = (bbox.x - ray.origin.x) * ray.invDir.x;
+		tMin = (bbox.getX() - ray.origin.getX()) * ray.invDir.getX();
 		bbox = ray.signDirX ? cuboid.min : cuboid.max;
-		tMax = (bbox.x - ray.origin.x) * ray.invDir.x;
+		tMax = (bbox.getX() - ray.origin.getX()) * ray.invDir.getX();
 
 		//Y
 		bbox = ray.signDirY ? cuboid.max : cuboid.min;
-		double tyMin = (bbox.y - ray.origin.y) * ray.invDir.y;
+		double tyMin = (bbox.getY() - ray.origin.getY()) * ray.invDir.getY();
 		bbox = ray.signDirY ? cuboid.min : cuboid.max;
-		double tyMax = (bbox.y - ray.origin.y) * ray.invDir.y;
+		double tyMax = (bbox.getY() - ray.origin.getY()) * ray.invDir.getY();
 
 		//Check with the current tMin and tMax to see if the clipping is out of bounds
 		if ((tMin > tyMax) || (tyMin > tMax)) {
@@ -210,9 +202,9 @@ public class RayTracer {
 			tMax = tyMax;
 		}
 		bbox = ray.signDirZ ? cuboid.max : cuboid.min;
-		double tzMin = (bbox.z - ray.origin.z) * ray.invDir.z;
+		double tzMin = (bbox.getZ() - ray.origin.getZ()) * ray.invDir.getZ();
 		bbox = ray.signDirZ ? cuboid.min : cuboid.max;
-		double tzMax = (bbox.z - ray.origin.z) * ray.invDir.z;
+		double tzMax = (bbox.getZ() - ray.origin.getZ()) * ray.invDir.getZ();
 
 		//Check with the current tMin and tMax to see if the clipping is out of bounds
 		if ((tMin > tzMax) || (tzMin > tMax)) {
@@ -228,19 +220,19 @@ public class RayTracer {
 		}
 
 		if ((tMin < maxDist) && (tMax > minDist)) {
-			return Optional.of(ray.origin.add(ray.dir.multiply(tMin)));
+			return Optional.of(ray.origin.add(ray.dir.scalarMultiply(tMin)));
 		}
 
 		return Optional.empty();
 	}
 
 	public static class RayTraceResult implements Comparable<RayTraceResult> {
-		public final Vector3d hit;
+		public final Vector3D hit;
 		public final double distance;
 		public final Direction side;
 		public final Cuboid hitCuboid;
 
-		public RayTraceResult(Vector3d hit, double distance, Direction side, Cuboid hitCuboid) {
+		public RayTraceResult(Vector3D hit, double distance, Direction side, Cuboid hitCuboid) {
 			this.hit = hit;
 			this.distance = distance;
 			this.side = side;
@@ -257,7 +249,7 @@ public class RayTracer {
 	public static class RayTraceBlockResult extends RayTraceResult {
 		public final Block block;
 
-		public RayTraceBlockResult(Vector3d hit, double distance, Direction side, Cuboid hitCuboid, Block block) {
+		public RayTraceBlockResult(Vector3D hit, double distance, Direction side, Cuboid hitCuboid, Block block) {
 			super(hit, distance, side, hitCuboid);
 			this.block = block;
 		}
@@ -266,7 +258,7 @@ public class RayTracer {
 	public static class RayTraceEntityResult extends RayTraceResult {
 		public final Entity entity;
 
-		public RayTraceEntityResult(Vector3d hit, double distance, Direction side, Cuboid hitCuboid, Entity entity) {
+		public RayTraceEntityResult(Vector3D hit, double distance, Direction side, Cuboid hitCuboid, Entity entity) {
 			super(hit, distance, side, hitCuboid);
 			this.entity = entity;
 		}

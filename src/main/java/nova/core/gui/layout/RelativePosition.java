@@ -1,15 +1,12 @@
 package nova.core.gui.layout;
 
-import nova.core.util.transform.vector.Vector2;
-import nova.core.util.transform.vector.Vector2d;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * {@link Constraints} for relative positioning.
- *
  * @author Vic Nightfall
  */
 public class RelativePosition extends Constraints<RelativePosition> {
@@ -38,25 +35,13 @@ public class RelativePosition extends Constraints<RelativePosition> {
 		this.yAnchor = yAnchor;
 	}
 
-	public RelativePosition(Vector2<?> pos, Anchor xAnchor, Anchor yAnchor) {
-		this(pos.xd(), pos.yd(), xAnchor, yAnchor);
+	public RelativePosition(Vector2D pos, Anchor xAnchor, Anchor yAnchor) {
+		this(pos.getX(), pos.getY(), xAnchor, yAnchor);
+		//xRelative = yRelative = true;
 	}
 
-	public RelativePosition(Vector2i pos) {
+	public RelativePosition(Vector2D pos) {
 		this(pos, Anchor.WEST, Anchor.NORTH);
-	}
-
-	public RelativePosition(Vector2i pos, Anchor xAnchor, Anchor yAnchor) {
-		this((Vector2<?>) pos, xAnchor, yAnchor);
-	}
-
-	public RelativePosition(Vector2d pos) {
-		this(pos, Anchor.WEST, Anchor.NORTH);
-	}
-
-	public RelativePosition(Vector2d pos, Anchor xAnchor, Anchor yAnchor) {
-		this((Vector2<?>) pos, Anchor.WEST, Anchor.NORTH);
-		xRelative = yRelative = true;
 	}
 
 	public RelativePosition(int xOffset, int yOffset) {
@@ -109,8 +94,9 @@ public class RelativePosition extends Constraints<RelativePosition> {
 					yRelative = relative;
 				}
 			}
-			if (str.length() - size > 0)
+			if (str.length() - size > 0) {
 				throw new IllegalArgumentException();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new LayoutException("Invalid relative position \"" + str + "\"");
@@ -145,15 +131,17 @@ public class RelativePosition extends Constraints<RelativePosition> {
 		return this;
 	}
 
-	public Vector2i getPositionOf(Vector2i parentSize) {
-		int x = xRelative ? (int) (parentSize.x * xOffset) : (int) xOffset;
-		int y = yRelative ? (int) (parentSize.y * yOffset) : (int) yOffset;
+	public Vector2D getPositionOf(Vector2D parentSize) {
+		int x = xRelative ? (int) (parentSize.getX() * xOffset) : (int) xOffset;
+		int y = yRelative ? (int) (parentSize.getY() * yOffset) : (int) yOffset;
 
-		if (xAnchor == Anchor.EAST)
-			x = parentSize.x - x;
-		if (yAnchor == Anchor.SOUTH)
-			y = parentSize.y - y;
+		if (xAnchor == Anchor.EAST) {
+			x = (int) parentSize.getX() - x;
+		}
+		if (yAnchor == Anchor.SOUTH) {
+			y = (int) parentSize.getY() - y;
+		}
 
-		return new Vector2i(x, y);
+		return new Vector2D(x, y);
 	}
 }

@@ -4,8 +4,7 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
 import nova.core.util.Direction;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
 
 import java.util.Optional;
@@ -28,7 +27,7 @@ public class ItemBlock extends Item {
 
 				if (opBlock.isPresent()) {
 					Block block = opBlock.get();
-					Vector3i placePos = block.shouldDisplacePlacement() ? evt.position.add(evt.side.toVector()) : evt.position;
+					Vector3D placePos = block.shouldDisplacePlacement() ? evt.position.add(evt.side.toVector()) : evt.position;
 					if (onPrePlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit)) {
 						evt.action = onPostPlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit);
 					}
@@ -37,7 +36,7 @@ public class ItemBlock extends Item {
 		);
 	}
 
-	protected boolean onPrePlace(Entity entity, World world, Vector3i placePos, Direction side, Vector3d hit) {
+	protected boolean onPrePlace(Entity entity, World world, Vector3D placePos, Direction side, Vector3D hit) {
 		Optional<Block> checkBlock = world.getBlock(placePos);
 		if (checkBlock.isPresent() && checkBlock.get().canReplace()) {
 			return world.setBlock(placePos, blockFactory);
@@ -45,7 +44,7 @@ public class ItemBlock extends Item {
 		return false;
 	}
 
-	protected boolean onPostPlace(Entity entity, World world, Vector3i placePos, Direction side, Vector3d hit) {
+	protected boolean onPostPlace(Entity entity, World world, Vector3D placePos, Direction side, Vector3D hit) {
 		Optional<Block> opBlock = world.getBlock(placePos);
 		if (opBlock.isPresent() && opBlock.get().sameType(blockFactory.getDummy())) {
 			//TODO: What if the block is NOT placed by a player?

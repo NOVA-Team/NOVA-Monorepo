@@ -2,7 +2,7 @@ package nova.core.event;
 
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 /**
  * @author Stan Hebben

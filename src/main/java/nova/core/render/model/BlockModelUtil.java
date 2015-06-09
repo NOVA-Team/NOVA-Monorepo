@@ -6,7 +6,7 @@ import nova.core.component.misc.Collider;
 import nova.core.render.Color;
 import nova.core.render.RenderException;
 import nova.core.util.Direction;
-import nova.core.util.transform.shape.Cuboid;
+import nova.core.util.shape.Cuboid;
 
 import java.util.Optional;
 
@@ -27,12 +27,12 @@ public class BlockModelUtil {
 
 		if (collider.isPresent() && staticRenderer.isPresent()) {
 			Cuboid boundingBox = collider.get().boundingBox.get();
-			double minX = boundingBox.min.x - 0.5;
-			double minY = boundingBox.min.y - 0.5;
-			double minZ = boundingBox.min.z - 0.5;
-			double maxX = boundingBox.max.x - 0.5;
-			double maxY = boundingBox.max.y - 0.5;
-			double maxZ = boundingBox.max.z - 0.5;
+			double minX = boundingBox.min.getX() - 0.5;
+			double minY = boundingBox.min.getY() - 0.5;
+			double minZ = boundingBox.min.getZ() - 0.5;
+			double maxX = boundingBox.max.getX() - 0.5;
+			double maxY = boundingBox.max.getY() - 0.5;
+			double maxZ = boundingBox.max.getZ() - 0.5;
 
 			if (staticRenderer.get().renderSide.apply(Direction.DOWN)) {
 				Color downColor = staticRenderer.get().colorMultiplier.apply(Direction.DOWN);
@@ -83,7 +83,7 @@ public class BlockModelUtil {
 		CubeTextureCoordinates textureCoordinates) {
 
 		Face down = model.createFace();
-		down.normal = Direction.DOWN.toVector().toDouble();
+		down.normal = Direction.DOWN.toVector();
 		//Top-left corner
 		down.drawVertex(new Vertex(maxX, minY, maxZ, textureCoordinates.getBottomMinU(), textureCoordinates.getBottomMinV()));
 		//Top-right corner
@@ -103,7 +103,7 @@ public class BlockModelUtil {
 		CubeTextureCoordinates textureCoordinates) {
 
 		Face up = model.createFace();
-		up.normal = Direction.UP.toVector().toDouble();
+		up.normal = Direction.UP.toVector();
 		//Bottom-left corner
 		up.drawVertex(new Vertex(maxX, maxY, minZ, textureCoordinates.getTopMinU(), textureCoordinates.getTopMaxV()));
 		//Bottom-right corner
@@ -123,7 +123,7 @@ public class BlockModelUtil {
 		CubeTextureCoordinates textureCoordinates) {
 
 		Face north = model.createFace();
-		north.normal = Direction.NORTH.toVector().toDouble();
+		north.normal = Direction.NORTH.toVector();
 		//Top-left corner
 		north.drawVertex(new Vertex(minX, maxY, minZ, textureCoordinates.getNorthMinU(), textureCoordinates.getNorthMinV()));
 		//Top-right corner
@@ -144,7 +144,7 @@ public class BlockModelUtil {
 		CubeTextureCoordinates textureCoordinates) {
 
 		Face south = model.createFace();
-		south.normal = Direction.SOUTH.toVector().toDouble();
+		south.normal = Direction.SOUTH.toVector();
 		//Bottom-left corner
 		south.drawVertex(new Vertex(minX, minY, maxZ, textureCoordinates.getSouthMinU(), textureCoordinates.getSouthMaxV()));
 		//Bottom-right corner
@@ -165,7 +165,7 @@ public class BlockModelUtil {
 		CubeTextureCoordinates textureCoordinates) {
 
 		Face west = model.createFace();
-		west.normal = Direction.WEST.toVector().toDouble();
+		west.normal = Direction.WEST.toVector();
 		//Bottom-left corner
 		west.drawVertex(new Vertex(minX, minY, minZ, textureCoordinates.getWestMinU(), textureCoordinates.getWestMaxV()));
 		//Bottom-right corner
@@ -186,7 +186,7 @@ public class BlockModelUtil {
 		CubeTextureCoordinates textureCoordinates) {
 
 		Face east = model.createFace();
-		east.normal = Direction.EAST.toVector().toDouble();
+		east.normal = Direction.EAST.toVector();
 		//Top-left corner
 		east.drawVertex(new Vertex(maxX, maxY, minZ, textureCoordinates.getEastMinU(), textureCoordinates.getEastMinV()));
 		//Top-right corner
@@ -241,7 +241,7 @@ public class BlockModelUtil {
 	}
 
 	public static Model drawCube(Model model, Cuboid cuboid, CubeTextureCoordinates textureCoordinates) {
-		return drawCube(model, cuboid.min.x, cuboid.min.y, cuboid.min.z, cuboid.max.x, cuboid.max.y, cuboid.max.z, textureCoordinates);
+		return drawCube(model, cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ(), textureCoordinates);
 	}
 
 	public static Model drawCube(Model model) {

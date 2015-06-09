@@ -6,7 +6,7 @@ import nova.core.gui.render.Canvas;
 import nova.core.gui.render.Graphics;
 import nova.core.render.Color;
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ public class Background extends Constraints<Background> {
 	}
 
 	public Background(Texture texture, EnumFill xFill, EnumFill yFill) {
-		this(texture, xFill, yFill, new RelativePosition(Vector2i.zero));
+		this(texture, xFill, yFill, new RelativePosition(Vector2D.ZERO));
 	}
 
 	public Background(Texture texture, EnumFill xFill) {
@@ -53,7 +53,7 @@ public class Background extends Constraints<Background> {
 		this.texture = Optional.empty();
 		this.xFill = this.yFill = EnumFill.DEFAULT;
 		this.color = color;
-		this.position = new RelativePosition(Vector2i.zero);
+		this.position = new RelativePosition(Vector2D.ZERO);
 	}
 
 	// TODO Test me!
@@ -65,16 +65,16 @@ public class Background extends Constraints<Background> {
 	 * @param graphics {@link Graphics} object to draw onto
 	 * @param size boundaries of the background
 	 */
-	public void draw(Graphics graphics, Vector2i size) {
+	public void draw(Graphics graphics, Vector2D size) {
 		// TODO Need to alter Canvas to save state and consider the fill enum
 		if (texture.isPresent()) {
 			// Draw texture
-			Vector2i position = this.position.getPositionOf(size);
-			graphics.drawTexture(position.x, position.y, size.x - position.x, size.y - position.y, texture.get(), color);
+			Vector2D position = this.position.getPositionOf(size);
+			graphics.drawTexture(position.getX(), position.getY(), size.getX() - position.getX(), size.getY() - position.getY(), texture.get(), color);
 		} else {
 			// Draw solid background color
 			graphics.setColor(color);
-			graphics.fillRect(0, 0, size.x, size.y);
+			graphics.fillRect(0, 0, size.getX(), size.getY());
 		}
 	}
 

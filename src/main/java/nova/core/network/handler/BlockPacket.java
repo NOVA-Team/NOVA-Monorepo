@@ -5,7 +5,7 @@ import nova.core.entity.Entity;
 import nova.core.network.NetworkException;
 import nova.core.network.Packet;
 import nova.core.network.Syncable;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Optional;
 
@@ -25,7 +25,7 @@ public class BlockPacket implements PacketHandler<Block> {
 	@Override
 	public void read(Packet packet) {
 		Entity entity = packet.player().entity();
-		Vector3i position = new Vector3i(packet.readInt(), packet.readInt(), packet.readInt());
+		Vector3D position = new Vector3D(packet.readInt(), packet.readInt(), packet.readInt());
 
 		Optional<Block> opBlock = entity.world().getBlock(position);
 
@@ -42,10 +42,10 @@ public class BlockPacket implements PacketHandler<Block> {
 	@Override
 	public void write(Block block, Packet packet) {
 		if (block instanceof Syncable) {
-			Vector3i position = block.position();
-			packet.writeInt(position.x);
-			packet.writeInt(position.y);
-			packet.writeInt(position.z);
+			Vector3D position = block.position();
+			packet.writeInt((int) position.getX());
+			packet.writeInt((int) position.getY());
+			packet.writeInt((int) position.getZ());
 			((Syncable) block).write(packet);
 			return;
 		}

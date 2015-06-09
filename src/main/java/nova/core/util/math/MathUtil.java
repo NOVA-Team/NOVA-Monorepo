@@ -1,7 +1,6 @@
 package nova.core.util.math;
 
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * Utility class for everything related to numbers.
@@ -200,12 +199,8 @@ public class MathUtil {
 		return a + f * (b - a);
 	}
 
-	public static Vector3d lerp(Vector3d a, Vector3d b, float f) {
-		return a.add((b.subtract(a)).multiply(f));
-	}
-
-	public static Vector3i lerp(Vector3i a, Vector3i b, float f) {
-		return a.add((b.subtract(a)).multiply(f));
+	public static Vector3D lerp(Vector3D a, Vector3D b, float f) {
+		return a.add((b.subtract(a)).scalarMultiply(f));
 	}
 
 	/**

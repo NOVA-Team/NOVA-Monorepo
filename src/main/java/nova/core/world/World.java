@@ -7,10 +7,9 @@ import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.shape.Cuboid;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
+import nova.core.util.shape.Cuboid;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Optional;
 import java.util.Set;
@@ -27,14 +26,14 @@ public abstract class World implements Identifiable {
 	 *
 	 * @param position The position to perform the static re-rendering.
 	 */
-	public abstract void markStaticRender(Vector3i position);
+	public abstract void markStaticRender(Vector3D position);
 
 	/**
 	 * Marks a specific block to indicate it changed.
 	 *
 	 * @param position The position being changed.
 	 */
-	public abstract void markChange(Vector3i position);
+	public abstract void markChange(Vector3D position);
 
 	/**
 	 * Gets the block which occupies the given position.
@@ -42,7 +41,7 @@ public abstract class World implements Identifiable {
 	 * @param position The position to query.
 	 * @return The block at the position. If the block is air, it will return the air block. If no block is present (the void), it will return an empty optional.
 	 */
-	public abstract Optional<Block> getBlock(Vector3i position);
+	public abstract Optional<Block> getBlock(Vector3D position);
 
 	/**
 	 * Sets the block occupying a given position.
@@ -52,7 +51,7 @@ public abstract class World implements Identifiable {
 	 * @param args The block constructor arguments.
 	 * @return {@code true} if the replace was successful.
 	 */
-	public abstract boolean setBlock(Vector3i position, BlockFactory blockFactory, Object... args);
+	public abstract boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args);
 
 	/**
 	 * Removes the block in the specified position.
@@ -60,7 +59,7 @@ public abstract class World implements Identifiable {
 	 * @param position the position of the block to remove.
 	 * @return {@code true} if the block was removed.
 	 */
-	public boolean removeBlock(Vector3i position) {
+	public boolean removeBlock(Vector3D position) {
 		return setBlock(position, Game.blocks().getAirBlockFactory());
 	}
 
@@ -76,7 +75,7 @@ public abstract class World implements Identifiable {
 	 *
 	 * @param item The item
 	 */
-	public abstract Entity addEntity(Vector3d position, Item item);
+	public abstract Entity addEntity(Vector3D position, Item item);
 
 	/**
 	 * Creates an entity only on the client side.
@@ -117,5 +116,5 @@ public abstract class World implements Identifiable {
 	 * @param position The position in the world of the sound.
 	 * @param sound The sound that will be played.
 	 */
-	public abstract void playSoundAtPosition(Vector3d position, Sound sound);
+	public abstract void playSoundAtPosition(Vector3D position, Sound sound);
 }

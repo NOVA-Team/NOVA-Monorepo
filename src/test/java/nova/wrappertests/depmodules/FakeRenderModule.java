@@ -2,7 +2,7 @@ package nova.wrappertests.depmodules;
 
 import nova.core.render.RenderManager;
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import se.jbee.inject.bind.BinderModule;
 
 /**
@@ -17,8 +17,8 @@ public class FakeRenderModule extends BinderModule {
 
 	public static class FakeRenderManager extends RenderManager {
 		@Override
-		public Vector2i getDimension(Texture texture) {
-			return Vector2i.zero;
+		public Vector2D getDimension(Texture texture) {
+			return Vector2D.ZERO;
 		}
 	}
 

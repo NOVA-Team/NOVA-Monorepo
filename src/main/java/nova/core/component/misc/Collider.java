@@ -8,8 +8,8 @@ import nova.core.component.Component;
 import nova.core.entity.Entity;
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
-import nova.core.util.transform.shape.Cuboid;
-import nova.core.util.transform.vector.Vector3i;
+import nova.core.util.shape.Cuboid;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public class Collider extends Component {
 	/**
 	 * A general cuboid that represents the bounds of this object.
 	 */
-	public Supplier<Cuboid> boundingBox = () -> new Cuboid(new Vector3i(0, 0, 0), new Vector3i(1, 1, 1));
+	public Supplier<Cuboid> boundingBox = () -> new Cuboid(new Vector3D(0, 0, 0), new Vector3D(1, 1, 1));
 
 	/**
 	 * The boxes that provide occlusion to the specific block.

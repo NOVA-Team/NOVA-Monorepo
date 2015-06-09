@@ -1,11 +1,11 @@
 package nova.core.component.transform;
 
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * A 3D block transform.
  * @author Calclavia
  */
-public class BlockTransform extends WorldTransform<Vector3i> {
+public class BlockTransform extends WorldTransform<Vector3D> {
 
 }

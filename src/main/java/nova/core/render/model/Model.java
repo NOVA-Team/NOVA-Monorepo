@@ -1,13 +1,20 @@
 package nova.core.render.model;
 
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.matrix.Matrix4x4;
-import nova.core.util.transform.matrix.MatrixStack;
-import nova.core.util.transform.matrix.Quaternion;
-import nova.core.util.transform.vector.Vector2d;
-import nova.core.util.transform.vector.Vector3;
+import nova.core.util.math.MatrixStack;
+import nova.core.util.math.TransformUtil;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.math3.linear.LUDecomposition;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.Spliterator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -25,9 +32,9 @@ public class Model implements Iterable<Model>, Cloneable {
 	public final Set<Face> faces = new HashSet<>();
 	public final Set<Model> children = new HashSet<>();
 
-	public Matrix4x4 matrix = Matrix4x4.IDENTITY;
+	public MatrixStack matrix = new MatrixStack();
 
-	public Vector2d textureOffset = Vector2d.zero;
+	public Vector2D textureOffset = Vector2D.ZERO;
 
 	public int blendSFactor = -1;
 	public int blendDFactor = -1;
@@ -78,34 +85,6 @@ public class Model implements Iterable<Model>, Cloneable {
 		return flatten(new MatrixStack());
 	}
 
-	public Model translate(Vector3<?> vec) {
-		return translate(vec.xd(), vec.yd(), vec.zd());
-	}
-
-	public Model translate(double x, double y, double z) {
-		matrix = new MatrixStack().loadMatrix(matrix).translate(x, y, z).getMatrix();
-		return this;
-	}
-
-	public Model scale(Vector3<?> vec) {
-		return scale(vec.xd(), vec.yd(), vec.zd());
-	}
-
-	public Model scale(double x, double y, double z) {
-		matrix = new MatrixStack().loadMatrix(matrix).scale(x, y, z).getMatrix();
-		return this;
-	}
-
-	public Model rotate(Quaternion quat) {
-		matrix = new MatrixStack().loadMatrix(matrix).rotate(quat).getMatrix();
-		return this;
-	}
-
-	public Model rotate(Vector3<?> vec, double angle) {
-		matrix = new MatrixStack().loadMatrix(matrix).rotate(vec, angle).getMatrix();
-		return this;
-	}
-
 	/**
 	 * Combines child models with names into one model with its children being the children selected.
 	 * @param newModelName The new name for the model
@@ -146,12 +125,18 @@ public class Model implements Iterable<Model>, Cloneable {
 		Set<Model> models = new HashSet<>();
 
 		matrixStack.pushMatrix();
-		matrixStack.transform(matrix);
+		matrixStack.transform(matrix.getMatrix());
 		//Create a new model with transformation applied.
 		Model transformedModel = clone();
+		// correct formula for Normal Matrix is transpose(inverse(mat3(model_mat))
+		// we have to augemnt that to 4x4
+		RealMatrix normalMatrix3x3 = new LUDecomposition(matrixStack.getMatrix().getSubMatrix(0, 2, 0, 2), 1e-5).getSolver().getInverse().transpose();
+		RealMatrix normalMatrix = MatrixUtils.createRealMatrix(4, 4);
+		normalMatrix.setSubMatrix(normalMatrix3x3.getData(), 0, 0);
+		normalMatrix.setEntry(3, 3, 1);
 		transformedModel.faces.stream().forEach(f -> {
-				f.normal = f.normal; //TODO normal matrix;
-				f.vertices.forEach(v -> v.vec = matrixStack.transform(v.vec));
+				f.normal = TransformUtil.transform(f.normal, normalMatrix);
+				f.vertices.forEach(v -> v.vec = matrixStack.apply(v.vec));
 			}
 		);
 
@@ -167,7 +152,7 @@ public class Model implements Iterable<Model>, Cloneable {
 		Model model = new Model(name);
 		model.faces.addAll(faces.stream().map(Face::clone).collect(Collectors.toSet()));
 		model.children.addAll(children.stream().map(Model::clone).collect(Collectors.toSet()));
-		model.matrix = matrix;
+		model.matrix = new MatrixStack(matrix);
 		model.textureOffset = textureOffset;
 		return model;
 	}

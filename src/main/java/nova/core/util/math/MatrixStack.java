@@ -1,108 +1,118 @@
-package nova.core.util.transform.matrix;
+package nova.core.util.math;
 
-import nova.core.util.collection.Tuple2;
-import nova.core.util.transform.vector.Transformer;
-import nova.core.util.transform.vector.Vector3;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.util.Stack;
 
 public class MatrixStack implements Transformer {
 
-	private final Stack<Matrix4x4> stack = new Stack<>();
-	private Matrix4x4 current = Matrix4x4.IDENTITY;
+	private final Stack<RealMatrix> stack;
+	private RealMatrix current = MatrixUtils.createRealIdentityMatrix(4);
+
+	public MatrixStack() {
+		this.stack = new Stack<>();
+	}
+
+	public MatrixStack(MatrixStack clone) {
+		this.stack = (Stack) clone.stack.clone();
+		this.current = clone.current.copy();
+	}
+
+	public MatrixStack(RealMatrix current) {
+		this.stack = new Stack<>();
+		this.current = current;
+	}
 
 	/**
 	 * Replaces current transformation matrix by an identity matrix.
 	 */
 	public void loadIdentity() {
-		current = Matrix4x4.IDENTITY;
+		current = MatrixUtils.createRealIdentityMatrix(4);
 	}
 
 	/**
 	 * Replaces current transformation matrix by an identity current.
 	 */
-	public MatrixStack loadMatrix(Matrix4x4 matrix) {
+	public MatrixStack loadMatrix(RealMatrix matrix) {
 		current = matrix;
 		return this;
 	}
 
 	/**
 	 * Exposes current transformation matrix.
-	 *
 	 * @return current transformation matrix.
 	 */
-	public Matrix4x4 getMatrix() {
+	public RealMatrix getMatrix() {
 		return current;
 	}
 
 	/**
 	 * Transforms current matrix with give matrix.
-	 *
 	 * @param matrix to transform current matrix.
 	 */
-	public MatrixStack transform(Matrix4x4 matrix) {
-		current = current.rightMultiply(matrix);
+	public MatrixStack transform(RealMatrix matrix) {
+
+		current = current.preMultiply(MatrixUtil.augmentWithIdentity(matrix, 4));
 		return this;
 	}
 
 	/**
 	 * Translates current transformation matrix.
-	 *
 	 * @param x translation.
 	 * @param y translation.
 	 * @param z translation.
 	 */
 	public MatrixStack translate(double x, double y, double z) {
-		current = current.rightMultiply(MatrixHelper.translationMatrix(x, y, z));
+		current = current.preMultiply(TransformUtil.translationMatrix(x, y, z));
 		return this;
 	}
 
 	/**
 	 * Translates current transformation matrix.
-	 *
 	 * @param translateVector vector of translation.
 	 */
-	public MatrixStack translate(Vector3<?> translateVector) {
-		translate(translateVector.xd(), translateVector.yd(), translateVector.zd());
+	public MatrixStack translate(Vector3D translateVector) {
+		translate(translateVector.getX(), translateVector.getY(), translateVector.getZ());
 		return this;
 	}
 
-	public MatrixStack rotate(Quaternion quaternion) {
-		Tuple2<Vector3d, Double> axisAnglePair = quaternion.toAngleAxis();
-		return rotate(axisAnglePair._1, axisAnglePair._2);
+	public MatrixStack rotate(Rotation rotation) {
+		RealMatrix rotMat = MatrixUtils.createRealMatrix(4, 4);
+		rotMat.setSubMatrix(rotation.getMatrix(), 0, 0);
+		rotMat.setEntry(3, 3, 1);
+		current = current.preMultiply(rotMat);
+		return this;
 	}
 
 	/**
 	 * Rotates transformation matrix around rotateVector axis by angle radians.
-	 *
 	 * @param rotateVector Vector serving as rotation axis.
 	 * @param angle in radians.
 	 */
-	public MatrixStack rotate(Vector3<?> rotateVector, double angle) {
-		current = current.rightMultiply(MatrixHelper.rotationMatrix(rotateVector, angle));
-		return this;
+	public MatrixStack rotate(Vector3D rotateVector, double angle) {
+		return rotate(new Rotation(rotateVector, angle));
 	}
 
 	/**
 	 * Scales current transformation matrix.
-	 *
 	 * @param x scale.
 	 * @param y scale.
 	 * @param z scale.
 	 */
 	public MatrixStack scale(double x, double y, double z) {
-		current = current.rightMultiply(MatrixHelper.scaleMatrix(x, y, z));
+		current = current.preMultiply(TransformUtil.scaleMatrix(x, y, z));
 		return this;
 	}
 
 	/**
 	 * Scales current transformation matrix.
-	 *
 	 * @param scaleVector scale vector.
 	 */
-	public MatrixStack scale(Vector3<?> scaleVector) {
-		scale(scaleVector.xd(), scaleVector.yd(), scaleVector.zd());
+	public MatrixStack scale(Vector3D scaleVector) {
+		scale(scaleVector.getX(), scaleVector.getY(), scaleVector.getZ());
 		return this;
 	}
 
@@ -124,12 +134,11 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Called to transform a vector.
-	 *
 	 * @param vec - The vector being transformed
 	 * @return The transformed vector by current matrix.
 	 */
 	@Override
-	public Vector3d transform(Vector3<?> vec) {
-		return current.transform(vec);
+	public Vector3D apply(Vector3D vec) {
+		return TransformUtil.transform(vec, current);
 	}
 }

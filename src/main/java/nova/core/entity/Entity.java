@@ -6,9 +6,9 @@ import nova.core.component.transform.EntityTransform;
 import nova.core.event.EventBus;
 import nova.core.util.Identifiable;
 import nova.core.util.UniqueIdentifiable;
-import nova.core.util.transform.matrix.Quaternion;
-import nova.core.util.transform.vector.Vector3d;
 import nova.core.world.World;
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * An entity is an object in the world that has a position.
@@ -26,51 +26,51 @@ public abstract class Entity extends ComponentProvider implements UniqueIdentifi
 		return transform().world();
 	}
 
-	public final Vector3d position() {
+	public final Vector3D position() {
 		return transform().position();
 	}
 
-	public final Vector3d scale() {
+	public final Vector3D scale() {
 		return transform().scale();
 	}
 
-	public final Vector3d pivot() {
+	public final Vector3D pivot() {
 		return transform().pivot();
 	}
 
-	public final Quaternion rotation() {
+	public final Rotation rotation() {
 		return transform().rotation();
 	}
 
 	public final double x() {
-		return position().x;
+		return position().getX();
 	}
 
 	public final double y() {
-		return position().y;
+		return position().getY();
 	}
 
 	public final double z() {
-		return position().z;
+		return position().getZ();
 	}
 
 	public void setWorld(World world) {
 		transform().setWorld(world);
 	}
 
-	public void setPosition(Vector3d pos) {
+	public void setPosition(Vector3D pos) {
 		transform().setPosition(pos);
 	}
 
-	public void setScale(Vector3d scale) {
+	public void setScale(Vector3D scale) {
 		transform().setScale(scale);
 	}
 
-	public void setPivot(Vector3d pivot) {
+	public void setPivot(Vector3D pivot) {
 		transform().setPivot(pivot);
 	}
 
-	public void setRotation(Quaternion rotation) {
+	public void setRotation(Rotation rotation) {
 		transform().setRotation(rotation);
 	}
 

@@ -2,7 +2,7 @@ package nova.core.util;
 
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 public class RegistryTest {
 

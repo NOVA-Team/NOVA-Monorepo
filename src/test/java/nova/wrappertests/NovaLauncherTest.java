@@ -8,7 +8,7 @@ import nova.testutils.mod.NonAnnotatedTestMod;
 import nova.testutils.mod.TestMod;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 public class NovaLauncherTest extends NovaLauncherTestFactory {
 

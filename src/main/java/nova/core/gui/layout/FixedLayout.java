@@ -3,7 +3,7 @@ package nova.core.gui.layout;
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
 import nova.core.gui.Outline;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.HashMap;
 
@@ -27,8 +27,8 @@ public class FixedLayout extends AbstractGuiLayout<RelativePosition> {
 		for (GuiComponent<?, ?> component : components.keySet()) {
 			RelativePosition position = components.get(component);
 
-			Vector2i preferredSize = getPreferredSizeOf(component);
-			Vector2i computedPosition = position.getPositionOf(container.getOutline().getDimension());
+			Vector2D preferredSize = getPreferredSizeOf(component);
+			Vector2D computedPosition = position.getPositionOf(container.getOutline().getDimension());
 
 			setOutlineOf(component, new Outline(computedPosition, preferredSize));
 		}

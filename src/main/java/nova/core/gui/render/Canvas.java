@@ -5,7 +5,7 @@ import nova.core.gui.Spacing;
 import nova.core.render.Color;
 import nova.core.render.RenderException;
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Stack;
 
@@ -13,20 +13,19 @@ import java.util.Stack;
  * A canvas is an object that can be drawn onto in 2D space. The content might
  * be back buffered, depends on the context. Use {@link #isBuffered()} to check.
  * A {@link Graphics} object can be used to draw onto a canvas.
- *
  * @author Vic Nightfall
  */
 public abstract class Canvas {
 
 	private static final int MAX_STACK_DEPTH = Short.MAX_VALUE;
 
-	protected Vector2i dimension;
+	protected Vector2D dimension;
 	protected boolean isBuffered;
 	protected CanvasState state = new CanvasState();
 
 	private Stack<CanvasState> stack = new Stack<>();
 
-	public Canvas(Vector2i dimension, boolean isBuffered) {
+	public Canvas(Vector2D dimension, boolean isBuffered) {
 		this.dimension = dimension;
 		this.isBuffered = isBuffered;
 	}
@@ -35,7 +34,7 @@ public abstract class Canvas {
 		return state;
 	}
 
-	public Vector2i getDimension() {
+	public Vector2D getDimension() {
 		return dimension;
 	}
 
@@ -69,12 +68,12 @@ public abstract class Canvas {
 	}
 
 	public void setScissor(Outline outline) {
-		Vector2i dimension = getDimension();
+		Vector2D dimension = getDimension();
 		addScissor(
-				outline.y1i() + state.tyi(),
-				dimension.x - outline.getWidth() - state.txi(),
-				dimension.y - outline.getHeight() - state.tyi(),
-				outline.x1i() + state.txi());
+			outline.y1i() + state.tyi(),
+			(int) dimension.getX() - outline.getWidth() - state.txi(),
+			(int) dimension.getY() - outline.getHeight() - state.tyi(),
+			outline.x1i() + state.txi());
 	}
 
 	public void setScissor(int top, int right, int bottom, int left) {
@@ -96,14 +95,16 @@ public abstract class Canvas {
 	}
 
 	public void push() {
-		if (stack.size() >= MAX_STACK_DEPTH)
+		if (stack.size() >= MAX_STACK_DEPTH) {
 			throw new RenderException("Canvas stack overflow! Max: " + MAX_STACK_DEPTH);
+		}
 		stack.push(state.clone());
 	}
 
 	public void pop() {
-		if (stack.size() == 0)
+		if (stack.size() == 0) {
 			throw new RenderException("Canvas stack underflow!");
+		}
 		state = stack.pop();
 	}
 
@@ -116,10 +117,11 @@ public abstract class Canvas {
 	public abstract void addVertexWithUV(double x, double y, double u, double v);
 
 	public void addVertex(Vertex2D v) {
-		if (v.uv)
-			addVertexWithUV(v.x, v.y, v.u, v.v);
-		else
-			addVertex(v.x, v.y);
+		if (v.uv) {
+			addVertexWithUV(v.getX(), v.getY(), v.u, v.v);
+		} else {
+			addVertex(v.getX(), v.getY());
+		}
 	}
 
 	public abstract void draw();

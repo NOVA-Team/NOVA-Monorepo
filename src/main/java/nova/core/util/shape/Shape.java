@@ -1,6 +1,6 @@
-package nova.core.util.transform.shape;
+package nova.core.util.shape;
 
-import nova.core.util.transform.Operator;
+import nova.core.util.math.Operator;
 
 /**
  * Represents a 3-dimensional shape.

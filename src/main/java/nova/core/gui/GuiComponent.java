@@ -14,8 +14,8 @@ import nova.core.gui.render.Graphics;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Syncable;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.vector.Vector2i;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -36,9 +36,9 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 
 	private final boolean hasIdentifier;
 	private final String uniqueID;
-	protected Optional<Vector2i> preferredSize = Optional.empty();
-	protected Optional<Vector2i> minimumSize = Optional.empty();
-	protected Optional<Vector2i> maximumSize = Optional.empty();
+	protected Optional<Vector2D> preferredSize = Optional.empty();
+	protected Optional<Vector2D> minimumSize = Optional.empty();
+	protected Optional<Vector2D> maximumSize = Optional.empty();
 	protected Optional<Background> background = Optional.empty();
 	/**
 	 * Parent container instance. The instance will be populated once added to a
@@ -106,7 +106,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * controls positioning. (If you are a layout don't mind the @deprecated)
 	 *
 	 * @param outline {@link Outline} to use as outline
-	 * @see #setPreferredSize(Vector2i)
+	 * @see #setPreferredSize(Vector2D)
 	 */
 	@Deprecated
 	public void setOutlineNative(Outline outline) {
@@ -119,18 +119,18 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	public O setPreferredSize(int width, int height) {
-		return setPreferredSize(new Vector2i(width, height));
+		return setPreferredSize(new Vector2D(width, height));
 	}
 
 	public O setMinimumSize(int width, int height) {
-		return setMinimumSize(new Vector2i(width, height));
+		return setMinimumSize(new Vector2D(width, height));
 	}
 
 	public O setMaximumSize(int width, int height) {
-		return setMaximumSize(new Vector2i(width, height));
+		return setMaximumSize(new Vector2D(width, height));
 	}
 
-	public Optional<Vector2i> getPreferredSize() {
+	public Optional<Vector2D> getPreferredSize() {
 		return preferredSize.isPresent() ? preferredSize : nativeElement.getPreferredSize();
 	}
 
@@ -141,13 +141,13 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * @param size preferred size of the component
 	 * @return This component
 	 */
-	public O setPreferredSize(Vector2i size) {
+	public O setPreferredSize(Vector2D size) {
 		preferredSize = Optional.of(size);
 		revalidate();
 		return (O) this;
 	}
 
-	public Optional<Vector2i> getMinimumSize() {
+	public Optional<Vector2D> getMinimumSize() {
 		return minimumSize.isPresent() ? minimumSize : nativeElement.getMinimumSize();
 	}
 
@@ -158,13 +158,13 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * @param size minimal size of the component
 	 * @return This component
 	 */
-	public O setMinimumSize(Vector2i size) {
+	public O setMinimumSize(Vector2D size) {
 		minimumSize = Optional.of(size);
 		revalidate();
 		return (O) this;
 	}
 
-	public Optional<Vector2i> getMaximumSize() {
+	public Optional<Vector2D> getMaximumSize() {
 		return maximumSize.isPresent() ? maximumSize : nativeElement.getMaximumSize();
 	}
 
@@ -175,7 +175,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	 * @param size maximal size of the component
 	 * @return This component
 	 */
-	public O setMaximumSize(Vector2i size) {
+	public O setMaximumSize(Vector2D size) {
 		maximumSize = Optional.of(size);
 		revalidate();
 		return (O) this;
@@ -289,7 +289,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	public final void preRender(int mouseX, int mouseY, Graphics graphics) {
-		isMouseOver = getOutline().setPosition(Vector2i.zero).contains(mouseX, mouseY);
+		isMouseOver = getOutline().setPosition(Vector2D.ZERO).contains(mouseX, mouseY);
 		if (background.isPresent())
 			background.get().draw(graphics, getOutline().getDimension());
 	}

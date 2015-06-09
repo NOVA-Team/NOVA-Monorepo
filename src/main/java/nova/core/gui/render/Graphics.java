@@ -5,7 +5,7 @@ import nova.core.gui.render.text.FormattedText;
 import nova.core.gui.render.text.TextRenderer;
 import nova.core.render.Color;
 import nova.core.render.texture.Texture;
-import nova.core.util.transform.vector.Vector2d;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
  * 
@@ -141,8 +141,8 @@ public class Graphics implements TextRenderer {
 			Vertex2D v1 = vertices[i];
 			Vertex2D v2 = vertices[(i + 1) % shapeSize];
 
-			double g = v2.y - v1.y;
-			double a = v2.x - v1.x;
+			double g = v2.getY() - v1.getY();
+			double a = v2.getX() - v1.getX();
 			double angle = Math.atan(g / a);
 			double size = linewidth / 2D;
 
@@ -241,12 +241,12 @@ public class Graphics implements TextRenderer {
 	}
 
 	@Override
-	public Vector2d getBounds(FormattedText text) {
+	public Vector2D getBounds(FormattedText text) {
 		return textRenderer.getBounds(text);
 	}
 
 	@Override
-	public Vector2d getBounds(String str) {
+	public Vector2D getBounds(String str) {
 		return textRenderer.getBounds(str);
 	}
 

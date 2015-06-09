@@ -1,9 +1,9 @@
 package nova.core.render.model;
 
 import nova.core.render.RenderException;
-import nova.core.util.transform.matrix.MatrixStack;
-import nova.core.util.transform.vector.Vector2d;
-import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.math.MatrixStack;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -196,11 +196,11 @@ public class TechneModel extends ModelProvider {
 
 				MatrixStack ms = new MatrixStack();
 				ms.translate(positionX, positionY, positionZ);
-				ms.rotate(Vector3d.yAxis, angleY);
-				ms.rotate(Vector3d.xAxis, angleX);
-				ms.rotate(Vector3d.zAxis, angleZ);
-				modelPart.matrix = ms.getMatrix();
-				modelPart.textureOffset = new Vector2d(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
+				ms.rotate(Vector3D.PLUS_J, angleY);
+				ms.rotate(Vector3D.PLUS_I, angleX);
+				ms.rotate(Vector3D.PLUS_K, angleZ);
+				modelPart.matrix = ms;
+				modelPart.textureOffset = new Vector2D(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
 
 				if (model.children.stream().anyMatch(m -> m.name.equals(modelName))) {
 					throw new RenderException("Model contained duplicate part name: '" + shapeName + "' node #" + i);

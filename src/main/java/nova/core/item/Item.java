@@ -7,8 +7,7 @@ import nova.core.render.Color;
 import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.internal.core.Game;
 
 import java.util.List;
@@ -139,11 +138,11 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 		//The entity that right clicked
 		public final Entity entity;
 
-		public final Vector3i position;
+		public final Vector3D position;
 
 		public final Direction side;
 
-		public final Vector3d hit;
+		public final Vector3D hit;
 
 		//Did this event cause an action? True if the player's action cancels out events.
 		public boolean action = false;
@@ -156,7 +155,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 		 * @param hit - The position the player hit on the block
 		 *
 		 */
-		public UseEvent(Entity entity, Vector3i position, Direction side, Vector3d hit) {
+		public UseEvent(Entity entity, Vector3D position, Direction side, Vector3D hit) {
 			this.entity = entity;
 			this.position = position;
 			this.side = side;

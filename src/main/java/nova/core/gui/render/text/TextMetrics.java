@@ -1,7 +1,7 @@
 package nova.core.gui.render.text;
 
 import nova.core.gui.render.text.TextRenderer.RenderedText;
-import nova.core.util.transform.vector.Vector2d;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
  * Provides methods for calculating the bounds of {@link FormattedText} and
@@ -23,7 +23,7 @@ public interface TextMetrics {
 	 * @param text FormattedText
 	 * @return boundaries
 	 */
-	public default Vector2d getBounds(FormattedText text) {
+	public default Vector2D getBounds(FormattedText text) {
 		return cacheString(text).getDimensions();
 	}
 
@@ -33,5 +33,5 @@ public interface TextMetrics {
 	 * @param str String
 	 * @return boundaries
 	 */
-	public Vector2d getBounds(String str);
+	public Vector2D getBounds(String str);
 }

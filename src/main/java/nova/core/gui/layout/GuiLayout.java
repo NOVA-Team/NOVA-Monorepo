@@ -2,7 +2,7 @@ package nova.core.gui.layout;
 
 import nova.core.gui.AbstractGuiContainer;
 import nova.core.gui.GuiComponent;
-import nova.core.util.transform.vector.Vector2i;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
  * Root class for {@link AbstractGuiContainer} layouts. A layout handles
@@ -25,7 +25,7 @@ public interface GuiLayout {
 
 	public void remove(GuiComponent<?, ?> component);
 
-	public default Vector2i getMinimumSize(GuiComponent<?, ?> component) {
-		return Vector2i.zero;
+	public default Vector2D getMinimumSize(GuiComponent<?, ?> component) {
+		return Vector2D.ZERO;
 	}
 }

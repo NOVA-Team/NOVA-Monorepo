@@ -1,8 +1,8 @@
 package nova.core.gui.render;
 
 import nova.core.render.RenderException;
-import nova.core.util.transform.shape.Rectangle;
-import nova.core.util.transform.vector.Vector2d;
+import nova.core.util.shape.Rectangle;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
  * A Shape2D is a polygon mesh in 2D space. It defines an array of
@@ -17,7 +17,7 @@ public interface Shape2D {
 
 	public Vertex2D[] vertices();
 
-	public default Vector2d centroid() {
+	public default Vector2D centroid() {
 		Vertex2D[] vertices = vertices();
 		int n = size();
 
@@ -27,15 +27,15 @@ public interface Shape2D {
 		double f = 0;
 		for (i = 0; i < n; i++) {
 			j = (i + 1) % n;
-			f = (vertices[i].x * vertices[j].y - vertices[j].x * vertices[i].y);
-			cx += (vertices[i].x + vertices[j].x) * f;
-			cy += (vertices[i].y + vertices[j].y) * f;
+			f = (vertices[i].getX() * vertices[j].getY() - vertices[j].getX() * vertices[i].getY());
+			cx += (vertices[i].getX() + vertices[j].getX()) * f;
+			cy += (vertices[i].getY() + vertices[j].getY()) * f;
 		}
 		f = 1.0 / (6.0 * area());
 		cx *= f;
 		cy *= f;
 
-		return new Vector2d(cx, cy);
+		return new Vector2D(cx, cy);
 	}
 
 	public default double area() {
@@ -45,8 +45,8 @@ public interface Shape2D {
 		double a = 0;
 		for (int i = 0; i < n; i++) {
 			int j = (i + 1) % n;
-			a += vertices[i].x * vertices[j].y;
-			a -= vertices[i].y * vertices[j].x;
+			a += vertices[i].getX() * vertices[j].getY();
+			a -= vertices[i].getY() * vertices[j].getX();
 		}
 
 		a /= 2.0;
@@ -78,7 +78,7 @@ public interface Shape2D {
 
 		private final Vertex2D[] vertices;
 
-		public RectangleShape(Rectangle<?> rect) {
+		public RectangleShape(Rectangle rect) {
 			vertices = new Vertex2D[4];
 			vertices[0] = new Vertex2D(rect.x1i(), rect.y1i());
 			vertices[1] = new Vertex2D(rect.x2i(), rect.y1i());
@@ -95,13 +95,13 @@ public interface Shape2D {
 		}
 
 		@Override
-		public Vector2d centroid() {
-			return new Vector2d((vertices[0].x + vertices[1].x) / 2, (vertices[1].y + vertices[2].y) / 2);
+		public Vector2D centroid() {
+			return new Vector2D((vertices[0].getX() + vertices[1].getY()) / 2, (vertices[1].getY() + vertices[2].getY()) / 2);
 		}
 
 		@Override
 		public double area() {
-			return (vertices[1].x - vertices[0].x) * (vertices[2].y - vertices[1].y);
+			return (vertices[1].getX() - vertices[0].getX()) * (vertices[2].getY() - vertices[1].getY());
 		}
 
 		@Override

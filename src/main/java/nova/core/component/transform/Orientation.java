@@ -15,7 +15,7 @@ import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.Direction;
 import nova.core.util.RayTracer;
-import nova.core.util.transform.vector.Vector3d;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.internal.core.Game;
 
 import java.util.Optional;
@@ -116,7 +116,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	/**
 	 * Rotatable Block
 	 */
-	public boolean rotate(int side, Vector3d hit) {
+	public boolean rotate(int side, Vector3D hit) {
 		int result = getSideToRotate(side, hit);
 
 		if (result != -1) {
@@ -131,19 +131,19 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	/**
 	 * Determines the side to rotate based on the hit vector on the block.
 	 */
-	public int getSideToRotate(int hitSide, Vector3d hit) {
+	public int getSideToRotate(int hitSide, Vector3D hit) {
 		int tBack = hitSide ^ 1;
 
 		switch (hitSide) {
 			case 0:
 			case 1:
-				if (hit.x < 0.25) {
-					if (hit.z < 0.25) {
+				if (hit.getX() < 0.25) {
+					if (hit.getZ() < 0.25) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
 					}
-					if (hit.z > 0.75) {
+					if (hit.getZ() > 0.75) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
@@ -152,13 +152,13 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 						return 4;
 					}
 				}
-				if (hit.x > 0.75) {
-					if (hit.z < 0.25) {
+				if (hit.getX() > 0.75) {
+					if (hit.getZ() < 0.25) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
 					}
-					if (hit.z > 0.75) {
+					if (hit.getZ() > 0.75) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
@@ -167,12 +167,12 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 						return 5;
 					}
 				}
-				if (hit.z < 0.25) {
+				if (hit.getZ() < 0.25) {
 					if (canRotate(2)) {
 						return 2;
 					}
 				}
-				if (hit.z > 0.75) {
+				if (hit.getZ() > 0.75) {
 					if (canRotate(3)) {
 						return 3;
 					}
@@ -183,13 +183,13 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 				break;
 			case 2:
 			case 3:
-				if (hit.x < 0.25) {
-					if (hit.y < 0.25) {
+				if (hit.getX() < 0.25) {
+					if (hit.getY() < 0.25) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
 					}
-					if (hit.y > 0.75) {
+					if (hit.getY() > 0.75) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
@@ -198,13 +198,13 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 						return 4;
 					}
 				}
-				if (hit.x > 0.75) {
-					if (hit.y < 0.25) {
+				if (hit.getX() > 0.75) {
+					if (hit.getY() < 0.25) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
 					}
-					if (hit.y > 0.75) {
+					if (hit.getY() > 0.75) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
@@ -213,12 +213,12 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 						return 5;
 					}
 				}
-				if (hit.y < 0.25) {
+				if (hit.getY() < 0.25) {
 					if (canRotate(0)) {
 						return 0;
 					}
 				}
-				if (hit.y > 0.75) {
+				if (hit.getY() > 0.75) {
 					if (canRotate(1)) {
 						return 1;
 					}
@@ -229,13 +229,13 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 				break;
 			case 4:
 			case 5:
-				if (hit.z < 0.25) {
-					if (hit.y < 0.25) {
+				if (hit.getZ() < 0.25) {
+					if (hit.getY() < 0.25) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
 					}
-					if (hit.y > 0.75) {
+					if (hit.getY() > 0.75) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
@@ -244,13 +244,13 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 						return 2;
 					}
 				}
-				if (hit.z > 0.75) {
-					if (hit.y < 0.25) {
+				if (hit.getZ() > 0.75) {
+					if (hit.getY() < 0.25) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
 					}
-					if (hit.y > 0.75) {
+					if (hit.getY() > 0.75) {
 						if (canRotate(tBack)) {
 							return tBack;
 						}
@@ -259,12 +259,12 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 						return 3;
 					}
 				}
-				if (hit.y < 0.25) {
+				if (hit.getY() < 0.25) {
 					if (canRotate(0)) {
 						return 0;
 					}
 				}
-				if (hit.y > 0.75) {
+				if (hit.getY() > 0.75) {
 					if (canRotate(1)) {
 						return 1;
 					}
