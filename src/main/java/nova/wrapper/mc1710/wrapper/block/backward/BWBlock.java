@@ -50,7 +50,7 @@ public class BWBlock extends Block implements Storable {
 					(int) position().getX(),
 					(int) position().getY(),
 					(int) position().getZ(),
-					Game.natives().toNative(entity.isPresent() ? entity.get().get(Collider.class).boundingBox.get() : Cuboid.one.add(pos)),
+					Game.natives().toNative(entity.isPresent() ? entity.get().get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),
 					aabbs,
 					entity.isPresent() ? Game.natives().toNative(entity.get()) : null
 				);
