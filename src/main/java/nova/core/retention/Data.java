@@ -110,7 +110,7 @@ public class Data extends HashMap<String, Object> {
 	}
 
 	public void putAll(Data m) {
-		putAll(m);
+		super.putAll(m);
 	}
 
 	@Override
