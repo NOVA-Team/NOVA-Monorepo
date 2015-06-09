@@ -24,70 +24,19 @@ public class BWModel extends Model {
 	 * Completes this rendering for a block.
 	 */
 	public void renderWorld(IBlockAccess blockAccess) {
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.setColorRGBA_F(1, 1, 1, 1);
 
-		/**
-		 * Convert textures and UV into Minecraft equivalent.
-		 */
-		flatten().forEach(model ->
-				model.faces.forEach(face ->
-				{
-					if (face.getBrightness() >= 0) {
-						// Brightness is defined as: skyLight << 20 | blockLight
-						// << 4
-						tessellator.setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
-					} else {
-						// Determine nearest adjacent block.
-						Vector3D nearestPos = Vector3DUtil.floor(face.getCenter().add(face.normal.scalarMultiply(0.6))); // 0.6 so down rounding doesn't get us.
-						Block block = blockAccess.getBlock((int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ());
-						try {
-							int brightness = block.getMixedBrightnessForBlock(blockAccess, (int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ());
-
-							// TODO: Add Ambient Occlusion
-
-							/*int aoBrightnessXYNN = block.getMixedBrightnessForBlock(blockAccess, translation.getX() - 1, translation.getY(), translation.zi());
-							int aoBrightnessYZNN = block.getMixedBrightnessForBlock(blockAccess, translation.getX(), translation.getY(), translation.zi() - 1);
-							int aoBrightnessYZNP = block.getMixedBrightnessForBlock(blockAccess, translation.getX(), translation.getY(), translation.zi() + 1);
-							int aoBrightnessXYPN = block.getMixedBrightnessForBlock(blockAccess, translation.getX() + 1, translation.getY(), translation.zi());
-
-							int brightnessTopLeft = getAoBrightness(aoBrightnessXYZNNP, this.aoBrightnessXYNN, this.aoBrightnessYZNP, i1);
-							int brightnessTopRight = getAoBrightness(aoBrightnessYZNP, this.aoBrightnessXYZPNP, this.aoBrightnessXYPN, i1);
-							int brightnessBottomRight = getAoBrightness(this.aoBrightnessYZNN, this.aoBrightnessXYPN, this.aoBrightnessXYZPNN, i1);
-							int brightnessBottomLeft = getAoBrightness(this.aoBrightnessXYNN, this.aoBrightnessXYZNNN, this.aoBrightnessYZNN, i1);*/
-
-							tessellator.setBrightness(brightness);
-
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						// TODO: Remove this
-						// tessellator.setBrightness(15 << 20 | 11 << 4);
-					}
-					tessellator.setNormal((int) face.normal.getX(), (int) face.normal.getY(), (int) face.normal.getZ());
-
-					if (face.texture.isPresent()) {
-						Texture texture = face.texture.get();
-						IIcon icon = RenderUtility.instance.getIcon(texture);
-						face.vertices.forEach(v -> {
-							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
-							tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
-						});
-					} else {
-						face.vertices.forEach(v -> {
-							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
-							tessellator.addVertex(v.vec.getX(), v.vec.getY(), v.vec.getZ());
-						});
-					}
-				})
-		);
+		render(Optional.of(blockAccess), Optional.empty());
 	}
 
 	public void render() {
-		render(Optional.empty());
+		render(Optional.empty(), Optional.empty());
 	}
 
 	public void render(Optional<RenderManager> entityRenderManager) {
+		render(Optional.empty(), entityRenderManager);
+	}
+
+	public void render(Optional<IBlockAccess> access, Optional<RenderManager> entityRenderManager) {
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.setColorRGBA_F(1, 1, 1, 1);
 
@@ -99,10 +48,30 @@ public class BWModel extends Model {
 			{
 				model.faces.forEach(face ->
 				{
-					// Brightness is defined as: skyLight << 20 | blockLight <<
-					// 4
+					// Brightness is defined as: skyLight << 20 | blockLight << 4
 					if (face.getBrightness() >= 0) {
 						tessellator.setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
+					} else if (access.isPresent()) {
+						// Determine nearest adjacent block.
+						Vector3D nearestPos = Vector3DUtil.floor(face.getCenter().add(face.normal.scalarMultiply(0.6))); // 0.6 so down rounding doesn't get us.
+						Block block = access.get().getBlock((int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ());
+						int brightness = block.getMixedBrightnessForBlock(access.get(), (int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ());
+
+						// TODO: Add Ambient Occlusion
+						/*
+						int aoBrightnessXYNN = block.getMixedBrightnessForBlock(blockAccess, translation.getX() - 1, translation.getY(), translation.zi());
+						int aoBrightnessYZNN = block.getMixedBrightnessForBlock(blockAccess, translation.getX(), translation.getY(), translation.zi() - 1);
+						int aoBrightnessYZNP = block.getMixedBrightnessForBlock(blockAccess, translation.getX(), translation.getY(), translation.zi() + 1);
+						int aoBrightnessXYPN = block.getMixedBrightnessForBlock(blockAccess, translation.getX() + 1, translation.getY(), translation.zi());
+
+						int brightnessTopLeft = getAoBrightness(aoBrightnessXYZNNP, this.aoBrightnessXYNN, this.aoBrightnessYZNP, i1);
+						int brightnessTopRight = getAoBrightness(aoBrightnessYZNP, this.aoBrightnessXYZPNP, this.aoBrightnessXYPN, i1);
+						int brightnessBottomRight = getAoBrightness(this.aoBrightnessYZNN, this.aoBrightnessXYPN, this.aoBrightnessXYZPNN, i1);
+						int brightnessBottomLeft = getAoBrightness(this.aoBrightnessXYNN, this.aoBrightnessXYZNNN, this.aoBrightnessYZNN, i1);
+						*/
+
+						tessellator.setBrightness(brightness);
+
 					} else {
 						// Determine nearest adjacent block.
 						tessellator.setBrightness(15 << 20 | 11 << 4);
@@ -118,21 +87,26 @@ public class BWModel extends Model {
 								entityRenderManager.get().renderEngine.bindTexture(new ResourceLocation(t.domain, "textures/entities/" + t.resource + ".png"));
 							}
 						}
+
 						Texture texture = face.texture.get();
 						IIcon icon = RenderUtility.instance.getIcon(texture);
-						face.vertices.forEach(v -> {
-							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
-							if (icon != null) {
-								tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
-							} else {
-								tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
+						face.vertices.forEach(
+							v -> {
+								tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
+								if (icon != null) {
+									tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
+								} else {
+									tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
+								}
 							}
-						});
+						);
 					} else {
-						face.vertices.forEach(v -> {
-							tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
-							tessellator.addVertex(v.vec.getX(), v.vec.getY(), v.vec.getZ());
-						});
+						face.vertices.forEach(
+							v -> {
+								tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
+								tessellator.addVertex(v.vec.getX(), v.vec.getY(), v.vec.getZ());
+							}
+						);
 					}
 				});
 			}
