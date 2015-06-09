@@ -15,7 +15,6 @@ import java.util.function.Consumer;
  * A cuboid is a shape that represents a cube.
  * @author Calclavia
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class Cuboid extends Shape<Cuboid, Cuboid> {
 	public static final Cuboid ZERO = new Cuboid(Vector3D.ZERO, Vector3D.ZERO);
 	public static final Cuboid ONE = new Cuboid(Vector3D.ZERO, Vector3DUtil.ONE);
@@ -132,13 +131,13 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	public Cuboid transform(Transformer transform) {
 		Vector3D transMin = transform.apply(min);
 		Vector3D transMax = transform.apply(max);
-		return new Cuboid(Vector3DUtil.min(transMin, transMax), Vector3DUtil.min(transMax, transMin));
+		return new Cuboid(Vector3DUtil.min(transMin, transMax), Vector3DUtil.max(transMax, transMin));
 	}
 
 	public Cuboid transform(Rotation transform) {
 		Vector3D transMin = transform.applyTo(min);
 		Vector3D transMax = transform.applyTo(max);
-		return new Cuboid(Vector3DUtil.min(transMin, transMax), Vector3DUtil.min(transMax, transMin));
+		return new Cuboid(Vector3DUtil.min(transMin, transMax), Vector3DUtil.max(transMax, transMin));
 	}
 
 	public void forEach(Consumer<Vector3D> consumer) {
