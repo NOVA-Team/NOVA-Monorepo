@@ -2,11 +2,15 @@ package nova.internal.core.tick;
 
 import nova.core.component.Updater;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.stream.Stream;
 
 /**
  * The update ticker is responsible for ticking Update objects.
- *
  * @author Calclavia
  */
 public class UpdateTicker {
@@ -43,7 +47,6 @@ public class UpdateTicker {
 
 	/**
 	 * Queues an event to be executed.
-	 *
 	 * @param func Event to be executed.
 	 */
 	public void preQueue(Runnable func) {
@@ -63,7 +66,9 @@ public class UpdateTicker {
 		//The time in milliseconds between the last update and this one.
 		deltaTime = (current - last) / 1000d;
 		synchronized (updaters) {
-			updaters.parallelStream().forEach(t -> t.update(deltaTime));
+			//TODO: Check the threshold
+			Stream<Updater> stream = updaters.size() > 1000 ? updaters.parallelStream() : updaters.stream();
+			stream.forEach(t -> t.update(deltaTime));
 		}
 		last = current;
 
