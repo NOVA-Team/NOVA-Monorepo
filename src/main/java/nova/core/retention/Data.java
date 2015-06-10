@@ -83,6 +83,10 @@ public class Data extends HashMap<String, Object> {
 			Class clazz = (Class) Class.forName((String) data.get("class"));
 			if (clazz.isEnum()) {
 				return Enum.valueOf(clazz, data.get("value"));
+			} else if (clazz == Vector3D.class) {
+				return new Vector3D(data.get("x"), data.get("y"), data.get("z"));
+			} else if (clazz == Vector2D.class) {
+				return new Vector2D(data.get("x"), (double) data.get("y"));
 			} else {
 				return unserialize(clazz, data);
 			}
@@ -130,6 +134,19 @@ public class Data extends HashMap<String, Object> {
 			enumData.className = value.getClass().getName();
 			enumData.put("value", ((Enum) value).name());
 			value = enumData;
+		} else if (value instanceof Vector3D) {
+			Data vectorData = new Data();
+			vectorData.className = Vector3D.class.getName();
+			vectorData.put("x", ((Vector3D) value).getX());
+			vectorData.put("y", ((Vector3D) value).getY());
+			vectorData.put("z", ((Vector3D) value).getZ());
+			value = vectorData;
+		} else if (value instanceof Vector2D) {
+			Data vectorData = new Data();
+			vectorData.className = Vector2D.class.getName();
+			vectorData.put("x", ((Vector2D) value).getX());
+			vectorData.put("y", ((Vector2D) value).getY());
+			value = vectorData;
 		} else if (value instanceof Storable) {
 			value = serialize((Storable) value);
 		}
