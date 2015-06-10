@@ -172,6 +172,16 @@ public class Data extends HashMap<String, Object> {
 		}
 	}
 
+	public Vector3D getVector3D(String key) {
+		Data data = get(key);
+		return new Vector3D(data.get("x"), data.get("y"), data.get("z"));
+	}
+
+	public Vector2D getVector2D(String key) {
+		Data data = get(key);
+		return new Vector2D(data.get("x"), (double) data.get("y"));
+	}
+
 	public <T extends Storable> T getStorable(String key) {
 		Data storableData = get(key);
 		try {
