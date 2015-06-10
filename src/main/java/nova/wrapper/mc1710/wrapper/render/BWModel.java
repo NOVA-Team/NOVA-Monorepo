@@ -45,7 +45,6 @@ public class BWModel extends Model {
 		 */
 		flatten().forEach(
 			model ->
-			{
 				model.faces.forEach(face ->
 				{
 					// Brightness is defined as: skyLight << 20 | blockLight << 4
@@ -80,26 +79,30 @@ public class BWModel extends Model {
 					tessellator.setNormal((int) face.normal.getX(), (int) face.normal.getY(), (int) face.normal.getZ());
 
 					if (face.texture.isPresent()) {
-						if (entityRenderManager.isPresent()) {
-							if (face.texture.get() instanceof EntityTexture) {
-								//We're not working on an atlas, so just do... this.
-								Texture t = face.texture.get();
-								entityRenderManager.get().renderEngine.bindTexture(new ResourceLocation(t.domain, "textures/entities/" + t.resource + ".png"));
-							}
-						}
-
-						Texture texture = face.texture.get();
-						IIcon icon = RenderUtility.instance.getIcon(texture);
-						face.vertices.forEach(
-							v -> {
-								tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
-								if (icon != null) {
-									tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
-								} else {
+						if (entityRenderManager.isPresent() && face.texture.get() instanceof EntityTexture) {
+							//We're not working on an atlas, so just do... this.
+							Texture t = face.texture.get();
+							entityRenderManager.get().renderEngine.bindTexture(new ResourceLocation(t.domain, "textures/entities/" + t.resource + ".png"));
+							face.vertices.forEach(
+								v -> {
+									tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 									tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
 								}
-							}
-						);
+							);
+						} else {
+							Texture texture = face.texture.get();
+							IIcon icon = RenderUtility.instance.getIcon(texture);
+							face.vertices.forEach(
+								v -> {
+									tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
+									if (icon != null) {
+										tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
+									} else {
+										tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
+									}
+								}
+							);
+						}
 					} else {
 						face.vertices.forEach(
 							v -> {
@@ -108,8 +111,7 @@ public class BWModel extends Model {
 							}
 						);
 					}
-				});
-			}
+				})
 		);
 	}
 
