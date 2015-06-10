@@ -1,4 +1,4 @@
-package nova.core.util.transform;
+package nova.core.util.math;
 
 import nova.core.util.math.MatrixStack;
 import nova.core.util.math.TransformUtil;
