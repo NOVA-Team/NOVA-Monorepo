@@ -372,7 +372,8 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 			model.matrix = new MatrixStack().translate(x + 0.5, y + 0.5, z + 0.5);
 			opRenderer.get().onRender.accept(model);
 			model.renderWorld(world);
-			return true; // TODO Ensure that true is returned only when something got rendered. Easiest way would be to use access transformer to expose Teselator's bufferIndex, then `return bufferIndex != 0`.
+
+			return Tessellator.instance.rawBufferIndex != 0; // Returns true if Tesselator is not empty. Avoids crash on empty Tesselator buffer.
 		}
 		return false;
 	}
