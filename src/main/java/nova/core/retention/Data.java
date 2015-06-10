@@ -56,6 +56,7 @@ public class Data extends HashMap<String, Object> {
 
 	public Data(Class clazz) {
 		className = clazz.getName();
+		put("class", className);
 	}
 
 	/**
@@ -130,20 +131,17 @@ public class Data extends HashMap<String, Object> {
 		assert Arrays.stream(dataTypes).anyMatch(clazz -> clazz.isAssignableFrom(check.getClass()));
 
 		if (value instanceof Enum) {
-			Data enumData = new Data();
-			enumData.className = value.getClass().getName();
+			Data enumData = new Data(value.getClass());
 			enumData.put("value", ((Enum) value).name());
 			value = enumData;
 		} else if (value instanceof Vector3D) {
-			Data vectorData = new Data();
-			vectorData.className = Vector3D.class.getName();
+			Data vectorData = new Data(Vector3D.class);
 			vectorData.put("x", ((Vector3D) value).getX());
 			vectorData.put("y", ((Vector3D) value).getY());
 			vectorData.put("z", ((Vector3D) value).getZ());
 			value = vectorData;
 		} else if (value instanceof Vector2D) {
-			Data vectorData = new Data();
-			vectorData.className = Vector2D.class.getName();
+			Data vectorData = new Data(Vector2D.class);
 			vectorData.put("x", ((Vector2D) value).getX());
 			vectorData.put("y", ((Vector2D) value).getY());
 			value = vectorData;
