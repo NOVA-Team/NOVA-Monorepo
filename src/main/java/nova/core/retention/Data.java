@@ -56,7 +56,7 @@ public class Data extends HashMap<String, Object> {
 
 	public Data(Class clazz) {
 		className = clazz.getName();
-		put("class", className);
+		super.put("class", className);
 	}
 
 	/**
