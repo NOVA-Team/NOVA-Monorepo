@@ -86,12 +86,14 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 		//get constructor with most parameters.
 		Optional<Constructor<?>> ocons = candidates.max(Comparator.comparingInt((constructor) -> constructor.getParameterTypes().length));
 
-		Constructor<?> cons = ocons.get();
+		@SuppressWarnings("unchecked")
+		Constructor<T> cons = (Constructor<T>) ocons.get();
+
 		Object[] parameters = Arrays.stream(cons.getParameterTypes())
-			.map(clazz -> (Object) diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(clazz)))
+			.map(clazz -> (Object) diep.getInjector().resolve(se.jbee.inject.Dependency.dependency(clazz)))
 			.collect(Collectors.toList()).toArray();
 
-		return (T) cons.newInstance(parameters);
+		return cons.newInstance(parameters);
 	}
 
 	public void load() {
@@ -134,7 +136,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 									f.setAccessible(true);
 									if (f.get(loadable) == null) {
 										try {
-											f.set(loadable, diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(f.getType())));
+											f.set(loadable, diep.getInjector().resolve(se.jbee.inject.Dependency.dependency(f.getType())));
 										} catch (Exception e) {
 											e.printStackTrace();
 										}

@@ -15,9 +15,14 @@ import java.util.Set;
 public class DependencyInjectionEntryPoint {
 
 	private State state = State.PREINIT;
-	private Optional<Injector> injector = Optional.empty();
+
+	// When this is null no mods are loaded.
+	private Injector injector = null;
 
 	private Set<Class<? extends Bundle>> bundles = Sets.newHashSet();
+
+	// Game bound to this DIEP.
+	private Game game = null;
 
 	public DependencyInjectionEntryPoint() {
 
@@ -27,7 +32,7 @@ public class DependencyInjectionEntryPoint {
 	/**
 	 * @return current injector instance.
 	 */
-	public Optional<Injector> getInjector() {
+	public Injector getInjector() {
 		return injector;
 	}
 
@@ -39,20 +44,20 @@ public class DependencyInjectionEntryPoint {
 	}
 
 	/**
-	 * Installs bundle in core Injector. Works until, finalization later throws
-	 * {@link IllegalStateException}.
+	 * Installs bundle in core Injector. Can be used after initialization.
 	 *
 	 * @param bundle Bundle
 	 */
 	public void install(Class<? extends Bundle> bundle) {
 		if (state != State.PREINIT) {
-			throw new IllegalStateException("This function may only be used before DependencyInjectionEntryPoint initialization.");
+			bundles.add(bundle);
+			game.changeInjector(Bootstrap.injector(DIEPBundle.class));
 		}
 		bundles.add(bundle);
 	}
 
 	/**
-	 * Removes bundle from core Injector. Works until finalization, later throws
+	 * Removes bundle from core Injector. Works until initialization, later throws
 	 * {@link IllegalStateException}.
 	 *
 	 * @param bundle Bundle
@@ -80,9 +85,11 @@ public class DependencyInjectionEntryPoint {
 
 		DIEPBundle.bundles = bundles;
 
-		injector = Optional.of(Bootstrap.injector(DIEPBundle.class));
+		injector = Bootstrap.injector(DIEPBundle.class);
 		state = State.POSTINIT;
-		return injector.map(injector -> injector.resolve(Dependency.dependency(Game.class))).orElseThrow(IllegalStateException::new);
+		game = injector.resolve(Dependency.dependency(Game.class));
+		game.changeInjector(injector);
+		return game;
 	}
 
 	private enum State {

@@ -20,6 +20,7 @@ import nova.core.world.WorldManager;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.tick.UpdateTicker;
 import org.slf4j.Logger;
+import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
 
 public class Game {
@@ -61,7 +62,7 @@ public class Game {
 	 */
 	private final UpdateTicker.ThreadTicker threadTicker;
 
-	private Optional<Injector> injector;
+	private Injector injector;
 
 	private Game(
 		Logger logger,
@@ -205,12 +206,12 @@ public class Game {
 		return instance.threadTicker;
 	}
 
-	public static Optional<Injector> injector() {
-		return instance.injector;
+	public static <T> T resolve( Dependency<T> dependency ) {
+		return instance.injector.resolve(dependency);
 	}
 
-	public static void changeInjector(Optional<Injector> newInjector) {
-		instance.injector = newInjector;
+	public void changeInjector(Injector newInjector) {
+		this.injector = newInjector;
 	}
 
 }

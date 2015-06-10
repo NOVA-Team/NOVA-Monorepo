@@ -9,53 +9,50 @@ import se.jbee.inject.Injector;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-public class Factory<T extends Buildable> implements Cloneable{
+public class Factory<T extends Buildable> {
 
-    private final ImmutableList<Consumer<T>> finalizers;
-    private final Class<T> clazz;
+	private final Class<T> clazz;
+	private final ImmutableList<Consumer<T>> finalizers;
 
-    private Factory(Class<T> clazz) {
-        this.clazz = clazz;
-        finalizers = ImmutableList.<Consumer<T>>builder().build();
-    }
-    private Factory(Class<T> clazz, ImmutableList<Consumer<T>> finalizers) {
-        this.clazz = clazz;
-        this.finalizers = finalizers;
-    }
+	private Factory(Class<T> clazz) {
+		this.clazz = clazz;
+		finalizers = ImmutableList.<Consumer<T>>builder().build();
+	}
 
-    public static <T extends Buildable> Factory of(Class<T> clazz) {
-        return new Factory(clazz);
-    }
-    public static <T extends Buildable> Factory of(T obj) {
-        return obj.factory();
-    }
+	private Factory(Class<T> clazz, ImmutableList<Consumer<T>> finalizers) {
+		this.clazz = clazz;
+		this.finalizers = finalizers;
+	}
 
-    public Factory<T> arguments(Object ... args) {
-        Object argsCopy = Arrays.copyOf(args, args.length);
-        return this.withFinalizer((buildable) -> buildable.arguments(argsCopy));
-    }
+	private Factory(Factory<T> factory) {
+		this(factory.clazz, factory.finalizers);
+	}
 
-    public Factory<T> withFinalizer(Consumer<T> finalizer){
-        return new Factory<>(this.clazz, ImmutableList.<Consumer<T>>builder().addAll(this.finalizers).add(finalizer).build());
-    }
+	public static <T extends Buildable> Factory of(Class<T> clazz) {
+		return new Factory<>(clazz);
+	}
 
-    public T resolve(Injector injector) {
-        T obj = injector.resolve(Dependency.dependency(clazz));
-        finalizers.stream().forEach((cons) -> cons.accept(obj));
-        return obj;
-    }
+	public static <T extends Buildable> Factory of(T obj) {
+		return obj.factory();
+	}
 
-    public T resolve() {
-        Injector injector = Game.injector().orElseThrow(() -> new WrapperBrokenException("Game.injector is not available"));
-        T obj = injector.resolve(Dependency.dependency(clazz));
-        finalizers.stream().forEach((cons) -> cons.accept(obj));
-        return obj;
-    }
+	public Factory<T> arguments(Object... args) {
+		Object argsCopy = Arrays.copyOf(args, args.length);
+		return this.withFinalizer((buildable) -> buildable.arguments(argsCopy));
+	}
 
+	public Factory<T> withFinalizer(Consumer<T> finalizer) {
+		return new Factory<>(this.clazz, ImmutableList.<Consumer<T>>builder().addAll(this.finalizers).add(finalizer).build());
+	}
 
+	public T resolve() {
+		T obj = Game.resolve(Dependency.dependency(clazz));
+		finalizers.stream().forEach((cons) -> cons.accept(obj));
+		return obj;
+	}
 
-
-
-
+	public Factory<T> clone() {
+		return new Factory<>(this);
+	}
 
 }
