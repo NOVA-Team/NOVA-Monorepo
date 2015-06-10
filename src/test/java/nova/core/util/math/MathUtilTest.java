@@ -109,7 +109,7 @@ public class MathUtilTest {
 		assertThat(MathUtil.lerp(1F, 2F, .5F)).isCloseTo(1.5F, offsetF);
 		assertThat(MathUtil.lerp(1F, 2F, 1F)).isCloseTo(2F, offsetF);
 
-		assertThat(MathUtil.lerp(Vector3D.ZERO, Vector3DUtil.ONE, 0)).isAlmostEqualTo(Vector3DUtil.ONE);
+		assertThat(MathUtil.lerp(Vector3D.ZERO, Vector3DUtil.ONE, 0)).isAlmostEqualTo(Vector3D.ZERO);
 		assertThat(MathUtil.lerp(Vector3D.ZERO, Vector3DUtil.ONE, .5F)).isAlmostEqualTo(Vector3DUtil.ONE.scalarMultiply(0.5));
 		assertThat(MathUtil.lerp(Vector3D.ZERO, Vector3DUtil.ONE, 1)).isAlmostEqualTo(Vector3DUtil.ONE);
 	}
