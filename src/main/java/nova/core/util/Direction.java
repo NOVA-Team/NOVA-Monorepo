@@ -1,5 +1,6 @@
 package nova.core.util;
 
+import nova.core.util.math.Vector3DUtil;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -9,28 +10,34 @@ import java.util.stream.IntStream;
  * Defines basic directions in world.
  */
 public enum Direction {
-	DOWN(0, -1, 0, new Rotation(Vector3D.PLUS_I, -Math.PI / 2)),
-	UP(0, 1, 0, new Rotation(Vector3D.PLUS_I, Math.PI / 2)),
-	NORTH(0, 0, -1, new Rotation(Vector3D.PLUS_J, -Math.PI)),
-	SOUTH(0, 0, 1, new Rotation(Vector3D.PLUS_J, 0)),
-	WEST(-1, 0, 0, new Rotation(Vector3D.PLUS_J, Math.PI / 2)),
-	EAST(1, 0, 0, new Rotation(Vector3D.PLUS_J, -Math.PI / 2)),
-	UNKNOWN(0, 0, 0, Rotation.IDENTITY);
+	DOWN(0, -1, 0),
+	UP(0, 1, 0),
+	NORTH(0, 0, -1),
+	SOUTH(0, 0, 1),
+	WEST(-1, 0, 0),
+	EAST(1, 0, 0),
+	UNKNOWN(0, 0, 0);
 
 	public static final Direction[] DIRECTIONS = new Direction[] {
 		DOWN, UP, NORTH, SOUTH, WEST, EAST
 	};
+
 	private static final Direction[] values = Direction.values();
 	public final int x, y, z;
 	public final Rotation rotation;
 	private final Vector3D vector;
 
-	Direction(int x, int y, int z, Rotation rotation) {
+	Direction(int x, int y, int z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.vector = new Vector3D(x, y, z);
-		this.rotation = rotation;
+
+		if (vector.equals(Vector3D.ZERO)) {
+			this.rotation = Rotation.IDENTITY;
+		} else {
+			this.rotation = new Rotation(Vector3DUtil.FORWARD, vector);
+		}
 	}
 
 	/**
