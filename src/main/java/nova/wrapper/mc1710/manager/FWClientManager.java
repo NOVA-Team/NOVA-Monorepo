@@ -8,10 +8,15 @@ import nova.wrapper.mc1710.wrapper.entity.BWEntity;
 /**
  * @author Calclavia
  */
-public class MCClientManager extends ClientManager {
+public class FWClientManager extends ClientManager {
 
 	@Override
 	public Entity getPlayer() {
 		return new BWEntity(Minecraft.getMinecraft().thePlayer);
+	}
+
+	@Override
+	public boolean isPaused() {
+		return Minecraft.getMinecraft().isGamePaused();
 	}
 }
