@@ -1,10 +1,8 @@
 package nova.core.factory;
 
 import com.google.common.collect.ImmutableList;
-import nova.core.util.exception.WrapperBrokenException;
-import nova.internal.Game;
+import nova.internal.core.Game;
 import se.jbee.inject.Dependency;
-import se.jbee.inject.Injector;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -47,7 +45,9 @@ public class Factory<T extends Buildable> {
 
 	public T resolve() {
 		T obj = Game.resolve(Dependency.dependency(clazz));
+		obj.afterConstruction();
 		finalizers.stream().forEach((cons) -> cons.accept(obj));
+		obj.afterFinalizers();
 		return obj;
 	}
 
