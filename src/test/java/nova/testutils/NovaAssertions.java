@@ -5,17 +5,15 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.assertj.core.api.AbstractAssert;
 
 import org.assertj.core.api.Assertions;
+import org.assertj.core.data.Offset;
 
 public abstract class NovaAssertions extends Assertions{
 
-
+    public static Offset<Double> offsetD = Offset.offset(1e-11);
+    public static Offset<Float> offsetF = Offset.offset(1e-7F);
 
     public static AlmostEqualAssertionVector3D assertThat(Vector3D actual) {
         return new AlmostEqualAssertionVector3D(actual);
-    }
-
-    public static AlmostEqualAssertionDouble assertThatDouble(Double actual) {
-        return new AlmostEqualAssertionDouble(actual);
     }
 
 
@@ -44,7 +42,7 @@ public abstract class NovaAssertions extends Assertions{
             if (Math.abs(difference(actual, zero)) > precision) {
                 failWithMessage("<%s> was expected to be equal to <%s> with tolerance <%s> but difference is <%s>", actual, zero, precision, difference(actual, zero));
             }
-            return (K) this;
+            return this;
         }
 
         public Almost<K, T> isAlmostEqualTo(T other) {

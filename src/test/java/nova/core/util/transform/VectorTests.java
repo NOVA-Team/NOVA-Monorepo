@@ -2,6 +2,7 @@ package nova.core.util.transform;
 
 import nova.core.util.math.Vector2DUtil;
 import nova.core.util.math.Vector3DUtil;
+import nova.testutils.NovaAssertions;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.junit.Test;
@@ -9,7 +10,6 @@ import org.junit.Test;
 import java.util.Random;
 
 import static nova.testutils.NovaAssertions.assertThat;
-import static nova.testutils.NovaAssertions.assertThatDouble;
 
 public class VectorTests {
 
@@ -23,11 +23,11 @@ public class VectorTests {
 		assertThat(Vector3DUtil.reciprocal(v1)).isAlmostEqualTo(new Vector3D(1 / v1.getX(), 1 / v1.getY(), 1 / v1.getZ()));
 
 		assertThat(v1.crossProduct(v2)).isAlmostEqualTo(new Vector3D(
-				v1.getY() * v2.getZ() - v1.getZ() * v2.getY(),
-				v1.getZ() * v2.getX() - v1.getX() * v2.getZ(),
-				v1.getX() * v2.getY() - v1.getY() * v2.getX()));
+			v1.getY() * v2.getZ() - v1.getZ() * v2.getY(),
+			v1.getZ() * v2.getX() - v1.getX() * v2.getZ(),
+			v1.getX() * v2.getY() - v1.getY() * v2.getX()));
 
-		assertThatDouble(v1.dotProduct(v2)).isAlmostEqualTo(v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ());
+		assertThat(v1.dotProduct(v2)).isCloseTo(v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ(), NovaAssertions.offsetD);
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class VectorTests {
 
 		//Won't work due to the values being integers
 		//assertThat(v1.dot(v2)).isEqualTo(v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.z * v2.z);
-		assertThatDouble(v1.dotProduct(v2)).isAlmostEqualTo(v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ());
+		assertThat(v1.dotProduct(v2)).isCloseTo(v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ(), NovaAssertions.offsetD);
 	}
 
 	@Test
@@ -60,6 +60,6 @@ public class VectorTests {
 
 		assertThat(Vector2DUtil.reciprocal(v1)).isEqualTo(new Vector2D(1 / v1.getX(), 1 / v1.getY()));
 
-		assertThatDouble(v1.dotProduct(v2)).isAlmostEqualTo(v1.getX() * v2.getX() + v1.getY() * v2.getY());
+		assertThat(v1.dotProduct(v2)).isCloseTo(v1.getX() * v2.getX() + v1.getY() * v2.getY(), NovaAssertions.offsetD);
 	}
 }

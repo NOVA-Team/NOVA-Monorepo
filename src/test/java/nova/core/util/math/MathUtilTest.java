@@ -1,6 +1,8 @@
 
 package nova.core.util.math;
 
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.assertj.core.data.Offset;
 import org.junit.Test;
 
 import static nova.testutils.NovaAssertions.assertThat;
@@ -82,7 +84,35 @@ public class MathUtilTest {
         MathUtil.min(new double[]{});
     }
 
+    @Test
+    public void testClamp() {
+	    assertThat(MathUtil.clamp(6, 2, 3)).isEqualTo(3);
+	    assertThat(MathUtil.clamp(2, 2, 3)).isEqualTo(2);
+	    assertThat(MathUtil.clamp(3, 2, 3)).isEqualTo(3);
+	    assertThat(MathUtil.clamp(1, 2, 3)).isEqualTo(2);
 
+	    assertThat(MathUtil.clamp(6D, 2, 3)).isEqualTo(3);
+	    assertThat(MathUtil.clamp(2D, 2, 3)).isEqualTo(2);
+	    assertThat(MathUtil.clamp(3D, 2, 3)).isEqualTo(3);
+	    assertThat(MathUtil.clamp(1D, 2, 3)).isEqualTo(2);
+    }
+
+	@Test
+	public void testLerp() {
+		Offset<Double> offsetD = Offset.offset(1e-11);
+		Offset<Float> offsetF = Offset.offset(1e-7F);
+		assertThat(MathUtil.lerp(1D, 2D, 0)).isCloseTo(1, offsetD);
+		assertThat(MathUtil.lerp(1D, 2D, .5)).isCloseTo(1.5, offsetD);
+		assertThat(MathUtil.lerp(1D, 2D, 1)).isCloseTo(2, offsetD);
+
+		assertThat(MathUtil.lerp(1F, 2F, 0F)).isCloseTo(1F, offsetF);
+		assertThat(MathUtil.lerp(1F, 2F, .5F)).isCloseTo(1.5F, offsetF);
+		assertThat(MathUtil.lerp(1F, 2F, 1F)).isCloseTo(2F, offsetF);
+
+		assertThat(MathUtil.lerp(Vector3D.ZERO, Vector3DUtil.ONE, 0)).isAlmostEqualTo(Vector3DUtil.ONE);
+		assertThat(MathUtil.lerp(Vector3D.ZERO, Vector3DUtil.ONE, .5F)).isAlmostEqualTo(Vector3DUtil.ONE.scalarMultiply(0.5));
+		assertThat(MathUtil.lerp(Vector3D.ZERO, Vector3DUtil.ONE, 1)).isAlmostEqualTo(Vector3DUtil.ONE);
+	}
 
 }
 
