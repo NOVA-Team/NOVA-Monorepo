@@ -19,5 +19,10 @@ public class FakeClientModule extends BinderModule {
 		public Entity getPlayer() {
 			return null;
 		}
+
+		@Override
+		public boolean isPaused() {
+			return false;
+		}
 	}
 }
