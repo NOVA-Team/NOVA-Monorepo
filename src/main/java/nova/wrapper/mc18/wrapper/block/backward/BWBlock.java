@@ -104,7 +104,7 @@ public class BWBlock extends Block implements Storable {
 
 	@Override
 	public String getID() {
-		return (String) net.minecraft.block.Block.blockRegistry.getNameForObject(mcBlock);
+		return net.minecraft.block.Block.blockRegistry.getNameForObject(mcBlock).toString();
 	}
 
 	@Override

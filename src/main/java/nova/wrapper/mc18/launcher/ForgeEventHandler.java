@@ -37,17 +37,19 @@ public class ForgeEventHandler {
 
 	@SubscribeEvent
 	public void playerInteractEvent(PlayerInteractEvent event) {
-		GlobalEvents.PlayerInteractEvent evt = new GlobalEvents.PlayerInteractEvent(
-			Game.natives().toNova(event.world),
-			new Vector3D(event.pos.getX(), event.pos.getY(), event.pos.getZ()),
-			Game.natives().toNova(event.entityPlayer),
-			GlobalEvents.PlayerInteractEvent.Action.values()[event.action.ordinal()]
-		);
+		if (event.world != null && event.pos != null) {
+			GlobalEvents.PlayerInteractEvent evt = new GlobalEvents.PlayerInteractEvent(
+				Game.natives().toNova(event.world),
+				new Vector3D(event.pos.getX(), event.pos.getY(), event.pos.getZ()),
+				Game.natives().toNova(event.entityPlayer),
+				GlobalEvents.PlayerInteractEvent.Action.values()[event.action.ordinal()]
+			);
 
-		Game.events().events.publish(evt);
+			Game.events().events.publish(evt);
 
-		event.useBlock = Event.Result.values()[evt.useBlock.ordinal()];
-		event.useItem = Event.Result.values()[evt.useItem.ordinal()];
-		event.setCanceled(evt.isCanceled());
+			event.useBlock = Event.Result.values()[evt.useBlock.ordinal()];
+			event.useItem = Event.Result.values()[evt.useItem.ordinal()];
+			event.setCanceled(evt.isCanceled());
+		}
 	}
 }
