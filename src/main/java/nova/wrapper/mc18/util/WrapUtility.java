@@ -21,7 +21,7 @@ public class WrapUtility {
 		if (item.getHasSubtypes()) {
 			return Item.itemRegistry.getNameForObject(item) + ":" + meta;
 		} else {
-			return Item.itemRegistry.getNameForObject(item);
+			return (String) Item.itemRegistry.getNameForObject(item);
 		}
 	}
 

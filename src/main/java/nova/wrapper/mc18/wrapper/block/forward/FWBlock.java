@@ -353,11 +353,11 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 			GL11.glPushAttrib(GL_TEXTURE_BIT);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			GL11.glPushMatrix();
-			Tessellator.instance.startDrawingQuads();
+			Tessellator.getInstance().startDrawingQuads();
 			BWModel model = new BWModel();
 			opRenderer.get().onRender.accept(model);
 			model.render();
-			Tessellator.instance.draw();
+			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
 			GL11.glPopAttrib();
 		}
@@ -374,7 +374,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 			opRenderer.get().onRender.accept(model);
 			model.renderWorld(world);
 
-			return Tessellator.instance.rawBufferIndex != 0; // Returns true if Tesselator is not empty. Avoids crash on empty Tesselator buffer.
+			return Tessellator.getInstance().rawBufferIndex != 0; // Returns true if Tesselator is not empty. Avoids crash on empty Tesselator buffer.
 		}
 		return false;
 	}

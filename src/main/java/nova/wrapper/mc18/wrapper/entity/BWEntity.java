@@ -100,7 +100,7 @@ public class BWEntity extends Entity {
 
 		@Override
 		public String getDisplayName() {
-			return entity.getDisplayName();
+			return entity.getDisplayName().getUnformattedText();
 		}
 	}
 

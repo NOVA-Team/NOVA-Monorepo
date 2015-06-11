@@ -58,9 +58,9 @@ public class FWEntityFX extends EntityFX {
 		float f12 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) p_70539_2_ - interpPosY);
 		float f13 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) p_70539_2_ - interpPosZ);
 
-		Tessellator.instance.draw();
+		Tessellator.getInstance().draw();
 		FWEntityRenderer.render(this, wrapped, f11, f12, f13);
-		Tessellator.instance.startDrawingQuads();
+		Tessellator.getInstance().getWorldRenderer().startDrawingQuads();
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderUtility.particleResource);
 	}
 

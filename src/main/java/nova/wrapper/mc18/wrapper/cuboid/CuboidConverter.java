@@ -26,6 +26,6 @@ public class CuboidConverter implements NativeConverter<Cuboid, AxisAlignedBB> {
 
 	@Override
 	public AxisAlignedBB toNative(Cuboid cuboid) {
-		return AxisAlignedBB.getBoundingBox(cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ());
+		return AxisAlignedBB.fromBounds(cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ());
 	}
 }

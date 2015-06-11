@@ -1,8 +1,8 @@
 package nova.wrapper.mc18.wrapper.entity.forward;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import nova.core.component.renderer.DynamicRenderer;
@@ -23,6 +23,10 @@ import static org.lwjgl.opengl.GL11.glShadeModel;
  */
 public class FWEntityRenderer extends Render {
 	public static final FWEntityRenderer instance = new FWEntityRenderer();
+
+	public FWEntityRenderer() {
+		super(Minecraft.getMinecraft().getRenderManager());
+	}
 
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
@@ -51,9 +55,9 @@ public class FWEntityRenderer extends Render {
 				GL11.glBlendFunc(model.blendSFactor, model.blendDFactor);
 			}
 
-			Tessellator.instance.startDrawingQuads();
-			model.render(Optional.of(RenderManager.instance));
-			Tessellator.instance.draw();
+			Tessellator.getInstance().getWorldRenderer().startDrawingQuads();
+			model.render(Optional.of(Minecraft.getMinecraft().getRenderManager()));
+			Tessellator.getInstance().draw();
 
 			if (model.blendSFactor > 0 && model.blendDFactor > 0) {
 				RenderUtility.disableBlending();

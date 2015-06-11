@@ -38,7 +38,7 @@ public class MCEntityTransform extends EntityTransform {
 				.findAny()
 				.get()
 				.provider
-				.dimensionId
+				.getDimensionId()
 		);
 	}
 

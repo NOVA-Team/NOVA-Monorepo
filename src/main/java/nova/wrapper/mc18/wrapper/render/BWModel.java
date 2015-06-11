@@ -37,8 +37,8 @@ public class BWModel extends Model {
 	}
 
 	public void render(Optional<IBlockAccess> access, Optional<RenderManager> entityRenderManager) {
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.setColorRGBA_F(1, 1, 1, 1);
+		Tessellator tessellator = Tessellator.getInstance();
+		tessellator.getWorldRenderer().func_178960_a(1, 1, 1, 1);
 
 		/**
 		 * Convert textures and UV into Minecraft equivalent.

@@ -245,7 +245,7 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 			ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 
 			fontRendererObj = mc.fontRenderer;
-			MCCanvas canvas = new MCCanvas(width, height, Tessellator.instance, scaledresolution.getScaleFactor());
+			MCCanvas canvas = new MCCanvas(width, height, Tessellator.getInstance(), scaledresolution.getScaleFactor());
 			if (textRenderer == null) {
 				textRenderer = new MCTextRenderer(fontRendererObj, canvas);
 			}

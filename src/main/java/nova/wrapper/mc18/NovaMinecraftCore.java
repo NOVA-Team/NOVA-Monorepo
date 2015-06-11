@@ -6,7 +6,7 @@ import nova.wrapper.mc18.asm.transformers.Transformers;
 
 import java.util.Map;
 
-@MCVersion(value = "1.7.10")
+@MCVersion(value = "1.8")
 public class NovaMinecraftCore implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass() {

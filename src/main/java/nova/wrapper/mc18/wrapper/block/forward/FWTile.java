@@ -52,7 +52,7 @@ public class FWTile extends TileEntity {
 	public void validate() {
 		super.validate();
 
-		block.add(new MCBlockTransform(block, new BWWorld(getWorldObj()), new Vector3D(xCoord, yCoord, zCoord)));
+		block.add(new MCBlockTransform(block, new BWWorld(getWorld()), new Vector3D(pos.getX(), pos.getY(), pos.getZ())));
 
 		if (cacheData != null && block instanceof Storable) {
 			((Storable) block).load(cacheData);
@@ -72,7 +72,7 @@ public class FWTile extends TileEntity {
 	 * Updates the block.
 	 */
 	@Override
-	public void updateEntity() {
+	public void update() {
 		((Updater) block).update(0.05);
 	}
 

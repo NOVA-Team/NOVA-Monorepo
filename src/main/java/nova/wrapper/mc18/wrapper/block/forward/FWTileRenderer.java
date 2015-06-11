@@ -28,9 +28,9 @@ public class FWTileRenderer extends TileEntitySpecialRenderer {
 			opRenderer.get().onRender.accept(model);
 			bindTexture(TextureMap.locationBlocksTexture);
 			RenderUtility.enableBlending();
-			Tessellator.instance.startDrawingQuads();
+			Tessellator.getInstance().startDrawingQuads();
 			model.render();
-			Tessellator.instance.draw();
+			Tessellator.getInstance().draw();
 			RenderUtility.disableBlending();
 		}
 	}
