@@ -47,23 +47,23 @@ public class FWInventory implements IInventory {
 		wrapped.set(slot, stack != null ? ItemConverter.instance().getNovaItem(stack) : null);
 	}
 
-    @Override
-    public String getName() {
-        // TODO Shouldn't be null
-        return null;
-    }
+	@Override
+	public String getCommandSenderName() {
+		// TODO Shouldn't be empty?
+		return "";
+	}
 
-    @Override
+	@Override
 	public boolean hasCustomName() {
 		return false;
 	}
 
-    @Override
-    public IChatComponent getDisplayName() {
-        return null;
-    }
+	@Override
+	public IChatComponent getDisplayName() {
+		return null;
+	}
 
-    @Override
+	@Override
 	public int getInventoryStackLimit() {
 		return 64;
 	}
@@ -95,23 +95,23 @@ public class FWInventory implements IInventory {
 		return true;
 	}
 
-    @Override
-    public int getField(int id) {
-        return 0;
-    }
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
 
-    @Override
-    public void setField(int id, int value) {
+	@Override
+	public void setField(int id, int value) {
 
-    }
+	}
 
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
 
-    @Override
-    public void clear() {
-        this.wrapped = null;
-    }
+	@Override
+	public void clear() {
+		this.wrapped = null;
+	}
 }

@@ -45,7 +45,7 @@ public class FWEntityFX extends EntityFX {
 	}
 
 	@Override
-	public void func_180434_a(WorldRenderer p_180434_1_, net.minecraft.entity.Entity p_180434_2_, float p_70539_2_, float x, float y, float z, float p_70539_6_, float p_70539_7_) {
+	public void renderParticle(WorldRenderer worldRendererIn, net.minecraft.entity.Entity p_180434_2_, float p_70539_2_, float x, float y, float z, float p_70539_6_, float p_70539_7_) {
 		if (firstTick) {
 			prevPosX = posX;
 			prevPosY = posY;
