@@ -4,8 +4,17 @@ apply plugin: 'maven-publish'
 
 
 dependencies {
-	compile project(':core')
-	testCompile project(':core')
+	if (project.hasProperty("nova.core.location")) {
+		compile project(":NovaCore")
+		testCompile project(path: ':NovaCore', configuration: 'wrapperTests')
+	} else {
+		compile group: "nova.core", name: "NovaCore", version: property("nova.core.version"), changing: true
+		testCompile group: "nova.core", name: "NovaCore", version: property("nova.core.version"), classifier: "wrappertests", changing: true
+	}
+
+	testCompile "junit:junit:4.12"
+	testCompile 'org.assertj:assertj-core:3.0.0'
+	testRuntime 'org.slf4j:slf4j-simple:1.7.10'
 }
 
 compileJava {
