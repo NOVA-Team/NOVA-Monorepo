@@ -101,7 +101,7 @@ public class NovaMinecraft {
 			proxy.registerResourcePacks(modClasses);
 			launcher = new NovaLauncher(diep, modClasses);
 
-			Game.inject(diep.init());
+			Game.inject(diep);
 
 			//Inject eventManager
 			eventManager = diep.getInjector().get().resolve(Dependency.dependency(WrapperEventManager.class));
