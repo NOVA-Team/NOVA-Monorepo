@@ -12,9 +12,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
 import net.minecraftforge.client.model.ISmartItemModel;
+import nova.core.component.renderer.ItemRenderer;
+import nova.core.component.renderer.StaticRenderer;
+import nova.core.item.Item;
 import nova.core.render.model.Model;
 import nova.core.util.Direction;
+import nova.internal.core.Game;
 import nova.wrapper.mc18.render.RenderUtility;
+import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,14 +41,60 @@ public class FWSmartModel implements ISmartBlockModel, ISmartItemModel, IFlexibl
 
 	@Override
 	public IBakedModel handleBlockState(IBlockState state) {
-		return this;
+		FWBlock block = (FWBlock) state.getBlock();
+
+		if (block.block.has(StaticRenderer.class)) {
+			StaticRenderer renderer = block.block.get(StaticRenderer.class);
+			BWModel model = new BWModel();
+			//model.matrix.translate(x + 0.5, y + 0.5, z + 0.5);
+			renderer.onRender.accept(model);
+			return new FWSmartModel(model);
+		}
+
+		return null;
 	}
 
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
+		Item item = Game.natives().toNova(stack);
+
+		if (item.has(ItemRenderer.class)) {
+			ItemRenderer renderer = item.get(ItemRenderer.class);
+			BWModel model = new BWModel();
+			renderer.onRender.accept(model);
+			return new FWSmartModel(model);
+		}
+
 		return this;
 	}
 
+	/*
+
+	@Override
+	public IIcon getIcon(IBlockAccess access, int x, int y, int z, int side) {
+		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Optional<StaticBlockRenderer> opRenderer = blockInstance.getOp(StaticBlockRenderer.class);
+		if (opRenderer.isPresent()) {
+			Optional<Texture> texture = opRenderer.get().texture.apply(Direction.values()[side]);
+			if (texture.isPresent()) {
+				return RenderUtility.instance.getTexture(texture.get());
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public IIcon getIcon(int side, int meta) {
+		Optional<StaticBlockRenderer> opRenderer = block.getOp(StaticBlockRenderer.class);
+		if (opRenderer.isPresent()) {
+			Optional<Texture> texture = opRenderer.get().texture.apply(Direction.values()[side]);
+			if (texture.isPresent()) {
+				return RenderUtility.instance.getTexture(texture.get());
+			}
+		}
+		return null;
+	}
+	 */
 	@Override
 	public VertexFormat getFormat() {
 		return format;
