@@ -163,7 +163,8 @@ public class Data extends HashMap<String, Object> {
 	public <T extends Enum<T>> T getEnum(String key) {
 		Data enumData = get(key);
 		try {
-			Class<T> enumClass = (Class) Class.forName(enumData.className);
+			@SuppressWarnings("unchecked")
+			Class<T> enumClass = (Class<T>) Class.forName(enumData.className);
 			return Enum.valueOf(enumClass, enumData.get("value"));
 		} catch (Exception e) {
 			throw new DataException(e);
@@ -183,7 +184,8 @@ public class Data extends HashMap<String, Object> {
 	public <T extends Storable> T getStorable(String key) {
 		Data storableData = get(key);
 		try {
-			Class<T> storableClass = (Class) Class.forName(storableData.className);
+			@SuppressWarnings("unchecked")
+			Class<T> storableClass = (Class<T>) Class.forName(storableData.className);
 			T obj = storableClass.newInstance();
 			obj.load(storableData);
 			return obj;

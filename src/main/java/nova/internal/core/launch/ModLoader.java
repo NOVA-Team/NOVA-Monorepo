@@ -91,6 +91,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 			.map(clazz -> (Object) diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(clazz)))
 			.collect(Collectors.toList()).toArray();
 
+		//noinspection unchecked
 		return (T) cons.newInstance(parameters);
 	}
 

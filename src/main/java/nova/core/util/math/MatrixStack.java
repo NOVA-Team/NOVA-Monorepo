@@ -17,7 +17,8 @@ public class MatrixStack implements Transformer {
 	}
 
 	public MatrixStack(MatrixStack clone) {
-		this.stack = (Stack) clone.stack.clone();
+		//noinspection unchecked
+		this.stack = (Stack<RealMatrix>) clone.stack.clone();
 		this.current = clone.current.copy();
 	}
 
