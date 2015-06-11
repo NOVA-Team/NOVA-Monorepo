@@ -35,6 +35,7 @@ import nova.wrapper.mc18.depmodules.TickerModule;
 import nova.wrapper.mc18.depmodules.WrapperEventModule;
 import nova.wrapper.mc18.recipes.MinecraftRecipeRegistry;
 import nova.wrapper.mc18.util.WrapperEventManager;
+import nova.wrapper.mc18.wrapper.VectorConverter;
 import nova.wrapper.mc18.wrapper.block.BlockConverter;
 import nova.wrapper.mc18.wrapper.block.world.WorldConverter;
 import nova.wrapper.mc18.wrapper.cuboid.CuboidConverter;
@@ -116,6 +117,7 @@ public class NovaMinecraft {
 			Game.natives().registerConverter(new WorldConverter());
 			Game.natives().registerConverter(new CuboidConverter());
 			Game.natives().registerConverter(new InventoryConverter());
+			Game.natives().registerConverter(new VectorConverter());
 
 			/**
 			 * Initiate recipe and ore dictionary integration
