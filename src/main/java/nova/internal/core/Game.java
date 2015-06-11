@@ -17,7 +17,6 @@ import nova.core.render.RenderManager;
 import nova.core.util.LanguageManager;
 import nova.core.util.RetentionManager;
 import nova.core.world.WorldManager;
-import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.tick.UpdateTicker;
 import org.slf4j.Logger;
 import se.jbee.inject.Dependency;
@@ -26,7 +25,6 @@ import se.jbee.inject.Injector;
 public class Game {
 
 	private static Game instance;
-	private static Injector injector;
 
 	private final Logger logger;
 
@@ -112,16 +110,8 @@ public class Game {
 		logger.info("Game instance created.");
 	}
 
-	public static void inject(DependencyInjectionEntryPoint diep) {
-		instance = diep.init();
-	}
-
 	public static GameInfo info() {
 		return instance.gameInfo;
-	}
-
-	public static Injector injector() {
-		return injector;
 	}
 
 	public static Logger logger() {
@@ -198,7 +188,6 @@ public class Game {
 	public static UpdateTicker.SynchronizedTicker syncTicker() {
 		return instance.syncTicker;
 	}
-
 	/**
 	 * The thread ticker that runs on NOVA's thread.
 	 */

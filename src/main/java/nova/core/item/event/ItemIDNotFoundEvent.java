@@ -1,24 +1,22 @@
 package nova.core.item.event;
 
-import nova.core.item.ItemFactory;
+import nova.core.item.Item;
+import nova.core.util.Factory;
 
-/**
- * Created by Stan on 3/02/2015.
- */
 public class ItemIDNotFoundEvent {
 	public final String id;
 
-	private ItemFactory remappedFactory = null;
+	private Factory<Item> remappedFactory = null;
 
 	public ItemIDNotFoundEvent(String id) {
 		this.id = id;
 	}
 
-	public ItemFactory getRemappedFactory() {
+	public Factory<Item> getRemappedFactory() {
 		return remappedFactory;
 	}
 
-	public void setRemappedFactory(ItemFactory remappedFactory) {
+	public void setRemappedFactory(Factory<Item> remappedFactory) {
 		this.remappedFactory = remappedFactory;
 	}
 }

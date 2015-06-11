@@ -7,10 +7,9 @@ import nova.core.event.CancelableEvent;
 import nova.core.event.Event;
 import nova.core.event.EventBus;
 import nova.core.item.Item;
-import nova.core.item.ItemBlock;
-import nova.core.item.ItemFactory;
+import nova.core.util.Buildable;
 import nova.core.util.Direction;
-import nova.core.util.Identifiable;
+import nova.core.util.Factory;
 import nova.core.world.World;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -23,29 +22,32 @@ import java.util.Set;
 /**
  * @author Calclavia
  */
-public abstract class Block extends ComponentProvider implements Identifiable {
+public abstract class Block extends ComponentProvider implements Buildable<Block> {
 
 	public final EventBus<Event> events = new EventBus<>();
 
 	/**
-	 * Called when the block is registered.
+	 * Will be injected by factory.
 	 */
-	public void onRegister() {
-		//Register the itemblock
-		Game.items().register((args) -> new ItemBlock(factory()));
-	}
+	@SuppressWarnings("unused")
+	private String ID;
 
-	public ItemFactory getItemFactory() {
-		return Game.items().getItemFactoryFromBlock(factory());
+	public final String getID() {
+		return ID;
 	}
 
 	/**
 	 * Called to get the BlockFactory that refers to this Block class.
-	 * @return The {@link nova.core.block.BlockFactory} that refers to this
-	 * Block class.
+	 * @return The {@link nova.core.util.Factory} that refers to this
+	 * Block factory.
 	 */
-	public final BlockFactory factory() {
+	public final Factory<Block> factory() {
 		return Game.blocks().getFactory(getID()).get();
+	}
+
+
+	public Factory<Item> getItemFactory() {
+		return Game.items().getItemFactoryFromBlock(factory());
 	}
 
 	public final BlockTransform transform() {
@@ -250,7 +252,14 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		public Set<Item> drops;
 
 		public DropEvent(Block block) {
-			this.drops = Collections.singleton(block.getItemFactory().makeItem());
+			this.drops = Collections.singleton(block.getItemFactory().resolve());
 		}
+		public DropEvent(Item item) {
+			this.drops = Collections.singleton(item);
+		}
+		public DropEvent(Set<Item> items) {
+			this.drops = items;
+		}
+
 	}
 }

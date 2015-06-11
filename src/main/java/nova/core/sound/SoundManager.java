@@ -6,19 +6,14 @@ import nova.core.util.Registry;
 
 import java.util.function.Function;
 
-public class SoundManager extends Manager<Sound, SoundManager.SoundFactory> {
-	public SoundManager(Registry<SoundFactory> registry) {
+public class SoundManager extends Manager<Sound, Factory<Sound>> {
+	public SoundManager(Registry<Factory<Sound>> registry) {
 		super(registry);
 	}
 
 	@Override
-	public SoundFactory register(Function<Object[], Sound> constructor) {
-		return register(new SoundFactory(constructor));
+	public Factory<Sound> register(Function<Object[], Sound> constructor) {
+		return register(new Factory<Sound>(constructor));
 	}
-
-	protected static class SoundFactory extends Factory<Sound> {
-		public SoundFactory(Function<Object[], Sound> constructor) {
-			super(constructor);
-		}
-	}
+	
 }

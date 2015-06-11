@@ -1,5 +1,7 @@
 package nova.core.util;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ObjectArrays;
 import com.google.common.primitives.Primitives;
 
@@ -302,6 +304,52 @@ public class ReflectionUtil {
 
 		if (superClass != null) {
 			forEachRecursiveAnnotatedField(annotation, superClass, action);
+		}
+	}
+
+	private static Cache<ClassStringPair, Field> classFieldCache = CacheBuilder.newBuilder().weakKeys().build();
+
+	public static <T> boolean injectField(String fieldName, T object, Object value) {
+		Class<?> clazz = object.getClass();
+		try {
+			Field field = classFieldCache.get(new ClassStringPair(clazz, fieldName), () -> {
+				while (!Object.class.equals(clazz)) {
+					Field f = clazz.getDeclaredField(fieldName);
+					if (f != null) {
+						f.setAccessible(true);
+						return f;
+					}
+				}
+				return null;
+			});
+			if (field != null) {
+				field.set(object, value);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private static class ClassStringPair {
+		public final Class<?> clazz;
+		public final String string;
+
+		ClassStringPair(Class<?> clazz, String string) {
+			this.clazz = clazz;
+			this.string = string;
+		}
+
+		@Override
+		public int hashCode() {
+			return 37 * clazz.hashCode() + string.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return obj == this || obj instanceof ClassStringPair && string.equals(((ClassStringPair) obj).string) && clazz.equals(((ClassStringPair) obj).clazz);
 		}
 	}
 

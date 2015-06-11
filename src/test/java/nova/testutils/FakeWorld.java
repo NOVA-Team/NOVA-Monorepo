@@ -1,7 +1,6 @@
 package nova.testutils;
 
 import nova.core.block.Block;
-import nova.core.block.BlockFactory;
 import nova.core.component.transform.BlockTransform;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;

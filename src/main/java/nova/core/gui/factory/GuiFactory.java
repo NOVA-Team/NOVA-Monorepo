@@ -1,7 +1,6 @@
 package nova.core.gui.factory;
 
 import nova.core.gui.Gui;
-import nova.core.util.Factory;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

@@ -107,7 +107,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				.collect(Collectors.toMap(Map.Entry::getKey,
 						entry -> {
 							try {
-								return makeObjectWithDep(entry.getValue());
+								return makeObjectWithDep((Class<Loadable>) entry.getValue());
 							} catch (Exception ex) {
 								System.out.println("Failed to load NOVA Java mod: " + entry);
 								throw new ExceptionInInitializerError(ex);

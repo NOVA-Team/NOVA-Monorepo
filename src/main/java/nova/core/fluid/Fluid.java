@@ -1,13 +1,13 @@
 package nova.core.fluid;
 
-import nova.core.block.BlockFactory;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
+import nova.core.util.Buildable;
 import nova.core.util.Identifiable;
 
 import java.util.Optional;
 
-public class Fluid implements Identifiable, Storable, Cloneable {
+public class Fluid implements Storable, Cloneable, Buildable {
 	/**
 	 * 1000 liters = 1 cubic meter
 	 */

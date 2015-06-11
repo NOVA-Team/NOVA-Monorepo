@@ -8,15 +8,5 @@ import nova.core.util.Identifiable;
  * @author Calclavia
  */
 public class Category extends Component implements Identifiable {
-
-	public final String name;
-
-	public Category(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String getID() {
-		return name;
-	}
+	//TODO Fix category.
 }

@@ -79,4 +79,15 @@ public class ReflectionTest {
 			.isEqualTo(con_DDD);
 		assertThat(newInstanceMatching(constr, Double.valueOf(1), Double.valueOf(1), Double.valueOf(1))).isNotNull();
 	}
+
+	public static class WithField {
+		private String string;
+	}
+
+	@Test
+	public void testInjectField() {
+		WithField withField = new WithField();
+		ReflectionUtil.injectField("string", withField, "injected");
+		assertThat(withField.string).isEqualTo("injected");
+	}
 }

@@ -17,22 +17,17 @@ import java.util.function.Function;
  * Do not create new instances of components yourself.
  * @author Calclavia
  */
-public class ComponentManager extends Manager<Component, ComponentManager.ComponentFactory> {
+public class ComponentManager extends Manager<Component> {
 
 	private Map<Class<? extends Component>, String> classToComponent = new HashMap<>();
 
-	private ComponentManager(Registry<ComponentFactory> registry) {
+	private ComponentManager(Registry<Factory<Component>> registry) {
 		super(registry);
 	}
 
 	@Override
-	public ComponentFactory register(Function<Object[], Component> constructor) {
-		return register(new ComponentFactory(constructor));
-	}
-
-	@Override
-	public ComponentFactory register(ComponentFactory factory) {
-		classToComponent.put(factory.getDummy().getClass(), factory.getID());
+	public Factory<Component> register(Factory<Component> factory) {
+		classToComponent.put(factory.clazz, factory.getID());
 		return super.register(factory);
 	}
 
@@ -45,12 +40,12 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 	 */
 	@SuppressWarnings("unchecked")
 	public <N> N make(Class<N> theInterface, Object... args) {
-		Optional<ComponentFactory> first = registry.stream()
-			.filter(n -> theInterface.isAssignableFrom(n.getDummy().getClass()))
+		Optional<Factory<Component>> first = registry.stream()
+			.filter(n -> theInterface.isAssignableFrom(n.clazz))
 			.findFirst();
 
 		if (first.isPresent()) {
-			return (N) first.get().make(args);
+			return (N) first.get().resolve();
 		} else {
 			throw new RegistrationException("Attempt to create node that is not registered: " + theInterface);
 		}
@@ -63,16 +58,7 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 	 * @return A new node.
 	 */
 	public Component make(String componentID, Object... args) {
-		return registry.get(componentID).get().make(args);
+		return registry.get(componentID).get().resolve();
 	}
-
-	public static class ComponentFactory extends Factory<Component> {
-		public ComponentFactory(Function<Object[], Component> constructor) {
-			super(constructor);
-		}
-
-		public Component make(Object... args) {
-			return constructor.apply(args);
-		}
-	}
+	
 }

@@ -1,11 +1,10 @@
 package nova.core.world;
 
 import nova.core.block.Block;
-import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
-import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
+import nova.core.util.Factory;
 import nova.core.util.Identifiable;
 import nova.core.util.shape.Cuboid;
 import nova.internal.core.Game;
@@ -51,7 +50,7 @@ public abstract class World implements Identifiable {
 	 * @param args The block constructor arguments.
 	 * @return {@code true} if the replace was successful.
 	 */
-	public abstract boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args);
+	public abstract boolean setBlock(Vector3D position, Factory<Block> blockFactory, Object... args);
 
 	/**
 	 * Removes the block in the specified position.
