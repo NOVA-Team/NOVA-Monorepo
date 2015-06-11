@@ -14,6 +14,7 @@ import nova.core.util.Identifiable;
 import nova.core.world.World;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.util.FastMath;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -64,7 +65,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 * @return The x co-ordinate of the block.
 	 */
 	public final int x() {
-		return (int) position().getX();
+		return (int) FastMath.floor(position().getX());
 	}
 
 	/**
@@ -72,7 +73,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 * @return The y co-ordinate of the block.
 	 */
 	public final int y() {
-		return (int) position().getY();
+		return (int) FastMath.floor(position().getY());
 	}
 
 	/**
@@ -80,7 +81,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 * @return The z co-ordinate of the block.
 	 */
 	public final int z() {
-		return (int) position().getZ();
+		return (int) FastMath.floor(position().getZ());
 	}
 
 	/**
