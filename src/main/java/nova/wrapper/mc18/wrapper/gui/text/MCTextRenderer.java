@@ -42,10 +42,20 @@ public class MCTextRenderer implements TextRenderer {
 			GL11.glTranslatef(x + xOffset, y - fontrenderer.FONT_HEIGHT * scale + scale * 2F + yOffset, 0);
 			GL11.glScalef(scale, scale, 0);
 			GL11.glTranslatef(-x - xOffset, -y, 0);
-			fontrenderer.drawString(text.text, x + xOffset, y, text.format.color.argb(), text.format.shadow);
+
+			if (text.format.shadow) {
+				fontrenderer.func_175063_a(text.text, x + xOffset, y, text.format.color.argb());
+			} else {
+				fontrenderer.drawString(text.text, x + xOffset, y, text.format.color.argb());
+			}
+
 			GL11.glPopMatrix();
 		} else {
-			fontrenderer.drawString(text.text, x + xOffset, y - fontrenderer.FONT_HEIGHT + 2 + yOffset, text.format.color.argb(), text.format.shadow);
+			if (text.format.shadow) {
+				fontrenderer.func_175063_a(text.text, x + xOffset, y - fontrenderer.FONT_HEIGHT + 2 + yOffset, text.format.color.argb());
+			} else {
+				fontrenderer.drawString(text.text, x + xOffset, y - fontrenderer.FONT_HEIGHT + 2 + yOffset, text.format.color.argb());
+			}
 		}
 	}
 
@@ -96,7 +106,7 @@ public class MCTextRenderer implements TextRenderer {
 
 	@Override
 	public RenderedText cacheCutString(FormattedText str, int width) {
-		// TODO implement
+		// TODO: Implement this.
 		throw new UnsupportedOperationException();
 	}
 }
