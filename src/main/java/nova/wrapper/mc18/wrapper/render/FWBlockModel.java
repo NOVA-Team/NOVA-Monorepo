@@ -1,5 +1,6 @@
 package nova.wrapper.mc18.wrapper.render;
 
+import com.google.common.primitives.Ints;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -10,22 +11,24 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
 import nova.core.render.model.Model;
+import nova.core.util.Direction;
 import nova.wrapper.mc18.render.RenderUtility;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Calclavia
  */
-public class SmartBlockModel implements ISmartBlockModel, IFlexibleBakedModel {
+public class FWBlockModel implements ISmartBlockModel, IFlexibleBakedModel {
 
 	private final Model model;
+	private final VertexFormat format;
 
-	public SmartBlockModel(Model model) {
+	public FWBlockModel(Model model) {
 		this.model = model;
+		this.format = new VertexFormat();
 	}
 
 	@Override
@@ -35,7 +38,7 @@ public class SmartBlockModel implements ISmartBlockModel, IFlexibleBakedModel {
 
 	@Override
 	public VertexFormat getFormat() {
-		return null;
+		return format;
 	}
 
 	@Override
@@ -45,27 +48,37 @@ public class SmartBlockModel implements ISmartBlockModel, IFlexibleBakedModel {
 
 	@Override
 	public List getGeneralQuads() {
-		List<BakedQuad> quads = new LinkedList<>();
-		Set<Model> flatten = model.flatten();
-		flatten.stream()
-			.map(
+		return model
+			.flatten()
+			.stream()
+			.flatMap(
 				model ->
 					model.faces
 						.stream()
-						.map(face -> BWModel.vertexToInts(face.vertices.stream(), RenderUtility.instance.getTexture(face.texture.get())))
-			);
+						.map(
+							face -> {
+								List<int[]> vertexData = face.vertices
+									.stream()
+									.map(v -> BWModel.vertexToInts(v, RenderUtility.instance.getTexture(face.texture.get())))
+									.collect(Collectors.toList());
 
-		return quads;
+								int[] data = Ints.concat((int[][]) vertexData.toArray());
+								//TODO: The facing might be wrong
+								return new BakedQuad(data, -1, EnumFacing.values()[Direction.fromVector(face.normal).ordinal()]);
+							}
+						)
+			)
+			.collect(Collectors.toList());
 	}
 
 	@Override
 	public boolean isAmbientOcclusion() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isGui3d() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -80,6 +93,6 @@ public class SmartBlockModel implements ISmartBlockModel, IFlexibleBakedModel {
 
 	@Override
 	public ItemCameraTransforms getItemCameraTransforms() {
-		return null;
+		return ItemCameraTransforms.DEFAULT;
 	}
 }
