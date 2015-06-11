@@ -2,13 +2,14 @@ package nova.core.item;
 
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
+import nova.core.event.Event;
 import nova.core.event.EventBus;
 import nova.core.render.Color;
 import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,12 +17,7 @@ import java.util.Optional;
 //TODO: Convert to component system
 public abstract class Item extends ComponentProvider implements Identifiable {
 
-	/**
-	 * Item Events
-	 */
-	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
-	public final EventBus<UseEvent> useEvent = new EventBus<>();
-	public final EventBus<TooltipEvent> tooltipEvent = new EventBus<>();
+	public final EventBus<Event> events = new EventBus<>();
 
 	/**
 	 * The amount of this item that is present.
@@ -119,7 +115,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 		return Optional.empty();
 	}
 
-	public static class TooltipEvent {
+	public static class TooltipEvent extends Event {
 		public final Optional<Entity> entity;
 		public final List<String> tooltips;
 
@@ -134,7 +130,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 		}
 	}
 
-	public static class UseEvent {
+	public static class UseEvent extends Event {
 		//The entity that right clicked
 		public final Entity entity;
 
@@ -153,7 +149,6 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 		 * @param position - The position of the block
 		 * @param side - The side the player clicked
 		 * @param hit - The position the player hit on the block
-		 *
 		 */
 		public UseEvent(Entity entity, Vector3D position, Direction side, Vector3D hit) {
 			this.entity = entity;
@@ -163,7 +158,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 		}
 	}
 
-	public static class RightClickEvent {
+	public static class RightClickEvent extends Event {
 		//The entity that right clicked
 		public final Entity entity;
 

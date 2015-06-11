@@ -20,7 +20,7 @@ public class ItemBlock extends Item {
 
 	public ItemBlock(BlockFactory blockFactory) {
 		this.blockFactory = blockFactory;
-		useEvent.add(
+		events.add(
 			evt ->
 			{
 				Optional<Block> opBlock = evt.entity.world().getBlock(evt.position);
@@ -32,7 +32,8 @@ public class ItemBlock extends Item {
 						evt.action = onPostPlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit);
 					}
 				}
-			}
+			},
+			UseEvent.class
 		);
 	}
 
