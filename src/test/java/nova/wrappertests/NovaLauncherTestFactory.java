@@ -1,7 +1,7 @@
 package nova.wrappertests;
 
-import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.Game;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.launch.NovaLauncher;
 import nova.testutils.FakeBlock;
 import nova.wrappertests.depmodules.FakeClientModule;
@@ -55,7 +55,7 @@ public class NovaLauncherTestFactory {
 
 		NovaLauncher launcher = new NovaLauncher(diep, new HashSet<>(Arrays.asList(modClasses)));
 
-		Game.inject(diep.init());
+		Game.inject(diep);
 
 		/**
 		 * Register fake air block

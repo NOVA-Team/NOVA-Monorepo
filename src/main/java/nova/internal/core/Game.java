@@ -4,7 +4,6 @@ import nova.core.block.BlockManager;
 import nova.core.component.ComponentManager;
 import nova.core.entity.EntityManager;
 import nova.core.event.GlobalEvents;
-import nova.core.fluid.FluidManager;
 import nova.core.game.ClientManager;
 import nova.core.game.GameInfo;
 import nova.core.gui.InputManager;
@@ -20,12 +19,15 @@ import nova.core.render.RenderManager;
 import nova.core.util.LanguageManager;
 import nova.core.util.RetentionManager;
 import nova.core.world.WorldManager;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.tick.UpdateTicker;
 import org.slf4j.Logger;
+import se.jbee.inject.Injector;
 
 public class Game {
 
 	private static Game instance;
+	private static Injector injector;
 
 	private final Logger logger;
 
@@ -71,7 +73,6 @@ public class Game {
 		BlockManager blockManager,
 		EntityManager entityManager,
 		ItemManager itemManager,
-		FluidManager fluidManager,
 		WorldManager worldManager,
 		RenderManager renderManager,
 		RecipeManager recipeManager,
@@ -117,12 +118,17 @@ public class Game {
 		logger.info("Game instance created.");
 	}
 
-	public static void inject(Game game) {
-		Game.instance = game;
+	public static void inject(DependencyInjectionEntryPoint diep) {
+		instance = diep.init();
+		injector = diep.getInjector().get();
 	}
 
 	public static GameInfo info() {
 		return instance.gameInfo;
+	}
+
+	public static Injector diep() {
+		return injector;
 	}
 
 	public static Logger logger() {
