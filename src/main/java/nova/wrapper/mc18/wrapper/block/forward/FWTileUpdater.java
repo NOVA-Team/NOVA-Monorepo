@@ -7,6 +7,14 @@ import nova.core.component.Updater;
  * @author Calclavia
  */
 public class FWTileUpdater extends FWTile implements IUpdatePlayerListBox {
+	public FWTileUpdater() {
+
+	}
+
+	public FWTileUpdater(String blockID) {
+		this.blockID = blockID;
+	}
+
 	/**
 	 * Updates the block.
 	 */
