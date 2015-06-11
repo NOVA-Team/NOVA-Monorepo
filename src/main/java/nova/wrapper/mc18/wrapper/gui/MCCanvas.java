@@ -2,6 +2,7 @@ package nova.wrapper.mc18.wrapper.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.ResourceLocation;
 import nova.core.gui.Spacing;
 import nova.core.gui.render.Canvas;
@@ -12,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 public class MCCanvas extends Canvas {
 
 	private final Tessellator tessellator;
+	private final WorldRenderer worldRenderer;
 	private final float scale;
 
 	public MCCanvas(int width, int height, Tessellator tessellator) {
@@ -21,6 +23,7 @@ public class MCCanvas extends Canvas {
 	public MCCanvas(int width, int height, Tessellator tessellator, float scale) {
 		super(new Vector2D(width, height), false);
 		this.tessellator = tessellator;
+		this.worldRenderer = tessellator.getWorldRenderer();
 		this.scale = scale;
 	}
 
@@ -35,17 +38,17 @@ public class MCCanvas extends Canvas {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}
 		GL11.glColor4f(state.color().redf(), state.color().greenf(), state.color().bluef(), state.color().alphaf());
-		tessellator.startDrawing(GL11.GL_POLYGON);
+		worldRenderer.startDrawing(GL11.GL_POLYGON);
 	}
 
 	@Override
 	public void addVertex(double x, double y) {
-		tessellator.addVertex(x, y, state.zIndex());
+		worldRenderer.addVertex(x, y, state.zIndex());
 	}
 
 	@Override
 	public void addVertexWithUV(double x, double y, double u, double v) {
-		tessellator.addVertexWithUV(x, y, state.zIndex(), u, v);
+		worldRenderer.addVertexWithUV(x, y, state.zIndex(), u, v);
 	}
 
 	@Override
