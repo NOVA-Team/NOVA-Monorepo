@@ -16,11 +16,23 @@ public class TileEntityTransformer implements Transformer {
 
 		System.out.println("[NOVA] Transforming TileEntity class for dynamic instance injection.");
 
-		MethodNode method = ASMHelper.findMethod(new ObfMapping("net/minecraft/tileentity/TileEntity", "func_145827_c", "(Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;"), cnode);
+		ObfMapping obfmap = new ObfMapping("aor", "c", "(Ldh;)Laor;");
+		ObfMapping srgmap = new ObfMapping("net/minecraft/tileentity/TileEntity", "func_145827_c", "(Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;");
+		ObfMapping decompMap = new ObfMapping("net/minecraft/tileentity/TileEntity", "createAndLoadEntity", "(Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;");
+
+		MethodNode method = ASMHelper.findMethod(obfmap, cnode);
 
 		if (method == null) {
-			method = ASMHelper.findMethod(new ObfMapping("net/minecraft/tileentity/TileEntity", "createAndLoadEntity", "(Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;"), cnode);
+			System.out.println("Lookup " + obfmap + " failed.");
+			method = ASMHelper.findMethod(decompMap, cnode);
+
+			if (method == null) {
+				System.out.println("Lookup " + decompMap + " failed.");
+				method = ASMHelper.findMethod(srgmap, cnode);
+			}
 		}
+
+		System.out.println("Transforming method " + method.name);
 
 		ASMHelper.removeBlock(method.instructions, new InsnListSection(method.instructions, 23, 26));
 
