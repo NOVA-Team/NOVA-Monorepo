@@ -2,6 +2,11 @@ apply plugin: 'forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'maven-publish'
 
+buildscript {
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+	}
+}
 
 dependencies {
 	if (project.hasProperty("nova.core.location")) {
