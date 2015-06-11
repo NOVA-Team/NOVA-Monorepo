@@ -170,7 +170,7 @@ public class Configuration {
 	 * @param configFile File to load config from.
 	 * @param holder     Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
 	 */
-	@SuppressWarnings("ResultOfMethodCallIgnored") // mkdirs and createNewFile
+	 // mkdirs and createNewFile
 	public static void load(File configFile, Object holder) {
 		if (!configFile.exists()) {
 			try {
