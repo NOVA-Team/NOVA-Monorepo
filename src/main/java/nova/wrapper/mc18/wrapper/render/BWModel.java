@@ -124,8 +124,8 @@ public class BWModel extends Model {
 			Float.floatToRawIntBits((float) vertex.vec.getY()),
 			Float.floatToRawIntBits((float) vertex.vec.getZ()),
 			vertex.color.rgba(),
-			Float.floatToRawIntBits(texture.getInterpolatedU(vertex.uv.getX())),
-			Float.floatToRawIntBits(texture.getInterpolatedV(vertex.uv.getY())),
+			Float.floatToRawIntBits(texture.getInterpolatedU(16 * vertex.uv.getX())),
+			Float.floatToRawIntBits(texture.getInterpolatedV(16 * vertex.uv.getY())),
 			0
 		};
 	}

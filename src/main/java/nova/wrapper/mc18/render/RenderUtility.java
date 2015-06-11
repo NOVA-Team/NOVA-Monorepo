@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.render.RenderException;
 import nova.core.render.model.Model;
+import nova.core.render.texture.BlockTexture;
+import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
 import nova.internal.core.Game;
 import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
@@ -116,7 +118,8 @@ public class RenderUtility {
 	}
 
 	public void registerIcon(Texture texture, TextureStitchEvent.Pre event) {
-		textureMap.put(texture, event.map.registerSprite(new ResourceLocation(texture.domain, texture.getResource())));
+		String resPath = (texture instanceof BlockTexture ? "blocks" : texture instanceof ItemTexture ? "items" : "entities") + "/" + texture.resource;
+		textureMap.put(texture, event.map.registerSprite(new ResourceLocation(texture.domain, resPath)));
 	}
 
 	@SubscribeEvent
@@ -126,10 +129,11 @@ public class RenderUtility {
 			Object blockObj = Game.natives().toNative(blockFactory.getDummy());
 			if (blockObj instanceof FWBlock) {
 				FWBlock block = (FWBlock) blockObj;
-				ResourceLocation objRL = (ResourceLocation) net.minecraft.block.Block.blockRegistry.getNameForObject(block);
-				ModelResourceLocation blockLocation = new ModelResourceLocation(objRL, "normal");
-				ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
-				System.out.println("Bind Block: " + objRL);
+				ResourceLocation blockRL = (ResourceLocation) net.minecraft.block.Block.blockRegistry.getNameForObject(block);
+				Item itemFromBlock = Item.getItemFromBlock(block);
+				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(itemFromBlock);
+				ModelResourceLocation blockLocation = new ModelResourceLocation(blockRL, "normal");
+				ModelResourceLocation itemLocation = new ModelResourceLocation(itemRL, "inventory");
 				event.modelRegistry.putObject(blockLocation, new FWSmartModel(new Model()));
 				event.modelRegistry.putObject(itemLocation, new FWSmartModel(new Model()));
 			}
@@ -142,7 +146,6 @@ public class RenderUtility {
 				FWItem item = (FWItem) itemObj;
 				ResourceLocation objRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
 				ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "normal");
-				System.out.println("Bind Item: " + objRL);
 				event.modelRegistry.putObject(itemLocation, new FWSmartModel(new Model()));
 			}
 		});
