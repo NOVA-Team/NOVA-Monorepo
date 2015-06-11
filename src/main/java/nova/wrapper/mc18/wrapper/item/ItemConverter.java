@@ -3,6 +3,7 @@ package nova.wrapper.mc18.wrapper.item;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nova.core.block.BlockFactory;
@@ -201,7 +202,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	private void registerMinecraftItemsToNOVA() {
-		Set<String> itemIDs = (Set<String>) net.minecraft.item.Item.itemRegistry.getKeys();
+		Set<ResourceLocation> itemIDs = (Set<ResourceLocation>) net.minecraft.item.Item.itemRegistry.getKeys();
 		itemIDs.forEach(itemID -> {
 			net.minecraft.item.Item item = (net.minecraft.item.Item) net.minecraft.item.Item.itemRegistry.getObject(itemID);
 			registerMinecraftMapping(item, 0);
