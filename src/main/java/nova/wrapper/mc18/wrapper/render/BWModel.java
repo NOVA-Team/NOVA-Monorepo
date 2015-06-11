@@ -2,6 +2,7 @@ package nova.wrapper.mc18.wrapper.render;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.IIcon;
@@ -38,7 +39,8 @@ public class BWModel extends Model {
 
 	public void render(Optional<net.minecraft.world.World> world, Optional<RenderManager> entityRenderManager) {
 		Tessellator tessellator = Tessellator.getInstance();
-		tessellator.getWorldRenderer().func_178960_a(1, 1, 1, 1);
+		WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+		worldRenderer.setColorRGBA_F(1, 1, 1, 1);
 
 		/**
 		 * Convert textures and UV into Minecraft equivalent.
@@ -49,12 +51,12 @@ public class BWModel extends Model {
 				{
 					// Brightness is defined as: skyLight << 20 | blockLight << 4
 					if (face.getBrightness() >= 0) {
-						tessellator.getWorldRenderer().setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
+						worldRenderer.setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
 					} else if (world.isPresent()) {
 						// Determine nearest adjacent block.
 						Vector3D nearestPos = Vector3DUtil.floor(face.getCenter().add(face.normal.scalarMultiply(0.05)));
-						Block block = world.get().getBlock(new BlockPos((int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ()));
-						int brightness = block.getMixedBrightnessForBlock(world.get(), (int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ());
+						Block block = world.get().getBlockState(new BlockPos((int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ())).getBlock();
+						int brightness = block.getMixedBrightnessForBlock(world.get(), new BlockPos((int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ()));
 
 						// TODO: Add Ambient Occlusion
 						/*
@@ -69,14 +71,14 @@ public class BWModel extends Model {
 						int brightnessBottomLeft = getAoBrightness(this.aoBrightnessXYNN, this.aoBrightnessXYZNNN, this.aoBrightnessYZNN, i1);
 						*/
 
-						tessellator.setBrightness(brightness);
+						worldRenderer.setBrightness(brightness);
 
 					} else {
 						// Determine nearest adjacent block.
-						tessellator.setBrightness(15 << 20 | 11 << 4);
+						worldRenderer.setBrightness(15 << 20 | 11 << 4);
 					}
 
-					tessellator.setNormal((int) face.normal.getX(), (int) face.normal.getY(), (int) face.normal.getZ());
+					worldRenderer.setNormal((int) face.normal.getX(), (int) face.normal.getY(), (int) face.normal.getZ());
 
 					if (face.texture.isPresent()) {
 						if (entityRenderManager.isPresent() && face.texture.get() instanceof EntityTexture) {
@@ -85,8 +87,8 @@ public class BWModel extends Model {
 							entityRenderManager.get().renderEngine.bindTexture(new ResourceLocation(t.domain, "textures/entities/" + t.resource + ".png"));
 							face.vertices.forEach(
 								v -> {
-									tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
-									tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
+									worldRenderer.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
+									worldRenderer.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
 								}
 							);
 						} else {
@@ -94,11 +96,11 @@ public class BWModel extends Model {
 							IIcon icon = RenderUtility.instance.getIcon(texture);
 							face.vertices.forEach(
 								v -> {
-									tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
+									worldRenderer.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 									if (icon != null) {
-										tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
+										worldRenderer.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
 									} else {
-										tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
+										worldRenderer.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
 									}
 								}
 							);
@@ -106,8 +108,8 @@ public class BWModel extends Model {
 					} else {
 						face.vertices.forEach(
 							v -> {
-								tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
-								tessellator.addVertex(v.vec.getX(), v.vec.getY(), v.vec.getZ());
+								worldRenderer.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
+								worldRenderer.addVertex(v.vec.getX(), v.vec.getY(), v.vec.getZ());
 							}
 						);
 					}
