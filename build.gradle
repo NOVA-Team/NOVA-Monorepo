@@ -5,6 +5,7 @@ apply plugin: 'maven-publish'
 
 dependencies {
 	compile project(':core')
+	testCompile project(':core')
 }
 
 compileJava {
