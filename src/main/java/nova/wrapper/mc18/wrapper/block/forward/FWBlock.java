@@ -133,6 +133,17 @@ public class FWBlock extends net.minecraft.block.Block {
 		return FWTileLoader.loadTile(block.getID());
 	}
 
+	//TODO: Hacks
+	public IBlockAccess lastExtendedWorld;
+	public BlockPos lastExtendedStatePos;
+
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		lastExtendedWorld = world;
+		lastExtendedStatePos = pos;
+		return super.getExtendedState(state, world, pos);
+	}
+
 	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, net.minecraft.block.Block neighborBlock) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));

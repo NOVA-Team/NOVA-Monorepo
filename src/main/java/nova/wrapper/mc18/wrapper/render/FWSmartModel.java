@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
 import net.minecraftforge.client.model.ISmartItemModel;
+import nova.core.block.Block;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
@@ -43,8 +44,9 @@ public class FWSmartModel implements ISmartBlockModel, ISmartItemModel, IFlexibl
 	public IBakedModel handleBlockState(IBlockState state) {
 		FWBlock block = (FWBlock) state.getBlock();
 
-		if (block.block.has(StaticRenderer.class)) {
-			StaticRenderer renderer = block.block.get(StaticRenderer.class);
+		Block blockInstance = block.getBlockInstance(block.lastExtendedWorld, Game.natives().toNova(block.lastExtendedStatePos));
+		if (blockInstance.has(StaticRenderer.class)) {
+			StaticRenderer renderer = blockInstance.get(StaticRenderer.class);
 			BWModel model = new BWModel();
 			model.matrix.translate(0.5, 0.5, 0.5);
 			renderer.onRender.accept(model);
