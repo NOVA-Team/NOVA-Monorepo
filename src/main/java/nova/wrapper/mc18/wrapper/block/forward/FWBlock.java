@@ -2,8 +2,6 @@ package nova.wrapper.mc18.wrapper.block.forward;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,38 +9,26 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.Stateful;
 import nova.core.block.component.LightEmitter;
-import nova.core.block.component.StaticBlockRenderer;
 import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
-import nova.core.component.renderer.ItemRenderer;
-import nova.core.component.renderer.StaticRenderer;
-import nova.core.render.texture.Texture;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
-import nova.core.util.math.MatrixStack;
 import nova.core.util.shape.Cuboid;
 import nova.internal.core.Game;
 import nova.wrapper.mc18.launcher.NovaMinecraft;
-import nova.wrapper.mc18.render.RenderUtility;
 import nova.wrapper.mc18.util.WrapperEventManager;
 import nova.wrapper.mc18.wrapper.block.world.BWWorld;
-import nova.wrapper.mc18.wrapper.render.BWModel;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,8 +37,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
 
 /**
  * A Minecraft to Nova block wrapper
@@ -81,10 +65,6 @@ public class FWBlock extends net.minecraft.block.Block {
 		// Recalculate super constructor things after loading the block properly
 		this.fullBlock = isOpaqueCube();
 		this.lightOpacity = isOpaqueCube() ? 255 : 0;
-
-		if (FMLCommonHandler.instance().getSide().isClient()) {
-			blockRenderingID = RenderingRegistry.getNextAvailableRenderId();
-		}
 	}
 
 	public Block getBlockInstance(IBlockAccess access, Vector3D position) {
@@ -93,7 +73,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		 * block. Otherwise, create a new instance of the block and forward the
 		 * methods over.
 		 */
-		if (hasTileEntity(0)) {
+		if (hasTileEntity(null)) {
 			FWTile tileWrapper = (FWTile) access.getTileEntity(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()));
 			if (tileWrapper != null && tileWrapper.getBlock() != null) {
 				return ((FWTile) access.getTileEntity(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()))).getBlock();
@@ -154,33 +134,8 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return FWTileLoader.loadTile(block.getID());
-	}
-
-	@Override
-	public IIcon getIcon(IBlockAccess access, int x, int y, int z, int side) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		Optional<StaticBlockRenderer> opRenderer = blockInstance.getOp(StaticBlockRenderer.class);
-		if (opRenderer.isPresent()) {
-			Optional<Texture> texture = opRenderer.get().texture.apply(Direction.values()[side]);
-			if (texture.isPresent()) {
-				return RenderUtility.instance.getTexture(texture.get());
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public IIcon getIcon(int side, int meta) {
-		Optional<StaticBlockRenderer> opRenderer = block.getOp(StaticBlockRenderer.class);
-		if (opRenderer.isPresent()) {
-			Optional<Texture> texture = opRenderer.get().texture.apply(Direction.values()[side]);
-			if (texture.isPresent()) {
-				return RenderUtility.instance.getTexture(texture.get());
-			}
-		}
-		return null;
 	}
 
 	@Override
@@ -206,7 +161,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
 		MovingObjectPosition mop = player.rayTrace(10, 1);
-		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(mop.field_178784_b.ordinal()), new Vector3D(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(mop.sideHit.ordinal()), new Vector3D(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
 		blockInstance.events.publish(evt);
 	}
 
@@ -349,66 +304,4 @@ public class FWBlock extends net.minecraft.block.Block {
 	public int getRenderType() {
 		return blockRenderingID;
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
-		Optional<ItemRenderer> opRenderer = this.block.getOp(ItemRenderer.class);
-		if (opRenderer.isPresent()) {
-			GL11.glPushAttrib(GL_TEXTURE_BIT);
-			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-			GL11.glPushMatrix();
-			Tessellator.getInstance().startDrawingQuads();
-			BWModel model = new BWModel();
-			opRenderer.get().onRender.accept(model);
-			model.render();
-			Tessellator.getInstance().draw();
-			GL11.glPopMatrix();
-			GL11.glPopAttrib();
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		Optional<StaticRenderer> opRenderer = blockInstance.getOp(StaticRenderer.class);
-		if (opRenderer.isPresent()) {
-			BWModel model = new BWModel();
-			model.matrix = new MatrixStack().translate(x + 0.5, y + 0.5, z + 0.5);
-			opRenderer.get().onRender.accept(model);
-			model.renderWorld(world);
-
-			return Tessellator.getInstance().getWorldRenderer().rawBufferIndex != 0; // Returns true if Tesselator is not empty. Avoids crash on empty Tesselator buffer.
-		}
-		return false;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean shouldRender3DInInventory(int modelId) {
-		return true;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderId() {
-		return blockRenderingID;
-	}
-
-	@Override
-	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-		return true;
-	}
-
-	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-		return true;
-	}
-
-	@Override
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		// TODO: Use this
-	}
-
 }

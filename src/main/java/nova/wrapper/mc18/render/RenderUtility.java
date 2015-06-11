@@ -5,7 +5,9 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.render.RenderException;
 import nova.core.render.texture.Texture;
 import nova.internal.core.Game;
+import nova.wrapper.mc18.wrapper.render.FWSmartModel;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -111,11 +114,15 @@ public class RenderUtility {
 	public void registerIcon(Texture texture, TextureStitchEvent.Pre event) {
 		textureMap.put(texture, event.map.registerSprite(new ResourceLocation(texture.domain, texture.getResource())));
 	}
-/*
+
 	@SubscribeEvent
-	public void bakeModel(ModelBakeEvent event) {
-		event.modelRegistry.
-	}*/
+	public void onModelBakeEvent(ModelBakeEvent event) {
+		TextureAtlasSprite base = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("minecraft:blocks/slime");
+		TextureAtlasSprite overlay = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("minecraft:blocks/redstone_block");
+		IBakedModel customModel = new FWSmartModel(base, overlay);
+		event.modelRegistry.putObject(ClientProxy.blockLocation, customModel);
+		event.modelRegistry.putObject(ClientProxy.itemLocation, customModel);
+	}
 
 	public void preInit() {
 		//Load models
