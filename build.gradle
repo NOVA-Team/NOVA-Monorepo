@@ -22,6 +22,10 @@ dependencies {
 	testRuntime 'org.slf4j:slf4j-simple:1.7.10'
 }
 
+minecraft {
+	mappings = 'stable_nodoc_16'
+}
+
 compileJava {
 	sourceCompatibility = '1.8'
 	targetCompatibility = '1.8'
