@@ -56,7 +56,7 @@ public class FWEntity extends net.minecraft.entity.Entity {
 	protected void entityInit() {
 		//MC calls entityInit() before we finish wrapping, so this variable is required to check if wrapped exists.
 		if (wrapped != null) {
-			wrapped.loadEvent.publish(new Stateful.LoadEvent());
+			wrapped.events.publish(new Stateful.LoadEvent());
 		}
 	}
 
@@ -104,7 +104,7 @@ public class FWEntity extends net.minecraft.entity.Entity {
 
 	@Override
 	public void setDead() {
-		wrapped.unloadEvent.publish(new Stateful.UnloadEvent());
+		wrapped.events.publish(new Stateful.UnloadEvent());
 		super.setDead();
 	}
 }

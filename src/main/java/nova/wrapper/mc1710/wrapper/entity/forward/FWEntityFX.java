@@ -73,7 +73,7 @@ public class FWEntityFX extends EntityFX {
 	protected void entityInit() {
 		//MC calls entityInit() before we finish wrapping, so this variable is required to check if wrapped exists.
 		if (wrapped != null) {
-			wrapped.loadEvent.publish(new Stateful.LoadEvent());
+			wrapped.events.publish(new Stateful.LoadEvent());
 			prevPosX = posX;
 			prevPosY = posY;
 			prevPosZ = posZ;
@@ -122,7 +122,7 @@ public class FWEntityFX extends EntityFX {
 
 	@Override
 	public void setDead() {
-		wrapped.unloadEvent.publish(new Stateful.UnloadEvent());
+		wrapped.events.publish(new Stateful.UnloadEvent());
 		super.setDead();
 	}
 }
