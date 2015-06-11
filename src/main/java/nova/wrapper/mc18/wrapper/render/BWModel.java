@@ -49,7 +49,7 @@ public class BWModel extends Model {
 				{
 					// Brightness is defined as: skyLight << 20 | blockLight << 4
 					if (face.getBrightness() >= 0) {
-						tessellator.setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
+						tessellator.getWorldRenderer().setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
 					} else if (access.isPresent()) {
 						// Determine nearest adjacent block.
 						Vector3D nearestPos = Vector3DUtil.floor(face.getCenter().add(face.normal.scalarMultiply(0.05)));

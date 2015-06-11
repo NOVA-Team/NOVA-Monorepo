@@ -13,8 +13,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -57,7 +55,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
  * A Minecraft to Nova block wrapper
  * @author Calclavia
  */
-public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
+public class FWBlock extends net.minecraft.block.Block {
 	public final Block block;
 	/**
 	 * Reference to the wrapper Nova block
@@ -70,16 +68,15 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
-	// TODO: Resolve unknown material issue
 	public FWBlock(BlockFactory factory) {
 		super(Material.piston);
 		this.factory = factory;
 		this.block = factory.getDummy();
 		this.blockClass = block.getClass();
-		this.setBlockName(block.getID());
+		this.setUnlocalizedName(block.getID());
 
 		// Recalculate super constructor things after loading the block properly
-		this.opaque = isOpaqueCube();
+		this.fullBlock = isOpaqueCube();
 		this.lightOpacity = isOpaqueCube() ? 255 : 0;
 
 		if (FMLCommonHandler.instance().getSide().isClient()) {

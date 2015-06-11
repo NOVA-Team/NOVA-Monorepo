@@ -2,6 +2,7 @@ package nova.wrapper.mc18.wrapper.entity.forward;
 
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -44,7 +45,7 @@ public class FWEntityFX extends EntityFX {
 	}
 
 	@Override
-	public void renderParticle(Tessellator tess, float p_70539_2_, float x, float y, float z, float p_70539_6_, float p_70539_7_) {
+	public void func_180434_a(WorldRenderer p_180434_1_, net.minecraft.entity.Entity p_180434_2_, float p_70539_2_, float x, float y, float z, float p_70539_6_, float p_70539_7_) {
 		if (firstTick) {
 			prevPosX = posX;
 			prevPosY = posY;
