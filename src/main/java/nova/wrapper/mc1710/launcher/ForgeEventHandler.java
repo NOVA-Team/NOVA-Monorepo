@@ -6,10 +6,10 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import nova.core.event.GlobalEvents;
-import nova.internal.core.Game;
 import nova.core.item.ItemDictionary;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import nova.internal.core.Game;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * @author Stan, Calclavia
@@ -44,7 +44,7 @@ public class ForgeEventHandler {
 			GlobalEvents.PlayerInteractEvent.Action.values()[event.action.ordinal()]
 		);
 
-		Game.events().playerInteract.publish(evt);
+		Game.events().events.publish(evt);
 
 		event.useBlock = Event.Result.values()[evt.useBlock.ordinal()];
 		event.useItem = Event.Result.values()[evt.useItem.ordinal()];

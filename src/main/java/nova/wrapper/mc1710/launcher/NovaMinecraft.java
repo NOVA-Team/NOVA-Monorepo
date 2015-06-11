@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.common.MinecraftForge;
 import nova.core.component.ComponentProvider;
 import nova.core.deps.MavenDependency;
-import nova.core.event.Event;
+import nova.core.event.GlobalEvents;
 import nova.core.loader.Loadable;
 import nova.core.loader.NativeLoader;
 import nova.internal.core.Game;
@@ -225,12 +225,12 @@ public class NovaMinecraft {
 
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
-		Game.events().serverStarting.publish(new Event());
+		Game.events().events.publish(new GlobalEvents.ServerStartingEvent());
 	}
 
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent event) {
-		Game.events().serverStopping.publish(new Event());
+		Game.events().events.publish(new GlobalEvents.ServerStoppingEvent());
 	}
 
 }
