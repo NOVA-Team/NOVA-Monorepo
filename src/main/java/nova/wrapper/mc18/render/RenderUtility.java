@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -13,8 +14,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.render.RenderException;
+import nova.core.render.model.Model;
 import nova.core.render.texture.Texture;
 import nova.internal.core.Game;
+import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
+import nova.wrapper.mc18.wrapper.item.FWItem;
 import nova.wrapper.mc18.wrapper.render.FWSmartModel;
 import org.lwjgl.opengl.GL11;
 
@@ -117,12 +121,30 @@ public class RenderUtility {
 
 	@SubscribeEvent
 	public void onModelBakeEvent(ModelBakeEvent event) {
-		//Register all blocks and items
+		//Register all blocks
 		Game.blocks().registry.forEach(blockFactory -> {
-			ModelResourceLocation blockLocation = new ModelResourceLocation(blockFactory.getID(), "normal");
-			ModelResourceLocation itemLocation = new ModelResourceLocation(blockFactory.getID(), "inventory");
-			event.modelRegistry.putObject(blockLocation, new FWSmartModel(null));
-			event.modelRegistry.putObject(itemLocation, new FWSmartModel(null));
+			Object blockObj = Game.natives().toNative(blockFactory.getDummy());
+			if (blockObj instanceof FWBlock) {
+				FWBlock block = (FWBlock) blockObj;
+				ResourceLocation objRL = (ResourceLocation) net.minecraft.block.Block.blockRegistry.getNameForObject(block);
+				ModelResourceLocation blockLocation = new ModelResourceLocation(objRL, "normal");
+				ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
+				System.out.println("Bind Block: " + objRL);
+				event.modelRegistry.putObject(blockLocation, new FWSmartModel(new Model()));
+				event.modelRegistry.putObject(itemLocation, new FWSmartModel(new Model()));
+			}
+		});
+
+		//Register all items
+		Game.items().registry.forEach(itemFactory -> {
+			Object itemObj = Game.natives().toNative(itemFactory.getDummy());
+			if (itemObj instanceof FWItem) {
+				FWItem item = (FWItem) itemObj;
+				ResourceLocation objRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
+				ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "normal");
+				System.out.println("Bind Item: " + objRL);
+				event.modelRegistry.putObject(itemLocation, new FWSmartModel(new Model()));
+			}
 		});
 	}
 

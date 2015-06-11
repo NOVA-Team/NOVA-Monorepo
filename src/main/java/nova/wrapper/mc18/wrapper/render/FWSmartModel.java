@@ -46,7 +46,7 @@ public class FWSmartModel implements ISmartBlockModel, ISmartItemModel, IFlexibl
 		if (block.block.has(StaticRenderer.class)) {
 			StaticRenderer renderer = block.block.get(StaticRenderer.class);
 			BWModel model = new BWModel();
-			//model.matrix.translate(x + 0.5, y + 0.5, z + 0.5);
+			model.matrix.translate(0.5, 0.5, 0.5);
 			renderer.onRender.accept(model);
 			return new FWSmartModel(model);
 		}
@@ -121,7 +121,7 @@ public class FWSmartModel implements ISmartBlockModel, ISmartItemModel, IFlexibl
 									.map(v -> BWModel.vertexToInts(v, RenderUtility.instance.getTexture(face.texture.get())))
 									.collect(Collectors.toList());
 
-								int[] data = Ints.concat((int[][]) vertexData.toArray());
+								int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
 								//TODO: The facing might be wrong
 								return new BakedQuad(data, -1, EnumFacing.values()[Direction.fromVector(face.normal).ordinal()]);
 							}
