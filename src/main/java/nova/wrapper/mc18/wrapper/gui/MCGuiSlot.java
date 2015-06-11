@@ -37,7 +37,7 @@ public class MCGuiSlot extends MCGuiComponent<Slot> implements NativeSlot, Drawa
 
 		// Translate item renderer back to the origin
 		GL11.glTranslatef(0, 0, -150);
-		gui.func_146977_a(slot);
+		gui.drawSlot(slot);
 		GL11.glTranslatef(0, 0, 150);
 
 		if (mouseX >= slot.xDisplayPosition

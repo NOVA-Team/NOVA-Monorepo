@@ -211,9 +211,9 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 		}
 
 		@Override
-		protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
+		protected void mouseClickMove(int mouseX, int mouseY, int button, long time) {
 			onMousePressed(mouseX - getOutline().x1i(), mouseY - getOutline().y1i(), getMouseButton(button), false);
-			super.mouseMovedOrUp(mouseX, mouseY, button);
+			super.mouseClickMove(mouseX, mouseY, button, time);
 		}
 
 		private EnumMouseButton getMouseButton(int button) {

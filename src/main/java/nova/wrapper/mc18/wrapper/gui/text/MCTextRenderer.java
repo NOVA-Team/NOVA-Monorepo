@@ -16,7 +16,7 @@ public class MCTextRenderer implements TextRenderer {
 
 	private final FontRenderer fontrenderer;
 	MCCanvas canvas;
-	int zIndex;
+	int      zIndex;
 
 	public MCTextRenderer(FontRenderer fontrenderer, MCCanvas canvas) {
 		this.fontrenderer = fontrenderer;
@@ -43,19 +43,11 @@ public class MCTextRenderer implements TextRenderer {
 			GL11.glScalef(scale, scale, 0);
 			GL11.glTranslatef(-x - xOffset, -y, 0);
 
-			if (text.format.shadow) {
-				fontrenderer.func_175063_a(text.text, x + xOffset, y, text.format.color.argb());
-			} else {
-				fontrenderer.drawString(text.text, x + xOffset, y, text.format.color.argb());
-			}
+			fontrenderer.drawString(text.text, x + xOffset, y, text.format.color.argb(), text.format.shadow);
 
 			GL11.glPopMatrix();
 		} else {
-			if (text.format.shadow) {
-				fontrenderer.func_175063_a(text.text, x + xOffset, y - fontrenderer.FONT_HEIGHT + 2 + yOffset, text.format.color.argb());
-			} else {
-				fontrenderer.drawString(text.text, x + xOffset, y - fontrenderer.FONT_HEIGHT + 2 + yOffset, text.format.color.argb());
-			}
+			fontrenderer.drawString(text.text, x + xOffset, y - fontrenderer.FONT_HEIGHT + 2 + yOffset, text.format.color.argb(), text.format.shadow);
 		}
 	}
 

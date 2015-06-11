@@ -58,7 +58,8 @@ public class MCGuiFactory extends GuiManager {
 		if (gui.hasServerSide()) {
 			Minecraft.getMinecraft().thePlayer.closeScreen();
 		} else {
-			Minecraft.getMinecraft().thePlayer.closeScreenNoPacket();
+			//TODO Does this work?
+			Minecraft.getMinecraft().thePlayer.closeScreen();
 		}
 	}
 

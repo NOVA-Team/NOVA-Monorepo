@@ -55,7 +55,7 @@ public class MCButton extends MCGuiComponent<Button> implements NativeButton, Dr
 
 	@Override
 	public Optional<Vector2D> getMinimumSize() {
-		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 		return fontRenderer != null ? Optional.of(new Vector2D(fontRenderer.getStringWidth(button.displayString) + 10, fontRenderer.FONT_HEIGHT + 10)) : Optional.empty();
 	}
 
@@ -79,7 +79,7 @@ public class MCButton extends MCGuiComponent<Button> implements NativeButton, Dr
 	public void onMousePressed(MouseEvent event) {
 		if (event.state == EnumMouseState.DOWN) {
 			if (getComponent().isMouseOver()) {
-				button.func_146113_a(Minecraft.getMinecraft().getSoundHandler());
+				button.playPressSound(Minecraft.getMinecraft().getSoundHandler());
 			}
 		}
 	}
