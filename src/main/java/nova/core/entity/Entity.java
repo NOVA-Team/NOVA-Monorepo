@@ -3,6 +3,7 @@ package nova.core.entity;
 import nova.core.block.Stateful;
 import nova.core.component.ComponentProvider;
 import nova.core.component.transform.EntityTransform;
+import nova.core.event.Event;
 import nova.core.event.EventBus;
 import nova.core.util.Identifiable;
 import nova.core.util.UniqueIdentifiable;
@@ -15,8 +16,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public abstract class Entity extends ComponentProvider implements UniqueIdentifiable, Identifiable, Stateful {
 
-	public final EventBus<Stateful.LoadEvent> loadEvent = new EventBus<>();
-	public final EventBus<Stateful.UnloadEvent> unloadEvent = new EventBus<>();
+	public final EventBus<Event> events = new EventBus<>();
 
 	public final EntityTransform transform() {
 		return get(EntityTransform.class);
@@ -76,8 +76,7 @@ public abstract class Entity extends ComponentProvider implements UniqueIdentifi
 
 	@Override
 	public String getUniqueID() {
-		//TODO: Is this safe?
-		// I'm not sure what to do here
+		//TODO: Is this safe? I'm not sure what to do here
 		return get(UniqueIdentifiable.class).getUniqueID();
 	}
 }
