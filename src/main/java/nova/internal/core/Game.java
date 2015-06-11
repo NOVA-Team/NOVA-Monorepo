@@ -7,8 +7,6 @@ import nova.core.event.GlobalEvents;
 import nova.core.game.ClientManager;
 import nova.core.game.GameInfo;
 import nova.core.gui.InputManager;
-import nova.core.gui.factory.GuiComponentFactory;
-import nova.core.gui.factory.GuiManager;
 import nova.core.item.ItemDictionary;
 import nova.core.item.ItemManager;
 import nova.core.nativewrapper.NativeManager;
@@ -63,9 +61,6 @@ public class Game {
 	 */
 	private final UpdateTicker.ThreadTicker threadTicker;
 
-	private final GuiComponentFactory guiComponentFactory;
-	private final GuiManager guiFactory;
-
 	private Game(
 		Logger logger,
 		GameInfo gameInfo,
@@ -86,8 +81,7 @@ public class Game {
 		NativeManager nativeManager,
 		ComponentManager componentManager,
 		UpdateTicker.SynchronizedTicker syncTicker,
-		UpdateTicker.ThreadTicker threadTicker,
-		GuiComponentFactory guiComponentFactory, GuiManager guiFactory) {
+		UpdateTicker.ThreadTicker threadTicker) {
 
 		this.logger = logger;
 
@@ -112,9 +106,6 @@ public class Game {
 		this.syncTicker = syncTicker;
 		this.threadTicker = threadTicker;
 
-		this.guiComponentFactory = guiComponentFactory;
-		this.guiFactory = guiFactory;
-
 		logger.info("Game instance created.");
 	}
 
@@ -127,7 +118,7 @@ public class Game {
 		return instance.gameInfo;
 	}
 
-	public static Injector diep() {
+	public static Injector injector() {
 		return injector;
 	}
 
@@ -211,13 +202,5 @@ public class Game {
 	 */
 	public static UpdateTicker.ThreadTicker threadTicker() {
 		return instance.threadTicker;
-	}
-
-	public static GuiComponentFactory guiComponent() {
-		return instance.guiComponentFactory;
-	}
-
-	public static GuiManager gui() {
-		return instance.guiFactory;
 	}
 }

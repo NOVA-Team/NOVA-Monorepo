@@ -19,12 +19,4 @@ public abstract class GuiComponentFactory {
 	public <T extends NativeGuiComponent> void registerNativeComponent(Class<T> clazz, Function<GuiComponent<?, ?>, T> supplier) {
 		map.put(clazz, supplier);
 	}
-
-	/**
-	 * Test the integrity i.e, if each required component is supplied by the
-	 * wrapper.
-	 */
-	public void validate() {
-
-	}
 }

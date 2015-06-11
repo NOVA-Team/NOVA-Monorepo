@@ -1,14 +1,26 @@
 package nova.internal.core.launch;
 
-import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.deps.Dependencies;
 import nova.core.deps.Dependency;
 import nova.core.deps.MavenDependency;
 import nova.core.loader.NovaMod;
 import nova.core.util.NovaException;
 import nova.internal.core.Game;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,8 +100,6 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 
 	@Override
 	public void preInit() {
-		// Test integrity of the GuiFactory
-		Game.guiComponent().validate();
 		super.preInit();
 	}
 
