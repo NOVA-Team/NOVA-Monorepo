@@ -42,7 +42,7 @@ public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 		Data data = new Data();
 		if (nbt != null) {
 			data.className = nbt.getString("class");
-			Set<String> keys = nbt.func_150296_c();
+			Set<String> keys = nbt.getKeySet();
 			keys.forEach(k -> data.put(k, load(nbt, k)));
 		}
 		return data;
