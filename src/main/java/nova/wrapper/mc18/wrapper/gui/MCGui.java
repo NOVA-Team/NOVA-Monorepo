@@ -28,6 +28,7 @@ import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -201,7 +202,12 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 		@Override
 		protected void mouseClicked(int mouseX, int mouseY, int button) {
 			onMousePressed(mouseX - getOutline().x1i(), mouseY - getOutline().y1i(), getMouseButton(button), true);
-			super.mouseClicked(mouseX, mouseY, button);
+
+			try {
+				super.mouseClicked(mouseX, mouseY, button);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		@Override
@@ -229,10 +235,14 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 			char ch = Keyboard.getEventCharacter();
 			onKeyPressed(Game.input().getKey(key), ch, state);
 			if (state) {
-				keyTyped(ch, key);
+				try {
+					keyTyped(ch, key);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
-			this.mc.func_152348_aa();
+			this.mc.dispatchKeypresses();
 		}
 
 		@Override
@@ -244,7 +254,6 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 		public void setWorldAndResolution(Minecraft mc, int width, int height) {
 			ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 
-			fontRendererObj = mc.fontRenderer;
 			MCCanvas canvas = new MCCanvas(width, height, Tessellator.getInstance(), scaledresolution.getScaleFactor());
 			if (textRenderer == null) {
 				textRenderer = new MCTextRenderer(fontRendererObj, canvas);

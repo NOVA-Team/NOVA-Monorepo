@@ -32,7 +32,7 @@ public class MCGuiSlot extends MCGuiComponent<Slot> implements NativeSlot, Drawa
 			// Draw slot background
 			Minecraft.getMinecraft().renderEngine.bindTexture(GuiUtils.RESOURCE_GUI_CONTROLS);
 			GL11.glColor3f(1, 1, 1);
-			Gui.func_146110_a(slot.xDisplayPosition - 1, slot.yDisplayPosition - 1, 0, 8, 18, 18, 32, 32);
+			Gui.drawModalRectWithCustomSizedTexture(slot.xDisplayPosition - 1, slot.yDisplayPosition - 1, 0, 8, 18, 18, 32, 32);
 		}
 
 		// Translate item renderer back to the origin
@@ -44,7 +44,7 @@ public class MCGuiSlot extends MCGuiComponent<Slot> implements NativeSlot, Drawa
 			&& mouseY >= slot.yDisplayPosition
 			&& mouseX < slot.xDisplayPosition + 18
 			&& mouseY < slot.yDisplayPosition + 18
-			&& slot.func_111238_b()) {
+			&& slot.canBeHovered()) {
 
 			gui.theSlot = slot;
 			GL11.glDisable(GL11.GL_LIGHTING);
