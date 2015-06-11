@@ -34,7 +34,6 @@ public class Game {
 	private final BlockManager blockManager;
 	private final EntityManager entityManager;
 	private final ItemManager itemManager;
-	private final FluidManager fluidManager;
 	private final WorldManager worldManager;
 	private final RenderManager renderManager;
 	private final RecipeManager recipeManager;
@@ -96,7 +95,6 @@ public class Game {
 		this.blockManager = blockManager;
 		this.entityManager = entityManager;
 		this.itemManager = itemManager;
-		this.fluidManager = fluidManager;
 		this.worldManager = worldManager;
 		this.renderManager = renderManager;
 		this.recipeManager = recipeManager;
@@ -145,10 +143,6 @@ public class Game {
 
 	public static ItemManager items() {
 		return instance.itemManager;
-	}
-
-	public static FluidManager fluids() {
-		return instance.fluidManager;
 	}
 
 	public static WorldManager worlds() {
