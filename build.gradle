@@ -105,3 +105,11 @@ eclipse.classpath.file {
 		cp.entries.removeAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }
 	}
 }
+
+idea.project.ipr {
+	withXml { provider ->
+		provider.node.component
+			.find { it.@name == 'ProjectCodeStyleSettingsManager' }
+			.option.find { it.@name == 'PREFERRED_PROJECT_CODE_STYLE'}.@value = 'NOVAFormat'
+	}
+}
