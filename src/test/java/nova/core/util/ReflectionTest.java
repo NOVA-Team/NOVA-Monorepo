@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 
 import org.junit.Test;
 
+@SuppressWarnings("ALL")
 public class ReflectionTest {
 	
 	static Constructor<?> con_ddd = find(double.class, double.class, double.class);
@@ -24,15 +25,15 @@ public class ReflectionTest {
 	}
 	
 	static class TestClass {
-		TestClass(double a, double b, double c) {}
+		public TestClass(double a, double b, double c) {}
 
-		TestClass(Double a, Double b, Double c) {}
+		public TestClass(Double a, Double b, Double c) {}
 
-		TestClass(double a, double b, int c) {}
+		public TestClass(double a, double b, int c) {}
 
-		TestClass(float... f) {}
+		public TestClass(float... f) {}
 
-		TestClass(Object... a) {}
+		public TestClass(Object... a) {}
 	}
 	
 	@Test
