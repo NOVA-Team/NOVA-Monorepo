@@ -5,7 +5,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
-import nova.core.component.Updater;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
@@ -20,9 +19,9 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public class FWTile extends TileEntity {
 
-	private String blockID;
-	private Block block;
-	private Data cacheData = null;
+	protected String blockID;
+	protected Block block;
+	protected Data cacheData = null;
 
 	public FWTile() {
 
@@ -66,23 +65,6 @@ public class FWTile extends TileEntity {
 	public void invalidate() {
 		block.events.publish(new Stateful.UnloadEvent());
 		super.invalidate();
-	}
-
-	/**
-	 * Updates the block.
-	 */
-	@Override
-	public void update() {
-		((Updater) block).update(0.05);
-	}
-
-	/**
-	 * Only register tile updates if the block is an instance of Updater.
-	 * @return Whether can update
-	 */
-	@Override
-	public boolean canUpdate() {
-		return block instanceof Updater;
 	}
 
 	@Override

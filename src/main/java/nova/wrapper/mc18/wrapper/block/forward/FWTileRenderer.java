@@ -19,8 +19,8 @@ public class FWTileRenderer extends TileEntitySpecialRenderer {
 	public static final FWTileRenderer instance = new FWTileRenderer();
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float p_147500_8_) {
-		Block block = ((FWTile) tile).getBlock();
+	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float p_180535_8_, int p_180535_9_) {
+		Block block = ((FWTile) te).getBlock();
 		Optional<DynamicRenderer> opRenderer = block.getOp(DynamicRenderer.class);
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
@@ -28,7 +28,7 @@ public class FWTileRenderer extends TileEntitySpecialRenderer {
 			opRenderer.get().onRender.accept(model);
 			bindTexture(TextureMap.locationBlocksTexture);
 			RenderUtility.enableBlending();
-			Tessellator.getInstance().startDrawingQuads();
+			Tessellator.getInstance().getWorldRenderer().startDrawingQuads();
 			model.render();
 			Tessellator.getInstance().draw();
 			RenderUtility.disableBlending();
