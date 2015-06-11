@@ -2,33 +2,24 @@ package nova.core.event;
 
 import nova.core.block.Block;
 import nova.core.entity.Entity;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
- * General event manager that handles basic events
+ * Global event manager that handles general events that are not object specific.
  * @author Calclavia
  */
 public class GlobalEvents {
-	/**
-	 * Called when the server starts
-	 */
-	public EventBus<Event> serverStarting = new EventBus<>();
 
-	/**
-	 * Called when the server stops
-	 */
-	public EventBus<Event> serverStopping = new EventBus<>();
+	public EventBus<Event> events = new EventBus<>();
 
-	/**
-	 * Called when a block is changed (set block) in the world.
-	 */
-	public EventBus<BlockChangeEvent> blockChange = new EventBus<>();
+	public static class ServerStartingEvent extends Event {
 
-	/**
-	 * Called when a player interacts
-	 */
-	public EventBus<PlayerInteractEvent> playerInteract = new EventBus<>();
+	}
+
+	public static class ServerStoppingEvent extends Event {
+
+	}
 
 	public static class BlockEvent extends CancelableEvent {
 		//The world
