@@ -7,7 +7,7 @@ import java.lang.reflect.Constructor;
 
 import org.junit.Test;
 
-@SuppressWarnings("ALL")
+
 public class ReflectionTest {
 	
 	static Constructor<?> con_ddd = find(double.class, double.class, double.class);
@@ -23,7 +23,7 @@ public class ReflectionTest {
 			throw new RuntimeException(e);
 		}
 	}
-	
+	@SuppressWarnings("ALL")
 	static class TestClass {
 		public TestClass(double a, double b, double c) {}
 
