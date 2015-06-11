@@ -14,7 +14,7 @@ import nova.core.render.model.Model;
 @Require(Orientation.class)
 class RotatedRenderer extends StaticRenderer {
 
-	public RotatedRenderer(Block provider) {
+	RotatedRenderer(Block provider) {
 		super(provider);
 		onRender = this::renderStatic;
 	}

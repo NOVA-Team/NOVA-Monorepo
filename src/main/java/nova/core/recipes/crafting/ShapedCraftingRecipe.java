@@ -375,7 +375,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	}
 
 	private class NonMirroredMapping extends ShapedMapping {
-		public NonMirroredMapping(Vector2D firstItemOffset) {
+		private NonMirroredMapping(Vector2D firstItemOffset) {
 			super(new Vector2D(
 				firstItemOffset.getX() - posx[0],
 				firstItemOffset.getY() - posy[0]));
@@ -396,7 +396,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	}
 
 	private class MirroredMapping extends ShapedMapping {
-		public MirroredMapping(Vector2D firstItemOffset, int craftingGridWidth) {
+		private MirroredMapping(Vector2D firstItemOffset, int craftingGridWidth) {
 			super(new Vector2D(
 				// dark magic converting the offset of the first non-empty item slot to the mapping offset
 				// in a mirrored recipe mapping
