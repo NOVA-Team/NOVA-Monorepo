@@ -1,6 +1,5 @@
 package nova.core.block.component;
 
-import com.sun.istack.internal.NotNull;
 import nova.core.block.Block;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.render.Color;
@@ -48,7 +47,7 @@ public class StaticBlockRenderer extends StaticRenderer {
 		return this;
 	}
 
-	public StaticBlockRenderer setTexture(@NotNull Texture t) {
+	public StaticBlockRenderer setTexture(Texture t) {
 		Objects.requireNonNull(t, "Texture is null, please initiate the texture before the block");
 		this.texture = (dir) -> Optional.of(t);
 		return this;
