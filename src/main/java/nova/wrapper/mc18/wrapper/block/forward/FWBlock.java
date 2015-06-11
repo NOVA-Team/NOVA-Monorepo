@@ -164,7 +164,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		if (opRenderer.isPresent()) {
 			Optional<Texture> texture = opRenderer.get().texture.apply(Direction.values()[side]);
 			if (texture.isPresent()) {
-				return RenderUtility.instance.getIcon(texture.get());
+				return RenderUtility.instance.getTexture(texture.get());
 			}
 		}
 		return null;
@@ -176,7 +176,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		if (opRenderer.isPresent()) {
 			Optional<Texture> texture = opRenderer.get().texture.apply(Direction.values()[side]);
 			if (texture.isPresent()) {
-				return RenderUtility.instance.getIcon(texture.get());
+				return RenderUtility.instance.getTexture(texture.get());
 			}
 		}
 		return null;

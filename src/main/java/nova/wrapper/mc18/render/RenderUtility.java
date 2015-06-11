@@ -3,11 +3,10 @@ package nova.wrapper.mc18.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelFormatException;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,7 +39,9 @@ public class RenderUtility {
 	public static final ResourceLocation particleResource = new ResourceLocation("textures/particle/particles.png");
 
 	public static final RenderUtility instance = new RenderUtility();
-	private final HashMap<Texture, IIcon> iconMap = new HashMap<>();
+
+	//NOVA Texture to MC TextureAtlasSprite
+	private final HashMap<Texture, TextureAtlasSprite> textureMap = new HashMap<>();
 
 	/**
 	 * Enables blending.
@@ -85,9 +86,9 @@ public class RenderUtility {
 		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
 	}
 
-	public IIcon getIcon(Texture texture) {
-		if (iconMap.containsKey(texture)) {
-			return iconMap.get(texture);
+	public TextureAtlasSprite getTexture(Texture texture) {
+		if (textureMap.containsKey(texture)) {
+			return textureMap.get(texture);
 		}
 
 		throw new RenderException("Texture cannot be found: " + texture);
@@ -99,17 +100,16 @@ public class RenderUtility {
 	 */
 	@SubscribeEvent
 	public void preTextureHook(TextureStitchEvent.Pre event) {
-		if (event.map.getTextureType() == 0) {
+		if (event.map == Minecraft.getMinecraft().getTextureMapBlocks()) {
 			Game.render().blockTextures.forEach(t -> registerIcon(t, event));
+			Game.render().itemTextures.forEach(t -> registerIcon(t, event));
 			//TODO: This is HACKS. We should create custom sprite sheets for entities.
 			Game.render().entityTextures.forEach(t -> registerIcon(t, event));
-		} else if (event.map.getTextureType() == 1) {
-			Game.render().itemTextures.forEach(t -> registerIcon(t, event));
 		}
 	}
 
 	public void registerIcon(Texture texture, TextureStitchEvent.Pre event) {
-		iconMap.put(texture, event.map.registerIcon(texture.getResource()));
+		textureMap.put(texture, event.map.registerSprite(new ResourceLocation(texture.domain, texture.getResource())));
 	}
 
 	@SubscribeEvent
@@ -125,7 +125,7 @@ public class RenderUtility {
 				IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
 				m.load(res.getInputStream());
 			} catch (IOException e) {
-				throw new ModelFormatException("IO Exception reading model format", e);
+				throw new RuntimeException("IO Exception reading model format", e);
 			}
 		});
 	}

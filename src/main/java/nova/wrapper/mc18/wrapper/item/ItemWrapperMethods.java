@@ -49,7 +49,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	default IIcon getIconFromDamage(int p_77617_1_) {
 		if (getItemFactory().getDummy().getTexture().isPresent()) {
-			return RenderUtility.instance.getIcon(getItemFactory().getDummy().getTexture().get());
+			return RenderUtility.instance.getTexture(getItemFactory().getDummy().getTexture().get());
 		}
 		return null;
 	}
@@ -57,7 +57,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	default IIcon getIcon(ItemStack itemStack, int pass) {
 		Item item = Game.natives().toNova(itemStack);
 		if (item.getTexture().isPresent()) {
-			return RenderUtility.instance.getIcon(item.getTexture().get());
+			return RenderUtility.instance.getTexture(item.getTexture().get());
 		}
 		return null;
 	}

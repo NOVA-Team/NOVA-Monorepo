@@ -4,10 +4,12 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import nova.core.render.model.Model;
+import nova.core.render.model.Vertex;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
 import nova.core.util.math.Vector3DUtil;
@@ -93,7 +95,7 @@ public class BWModel extends Model {
 							);
 						} else {
 							Texture texture = face.texture.get();
-							IIcon icon = RenderUtility.instance.getIcon(texture);
+							IIcon icon = RenderUtility.instance.getTexture(texture);
 							face.vertices.forEach(
 								v -> {
 									worldRenderer.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
@@ -115,6 +117,18 @@ public class BWModel extends Model {
 					}
 				})
 		);
+	}
+
+	public static int[] vertexToInts(Vertex vertex, TextureAtlasSprite texture) {
+		return new int[] {
+			Float.floatToRawIntBits((float) vertex.vec.getX()),
+			Float.floatToRawIntBits((float) vertex.vec.getY()),
+			Float.floatToRawIntBits((float) vertex.vec.getZ()),
+			vertex.color.rgba(),
+			Float.floatToRawIntBits(texture.getInterpolatedU(vertex.uv.getX())),
+			Float.floatToRawIntBits(texture.getInterpolatedV(vertex.uv.getY())),
+			0
+		};
 	}
 
 	public int getAoBrightness(int a, int b, int c, int d) {
