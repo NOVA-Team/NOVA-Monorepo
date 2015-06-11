@@ -110,6 +110,7 @@ public class UpdateTicker {
 		@Override
 		public void run() {
 			try {
+				//noinspection InfiniteLoopStatement
 				while (true) {
 					if (!pause) {
 						ticker.update();
