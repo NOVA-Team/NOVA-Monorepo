@@ -3,12 +3,13 @@ package nova.wrapper.mc18.wrapper.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
 import nova.core.inventory.Inventory;
 import nova.wrapper.mc18.wrapper.item.ItemConverter;
 
 public class FWInventory implements IInventory {
 
-	public final Inventory wrapped;
+	public Inventory wrapped;
 
 	public FWInventory(Inventory inventory) {
 		this.wrapped = inventory;
@@ -46,18 +47,23 @@ public class FWInventory implements IInventory {
 		wrapped.set(slot, stack != null ? ItemConverter.instance().getNovaItem(stack) : null);
 	}
 
-	@Override
-	public String getInventoryName() {
-		// TODO Shouldn't be null
-		return null;
-	}
+    @Override
+    public String getName() {
+        // TODO Shouldn't be null
+        return null;
+    }
 
-	@Override
-	public boolean hasCustomInventoryName() {
+    @Override
+	public boolean hasCustomName() {
 		return false;
 	}
 
-	@Override
+    @Override
+    public IChatComponent getDisplayName() {
+        return null;
+    }
+
+    @Override
 	public int getInventoryStackLimit() {
 		return 64;
 	}
@@ -74,12 +80,12 @@ public class FWInventory implements IInventory {
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer playerIn) {
 
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer playerIn) {
 
 	}
 
@@ -89,4 +95,23 @@ public class FWInventory implements IInventory {
 		return true;
 	}
 
+    @Override
+    public int getField(int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField(int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 0;
+    }
+
+    @Override
+    public void clear() {
+        this.wrapped = null;
+    }
 }

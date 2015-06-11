@@ -25,10 +25,10 @@ public class GuiUtils {
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(RESOURCE_GUI_CONTROLS);
 		GL11.glColor4f(1, 1, 1, 1);
-		Gui.func_146110_a(0, 0, 0, 0, 4, 4, 32, 32);
-		Gui.func_146110_a(width - 4, 0, 4, 0, 4, 4, 32, 32);
-		Gui.func_146110_a(width - 4, height - 4, 4, 4, 4, 4, 32, 32);
-		Gui.func_146110_a(0, height - 4, 0, 4, 4, 4, 32, 32);
+		Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 4, 4, 32, 32);
+		Gui.drawModalRectWithCustomSizedTexture(width - 4, 0, 4, 0, 4, 4, 32, 32);
+		Gui.drawModalRectWithCustomSizedTexture(width - 4, height - 4, 4, 4, 4, 4, 32, 32);
+		Gui.drawModalRectWithCustomSizedTexture(0, height - 4, 0, 4, 4, 4, 32, 32);
 		GL11.glTranslatef(-xOffset, -yOffset, 0);
 	}
 }
