@@ -13,8 +13,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.Stateful;
@@ -49,9 +47,6 @@ public class FWBlock extends net.minecraft.block.Block {
 	 */
 	private final BlockFactory factory;
 	private final Class<? extends Block> blockClass;
-
-	@SideOnly(Side.CLIENT)
-	private int blockRenderingID;
 
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
@@ -295,13 +290,5 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public float getBlockHardness(World world, BlockPos pos) {
 		return (float) getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).getHardness() * 2;
-	}
-
-	/**
-	 * Rendering forwarding
-	 */
-	@Override
-	public int getRenderType() {
-		return blockRenderingID;
 	}
 }

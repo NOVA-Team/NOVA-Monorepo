@@ -1,17 +1,8 @@
 package nova.wrapper.mc18.launcher;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -43,7 +34,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerItem(FWItem item) {
 		super.registerItem(item);
-		MinecraftForgeClient.registerItemRenderer(item, item);
+		//TODO: Do we need this?
 	}
 
 	@Override
@@ -53,18 +44,7 @@ public class ClientProxy extends CommonProxy {
 		/**
 		 * Registers a block rendering handlers
 		 */
-		Item item = Item.getItemFromBlock(block);
-		ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition() {
-			public ModelResourceLocation getModelLocation(ItemStack stack) {
-				return modelLocation;
-			}
-		});
-		ModelLoader.setCustomStateMapper(block, new StateMapperBase() {
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-				return modelLocation;
-			}
-		});
-		ModelBakery
+		//TODO: Do we need this?
 	}
 
 	@Override

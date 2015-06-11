@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -117,11 +117,13 @@ public class RenderUtility {
 
 	@SubscribeEvent
 	public void onModelBakeEvent(ModelBakeEvent event) {
-		TextureAtlasSprite base = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("minecraft:blocks/slime");
-		TextureAtlasSprite overlay = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("minecraft:blocks/redstone_block");
-		IBakedModel customModel = new FWSmartModel(base, overlay);
-		event.modelRegistry.putObject(ClientProxy.blockLocation, customModel);
-		event.modelRegistry.putObject(ClientProxy.itemLocation, customModel);
+		//Register all blocks and items
+		Game.blocks().registry.forEach(blockFactory -> {
+			ModelResourceLocation blockLocation = new ModelResourceLocation(blockFactory.getID(), "normal");
+			ModelResourceLocation itemLocation = new ModelResourceLocation(blockFactory.getID(), "inventory");
+			event.modelRegistry.putObject(blockLocation, new FWSmartModel(null));
+			event.modelRegistry.putObject(itemLocation, new FWSmartModel(null));
+		});
 	}
 
 	public void preInit() {
