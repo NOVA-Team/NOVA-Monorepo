@@ -32,7 +32,9 @@ import nova.wrapper.mc1710.depmodules.NetworkModule;
 import nova.wrapper.mc1710.depmodules.RenderModule;
 import nova.wrapper.mc1710.depmodules.SaveModule;
 import nova.wrapper.mc1710.depmodules.TickerModule;
+import nova.wrapper.mc1710.depmodules.WrapperEventModule;
 import nova.wrapper.mc1710.recipes.MinecraftRecipeRegistry;
+import nova.wrapper.mc1710.util.WrapperEventManager;
 import nova.wrapper.mc1710.wrapper.block.BlockConverter;
 import nova.wrapper.mc1710.wrapper.block.world.WorldConverter;
 import nova.wrapper.mc1710.wrapper.cuboid.CuboidConverter;
@@ -43,6 +45,7 @@ import nova.wrapper.mc1710.wrapper.gui.MCGuiFactory;
 import nova.wrapper.mc1710.wrapper.inventory.InventoryConverter;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.wrapper.item.OreDictionaryIntegration;
+import se.jbee.inject.Dependency;
 
 import java.util.List;
 import java.util.Set;
@@ -68,6 +71,8 @@ public class NovaMinecraft {
 	private static ModLoader<NativeLoader> nativeLoader;
 	private static Set<Loadable> nativeConverters;
 
+	public static WrapperEventManager eventManager;
+
 	/**
 	 * ORDER OF LOADING.
 	 *
@@ -89,6 +94,7 @@ public class NovaMinecraft {
 			diep.install(ClientModule.class);
 			diep.install(GameInfoModule.class);
 			diep.install(RenderModule.class);
+			diep.install(WrapperEventModule.class);
 
 			Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
 
@@ -96,6 +102,9 @@ public class NovaMinecraft {
 			launcher = new NovaLauncher(diep, modClasses);
 
 			Game.inject(diep.init());
+
+			//Inject eventManager
+			eventManager = diep.getInjector().get().resolve(Dependency.dependency(WrapperEventManager.class));
 
 			/**
 			 * Register native converters

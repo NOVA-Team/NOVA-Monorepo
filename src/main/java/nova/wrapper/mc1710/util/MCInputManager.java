@@ -1,7 +1,6 @@
 package nova.wrapper.mc1710.util;
 
 import nova.core.gui.InputManager;
-
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -26,8 +25,7 @@ public class MCInputManager extends InputManager {
 
 	@Override
 	public boolean isKeyDown(Key key) {
-		// TODO: Sync this with server side for server-side events. Need a
-		// packet manager
+		// TODO: Sync this with server side for server-side events. Need a packet manager
 		return Keyboard.isKeyDown(getNativeKeyCode(key));
 	}
 }

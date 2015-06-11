@@ -3,16 +3,13 @@ package nova.wrapper.mc1710.util;
 import nova.core.event.EventBus;
 import nova.core.event.GlobalEvents;
 import nova.core.util.Direction;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * @author Calclavia
  */
 public class WrapperEventManager {
-
-	//TODO: Use DI instead?
-	public static final WrapperEventManager instance = new WrapperEventManager();
 
 	//Called when requesting strong power of a block
 	public final EventBus<RedstoneEvent> onStrongPower = new EventBus<>();

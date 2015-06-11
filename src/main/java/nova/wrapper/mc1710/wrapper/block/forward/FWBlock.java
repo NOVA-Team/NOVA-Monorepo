@@ -34,6 +34,7 @@ import nova.core.util.Direction;
 import nova.core.util.math.MatrixStack;
 import nova.core.util.shape.Cuboid;
 import nova.internal.core.Game;
+import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEventManager;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
@@ -311,7 +312,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	public boolean canConnectRedstone(IBlockAccess access, int x, int y, int z, int side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		WrapperEventManager.RedstoneConnectEvent event = new WrapperEventManager.RedstoneConnectEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
-		WrapperEventManager.instance.onCanConnect.publish(event);
+		NovaMinecraft.eventManager.onCanConnect.publish(event);
 		return event.canConnect;
 	}
 
@@ -319,7 +320,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	public int isProvidingWeakPower(IBlockAccess access, int x, int y, int z, int side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		WrapperEventManager.RedstoneEvent event = new WrapperEventManager.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
-		WrapperEventManager.instance.onWeakPower.publish(event);
+		NovaMinecraft.eventManager.onWeakPower.publish(event);
 		return event.power;
 	}
 
@@ -327,7 +328,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	public int isProvidingStrongPower(IBlockAccess access, int x, int y, int z, int side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		WrapperEventManager.RedstoneEvent event = new WrapperEventManager.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
-		WrapperEventManager.instance.onStrongPower.publish(event);
+		NovaMinecraft.eventManager.onStrongPower.publish(event);
 		return event.power;
 	}
 
