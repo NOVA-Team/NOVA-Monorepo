@@ -1,11 +1,14 @@
 package nova.wrapper.mc18.wrapper.block.backward;
 
+import net.minecraft.block.BlockSnow;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
 import nova.core.block.component.LightEmitter;
@@ -40,16 +43,15 @@ public class BWBlock extends Block implements Storable {
 		BlockTransform transform = add(new BlockTransform());
 		transform.setWorld(world);
 		transform.setPosition(pos);
-		add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), x(), y(), z()) / 15.0F);
+		add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0F);
 		add(new Collider())
 			.setBoundingBox(() -> new Cuboid(mcBlock.getBlockBoundsMinX(), mcBlock.getBlockBoundsMinY(), mcBlock.getBlockBoundsMinZ(), mcBlock.getBlockBoundsMaxX(), mcBlock.getBlockBoundsMaxY(), mcBlock.getBlockBoundsMaxZ()))
 			.setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
 				mcBlock.addCollisionBoxesToList(
 					Game.natives().toNative(world()),
-					(int) position().getX(),
-					(int) position().getY(),
-					(int) position().getZ(),
+					new BlockPos(x(), y(), z()),
+					blockState(),
 					Game.natives().toNative(entity.isPresent() ? entity.get().get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),
 					aabbs,
 					entity.isPresent() ? Game.natives().toNative(entity.get()) : null
@@ -72,29 +74,29 @@ public class BWBlock extends Block implements Storable {
 		return ((BWWorld) world()).access;
 	}
 
-	private int getMetadata() {
-		return getMcBlockAccess().getBlockMetadata(x(), y(), z());
+	private IBlockState blockState() {
+		return getMcBlockAccess().getBlockState(new BlockPos(x(), y(), z()));
 	}
 
 	private TileEntity getTileEntity() {
-		if (mcTileEntity == null && mcBlock.hasTileEntity(getMetadata())) {
-			mcTileEntity = getMcBlockAccess().getTileEntity(x(), y(), z());
+		if (mcTileEntity == null && mcBlock.hasTileEntity(blockState())) {
+			mcTileEntity = getMcBlockAccess().getTileEntity(new BlockPos(x(), y(), z()));
 		}
 		return mcTileEntity;
 	}
 
 	@Override
 	public boolean canReplace() {
-		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) getMcBlockAccess(), x(), y(), z());
+		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) getMcBlockAccess(), new BlockPos(x(), y(), z()));
 	}
 
 	@Override
 	public boolean shouldDisplacePlacement() {
-		if (mcBlock == Blocks.snow_layer && (getMcBlockAccess().getBlockMetadata(x(), y(), z()) & 7) < 1) {
+		if (mcBlock == Blocks.snow_layer && ((int) blockState().getValue(BlockSnow.LAYERS_PROP) < 1)) {
 			return false;
 		}
 
-		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable(getMcBlockAccess(), x(), y(), z())) {
+		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable(Game.natives().toNative(world()), new BlockPos(x(), y(), z()))) {
 			return false;
 		}
 		return super.shouldDisplacePlacement();
@@ -102,7 +104,7 @@ public class BWBlock extends Block implements Storable {
 
 	@Override
 	public String getID() {
-		return net.minecraft.block.Block.blockRegistry.getNameForObject(mcBlock);
+		return (String) net.minecraft.block.Block.blockRegistry.getNameForObject(mcBlock);
 	}
 
 	@Override

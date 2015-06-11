@@ -21,7 +21,7 @@ public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWra
 
 	@Override
 	public ItemFactory getItemFactory() {
-		return ((FWBlock) field_150939_a).block.getItemFactory();
+		return ((FWBlock) block).block.getItemFactory();
 	}
 
 	@Override

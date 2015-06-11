@@ -4,8 +4,6 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.item.Item;
 
-import java.util.Iterator;
-
 /**
  * Created by Stan on 3/02/2015.
  */
@@ -23,13 +21,7 @@ public class WrappedNBTTagCompound extends NBTTagCompound {
 	@Override
 	public NBTBase copy() {
 		WrappedNBTTagCompound result = new WrappedNBTTagCompound(item);
-		Iterator iterator = this.func_150296_c().iterator();
-
-		while (iterator.hasNext()) {
-			String s = (String) iterator.next();
-			result.setTag(s, getTag(s).copy());
-		}
-
+		getKeySet().forEach(s -> result.setTag((String) s, getTag((String) s).copy()));
 		return result;
 	}
 }
