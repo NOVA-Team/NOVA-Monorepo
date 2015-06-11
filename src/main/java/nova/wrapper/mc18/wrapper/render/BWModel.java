@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import nova.core.render.model.Model;
 import nova.core.render.model.Vertex;
@@ -95,7 +94,7 @@ public class BWModel extends Model {
 							);
 						} else {
 							Texture texture = face.texture.get();
-							IIcon icon = RenderUtility.instance.getTexture(texture);
+							TextureAtlasSprite icon = RenderUtility.instance.getTexture(texture);
 							face.vertices.forEach(
 								v -> {
 									worldRenderer.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());

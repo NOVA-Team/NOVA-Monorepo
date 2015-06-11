@@ -1,10 +1,16 @@
 package nova.wrapper.mc18.launcher;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -44,10 +50,19 @@ public class ClientProxy extends CommonProxy {
 		super.registerBlock(block);
 
 		/**
-		 * Registers a block rendering handler for this block
+		 * Registers a block rendering handlers
 		 */
-		RenderingRegistry.registerBlockHandler(block);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), block);
+		Item item = Item.getItemFromBlock(block);
+		ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition() {
+			public ModelResourceLocation getModelLocation(ItemStack stack) {
+				return modelLocation;
+			}
+		});
+		ModelLoader.setCustomStateMapper(block, new StateMapperBase() {
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return modelLocation;
+			}
+		});
 	}
 
 	@Override

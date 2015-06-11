@@ -111,11 +111,11 @@ public class RenderUtility {
 	public void registerIcon(Texture texture, TextureStitchEvent.Pre event) {
 		textureMap.put(texture, event.map.registerSprite(new ResourceLocation(texture.domain, texture.getResource())));
 	}
-
+/*
 	@SubscribeEvent
-	public void textureHook(TextureStitchEvent.Post event) {
-
-	}
+	public void bakeModel(ModelBakeEvent event) {
+		event.modelRegistry.
+	}*/
 
 	public void preInit() {
 		//Load models

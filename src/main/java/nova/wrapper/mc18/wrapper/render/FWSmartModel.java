@@ -7,9 +7,11 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
+import net.minecraftforge.client.model.ISmartItemModel;
 import nova.core.render.model.Model;
 import nova.core.util.Direction;
 import nova.wrapper.mc18.render.RenderUtility;
@@ -19,20 +21,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Generates a smart model based on a NOVA Model
  * @author Calclavia
  */
-public class FWBlockModel implements ISmartBlockModel, IFlexibleBakedModel {
+public class FWSmartModel implements ISmartBlockModel, ISmartItemModel, IFlexibleBakedModel {
 
 	private final Model model;
 	private final VertexFormat format;
 
-	public FWBlockModel(Model model) {
+	public FWSmartModel(Model model) {
 		this.model = model;
 		this.format = new VertexFormat();
 	}
 
 	@Override
 	public IBakedModel handleBlockState(IBlockState state) {
+		return this;
+	}
+
+	@Override
+	public IBakedModel handleItemState(ItemStack stack) {
 		return this;
 	}
 

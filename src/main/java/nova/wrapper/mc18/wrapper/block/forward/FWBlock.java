@@ -13,6 +13,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -330,6 +331,17 @@ public class FWBlock extends net.minecraft.block.Block {
 		return super.getUnlocalizedName().replaceFirst("tile", "block");
 	}
 
+	@Override
+	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
+		// TODO: Maybe do something with these parameters.
+		return (float) getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).getResistance() * 30;
+	}
+
+	@Override
+	public float getBlockHardness(World world, BlockPos pos) {
+		return (float) getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).getHardness() * 2;
+	}
+
 	/**
 	 * Rendering forwarding
 	 */
@@ -367,7 +379,7 @@ public class FWBlock extends net.minecraft.block.Block {
 			opRenderer.get().onRender.accept(model);
 			model.renderWorld(world);
 
-			return Tessellator.getInstance().rawBufferIndex != 0; // Returns true if Tesselator is not empty. Avoids crash on empty Tesselator buffer.
+			return Tessellator.getInstance().getWorldRenderer().rawBufferIndex != 0; // Returns true if Tesselator is not empty. Avoids crash on empty Tesselator buffer.
 		}
 		return false;
 	}
@@ -399,14 +411,4 @@ public class FWBlock extends net.minecraft.block.Block {
 		// TODO: Use this
 	}
 
-	@Override
-	public float getExplosionResistance(Entity expEntity, World world, int x, int y, int z, double explosionX, double p_explosionresistance, double explosionY) {
-		// TODO: Maybe do something with these parameters.
-		return (float) getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).getResistance() * 30;
-	}
-
-	@Override
-	public float getBlockHardness(World world, int x, int y, int z) {
-		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getHardness() * 2;
-	}
 }
