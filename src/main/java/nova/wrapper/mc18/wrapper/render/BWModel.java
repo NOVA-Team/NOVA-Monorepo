@@ -3,9 +3,9 @@ package nova.wrapper.mc18.wrapper.render;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IBlockAccess;
 import nova.core.render.model.Model;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
@@ -23,9 +23,9 @@ public class BWModel extends Model {
 	/**
 	 * Completes this rendering for a block.
 	 */
-	public void renderWorld(IBlockAccess blockAccess) {
+	public void renderWorld(net.minecraft.world.World world) {
 
-		render(Optional.of(blockAccess), Optional.empty());
+		render(Optional.of(world), Optional.empty());
 	}
 
 	public void render() {
@@ -36,7 +36,7 @@ public class BWModel extends Model {
 		render(Optional.empty(), entityRenderManager);
 	}
 
-	public void render(Optional<IBlockAccess> access, Optional<RenderManager> entityRenderManager) {
+	public void render(Optional<net.minecraft.world.World> world, Optional<RenderManager> entityRenderManager) {
 		Tessellator tessellator = Tessellator.getInstance();
 		tessellator.getWorldRenderer().func_178960_a(1, 1, 1, 1);
 
@@ -50,11 +50,11 @@ public class BWModel extends Model {
 					// Brightness is defined as: skyLight << 20 | blockLight << 4
 					if (face.getBrightness() >= 0) {
 						tessellator.getWorldRenderer().setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
-					} else if (access.isPresent()) {
+					} else if (world.isPresent()) {
 						// Determine nearest adjacent block.
 						Vector3D nearestPos = Vector3DUtil.floor(face.getCenter().add(face.normal.scalarMultiply(0.05)));
-						Block block = access.get().getBlock((int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ());
-						int brightness = block.getMixedBrightnessForBlock(access.get(), (int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ());
+						Block block = world.get().getBlock(new BlockPos((int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ()));
+						int brightness = block.getMixedBrightnessForBlock(world.get(), (int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ());
 
 						// TODO: Add Ambient Occlusion
 						/*
