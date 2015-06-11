@@ -1,5 +1,7 @@
 package nova.wrapper.mc1710.launcher;
 
+import nova.internal.core.Game;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.wrapper.mc1710.depmodules.ClientModule;
 import nova.wrapper.mc1710.depmodules.GameInfoModule;
 import nova.wrapper.mc1710.depmodules.GuiModule;
@@ -9,10 +11,13 @@ import nova.wrapper.mc1710.depmodules.RenderModule;
 import nova.wrapper.mc1710.depmodules.SaveModule;
 import nova.wrapper.mc1710.depmodules.TickerModule;
 import nova.wrappertests.depmodules.FakeNetworkModule;
+import org.junit.Test;
 import se.jbee.inject.bootstrap.Bundle;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author rx14
@@ -32,5 +37,21 @@ public class NovaLauncherTest extends nova.wrappertests.NovaLauncherTest {
 			TickerModule.class,
 			GameInfoModule.class
 		);
+	}
+
+	@Test
+	public void testLaunching() {
+		doLaunchAssert(createLauncher());
+	}
+
+	@Test
+	public void testResolveGame() {
+		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
+
+		getModules().forEach(diep::install);
+
+		Game game = diep.init();
+
+		assertThat(game).isNotNull();
 	}
 }
