@@ -1,9 +1,7 @@
 package nova.wrapper.mc18.wrapper.item;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import nova.core.item.ItemFactory;
 import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
@@ -40,22 +38,7 @@ public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWra
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int p_77617_1_) {
-		return ItemWrapperMethods.super.getIconFromDamage(p_77617_1_);
-	}
-
-	@Override
-	public IIcon getIcon(ItemStack itemStack, int pass) {
-		return ItemWrapperMethods.super.getIcon(itemStack, pass);
-	}
-
-	@Override
 	public int getColorFromItemStack(ItemStack p_82790_1_, int p_82790_2_) {
 		return ItemWrapperMethods.super.getColorFromItemStack(p_82790_1_, p_82790_2_);
-	}
-
-	@Override
-	public void registerIcons(IIconRegister ir) {
-
 	}
 }
