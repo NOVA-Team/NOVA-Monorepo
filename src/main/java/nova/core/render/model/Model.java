@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A model is capable of containing multiple faces.
@@ -36,6 +37,7 @@ public class Model implements Iterable<Model>, Cloneable {
 
 	public Vector2D textureOffset = Vector2D.ZERO;
 
+	//GL Blending
 	public int blendSFactor = -1;
 	public int blendDFactor = -1;
 
@@ -46,6 +48,7 @@ public class Model implements Iterable<Model>, Cloneable {
 	public Model() {
 		this("");
 	}
+
 
 	/**
 	 * Binds all the faces and all child models with this texture.
@@ -79,6 +82,20 @@ public class Model implements Iterable<Model>, Cloneable {
 	 */
 	public void drawFace(Face Face) {
 		faces.add(Face);
+	}
+
+	public Model addChild(Model child) {
+		children.add(child);
+		return this;
+	}
+
+	public Model removeChild(Model child) {
+		children.remove(child);
+		return this;
+	}
+
+	public Stream<Model> stream() {
+		return children.stream();
 	}
 
 	public Set<Model> flatten() {
