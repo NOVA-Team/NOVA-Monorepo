@@ -17,7 +17,11 @@ public class TileEntityTransformer implements Transformer {
 
 		System.out.println("[NOVA] Transforming TileEntity class for dynamic instance injection.");
 
-		MethodNode method = ASMHelper.findMethod(new ObfMapping("net/minecraft/tileentity/TileEntity", "createAndLoadEntity", "(Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;"), cnode);
+		MethodNode method = ASMHelper.findMethod(new ObfMapping("net/minecraft/tileentity/TileEntity", "func_145827_c", "(Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;"), cnode);
+
+		if (method == null) {
+			method = ASMHelper.findMethod(new ObfMapping("net/minecraft/tileentity/TileEntity", "createAndLoadEntity", "(Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;"), cnode);
+		}
 
 		ASMHelper.removeBlock(method.instructions, new InsnListSection(method.instructions, 23, 26));
 
