@@ -108,8 +108,14 @@ eclipse.classpath.file {
 
 rootProject.idea.project.ipr {
 	withXml { provider ->
-		provider.node.component
+		def settingsnode = provider.node.component
 			.find { it.@name == 'ProjectCodeStyleSettingsManager' }
-			.option.find { it.@name == 'PREFERRED_PROJECT_CODE_STYLE'}.@value = 'NOVAFormat'
+
+		if (settingsnode) {
+			def codestyle = settingsnode.option.find { it.@name == 'PREFERRED_PROJECT_CODE_STYLE' }
+			if (codestyle) {
+				codestyle.@value = 'NOVAFormat'
+			}
+		}
 	}
 }
