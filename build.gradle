@@ -1,0 +1,113 @@
+apply plugin: 'forge'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'maven-publish'
+
+
+dependencies {
+	compile project(':core')
+}
+
+compileJava {
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
+	options.encoding = 'UTF-8'
+	options.fork = true
+	options.compilerArgs << '-Xlint'
+}
+
+compileTestJava {
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
+	options.encoding = 'UTF-8'
+	options.fork = true
+	options.compilerArgs << '-Xlint'
+}
+
+runClient {
+	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc18.NovaMinecraftCore'
+}
+runServer {
+	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc18.NovaMinecraftCore'
+}
+
+jar {
+	from project(':core').sourceSets.main.output
+	manifest {
+		attributes 'FMLCorePlugin': 'nova.wrapper.mc18.NovaMinecraftCore'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+	}
+}
+
+minecraft {
+	version = property("forge.version")
+	runDir = "run"
+}
+
+processResources {
+	// this will ensure that this task is redone when the versions change.
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+
+	// replace stuff in mcmod.info, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+
+		// replace version and mcversion
+		expand 'version': project.version, 'mcversion': project.minecraft.version
+	}
+
+	// copy everything else, thats not the mcmod.info
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
+}
+
+task deobfJar(type: Jar) {
+	from sourceSets.main.output
+	classifier = 'deobf'
+}
+
+shadowJar {
+	manifest {
+		attributes("Implementation-Title": project.name,
+			"Implementation-Version": version,
+			"Specification-Title": "NovaCore")
+	}
+}
+
+artifacts {
+	archives deobfJar
+}
+
+publishing {
+	publications {
+		main(MavenPublication) {
+			from components.java
+
+			artifactId "NovaWrapper-MC1.8"
+
+			artifact sourcesJar
+			artifact deobfJar
+			artifact javadocJar
+
+			pom.withXml(writePom(project.properties))
+			pom.withXml {xml ->
+				def children = xml.asNode().get("dependencies")[0]
+				for (child in children) {
+					def artifactId = child.get("artifactId")[0].value()[0]
+					if (artifactId.equals("forgeSrc") || artifactId.equals("forgeBin")) {
+						children.remove(child)
+						break;
+					}
+				}
+			}
+		}
+	}
+	repositories {
+		if (System.getenv("MAVEN_DIR") != null) {
+			maven {
+				url System.getenv("MAVEN_DIR")
+			}
+		}
+	}
+}
