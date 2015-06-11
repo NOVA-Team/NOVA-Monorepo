@@ -3,6 +3,7 @@ package nova.wrapper.mc18.wrapper.block.world;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
@@ -43,17 +44,20 @@ public class BWWorld extends World {
 
 	@Override
 	public void markStaticRender(Vector3D position) {
-		world().markBlockForUpdate((int) position.getX(), (int) position.getY(), (int) position.getZ());
+		world().markBlockForUpdate(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()));
 	}
 
 	@Override
 	public void markChange(Vector3D position) {
-		world().notifyBlockChange((int) position.getX(), (int) position.getY(), (int) position.getZ(), access.getBlock((int) position.getX(), (int) position.getY(), (int) position.getZ()));
+		world().notifyNeighborsOfStateChange(
+			new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()),
+			access.getBlockState(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ())).getBlock()
+		);
 	}
 
 	@Override
 	public Optional<Block> getBlock(Vector3D position) {
-		net.minecraft.block.Block mcBlock = access.getBlock((int) position.getX(), (int) position.getY(), (int) position.getZ());
+		net.minecraft.block.Block mcBlock = access.getBlockState(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ())).getBlock();
 		if (mcBlock == null || mcBlock == Blocks.air) {
 			return Optional.of(Game.blocks().getAirBlock());
 		} else if (mcBlock instanceof FWBlock) {
@@ -67,12 +71,12 @@ public class BWWorld extends World {
 	public boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args) {
 		//TODO: Implement object arguments
 		net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.getDummy());
-		return world().setBlock((int) position.getX(), (int) position.getY(), (int) position.getZ(), mcBlock != null ? mcBlock : Blocks.air);
+		return world().setBlockState(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()), (mcBlock != null ? mcBlock : Blocks.air).getDefaultState());
 	}
 
 	@Override
 	public boolean removeBlock(Vector3D position) {
-		return world().setBlockToAir((int) position.getX(), (int) position.getY(), (int) position.getZ());
+		return world().setBlockToAir(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()));
 	}
 
 	@Override
@@ -101,7 +105,7 @@ public class BWWorld extends World {
 
 	@Override
 	public Set<Entity> getEntities(Cuboid bound) {
-		return new HashSet(world().getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ())));
+		return new HashSet(world().getEntitiesWithinAABB(Entity.class, AxisAlignedBB.fromBounds(bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ())));
 	}
 
 	@Override
