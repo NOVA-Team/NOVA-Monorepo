@@ -300,7 +300,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			if (item.getHasSubtypes()) {
 				return net.minecraft.item.Item.itemRegistry.getNameForObject(item) + ":" + meta;
 			} else {
-				return net.minecraft.item.Item.itemRegistry.getNameForObject(item);
+				return net.minecraft.item.Item.itemRegistry.getNameForObject(item).toString();
 			}
 		}
 	}
