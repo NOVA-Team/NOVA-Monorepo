@@ -28,21 +28,21 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
 		Item item = Game.natives().toNova(itemStack);
-		item.setCount(itemStack.stackSize).tooltipEvent.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
+		item.setCount(itemStack.stackSize).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
 		getItemFactory().saveItem(item);
 	}
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		Item item = Game.natives().toNova(itemStack);
 		Item.UseEvent event = new Item.UseEvent(new BWEntity(player), new Vector3D(x, y, z), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ));
-		item.useEvent.publish(event);
+		item.events.publish(event);
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return event.action;
 	}
 
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		Item item = Game.natives().toNova(itemStack);
-		item.rightClickEvent.publish(new Item.RightClickEvent(new BWEntity(player)));
+		item.events.publish(new Item.RightClickEvent(new BWEntity(player)));
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
 		return itemStack;
 	}
