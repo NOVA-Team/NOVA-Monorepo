@@ -106,7 +106,7 @@ eclipse.classpath.file {
 	}
 }
 
-idea.project.ipr {
+rootProject.idea.project.ipr {
 	withXml { provider ->
 		provider.node.component
 			.find { it.@name == 'ProjectCodeStyleSettingsManager' }
