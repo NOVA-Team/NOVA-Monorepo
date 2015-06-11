@@ -1,5 +1,7 @@
 package nova.core.block;
 
+import nova.core.event.Event;
+
 /**
  * This interface should be implemented by any block willing to keep a
  * per-block-instance state. This means that once the block instance is
@@ -12,14 +14,14 @@ public interface Stateful {
 	/**
 	 * Called when the stateful object loads
 	 */
-	class LoadEvent {
+	class LoadEvent extends Event {
 
 	}
 
 	/**
 	 * Called when the stateful object unloads.
 	 */
-	class UnloadEvent {
+	class UnloadEvent extends Event {
 
 	}
 }

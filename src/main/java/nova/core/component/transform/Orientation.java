@@ -15,8 +15,8 @@ import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.Direction;
 import nova.core.util.RayTracer;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Optional;
 
@@ -49,21 +49,23 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	public Orientation hookBlockEvents() {
 		if (provider instanceof Block) {
-			((Block) provider).placeEvent.add(
+			((Block) provider).events.add(
 				evt ->
 				{
 					if (Game.network().isServer()) {
 						setOrientation(calculateDirection(evt.placer));
 					}
-				}
+				},
+				Block.PlaceEvent.class
 			);
-			((Block) provider).rightClickEvent.add(
+			((Block) provider).events.add(
 				evt ->
 				{
 					if (Game.network().isServer()) {
 						rotate(evt.side.ordinal(), evt.position);
 					}
-				}
+				},
+				Block.RightClickEvent.class
 			);
 		}
 		return this;

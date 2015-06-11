@@ -4,8 +4,8 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.entity.Entity;
 import nova.core.util.Direction;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public class ItemBlock extends Item {
 		Optional<Block> opBlock = world.getBlock(placePos);
 		if (opBlock.isPresent() && opBlock.get().sameType(blockFactory.getDummy())) {
 			//TODO: What if the block is NOT placed by a player?
-			opBlock.get().placeEvent.publish(new Block.BlockPlaceEvent(entity, side, hit, this));
+			opBlock.get().events.publish(new Block.PlaceEvent(entity, side, hit, this));
 		}
 
 		addCount(-1);

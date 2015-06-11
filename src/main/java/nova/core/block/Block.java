@@ -4,15 +4,16 @@ import nova.core.component.ComponentProvider;
 import nova.core.component.transform.BlockTransform;
 import nova.core.entity.Entity;
 import nova.core.event.CancelableEvent;
+import nova.core.event.Event;
 import nova.core.event.EventBus;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -23,16 +24,7 @@ import java.util.Set;
  */
 public abstract class Block extends ComponentProvider implements Identifiable {
 
-	public final EventBus<Stateful.LoadEvent> loadEvent = new EventBus<>();
-	public final EventBus<Stateful.UnloadEvent> unloadEvent = new EventBus<>();
-
-	public final EventBus<NeighborChangeEvent> neighborChangeEvent = new EventBus<>();
-	public final EventBus<BlockPlaceEvent> placeEvent = new EventBus<>();
-	public final EventBus<BlockRemoveEvent> removeEvent = new EventBus<>();
-	public final EventBus<RightClickEvent> rightClickEvent = new EventBus<>();
-	public final EventBus<LeftClickEvent> leftClickEvent = new EventBus<>();
-
-	public final EventBus<DropEvent> dropEvent = new EventBus<>();
+	public final EventBus<Event> events = new EventBus<>();
 
 	/**
 	 * Called when the block is registered.
@@ -120,7 +112,6 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	/**
 	 * Called when an ItemBlock tries to place a block in this position whether to displace the place position or not.
 	 * If the ItemBlock does not displace the position, it will replace this block.
-	 *
 	 * @return True if by right clicking on this block, the placement of the new block should be displaced.
 	 */
 	public boolean shouldDisplacePlacement() {
@@ -143,7 +134,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		}
 	}
 
-	public static class BlockPlaceEvent {
+	public static class PlaceEvent extends Event {
 
 		/**
 		 * The entity that placed the block
@@ -168,7 +159,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		/**
 		 * Called when the block is placed.
 		 */
-		public BlockPlaceEvent(Entity placer, Direction side, Vector3D hit, Item item) {
+		public PlaceEvent(Entity placer, Direction side, Vector3D hit, Item item) {
 			this.placer = placer;
 			this.side = side;
 			this.hit = hit;
@@ -176,7 +167,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		}
 	}
 
-	public static class BlockRemoveEvent {
+	public static class RemoveEvent extends Event {
 		/**
 		 * The entity that is removing the block
 		 */
@@ -190,12 +181,12 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		/**
 		 * Called when the block is about to be removed.
 		 */
-		public BlockRemoveEvent(Optional<Entity> entity) {
+		public RemoveEvent(Optional<Entity> entity) {
 			this.entity = entity;
 		}
 	}
 
-	public static class RightClickEvent {
+	public static class RightClickEvent extends Event {
 		/**
 		 * The entity that clicked this object. Most likely a
 		 * player.
@@ -224,7 +215,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		}
 	}
 
-	public static class LeftClickEvent {
+	public static class LeftClickEvent extends Event {
 		/**
 		 * The entity that clicked this object. Most likely a
 		 * player.
@@ -253,7 +244,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		}
 	}
 
-	public static class DropEvent {
+	public static class DropEvent extends Event {
 
 		public Set<Item> drops;
 
