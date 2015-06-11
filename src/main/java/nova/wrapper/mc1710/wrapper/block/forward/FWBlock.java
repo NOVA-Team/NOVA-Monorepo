@@ -137,7 +137,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		}
 
 		Block.DropEvent event = new Block.DropEvent(blockInstance);
-		blockInstance.dropEvent.publish(event);
+		blockInstance.events.publish(event);
 
 		return new ArrayList<>(
 			event.drops
@@ -188,14 +188,14 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		// Minecraft does not provide the neighbor :(
 		Block.NeighborChangeEvent evt = new Block.NeighborChangeEvent(Optional.empty());
-		blockInstance.neighborChangeEvent.publish(evt);
+		blockInstance.events.publish(evt);
 	}
 
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
-		Block.BlockRemoveEvent evt = new Block.BlockRemoveEvent(Optional.of(Game.natives().toNova(player)));
-		blockInstance.removeEvent.publish(evt);
+		Block.RemoveEvent evt = new Block.RemoveEvent(Optional.of(Game.natives().toNova(player)));
+		blockInstance.events.publish(evt);
 		if (evt.result) {
 			return super.removedByPlayer(world, player, x, y, z, willHarvest);
 		}
@@ -207,7 +207,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		MovingObjectPosition mop = player.rayTrace(10, 1);
 		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(mop.sideHit), new Vector3D(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
-		blockInstance.leftClickEvent.publish(evt);
+		blockInstance.events.publish(evt);
 	}
 
 	@Override
@@ -219,7 +219,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ));
-		blockInstance.rightClickEvent.publish(evt);
+		blockInstance.events.publish(evt);
 		return evt.result;
 	}
 

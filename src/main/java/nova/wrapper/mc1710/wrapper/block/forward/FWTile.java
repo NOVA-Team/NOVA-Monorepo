@@ -6,13 +6,13 @@ import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
-import nova.internal.core.Game;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import nova.internal.core.Game;
 import nova.wrapper.mc1710.network.netty.MCNetworkManager;
 import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * A Minecraft TileEntity to Nova block wrapper
@@ -59,12 +59,12 @@ public class FWTile extends TileEntity {
 			cacheData = null;
 		}
 
-		block.loadEvent.publish(new Stateful.LoadEvent());
+		block.events.publish(new Stateful.LoadEvent());
 	}
 
 	@Override
 	public void invalidate() {
-		block.unloadEvent.publish(new Stateful.UnloadEvent());
+		block.events.publish(new Stateful.UnloadEvent());
 		super.invalidate();
 	}
 
