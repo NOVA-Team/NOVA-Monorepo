@@ -92,7 +92,7 @@ public class BWBlock extends Block implements Storable {
 
 	@Override
 	public boolean shouldDisplacePlacement() {
-		if (mcBlock == Blocks.snow_layer && ((int) blockState().getValue(BlockSnow.LAYERS_PROP) < 1)) {
+		if (mcBlock == Blocks.snow_layer && ((int) blockState().getValue(BlockSnow.LAYERS) < 1)) {
 			return false;
 		}
 

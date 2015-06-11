@@ -45,4 +45,9 @@ public class NovaCraftingRecipe implements IRecipe {
 		}
 		return null;
 	}
+
+	@Override
+	public ItemStack[] getRemainingItems(InventoryCrafting inv) {
+		return new ItemStack[0];
+	}
 }
