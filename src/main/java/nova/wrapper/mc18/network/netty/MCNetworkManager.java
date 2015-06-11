@@ -100,7 +100,7 @@ public class MCNetworkManager extends NetworkManager {
 	}
 
 	public void sendToAllInDimension(PacketAbstract packet, World world) {
-		sendToAllInDimension(packet, world.provider.dimensionId);
+		sendToAllInDimension(packet, world.provider.getDimensionId());
 	}
 
 	/**
@@ -127,11 +127,11 @@ public class MCNetworkManager extends NetworkManager {
 	}
 
 	public void sendToAllAround(PacketAbstract message, TileEntity tile, double range) {
-		sendToAllAround(message, tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, range);
+		sendToAllAround(message, tile.getWorld(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), range);
 	}
 
 	public void sendToAllAround(PacketAbstract message, World world, double x, double y, double z, double range) {
-		sendToAllAround(message, new NetworkRegistry.TargetPoint(world.provider.dimensionId, x, y, z, range));
+		sendToAllAround(message, new NetworkRegistry.TargetPoint(world.provider.getDimensionId(), x, y, z, range));
 	}
 
 	@SideOnly(Side.CLIENT)
