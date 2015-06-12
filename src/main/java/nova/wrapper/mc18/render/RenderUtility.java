@@ -3,16 +3,22 @@ package nova.wrapper.mc18.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.ModelRotation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.render.RenderException;
 import nova.core.render.texture.BlockTexture;
@@ -28,6 +34,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_FLAT;
@@ -147,12 +154,32 @@ public class RenderUtility {
 
 		//Register all items
 		Game.items().registry.forEach(itemFactory -> {
-			Object itemObj = Game.natives().toNative(itemFactory.getDummy());
-			if (itemObj instanceof FWItem) {
-				FWItem item = (FWItem) itemObj;
-				ResourceLocation objRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
-				ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "normal");
-				event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(item.itemFactory.getDummy()));
+			Object stackObj = Game.natives().toNative(itemFactory.getDummy());
+			if (stackObj instanceof ItemStack) {
+				Item itemObj = ((ItemStack) stackObj).getItem();
+				if (itemObj instanceof FWItem) {
+					FWItem item = (FWItem) itemObj;
+					ResourceLocation objRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
+					ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
+
+					nova.core.item.Item dummy = item.getItemFactory().getDummy();
+					Optional<ItemTexture> texture = dummy.getTexture();
+
+					if (dummy.has(ItemRenderer.class)) {
+						//The item has a custom renderer
+						event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(dummy));
+					} else if (texture.isPresent()) {
+						//Default item rendering hack
+						ModelBlock modelGenerated = ModelBakery.MODEL_GENERATED;
+						modelGenerated.name = itemLocation.toString();
+						modelGenerated.textures.put("layer0", texture.get().getResource());
+						ModelBlock modelBlock = event.modelBakery.itemModelGenerator.makeItemModel(event.modelBakery.textureMap, modelGenerated);
+						TextureAtlasSprite mcTexture = RenderUtility.instance.getTexture(texture.get());
+						event.modelBakery.sprites.put(new ResourceLocation(mcTexture.getIconName().replace("items/", "")), mcTexture);
+						IBakedModel iBakedModel = event.modelBakery.bakeModel(modelBlock, ModelRotation.X0_Y0, true);
+						event.modelRegistry.putObject(itemLocation, iBakedModel);
+					}
+				}
 			}
 		});
 	}
