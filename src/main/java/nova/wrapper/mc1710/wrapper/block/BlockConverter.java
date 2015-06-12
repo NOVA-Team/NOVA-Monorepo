@@ -114,7 +114,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 			if (first.isPresent()) {
 				blockWrapper.setCreativeTab(first.get());
 			} else {
-				ModCreativeTab tab = new ModCreativeTab(category.name, Game.natives().toNative(category.item));
+				ModCreativeTab tab = new ModCreativeTab(category.name, Game.natives().toNative(category.item.get()));
 				blockWrapper.setCreativeTab(tab);
 
 				if (category.item.isPresent()) {
