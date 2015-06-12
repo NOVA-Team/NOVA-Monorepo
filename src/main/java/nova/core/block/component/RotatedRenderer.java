@@ -13,10 +13,13 @@ import java.util.function.Consumer;
  * @author Calclavia
  */
 @Require(Orientation.class)
-class RotatedRenderer extends StaticBlockRenderer {
+public class RotatedRenderer extends StaticBlockRenderer {
 
 	public Consumer<Model> rotateModel = model -> model.matrix.rotate(provider.get(Orientation.class).orientation().rotation);
 
+	/**
+	 * @param provider block to render rotated
+	 */
 	public RotatedRenderer(Block provider) {
 		super(provider);
 		setOnRender(onRender);
