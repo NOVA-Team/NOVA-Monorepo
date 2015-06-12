@@ -3,67 +3,131 @@ package nova.core.util;
 import nova.internal.core.Game;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * A simple stop watch profiler.
- * @author Calclavia
+ * A simple stop watch profiler. All results are in microseconds.
  */
-public class Profiler {
+public final class Profiler {
 
+	/**
+	 * Name of this profiler
+	 */
 	public final String name;
-	private final List<Long> lapped = new ArrayList<>();
-	private long time;
 
+	private final List<Double> lapped = new ArrayList<>();
+	private long time = -1;
+	private double lastTime = 0;
+
+	/**
+	 * Creates new profiler.
+	 * @param name of this profiler.
+	 */
 	public Profiler(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Start's the profiler
-	 *
-	 * @return The started profiler
+	 * Starts this profiler.
+	 * @throws IllegalStateException if profiler is currently running. See {@link Profiler#isRunning()}
+	 * @return {@code this} for chaining.
 	 */
 	public Profiler start() {
-		time = System.currentTimeMillis();
+		assureRightState("start", false);
+
+		time = System.nanoTime();
 		return this;
 	}
 
 	/**
-	 * Stops the profiler
-	 *
-	 * @return How much time elapsed (in seconds)
+	 * Ends current profiling session. Saves result for average calculations.
+	 * @throws IllegalStateException if profiler is not currently running. See {@link Profiler#isRunning()}
+	 * @return time elapsed since last start or lap measured in microseconds.
 	 */
 	public double end() {
-		Game.logger().info(toString());
-		return elapsed() / 1000d;
+		assureRightState("end", true);
+
+		lastTime = elapsed();
+		lapped.add(lastTime);
+		time = -1;
+		return lastTime;
 	}
 
 	/**
-	 * @return How much time elapsed since the profiler was started (in miliseconds)
+	 * Helper method for loop time measurements.
+	 * Class {@link Profiler#end()} and then {@link Profiler#start()}
+	 * @throws IllegalStateException if profiler is not currently running. See {@link Profiler#isRunning()}
+	 * @return time in microseconds previous lap took.
 	 */
-	public long elapsed() {
-		return System.currentTimeMillis() - time;
+	public double lap() {
+		assureRightState("lap", true);
+
+		end();
+		start();
+		return lastTime;
 	}
 
 	/**
-	 * @return The average time of the laps (in seconds)
+	 * States whether profiler is currently performing time measurements.
+	 * @return {@code true} if profiler is running.
+	 */
+	public boolean isRunning() {
+		return time != -1;
+	}
+
+	/**
+	 * Measures time since last (lap)start of this profiler.
+	 * @throws IllegalStateException if profiler is not currently running. See {@link Profiler#isRunning()}
+	 * @return time elapsed since last start or lap measured in microseconds.
+	 */
+	public double elapsed() {
+		assureRightState("elapsed", true);
+
+		return (System.nanoTime() - time) / 1000d;
+	}
+
+	/**
+	 * Getter for last cycle time.
+	 * @return time in microseconds between last start-lap/lap-lap/lap-end or start-end cycle.
+	 */
+	public double lastTime() {
+		return lastTime;
+	}
+
+	/**
+	 * Calculates average time between cycles.
+	 * @return average time in microseconds.
 	 */
 	public double average() {
-		return lapped.stream().mapToDouble(value -> value / 1000d).sum() / lapped.size();
+		return lapped.stream().mapToDouble(Double::doubleValue).sum() / lapped.size();
 	}
 
 	/**
-	 * Starts a new lap
-	 * @return The profiler
+	 * Getter for lap timing.
+	 * @return unmodifiable list of elapsed times between cycles.
 	 */
-	public Profiler lap() {
-		lapped.add(elapsed());
-		return start();
+	public List<Double> results() {
+		return Collections.unmodifiableList(lapped);
+	}
+
+	/**
+	 * Clears saved results for average computations.
+	 * @return this for chaining.
+	 */
+	public Profiler clearResults() {
+		lapped.clear();
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return name + " took " + (elapsed() / 1000d) + " seconds";
+		return name + " took " + (lastTime / 1e6d) + " seconds";
+	}
+
+	private void assureRightState(String method, boolean shouldBeRunning) {
+		if (shouldBeRunning ^ isRunning()) {
+			throw new IllegalStateException(String.format("The profiler's method: <%s> was called while it %s running.", method, isRunning() ? "was" : "wasn't"));
+		}
 	}
 }
