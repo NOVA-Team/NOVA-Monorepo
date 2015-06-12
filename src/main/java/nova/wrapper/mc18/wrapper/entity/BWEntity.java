@@ -2,14 +2,12 @@ package nova.wrapper.mc18.wrapper.entity;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import nova.core.component.misc.Damageable;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
 import nova.core.entity.component.Player;
 import nova.core.inventory.component.InventoryPlayer;
-import nova.core.network.NetworkTarget;
 import nova.wrapper.mc18.wrapper.entity.forward.MCEntityTransform;
 import nova.wrapper.mc18.wrapper.inventory.BWInventory;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -38,26 +36,12 @@ public class BWEntity extends Entity {
 		});
 
 		if (entity instanceof EntityLivingBase) {
-			Living living = add(new Living());
-
-			living.faceDisplacement = () -> {
-				if (entity instanceof EntityPlayer) {
-					if (NetworkTarget.Side.get().isClient()) {
-						//compatibility with eye height changing mods
-						return Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight() - ((EntityPlayer) entity).getDefaultEyeHeight());
-					} else {
-						if (entity instanceof EntityPlayerMP && entity.isSneaking()) {
-							return Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight() - 0.08);
-						} else {
-							return Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight());
-						}
-					}
-				}
-				return Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight());
-			};
-
 			if (entity instanceof EntityPlayer) {
-				add(new MCPlayer(this));
+				MCPlayer player = add(new MCPlayer(this));
+				player.faceDisplacement = () -> Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight());
+			} else {
+				Living living = add(new Living());
+				living.faceDisplacement = () -> Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight());
 			}
 		}
 	}
