@@ -123,7 +123,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 					//Add folder resource pack location. The folderLocation is the root of the project, including the packages of classes, and an assets folder inside.
 					String folderLocation = c.getProtectionDomain().getCodeSource().getLocation().getPath();
 					String classPath = c.getCanonicalName().replaceAll("\\.", "/");
-					folderLocation = folderLocation.replaceFirst("file:", "").replace(classPath, "").replace("/.class", "").replaceAll("%20", " ");
+					folderLocation = folderLocation.replaceAll("^file:", "").replace(classPath + ".class", "").replaceAll("%20", " ");
 					File folderFile = new File(folderLocation);
 					if (!new File(folderFile, "assets").isDirectory()) {
 						//Try IDEA workaround.
