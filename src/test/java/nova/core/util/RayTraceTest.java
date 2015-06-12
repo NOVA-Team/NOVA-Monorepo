@@ -1,8 +1,7 @@
 package nova.core.util;
 
-import nova.core.component.misc.Collider;
+import nova.core.block.Block;
 import nova.core.entity.Entity;
-import nova.core.entity.EntityFactory;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
 import nova.core.util.math.RotationUtil;
@@ -103,23 +102,14 @@ public class RayTraceTest {
 
 	@NovaMod(id = "rayTrace", name = "ray", version = "1.0", novaVersion = "0.0.1")
 	public static class RayTraceMod implements Loadable {
-		public static BlockFactory solid;
-		public static EntityFactory testEntity;
+		public static Factory<Block> solid;
+		public static Factory<Entity> testEntity;
 
 		@Override
 		public void preInit() {
-			solid = Game.blocks().register(args -> {
-				FakeBlock solid = new FakeBlock("solid");
-				solid.add(new Collider());
-				return solid;
-			});
+			solid = Game.blocks().register(FakeBlock.class).get(0);
 
-			testEntity = Game.entities().register(objects -> new Entity() {
-				@Override
-				public String getID() {
-					return "test";
-				}
-			});
+			testEntity = Game.entities().register(Factory.of(Entity.class).ID("TestEntity"));
 		}
 	}
 }

@@ -6,6 +6,7 @@ import nova.core.entity.EntityManager;
 import nova.core.event.GlobalEvents;
 import nova.core.game.ClientManager;
 import nova.core.game.GameInfo;
+import nova.core.game.GameStatusEventBus;
 import nova.core.gui.InputManager;
 import nova.core.item.ItemDictionary;
 import nova.core.item.ItemManager;
@@ -14,6 +15,7 @@ import nova.core.network.NetworkManager;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
+import nova.core.sound.SoundManager;
 import nova.core.util.LanguageManager;
 import nova.core.util.RetentionManager;
 import nova.core.world.WorldManager;
@@ -21,6 +23,8 @@ import nova.internal.core.tick.UpdateTicker;
 import org.slf4j.Logger;
 import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
+
+import java.util.Optional;
 
 public class Game {
 
@@ -45,6 +49,8 @@ public class Game {
 	private final InputManager inputManager;
 	private final ComponentManager componentManager;
 	private final NativeManager nativeManager;
+	private final Optional<SoundManager> soundManger;
+	private final GameStatusEventBus gameStatusEventBus;
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
@@ -59,6 +65,7 @@ public class Game {
 	 * This is @deprecated, use threadTicker() instead.
 	 */
 	private final UpdateTicker.ThreadTicker threadTicker;
+
 
 	private Injector injector;
 
@@ -82,7 +89,9 @@ public class Game {
 		NativeManager nativeManager,
 		ComponentManager componentManager,
 		UpdateTicker.SynchronizedTicker syncTicker,
-		UpdateTicker.ThreadTicker threadTicker) {
+		UpdateTicker.ThreadTicker threadTicker,
+		Optional<SoundManager> soundManger,
+		GameStatusEventBus gameStatusEventBus) {
 
 		this.logger = logger;
 
@@ -106,6 +115,8 @@ public class Game {
 
 		this.syncTicker = syncTicker;
 		this.threadTicker = threadTicker;
+		this.soundManger = soundManger;
+		this.gameStatusEventBus = gameStatusEventBus;
 
 		logger.info("Game instance created.");
 	}
@@ -182,6 +193,10 @@ public class Game {
 		return instance.nativeManager;
 	}
 
+	public static Optional<SoundManager> sound() {
+		return instance.soundManger;
+	}
+
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
 	 */
@@ -195,12 +210,20 @@ public class Game {
 		return instance.threadTicker;
 	}
 
+	public static GameStatusEventBus gameStatusEventBus() {
+		return instance.gameStatusEventBus;
+	}
+
 	public static <T> T resolve( Dependency<T> dependency ) {
 		return instance.injector.resolve(dependency);
 	}
 
 	public void changeInjector(Injector newInjector) {
 		this.injector = newInjector;
+	}
+
+	public static void setGame(Game game) {
+		instance = game;
 	}
 
 }

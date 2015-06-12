@@ -1,5 +1,6 @@
 package nova.internal.core.depmodules;
 
+import nova.core.game.GameStatusEventBus;
 import nova.internal.core.di.NovaScopes;
 import nova.core.util.Dictionary;
 import nova.core.util.Registry;
@@ -19,6 +20,7 @@ class UtilModule extends BinderModule {
 		bind(Dictionary.class).toConstructor();
 
 		per(Scoped.APPLICATION).bind(Game.class).toConstructor();
+		per(Scoped.APPLICATION).bind(GameStatusEventBus.class).toConstructor();
 	}
 
 }

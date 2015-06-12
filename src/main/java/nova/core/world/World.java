@@ -47,10 +47,10 @@ public abstract class World implements Identifiable {
 	 *
 	 * @param position The position of the block to set.
 	 * @param blockFactory The block factory.
-	 * @param args The block constructor arguments.
+	 * @param instanceArguments The block instance arguments.
 	 * @return {@code true} if the replace was successful.
 	 */
-	public abstract boolean setBlock(Vector3D position, Factory<Block> blockFactory, Object... args);
+	public abstract boolean setBlock(Vector3D position, Factory<Block> blockFactory, Object... instanceArguments);
 
 	/**
 	 * Removes the block in the specified position.
@@ -66,8 +66,9 @@ public abstract class World implements Identifiable {
 	 * Creates an entity
 	 *
 	 * @param factory The entity factory
+	 * @param instanceArguments The block instance arguments.
 	 */
-	public abstract Entity addEntity(EntityFactory factory, Object... args);
+	public abstract Entity addEntity(Factory<Entity> factory, Object... instanceArguments);
 
 	/**
 	 * Creates an entity that holds an item
@@ -80,7 +81,7 @@ public abstract class World implements Identifiable {
 	 * Creates an entity only on the client side.
 	 * For example, particle effects.
 	 */
-	public abstract Entity addClientEntity(EntityFactory factory);
+	public abstract Entity addClientEntity(Factory<Entity> factory);
 
 	/**
 	 * Creates an entity only on the client side.

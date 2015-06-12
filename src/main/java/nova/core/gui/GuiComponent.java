@@ -40,7 +40,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	private static final GuiComponentFactory factory;
 
 	static {
-		factory = Game.injector().resolve(Dependency.dependency(GuiComponentFactory.class));
+		factory = Game.resolve(Dependency.dependency(GuiComponentFactory.class));
 	}
 
 	protected Optional<Vector2D> preferredSize = Optional.empty();

@@ -1,5 +1,6 @@
 package nova.internal.core.launch;
 
+import nova.core.game.GameStatusEventBus;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.loader.Loadable;
 import nova.internal.core.Game;
@@ -97,6 +98,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	}
 
 	public void load() {
+
 		mods = new HashMap<>();
 
 		/**
@@ -160,6 +162,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	@Override
 	public void preInit() {
+		Game.gameStatusEventBus().publish(new GameStatusEventBus.PreInit());
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				mod.preInit();
@@ -172,6 +175,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	@Override
 	public void init() {
+		Game.gameStatusEventBus().publish(new GameStatusEventBus.Init());
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				mod.init();
@@ -184,6 +188,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	@Override
 	public void postInit() {
+		Game.gameStatusEventBus().publish(new GameStatusEventBus.PostInit());
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				mod.postInit();

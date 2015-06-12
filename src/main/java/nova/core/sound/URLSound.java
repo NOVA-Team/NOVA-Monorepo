@@ -24,7 +24,7 @@ public class URLSound extends StreamedSound {
 	}
 
 	@Override
-	public String getID() {
+	public String toString() {
 		return location.toString();
 	}
 }

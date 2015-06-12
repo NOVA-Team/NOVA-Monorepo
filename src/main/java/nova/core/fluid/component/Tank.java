@@ -1,7 +1,6 @@
 package nova.core.fluid.component;
 
 import nova.core.fluid.Fluid;
-import nova.core.fluid.FluidFactory;
 
 import java.util.Optional;
 
@@ -49,8 +48,5 @@ public interface Tank extends FluidConsumer, FluidProvider {
 		return false;
 	}
 
-	default boolean hasFluidType(FluidFactory factory) {
-		return hasFluidType(factory.getDummy());
-	}
 
 }

@@ -55,7 +55,7 @@ public final class Factory<T extends Buildable> implements Identifiable{
         return new Factory<>(this.clazz, this.finalizers, Optional.of(ID), typeArguments);
     }
 
-	public T resolve(Object... args) {
+	public T make(Object... args) {
 		T obj = Game.resolve(Dependency.dependency(clazz));
 		ReflectionUtil.injectField("ID", obj, getID());
 		obj.afterConstruction(typeArguments, Optional.ofNullable(args));
@@ -65,8 +65,8 @@ public final class Factory<T extends Buildable> implements Identifiable{
 	}
 
 	@SuppressWarnings("NullArgumentToVariableArgMethod")
-	public T resolve() {
-		return resolve(null);
+	public T make() {
+		return make(null);
 	}
 
 

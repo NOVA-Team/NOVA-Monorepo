@@ -129,8 +129,4 @@ public abstract class RigidBody extends Component implements Updater {
 		return getAngularVelocity();
 	}
 
-	@Override
-	public final String getID() {
-		return null;
-	}
 }

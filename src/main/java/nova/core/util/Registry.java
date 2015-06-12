@@ -4,6 +4,7 @@ import com.google.common.collect.HashBiMap;
 
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.stream.Stream;
 
@@ -74,5 +75,9 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 
 	public Stream<T> stream() {
 		return objects.values().stream();
+	}
+
+	public Set<T> values() {
+		return objects.values();
 	}
 }

@@ -25,7 +25,6 @@ public class DependencyInjectionEntryPoint {
 	private Game game = null;
 
 	public DependencyInjectionEntryPoint() {
-
 		install(CoreBundle.class);
 	}
 
@@ -51,6 +50,7 @@ public class DependencyInjectionEntryPoint {
 	public void install(Class<? extends Bundle> bundle) {
 		if (state != State.PREINIT) {
 			bundles.add(bundle);
+			DIEPBundle.bundles = bundles;
 			game.changeInjector(Bootstrap.injector(DIEPBundle.class));
 		}
 		bundles.add(bundle);
@@ -74,9 +74,7 @@ public class DependencyInjectionEntryPoint {
 	 * In this method modules added to DependencyInjectionEntryPoint are being
 	 * installed in core injector. Alternating module composition in core
 	 * injector after initialization is not possible.
-	 *
-	 * @return Game instance {@link Game}. Use it for future injections and
-	 *         general management.
+	 * Sets Game.instance
 	 */
 	public Game init() {
 		if (state != State.PREINIT) {
@@ -89,6 +87,7 @@ public class DependencyInjectionEntryPoint {
 		state = State.POSTINIT;
 		game = injector.resolve(Dependency.dependency(Game.class));
 		game.changeInjector(injector);
+		Game.setGame(game);
 		return game;
 	}
 

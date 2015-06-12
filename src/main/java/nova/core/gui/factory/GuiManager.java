@@ -19,8 +19,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class GuiManager extends Manager<Gui, GuiFactory> {
-
+public abstract class GuiManager {// extends Manager<Gui> {
+/*
 	// TODO Move this into a seperate manager
 	protected EnumMap<GuiType, List<Gui>> overlayRegistry = new EnumMap<>(GuiType.class);
 
@@ -46,7 +46,7 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 		return register(new GuiFactory(constructor));
 	}
 
-	/**
+	*//**
 	 * <p>
 	 * Shows the provided {@link Gui} previously registered over the factory
 	 * instance. It will trigger the {@link BindEvent}, so any changes to the
@@ -61,13 +61,13 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 	 * @param entity {@link Entity} which opened the GUI
 	 * @param position The block coordinate on which to open the GUI
 	 * @see #showGui(Gui, Entity, Vector3D)
-	 */
+	 *//*
 	public void showGui(String identifier, Entity entity, Vector3D position) {
 		GuiFactory factory = getFactory(identifier).orElseThrow(() -> new RegistrationException(String.format("No GUI called %s registered!", identifier)));
 		showGui(factory.makeGUI(), entity, position);
 	}
 
-	/**
+	*//**
 	 * <p>
 	 * Shows the provided {@link Gui}. It will trigger the {@link BindEvent}, so
 	 * any changes to the instance can be done there.
@@ -85,7 +85,7 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 	 * @param entity {@link Entity} which opened the GUI
 	 * @param position The block coordinate on which to open the GUI
 	 * @see #showGui(String, Entity, Vector3D)
-	 */
+	 *//*
 	public void showGui(String modID, Gui gui, Entity entity, Vector3D position) {
 		showGui(gui, entity, position);
 	}
@@ -94,12 +94,12 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 		gui.bind(entity, position);
 	}
 
-	/**
+	*//**
 	 * Closes the currently open NOVA {@link Gui} on the client side, if
 	 * present, and returns to the in-game GUI. It will not affect any native
 	 * GUIs that might exist along with NOVA.
 	 * @throws IllegalSideException if called on the server side
-	 */
+	 *//*
 	@Sided(Side.CLIENT)
 	public void closeGui() {
 		Side.assertSide(Side.CLIENT);
@@ -113,11 +113,11 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 		gui.unbind();
 	}
 
-	/**
+	*//**
 	 * Returns the active NOVA {@link Gui} on the client side, if present.
 	 * @return NOVA {@link Gui}
 	 * @throws IllegalSideException if called on the server side
-	 */
+	 *//*
 	@Sided(Side.CLIENT)
 	public Optional<Gui> getActiveGui() {
 		Side.assertSide(Side.CLIENT);
@@ -126,12 +126,12 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 
 	protected abstract Optional<Gui> getActiveGuiImpl();
 
-	/**
+	*//**
 	 * Returns the active NOVA {@link Gui} of the supplied player on the client
 	 * side, if present.
 	 * @param player Player to check for
 	 * @return NOVA {@link Gui}
-	 */
+	 *//*
 	public Optional<Gui> getActiveGui(Entity player) {
 		if (Side.get().isClient()) {
 			return getActiveGuiImpl();
@@ -141,15 +141,15 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 
 	protected abstract Optional<Gui> getActiveGuiImpl(Entity player);
 
-	/**
+	*//**
 	 * Returns the active {@link GuiType}.
 	 * @return active {@link GuiType}
-	 */
+	 *//*
 	public GuiType getActiveGuiType() {
 		return getActiveGui().isPresent() ? GuiType.CUSTOM : GuiType.NATIVE;
 	}
 
 	public static enum GuiType {
 		INGAME, TITLE, OPTIONS, INGAME_OPTIONS, CRAFTING, NATIVE, CUSTOM
-	}
+	}*/
 }

@@ -13,7 +13,6 @@ import nova.core.util.Manager;
 import nova.core.util.Registry;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ItemManager extends Manager<Item> {
@@ -29,14 +28,13 @@ public class ItemManager extends Manager<Item> {
 	}
 
 	@Override
-	public Factory<Item> register(Factory<Item> factory) {
-		registry.register(factory);
+	public Factory<Item> beforeRegister(Factory<Item> factory) {
 		itemRegistryListeners.publish(new ItemRegistrationEvent(factory));
 		return factory;
 	}
 
 	public Factory<Item> getItemFactoryFromBlock(Factory<Block> block) {
-		return registry.get(block.getID()).get();
+		return getFactory(block.getID()).get();
 	}
 
 	public Factory<Item> getItemFromBlock(Factory<Block> block) {
@@ -48,16 +46,16 @@ public class ItemManager extends Manager<Item> {
 	}
 
 	public Optional<Factory<Item>> getItem(String name) {
-		if (!registry.contains(name)) {
+		if (!contains(name)) {
 			ItemIDNotFoundEvent event = new ItemIDNotFoundEvent(name);
 			idNotFoundListeners.publish(event);
 
 			if (event.getRemappedFactory() != null) {
-				registry.register(event.getRemappedFactory());
+				register(event.getRemappedFactory());
 			}
 		}
 
-		return registry.get(name);
+		return getFactory(name);
 	}
 
 	public EventListenerHandle<ItemIDNotFoundEvent> whenIDNotFound(EventListener<ItemIDNotFoundEvent> listener) {
@@ -77,7 +75,7 @@ public class ItemManager extends Manager<Item> {
 	}
 
 	public Item makeItem(Factory<Item> factory, Data data) {
-		Item newItem = factory.resolve();
+		Item newItem = factory.make();
 		if (newItem instanceof Storable) {
 			((Storable) newItem).load(data);
 		}

@@ -29,7 +29,7 @@ public class BlockManager extends Manager<Block> {
 	 * @return air block
 	 */
 	public Block getAirBlock() {
-		return Game.blocks().get("air").get();  // TODO OreRegistry
+		return Game.blocks().make("air").get();  // TODO OreRegistry
 	}
 
 	/**
@@ -41,18 +41,18 @@ public class BlockManager extends Manager<Block> {
 	}
 
 	@Override
-	public Factory<Block> register(Factory<Block> factory) throws RegistrationException {
+	public Factory<Block> beforeRegister(Factory<Block> factory) {
 		if (!factory.ID.isPresent()) {
 			throw new RegistrationException(String.format("Factory passed for registration is not named. [%s]", factory));
 		}
-		if (registry.contains(factory.getID())) {
+		if (getFactory(factory.getID()).isPresent()) {
 			throw new RegistrationException(String.format("Factory passed for is already registered. [%s]", factory));
 		}
 
 		BlockRegisteredEvent event = new BlockRegisteredEvent(factory);
 		blockRegisteredListeners.publish(event);
 
-		return super.register(event.blockFactory);
+		return event.blockFactory;
 	}
 
 	@CancelableEvent.Cancelable

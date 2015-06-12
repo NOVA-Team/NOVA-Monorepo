@@ -252,7 +252,7 @@ public abstract class Block extends ComponentProvider implements Buildable<Block
 		public Set<Item> drops;
 
 		public DropEvent(Block block) {
-			this.drops = Collections.singleton(block.getItemFactory().resolve());
+			this.drops = Collections.singleton(block.getItemFactory().make());
 		}
 		public DropEvent(Item item) {
 			this.drops = Collections.singleton(item);

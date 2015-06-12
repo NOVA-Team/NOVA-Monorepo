@@ -8,7 +8,6 @@ import nova.core.util.Registry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * Used to instantiate components.
@@ -26,7 +25,7 @@ public class ComponentManager extends Manager<Component> {
 	}
 
 	@Override
-	public Factory<Component> register(Factory<Component> factory) {
+	public Factory<Component> beforeRegister(Factory<Component> factory) {
 		classToComponent.put(factory.clazz, factory.getID());
 		return super.register(factory);
 	}
@@ -40,25 +39,15 @@ public class ComponentManager extends Manager<Component> {
 	 */
 	@SuppressWarnings("unchecked")
 	public <N> N make(Class<N> theInterface, Object... args) {
-		Optional<Factory<Component>> first = registry.stream()
+		Optional<Factory<Component>> first = all().stream()
 			.filter(n -> theInterface.isAssignableFrom(n.clazz))
 			.findFirst();
 
 		if (first.isPresent()) {
-			return (N) first.get().resolve();
+			return (N) first.get().make(args);
 		} else {
 			throw new RegistrationException("Attempt to create node that is not registered: " + theInterface);
 		}
-	}
-
-	/**
-	 * Instantiates a new node based on its componentID.
-	 * @param componentID - The ID of the node
-	 * @param args - The arguments for the constructor
-	 * @return A new node.
-	 */
-	public Component make(String componentID, Object... args) {
-		return registry.get(componentID).get().resolve();
 	}
 	
 }
