@@ -1,11 +1,9 @@
 package nova.wrapper.mc18.wrapper.render;
 
-import com.google.common.primitives.Ints;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
 import net.minecraftforge.client.model.ISmartItemModel;
@@ -13,13 +11,11 @@ import nova.core.block.Block;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.ItemBlock;
-import nova.core.util.Direction;
+import nova.core.render.RenderException;
 import nova.internal.core.Game;
-import nova.wrapper.mc18.render.RenderUtility;
 import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -28,12 +24,12 @@ import java.util.stream.Collectors;
 public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel, ISmartItemModel, IFlexibleBakedModel {
 
 	private final Block block;
-	private final boolean isDummy;
+	private final boolean isItem;
 
 	public FWSmartBlockModel(Block block, boolean isDummy) {
 		super();
 		this.block = block;
-		this.isDummy = isDummy;
+		this.isItem = isDummy;
 	}
 
 	//Block rendering
@@ -47,7 +43,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 			return new FWSmartBlockModel(blockInstance, false);
 		}
 
-		return this;
+		throw new RenderException("Attempt to statically render a block without StaticRenderer");
 	}
 
 	//Itemblock rendering
@@ -60,7 +56,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 			return new FWSmartBlockModel(block, true);
 		}
 
-		return this;
+		throw new RenderException("Attempt to statically render a block as an item without ItemRenderer");
 	}
 
 	@Override
@@ -68,7 +64,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 		BWModel blockModel = new BWModel();
 		blockModel.matrix.translate(0.5, 0.5, 0.5);
 
-		if (isDummy) {
+		if (isItem) {
 			ItemRenderer renderer = block.get(ItemRenderer.class);
 			renderer.onRender.accept(blockModel);
 		} else {
@@ -76,26 +72,6 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 			renderer.onRender.accept(blockModel);
 		}
 
-		return blockModel
-			.flatten()
-			.stream()
-			.flatMap(
-				model ->
-					model.faces
-						.stream()
-						.map(
-							face -> {
-								List<int[]> vertexData = face.vertices
-									.stream()
-									.map(v -> BWModel.vertexToInts(v, RenderUtility.instance.getTexture(face.texture.get())))
-									.collect(Collectors.toList());
-
-								int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
-								//TODO: The facing might be wrong
-								return new BakedQuad(data, -1, EnumFacing.values()[Direction.fromVector(face.normal).ordinal()]);
-							}
-						)
-			)
-			.collect(Collectors.toList());
+		return modelToQuads(blockModel);
 	}
 }

@@ -12,7 +12,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.util.Iterator;
 
-public class MCRenderManager extends RenderManager {
+public class BWRenderManager extends RenderManager {
 
 	public static ResourceLocation toResourceLocation(Texture texture) {
 		return new ResourceLocation(texture.domain, texture.getPath());

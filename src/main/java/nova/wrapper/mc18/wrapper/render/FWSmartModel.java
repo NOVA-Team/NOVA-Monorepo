@@ -1,13 +1,19 @@
 package nova.wrapper.mc18.wrapper.render;
 
+import com.google.common.primitives.Ints;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
+import nova.core.render.model.Model;
+import nova.core.util.Direction;
+import nova.wrapper.mc18.render.RenderUtility;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -20,21 +26,30 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 	public FWSmartModel() {
 		this.format = new VertexFormat();
 	}
-/*
-	@Override
-	public IBakedModel handleItemState(ItemStack stack) {
-		Item item = Game.natives().toNova(stack);
 
-		if (item.has(ItemRenderer.class)) {
-			ItemRenderer renderer = item.get(ItemRenderer.class);
-			BWModel model = new BWModel();
-			renderer.onRender.accept(model);
-			return new FWSmartModel(model);
-		}
+	protected List<BakedQuad> modelToQuads(Model modelIn) {
+		return modelIn
+			.flatten()
+			.stream()
+			.flatMap(
+				model ->
+					model.faces
+						.stream()
+						.map(
+							face -> {
+								List<int[]> vertexData = face.vertices
+									.stream()
+									.map(v -> BWModel.vertexToInts(v, RenderUtility.instance.getTexture(face.texture.get())))
+									.collect(Collectors.toList());
 
-		return this;
-	}*/
-
+								int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
+								//TODO: The facing might be wrong
+								return new BakedQuad(data, -1, EnumFacing.values()[Direction.fromVector(face.normal).ordinal()]);
+							}
+						)
+			)
+			.collect(Collectors.toList());
+	}
 
 	@Override
 	public VertexFormat getFormat() {
