@@ -18,6 +18,8 @@ public class BlockModelUtil {
 
 	/**
 	 * Draws a standard block.
+	 *
+	 * @param model Model to use
 	 * @param block Block to draw
 	 * @return This Model
 	 */
@@ -76,6 +78,19 @@ public class BlockModelUtil {
 		return null;
 	}
 
+	/**
+	 * Creates the botom face of the model
+	 *
+	 * @param model The model to render
+	 * @param minX Min X coord
+	 * @param minY Min Y coord
+	 * @param minZ Min Z coord
+	 * @param maxX Max X coord
+	 * @param maxY Max Y coord
+	 * @param maxZ Max Z coord
+	 * @param textureCoordinates Texture coordinates to render
+	 * @return The bottom face of the model
+	 */
 	public static Face drawDown(
 		Model model,
 		double minX, double minY, double minZ,
@@ -96,6 +111,19 @@ public class BlockModelUtil {
 		return down;
 	}
 
+	/**
+	 * Creates the top face of the model
+	 *
+	 * @param model The model to render
+	 * @param minX Min X coord
+	 * @param minY Min Y coord
+	 * @param minZ Min Z coord
+	 * @param maxX Max X coord
+	 * @param maxY Max Y coord
+	 * @param maxZ Max Z coord
+	 * @param textureCoordinates Texture coordinates to render
+	 * @return The top face of the model
+	 */
 	public static Face drawUp(
 		Model model,
 		double minX, double minY, double minZ,
@@ -116,6 +144,19 @@ public class BlockModelUtil {
 		return up;
 	}
 
+	/**
+	 * Creates the north face of the model
+	 *
+	 * @param model The model to render
+	 * @param minX Min X coord
+	 * @param minY Min Y coord
+	 * @param minZ Min Z coord
+	 * @param maxX Max X coord
+	 * @param maxY Max Y coord
+	 * @param maxZ Max Z coord
+	 * @param textureCoordinates Texture coordinates to render
+	 * @return The north face of the model
+	 */
 	public static Face drawNorth(
 		Model model,
 		double minX, double minY, double minZ,
@@ -137,6 +178,19 @@ public class BlockModelUtil {
 		return north;
 	}
 
+	/**
+	 * Creates the south face of the model
+	 *
+	 * @param model The model to render
+	 * @param minX Min X coord
+	 * @param minY Min Y coord
+	 * @param minZ Min Z coord
+	 * @param maxX Max X coord
+	 * @param maxY Max Y coord
+	 * @param maxZ Max Z coord
+	 * @param textureCoordinates Texture coordinates to render
+	 * @return The south face of the model
+	 */
 	public static Face drawSouth(
 		Model model,
 		double minX, double minY, double minZ,
@@ -158,6 +212,19 @@ public class BlockModelUtil {
 		return south;
 	}
 
+	/**
+	 * Creates the west face of the model
+	 *
+	 * @param model The model to render
+	 * @param minX Min X coord
+	 * @param minY Min Y coord
+	 * @param minZ Min Z coord
+	 * @param maxX Max X coord
+	 * @param maxY Max Y coord
+	 * @param maxZ Max Z coord
+	 * @param textureCoordinates Texture coordinates to render
+	 * @return The west face of the model
+	 */
 	public static Face drawWest(
 		Model model,
 		double minX, double minY, double minZ,
@@ -179,6 +246,19 @@ public class BlockModelUtil {
 		return west;
 	}
 
+	/**
+	 * Creates the east face of the model
+	 *
+	 * @param model The model to render
+	 * @param minX Min X coord
+	 * @param minY Min Y coord
+	 * @param minZ Min Z coord
+	 * @param maxX Max X coord
+	 * @param maxY Max Y coord
+	 * @param maxZ Max Z coord
+	 * @param textureCoordinates Texture coordinates to render
+	 * @return The east face of the model
+	 */
 	public static Face drawEast(
 		Model model,
 		double minX, double minY, double minZ,
@@ -200,6 +280,20 @@ public class BlockModelUtil {
 		return east;
 	}
 
+	/**
+	 * Creates a face of the model in a specified direction
+	 *
+	 * @param dir The direction of the face to make
+	 * @param model The model to use
+	 * @param minX Min X coord
+	 * @param minY Min Y coord
+	 * @param minZ Min Z coord
+	 * @param maxX Max X coord
+	 * @param maxY Max Y coord
+	 * @param maxZ Max Z coord
+	 * @param textureCoordinates Texture coordinates to render
+	 * @return The face of the model in that dirction
+	 */
 	public static Face drawDir(Direction dir,
 		Model model,
 		double minX, double minY, double minZ,
@@ -224,6 +318,19 @@ public class BlockModelUtil {
 		throw new RenderException("Invalid draw direction!");
 	}
 
+	/**
+	 * Applies the textures to the model
+	 *
+	 * @param model The model to use
+	 * @param minX Min X coord
+	 * @param minY Min Y coord
+	 * @param minZ Min Z coord
+	 * @param maxX Max X coord
+	 * @param maxY Max Y coord
+	 * @param maxZ Max Z coord
+	 * @param textureCoordinates Texture coordinates to render
+	 * @return The cube model with textures
+	 */
 	public static Model drawCube(
 		Model model,
 		double minX, double minY, double minZ,
@@ -240,6 +347,13 @@ public class BlockModelUtil {
 		return model;
 	}
 
+	/**
+	 * Binds the specified texturecoordinates to the model for the specified cuboid for rendering
+	 * @param model The model to apply the textures to
+	 * @param cuboid The cuboid where the moddel aplies to
+	 * @param textureCoordinates The texturecoordinates to use
+	 * @return The model with the textures aplied
+	 */
 	public static Model drawCube(Model model, Cuboid cuboid, CubeTextureCoordinates textureCoordinates) {
 		return drawCube(model, cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ(), textureCoordinates);
 	}

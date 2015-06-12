@@ -59,7 +59,7 @@ public class Collider extends Component {
 	}
 
 	public Collider onCollide(EventListener<CollideEvent> listener) {
-		this.collideEvent.add(listener);
+		this.collideEvent.on(CollideEvent.class).bind(listener::onEvent);
 		return this;
 	}
 

@@ -36,6 +36,8 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Replaces current transformation matrix by an identity current.
+	 *
+	 * @param matrix The new matrix to use
 	 */
 	public MatrixStack loadMatrix(RealMatrix matrix) {
 		current = matrix;
@@ -44,6 +46,7 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Exposes current transformation matrix.
+	 *
 	 * @return current transformation matrix.
 	 */
 	public RealMatrix getMatrix() {
@@ -52,7 +55,9 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Transforms current matrix with give matrix.
+	 *
 	 * @param matrix to transform current matrix.
+	 * @return The transformed matrix
 	 */
 	public MatrixStack transform(RealMatrix matrix) {
 
@@ -62,9 +67,11 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Translates current transformation matrix.
+	 *
 	 * @param x translation.
 	 * @param y translation.
 	 * @param z translation.
+	 * @return The tranlated matrix
 	 */
 	public MatrixStack translate(double x, double y, double z) {
 		current = current.preMultiply(TransformUtil.translationMatrix(x, y, z));
@@ -73,13 +80,21 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Translates current transformation matrix.
+	 *
 	 * @param translateVector vector of translation.
+	 * @return The tranformed matrix
 	 */
 	public MatrixStack translate(Vector3D translateVector) {
 		translate(translateVector.getX(), translateVector.getY(), translateVector.getZ());
 		return this;
 	}
 
+	/**
+	 * Rotates the current matrix
+	 *
+	 * @param rotation The rotation to aply
+	 * @return The rorated matrix
+	 */
 	public MatrixStack rotate(Rotation rotation) {
 		RealMatrix rotMat = MatrixUtils.createRealMatrix(4, 4);
 		rotMat.setSubMatrix(rotation.getMatrix(), 0, 0);
@@ -90,8 +105,10 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Rotates transformation matrix around rotateVector axis by angle radians.
+	 *
 	 * @param rotateVector Vector serving as rotation axis.
 	 * @param angle in radians.
+	 * @return The rotated matrix
 	 */
 	public MatrixStack rotate(Vector3D rotateVector, double angle) {
 		return rotate(new Rotation(rotateVector, angle));
@@ -99,9 +116,11 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Scales current transformation matrix.
+	 *
 	 * @param x scale.
 	 * @param y scale.
 	 * @param z scale.
+	 * @return The scaled matrix
 	 */
 	public MatrixStack scale(double x, double y, double z) {
 		current = current.preMultiply(TransformUtil.scaleMatrix(x, y, z));
@@ -110,7 +129,9 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Scales current transformation matrix.
+	 *
 	 * @param scaleVector scale vector.
+	 * @return The current matrix
 	 */
 	public MatrixStack scale(Vector3D scaleVector) {
 		scale(scaleVector.getX(), scaleVector.getY(), scaleVector.getZ());

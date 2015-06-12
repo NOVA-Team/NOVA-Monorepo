@@ -19,24 +19,44 @@ public class Profiler {
 		this.name = name;
 	}
 
+	/**
+	 * Start's the profiler
+	 *
+	 * @return The started profiler
+	 */
 	public Profiler start() {
 		time = System.currentTimeMillis();
 		return this;
 	}
 
+	/**
+	 * Stops the profiler
+	 *
+	 * @return How much time elapsed (in seconds)
+	 */
 	public double end() {
 		Game.logger().info(toString());
 		return elapsed() / 1000d;
 	}
 
+	/**
+	 * @return How much time elapsed since the profiler was started (in miliseconds)
+	 */
 	public long elapsed() {
 		return System.currentTimeMillis() - time;
 	}
 
+	/**
+	 * @return The average time of the laps (in seconds)
+	 */
 	public double average() {
 		return lapped.stream().mapToDouble(value -> value / 1000d).sum() / lapped.size();
 	}
 
+	/**
+	 * Starts a new lap
+	 * @return The profiler
+	 */
 	public Profiler lap() {
 		lapped.add(elapsed());
 		return start();

@@ -29,19 +29,19 @@ public class Outline extends Rectangle {
 	}
 
 	public int getWidth() {
-		return x2i() - x1i();
+		return maxXi() - minXi();
 	}
 
 	public Outline setWidth(int width) {
-		return new Outline(new Vector2D(x1i(), x1i() + width), max);
+		return new Outline(new Vector2D(minXi(), minXi() + width), max);
 	}
 
 	public int getHeight() {
-		return y2i() - y1i();
+		return maxYi() - minYi();
 	}
 
 	public Outline setHeight(int height) {
-		return new Outline(min, new Vector2D(y1i(), y1i() + height));
+		return new Outline(min, new Vector2D(minYi(), minYi() + height));
 	}
 
 	public Vector2D getDimension() {

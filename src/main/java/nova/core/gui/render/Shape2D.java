@@ -80,10 +80,10 @@ public interface Shape2D {
 
 		public RectangleShape(Rectangle rect) {
 			vertices = new Vertex2D[4];
-			vertices[0] = new Vertex2D(rect.x1i(), rect.y1i());
-			vertices[1] = new Vertex2D(rect.x2i(), rect.y1i());
-			vertices[2] = new Vertex2D(rect.x2i(), rect.y2i());
-			vertices[2] = new Vertex2D(rect.x1i(), rect.y2i());
+			vertices[0] = new Vertex2D(rect.minXi(), rect.minYi());
+			vertices[1] = new Vertex2D(rect.maxXi(), rect.minYi());
+			vertices[2] = new Vertex2D(rect.maxXi(), rect.maxYi());
+			vertices[2] = new Vertex2D(rect.minXi(), rect.maxYi());
 		}
 
 		public RectangleShape(int x, int y, int width, int height) {
