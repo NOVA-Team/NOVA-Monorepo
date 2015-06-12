@@ -163,21 +163,24 @@ public class RenderUtility {
 					ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
 
 					nova.core.item.Item dummy = item.getItemFactory().getDummy();
-					Optional<ItemTexture> texture = dummy.getTexture();
 
 					if (dummy.has(ItemRenderer.class)) {
-						//The item has a custom renderer
-						event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(dummy));
-					} else if (texture.isPresent()) {
-						//Default item rendering hack
-						ModelBlock modelGenerated = ModelBakery.MODEL_GENERATED;
-						modelGenerated.name = itemLocation.toString();
-						modelGenerated.textures.put("layer0", texture.get().getResource());
-						ModelBlock modelBlock = event.modelBakery.itemModelGenerator.makeItemModel(event.modelBakery.textureMap, modelGenerated);
-						TextureAtlasSprite mcTexture = RenderUtility.instance.getTexture(texture.get());
-						event.modelBakery.sprites.put(new ResourceLocation(mcTexture.getIconName().replace("items/", "")), mcTexture);
-						IBakedModel iBakedModel = event.modelBakery.bakeModel(modelBlock, ModelRotation.X0_Y0, true);
-						event.modelRegistry.putObject(itemLocation, iBakedModel);
+						Optional<ItemTexture> texture = dummy.get(ItemRenderer.class).texture;
+
+						if (texture.isPresent()) {
+							//Default item rendering hack
+							ModelBlock modelGenerated = ModelBakery.MODEL_GENERATED;
+							modelGenerated.name = itemLocation.toString();
+							modelGenerated.textures.put("layer0", texture.get().getResource());
+							ModelBlock modelBlock = event.modelBakery.itemModelGenerator.makeItemModel(event.modelBakery.textureMap, modelGenerated);
+							TextureAtlasSprite mcTexture = RenderUtility.instance.getTexture(texture.get());
+							event.modelBakery.sprites.put(new ResourceLocation(mcTexture.getIconName().replace("items/", "")), mcTexture);
+							IBakedModel iBakedModel = event.modelBakery.bakeModel(modelBlock, ModelRotation.X0_Y0, true);
+							event.modelRegistry.putObject(itemLocation, iBakedModel);
+						} else {
+							//The item has a custom renderer
+							event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(dummy));
+						}
 					}
 				}
 			}
