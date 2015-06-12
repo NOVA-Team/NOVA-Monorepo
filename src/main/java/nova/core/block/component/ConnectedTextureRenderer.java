@@ -3,6 +3,7 @@ package nova.core.block.component;
 import nova.core.block.Block;
 import nova.core.component.Require;
 import nova.core.component.misc.Collider;
+import nova.core.component.transform.BlockTransform;
 import nova.core.render.model.BlockModelUtil;
 import nova.core.render.model.Face;
 import nova.core.render.model.Model;
@@ -42,11 +43,15 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 	public ConnectedTextureRenderer(Block provider, Texture edgeTexture) {
 		super(provider);
 		this.block = provider;
-		connectMask = () ->
-			Arrays.stream(Direction.DIRECTIONS)
-				.filter(d -> block.world().getBlock(block.position().add(d.toVector())).get().sameType(block))
-				.map(d -> 1 << d.ordinal())
-				.reduce(0, (b, a) -> a | b);
+		connectMask = () -> {
+			if (block.has(BlockTransform.class)) {
+				return Arrays.stream(Direction.DIRECTIONS)
+					.filter(d -> block.world().getBlock(block.position().add(d.toVector())).get().sameType(block))
+					.map(d -> 1 << d.ordinal())
+					.reduce(0, (b, a) -> a | b);
+			}
+			return 0x0;
+		};
 
 		onRender = this::renderStatic;
 		this.edgeTexture = edgeTexture;
