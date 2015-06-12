@@ -1,6 +1,7 @@
 package nova.core.component.renderer;
 
 import nova.core.component.ComponentProvider;
+import nova.core.render.texture.ItemTexture;
 
 import java.util.Optional;
 
@@ -9,6 +10,12 @@ import java.util.Optional;
  * (That is, called upon item render or network synchronization.)
  */
 public class ItemRenderer extends Renderer {
+
+	/**
+	 * If there is no texture provided, it will not render any and default to onRender() method for custom item rendering.
+	 * @return {@link ItemTexture} instance
+	 */
+	public Optional<ItemTexture> texture = Optional.empty();
 
 	public ItemRenderer() {
 
@@ -23,5 +30,10 @@ public class ItemRenderer extends Renderer {
 				provider.getOp(DynamicRenderer.class).ifPresent(c -> c.onRender.accept(model));
 			}
 		};
+	}
+
+	public ItemRenderer setTexture(ItemTexture texture) {
+		this.texture = Optional.of(texture);
+		return this;
 	}
 }

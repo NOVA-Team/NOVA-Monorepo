@@ -5,7 +5,6 @@ import nova.core.entity.Entity;
 import nova.core.event.Event;
 import nova.core.event.EventBus;
 import nova.core.render.Color;
-import nova.core.render.texture.ItemTexture;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.internal.core.Game;
@@ -105,14 +104,6 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 	 */
 	public Color colorMultiplier() {
 		return Color.white;
-	}
-
-	/**
-	 * Gets the texture of this item. If there is no texture provided, it will not render any and default to onRender() method for custom item rendering.
-	 * @return {@link ItemTexture} instance
-	 */
-	public Optional<ItemTexture> getTexture() {
-		return Optional.empty();
 	}
 
 	public static class TooltipEvent extends Event {
