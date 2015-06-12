@@ -113,7 +113,7 @@ public abstract class ComponentProvider {
 			.collect(Collectors.toSet());
 
 		if (collect.size() > 1) {
-			throw new ComponentException("Ambiguous component search. There are two components that match this subtype: %s", componentType);
+			throw new ComponentException("Ambiguous component search. For component/interface %s there are multiple components found: %s", componentType, collect);
 		}
 
 		return collect.stream().findFirst();
