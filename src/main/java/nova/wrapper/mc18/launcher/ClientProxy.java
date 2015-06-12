@@ -2,7 +2,11 @@ package nova.wrapper.mc18.launcher;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -34,17 +38,26 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerItem(FWItem item) {
 		super.registerItem(item);
-		//TODO: Do we need this?
+
+		//Hacks to inject custom item definition
+		ModelLoader.setCustomMeshDefinition(item, stack -> {
+				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
+				return new ModelResourceLocation(itemRL, "inventory");
+			}
+		);
 	}
 
 	@Override
-	public void registerBlock(FWBlock block) {
-		super.registerBlock(block);
+	public void postRegisterBlock(FWBlock block) {
+		super.postRegisterBlock(block);
 
-		/**
-		 * Registers a block rendering handlers
-		 */
-		//TODO: Do we need this?
+		//Hack to inject custom itemblock definition
+		Item itemFromBlock = Item.getItemFromBlock(block);
+		ModelLoader.setCustomMeshDefinition(itemFromBlock, stack -> {
+				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(itemFromBlock);
+				return new ModelResourceLocation(itemRL, "inventory");
+			}
+		);
 	}
 
 	@Override

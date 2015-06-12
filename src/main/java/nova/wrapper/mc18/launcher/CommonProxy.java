@@ -33,7 +33,7 @@ public class CommonProxy implements Loadable {
 
 	}
 
-	public void registerBlock(FWBlock block) {
+	public void postRegisterBlock(FWBlock block) {
 
 	}
 

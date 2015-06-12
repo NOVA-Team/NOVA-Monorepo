@@ -14,14 +14,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.render.RenderException;
-import nova.core.render.model.Model;
 import nova.core.render.texture.BlockTexture;
 import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
 import nova.internal.core.Game;
 import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
-import nova.wrapper.mc18.wrapper.item.FWItem;
-import nova.wrapper.mc18.wrapper.render.FWSmartModel;
+import nova.wrapper.mc18.wrapper.render.FWSmartBlockModel;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -134,11 +132,12 @@ public class RenderUtility {
 				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(itemFromBlock);
 				ModelResourceLocation blockLocation = new ModelResourceLocation(blockRL, "normal");
 				ModelResourceLocation itemLocation = new ModelResourceLocation(itemRL, "inventory");
-				event.modelRegistry.putObject(blockLocation, new FWSmartModel(new Model()));
-				event.modelRegistry.putObject(itemLocation, new FWSmartModel(new Model()));
+				event.modelRegistry.putObject(blockLocation, new FWSmartBlockModel(block.block, true));
+				event.modelRegistry.putObject(itemLocation, new FWSmartBlockModel(block.block, true));
 			}
 		});
 
+		/*
 		//Register all items
 		Game.items().registry.forEach(itemFactory -> {
 			Object itemObj = Game.natives().toNative(itemFactory.getDummy());
@@ -148,7 +147,7 @@ public class RenderUtility {
 				ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "normal");
 				event.modelRegistry.putObject(itemLocation, new FWSmartModel(new Model()));
 			}
-		});
+		});*/
 	}
 
 	public void preInit() {
