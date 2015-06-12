@@ -13,7 +13,8 @@ public class ItemRenderer extends Renderer {
 
 	/**
 	 * If there is no texture provided, it will not render any and default to onRender() method for custom item rendering.
-	 * @return {@link ItemTexture} instance
+	 * <p>
+	 * return - {@link ItemTexture} instance
 	 */
 	public Optional<ItemTexture> texture = Optional.empty();
 
