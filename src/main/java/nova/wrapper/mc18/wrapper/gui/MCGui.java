@@ -129,9 +129,9 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 		}
 
 		Outline guiOutline = getOutline();
-		canvas.translate(guiOutline.x1i(), guiOutline.y1i());
-		super.draw(mouseX - guiOutline.x1i(), mouseY - guiOutline.y1i(), partial, graphics);
-		canvas.translate(-guiOutline.x1i(), -guiOutline.y1i());
+		canvas.translate(guiOutline.minXi(), guiOutline.minYi());
+		super.draw(mouseX - guiOutline.minXi(), mouseY - guiOutline.minYi(), partial, graphics);
+		canvas.translate(-guiOutline.minXi(), -guiOutline.minYi());
 	}
 
 	public class MCContainer extends Container {
@@ -201,7 +201,7 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 
 		@Override
 		protected void mouseClicked(int mouseX, int mouseY, int button) {
-			onMousePressed(mouseX - getOutline().x1i(), mouseY - getOutline().y1i(), getMouseButton(button), true);
+			onMousePressed(mouseX - getOutline().minXi(), mouseY - getOutline().minYi(), getMouseButton(button), true);
 
 			try {
 				super.mouseClicked(mouseX, mouseY, button);
@@ -212,7 +212,7 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 
 		@Override
 		protected void mouseClickMove(int mouseX, int mouseY, int button, long time) {
-			onMousePressed(mouseX - getOutline().x1i(), mouseY - getOutline().y1i(), getMouseButton(button), false);
+			onMousePressed(mouseX - getOutline().minXi(), mouseY - getOutline().minYi(), getMouseButton(button), false);
 			super.mouseClickMove(mouseX, mouseY, button, time);
 		}
 
