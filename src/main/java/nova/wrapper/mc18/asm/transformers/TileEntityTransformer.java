@@ -16,7 +16,7 @@ public class TileEntityTransformer implements Transformer {
 
 		System.out.println("[NOVA] Transforming TileEntity class for dynamic instance injection.");
 
-		ObfMapping obfmap = new ObfMapping("aor", "c", "(Ldh;)Laor;");
+		ObfMapping obfmap = new ObfMapping("bcm", "c", "(Lfn;)Lbcm;");
 		ObfMapping srgmap = new ObfMapping("net/minecraft/tileentity/TileEntity", "func_145827_c", "(Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;");
 		ObfMapping decompMap = new ObfMapping("net/minecraft/tileentity/TileEntity", "createAndLoadEntity", "(Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;");
 
