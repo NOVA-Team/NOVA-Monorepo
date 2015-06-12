@@ -21,9 +21,9 @@ import nova.wrapper.mc18.wrapper.entity.forward.FWEntity;
 import nova.wrapper.mc18.wrapper.entity.forward.MCEntityTransform;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The backwards world wrapper.
@@ -105,7 +105,11 @@ public class BWWorld extends World {
 
 	@Override
 	public Set<Entity> getEntities(Cuboid bound) {
-		return new HashSet(world().getEntitiesWithinAABB(Entity.class, AxisAlignedBB.fromBounds(bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ())));
+		return (Set) world()
+			.getEntitiesWithinAABB(net.minecraft.entity.Entity.class, AxisAlignedBB.fromBounds(bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ()))
+			.stream()
+			.map(mcEnt -> (Entity) Game.natives().toNova(mcEnt))
+			.collect(Collectors.toSet());
 	}
 
 	@Override
