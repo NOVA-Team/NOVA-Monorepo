@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A component provider provides the components associated with the object.
@@ -105,11 +107,16 @@ public abstract class ComponentProvider {
 				return Optional.of((C) component);
 			}
 		}
-		return components().stream()
+		Set<C> collect = components().stream()
 			.filter(c -> componentType.isAssignableFrom(c.getClass()))
 			.map(componentType::cast)
-			.findFirst();
+			.collect(Collectors.toSet());
 
+		if (collect.size() > 1) {
+			throw new ComponentException("Ambiguous component search. There are two components that match this subtype: %s", componentType);
+		}
+
+		return collect.stream().findFirst();
 	}
 
 	/**
