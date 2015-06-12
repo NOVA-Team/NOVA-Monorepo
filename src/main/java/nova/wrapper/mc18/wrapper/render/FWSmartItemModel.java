@@ -9,14 +9,10 @@ import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.item.Item;
-import nova.core.render.model.Face;
-import nova.core.render.model.Vertex;
-import nova.core.render.texture.ItemTexture;
 import nova.internal.core.Game;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -55,20 +51,6 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 			ItemRenderer renderer = item.get(ItemRenderer.class);
 			renderer.onRender.accept(model);
 
-			return modelToQuads(model);
-		}
-
-		//TODO: This should be in NOVA Core
-		Optional<ItemTexture> texture = item.getTexture();
-		if (texture.isPresent()) {
-			BWModel model = new BWModel();
-			Face face = model.createFace();
-			face.drawVertex(new Vertex(0, 0, 0, 0, 0));
-			face.drawVertex(new Vertex(0, 0, 1, 0, 1));
-			face.drawVertex(new Vertex(1, 0, 1, 1, 1));
-			face.drawVertex(new Vertex(1, 0, 0, 1, 0));
-			face.bindTexture(texture.get());
-			model.drawFace(face);
 			return modelToQuads(model);
 		}
 
