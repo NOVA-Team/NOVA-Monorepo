@@ -36,8 +36,8 @@ public class MCButton extends MCGuiComponent<Button> implements NativeButton, Dr
 	public void setOutline(Outline outline) {
 		button.width = outline.getWidth();
 		button.height = outline.getHeight();
-		button.xPosition = outline.x1i();
-		button.yPosition = outline.y1i();
+		button.xPosition = outline.minXi();
+		button.yPosition = outline.minYi();
 		super.setOutline(outline);
 	}
 

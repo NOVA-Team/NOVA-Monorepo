@@ -41,7 +41,7 @@ public class MCGuiContainer extends MCGuiComponent<AbstractGuiContainer<?, ?>> i
 	public void draw(int mouseX, int mouseY, float partial, Graphics graphics) {
 		for (GuiComponent<?, ?> component : components) {
 			Outline outline = component.getOutline();
-			int width = outline.x1i(), height = outline.y1i();
+			int width = outline.minXi(), height = outline.minYi();
 			Canvas canvas = graphics.getCanvas();
 
 			canvas.push();
