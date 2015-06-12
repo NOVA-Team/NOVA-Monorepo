@@ -191,12 +191,9 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 				if (first.isPresent()) {
 					itemWrapper.setCreativeTab(first.get());
 				} else {
-					ModCreativeTab tab = new ModCreativeTab(category.name, Game.natives().toNative(category.item.get()));
+					Optional<Item> item = category.item;
+					ModCreativeTab tab = new ModCreativeTab(category.name, item.isPresent() ? Game.natives().toNative(item.get()) : itemWrapper);
 					itemWrapper.setCreativeTab(tab);
-
-					if (category.item.isPresent()) {
-						tab.item = itemWrapper;
-					}
 				}
 			}
 
