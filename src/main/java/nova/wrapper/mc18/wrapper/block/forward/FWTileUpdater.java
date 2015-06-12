@@ -20,6 +20,8 @@ public class FWTileUpdater extends FWTile implements IUpdatePlayerListBox {
 	 */
 	@Override
 	public void update() {
-		((Updater) block).update(0.05);
+		if (block != null) {
+			((Updater) block).update(0.05);
+		}
 	}
 }

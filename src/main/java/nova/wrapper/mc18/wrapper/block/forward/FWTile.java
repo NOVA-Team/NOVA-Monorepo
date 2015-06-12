@@ -50,7 +50,6 @@ public class FWTile extends TileEntity {
 	@Override
 	public void validate() {
 		super.validate();
-
 		block.add(new MCBlockTransform(block, new BWWorld(getWorld()), new Vector3D(pos.getX(), pos.getY(), pos.getZ())));
 
 		if (cacheData != null && block instanceof Storable) {
@@ -86,11 +85,6 @@ public class FWTile extends TileEntity {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		/**
-		 * Because World and Position do not exist during NBT read time, we must
-		 * wait until the block is injected with World and Position data using
-		 * Future.
-		 */
 		blockID = nbt.getString("novaID");
 		cacheData = Game.natives().toNova(nbt.getCompoundTag("nova"));
 	}

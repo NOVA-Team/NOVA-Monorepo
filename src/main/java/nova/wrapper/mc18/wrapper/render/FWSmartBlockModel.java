@@ -11,7 +11,6 @@ import nova.core.block.Block;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.ItemBlock;
-import nova.core.render.RenderException;
 import nova.internal.core.Game;
 import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
 
@@ -43,7 +42,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 			return new FWSmartBlockModel(blockInstance, false);
 		}
 
-		throw new RenderException("Attempt to statically render a block without StaticRenderer");
+		return new FWEmptyModel();
 	}
 
 	//Itemblock rendering
@@ -56,7 +55,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 			return new FWSmartBlockModel(block, true);
 		}
 
-		throw new RenderException("Attempt to statically render a block as an item without ItemRenderer");
+		return new FWEmptyModel();
 	}
 
 	@Override

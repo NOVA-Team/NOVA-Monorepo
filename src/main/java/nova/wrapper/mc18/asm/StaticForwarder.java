@@ -31,7 +31,7 @@ public class StaticForwarder {
 	 * @throws Exception
 	 */
 	public static TileEntity loadTileEntityHook(NBTTagCompound data, Class<? extends TileEntity> clazz) throws Exception {
-		if (clazz.equals(FWTile.class)) {
+		if (FWTile.class.isAssignableFrom(clazz)) {
 			return FWTileLoader.loadTile(data);
 		} else {
 			return clazz.newInstance();
