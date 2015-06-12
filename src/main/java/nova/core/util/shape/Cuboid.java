@@ -21,11 +21,27 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	public final Vector3D min;
 	public final Vector3D max;
 
+	/**
+	 * New cuboid defined by the specified vectors as bounds
+	 *
+	 * @param min min vector
+	 * @param max max vextor
+	 */
 	public Cuboid(Vector3D min, Vector3D max) {
 		this.min = min;
 		this.max = max;
 	}
 
+	/**
+	 * New Cuboid with the specified coordinates as bounds
+	 *
+	 * @param minX min x coord
+	 * @param minY min y coord
+	 * @param minZ min z coord
+	 * @param maxX max x coord
+	 * @param maxY max y coord
+	 * @param maxZ max z coord
+	 */
 	public Cuboid(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
 		this(new Vector3D(minX, minY, minZ), new Vector3D(maxX, maxY, maxZ));
 	}
@@ -35,6 +51,12 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 		return new Cuboid(min.add(other.min), max.add(other.max));
 	}
 
+	/**
+	 * Adds a vector to the cuboid
+	 *
+	 * @param other The vector to add
+	 * @return The new cuboid
+	 */
 	public Cuboid add(Vector3D other) {
 		return new Cuboid(min.add(other), max.add(other));
 	}
@@ -68,6 +90,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Expands the cuboid by a certain vector.
+	 *
 	 * @param other Given vector
 	 * @return New cuboid
 	 */
@@ -77,6 +100,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Expands the cuboid by a certain amount.
+	 *
 	 * @param other The amount
 	 * @return New cuboid
 	 */
@@ -86,30 +110,52 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Returns if this cuboid is a cube.
+	 *
 	 * @return If this cuboid is a cube.
 	 */
 	public boolean isCube() {
 		return size().getX() == size().getY() && size().getY() == size().getZ();
 	}
 
+	/**
+	 * How large the cuboid is
+	 *
+	 * @return The size of the cuboid
+	 */
 	public Vector3D size() {
 		return max.subtract(min);
 	}
 
+	/**
+	 * The center of the cuboid
+	 *
+	 * @return Vector representing the cuboid
+	 */
 	public Vector3D center() {
 		return Vector3DUtil.midpoint(max, min);
 	}
 
+	/**
+	 * The volume of the cuboid
+	 *
+	 * @return The volume of the cuboid
+	 */
 	public double volume() {
 		return size().getX() * size().getY() * size().getZ();
 	}
 
+	/**
+	 * The surface area of the cuboid
+	 *
+	 * @return The surface area of the cuvoid
+	 */
 	public double surfaceArea() {
 		return (2 * size().getX() * size().getZ()) + (2 * size().getX() * size().getY()) + (2 * size().getZ() * size().getY());
 	}
 
 	/**
 	 * Checks if another cuboid is within this cuboid
+	 *
 	 * @param other Cuboid to check
 	 * @return Result of the check
 	 */
@@ -120,6 +166,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 
 	/**
 	 * Checks if a vector is within this cuboid.
+	 *
 	 * @param other Vector to check
 	 * @return Result of the check
 	 */
@@ -128,12 +175,24 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 			(other.getY() >= this.min.getY() && other.getY() < this.max.getY() ? other.getZ() >= this.min.getZ() && other.getZ() < this.max.getZ() : false) : false;
 	}
 
+	/**
+	 * Applies the given transformer to the cuboid
+	 *
+	 * @param transform The transformer to apply
+	 * @return The transformed cuboid
+	 */
 	public Cuboid transform(Transformer transform) {
 		Vector3D transMin = transform.apply(min);
 		Vector3D transMax = transform.apply(max);
 		return new Cuboid(Vector3DUtil.min(transMin, transMax), Vector3DUtil.max(transMax, transMin));
 	}
 
+	/**
+	 * Applies the given rotation to the Cuboid
+	 *
+	 * @param transform The rotation to apply
+	 * @return The rotated cuboid
+	 */
 	public Cuboid transform(Rotation transform) {
 		Vector3D transMin = transform.applyTo(min);
 		Vector3D transMax = transform.applyTo(max);
