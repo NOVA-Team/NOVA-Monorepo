@@ -9,9 +9,9 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.component.Category;
-import nova.internal.core.Game;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
+import nova.internal.core.Game;
 import nova.wrapper.mc1710.launcher.NovaMinecraft;
 import nova.wrapper.mc1710.util.ModCreativeTab;
 import nova.wrapper.mc1710.wrapper.block.backward.BWBlock;
@@ -114,12 +114,9 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 			if (first.isPresent()) {
 				blockWrapper.setCreativeTab(first.get());
 			} else {
-				ModCreativeTab tab = new ModCreativeTab(category.name, Game.natives().toNative(category.item.get()));
+				Optional<nova.core.item.Item> item = category.item;
+				ModCreativeTab tab = new ModCreativeTab(category.name, item.isPresent() ? Game.natives().toNative(item.get()) : Item.getItemFromBlock(blockWrapper));
 				blockWrapper.setCreativeTab(tab);
-
-				if (category.item.isPresent()) {
-					tab.item = Item.getItemFromBlock(blockWrapper);
-				}
 			}
 		}
 
