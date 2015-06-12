@@ -5,6 +5,7 @@ import nova.core.block.Stateful;
 import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
+import nova.core.entity.component.Living;
 import nova.core.event.Event;
 import nova.core.network.Packet;
 import nova.core.network.Sync;
@@ -14,8 +15,10 @@ import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.Direction;
 import nova.core.util.RayTracer;
+import nova.core.util.math.RotationUtil;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.util.FastMath;
 
 import java.util.Optional;
 
@@ -98,6 +101,29 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 			if (hit.isPresent()) {
 				return (isFlip) ? hit.get().side.opposite() : hit.get().side;
 			}
+		}
+
+		return Direction.UNKNOWN;
+	}
+
+	public Direction calculateDirectionFromEntity(Entity entity) {
+		if (provider instanceof Block) {
+			Vector3D position = entity.position();
+			if (FastMath.abs(position.getX() - ((Block) provider).y()) < 2.0F && FastMath.abs(position.getZ() - ((Block) provider).z()) < 2.0F) {
+				double height = position.add(entity.get(Living.class).faceDisplacement.get()).getY();
+
+				if (height - ((Block) provider).y() > 2.0D) {
+					return Direction.fromOrdinal(1);
+				}
+
+				if (((Block) provider).y() - height > 0.0D) {
+					return Direction.fromOrdinal(0);
+				}
+			}
+
+			int l = (int) FastMath.floor((entity.rotation().getAngles(RotationUtil.DEFAULT_ORDER)[0] * 4.0F / 360.0F) + 0.5D) & 3;
+			int dir = l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
+			return (isFlip) ? Direction.fromOrdinal(dir).opposite() : Direction.fromOrdinal(dir);
 		}
 
 		return Direction.UNKNOWN;
