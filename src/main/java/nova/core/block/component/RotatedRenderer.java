@@ -2,7 +2,6 @@ package nova.core.block.component;
 
 import nova.core.block.Block;
 import nova.core.component.Require;
-import nova.core.component.renderer.StaticRenderer;
 import nova.core.component.transform.Orientation;
 import nova.core.render.model.BlockModelUtil;
 import nova.core.render.model.Model;
@@ -12,9 +11,9 @@ import nova.core.render.model.Model;
  * @author Calclavia
  */
 @Require(Orientation.class)
-class RotatedRenderer extends StaticRenderer {
+class RotatedRenderer extends StaticBlockRenderer {
 
-	RotatedRenderer(Block provider) {
+	public RotatedRenderer(Block provider) {
 		super(provider);
 		onRender = this::renderStatic;
 	}
