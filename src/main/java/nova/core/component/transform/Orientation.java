@@ -182,7 +182,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 				}
 			}
 
-			int l = (int) FastMath.floor((entity.rotation().getAngles(RotationUtil.DEFAULT_ORDER)[1] * 4.0F / 360.0F) + 0.5D) & 3;
+			int l = (int) FastMath.floor((entity.rotation().getAngles(RotationUtil.DEFAULT_ORDER)[0] * 4.0F / 360.0F) + 0.5D) & 3;
 			int dir = l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
 			return (isFlip) ? Direction.fromOrdinal(dir).opposite() : Direction.fromOrdinal(dir);
 		}
