@@ -1,5 +1,6 @@
 package nova.core.component;
 
+import nova.core.item.Item;
 import nova.core.util.Identifiable;
 
 /**
@@ -10,9 +11,15 @@ import nova.core.util.Identifiable;
 public class Category extends Component implements Identifiable {
 
 	public final String name;
+	public final Item item;
+
+	public Category(String name, Item item) {
+		this.name = name;
+		this.item = item;
+	}
 
 	public Category(String name) {
-		this.name = name;
+		this(name, null);
 	}
 
 	@Override
