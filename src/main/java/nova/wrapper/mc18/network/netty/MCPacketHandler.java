@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import nova.wrapper.mc18.launcher.NovaMinecraft;
@@ -22,10 +23,10 @@ public class MCPacketHandler extends SimpleChannelInboundHandler<PacketAbstract>
 
 		switch (FMLCommonHandler.instance().getEffectiveSide()) {
 			case CLIENT:
-				packet.handleClientSide(NovaMinecraft.proxy.getClientPlayer());
+				FMLClientHandler.instance().getClient().addScheduledTask(() -> packet.handleClientSide(NovaMinecraft.proxy.getClientPlayer()));
 				break;
 			case SERVER:
-				packet.handleServerSide(((NetHandlerPlayServer) netHandler).playerEntity);
+				FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> packet.handleServerSide(((NetHandlerPlayServer) netHandler).playerEntity));
 				break;
 			default:
 				break;
