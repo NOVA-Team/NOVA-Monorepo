@@ -8,6 +8,7 @@ import nova.core.entity.EntityFactory;
 import nova.core.loader.Loadable;
 import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
 import nova.wrapper.mc18.wrapper.block.forward.FWTile;
+import nova.wrapper.mc18.wrapper.block.forward.FWTileUpdater;
 import nova.wrapper.mc18.wrapper.entity.forward.FWEntity;
 import nova.wrapper.mc18.wrapper.item.FWItem;
 
@@ -20,6 +21,7 @@ public class CommonProxy implements Loadable {
 	@Override
 	public void preInit() {
 		GameRegistry.registerTileEntity(FWTile.class, "novaTile");
+		GameRegistry.registerTileEntity(FWTileUpdater.class, "novaTileUpdater");
 		EntityRegistry.registerModEntity(FWEntity.class, "novaEntity", EntityRegistry.findGlobalUniqueEntityId(), NovaMinecraft.instance, 64, 20, true);
 	}
 
