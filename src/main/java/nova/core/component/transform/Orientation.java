@@ -6,7 +6,6 @@ import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.event.Event;
-import nova.core.event.EventBus;
 import nova.core.network.Packet;
 import nova.core.network.Sync;
 import nova.core.network.Syncable;
@@ -22,14 +21,11 @@ import java.util.Optional;
 
 /**
  * A component that is applied to providers with discrete orientations.
- *
  * @author Calclavia
  */
 public class Orientation extends Component implements Storable, Stateful, Syncable {
 
 	public final ComponentProvider provider;
-
-	public final EventBus<Event> onOrientationChange = new EventBus<>();
 
 	/**
 	 * The allowed rotation directions the block can face.
@@ -77,7 +73,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	public Orientation setOrientation(Direction orientation) {
 		this.orientation = orientation;
-		onOrientationChange.publish(new Event());
+		events.publish(new OrientationChangeEvent());
 		return this;
 	}
 
@@ -123,7 +119,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 		if (result != -1) {
 			setOrientation(Direction.fromOrdinal(result));
-			onOrientationChange.publish(new Event());
+			events.publish(new OrientationChangeEvent());
 			return true;
 		}
 
@@ -297,5 +293,9 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	@Override
 	public void write(Packet packet) {
 		packet.writeInt(orientation.ordinal());
+	}
+
+	public static class OrientationChangeEvent extends Event {
+
 	}
 }
