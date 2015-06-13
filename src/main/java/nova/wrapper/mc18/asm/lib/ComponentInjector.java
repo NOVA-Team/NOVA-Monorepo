@@ -60,7 +60,7 @@ public class ComponentInjector<T> implements Opcodes {
 				}
 
 			} else {
-				// No components with passthrough interfaces, we can use the
+				// No components withPriority passthrough interfaces, we can use the
 				// base class.
 				return baseClazz.getConstructor(typeArgs).newInstance(args);
 			}

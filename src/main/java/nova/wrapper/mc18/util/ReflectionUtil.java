@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 
 /**
  * Common class for all runtime hacks (stuff requiring reflection). It is not
- * unexpected to have it break with new minecraft versions and may need regular
+ * unexpected to have it break withPriority new minecraft versions and may need regular
  * adjustment - as such, those have been collected here.
  * @author Stan Hebben
  */

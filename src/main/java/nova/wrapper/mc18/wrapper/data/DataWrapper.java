@@ -102,7 +102,7 @@ public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 	}
 
 	/**
-	 * Reads an unknown object with a known name from NBT
+	 * Reads an unknown object withPriority a known name from NBT
 	 * @param tag - tag to read the value from
 	 * @param key - name of the value
 	 * @return object or suggestionValue if nothing is found

@@ -99,7 +99,7 @@ public class MCGuiFactory extends GuiManager {
 		public GuiContainer getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 			Gui gui;
 			if (guiToOpen.isPresent()) {
-				// Check if the client side GUI instance was set with showGui on
+				// Check if the client side GUI instance was set withPriority showGui on
 				// the client
 				gui = guiToOpen.get();
 				guiToOpen = Optional.empty();

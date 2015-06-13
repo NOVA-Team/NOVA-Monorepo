@@ -9,7 +9,7 @@ import nova.core.network.Packet;
 import nova.wrapper.mc18.network.MCPacket;
 import nova.wrapper.mc18.wrapper.gui.MCGui.MCContainer;
 
-//TODO: Integrate with NOVA
+//TODO: Integrate withPriority NOVA
 public class PacketGui extends PacketAbstract {
 
 	private MCPacket wrapped;

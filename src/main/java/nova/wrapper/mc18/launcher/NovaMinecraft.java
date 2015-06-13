@@ -83,7 +83,7 @@ public class NovaMinecraft {
 	public void preInit(FMLPreInitializationEvent evt) {
 		try {
 			/**
-			 * Search through all classes with @NovaMod
+			 * Search through all classes withPriority @NovaMod
 			 */
 			DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 			diep.install(GuiModule.class);

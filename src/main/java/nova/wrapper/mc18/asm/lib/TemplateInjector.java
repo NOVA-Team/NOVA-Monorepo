@@ -62,7 +62,7 @@ public class TemplateInjector {
 		}
 
 		/**
-		 * Patches the cnode with the methods from this template.
+		 * Patches the cnode withPriority the methods from this template.
 		 * @param cnode
 		 * @return
 		 */

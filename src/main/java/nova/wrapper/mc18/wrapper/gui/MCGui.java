@@ -182,7 +182,7 @@ public class MCGui extends MCGuiContainer implements NativeGui, DrawableGuiCompo
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partial) {
 			Container container = inventorySlots;
-			// Replace container instance with fake container in order to stop
+			// Replace container instance withPriority fake container in order to stop
 			// slot rendering
 			inventorySlots = fakeContainer;
 			super.drawScreen(mouseX, mouseY, partial);

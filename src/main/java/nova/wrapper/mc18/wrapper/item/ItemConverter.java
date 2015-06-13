@@ -58,7 +58,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	//TODO: Why is this method separate?
 	public Item getNovaItem(ItemStack itemStack) {
 		if (itemStack.getItemDamage() == net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE) {
-			// TODO: Deal with wildcard meta values - important for the ore dictionary
+			// TODO: Deal withPriority wildcard meta values - important for the ore dictionary
 			return getNovaItem(new ItemStack(itemStack.getItem(), 1, 0));
 		}
 

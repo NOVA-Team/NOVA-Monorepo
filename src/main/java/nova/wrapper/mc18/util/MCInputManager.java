@@ -24,7 +24,7 @@ public class MCInputManager extends InputManager {
 
 	@Override
 	public boolean isKeyDown(Key key) {
-		// TODO: Sync this with server side for server-side events. Need a packet manager
+		// TODO: Sync this withPriority server side for server-side events. Need a packet manager
 		return Keyboard.isKeyDown(getNativeKeyCode(key));
 	}
 }
