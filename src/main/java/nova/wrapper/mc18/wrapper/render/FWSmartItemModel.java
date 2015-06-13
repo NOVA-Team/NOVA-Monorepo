@@ -3,6 +3,7 @@ package nova.wrapper.mc18.wrapper.render;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.client.renderer.block.model.ModelBlock;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
@@ -10,6 +11,7 @@ import net.minecraftforge.client.model.ISmartItemModel;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.item.Item;
 import nova.internal.core.Game;
+import nova.wrapper.mc18.render.RenderUtility;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,6 +57,18 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 		}
 
 		return Collections.emptyList();
+	}
+
+	@Override
+	public TextureAtlasSprite getTexture() {
+		if (item.has(ItemRenderer.class)) {
+			ItemRenderer itemRenderer = item.get(ItemRenderer.class);
+			if (itemRenderer.texture.isPresent()) {
+				return RenderUtility.instance.getTexture(itemRenderer.texture.get());
+			}
+		}
+
+		return null;
 	}
 
 	@Override

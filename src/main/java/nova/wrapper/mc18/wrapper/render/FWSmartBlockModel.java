@@ -2,19 +2,25 @@ package nova.wrapper.mc18.wrapper.render;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 import nova.core.block.Block;
+import nova.core.block.component.StaticBlockRenderer;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.ItemBlock;
+import nova.core.render.texture.Texture;
+import nova.core.util.Direction;
 import nova.internal.core.Game;
+import nova.wrapper.mc18.render.RenderUtility;
 import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -72,5 +78,24 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 		}
 
 		return modelToQuads(blockModel);
+	}
+
+	@Override
+	public TextureAtlasSprite getTexture() {
+		if (block.has(StaticBlockRenderer.class)) {
+			Optional<Texture> apply = block.get(StaticBlockRenderer.class).texture.apply(Direction.UNKNOWN);
+			if (apply.isPresent()) {
+				return RenderUtility.instance.getTexture(apply.get());
+			}
+		}
+
+		if (block.has(ItemRenderer.class)) {
+			ItemRenderer itemRenderer = block.get(ItemRenderer.class);
+			if (itemRenderer.texture.isPresent()) {
+				return RenderUtility.instance.getTexture(itemRenderer.texture.get());
+			}
+		}
+
+		return null;
 	}
 }

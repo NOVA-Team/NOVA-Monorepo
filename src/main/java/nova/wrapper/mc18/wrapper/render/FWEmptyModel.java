@@ -2,6 +2,7 @@ package nova.wrapper.mc18.wrapper.render;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
@@ -32,5 +33,10 @@ public class FWEmptyModel extends FWSmartModel implements ISmartBlockModel, ISma
 	@Override
 	public List<BakedQuad> getGeneralQuads() {
 		return Collections.emptyList();
+	}
+
+	@Override
+	public TextureAtlasSprite getTexture() {
+		return null;
 	}
 }

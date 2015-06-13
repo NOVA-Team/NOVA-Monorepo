@@ -90,11 +90,6 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 	}
 
 	@Override
-	public TextureAtlasSprite getTexture() {
-		return null;
-	}
-
-	@Override
 	public ItemCameraTransforms getItemCameraTransforms() {
 		return ItemCameraTransforms.DEFAULT;
 	}
