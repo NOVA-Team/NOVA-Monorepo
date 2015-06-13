@@ -60,6 +60,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		// Recalculate super constructor things after loading the block properly
 		this.fullBlock = isOpaqueCube();
 		this.lightOpacity = isOpaqueCube() ? 255 : 0;
+		this.translucent = !isOpaqueCube();
 	}
 
 	public Block getBlockInstance(IBlockAccess access, Vector3D position) {
