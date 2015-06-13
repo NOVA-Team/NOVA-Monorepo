@@ -10,7 +10,7 @@ import se.jbee.inject.util.Scoped;
 
 class UtilModule extends BinderModule {
 
-	public UtilModule() {
+	UtilModule() {
 		super(NovaScopes.MULTIPLE_INSTANCES);
 	}
 

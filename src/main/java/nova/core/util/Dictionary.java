@@ -4,7 +4,11 @@ import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A dictionary where each identifying string represents a set of objects
@@ -17,10 +21,6 @@ public class Dictionary<T> {
 	private final Map<T, Set<String>> locations = new HashMap<>();
 	private final EventBus<AddEvent<T>> addEventListeners = new EventBus<>();
 	private final EventBus<RemoveEvent<T>> removeEventListeners = new EventBus<>();
-
-	public Dictionary() {
-
-	}
 
 	/**
 	 * Add an object to the dictionary.

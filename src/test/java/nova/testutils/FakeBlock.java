@@ -14,7 +14,7 @@ public class FakeBlock extends Block {
 		this.collider = collider;
 	}
 
-	public void afterConstruction(Optional<Object[]> typeArguments, Optional<Object[]> instanceArguments) {
+	public void afterConstruction(Object[] typeArguments, Object[] instanceArguments) {
 		if ("solid".equals(getID())) {
 			add(collider);
 		}

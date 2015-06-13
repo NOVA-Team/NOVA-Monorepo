@@ -2,6 +2,7 @@ package nova.core.util.shape;
 
 import nova.core.util.math.Vector2DUtil;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.math3.util.FastMath;
 
 /**
  * Immutable, generic rectangle that defines the area between two coordinates in
@@ -19,60 +20,95 @@ public class Rectangle extends Shape<Rectangle, Rectangle> {
 		this.max = max;
 	}
 
+	/**
+	 * Get the min coords vector
+	 *
+	 * @return The min vector
+	 */
 	public Vector2D getMin() {
 		return min;
 	}
 
+	/**
+	 * Sets the min vector
+	 *
+	 * @param min The new min vector
+	 * @return New Rectangle with the updated vector
+	 */
 	public Rectangle setMin(Vector2D min) {
 		return new Rectangle(min, max);
 	}
 
+	/**
+	 * Get the max vector
+	 *
+	 * @return The max vector
+	 */
 	public Vector2D getMax() {
 		return max;
 	}
 
+	/**
+	 * Sets the max vector
+	 *
+	 * @param max The new max vector
+	 * @return New Rectangle with the updated vector
+	 */
 	public Rectangle setMax(Vector2D max) {
 		return new Rectangle(min, max);
 	}
 
-	public int x1i() {
-		return (int) min.getX();
+	public int minXi() {
+		return (int) FastMath.floor(min.getX());
 	}
 
-	public int x2i() {
-		return (int) max.getX();
+	public int maxXi() {
+		return (int) FastMath.floor(max.getX());
 	}
 
-	public int y1i() {
-		return (int) min.getY();
+	public int minYi() {
+		return (int) FastMath.floor(min.getY());
 	}
 
-	public int y2i() {
+	public int maxYi() {
 		return (int) max.getY();
 	}
 
-	public double x1d() {
+	public double minXd() {
 		return min.getX();
 	}
 
-	public double x2d() {
+	public double maxXd() {
 		return max.getX();
 	}
 
-	public double y1d() {
+	public double minYd() {
 		return min.getY();
 	}
 
-	public double y2d() {
+	public double maxYd() {
 		return max.getY();
 	}
 
+	/**
+	 * Checks if the point is contained in the Rectangle
+	 *
+	 * @param point The point to check
+	 * @return If the point is in the rectangle or not
+	 */
 	public boolean contains(Vector2D point) {
 		return contains(point.getX(), point.getY());
 	}
 
+	/**
+	 * Checks if the point is contained in the Rectangle
+	 *
+	 * @param x x coord of the point
+	 * @param y y coord of the point
+	 * @return If the point is in the rectangle or not
+	 */
 	public boolean contains(double x, double y) {
-		return x >= x1d() && x <= x2d() && y >= y1d() && y <= y2d();
+		return x >= minXd() && x <= maxXd() && y >= minYd() && y <= maxYd();
 	}
 
 	@Override

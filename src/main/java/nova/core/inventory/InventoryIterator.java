@@ -10,7 +10,7 @@ class InventoryIterator implements Iterator<Item> {
 	private int i;
 	private Item next = null;
 
-	public InventoryIterator(Inventory inv) {
+	InventoryIterator(Inventory inv) {
 		this.inv = inv;
 		findNext();
 	}

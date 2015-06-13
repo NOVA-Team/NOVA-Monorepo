@@ -50,7 +50,7 @@ public class WavefrontObjectModel extends ModelProvider {
 			while ((currentLine = reader.readLine()) != null) {
 				lineCount++;
 				currentLine = currentLine.replaceAll("\\s+", " ").trim();
-				if (currentLine.startsWith("#") || currentLine.length() == 0) {
+				if (currentLine.startsWith("#") || currentLine.isEmpty()) {
 					continue;
 				} else if (currentLine.startsWith("v ")) {
 					Vector3D vertex = parseToVertex(currentLine, lineCount);
@@ -211,7 +211,7 @@ public class WavefrontObjectModel extends ModelProvider {
 	private Model parseToModel(String line, int lineNumber) {
 		if (isValid(line, subModelPattern)) {
 			String trimmedLine = line.substring(line.indexOf(" ") + 1);
-			if (trimmedLine.length() > 0) {
+			if (!trimmedLine.isEmpty()) {
 				return new Model(trimmedLine);
 			}
 		} else {

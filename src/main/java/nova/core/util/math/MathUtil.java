@@ -8,6 +8,10 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public class MathUtil {
 
+	private MathUtil() {
+
+	}
+
 	/**
 	 * Returns the smaller number of a and b.
 	 * @param a

@@ -238,7 +238,7 @@ public class TechneModel extends ModelProvider {
 		private final double sizeY;
 		private final double sizeZ;
 
-		public TechneCubeTextureCoordinates(
+		private TechneCubeTextureCoordinates(
 			double textureWidth, double textureHeight,
 			double offsetU, double offsetV,
 			double sizeX, double sizeY, double sizeZ) {

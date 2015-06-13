@@ -5,6 +5,7 @@ import nova.core.entity.Entity;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
 import nova.core.util.math.RotationUtil;
+import nova.core.util.math.Vector3DUtil;
 import nova.internal.core.Game;
 import nova.internal.core.launch.NovaLauncher;
 import nova.testutils.FakeBlock;
@@ -96,6 +97,21 @@ public class RayTraceTest {
 		RayTracer rayTracer = new RayTracer(entity).setDistance(10);
 		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults = rayTracer.rayTraceBlocks(fakeWorld).collect(Collectors.toList());
 		assertThat(rayTraceBlockResults.size()).isEqualTo(1);
+	}
+
+	@Test
+	public void testEdge() {
+		fakeWorld.setBlock(new Vector3D(0, 0, 2), RayTraceMod.solid);
+
+		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults1 = new RayTracer(Ray.fromInterval(Vector3D.ZERO, Direction.SOUTH.toVector().add(new Vector3D(0.1,0.1,0))))
+			.setDistance(10)
+			.rayTraceBlocks(fakeWorld)
+			.collect(Collectors.toList());
+
+		assertThat(rayTraceBlockResults1).hasSize(1);
+		RayTracer.RayTraceBlockResult res = rayTraceBlockResults1.get(0);
+
+		assertThat(res.side).isEqualTo(Direction.NORTH);
 	}
 
 	//TODO: Make ray trace entity unit test

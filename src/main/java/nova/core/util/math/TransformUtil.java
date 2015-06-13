@@ -11,6 +11,7 @@ public final class TransformUtil {
 
 	/**
 	 * Creates translation matrix.
+	 *
 	 * @param x translation.
 	 * @param y translation.
 	 * @param z translation.
@@ -26,6 +27,7 @@ public final class TransformUtil {
 
 	/**
 	 * Creates translation matrix.
+	 *
 	 * @param translationVector which components are translation parameters.
 	 * @return translation matrix.
 	 */
@@ -35,6 +37,7 @@ public final class TransformUtil {
 
 	/**
 	 * Creates scale matrix.
+	 *
 	 * @param x scale.
 	 * @param y scale.
 	 * @param z scale.
@@ -50,6 +53,7 @@ public final class TransformUtil {
 
 	/**
 	 * Creates scale matrix.
+	 *
 	 * @param scaleVector which components are scale parameters.
 	 * @return scale matrix.
 	 */
@@ -59,6 +63,7 @@ public final class TransformUtil {
 
 	/**
 	 * Transform vector by this matrix.
+	 *
 	 * @param vector to be transformed.
 	 * @param m The 4x4 matrix to transform the vector by
 	 * @return transformed vector.
@@ -74,6 +79,7 @@ public final class TransformUtil {
 
 	/**
 	 * Transform vector by this matrix.
+	 *
 	 * @param vector to be transformed.
 	 * @param m The 4x4 matrix to transform the vector by
 	 * @return transformed vector.

@@ -5,8 +5,8 @@ import nova.core.block.Stateful;
 import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
+import nova.core.entity.component.Living;
 import nova.core.event.Event;
-import nova.core.event.EventBus;
 import nova.core.network.Packet;
 import nova.core.network.Sync;
 import nova.core.network.Syncable;
@@ -15,21 +15,20 @@ import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.Direction;
 import nova.core.util.RayTracer;
+import nova.core.util.math.RotationUtil;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.util.FastMath;
 
 import java.util.Optional;
 
 /**
  * A component that is applied to providers with discrete orientations.
- *
  * @author Calclavia
  */
 public class Orientation extends Component implements Storable, Stateful, Syncable {
 
 	public final ComponentProvider provider;
-
-	public final EventBus<Event> onOrientationChange = new EventBus<>();
 
 	/**
 	 * The allowed rotation directions the block can face.
@@ -43,54 +42,108 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	@Store
 	protected Direction orientation = Direction.UNKNOWN;
 
+	/**
+	 * @param provider The provider to apply discrete orientations to
+	 */
 	public Orientation(ComponentProvider provider) {
 		this.provider = provider;
 	}
 
-	public Orientation hookBlockEvents() {
+	/**
+	 * Hooks the needed events intro the provider to rotate based on the side that is hit when placing the block
+	 *
+	 * @return The Orientation instance
+	 */
+	public Orientation hookBasedOnHitSide() {
 		if (provider instanceof Block) {
-			((Block) provider).events.add(
+			((Block) provider).events.on(Block.PlaceEvent.class).bind(
 				evt ->
 				{
 					if (Game.network().isServer()) {
 						setOrientation(calculateDirection(evt.placer));
 					}
-				},
-				Block.PlaceEvent.class
+				}
 			);
-			((Block) provider).events.add(
+			((Block) provider).events.on(Block.RightClickEvent.class).bind(
 				evt ->
 				{
 					if (Game.network().isServer()) {
 						rotate(evt.side.ordinal(), evt.position);
 					}
-				},
-				Block.RightClickEvent.class
+				}
 			);
 		}
 		return this;
 	}
 
+	/**
+	 * Hooks the needed events intro the provider to rotate based on the {@link Entity}'s rotation when placing the block
+	 *
+	 * @return The Orientation instance
+	 */
+	public Orientation hookBasedOnEntity() {
+		if (provider instanceof Block) {
+			((Block) provider).events.on(Block.PlaceEvent.class).bind(
+				event ->
+				{
+					if (Game.network().isServer()) {
+						setOrientation(calculateDirectionFromEntity(event.placer));
+					}
+				}
+			);
+		}
+		return this;
+	}
+
+	/**
+	 * @return The current orientation
+	 */
 	public Direction orientation() {
 		return orientation;
 	}
 
+	/**
+	 * Changes the orientation
+	 *
+	 * @param orientation New orientation
+	 * @return The Orientation instance
+	 */
 	public Orientation setOrientation(Direction orientation) {
+		if (this.orientation == orientation)
+			return this;
 		this.orientation = orientation;
-		onOrientationChange.publish(new Event());
+		events.publish(new OrientationChangeEvent());
 		return this;
 	}
 
+	/**
+	 * Set's the rotation mask
+	 *
+	 * @param mask New rotation mask
+	 * @return The Orientation instance
+	 */
 	public Orientation setMask(int mask) {
 		this.rotationMask = mask;
 		return this;
 	}
 
+	/**
+	 * Set to true to use the oposite direction
+	 *
+	 * @param flip should flip rotation or not
+	 * @return The Orientation instance
+	 */
 	public Orientation flipPlacement(boolean flip) {
 		isFlip = flip;
 		return this;
 	}
 
+	/**
+	 * Calculates the direction using raytracing
+	 *
+	 * @param entity The entity to start raytracing from
+	 * @return The side of the block that is hit with the raytracing
+	 */
 	public Direction calculateDirection(Entity entity) {
 		if (provider instanceof Block) {
 			Optional<RayTracer.RayTraceBlockResult> hit = new RayTracer(entity)
@@ -102,6 +155,36 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 			if (hit.isPresent()) {
 				return (isFlip) ? hit.get().side.opposite() : hit.get().side;
 			}
+		}
+
+		return Direction.UNKNOWN;
+	}
+
+	/**
+	 * Determines the direction the block is facing based on the entity's facing
+	 *
+	 * @param entity The entity used to determine rotation
+	 * @return The direction the block is facing
+	 */
+
+	public Direction calculateDirectionFromEntity(Entity entity) {
+		if (provider instanceof Block) {
+			Vector3D position = entity.position();
+			if (FastMath.abs(position.getX() - ((Block) provider).y()) < 2.0F && FastMath.abs(position.getZ() - ((Block) provider).z()) < 2.0F) {
+				double height = position.add(entity.get(Living.class).faceDisplacement.get()).getY();
+
+				if (height - ((Block) provider).y() > 2.0D) {
+					return Direction.fromOrdinal(1);
+				}
+
+				if (((Block) provider).y() - height > 0.0D) {
+					return Direction.fromOrdinal(0);
+				}
+			}
+
+			int l = (int) FastMath.floor((entity.rotation().getAngles(RotationUtil.DEFAULT_ORDER)[0] * 4.0F / 360.0F) + 0.5D) & 3;
+			int dir = l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
+			return (isFlip) ? Direction.fromOrdinal(dir).opposite() : Direction.fromOrdinal(dir);
 		}
 
 		return Direction.UNKNOWN;
@@ -123,7 +206,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 		if (result != -1) {
 			setOrientation(Direction.fromOrdinal(result));
-			onOrientationChange.publish(new Event());
+			events.publish(new OrientationChangeEvent());
 			return true;
 		}
 
@@ -297,5 +380,9 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	@Override
 	public void write(Packet packet) {
 		packet.writeInt(orientation.ordinal());
+	}
+
+	public static class OrientationChangeEvent extends Event {
+
 	}
 }

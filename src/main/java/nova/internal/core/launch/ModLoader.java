@@ -94,7 +94,9 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 			.map(clazz -> (Object) diep.getInjector().resolve(se.jbee.inject.Dependency.dependency(clazz)))
 			.collect(Collectors.toList()).toArray();
 
-		return cons.newInstance(parameters);
+		//noinspection unchecked
+		return (T) cons.newInstance(parameters);
+
 	}
 
 	public void load() {
@@ -106,7 +108,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 		 */
 		mods.putAll(
 			javaClasses.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey,
+				.collect(Collectors.<Map.Entry<ANNOTATION, Class<? extends Loadable>>, ANNOTATION, Loadable>toMap(Map.Entry::getKey,
 						entry -> {
 							try {
 								return makeObjectWithDep((Class<Loadable>) entry.getValue());

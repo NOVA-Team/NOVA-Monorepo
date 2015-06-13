@@ -38,4 +38,22 @@ public class DirectionTest {
 		Vector3D v6 = new Vector3D(-4, -3, 1).normalize();
 		assertThat(Direction.fromVector(v6)).isEqualTo(Direction.WEST);
 	}
+
+	@Test
+	public void testOpposite() {
+		assertThat(Direction.DOWN.opposite()).isEqualTo(Direction.UP);
+		assertThat(Direction.EAST.opposite().opposite()).isEqualTo(Direction.EAST);
+		assertThat(Direction.UNKNOWN.opposite()).isEqualTo(Direction.UNKNOWN);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void ordinalTooSmall() {
+		Direction.fromOrdinal(-1);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void ordinalTooLarge() {
+		Direction.fromOrdinal(7);
+	}
+
 }

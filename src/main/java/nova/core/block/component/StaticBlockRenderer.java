@@ -7,6 +7,7 @@ import nova.core.render.model.BlockModelUtil;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -18,13 +19,13 @@ public class StaticBlockRenderer extends StaticRenderer {
 	/**
 	 * Called to get the texture of this block for a certain side.
 	 * side - The side of the block that the texture is for.
-	 * Returns an optional of the texture.
+	 * Returns -  An optional of the texture.
 	 */
 	public Function<Direction, Optional<Texture>> texture = (dir) -> Optional.empty();
 	/**
 	 * Called when this block is to be rendered.
 	 * Direction - The direction to render
-	 * Return true if the side should render
+	 * Returns -  true if the side should render
 	 */
 	public Function<Direction, Boolean> renderSide = (dir) -> true;
 
@@ -32,7 +33,7 @@ public class StaticBlockRenderer extends StaticRenderer {
 	 * Gets the color of a specific face. This is called by the default block
 	 * renderer.
 	 * direction - The side of the block.
-	 * ReturnsThe color
+	 * Returns the color
 	 */
 	public Function<Direction, Color> colorMultiplier = (dir) -> Color.white;
 
@@ -43,6 +44,12 @@ public class StaticBlockRenderer extends StaticRenderer {
 
 	public StaticBlockRenderer setTexture(Function<Direction, Optional<Texture>> texture) {
 		this.texture = texture;
+		return this;
+	}
+
+	public StaticBlockRenderer setTexture(Texture t) {
+		Objects.requireNonNull(t, "Texture is null, please initiate the texture before the block");
+		this.texture = (dir) -> Optional.of(t);
 		return this;
 	}
 

@@ -40,6 +40,9 @@ public class RayTraceEfficiencyTest {
             Profiler start = new Profiler("Ray Trace " + size).start();
             rayTracer.rayTraceBlocks(fakeWorld).findFirst();
             start.end();
+	        Game.logger().info(start.toString());
         }
+
+
     }
 }

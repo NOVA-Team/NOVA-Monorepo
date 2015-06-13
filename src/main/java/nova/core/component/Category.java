@@ -1,6 +1,9 @@
 package nova.core.component;
 
+import nova.core.item.Item;
 import nova.core.util.Identifiable;
+
+import java.util.Optional;
 
 /**
  * For object that belong specific categories.

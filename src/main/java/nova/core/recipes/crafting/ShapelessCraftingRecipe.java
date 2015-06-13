@@ -113,7 +113,7 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 		public final Item[] inputs;
 		public final int[] indices;
 
-		public RecipeMatching(Item[] inputs, int[] indices) {
+		private RecipeMatching(Item[] inputs, int[] indices) {
 			this.inputs = inputs;
 			this.indices = indices;
 		}

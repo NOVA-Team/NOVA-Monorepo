@@ -5,14 +5,16 @@ import nova.core.event.EventBus;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A component provider provides the components associated with the object.
  * <p>
  * {@code ComponentProvider} is implemented in blocks or entities.
- *
  * @author Calclavia
  */
 public abstract class ComponentProvider {
@@ -24,7 +26,6 @@ public abstract class ComponentProvider {
 
 	/**
 	 * Adds a component to the provider.
-	 *
 	 * @param component The component to add.
 	 * @return the component.
 	 * @throws ComponentException when the component already exists on the provider.
@@ -41,7 +42,6 @@ public abstract class ComponentProvider {
 
 	/**
 	 * Adds a component to the provider if it is not present.
-	 *
 	 * @param component The component to add.
 	 * @return the component.
 	 */
@@ -58,7 +58,6 @@ public abstract class ComponentProvider {
 
 	/**
 	 * Removes a component from the provider.
-	 *
 	 * @param component The component to remove
 	 * @return the component removed.
 	 */
@@ -79,7 +78,6 @@ public abstract class ComponentProvider {
 
 	/**
 	 * Removes the component from the provider.
-	 *
 	 * @param componentType the component type.
 	 * @return the component removed.
 	 * @throws ComponentException when the component dies not exist.
@@ -97,7 +95,6 @@ public abstract class ComponentProvider {
 
 	/**
 	 * Gets an optional of the component with the specified type.
-	 *
 	 * @param componentType the type to get.
 	 * @return the optional of the component found or {@code Optional.empty()}
 	 * if the component was not found.
@@ -110,16 +107,20 @@ public abstract class ComponentProvider {
 				return Optional.of((C) component);
 			}
 		}
-		return componentMap.values().stream()
+		Set<C> collect = components().stream()
 			.filter(c -> componentType.isAssignableFrom(c.getClass()))
 			.map(componentType::cast)
-			.findFirst();
+			.collect(Collectors.toSet());
 
+		if (collect.size() > 1) {
+			throw new ComponentException("Ambiguous component search. For component/interface %s there are multiple components found: %s", componentType, collect);
+		}
+
+		return collect.stream().findFirst();
 	}
 
 	/**
 	 * Gets the component with the specified type.
-	 *
 	 * @param componentType the type to get.
 	 * @return the component.
 	 * @throws ComponentException if the component doesn't exist.
@@ -130,11 +131,10 @@ public abstract class ComponentProvider {
 
 	/**
 	 * Gets a set of components that this ComponentProvider provides.
-	 *
 	 * @return A set of components.
 	 */
 	public final Collection<Component> components() {
-		return componentMap.values();
+		return new HashSet<>(componentMap.values());
 	}
 
 	public static class ComponentAdded {

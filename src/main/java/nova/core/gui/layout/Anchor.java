@@ -24,11 +24,11 @@ public enum Anchor {
 			default:
 			case WEST:
 			case NORTH:
-				return new Vector2D(outline.x1i(), outline.y1i());
+				return new Vector2D(outline.minXi(), outline.minYi());
 			case EAST:
-				return new Vector2D(outline.x2i(), outline.y1i());
+				return new Vector2D(outline.maxXi(), outline.minYi());
 			case SOUTH:
-				return new Vector2D(outline.x1i(), outline.y2i());
+				return new Vector2D(outline.minXi(), outline.maxYi());
 		}
 	}
 

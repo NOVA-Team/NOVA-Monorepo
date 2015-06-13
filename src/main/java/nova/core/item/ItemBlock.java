@@ -20,21 +20,19 @@ public class ItemBlock extends Item {
 
 	public ItemBlock(Factory<Block> blockFactory) {
 		this.blockFactory = blockFactory;
-		events.add(
-			evt ->
-			{
-				Optional<Block> opBlock = evt.entity.world().getBlock(evt.position);
+		events.on(UseEvent.class).bind(this::onUse);
+	}
 
-				if (opBlock.isPresent()) {
-					Block block = opBlock.get();
-					Vector3D placePos = block.shouldDisplacePlacement() ? evt.position.add(evt.side.toVector()) : evt.position;
-					if (onPrePlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit)) {
-						evt.action = onPostPlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit);
-					}
-				}
-			},
-			UseEvent.class
-		);
+	protected void onUse(UseEvent evt) {
+		Optional<Block> opBlock = evt.entity.world().getBlock(evt.position);
+
+		if (opBlock.isPresent()) {
+			Block block = opBlock.get();
+			Vector3D placePos = block.shouldDisplacePlacement() ? evt.position.add(evt.side.toVector()) : evt.position;
+			if (onPrePlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit)) {
+				evt.action = onPostPlace(evt.entity, evt.entity.world(), placePos, evt.side, evt.hit);
+			}
+		}
 	}
 
 	protected boolean onPrePlace(Entity entity, World world, Vector3D placePos, Direction side, Vector3D hit) {

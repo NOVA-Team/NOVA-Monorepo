@@ -315,7 +315,7 @@ public class FormattedText implements Iterable<FormattedText> {
 
 		private FormattedText current;
 
-		public FormattedTextIterator(FormattedText text) {
+		private FormattedTextIterator(FormattedText text) {
 			current = text.first;
 		}
 
