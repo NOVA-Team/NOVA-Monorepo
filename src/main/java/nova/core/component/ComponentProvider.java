@@ -1,6 +1,7 @@
 package nova.core.component;
 
 import nova.core.component.exception.ComponentException;
+import nova.core.event.Event;
 import nova.core.event.EventBus;
 
 import java.util.Collection;
@@ -19,9 +20,9 @@ import java.util.stream.Collectors;
  */
 public abstract class ComponentProvider {
 
+	public final EventBus<Event> events = new EventBus<>();
 	public EventBus<ComponentAdded> onComponentAdded = new EventBus<>();
 	public EventBus<ComponentRemoved> onComponentRemoved = new EventBus<>();
-
 	private Map<Class<? extends Component>, Component> componentMap = new HashMap<>();
 
 	/**

@@ -5,7 +5,6 @@ import nova.core.component.transform.BlockTransform;
 import nova.core.entity.Entity;
 import nova.core.event.CancelableEvent;
 import nova.core.event.Event;
-import nova.core.event.EventBus;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
@@ -24,8 +23,6 @@ import java.util.Set;
  * @author Calclavia
  */
 public abstract class Block extends ComponentProvider implements Identifiable {
-
-	public final EventBus<Event> events = new EventBus<>();
 
 	/**
 	 * Called when the block is registered.

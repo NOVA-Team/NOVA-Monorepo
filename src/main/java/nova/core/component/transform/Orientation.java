@@ -112,7 +112,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 		if (this.orientation == orientation)
 			return this;
 		this.orientation = orientation;
-		events.publish(new OrientationChangeEvent());
+		provider.events.publish(new OrientationChangeEvent());
 		return this;
 	}
 
@@ -206,7 +206,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 		if (result != -1) {
 			setOrientation(Direction.fromOrdinal(result));
-			events.publish(new OrientationChangeEvent());
+			provider.events.publish(new OrientationChangeEvent());
 			return true;
 		}
 

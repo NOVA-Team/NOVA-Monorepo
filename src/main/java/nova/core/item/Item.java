@@ -3,7 +3,6 @@ package nova.core.item;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.event.Event;
-import nova.core.event.EventBus;
 import nova.core.render.Color;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
@@ -15,8 +14,6 @@ import java.util.Optional;
 
 //TODO: Convert to component system
 public abstract class Item extends ComponentProvider implements Identifiable {
-
-	public final EventBus<Event> events = new EventBus<>();
 
 	/**
 	 * The amount of this item that is present.
