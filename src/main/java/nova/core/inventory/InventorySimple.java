@@ -76,6 +76,19 @@ public class InventorySimple extends Component implements Inventory, Storable, S
 	}
 
 	@Override
+	public Optional<Item> remove(int slot) {
+		Item item = items[slot];
+		items[slot] = null;
+		return Optional.ofNullable(item);
+	}
+
+	public Optional<Item> swap(int slot, Item item) {
+		Optional<Item> current = get(slot);
+		set(slot, item);
+		return current;
+	}
+
+	@Override
 	public void save(Data data) {
 		data.put("size", size());
 		data.putAll(IntStream.range(0, size()).filter(i -> items[i] != null).boxed().collect(Collectors.toMap(i -> i + "", i -> items[i])));

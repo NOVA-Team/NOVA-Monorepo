@@ -41,6 +41,11 @@ public class InventoryView implements Inventory {
 	}
 
 	@Override
+	public Optional<Item> remove(int slot) {
+		return parent.remove(slot);
+	}
+
+	@Override
 	public int size() {
 		return slots.length;
 	}
