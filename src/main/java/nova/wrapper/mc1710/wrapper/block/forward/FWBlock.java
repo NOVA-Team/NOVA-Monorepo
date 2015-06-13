@@ -408,7 +408,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public float getExplosionResistance(Entity expEntity, World world, int x, int y, int z, double explosionX, double p_explosionresistance, double explosionY) {
-		// TODO: Maybe do something with these parameters.
+		// TODO: Maybe do something withPriority these parameters.
 		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getResistance() * 30;
 	}
 

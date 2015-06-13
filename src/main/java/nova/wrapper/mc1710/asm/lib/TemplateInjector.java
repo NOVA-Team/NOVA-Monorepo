@@ -1,7 +1,6 @@
 package nova.wrapper.mc1710.asm.lib;
 
 import com.google.common.collect.HashBiMap;
-
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -64,7 +63,7 @@ public class TemplateInjector {
 		}
 
 		/**
-		 * Patches the cnode with the methods from this template.
+		 * Patches the cnode withPriority the methods from this template.
 		 *
 		 * @param cnode
 		 * @return

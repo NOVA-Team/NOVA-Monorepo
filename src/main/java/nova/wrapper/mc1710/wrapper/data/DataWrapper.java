@@ -11,9 +11,9 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
-import nova.internal.core.Game;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
+import nova.internal.core.Game;
 
 import java.util.Set;
 
@@ -102,7 +102,7 @@ public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 	}
 
 	/**
-	 * Reads an unknown object with a known name from NBT
+	 * Reads an unknown object withPriority a known name from NBT
 	 * @param tag - tag to read the value from
 	 * @param key - name of the value
 	 * @return object or suggestionValue if nothing is found

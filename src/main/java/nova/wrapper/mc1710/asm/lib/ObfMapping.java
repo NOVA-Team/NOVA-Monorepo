@@ -32,7 +32,7 @@ public class ObfMapping {
 	}
 
 	/**
-	 * CCC will deal with this.
+	 * CCC will deal withPriority this.
 	 */
 	public static Remapper runtimeMapper = FMLDeobfuscatingRemapper.INSTANCE;
 	public static Remapper mcpMapper = null;

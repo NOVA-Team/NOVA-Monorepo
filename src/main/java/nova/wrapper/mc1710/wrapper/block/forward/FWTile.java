@@ -106,7 +106,7 @@ public class FWTile extends TileEntity {
 
 		/**
 		 * Because World and Position do not exist during NBT read time, we must
-		 * wait until the block is injected with World and Position data using
+		 * wait until the block is injected withPriority World and Position data using
 		 * Future.
 		 */
 		blockID = nbt.getString("novaID");

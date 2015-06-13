@@ -2,14 +2,6 @@ package nova.wrapper.mc1710.util;
 
 import com.google.common.collect.BiMap;
 import cpw.mods.fml.common.registry.EntityRegistry;
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -28,11 +20,19 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import nova.core.recipes.RecipeManager;
+
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Common class for all runtime hacks (stuff requiring reflection). It is not
- * unexpected to have it break with new minecraft versions and may need regular
+ * unexpected to have it break withPriority new minecraft versions and may need regular
  * adjustment - as such, those have been collected here.
  * 
  * @author Stan Hebben
