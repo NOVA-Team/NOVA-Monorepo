@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import nova.core.render.model.Model;
+import nova.core.render.model.Vertex;
 import nova.core.util.Direction;
 import nova.wrapper.mc18.render.RenderUtility;
 
@@ -39,7 +40,7 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 							face -> {
 								List<int[]> vertexData = face.vertices
 									.stream()
-									.map(v -> BWModel.vertexToInts(v, RenderUtility.instance.getTexture(face.texture.get())))
+									.map(v -> vertexToInts(v, RenderUtility.instance.getTexture(face.texture.get())))
 									.collect(Collectors.toList());
 
 								int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
@@ -49,6 +50,18 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 						)
 			)
 			.collect(Collectors.toList());
+	}
+
+	public static int[] vertexToInts(Vertex vertex, TextureAtlasSprite texture) {
+		return new int[] {
+			Float.floatToRawIntBits((float) vertex.vec.getX()),
+			Float.floatToRawIntBits((float) vertex.vec.getY()),
+			Float.floatToRawIntBits((float) vertex.vec.getZ()),
+			vertex.color.rgba(),
+			Float.floatToRawIntBits(texture.getInterpolatedU(16 * vertex.uv.getX())),
+			Float.floatToRawIntBits(texture.getInterpolatedV(16 * vertex.uv.getY())),
+			0
+		};
 	}
 
 	@Override
