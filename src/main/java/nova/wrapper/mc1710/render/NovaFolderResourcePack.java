@@ -3,7 +3,7 @@ package nova.wrapper.mc1710.render;
 import com.google.common.base.Charsets;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.util.ResourceLocation;
-import scala.actors.threadpool.Arrays;
+import java.util.Arrays;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;

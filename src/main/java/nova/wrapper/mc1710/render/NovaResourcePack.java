@@ -2,12 +2,12 @@ package nova.wrapper.mc1710.render;
 
 import com.google.common.base.Charsets;
 import net.minecraft.client.resources.FileResourcePack;
-import scala.actors.threadpool.Arrays;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
