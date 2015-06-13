@@ -18,7 +18,19 @@ public class ChunkTransformer implements Transformer {
 	public void transform(ClassNode cnode) {
 		System.out.println("[NOVA] Transforming Chunk class for chunkModified event.");
 
-		MethodNode method = ASMHelper.findMethod(new ObfMapping("net/minecraft/world/chunk/Chunk", "func_150807_a", "(IIILnet/minecraft/block/Block;I)Z"), cnode);
+		ObfMapping obfMap = new ObfMapping("apx", "a", "(IIILaji;I)Z");
+		ObfMapping srgMap = new ObfMapping("net/minecraft/world/chunk/Chunk", "func_150807_a", "(IIILnet/minecraft/block/Block;I)Z");
+
+		MethodNode method = ASMHelper.findMethod(obfMap, cnode);
+
+		if (method == null) {
+			System.out.println("[NOVA] Lookup " + obfMap + " failed. You are probably in a deobf environment.");
+			method = ASMHelper.findMethod(srgMap, cnode);
+
+			if (method == null) {
+				System.out.println("[NOVA] Lookup " + srgMap + " failed!");
+			}
+		}
 
 		System.out.println("[NOVA] Found method " + method.name);
 
