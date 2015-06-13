@@ -31,6 +31,14 @@ public class EvictingList<E> extends LinkedList<E> {
 	}
 
 	/**
+	 * Limit specifies how many elements can be contained in this list.
+	 * @return maximum number of entries in this list.
+	 */
+	public int limit() {
+		return limit;
+	}
+
+	/**
 	 * Get the oldest entry in the list
 	 *
 	 * @return The oldest entry in the list

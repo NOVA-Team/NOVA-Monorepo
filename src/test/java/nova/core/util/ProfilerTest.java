@@ -5,14 +5,12 @@ import org.assertj.core.data.Offset;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.DoubleSummaryStatistics;
-
 import static nova.testutils.NovaAssertions.*;
-
 
 public class ProfilerTest {
 	Profiler profiler;
 	Offset<Double> offsetMicro = Offset.offset(1000D);
+
 	@Before
 	public void before() {
 		profiler = new Profiler("testProfiler");
@@ -34,9 +32,9 @@ public class ProfilerTest {
 		assertThat(end).isCloseTo(0D, offsetMicro);
 		assertThat(profiler.lastTime()).isCloseTo(0D, offsetMicro);
 	}
-	
+
 	@Test
-	public void testTimings() throws InterruptedException{
+	public void testTimings() throws InterruptedException {
 		profiler.start();
 		Thread.sleep(2);
 		double lap = profiler.lap();
