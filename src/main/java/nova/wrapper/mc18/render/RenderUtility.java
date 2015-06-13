@@ -165,7 +165,7 @@ public class RenderUtility {
 					nova.core.item.Item dummy = item.getItemFactory().getDummy();
 
 					if (dummy.has(ItemRenderer.class)) {
-						Optional<ItemTexture> texture = dummy.get(ItemRenderer.class).texture;
+						Optional<Texture> texture = dummy.get(ItemRenderer.class).texture;
 
 						if (texture.isPresent()) {
 							//Default item rendering hack
