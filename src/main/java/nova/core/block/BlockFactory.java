@@ -15,8 +15,8 @@ public class BlockFactory extends Factory<Block> implements Identifiable {
 	}
 
 	/**
-	 * Creates a new instance of this block with blockAccess and position parameters.
-	 * @return A new block instance with these parameters.
+	 * Creates a new instance of this block withPriority blockAccess and position parameters.
+	 * @return A new block instance withPriority these parameters.
 	 */
 	public Block makeBlock(Object... args) {
 		Block newBlock = constructor.apply(args);

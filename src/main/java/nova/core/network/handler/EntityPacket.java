@@ -32,7 +32,7 @@ public class EntityPacket implements PacketHandler<Entity> {
 				return;
 			}
 		}
-		throw new NetworkException("Failed to receive packet to entity with UID" + uuid);
+		throw new NetworkException("Failed to receive packet to entity withPriority UID" + uuid);
 	}
 
 	@Override

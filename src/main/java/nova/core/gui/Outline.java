@@ -13,7 +13,7 @@ public class Outline extends Rectangle {
 	public static Outline empty = new Outline(0, 0, 0, 0);
 
 	/**
-	 * Creates a new Outline with the specified position and dimension.
+	 * Creates a new Outline withPriority the specified position and dimension.
 	 *
 	 * @param x X position
 	 * @param y Y position

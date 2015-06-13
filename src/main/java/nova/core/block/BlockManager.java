@@ -34,7 +34,7 @@ public class BlockManager extends Manager<Block, BlockFactory> {
 	}
 
 	/**
-	 * Register a new block with custom constructor arguments.
+	 * Register a new block withPriority custom constructor arguments.
 	 * @param constructor Block instance {@link Supplier}
 	 * @return Dummy block
 	 */
@@ -44,7 +44,7 @@ public class BlockManager extends Manager<Block, BlockFactory> {
 	}
 
 	/**
-	 * Register a new block with custom constructor arguments.
+	 * Register a new block withPriority custom constructor arguments.
 	 * @param factory {@link BlockFactory} of registered block
 	 * @return Dummy block
 	 */

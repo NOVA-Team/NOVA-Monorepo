@@ -29,7 +29,7 @@ public class WavefrontObjectModel extends ModelProvider {
 	private static Pattern face_V_Pattern = Pattern.compile("(f( \\d+){3,4} *\\n)|(f( \\d+){3,4} *$)");
 	private static Pattern subModelPattern = Pattern.compile("([go]([^\\\\ ]*+)*\\n)|([go]( [^\\\\ ]*+) *$)");
 	private static Matcher globalMatcher;
-	//A map of all models generated with their names
+	//A map of all models generated withPriority their names
 	private final Model model = new Model();
 	private Model currentModel = null;
 	private ArrayList<Vector3D> vertices = new ArrayList<>();

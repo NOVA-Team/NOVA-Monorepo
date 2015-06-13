@@ -86,7 +86,7 @@ public class RayTracer {
 	/**
 	 * Ray traces a set of blocks
 	 * @param blocks Set of blocks
-	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
+	 * @return A list of cuboids that intersect withPriority the line segment in the order from closest to furthest.
 	 */
 	public Stream<RayTraceBlockResult> rayTraceBlocks(Set<Block> blocks) {
 		return rayTraceBlocks(blocks.stream());
@@ -132,7 +132,7 @@ public class RayTracer {
 	/**
 	 * Ray traces a set of cuboids
 	 * @param stream A stream of cuboids
-	 * @return A list of cuboids that intersect with the line segment in the order from closest to furthest.
+	 * @return A list of cuboids that intersect withPriority the line segment in the order from closest to furthest.
 	 */
 	public List<RayTraceResult> rayTrace(Stream<Cuboid> stream) {
 		return stream
@@ -157,7 +157,7 @@ public class RayTracer {
 	}
 
 	/**
-	 * Calculates intersection with the given ray between a certain distance
+	 * Calculates intersection withPriority the given ray between a certain distance
 	 * interval.
 	 * <p>
 	 * Ray-box intersection is using IEEE numerical properties to ensure the
@@ -189,7 +189,7 @@ public class RayTracer {
 		bbox = ray.signDirY ? cuboid.min : cuboid.max;
 		double tyMax = (bbox.getY() - ray.origin.getY()) * ray.invDir.getY();
 
-		//Check with the current tMin and tMax to see if the clipping is out of bounds
+		//Check withPriority the current tMin and tMax to see if the clipping is out of bounds
 		if ((tMin > tyMax) || (tyMin > tMax)) {
 			return Optional.empty();
 		}
@@ -206,7 +206,7 @@ public class RayTracer {
 		bbox = ray.signDirZ ? cuboid.min : cuboid.max;
 		double tzMax = (bbox.getZ() - ray.origin.getZ()) * ray.invDir.getZ();
 
-		//Check with the current tMin and tMax to see if the clipping is out of bounds
+		//Check withPriority the current tMin and tMax to see if the clipping is out of bounds
 		if ((tMin > tzMax) || (tzMin > tMax)) {
 			return Optional.empty();
 		}

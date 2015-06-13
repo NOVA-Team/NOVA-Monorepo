@@ -56,8 +56,9 @@ public class GuiEventFactory {
 	}
 
 	public void constructPacket(SidedComponentEvent event, Gui parentGui, Packet packet, int subID) {
-		if (!networkEventsReverse.containsKey(event.getClass()))
-			throw new EventException(String.format("Unknown event %s at GUI \"%s\". Register with registerNetworkEvent!", event.getClass(), packet));
+		if (!networkEventsReverse.containsKey(event.getClass())) {
+			throw new EventException(String.format("Unknown event %s at GUI \"%s\". Register withPriority registerNetworkEvent!", event.getClass(), packet));
+		}
 		packet.writeInt(networkEventsReverse.get(event.getClass()));
 		packet.writeString(event.component.getQualifiedName());
 		packet.writeInt(subID);

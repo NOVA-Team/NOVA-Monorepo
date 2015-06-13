@@ -6,7 +6,7 @@ import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
  * A Shape2D is a polygon mesh in 2D space. It defines an array of
- * {@link Vertex2D} and can be drawn to a {@link Canvas} with a {@link Graphics}
+ * {@link Vertex2D} and can be drawn to a {@link Canvas} withPriority a {@link Graphics}
  * object.
  *
  * @author Vic Nightfall

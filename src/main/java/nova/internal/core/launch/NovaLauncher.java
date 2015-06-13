@@ -111,7 +111,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 	}
 
 	/**
-	 * Get the dependencies. Separated from preInit due to issues with ordering in case mods need to download mods before the preInit method is called.
+	 * Get the dependencies. Separated from preInit due to issues withPriority ordering in case mods need to download mods before the preInit method is called.
 	 * The wrapper just needs to call this method right before it downloads the dependencies.
 	 */
 	public void generateDependencies() {

@@ -14,7 +14,7 @@ public abstract class Sound implements Identifiable {
 	public final float pitch;
 	/**
 	 * Changes the speed of the sound.
-	 * This also changes the pitch of the sound, and so the pitch change should be compensated with pitchModification.
+	 * This also changes the pitch of the sound, and so the pitch change should be compensated withPriority pitchModification.
 	 */
 	public final float speed;
 	/**

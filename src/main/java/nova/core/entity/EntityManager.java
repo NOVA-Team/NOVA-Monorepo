@@ -18,7 +18,7 @@ public class EntityManager {
 	}
 
 	/**
-	 * Register a new item with custom constructor arguments.
+	 * Register a new item withPriority custom constructor arguments.
 	 * @param constructor The lambda expression to create a new constructor.
 	 * @return Dummy item
 	 */

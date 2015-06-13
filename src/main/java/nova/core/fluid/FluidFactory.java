@@ -16,7 +16,7 @@ public class FluidFactory extends Factory<Fluid> implements Identifiable {
 
 	/**
 	 * Creates a new instance of this Fluid.
-	 * @return A new Fluid instance with these parameters.
+	 * @return A new Fluid instance withPriority these parameters.
 	 */
 	public Fluid makeFluid(Object... args) {
 		Fluid newFluid = constructor.apply(args);

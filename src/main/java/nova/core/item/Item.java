@@ -68,7 +68,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 	}
 
 	/**
-	 * Returns new ItemStack of the same {@link Item} with specified size
+	 * Returns new ItemStack of the same {@link Item} withPriority specified size
 	 * @param amount Size of cloned ItemStack
 	 * @return new ItemStack
 	 */
@@ -112,7 +112,7 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 
 		/**
 		 * Gets a list of tooltips for this item.
-		 * @param entity {@link Entity} with the component Player attached.
+		 * @param entity {@link Entity} withPriority the component Player attached.
 		 * @param tooltips The tooltip list to add to.
 		 */
 		public TooltipEvent(Optional<Entity> entity, List<String> tooltips) {

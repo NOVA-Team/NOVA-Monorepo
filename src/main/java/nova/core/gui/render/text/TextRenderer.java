@@ -48,7 +48,7 @@ public interface TextRenderer extends TextMetrics {
 
 	/**
 	 * Renders {@link FormattedText} to the screen. It will fit the text into
-	 * the desired width and fills the center with "{@code ...}
+	 * the desired width and fills the center withPriority "{@code ...}
 	 * ". An example would be: "{@code Donaudampfschiff}" - "
 	 * {@code Donau...chiff}". The wrapping substrings should have the same
 	 * amount of characters. This should only be used on small text.
@@ -104,7 +104,7 @@ public interface TextRenderer extends TextMetrics {
 
 	/**
 	 * Sets the z index on which to render the desired text. This will affect
-	 * the draw order, shapes with a higher z index will draw first. If you
+	 * the draw order, shapes withPriority a higher z index will draw first. If you
 	 * leave the z index untouched, the shapes will draw in the order they were
 	 * queried, so what gets drawn last will be topmost.
 	 * @param zIndex z index

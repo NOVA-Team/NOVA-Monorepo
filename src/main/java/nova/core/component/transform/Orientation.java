@@ -23,7 +23,7 @@ import org.apache.commons.math3.util.FastMath;
 import java.util.Optional;
 
 /**
- * A component that is applied to providers with discrete orientations.
+ * A component that is applied to providers withPriority discrete orientations.
  * @author Calclavia
  */
 public class Orientation extends Component implements Storable, Stateful, Syncable {
@@ -145,7 +145,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	/**
 	 * Calculates the direction using raytracing
 	 * @param entity The entity to start raytracing from
-	 * @return The side of the block that is hit with the raytracing
+	 * @return The side of the block that is hit withPriority the raytracing
 	 */
 	public Direction calculateDirection(Entity entity) {
 		if (provider instanceof Block) {

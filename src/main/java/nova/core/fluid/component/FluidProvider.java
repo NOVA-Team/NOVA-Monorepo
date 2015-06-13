@@ -5,7 +5,7 @@ import nova.core.fluid.Fluid;
 import java.util.Optional;
 
 /**
- * Objects with this interface declare their ability to provide {@link Fluid FluidStacks}
+ * Objects withPriority this interface declare their ability to provide {@link Fluid FluidStacks}
  * @see FluidConsumer
  */
 public interface FluidProvider {

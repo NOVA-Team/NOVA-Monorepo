@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * </p>
  *
  * <p>
- * You can use a lambda consumer with {@link #of(Consumer)} to change the
+ * You can use a lambda consumer withPriority {@link #of(Consumer)} to change the
  * constraints inline. <b>In order to use a contraints object, use
  * {@link #clone()} first!</b>
  * </p>
@@ -122,7 +122,7 @@ public abstract class Constraints<O extends Constraints<O>> implements Cloneable
 		} catch (Exception e) {
 			throw new IllegalArgumentException(
 					"No matching constructor was found for constraint class " + clazz.getClass() +
-							" with the arguments " + Arrays.toString(parameters));
+						" withPriority the arguments " + Arrays.toString(parameters));
 		}
 	}
 

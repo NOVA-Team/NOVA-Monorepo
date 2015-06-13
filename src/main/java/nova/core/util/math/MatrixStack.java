@@ -54,7 +54,7 @@ public class MatrixStack implements Transformer {
 	}
 
 	/**
-	 * Transforms current matrix with give matrix.
+	 * Transforms current matrix withPriority give matrix.
 	 *
 	 * @param matrix to transform current matrix.
 	 * @return The transformed matrix

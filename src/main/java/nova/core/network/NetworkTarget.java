@@ -37,7 +37,7 @@ public @interface NetworkTarget {
 	 * </p>
 	 *
 	 * <p>
-	 * <b>Design your NOVA mod with two different sides in mind, or they might
+	 * <b>Design your NOVA mod withPriority two different sides in mind, or they might
 	 * only run client side and crash your game when attempting to run the mod
 	 * on the server side!</b>
 	 * </p>
@@ -56,7 +56,7 @@ public @interface NetworkTarget {
 		/**
 		 * The client side. The client usually handles rendering and has no
 		 * access to the remote {@link World} or {@link Entity Entities}. Any
-		 * changes on the client side have to be synchronized with the
+		 * changes on the client side have to be synchronized withPriority the
 		 * {@link #SERVER} side using {@link Packet Packets} or internal
 		 * synchronizing methods as provided by {@link Gui}, {@link Entity} and
 		 * others.
@@ -69,8 +69,8 @@ public @interface NetworkTarget {
 
 		/**
 		 * The server side. The server usually handles saving, entity logic,
-		 * world data, etc. The server has to send packets to communicate with
-		 * the {@link #CLIENT}, every interaction with the game world has to be
+		 * world data, etc. The server has to send packets to communicate withPriority
+		 * the {@link #CLIENT}, every interaction withPriority the game world has to be
 		 * synchronized in order to see the effects on the client. The server
 		 * doesn't handle rendering usually.
 		 *

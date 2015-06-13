@@ -61,9 +61,9 @@ public class Data extends HashMap<String, Object> {
 
 	/**
 	 * Saves an object, serializing its data.
-	 * This map can be reloaded and its class with be reconstructed.
+	 * This map can be reloaded and its class withPriority be reconstructed.
 	 * @param obj The object to store.
-	 * @return The data of the object with
+	 * @return The data of the object withPriority
 	 */
 	public static Data serialize(Storable obj) {
 		Data data = new Data(obj.getClass());
@@ -74,10 +74,10 @@ public class Data extends HashMap<String, Object> {
 	}
 
 	/**
-	 * Loads an object from its stored data, with an unknown class.
+	 * Loads an object from its stored data, withPriority an unknown class.
 	 * The class of the object must be stored within the data.
 	 * @param data The data
-	 * @return The object loaded with given data.
+	 * @return The object loaded withPriority given data.
 	 */
 	public static Object unserialize(Data data) {
 		try {
@@ -101,7 +101,7 @@ public class Data extends HashMap<String, Object> {
 	 * Loads an object from its stored data, given its class.
 	 * @param clazz - The class to load
 	 * @param data - The data
-	 * @return The object loaded with given data.
+	 * @return The object loaded withPriority given data.
 	 */
 	public static <T extends Storable> T unserialize(Class<T> clazz, Data data) {
 		try {

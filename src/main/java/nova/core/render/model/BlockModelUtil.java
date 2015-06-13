@@ -329,7 +329,7 @@ public class BlockModelUtil {
 	 * @param maxY Max Y coord
 	 * @param maxZ Max Z coord
 	 * @param textureCoordinates Texture coordinates to render
-	 * @return The cube model with textures
+	 * @return The cube model withPriority textures
 	 */
 	public static Model drawCube(
 		Model model,
@@ -352,7 +352,7 @@ public class BlockModelUtil {
 	 * @param model The model to apply the textures to
 	 * @param cuboid The cuboid where the moddel aplies to
 	 * @param textureCoordinates The texturecoordinates to use
-	 * @return The model with the textures aplied
+	 * @return The model withPriority the textures aplied
 	 */
 	public static Model drawCube(Model model, Cuboid cuboid, CubeTextureCoordinates textureCoordinates) {
 		return drawCube(model, cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ(), textureCoordinates);

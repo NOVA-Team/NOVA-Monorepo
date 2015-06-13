@@ -108,7 +108,7 @@ public interface Inventory extends Iterable<Item> {
 
 	/**
 	 * Removes a certain item from a slot.
-	 * @param check The item type to check with
+	 * @param check The item type to check withPriority
 	 * @return The items removed
 	 */
 	default Optional<Item> remove(Item check) {
