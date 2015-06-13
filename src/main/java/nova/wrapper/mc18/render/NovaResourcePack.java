@@ -2,7 +2,7 @@ package nova.wrapper.mc18.render;
 
 import com.google.common.base.Charsets;
 import net.minecraft.client.resources.FileResourcePack;
-import scala.actors.threadpool.Arrays;
+import java.util.Arrays;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
