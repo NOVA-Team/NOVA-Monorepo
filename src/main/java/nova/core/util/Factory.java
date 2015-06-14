@@ -22,6 +22,6 @@ public class Factory<T extends Identifiable> implements Identifiable {
 	}
 
 	public String getID() {
-		return dummy.getID();
+		return getDummy().getID();
 	}
 }
