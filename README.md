@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/NOVA-Team/NOVA-Core.png?label=ready&title=Ready)](https://waffle.io/NOVA-Team/NOVA-Core)
 [![Build Status](https://img.shields.io/travis/NOVA-Team/NOVA-Core.svg?style=flat-square)](https://travis-ci.org/NOVA-Team/NOVA-Core)
 [![Coverage](https://img.shields.io/codecov/c/github/NOVA-Team/NOVA-Core.svg?style=flat-square)](https://codecov.io/github/NOVA-Team/NOVA-Core)
 [![Tests](https://img.shields.io/jenkins/t/http/jenkins.magik6k.net/NovaAPI.svg?style=flat-square)](http://jenkins.magik6k.net/job/NovaAPI/lastCompletedBuild/testReport/)
