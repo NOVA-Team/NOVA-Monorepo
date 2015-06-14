@@ -54,6 +54,7 @@ jar {
 	manifest {
 		attributes 'FMLCorePlugin': 'nova.wrapper.mc18.NovaMinecraftCore'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
+		attributes 'FMLAT': 'nova_at.cfg'
 	}
 }
 
