@@ -8,14 +8,16 @@ import java.util.function.Function;
  */
 public class Factory<T extends Identifiable> implements Identifiable {
 	protected final Function<Object[], T> constructor;
-	protected final T dummy;
+	protected T dummy;
 
 	public Factory(Function<Object[], T> constructor) {
 		this.constructor = constructor;
-		this.dummy = constructor.apply(new Object[0]);
 	}
 
 	public T getDummy() {
+		if (dummy == null) {
+			dummy = constructor.apply(new Object[0]);
+		}
 		return dummy;
 	}
 
