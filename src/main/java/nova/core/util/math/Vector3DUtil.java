@@ -11,6 +11,10 @@ import java.util.Random;
  */
 public class Vector3DUtil {
 
+	private Vector3DUtil() {
+
+	}
+
 	public static final Vector3D ONE = new Vector3D(1, 1, 1);
 	public static final Vector3D CENTER = new Vector3D(0.5, 0.5, 0.5);
 	public static final Vector3D FORWARD = Vector3D.MINUS_K;
@@ -23,10 +27,23 @@ public class Vector3DUtil {
 		return new Vector3D(random.nextDouble(), random.nextDouble(), random.nextDouble()).scalarMultiply(2).subtract(ONE);
 	}
 
+	/**
+	 * Calculates maximum of each coordinate.
+	 *
+	 * @param a first vector.
+	 * @param b second vector.
+	 * @return new vector that's each coordinate is maximum of coordinates of a and b.
+	 */
 	public static Vector3D max(Vector3D a, Vector3D b) {
 		return new Vector3D(FastMath.max(a.getX(), b.getX()), FastMath.max(a.getY(), b.getY()), FastMath.max(a.getZ(), b.getZ()));
 	}
 
+	/**
+	 * Calculates minimum of each coordinate.
+	 * @param a first vector.
+	 * @param b second vector.
+	 * @return new vector that's each coordinate is minimum of coordinates of a and b.
+	 */
 	public static Vector3D min(Vector3D a, Vector3D b) {
 		return new Vector3D(FastMath.min(a.getX(), b.getX()), FastMath.min(a.getY(), b.getY()), FastMath.min(a.getZ(), b.getZ()));
 	}
@@ -43,10 +60,21 @@ public class Vector3DUtil {
 		return new Vector3D(-vec.getY(), vec.getX(), 0);
 	}
 
+	/**
+	 * Calculates middle point between two vectors.
+	 * @param a first vector.
+	 * @param b second vector.
+	 * @return new vectors that is in the middle of a and b.
+	 */
 	public static Vector3D midpoint(Vector3D a, Vector3D b) {
 		return a.add(b).scalarMultiply(0.5);
 	}
 
+	/**
+	 * Calculates one by vectos.
+	 * @param vec vector to be reciprocated.
+	 * @return reciprocal of vec.
+	 */
 	public static Vector3D reciprocal(Vector3D vec) {
 		return new Vector3D(1 / vec.getX(), 1 / vec.getY(), 1 / vec.getZ());
 	}

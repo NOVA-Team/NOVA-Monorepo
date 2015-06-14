@@ -11,9 +11,16 @@ import org.apache.commons.math3.util.FastMath;
  */
 public class RotationUtil {
 
+	private RotationUtil() {
+
+	}
+
+	/**
+	 * Rotation order that is used by defualt in Nova.
+	 */
 	public static final RotationOrder DEFAULT_ORDER = RotationOrder.YXZ;
 
-	public static int[][] relativeMatrix = new int[][] {
+	private static int[][] relativeMatrix = new int[][] {
 		{ 3, 2, 1, 0, 5, 4 },
 		{ 4, 5, 0, 1, 2, 3 },
 		{ 0, 1, 3, 2, 5, 4 },
@@ -22,7 +29,7 @@ public class RotationUtil {
 		{ 0, 1, 5, 4, 2, 3 }
 	};
 
-	public static int[] sideRotMap = new int[] {
+	private static int[] sideRotMap = new int[] {
 		3, 4, 2, 5,
 		3, 5, 2, 4,
 		1, 5, 0, 4,
@@ -30,7 +37,7 @@ public class RotationUtil {
 		1, 2, 0, 3,
 		1, 3, 0, 2 };
 
-	public static int[] rotSideMap = new int[] {
+	private static int[] rotSideMap = new int[] {
 		-1, -1, 2, 0, 1, 3,
 		-1, -1, 2, 0, 3, 1,
 		2, 0, -1, -1, 3, 1,

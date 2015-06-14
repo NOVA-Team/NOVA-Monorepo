@@ -4,9 +4,7 @@ import org.junit.Test;
 
 import static nova.testutils.NovaAssertions.assertThat;
 
-/**
- * Created by magik6k on 4/18/15.
- */
+
 public class StorableTest {
     @Test
     public void testSingleStorable() {
