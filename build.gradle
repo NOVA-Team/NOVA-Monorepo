@@ -50,6 +50,8 @@ jar {
 	manifest {
 		attributes 'FMLCorePlugin': 'nova.wrapper.mc1710.NovaMinecraftCore'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
+		attributes 'FMLAT': 'nova_at.cfg'
+
 	}
 }
 
@@ -98,7 +100,7 @@ publishing {
 	publications {
 		main(MavenPublication) {
 			from components.java
-			
+
 			artifactId "NovaWrapper-MC1.7.10"
 
 			artifact sourcesJar
