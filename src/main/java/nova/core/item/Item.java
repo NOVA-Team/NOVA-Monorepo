@@ -5,6 +5,7 @@ import nova.core.entity.Entity;
 import nova.core.event.Event;
 import nova.core.event.EventBus;
 import nova.core.render.Color;
+import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.internal.core.Game;
@@ -13,8 +14,8 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: Convert to component system
-public abstract class Item extends ComponentProvider implements Identifiable {
+//TODO: This Storable implementation is flawed and not based on ID.
+public abstract class Item extends ComponentProvider implements Identifiable, Storable {
 
 	public final EventBus<Event> events = new EventBus<>();
 
@@ -102,6 +103,8 @@ public abstract class Item extends ComponentProvider implements Identifiable {
 	 * Gets the color multiplier for rendering
 	 * @return The color
 	 */
+	//TODO: Convert to component system
+	@Deprecated
 	public Color colorMultiplier() {
 		return Color.white;
 	}
