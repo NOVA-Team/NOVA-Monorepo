@@ -102,7 +102,7 @@ public class InventorySimple extends Component implements Inventory, Storable, S
 
 	@Override
 	public void read(Packet packet) {
-		packet.write(size());
+		items = new Item[packet.readInt()];
 		IntStream.range(0, size()).forEach(i -> {
 			if (packet.readBoolean()) {
 				items[i] = (Item) packet.readStorable();
@@ -114,7 +114,7 @@ public class InventorySimple extends Component implements Inventory, Storable, S
 
 	@Override
 	public void write(Packet packet) {
-		items = new Item[packet.readInt()];
+		packet.write(size());
 		IntStream.range(0, size()).forEach(i -> {
 			if (get(i).isPresent()) {
 				packet.writeBoolean(true);
