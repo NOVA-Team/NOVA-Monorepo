@@ -78,7 +78,7 @@ public class Background extends Constraints<Background> {
 		}
 	}
 
-	// TODO Couldn't come up with a better name, might want to change this
+	// TODO Couldn't come up withPriority a better name, might want to change this
 	// before release
 	public static enum EnumFill {
 		REPEAT, FILL, DEFAULT

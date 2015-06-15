@@ -5,7 +5,7 @@ import nova.core.fluid.Fluid;
 import java.util.Optional;
 
 /**
- * Classes with this interface declare ability to store fluids
+ * Classes withPriority this interface declare ability to store fluids
  * @see FluidConsumer
  * @see Tank
  */

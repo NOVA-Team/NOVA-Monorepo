@@ -33,7 +33,7 @@ public class Rectangle extends Shape<Rectangle, Rectangle> {
 	 * Sets the min vector
 	 *
 	 * @param min The new min vector
-	 * @return New Rectangle with the updated vector
+	 * @return New Rectangle withPriority the updated vector
 	 */
 	public Rectangle setMin(Vector2D min) {
 		return new Rectangle(min, max);
@@ -52,7 +52,7 @@ public class Rectangle extends Shape<Rectangle, Rectangle> {
 	 * Sets the max vector
 	 *
 	 * @param max The new max vector
-	 * @return New Rectangle with the updated vector
+	 * @return New Rectangle withPriority the updated vector
 	 */
 	public Rectangle setMax(Vector2D max) {
 		return new Rectangle(min, max);

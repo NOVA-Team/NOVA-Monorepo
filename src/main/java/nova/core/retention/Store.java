@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Fields annotated with this annotation declare that they
+ * Fields annotated withPriority this annotation declare that they
  * should be saved after object death and restored later
  */
 @Retention(RetentionPolicy.RUNTIME)

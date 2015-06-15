@@ -6,6 +6,7 @@ import nova.core.event.Event;
 import nova.core.event.EventBus;
 import nova.core.render.Color;
 import nova.core.util.Buildable;
+import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.Factory;
 import nova.internal.core.Game;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 //TODO: Convert to component system
-public abstract class Item extends ComponentProvider implements Buildable<Item> {
+public abstract class Item extends ComponentProvider implements Buildable<Item>, Storable {
 
 	public final EventBus<Event> events = new EventBus<>();
 
@@ -79,7 +80,7 @@ public abstract class Item extends ComponentProvider implements Buildable<Item> 
 	}
 
 	/**
-	 * Returns new ItemStack of the same {@link Item} with specified size
+	 * Returns new ItemStack of the same {@link Item} withPriority specified size
 	 * @param amount Size of cloned ItemStack
 	 * @return new ItemStack
 	 */
@@ -113,6 +114,8 @@ public abstract class Item extends ComponentProvider implements Buildable<Item> 
 	 * Gets the color multiplier for rendering
 	 * @return The color
 	 */
+	//TODO: Convert to component system
+	@Deprecated
 	public Color colorMultiplier() {
 		return Color.white;
 	}
@@ -123,7 +126,7 @@ public abstract class Item extends ComponentProvider implements Buildable<Item> 
 
 		/**
 		 * Gets a list of tooltips for this item.
-		 * @param entity {@link Entity} with the component Player attached.
+		 * @param entity {@link Entity} withPriority the component Player attached.
 		 * @param tooltips The tooltip list to add to.
 		 */
 		public TooltipEvent(Optional<Entity> entity, List<String> tooltips) {

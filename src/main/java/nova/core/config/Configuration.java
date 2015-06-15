@@ -1,11 +1,18 @@
 package nova.core.config;
 
 import com.typesafe.config.ConfigException;
-import com.typesafe.config.*;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigRenderOptions;
+import com.typesafe.config.ConfigValue;
+import com.typesafe.config.ConfigValueFactory;
 import nova.core.util.ReflectionUtil;
 import nova.core.util.collection.Tuple2;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,7 +20,11 @@ import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Configuration {
@@ -148,8 +159,8 @@ public class Configuration {
 	 * Loads config data from HOCON string.
 	 *
 	 * @param configData Valid HOCON config.
-	 * @param holder     Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
-	 * @return Full config with added default data, represented as string.
+	 * @param holder     Object withPriority {@code @ConfigHolder} annotation and {@code @Config}'s in it.
+	 * @return Full config withPriority added default data, represented as string.
 	 */
 	public static String load(String configData, Object holder) {
 		com.typesafe.config.Config parsed = ConfigFactory.parseString(configData);
@@ -168,7 +179,7 @@ public class Configuration {
 	 * If file do not exist - creates it and writes all defaults.
 	 *
 	 * @param configFile File to load config from.
-	 * @param holder     Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
+	 * @param holder     Object withPriority {@code @ConfigHolder} annotation and {@code @Config}'s in it.
 	 */
 	 // mkdirs and createNewFile
 	public static void load(File configFile, Object holder) {
@@ -198,7 +209,7 @@ public class Configuration {
 	 * Loads config data from InputStream, any values missing are just ignored(so your defaults stay at place).
 	 *
 	 * @param stream Input stream to load data from.
-	 * @param holder Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
+	 * @param holder Object withPriority {@code @ConfigHolder} annotation and {@code @Config}'s in it.
 	 */
 	public static void load(InputStream stream, Object holder) {
 		handle(ConfigFactory.parseReader(new InputStreamReader(stream)), holder, "");
@@ -208,7 +219,7 @@ public class Configuration {
 	 * Shortcut to load configs from URL.
 	 *
 	 * @param url    Given URL.
-	 * @param holder Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
+	 * @param holder Object withPriority {@code @ConfigHolder} annotation and {@code @Config}'s in it.
 	 */
 	public static void load(URL url, Object holder) {
 		try {
@@ -222,7 +233,7 @@ public class Configuration {
 	 * Shortcut to load configs from URI. Just uses URI#toURL, be warned.
 	 *
 	 * @param uri    Given URI.
-	 * @param holder Object with {@code @ConfigHolder} annotation and {@code @Config}'s in it.
+	 * @param holder Object withPriority {@code @ConfigHolder} annotation and {@code @Config}'s in it.
 	 */
 	public static void load(URI uri, Object holder) {
 		try {

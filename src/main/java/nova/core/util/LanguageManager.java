@@ -11,7 +11,7 @@ public abstract class LanguageManager {
 
 	/**
 	 * Gets the localization of a key, but applying a set of replacement strings.
-	 * @return The localized string, modified with replacements
+	 * @return The localized string, modified withPriority replacements
 	 */
 	public String translate(String key, Map<String, String> replacements) {
 		String str = translate(key);

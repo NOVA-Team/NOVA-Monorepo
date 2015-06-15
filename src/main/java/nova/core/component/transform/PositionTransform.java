@@ -3,7 +3,7 @@ package nova.core.component.transform;
 import nova.core.component.Component;
 
 /**
- * A tansform that is associates with a position.
+ * A tansform that is associates withPriority a position.
  * @author Calclavia
  */
 public class PositionTransform<P> extends Component {

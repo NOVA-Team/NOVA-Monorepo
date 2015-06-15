@@ -75,7 +75,7 @@ public interface ItemIngredient {
 
 	/**
 	 * Performs any necessary actions when this ingredient is consumed due to crafting a single item. May return a
-	 * stack with zero size, but cannot return null.
+	 * stack withPriority zero size, but cannot return null.
 	 *
 	 * @param original Ingredient
 	 * @param craftingGrid {@link CraftingGrid} used

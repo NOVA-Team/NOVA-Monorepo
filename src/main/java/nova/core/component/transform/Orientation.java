@@ -23,7 +23,7 @@ import org.apache.commons.math3.util.FastMath;
 import java.util.Optional;
 
 /**
- * A component that is applied to providers with discrete orientations.
+ * A component that is applied to providers withPriority discrete orientations.
  * @author Calclavia
  */
 public class Orientation extends Component implements Storable, Stateful, Syncable {
@@ -51,7 +51,6 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	/**
 	 * Hooks the needed events intro the provider to rotate based on the side that is hit when placing the block
-	 *
 	 * @return The Orientation instance
 	 */
 	public Orientation hookBasedOnHitSide() {
@@ -64,21 +63,12 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 					}
 				}
 			);
-			((Block) provider).events.on(Block.RightClickEvent.class).bind(
-				evt ->
-				{
-					if (Game.network().isServer()) {
-						rotate(evt.side.ordinal(), evt.position);
-					}
-				}
-			);
 		}
 		return this;
 	}
 
 	/**
 	 * Hooks the needed events intro the provider to rotate based on the {@link Entity}'s rotation when placing the block
-	 *
 	 * @return The Orientation instance
 	 */
 	public Orientation hookBasedOnEntity() {
@@ -96,6 +86,22 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	}
 
 	/**
+	 * Hooks the needed events intro the provider to rotate when the block is right clicked.
+	 * @return The Orientation instance
+	 */
+	public Orientation hookRightClickRotate() {
+		((Block) provider).events.on(Block.RightClickEvent.class).bind(
+			evt ->
+			{
+				if (Game.network().isServer()) {
+					rotate(evt.side.ordinal(), evt.position);
+				}
+			}
+		);
+		return this;
+	}
+
+	/**
 	 * @return The current orientation
 	 */
 	public Direction orientation() {
@@ -104,13 +110,13 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	/**
 	 * Changes the orientation
-	 *
 	 * @param orientation New orientation
 	 * @return The Orientation instance
 	 */
 	public Orientation setOrientation(Direction orientation) {
-		if (this.orientation == orientation)
+		if (this.orientation == orientation) {
 			return this;
+		}
 		this.orientation = orientation;
 		events.publish(new OrientationChangeEvent());
 		return this;
@@ -118,7 +124,6 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	/**
 	 * Set's the rotation mask
-	 *
 	 * @param mask New rotation mask
 	 * @return The Orientation instance
 	 */
@@ -129,7 +134,6 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	/**
 	 * Set to true to use the oposite direction
-	 *
 	 * @param flip should flip rotation or not
 	 * @return The Orientation instance
 	 */
@@ -140,9 +144,8 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	/**
 	 * Calculates the direction using raytracing
-	 *
 	 * @param entity The entity to start raytracing from
-	 * @return The side of the block that is hit with the raytracing
+	 * @return The side of the block that is hit withPriority the raytracing
 	 */
 	public Direction calculateDirection(Entity entity) {
 		if (provider instanceof Block) {
@@ -162,7 +165,6 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	/**
 	 * Determines the direction the block is facing based on the entity's facing
-	 *
 	 * @param entity The entity used to determine rotation
 	 * @return The direction the block is facing
 	 */

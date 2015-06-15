@@ -19,7 +19,7 @@ public abstract class ModelProvider {
 	}
 
 	/**
-	 * Loads the model with a input stream.
+	 * Loads the model withPriority a input stream.
 	 *
 	 * @param stream The {@link InputStream}
 	 */

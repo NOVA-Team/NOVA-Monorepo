@@ -33,7 +33,7 @@ public class Fluid implements Storable, Cloneable, Identifiable {
 	}
 
 	/**
-	 * Creates new Fluid with an ID
+	 * Creates new Fluid withPriority an ID
 	 */
 	public Fluid(String id) {
 		this.id = id;
@@ -48,7 +48,7 @@ public class Fluid implements Storable, Cloneable, Identifiable {
 
 	/**
 	 * Sets new size of this FluidStack
-	 * Note that there can never be fluid with "zero" amount. Use Optional.empty() instead.
+	 * Note that there can never be fluid withPriority "zero" amount. Use Optional.empty() instead.
 	 * @param amount New size
 	 */
 	public Fluid setAmount(int amount) {
@@ -87,7 +87,7 @@ public class Fluid implements Storable, Cloneable, Identifiable {
 	}
 
 	/**
-	 * Returns new FluidStack of the same {@link Fluid} with specified fluid
+	 * Returns new FluidStack of the same {@link Fluid} withPriority specified fluid
 	 *
 	 * @param amount Amount of fluid in cloned FluidStack
 	 * @return new FluidStack
@@ -99,9 +99,9 @@ public class Fluid implements Storable, Cloneable, Identifiable {
 	}
 
 	/**
-	 * Gets the block associated with this fluid.
+	 * Gets the block associated withPriority this fluid.
 	 *
-	 * @return The block. There may be no block associated with this fluid.
+	 * @return The block. There may be no block associated withPriority this fluid.
 	 */
 	public Optional<Factory<Block>> getBlockFactory() {
 		return Optional.empty();

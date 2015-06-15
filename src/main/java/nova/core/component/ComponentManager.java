@@ -31,8 +31,8 @@ public class ComponentManager extends Manager<Component> {
 	}
 
 	/**
-	 * Instantiates a new node based on its interface. This is not as reliable as make with componentID.
-	 * @param theInterface The interface associated with the new component
+	 * Instantiates a new node based on its interface. This is not as reliable as make withPriority componentID.
+	 * @param theInterface The interface associated withPriority the new component
 	 * @param args The arguments for the component's constructor
 	 * @param <N> The node type
 	 * @return A new node of N type.

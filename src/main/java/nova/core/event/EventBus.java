@@ -37,7 +37,7 @@ public class EventBus<T> {
 	@Deprecated
 	public EventListenerHandle<T> add(EventListener<T> listener, int priority) {
 
-		return on().with(priority).bind(listener);
+		return on().withPriority(priority).bind(listener);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class EventBus<T> {
 
 	@Deprecated
 	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, int priority) {
-		return on(clazz).with(priority).bind(listener);
+		return on(clazz).withPriority(priority).bind(listener);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class EventBus<T> {
 			this.clazz = clazz;
 		}
 
-		public EventBinder<E> with(int priority) {
+		public EventBinder<E> withPriority(int priority) {
 			this.priority = priority;
 			return this;
 		}

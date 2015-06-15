@@ -39,7 +39,7 @@ public interface CraftingGrid {
 	 * Modifies the stack in the given slot. If the modification is not possible, this method returns null. If modification
 	 * was successful, returns true.
 	 *
-	 * Slots in a crafting grid should also be ordered with the slots at the y=0 first, starting from smallest x to
+	 * Slots in a crafting grid should also be ordered withPriority the slots at the y=0 first, starting from smallest x to
 	 * largest x and then from smallest y to largest y (natural order). However, not all (x, y) positions need to have
 	 * a corresponding slot.
 	 * @param slot slot to be modified
@@ -93,7 +93,7 @@ public interface CraftingGrid {
 
 	/**
 	 * Gets the type of crafting grid. For a crafting recipe, this should return CraftingGrid.TYPE_CRAFTING. Other
-	 * machines or crafting tables (with a separate set of recipes) may return a different value.
+	 * machines or crafting tables (withPriority a separate set of recipes) may return a different value.
 	 * @return crafting grid type0
 	 */
 	String getType();

@@ -1,12 +1,16 @@
 package nova.core.config;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * This annotation is used to fetch and load configs easily.
  * Configs are saved in
  * <a href="https://github.com/typesafehub/config/blob/master/HOCON.md">HOCON (Human-Optimized Config Object Notation)</a>
- * format, which is a nice JSON superset with less pedantic syntax and comments.
+ * format, which is a nice JSON superset withPriority less pedantic syntax and comments.
  * It has a tree structure, so any element could be reached via package-like path.<p>
  * Example usage:
  * <pre>
@@ -26,7 +30,7 @@ import java.lang.annotation.*;
  * }
  * baz = string
  * </pre><p>
- * For root values you could just use {@code &#64;Config} annotation with no parameters:
+ * For root values you could just use {@code &#64;Config} annotation withPriority no parameters:
  * <pre>
  * &#64;Config
  * public String baz = "default";

@@ -1,9 +1,7 @@
 package nova.testutils;
 
-
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.assertj.core.api.AbstractAssert;
-
 import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Offset;
 
@@ -33,15 +31,15 @@ public abstract class NovaAssertions extends Assertions{
         public Almost<K, T> isAlmostEqualTo(T other, double precision){
             isNotNull();
             if (Math.abs(difference(actual, other)) > precision) {
-                failWithMessage("<%s> was expected to be equal to <%s> with tolerance <%s> but difference is <%s>", actual, other, precision, difference(actual, other));
-            }
+				failWithMessage("<%s> was expected to be equal to <%s> withPriority tolerance <%s> but difference is <%s>", actual, other, precision, difference(actual, other));
+			}
             return this;
         }
         public Almost<K, T> isAlmostZeroTo(double precision){
             isNotNull();
             if (Math.abs(difference(actual, zero)) > precision) {
-                failWithMessage("<%s> was expected to be equal to <%s> with tolerance <%s> but difference is <%s>", actual, zero, precision, difference(actual, zero));
-            }
+				failWithMessage("<%s> was expected to be equal to <%s> withPriority tolerance <%s> but difference is <%s>", actual, zero, precision, difference(actual, zero));
+			}
             return this;
         }
 

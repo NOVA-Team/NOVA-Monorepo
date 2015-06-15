@@ -17,8 +17,7 @@ public class RayTraceEfficiencyTest {
         NovaLauncher launcher = new NovaLauncherTestFactory(RayTraceTest.RayTraceMod.class).createLauncher();
         FakeWorld fakeWorld = new FakeWorld();
 
-
-        Game.logger().info("Generating random world with block count: " + maxTestSize);
+		Game.logger().info("Generating random world withPriority block count: " + maxTestSize);
 
         /**
          * Generate a random world
@@ -36,8 +35,8 @@ public class RayTraceEfficiencyTest {
              * Do random ray trace
              */
             RayTracer rayTracer = new RayTracer(new Ray(new Vector3D(0, 5, 5), new Vector3D(1, 0, 0))).setDistance(size);
-            Game.logger().info("Ray tracing with threading: " + rayTracer.doParallel());
-            Profiler start = new Profiler("Ray Trace " + size).start();
+			Game.logger().info("Ray tracing withPriority threading: " + rayTracer.doParallel());
+			Profiler start = new Profiler("Ray Trace " + size).start();
             rayTracer.rayTraceBlocks(fakeWorld).findFirst();
             start.end();
 	        Game.logger().info(start.toString());

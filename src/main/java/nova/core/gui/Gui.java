@@ -13,8 +13,8 @@ import nova.core.inventory.Inventory;
 import nova.core.inventory.component.InventoryPlayer;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.network.Packet;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -28,14 +28,14 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	protected final boolean hasServerSide;
 
 	/**
-	 * List of {@link Inventory Inventories} associated with this GUI.
+	 * List of {@link Inventory Inventories} associated withPriority this GUI.
 	 */
 	protected final HashMap<String, Inventory> inventoryMap = new HashMap<>();
 	protected InventoryPlayer playerInventory;
 
 	/**
-	 * Creates a new GUI instance with a {@link Side#SERVER server} side
-	 * backend. You can register events with
+	 * Creates a new GUI instance withPriority a {@link Side#SERVER server} side
+	 * backend. You can register events withPriority
 	 * {@link #onEvent(ComponentEventListener, Class, Side)} specifying on which
 	 * side the event gets processed. Keep the client side restrictions in mind.
 	 * @param uniqueID Unique ID of this GUI
@@ -47,7 +47,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	}
 
 	/**
-	 * Creates a new GUI instance with an optional {@link Side#SERVER server}
+	 * Creates a new GUI instance withPriority an optional {@link Side#SERVER server}
 	 * side backend. GUIs without a server side aren't able to send events over
 	 * the network, adding a listener for the server side won't have any effect.
 	 * Keep the client side restrictions in mind.
@@ -106,7 +106,7 @@ public class Gui extends AbstractGuiContainer<Gui, NativeGui> {
 	}
 
 	/**
-	 * Associates an {@link Inventory} with this GUI. Has to be called from the
+	 * Associates an {@link Inventory} withPriority this GUI. Has to be called from the
 	 * {@link BindEvent} in order to supply it to {@link Slot}.
 	 * @param id Id used to indentify the inventory
 	 * @param inventory inventory to bind

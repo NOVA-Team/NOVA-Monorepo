@@ -9,7 +9,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public class ReflectionUtil {
@@ -265,7 +269,7 @@ public class ReflectionUtil {
 	}
 
 	/**
-	 * Invokes an action on each field annotated with specified annotation of
+	 * Invokes an action on each field annotated withPriority specified annotation of
 	 * given object
 	 *
 	 * @param <T> Annotation type

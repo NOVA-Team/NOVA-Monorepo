@@ -2,6 +2,7 @@ package nova.core.component.renderer;
 
 import nova.core.component.ComponentProvider;
 import nova.core.render.texture.ItemTexture;
+import nova.core.render.texture.Texture;
 
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ public class ItemRenderer extends Renderer {
 	 * <p>
 	 * return - {@link ItemTexture} instance
 	 */
-	public Optional<ItemTexture> texture = Optional.empty();
+	public Optional<Texture> texture = Optional.empty();
 
 	public ItemRenderer() {
 
@@ -33,7 +34,7 @@ public class ItemRenderer extends Renderer {
 		};
 	}
 
-	public ItemRenderer setTexture(ItemTexture texture) {
+	public ItemRenderer setTexture(Texture texture) {
 		this.texture = Optional.of(texture);
 		return this;
 	}

@@ -35,14 +35,14 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 	 * Tests whether a given ID is in the Registry.
 	 *
 	 * @param ID the id to find.
-	 * @return true if the registry contains the object with the given ID.
+	 * @return true if the registry contains the object withPriority the given ID.
 	 */
 	public boolean contains(String ID) {
 		return objects.containsKey(ID);
 	}
 
 	/**
-	 * Gets the object with the given id from the registry.
+	 * Gets the object withPriority the given id from the registry.
 	 *
 	 * @param ID the id to find.
 	 * @return the object found or empty Optional if not found.

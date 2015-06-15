@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A component provider provides the components associated with the object.
+ * A component provider provides the components associated withPriority the object.
  * <p>
  * {@code ComponentProvider} is implemented in blocks or entities.
  * @author Calclavia
@@ -94,7 +94,7 @@ public abstract class ComponentProvider {
 	}
 
 	/**
-	 * Gets an optional of the component with the specified type.
+	 * Gets an optional of the component withPriority the specified type.
 	 * @param componentType the type to get.
 	 * @return the optional of the component found or {@code Optional.empty()}
 	 * if the component was not found.
@@ -120,7 +120,7 @@ public abstract class ComponentProvider {
 	}
 
 	/**
-	 * Gets the component with the specified type.
+	 * Gets the component withPriority the specified type.
 	 * @param componentType the type to get.
 	 * @return the component.
 	 * @throws ComponentException if the component doesn't exist.

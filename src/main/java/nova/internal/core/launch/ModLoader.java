@@ -1,5 +1,6 @@
 package nova.internal.core.launch;
 
+
 import nova.core.game.GameStatusEventBus;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.loader.Loadable;
@@ -9,7 +10,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -84,7 +92,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	public <T> T makeObjectWithDep(Class<T> classToConstruct) throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		Stream<Constructor<?>> candidates = Arrays.stream(classToConstruct.getConstructors());
 
-		//get constructor with most parameters.
+		//get constructor withPriority most parameters.
 		Optional<Constructor<?>> ocons = candidates.max(Comparator.comparingInt((constructor) -> constructor.getParameterTypes().length));
 
 		@SuppressWarnings("unchecked")

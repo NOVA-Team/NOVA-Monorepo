@@ -9,7 +9,7 @@ import nova.core.render.model.Model;
 import java.util.function.Consumer;
 
 /**
- * Renders a block with rotation based on its direction
+ * Renders a block withPriority rotation based on its direction
  * @author Calclavia
  */
 @Require(Orientation.class)
