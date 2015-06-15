@@ -23,7 +23,7 @@ public class ItemManager extends Manager<Item> {
 	private final EventBus<ItemRegistrationEvent> itemRegistryListeners = new EventBus<>();
 
 	private ItemManager(Registry<Factory<Item>> itemRegistry, Supplier<BlockManager> blockManager) {
-		super(itemRegistry);
+		super(itemRegistry, Item.class);
 		this.blockManager = blockManager;
 	}
 

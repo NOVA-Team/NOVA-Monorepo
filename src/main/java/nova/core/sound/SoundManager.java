@@ -7,7 +7,8 @@ import nova.core.util.Registry;
 public class SoundManager extends Manager<Sound> {
 
 	public SoundManager(Registry<Factory<Sound>> registry) {
-		super(registry);
+		//TODO: Sounds are to be reworked.
+		super(registry, Sound.class);
 	}
 
 }

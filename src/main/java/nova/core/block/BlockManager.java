@@ -10,8 +10,6 @@ import nova.core.util.RegistrationException;
 import nova.core.util.Registry;
 import nova.internal.core.Game;
 
-import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class BlockManager extends Manager<Block> {
@@ -20,7 +18,7 @@ public class BlockManager extends Manager<Block> {
 	private final Supplier<ItemManager> itemManager;
 
 	private BlockManager(Registry<Factory<Block>> registry, Supplier<ItemManager> itemManager) {
-		super(registry);
+		super(registry, Block.class);
 		this.itemManager = itemManager;
 	}
 

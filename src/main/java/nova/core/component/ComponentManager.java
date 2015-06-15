@@ -21,7 +21,7 @@ public class ComponentManager extends Manager<Component> {
 	private Map<Class<? extends Component>, String> classToComponent = new HashMap<>();
 
 	private ComponentManager(Registry<Factory<Component>> registry) {
-		super(registry);
+		super(registry, Component.class);
 	}
 
 	@Override
