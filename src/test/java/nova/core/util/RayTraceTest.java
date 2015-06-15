@@ -1,8 +1,11 @@
 package nova.core.util;
 
 import nova.core.block.Block;
+import nova.core.block.BlockManager;
+import nova.core.component.ComponentManager;
 import nova.core.component.misc.Collider;
 import nova.core.entity.Entity;
+import nova.core.entity.EntityManager;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
 import nova.core.util.math.RotationUtil;
@@ -122,12 +125,23 @@ public class RayTraceTest {
 		public static Factory<Block> solid;
 		public static Factory<Entity> testEntity;
 
+		final BlockManager blockManager;
+		final EntityManager entityManager;
+		final ComponentManager componentManager;
+
+		public RayTraceMod(BlockManager blockManager, EntityManager entityManager, ComponentManager componentManager) {
+
+			this.blockManager = blockManager;
+			this.entityManager = entityManager;
+			this.componentManager = componentManager;
+		}
+
 		@Override
 		public void preInit() {
-			Game.blocks().register(FakeBlock.class);
-			solid = Game.blocks().getFactory("solid").get();
-			Game.components().register(Collider.class);
-			testEntity = Game.entities().register(Factory.of(Entity.class).ID("TestEntity"));
+			blockManager.register(FakeBlock.class);
+			solid = blockManager.getFactory("solid").get();
+			componentManager.register(Collider.class);
+			testEntity = entityManager.register(Factory.of(Entity.class).ID("TestEntity"));
 		}
 	}
 }
