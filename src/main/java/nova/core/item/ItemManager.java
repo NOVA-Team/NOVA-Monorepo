@@ -5,6 +5,7 @@ import nova.core.block.BlockManager;
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
+import nova.core.game.GameStatusEventBus;
 import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
@@ -22,10 +23,11 @@ public class ItemManager extends Manager<Item> {
 	private final EventBus<ItemIDNotFoundEvent> idNotFoundListeners = new EventBus<>();
 	private final EventBus<ItemRegistrationEvent> itemRegistryListeners = new EventBus<>();
 
-	private ItemManager(Registry<Factory<Item>> itemRegistry, Supplier<BlockManager> blockManager) {
-		super(itemRegistry, Item.class);
+	private ItemManager(Registry<Factory<Item>> itemRegistry, GameStatusEventBus gseb, Supplier<BlockManager> blockManager) {
+		super(itemRegistry, gseb, Item.class);
 		this.blockManager = blockManager;
 	}
+
 
 	@Override
 	public Factory<Item> beforeRegister(Factory<Item> factory) {

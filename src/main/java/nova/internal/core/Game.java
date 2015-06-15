@@ -19,6 +19,7 @@ import nova.core.sound.SoundManager;
 import nova.core.util.LanguageManager;
 import nova.core.util.RetentionManager;
 import nova.core.world.WorldManager;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.tick.UpdateTicker;
 import org.slf4j.Logger;
 import se.jbee.inject.Dependency;
@@ -68,6 +69,7 @@ public class Game {
 
 
 	private Injector injector;
+	private DependencyInjectionEntryPoint diep;
 
 	private Game(
 		Logger logger,
@@ -218,12 +220,17 @@ public class Game {
 		return instance.injector.resolve(dependency);
 	}
 
-	public void changeInjector(Injector newInjector) {
-		this.injector = newInjector;
+	public void changeInjector(DependencyInjectionEntryPoint diep) {
+		this.diep = diep;
+		this.injector = this.diep.getInjector();
 	}
 
 	public static void setGame(Game game) {
 		instance = game;
+	}
+
+	public static DependencyInjectionEntryPoint diep() {
+		return instance.diep;
 	}
 
 }

@@ -1,6 +1,7 @@
 package nova.core.util;
 
 import nova.core.block.Block;
+import nova.core.component.misc.Collider;
 import nova.core.entity.Entity;
 import nova.core.loader.Loadable;
 import nova.core.loader.NovaMod;
@@ -123,8 +124,9 @@ public class RayTraceTest {
 
 		@Override
 		public void preInit() {
-			solid = Game.blocks().register(FakeBlock.class).get(0);
-
+			Game.blocks().register(FakeBlock.class);
+			solid = Game.blocks().getFactory("solid").get();
+			Game.components().register(Collider.class);
 			testEntity = Game.entities().register(Factory.of(Entity.class).ID("TestEntity"));
 		}
 	}

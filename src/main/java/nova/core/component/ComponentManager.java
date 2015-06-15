@@ -1,5 +1,6 @@
 package nova.core.component;
 
+import nova.core.game.GameStatusEventBus;
 import nova.core.util.Factory;
 import nova.core.util.Manager;
 import nova.core.util.RegistrationException;
@@ -20,14 +21,14 @@ public class ComponentManager extends Manager<Component> {
 
 	private Map<Class<? extends Component>, String> classToComponent = new HashMap<>();
 
-	private ComponentManager(Registry<Factory<Component>> registry) {
-		super(registry, Component.class);
+	private ComponentManager(Registry<Factory<Component>> registry, GameStatusEventBus gseb) {
+		super(registry, gseb, Component.class);
 	}
 
 	@Override
 	public Factory<Component> beforeRegister(Factory<Component> factory) {
 		classToComponent.put(factory.clazz, factory.getID());
-		return super.register(factory);
+		return factory;
 	}
 
 	/**

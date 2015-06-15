@@ -8,6 +8,7 @@ import nova.core.component.Component;
 import nova.core.entity.Entity;
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
+import nova.core.util.Buildable;
 import nova.core.util.shape.Cuboid;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 

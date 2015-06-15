@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class ReflectionUtil {
 
@@ -311,18 +312,38 @@ public class ReflectionUtil {
 		}
 	}
 
-	private static Cache<ClassStringPair, Field> classFieldCache = CacheBuilder.newBuilder().weakKeys().build();
+	public static <A extends B, B> void forEachSuperClassUpTo(Class<A> fromClass, Class<B> toClass, Consumer<Class<? extends B>> action) {
+		if (!toClass.isAssignableFrom(fromClass)) {
+			throw new IllegalArgumentException(String.format("Class %s is not extending %s.", fromClass, toClass));
+		}
+		Class<? extends B> clazz = fromClass;
+
+		action.accept(clazz);
+		while (!clazz.equals(toClass)) {
+			clazz = clazz.getSuperclass().asSubclass(toClass);
+			action.accept(clazz);
+		}
+	}
+
+	public static <T> void forEachSuperClass(Class<T> clazz, Consumer<Class<?>> action) {
+		forEachSuperClassUpTo(clazz, Object.class, action);
+	}
+
+	private static Cache<ClassStringPair, Field> classFieldCache = CacheBuilder.newBuilder().build();
 
 	public static <T> boolean injectField(String fieldName, T object, Object value) {
 		Class<?> clazz = object.getClass();
 		try {
 			Field field = classFieldCache.get(new ClassStringPair(clazz, fieldName), () -> {
-				while (!Object.class.equals(clazz)) {
-					Field f = clazz.getDeclaredField(fieldName);
-					if (f != null) {
-						f.setAccessible(true);
-						return f;
+				Class<?> clazz1 = clazz;
+				while (!Object.class.equals(clazz1)) {
+					for (Field f :clazz1.getDeclaredFields()) {
+						if (f.getName().equals(fieldName)) {
+							f.setAccessible(true);
+							return f;
+						}
 					}
+					clazz1 = clazz1.getSuperclass();
 				}
 				return null;
 			});
@@ -333,6 +354,7 @@ public class ReflectionUtil {
 				return false;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

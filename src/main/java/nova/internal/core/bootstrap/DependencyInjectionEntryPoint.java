@@ -8,9 +8,11 @@ import se.jbee.inject.Injector;
 import se.jbee.inject.bootstrap.Bootstrap;
 import se.jbee.inject.bootstrap.BootstrapperBundle;
 import se.jbee.inject.bootstrap.Bundle;
+import se.jbee.inject.bootstrap.Module;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class DependencyInjectionEntryPoint {
 
@@ -20,6 +22,7 @@ public class DependencyInjectionEntryPoint {
 	private Injector injector = null;
 
 	private Set<Class<? extends Bundle>> bundles = Sets.newHashSet();
+	private Set<Supplier<Module>> modules = Sets.newHashSet();
 
 	// Game bound to this DIEP.
 	private Game game = null;
@@ -50,8 +53,7 @@ public class DependencyInjectionEntryPoint {
 	public void install(Class<? extends Bundle> bundle) {
 		if (state != State.PREINIT) {
 			bundles.add(bundle);
-			DIEPBundle.bundles = bundles;
-			game.changeInjector(Bootstrap.injector(DIEPBundle.class));
+			flush();
 		}
 		bundles.add(bundle);
 	}
@@ -80,15 +82,26 @@ public class DependencyInjectionEntryPoint {
 		if (state != State.PREINIT) {
 			throw new IllegalStateException("EntryPoint#postInit() has to be only once.");
 		}
-
 		DIEPBundle.bundles = bundles;
-
+		DIEPBundle.modules = modules;
 		injector = Bootstrap.injector(DIEPBundle.class);
 		state = State.POSTINIT;
 		game = injector.resolve(Dependency.dependency(Game.class));
-		game.changeInjector(injector);
+		game.changeInjector(this);
 		Game.setGame(game);
 		return game;
+	}
+
+	public void flush() {
+		DIEPBundle.bundles = bundles;
+		DIEPBundle.modules = modules;
+		injector = Bootstrap.injector(DIEPBundle.class);
+		game.changeInjector(this);
+	}
+
+	public void add(Supplier<Module> module) {
+
+		modules.add(module);
 	}
 
 	private enum State {
@@ -98,10 +111,12 @@ public class DependencyInjectionEntryPoint {
 	public static final class DIEPBundle extends BootstrapperBundle {
 
 		private static Set<Class<? extends Bundle>> bundles;
+		private static Set<Supplier<Module>> modules;
 
 		@Override
 		protected void bootstrap() {
 			bundles.stream().forEach(this::install);
+			modules.stream().map(Supplier::get).forEach(this::install);
 		}
 
 	}

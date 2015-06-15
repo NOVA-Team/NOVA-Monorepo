@@ -62,10 +62,6 @@ public class NovaLauncherTestFactory {
 		launcher.generateDependencies();
 		launcher.load();
 		launcher.preInit();
-		if (!Game.blocks().contains("air")) {
-			//First run.
-			Game.blocks().register(FakeBlock.class);
-		}
 		launcher.init();
 		launcher.postInit();
 

@@ -173,6 +173,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	@Override
 	public void preInit() {
 		Game.gameStatusEventBus().publish(new GameStatusEventBus.PreInit());
+		Game.diep().flush();
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				mod.preInit();
@@ -186,6 +187,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	@Override
 	public void init() {
 		Game.gameStatusEventBus().publish(new GameStatusEventBus.Init());
+		Game.diep().flush();
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				mod.init();
@@ -199,6 +201,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	@Override
 	public void postInit() {
 		Game.gameStatusEventBus().publish(new GameStatusEventBus.PostInit());
+		Game.diep().flush();
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				mod.postInit();

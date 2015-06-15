@@ -3,6 +3,7 @@ package nova.core.block;
 import nova.core.event.CancelableEvent;
 import nova.core.event.CancelableEventBus;
 import nova.core.event.EventBus;
+import nova.core.game.GameStatusEventBus;
 import nova.core.util.Factory;
 import nova.core.item.ItemManager;
 import nova.core.util.Manager;
@@ -17,8 +18,8 @@ public class BlockManager extends Manager<Block> {
 	public final EventBus<BlockRegisteredEvent> blockRegisteredListeners = new CancelableEventBus<>();
 	private final Supplier<ItemManager> itemManager;
 
-	private BlockManager(Registry<Factory<Block>> registry, Supplier<ItemManager> itemManager) {
-		super(registry, Block.class);
+	private BlockManager(Registry<Factory<Block>> registry, GameStatusEventBus gseb, Supplier<ItemManager> itemManager) {
+		super(registry,gseb, Block.class);
 		this.itemManager = itemManager;
 	}
 
@@ -44,7 +45,7 @@ public class BlockManager extends Manager<Block> {
 			throw new RegistrationException(String.format("Factory passed for registration is not named. [%s]", factory));
 		}
 		if (getFactory(factory.getID()).isPresent()) {
-			throw new RegistrationException(String.format("Factory passed for is already registered. [%s]", factory));
+			throw new RegistrationException(String.format("This ID is already taken. [%s]", factory));
 		}
 
 		BlockRegisteredEvent event = new BlockRegisteredEvent(factory);
