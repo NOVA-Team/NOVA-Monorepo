@@ -1,7 +1,9 @@
 package nova.core.util;
 
+import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Maps;
 import com.google.common.collect.ObjectArrays;
 import com.google.common.primitives.Primitives;
 
@@ -230,8 +232,8 @@ public class ReflectionUtil {
 
 						// Append arguments as new array.
 						return constr.newInstance(ObjectArrays.concat(
-								Arrays.copyOfRange(args, 0, last),
-								(Object) Arrays.copyOfRange(args, last, args.length)));
+							Arrays.copyOfRange(args, 0, last),
+							(Object) Arrays.copyOfRange(args, last, args.length)));
 					} else {
 						// Empty parameter -> pass empty array for var-args
 						return constr.newInstance(ObjectArrays.concat(args, (Object) new Object[0]));
@@ -291,7 +293,7 @@ public class ReflectionUtil {
 	 * @param annotation Your annotation class.
 	 * @param clazz Class to search through.
 	 * @return An ordered map of annotated fields and their annotations from the
-	 *         order of the most sub class to the most super class.
+	 * order of the most sub class to the most super class.
 	 */
 	public static <T extends Annotation> Map<Field, T> getAnnotatedFields(Class<T> annotation, Class<?> clazz) {
 		Map<Field, T> fields = new LinkedHashMap<>();
@@ -329,54 +331,65 @@ public class ReflectionUtil {
 		forEachSuperClassUpTo(clazz, Object.class, action);
 	}
 
-	private static Cache<ClassStringPair, Field> classFieldCache = CacheBuilder.newBuilder().build();
+	private static Cache<Class<?>, Map<String, Optional<Field>>> classFieldCache = CacheBuilder.newBuilder().weakKeys().build();
 
-	public static <T> boolean injectField(String fieldName, T object, Object value) {
-		Class<?> clazz = object.getClass();
+	/**
+	 * Finds given field by name in this class or its superclasses. Performs cacheing.
+	 *
+	 * @param fieldName which it will search for.
+	 * @param clazz which the search starts from.
+	 * @return Optiona.of(field) is field was found and Optional.empty() in case not.
+	 */
+	public static Optional<Field> findField(String fieldName, Class<?> clazz) {
 		try {
-			Field field = classFieldCache.get(new ClassStringPair(clazz, fieldName), () -> {
-				Class<?> clazz1 = clazz;
-				while (!Object.class.equals(clazz1)) {
-					for (Field f :clazz1.getDeclaredFields()) {
-						if (f.getName().equals(fieldName)) {
-							f.setAccessible(true);
-							return f;
-						}
+			Map<String, Optional<Field>> stringFieldMap = classFieldCache.get(clazz, Maps::newHashMap);
+			Optional<Field> fromCache = stringFieldMap.get(fieldName);
+			if (fromCache == null) {
+				for (Field f : clazz.getDeclaredFields()) {
+					if (f.getName().equals(fieldName)) {
+						fromCache = Optional.of(f);
+						break;
 					}
-					clazz1 = clazz1.getSuperclass();
 				}
-				return null;
-			});
-			if (field != null) {
-				field.set(object, value);
-				return true;
-			} else {
-				return false;
+				if (fromCache == null) {
+					if (!clazz.equals(Object.class)) {
+						fromCache = findField(fieldName, clazz.getSuperclass());
+					} else {
+						fromCache = Optional.empty();
+					}
+				}
+
+				stringFieldMap.put(fieldName, fromCache);
 			}
+
+			return fromCache;
 		} catch (Exception e) {
+			// Impossible. Would only heppen if Maps.newHashMap() trows an exception.
 			e.printStackTrace();
-			return false;
+			return Optional.empty();
 		}
 	}
 
-	private static class ClassStringPair {
-		public final Class<?> clazz;
-		public final String string;
+	/**
+	 * Injects value into field.
+	 *
+	 * @param fieldName to search for in object.
+	 * @param object object to be injected.
+	 * @param value to be injected.
+	 * @return {@code true} if injection was sucessful, {@code false} if not.
+	 */
+	public static boolean injectField(String fieldName, Object object, Object value) {
+		Optional<Field> oField = findField(fieldName, object.getClass());
+		oField.filter(field -> !field.isAccessible()).ifPresent(field -> field.setAccessible(true));
+		oField.ifPresent(field -> {
+			try {
+				field.set(object, value);
+			} catch (IllegalAccessException e) {
+				throw Throwables.propagate(e);
+			}
+		});
+		return oField.isPresent();
 
-		ClassStringPair(Class<?> clazz, String string) {
-			this.clazz = clazz;
-			this.string = string;
-		}
-
-		@Override
-		public int hashCode() {
-			return 37 * clazz.hashCode() + string.hashCode();
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			return obj == this || obj instanceof ClassStringPair && string.equals(((ClassStringPair) obj).string) && clazz.equals(((ClassStringPair) obj).clazz);
-		}
 	}
 
 	public static class ReflectionException extends NovaException {
