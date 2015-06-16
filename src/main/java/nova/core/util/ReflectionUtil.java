@@ -19,6 +19,9 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * Utility class containing muliple reflection helpers.
+ */
 public class ReflectionUtil {
 
 	/**
@@ -314,21 +317,33 @@ public class ReflectionUtil {
 		}
 	}
 
-	public static <A extends B, B> void forEachSuperClassUpTo(Class<A> fromClass, Class<B> toClass, Consumer<Class<? extends B>> action) {
+	/**
+	 * Calls consumer for each super class of fromClass staring on fromClass ending on toClass.
+	 * @param fromClass starting class.
+	 * @param toClass ending class.
+	 * @param consumer executed on each superclass of fromClass upto toClass
+	 * @param <B> ending class.
+	 */
+	public static <B> void forEachSuperClassUpTo(Class<? extends B> fromClass, Class<B> toClass, Consumer<Class<? extends B>> consumer) {
 		if (!toClass.isAssignableFrom(fromClass)) {
 			throw new IllegalArgumentException(String.format("Class %s is not extending %s.", fromClass, toClass));
 		}
 		Class<? extends B> clazz = fromClass;
 
-		action.accept(clazz);
+		consumer.accept(clazz);
 		while (!clazz.equals(toClass)) {
 			clazz = clazz.getSuperclass().asSubclass(toClass);
-			action.accept(clazz);
+			consumer.accept(clazz);
 		}
 	}
 
-	public static <T> void forEachSuperClass(Class<T> clazz, Consumer<Class<?>> action) {
-		forEachSuperClassUpTo(clazz, Object.class, action);
+	/**
+	 * Calls consumer on each superclass of clazz strarting from clazz ending at {@link Object}.
+	 * @param clazz starting class
+	 * @param consumer to be executed on each superclass of clazz.
+	 */
+	public static void forEachSuperClass(Class<?> clazz, Consumer<Class<?>> consumer) {
+		forEachSuperClassUpTo(clazz, Object.class, consumer);
 	}
 
 	private static Cache<Class<?>, Map<String, Optional<Field>>> classFieldCache = CacheBuilder.newBuilder().weakKeys().build();

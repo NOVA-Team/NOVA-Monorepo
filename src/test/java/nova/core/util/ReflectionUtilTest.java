@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.*;
 import static nova.core.util.ReflectionUtil.*;
 
 import java.lang.reflect.Constructor;
+import java.util.Set;
 
+import com.google.common.collect.Sets;
 import org.junit.Test;
 
 
@@ -113,5 +115,22 @@ public class ReflectionUtilTest {
 		injectField("first", withField, new Object());
 	}
 
+	@Test
+	public void testForEachSuperClass() {
+		Set<Class<?>> set = Sets.newHashSet();
 
+		forEachSuperClass(WithField.class, set::add);
+		assertThat(set).contains(WithField.class, WithFieldSuper.class, Object.class);
+	}
+
+	public static class SubClass extends WithField {
+
+	}
+	@Test
+	public void testForEachSuperClassUpTo() {
+		Set<Class<?>> set = Sets.newHashSet();
+
+		forEachSuperClassUpTo(SubClass.class, WithFieldSuper.class, set::add);
+		assertThat(set).contains(SubClass.class, WithField.class, WithFieldSuper.class).doesNotContain(Object.class);
+	}
 }
