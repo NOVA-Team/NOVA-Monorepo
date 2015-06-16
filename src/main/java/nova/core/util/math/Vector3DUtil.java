@@ -80,6 +80,8 @@ public class Vector3DUtil {
 	}
 
 	public static Vector3D perpendicular(Vector3D vec) {
+		// Special case. Z == 0 would cause a error.
+		//noinspection FloatingPointEquality
 		if (vec.getZ() == 0) {
 			return zCross(vec);
 		}

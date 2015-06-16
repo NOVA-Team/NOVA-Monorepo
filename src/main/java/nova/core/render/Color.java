@@ -13,19 +13,57 @@ public class Color {
 	// TODO Extend Operator?
 	// TODO Document me!
 	// TODO Test me!
-
+	/**
+	 * White color.
+	 */
 	public static final Color white = rgb(255, 255, 255);
+	/**
+	 * Light gray color.
+	 */
 	public static final Color lightGray = rgb(192, 192, 192);
+	/**
+	 * Gray color.
+	 */
 	public static final Color gray = rgb(128, 128, 128);
+	/**
+	 * Dark gray color.
+	 */
 	public static final Color darkGray = rgb(64, 64, 64);
+	/**
+	 * Black color.
+	 */
 	public static final Color black = rgb(0, 0, 0);
+	/**
+	 * Red color.
+	 */
 	public static final Color red = rgb(255, 0, 0);
+	/**
+	 * Pink color.
+	 */
 	public static final Color pink = rgb(255, 175, 175);
+	/**
+	 * Orange color.
+	 */
 	public static final Color orange = rgb(255, 200, 0);
+	/**
+	 * Yellow color.
+	 */
 	public static final Color yellow = rgb(255, 255, 0);
+	/**
+	 * Green color.
+	 */
 	public static final Color green = rgb(0, 255, 0);
+	/**
+	 * Magenta color.
+	 */
 	public static final Color magenta = rgb(255, 0, 255);
+	/**
+	 * Cyan color.
+	 */
 	public static final Color cyan = rgb(0, 255, 255);
+	/**
+	 * Blue color.
+	 */
 	public static final Color blue = rgb(0, 0, 255);
 
 	private final int value;
