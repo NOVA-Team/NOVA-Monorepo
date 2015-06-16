@@ -1,70 +1,63 @@
 package nova.core.item;
 
-import nova.core.block.BlockFactory;
+import nova.core.block.Block;
 import nova.core.block.BlockManager;
 import nova.core.event.EventBus;
 import nova.core.event.EventListener;
 import nova.core.event.EventListenerHandle;
+import nova.core.game.GameStatusEventBus;
 import nova.core.item.event.ItemIDNotFoundEvent;
+import nova.core.retention.Data;
+import nova.core.retention.Storable;
+import nova.core.util.Factory;
 import nova.core.util.Manager;
 import nova.core.util.Registry;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class ItemManager extends Manager<Item, ItemFactory> {
+public class ItemManager extends Manager<Item> {
 
 	private final Supplier<BlockManager> blockManager;
 
 	private final EventBus<ItemIDNotFoundEvent> idNotFoundListeners = new EventBus<>();
 	private final EventBus<ItemRegistrationEvent> itemRegistryListeners = new EventBus<>();
 
-	private ItemManager(Registry<ItemFactory> itemRegistry, Supplier<BlockManager> blockManager) {
-		super(itemRegistry);
+	private ItemManager(Registry<Factory<Item>> itemRegistry, GameStatusEventBus gseb, Supplier<BlockManager> blockManager) {
+		super(itemRegistry, gseb, Item.class);
 		this.blockManager = blockManager;
 	}
 
-	/**
-	 * Register a new item withPriority custom constructor arguments.
-	 * @param constructor The lambda expression to create a new constructor.
-	 * @return Dummy item
-	 */
-	@Override
-	public ItemFactory register(Function<Object[], Item> constructor) {
-		return register(new ItemFactory(constructor));
-	}
 
 	@Override
-	public ItemFactory register(ItemFactory factory) {
-		registry.register(factory);
+	public Factory<Item> beforeRegister(Factory<Item> factory) {
 		itemRegistryListeners.publish(new ItemRegistrationEvent(factory));
 		return factory;
 	}
 
-	public ItemFactory getItemFactoryFromBlock(BlockFactory block) {
-		return registry.get(block.getID()).get();
+	public Factory<Item> getItemFactoryFromBlock(Factory<Block> block) {
+		return getFactory(block.getID()).get();
 	}
 
-	public ItemFactory getItemFromBlock(BlockFactory block) {
+	public Factory<Item> getItemFromBlock(Factory<Block> block) {
 		return getItemFactoryFromBlock(block);
 	}
 
-	public Optional<BlockFactory> getBlockFromItem(Item item) {
+	public Optional<Factory<Block>> getBlockFromItem(Item item) {
 		return blockManager.get().getFactory(item.getID());
 	}
 
-	public Optional<ItemFactory> getItem(String name) {
-		if (!registry.contains(name)) {
+	public Optional<Factory<Item>> getItem(String name) {
+		if (!contains(name)) {
 			ItemIDNotFoundEvent event = new ItemIDNotFoundEvent(name);
 			idNotFoundListeners.publish(event);
 
 			if (event.getRemappedFactory() != null) {
-				registry.register(event.getRemappedFactory());
+				register(event.getRemappedFactory());
 			}
 		}
 
-		return registry.get(name);
+		return getFactory(name);
 	}
 
 	public EventListenerHandle<ItemIDNotFoundEvent> whenIDNotFound(EventListener<ItemIDNotFoundEvent> listener) {
@@ -76,10 +69,26 @@ public class ItemManager extends Manager<Item, ItemFactory> {
 	}
 
 	public class ItemRegistrationEvent {
-		public final ItemFactory itemFactory;
+		public final Factory<Item> itemFactory;
 
-		public ItemRegistrationEvent(ItemFactory itemFactory) {
+		public ItemRegistrationEvent(Factory<Item> itemFactory) {
 			this.itemFactory = itemFactory;
 		}
+	}
+
+	public Item makeItem(Factory<Item> factory, Data data) {
+		Item newItem = factory.make();
+		if (newItem instanceof Storable) {
+			((Storable) newItem).load(data);
+		}
+		return newItem;
+	}
+
+	public Data saveItem(Item item) {
+		Data data = new Data();
+		if (item instanceof Storable) {
+			((Storable) item).save(data);
+		}
+		return data;
 	}
 }

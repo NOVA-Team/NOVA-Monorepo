@@ -1,5 +1,6 @@
 package nova.core.component;
 
+import nova.core.game.GameStatusEventBus;
 import nova.core.util.Factory;
 import nova.core.util.Manager;
 import nova.core.util.RegistrationException;
@@ -8,7 +9,6 @@ import nova.core.util.Registry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * Used to instantiate components.
@@ -17,23 +17,18 @@ import java.util.function.Function;
  * Do not create new instances of components yourself.
  * @author Calclavia
  */
-public class ComponentManager extends Manager<Component, ComponentManager.ComponentFactory> {
+public class ComponentManager extends Manager<Component> {
 
 	private Map<Class<? extends Component>, String> classToComponent = new HashMap<>();
 
-	private ComponentManager(Registry<ComponentFactory> registry) {
-		super(registry);
+	private ComponentManager(Registry<Factory<Component>> registry, GameStatusEventBus gseb) {
+		super(registry, gseb, Component.class);
 	}
 
 	@Override
-	public ComponentFactory register(Function<Object[], Component> constructor) {
-		return register(new ComponentFactory(constructor));
-	}
-
-	@Override
-	public ComponentFactory register(ComponentFactory factory) {
-		classToComponent.put(factory.getDummy().getClass(), factory.getID());
-		return super.register(factory);
+	public Factory<Component> beforeRegister(Factory<Component> factory) {
+		classToComponent.put(factory.clazz, factory.getID());
+		return factory;
 	}
 
 	/**
@@ -45,8 +40,8 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 	 */
 	@SuppressWarnings("unchecked")
 	public <N> N make(Class<N> theInterface, Object... args) {
-		Optional<ComponentFactory> first = registry.stream()
-			.filter(n -> theInterface.isAssignableFrom(n.getDummy().getClass()))
+		Optional<Factory<Component>> first = all().stream()
+			.filter(n -> theInterface.isAssignableFrom(n.clazz))
 			.findFirst();
 
 		if (first.isPresent()) {
@@ -55,24 +50,5 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 			throw new RegistrationException("Attempt to create node that is not registered: " + theInterface);
 		}
 	}
-
-	/**
-	 * Instantiates a new node based on its componentID.
-	 * @param componentID - The ID of the node
-	 * @param args - The arguments for the constructor
-	 * @return A new node.
-	 */
-	public Component make(String componentID, Object... args) {
-		return registry.get(componentID).get().make(args);
-	}
-
-	public static class ComponentFactory extends Factory<Component> {
-		public ComponentFactory(Function<Object[], Component> constructor) {
-			super(constructor);
-		}
-
-		public Component make(Object... args) {
-			return constructor.apply(args);
-		}
-	}
+	
 }

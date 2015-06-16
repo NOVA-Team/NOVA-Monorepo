@@ -3,65 +3,62 @@ package nova.core.block;
 import nova.core.event.CancelableEvent;
 import nova.core.event.CancelableEventBus;
 import nova.core.event.EventBus;
+import nova.core.game.GameStatusEventBus;
+import nova.core.util.Factory;
 import nova.core.item.ItemManager;
 import nova.core.util.Manager;
+import nova.core.util.RegistrationException;
 import nova.core.util.Registry;
 import nova.internal.core.Game;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class BlockManager extends Manager<Block, BlockFactory> {
+public class BlockManager extends Manager<Block> {
 
 	public final EventBus<BlockRegisteredEvent> blockRegisteredListeners = new CancelableEventBus<>();
 	private final Supplier<ItemManager> itemManager;
 
-	private BlockManager(Registry<BlockFactory> registry, Supplier<ItemManager> itemManager) {
-		super(registry);
+	private BlockManager(Registry<Factory<Block>> registry, GameStatusEventBus gseb, Supplier<ItemManager> itemManager) {
+		super(registry,gseb, Block.class);
 		this.itemManager = itemManager;
 	}
 
 	/**
 	 * Gets the block registered that represents air.
-	 * @return
+	 * @return air block
 	 */
 	public Block getAirBlock() {
-		return Game.blocks().get("air").get();
+		return Game.blocks().make("air").get();  // TODO OreRegistry
 	}
 
-	public BlockFactory getAirBlockFactory() {
+	/**
+	 * Gets the factory registered for block that represents air.
+	 * @return air block's factory.
+	 */
+	public Factory<Block> getAirBlockFactory() {
 		return Game.blocks().getFactory("air").get();
 	}
 
-	/**
-	 * Register a new block withPriority custom constructor arguments.
-	 * @param constructor Block instance {@link Supplier}
-	 * @return Dummy block
-	 */
 	@Override
-	public BlockFactory register(Function<Object[], Block> constructor) {
-		return register(new BlockFactory(constructor));
-	}
+	public Factory<Block> beforeRegister(Factory<Block> factory) {
+		if (!factory.ID.isPresent()) {
+			throw new RegistrationException(String.format("Factory passed for registration is not named. [%s]", factory));
+		}
+		if (getFactory(factory.getID()).isPresent()) {
+			throw new RegistrationException(String.format("This ID is already taken. [%s]", factory));
+		}
 
-	/**
-	 * Register a new block withPriority custom constructor arguments.
-	 * @param factory {@link BlockFactory} of registered block
-	 * @return Dummy block
-	 */
-	@Override
-	public BlockFactory register(BlockFactory factory) {
 		BlockRegisteredEvent event = new BlockRegisteredEvent(factory);
 		blockRegisteredListeners.publish(event);
-		registry.register(event.blockFactory);
-		event.blockFactory.getDummy().onRegister();
+
 		return event.blockFactory;
 	}
 
 	@CancelableEvent.Cancelable
 	public static class BlockRegisteredEvent extends CancelableEvent {
-		public BlockFactory blockFactory;
+		public Factory<Block> blockFactory;
 
-		public BlockRegisteredEvent(BlockFactory blockFactory) {
+		public BlockRegisteredEvent(Factory<Block> blockFactory) {
 			this.blockFactory = blockFactory;
 		}
 	}

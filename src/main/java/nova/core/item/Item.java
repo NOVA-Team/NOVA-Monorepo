@@ -5,17 +5,18 @@ import nova.core.entity.Entity;
 import nova.core.event.Event;
 import nova.core.event.EventBus;
 import nova.core.render.Color;
+import nova.core.util.Buildable;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
-import nova.core.util.Identifiable;
+import nova.core.util.Factory;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.List;
 import java.util.Optional;
 
-//TODO: This Storable implementation is flawed and not based on ID.
-public abstract class Item extends ComponentProvider implements Identifiable, Storable {
+//TODO: Convert to component system
+public abstract class Item extends ComponentProvider implements Buildable<Item>, Storable {
 
 	public final EventBus<Event> events = new EventBus<>();
 
@@ -25,10 +26,20 @@ public abstract class Item extends ComponentProvider implements Identifiable, St
 	private int count = 1;
 
 	/**
-	 * Called to get the ItemFactory that refers to this Block class.
-	 * @return The {@link nova.core.item.ItemFactory} that refers to this Block class.
+	 * Will be injected by factory.
 	 */
-	public final ItemFactory factory() {
+	@SuppressWarnings("unused")
+	private String ID;
+
+	public final String getID() {
+		return ID;
+	}
+
+	/**
+	 * Called to get the ItemFactory that refers to this Block class.
+	 * @return The {@link nova.core.util.Factory} that refers to this Block class.
+	 */
+	public final Factory<Item> factory() {
 		return Game.items().getItem(this.getID()).get();
 	}
 
@@ -65,7 +76,7 @@ public abstract class Item extends ComponentProvider implements Identifiable, St
 
 	@Override
 	public Item clone() {
-		return factory().makeItem(factory().saveItem(this));
+		return Game.items().makeItem(factory(), Game.items().saveItem(this));
 	}
 
 	/**
@@ -86,7 +97,7 @@ public abstract class Item extends ComponentProvider implements Identifiable, St
 		}
 		Item item = (Item) o;
 		//Makes sure the stored data and stacksize are the same in items.
-		return sameItemType(item) && factory().saveItem(this).equals(item.factory().saveItem(item)) && item.count == count;
+		return sameItemType(item) && Game.items().saveItem(this).equals(Game.items().saveItem(this)) && item.count == count;
 	}
 
 	/**

@@ -54,24 +54,17 @@ public class NovaLauncherTestFactory {
 		getModules().forEach(diep::install);
 
 		NovaLauncher launcher = new NovaLauncher(diep, new HashSet<>(Arrays.asList(modClasses)));
-
-		Game.inject(diep);
-
+		diep.init();
 		/**
 		 * Register fake air block
 		 */
-		Game.blocks().register((args) -> new FakeBlock("air") {
-			@Override
-			public void onRegister() {
-
-			}
-		});
 
 		launcher.generateDependencies();
 		launcher.load();
 		launcher.preInit();
 		launcher.init();
 		launcher.postInit();
+
 		return launcher;
 	}
 

@@ -1,8 +1,10 @@
 package nova.internal.core.launch;
 
+
+import nova.core.game.GameStatusEventBus;
+import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.core.loader.Loadable;
 import nova.internal.core.Game;
-import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -93,16 +95,20 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 		//get constructor withPriority most parameters.
 		Optional<Constructor<?>> ocons = candidates.max(Comparator.comparingInt((constructor) -> constructor.getParameterTypes().length));
 
-		Constructor<?> cons = ocons.get();
+		@SuppressWarnings("unchecked")
+		Constructor<T> cons = (Constructor<T>) ocons.get();
+
 		Object[] parameters = Arrays.stream(cons.getParameterTypes())
-			.map(clazz -> (Object) diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(clazz)))
+			.map(clazz -> (Object) diep.getInjector().resolve(se.jbee.inject.Dependency.dependency(clazz)))
 			.collect(Collectors.toList()).toArray();
 
 		//noinspection unchecked
 		return (T) cons.newInstance(parameters);
+
 	}
 
 	public void load() {
+
 		mods = new HashMap<>();
 
 		/**
@@ -113,7 +119,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				.collect(Collectors.<Map.Entry<ANNOTATION, Class<? extends Loadable>>, ANNOTATION, Loadable>toMap(Map.Entry::getKey,
 						entry -> {
 							try {
-								return makeObjectWithDep(entry.getValue());
+								return makeObjectWithDep((Class<Loadable>) entry.getValue());
 							} catch (Exception ex) {
 								System.out.println("Failed to load NOVA Java mod: " + entry);
 								throw new ExceptionInInitializerError(ex);
@@ -142,7 +148,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 									f.setAccessible(true);
 									if (f.get(loadable) == null) {
 										try {
-											f.set(loadable, diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(f.getType())));
+											f.set(loadable, diep.getInjector().resolve(se.jbee.inject.Dependency.dependency(f.getType())));
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
@@ -166,6 +172,8 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	@Override
 	public void preInit() {
+		Game.gameStatusEventBus().publish(new GameStatusEventBus.PreInit());
+		Game.diep().flush();
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				mod.preInit();
@@ -178,6 +186,8 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	@Override
 	public void init() {
+		Game.gameStatusEventBus().publish(new GameStatusEventBus.Init());
+		Game.diep().flush();
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				mod.init();
@@ -190,6 +200,8 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	@Override
 	public void postInit() {
+		Game.gameStatusEventBus().publish(new GameStatusEventBus.PostInit());
+		Game.diep().flush();
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				mod.postInit();

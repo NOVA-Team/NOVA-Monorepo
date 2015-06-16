@@ -1,7 +1,6 @@
 package nova.core.recipes.crafting;
 
 import nova.core.item.Item;
-import nova.core.item.ItemFactory;
 import nova.core.util.RegistrationException;
 import nova.internal.core.Game;
 
@@ -79,12 +78,6 @@ public class SpecificItemIngredient implements ItemIngredient {
 	}
 
 	private Item getItem(String itemId) {
-		Optional<ItemFactory> itemFactory = Game.items().getItem(itemId);
-
-		if (itemFactory.isPresent()) {
-			return itemFactory.get().makeItem();
-		}
-
-		throw new RegistrationException("Missing item: " + itemId);
+		return Game.items().getItem(itemId).map(f -> f.make()).orElseThrow(() -> new RegistrationException("Missing item: " + itemId));
 	}
 }

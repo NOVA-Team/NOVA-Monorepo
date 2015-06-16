@@ -1,5 +1,9 @@
 package nova.core.util;
 
+import com.google.common.base.Throwables;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Maps;
 import com.google.common.collect.ObjectArrays;
 import com.google.common.primitives.Primitives;
 
@@ -13,7 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
+/**
+ * Utility class containing muliple reflection helpers.
+ */
 public class ReflectionUtil {
 
 	/**
@@ -227,8 +235,8 @@ public class ReflectionUtil {
 
 						// Append arguments as new array.
 						return constr.newInstance(ObjectArrays.concat(
-								Arrays.copyOfRange(args, 0, last),
-								(Object) Arrays.copyOfRange(args, last, args.length)));
+							Arrays.copyOfRange(args, 0, last),
+							(Object) Arrays.copyOfRange(args, last, args.length)));
 					} else {
 						// Empty parameter -> pass empty array for var-args
 						return constr.newInstance(ObjectArrays.concat(args, (Object) new Object[0]));
@@ -288,7 +296,7 @@ public class ReflectionUtil {
 	 * @param annotation Your annotation class.
 	 * @param clazz Class to search through.
 	 * @return An ordered map of annotated fields and their annotations from the
-	 *         order of the most sub class to the most super class.
+	 * order of the most sub class to the most super class.
 	 */
 	public static <T extends Annotation> Map<Field, T> getAnnotatedFields(Class<T> annotation, Class<?> clazz) {
 		Map<Field, T> fields = new LinkedHashMap<>();
@@ -307,6 +315,96 @@ public class ReflectionUtil {
 		if (superClass != null) {
 			forEachRecursiveAnnotatedField(annotation, superClass, action);
 		}
+	}
+
+	/**
+	 * Calls consumer for each super class of fromClass staring on fromClass ending on toClass.
+	 * @param fromClass starting class.
+	 * @param toClass ending class.
+	 * @param consumer executed on each superclass of fromClass upto toClass
+	 * @param <B> ending class.
+	 */
+	public static <B> void forEachSuperClassUpTo(Class<? extends B> fromClass, Class<B> toClass, Consumer<Class<? extends B>> consumer) {
+		if (!toClass.isAssignableFrom(fromClass)) {
+			throw new IllegalArgumentException(String.format("Class %s is not extending %s.", fromClass, toClass));
+		}
+		Class<? extends B> clazz = fromClass;
+
+		consumer.accept(clazz);
+		while (!clazz.equals(toClass)) {
+			clazz = clazz.getSuperclass().asSubclass(toClass);
+			consumer.accept(clazz);
+		}
+	}
+
+	/**
+	 * Calls consumer on each superclass of clazz strarting from clazz ending at {@link Object}.
+	 * @param clazz starting class
+	 * @param consumer to be executed on each superclass of clazz.
+	 */
+	public static void forEachSuperClass(Class<?> clazz, Consumer<Class<?>> consumer) {
+		forEachSuperClassUpTo(clazz, Object.class, consumer);
+	}
+
+	private static Cache<Class<?>, Map<String, Optional<Field>>> classFieldCache = CacheBuilder.newBuilder().weakKeys().build();
+
+	/**
+	 * Finds given field by name in this class or its superclasses. Performs cacheing.
+	 *
+	 * @param fieldName which it will search for.
+	 * @param clazz which the search starts from.
+	 * @return Optiona.of(field) is field was found and Optional.empty() in case not.
+	 */
+	public static Optional<Field> findField(String fieldName, Class<?> clazz) {
+		try {
+			Map<String, Optional<Field>> stringFieldMap = classFieldCache.get(clazz, Maps::newHashMap);
+			Optional<Field> fromCache = stringFieldMap.get(fieldName);
+			if (fromCache == null) {
+				for (Field f : clazz.getDeclaredFields()) {
+					if (f.getName().equals(fieldName)) {
+						fromCache = Optional.of(f);
+						break;
+					}
+				}
+				if (fromCache == null) {
+					if (!clazz.equals(Object.class)) {
+						fromCache = findField(fieldName, clazz.getSuperclass());
+					} else {
+						fromCache = Optional.empty();
+					}
+				}
+
+				stringFieldMap.put(fieldName, fromCache);
+			}
+
+			return fromCache;
+		} catch (Exception e) {
+			// Impossible. Would only heppen if Maps.newHashMap() trows an exception.
+			e.printStackTrace();
+			return Optional.empty();
+		}
+	}
+
+	/**
+	 * Injects value into field.
+	 *
+	 * @param fieldName to search for in object.
+	 * @param object object to be injected.
+	 * @param value to be injected.
+	 * @return {@code true} if injection was sucessful, {@code false} if not.
+	 */
+	public static boolean injectField(String fieldName, Object object, Object value) {
+		Optional<Field> oField = findField(fieldName, object.getClass());
+		oField.filter(field -> !field.isAccessible()).ifPresent(field -> field.setAccessible(true));
+		oField.ifPresent(field -> {
+			try {
+				field.set(object, value);
+			} catch (IllegalAccessException e) {
+				throw Throwables.propagate(e);
+			}
+		});
+		return oField.isPresent();
+
 	}
 
 	public static class ReflectionException extends NovaException {

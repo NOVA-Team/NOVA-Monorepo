@@ -1,13 +1,15 @@
 package nova.core.fluid;
 
-import nova.core.block.BlockFactory;
+import nova.core.block.Block;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
+import nova.core.util.Buildable;
+import nova.core.util.Factory;
 import nova.core.util.Identifiable;
 
 import java.util.Optional;
 
-public class Fluid implements Identifiable, Storable, Cloneable {
+public class Fluid implements Storable, Cloneable, Identifiable {
 	/**
 	 * 1000 liters = 1 cubic meter
 	 */
@@ -101,7 +103,7 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	 *
 	 * @return The block. There may be no block associated withPriority this fluid.
 	 */
-	public Optional<BlockFactory> getBlockFactory() {
+	public Optional<Factory<Block>> getBlockFactory() {
 		return Optional.empty();
 	}
 

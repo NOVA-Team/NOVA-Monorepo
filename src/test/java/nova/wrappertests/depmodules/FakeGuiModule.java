@@ -23,12 +23,10 @@ public class FakeGuiModule extends BinderModule {
 	}
 
 	public static class FakeGuiManager extends GuiManager {
-		@Override
 		protected Optional<Gui> getActiveGuiImpl() {
 			return null;
 		}
 
-		@Override
 		protected Optional<Gui> getActiveGuiImpl(Entity player) {
 			return null;
 		}

@@ -2,6 +2,8 @@ package nova.core.component;
 
 import nova.core.component.exception.ComponentException;
 import nova.core.event.EventBus;
+import nova.core.util.Factory;
+import nova.internal.core.Game;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,12 +26,21 @@ public abstract class ComponentProvider {
 
 	private Map<Class<? extends Component>, Component> componentMap = new HashMap<>();
 
+
+	public final <C extends Component> C add(Factory<C> component) {
+		return add(component.make());
+	}
+
+	public final <C extends Component> C add(Class<C> component) {
+		return add((Factory<C>)Game.components().getFactory(component.getCanonicalName()).get());
+	}
 	/**
 	 * Adds a component to the provider.
 	 * @param component The component to add.
 	 * @return the component.
 	 * @throws ComponentException when the component already exists on the provider.
 	 */
+	@Deprecated
 	public final <C extends Component> C add(C component) {
 		if (has(component.getClass())) {
 			throw new ComponentException("Attempt to add two components of the type %s to " + this, component);

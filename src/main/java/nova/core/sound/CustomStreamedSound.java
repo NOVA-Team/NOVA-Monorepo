@@ -7,9 +7,4 @@ public class CustomStreamedSound extends StreamedSound {
 	public CustomStreamedSound(boolean downloadFirst, float pitchModification, float speedModification, float volumeModification) {
 		super(downloadFirst, pitchModification, speedModification, volumeModification);
 	}
-
-	@Override
-	public String getID() {
-		return null;
-	}
 }

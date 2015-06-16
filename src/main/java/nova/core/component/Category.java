@@ -11,22 +11,5 @@ import java.util.Optional;
  * @author Calclavia
  */
 public class Category extends Component implements Identifiable {
-
-	public final String name;
-	public Optional<Item> item;
-
-	public Category(String name, Item item) {
-		this.name = name;
-		this.item = Optional.of(item);
-	}
-
-	public Category(String name) {
-		this.name = name;
-		this.item = Optional.empty();
-	}
-
-	@Override
-	public String getID() {
-		return name;
-	}
+	//TODO Fix category.
 }

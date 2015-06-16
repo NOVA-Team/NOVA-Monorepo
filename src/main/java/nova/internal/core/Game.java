@@ -6,6 +6,7 @@ import nova.core.entity.EntityManager;
 import nova.core.event.GlobalEvents;
 import nova.core.game.ClientManager;
 import nova.core.game.GameInfo;
+import nova.core.game.GameStatusEventBus;
 import nova.core.gui.InputManager;
 import nova.core.item.ItemDictionary;
 import nova.core.item.ItemManager;
@@ -14,18 +15,21 @@ import nova.core.network.NetworkManager;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
+import nova.core.sound.SoundManager;
 import nova.core.util.LanguageManager;
 import nova.core.util.RetentionManager;
 import nova.core.world.WorldManager;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.tick.UpdateTicker;
 import org.slf4j.Logger;
+import se.jbee.inject.Dependency;
 import se.jbee.inject.Injector;
+
+import java.util.Optional;
 
 public class Game {
 
 	private static Game instance;
-	private static Injector injector;
 
 	private final Logger logger;
 
@@ -46,6 +50,8 @@ public class Game {
 	private final InputManager inputManager;
 	private final ComponentManager componentManager;
 	private final NativeManager nativeManager;
+	private final Optional<SoundManager> soundManger;
+	private final GameStatusEventBus gameStatusEventBus;
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
@@ -60,6 +66,10 @@ public class Game {
 	 * This is @deprecated, use threadTicker() instead.
 	 */
 	private final UpdateTicker.ThreadTicker threadTicker;
+
+
+	private Injector injector;
+	private DependencyInjectionEntryPoint diep;
 
 	private Game(
 		Logger logger,
@@ -81,7 +91,9 @@ public class Game {
 		NativeManager nativeManager,
 		ComponentManager componentManager,
 		UpdateTicker.SynchronizedTicker syncTicker,
-		UpdateTicker.ThreadTicker threadTicker) {
+		UpdateTicker.ThreadTicker threadTicker,
+		Optional<SoundManager> soundManger,
+		GameStatusEventBus gameStatusEventBus) {
 
 		this.logger = logger;
 
@@ -105,21 +117,14 @@ public class Game {
 
 		this.syncTicker = syncTicker;
 		this.threadTicker = threadTicker;
+		this.soundManger = soundManger;
+		this.gameStatusEventBus = gameStatusEventBus;
 
 		logger.info("Game instance created.");
 	}
 
-	public static void inject(DependencyInjectionEntryPoint diep) {
-		instance = diep.init();
-		injector = diep.getInjector().get();
-	}
-
 	public static GameInfo info() {
 		return instance.gameInfo;
-	}
-
-	public static Injector injector() {
-		return injector;
 	}
 
 	public static Logger logger() {
@@ -190,17 +195,42 @@ public class Game {
 		return instance.nativeManager;
 	}
 
+	public static Optional<SoundManager> sound() {
+		return instance.soundManger;
+	}
+
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
 	 */
 	public static UpdateTicker.SynchronizedTicker syncTicker() {
 		return instance.syncTicker;
 	}
-
 	/**
 	 * The thread ticker that runs on NOVA's thread.
 	 */
 	public static UpdateTicker.ThreadTicker threadTicker() {
 		return instance.threadTicker;
 	}
+
+	public static GameStatusEventBus gameStatusEventBus() {
+		return instance.gameStatusEventBus;
+	}
+
+	public static <T> T resolve( Dependency<T> dependency ) {
+		return instance.injector.resolve(dependency);
+	}
+
+	public void changeInjector(DependencyInjectionEntryPoint diep) {
+		this.diep = diep;
+		this.injector = this.diep.getInjector();
+	}
+
+	public static void setGame(Game game) {
+		instance = game;
+	}
+
+	public static DependencyInjectionEntryPoint diep() {
+		return instance.diep;
+	}
+
 }

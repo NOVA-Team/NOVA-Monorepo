@@ -5,16 +5,37 @@ import nova.core.component.ComponentProvider;
 import nova.core.component.transform.EntityTransform;
 import nova.core.event.Event;
 import nova.core.event.EventBus;
-import nova.core.util.Identifiable;
+import nova.core.util.Buildable;
+import nova.core.util.Factory;
 import nova.core.util.UniqueIdentifiable;
 import nova.core.world.World;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * An entity is an object in the world that has a position.
  */
-public abstract class Entity extends ComponentProvider implements UniqueIdentifiable, Identifiable, Stateful {
+public class Entity extends ComponentProvider implements UniqueIdentifiable, Buildable<Entity>, Stateful {
+
+	/**
+	 * Will be injected by factory.
+	 */
+	@SuppressWarnings("unused")
+	private String ID;
+
+	public final String getID() {
+		return ID;
+	}
+
+	/**
+	 * Called to get the BlockFactory that refers to this Block class.
+	 * @return The {@link nova.core.util.Factory} that refers to this
+	 * Block factory.
+	 */
+	public final Factory<Entity> factory() {
+		return Game.entities().getFactory(getID()).get();
+	}
 
 	public final EventBus<Event> events = new EventBus<>();
 

@@ -1,12 +1,14 @@
 package nova.core.sound;
 
-import nova.core.util.Identifiable;
+import nova.core.util.Buildable;
+import nova.core.util.Factory;
+import nova.internal.core.Game;
 
 /**
  * An object representing a sound. (including the modification to pitch and volume, etc...)
  * @author skyem123
  */
-public abstract class Sound implements Identifiable {
+public abstract class Sound implements Buildable<Sound> {
 	/**
 	 * Changes the pitch of the sound.
 	 * This does not change the speed of the sound so it can it be used to compensate for the speed of the sound changing to pitch.
@@ -30,5 +32,24 @@ public abstract class Sound implements Identifiable {
 	}
 	public Sound() {
 		this(1, 1, 1);
+	}
+
+	/**
+	 * Will be injected by factory.
+	 */
+	@SuppressWarnings("unused")
+	private String ID;
+
+	public final String getID() {
+		return ID;
+	}
+
+	/**
+	 * Called to get the BlockFactory that refers to this Block class.
+	 * @return The {@link nova.core.util.Factory} that refers to this
+	 * Block factory.
+	 */
+	public final Factory<Sound> factory() {
+		return Game.sound().get().getFactory(getID()).get();
 	}
 }

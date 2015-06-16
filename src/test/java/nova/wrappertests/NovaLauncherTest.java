@@ -34,7 +34,6 @@ public class NovaLauncherTest extends NovaLauncherTestFactory {
 		getModules().forEach(diep::install);
 
 		Game game = diep.init();
-
 		assertThat(game).isNotNull();
 	}
 }

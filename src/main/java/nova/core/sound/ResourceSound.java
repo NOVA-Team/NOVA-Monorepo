@@ -20,7 +20,7 @@ public class ResourceSound extends Sound {
 	}
 
 	@Override
-	public String getID() {
+	public String toString() {
 		return domain + ":" + resource;
 	}
 }

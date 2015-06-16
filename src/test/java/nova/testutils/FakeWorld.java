@@ -1,15 +1,15 @@
 package nova.testutils;
 
 import nova.core.block.Block;
-import nova.core.block.BlockFactory;
 import nova.core.component.transform.BlockTransform;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
-import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
+import nova.core.util.Factory;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.HashMap;
@@ -39,7 +39,7 @@ public class FakeWorld extends World {
 	@Override
 	public Optional<Block> getBlock(Vector3D position) {
 		//Gives a fake block to represent air
-		FakeBlock air = new FakeBlock("air");
+		Block air = Game.blocks().getAirBlock();
 		BlockTransform component = new BlockTransform();
 		component.setPosition(position);
 		component.setWorld(this);
@@ -48,8 +48,8 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args) {
-		Block newBlock = blockFactory.makeBlock();
+	public boolean setBlock(Vector3D position, Factory<Block> blockFactory, Object... args) {
+		Block newBlock = blockFactory.make();
 		BlockTransform component = new BlockTransform();
 		component.setPosition(position);
 		component.setWorld(this);
@@ -59,7 +59,7 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public Entity addEntity(EntityFactory factory, Object... args) {
+	public Entity addEntity(Factory<Entity> factory, Object... args) {
 		Entity make = factory.make(args);
 		EntityTransform component = new EntityTransform();
 		component.setWorld(this);
@@ -82,7 +82,7 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public Entity addClientEntity(EntityFactory factory) {
+	public Entity addClientEntity(Factory<Entity>  factory) {
 		//TODO: Implement
 		return null;
 	}

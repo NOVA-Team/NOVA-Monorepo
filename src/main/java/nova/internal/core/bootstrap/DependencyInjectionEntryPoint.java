@@ -8,26 +8,33 @@ import se.jbee.inject.Injector;
 import se.jbee.inject.bootstrap.Bootstrap;
 import se.jbee.inject.bootstrap.BootstrapperBundle;
 import se.jbee.inject.bootstrap.Bundle;
+import se.jbee.inject.bootstrap.Module;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class DependencyInjectionEntryPoint {
 
 	private State state = State.PREINIT;
-	private Optional<Injector> injector = Optional.empty();
+
+	// When this is null no mods are loaded.
+	private Injector injector = null;
 
 	private Set<Class<? extends Bundle>> bundles = Sets.newHashSet();
+	private Set<Supplier<Module>> modules = Sets.newHashSet();
+
+	// Game bound to this DIEP.
+	private Game game = null;
 
 	public DependencyInjectionEntryPoint() {
-
 		install(CoreBundle.class);
 	}
 
 	/**
 	 * @return current injector instance.
 	 */
-	public Optional<Injector> getInjector() {
+	public Injector getInjector() {
 		return injector;
 	}
 
@@ -39,20 +46,20 @@ public class DependencyInjectionEntryPoint {
 	}
 
 	/**
-	 * Installs bundle in core Injector. Works until, finalization later throws
-	 * {@link IllegalStateException}.
+	 * Installs bundle in core Injector. Can be used after initialization.
 	 *
 	 * @param bundle Bundle
 	 */
 	public void install(Class<? extends Bundle> bundle) {
 		if (state != State.PREINIT) {
-			throw new IllegalStateException("This function may only be used before DependencyInjectionEntryPoint initialization.");
+			bundles.add(bundle);
+			flush();
 		}
 		bundles.add(bundle);
 	}
 
 	/**
-	 * Removes bundle from core Injector. Works until finalization, later throws
+	 * Removes bundle from core Injector. Works until initialization, later throws
 	 * {@link IllegalStateException}.
 	 *
 	 * @param bundle Bundle
@@ -69,33 +76,47 @@ public class DependencyInjectionEntryPoint {
 	 * In this method modules added to DependencyInjectionEntryPoint are being
 	 * installed in core injector. Alternating module composition in core
 	 * injector after initialization is not possible.
-	 *
-	 * @return Game instance {@link Game}. Use it for future injections and
-	 *         general management.
+	 * Sets Game.instance
 	 */
 	public Game init() {
 		if (state != State.PREINIT) {
 			throw new IllegalStateException("EntryPoint#postInit() has to be only once.");
 		}
-
 		DIEPBundle.bundles = bundles;
-
-		injector = Optional.of(Bootstrap.injector(DIEPBundle.class));
+		DIEPBundle.modules = modules;
+		injector = Bootstrap.injector(DIEPBundle.class);
 		state = State.POSTINIT;
-		return injector.map(injector -> injector.resolve(Dependency.dependency(Game.class))).orElseThrow(IllegalStateException::new);
+		game = injector.resolve(Dependency.dependency(Game.class));
+		game.changeInjector(this);
+		Game.setGame(game);
+		return game;
+	}
+
+	public void flush() {
+		DIEPBundle.bundles = bundles;
+		DIEPBundle.modules = modules;
+		injector = Bootstrap.injector(DIEPBundle.class);
+		game.changeInjector(this);
+	}
+
+	public void add(Supplier<Module> module) {
+
+		modules.add(module);
 	}
 
 	private enum State {
 		PREINIT, POSTINIT
 	}
 
-	private static final class DIEPBundle extends BootstrapperBundle {
+	public static final class DIEPBundle extends BootstrapperBundle {
 
 		private static Set<Class<? extends Bundle>> bundles;
+		private static Set<Supplier<Module>> modules;
 
 		@Override
 		protected void bootstrap() {
 			bundles.stream().forEach(this::install);
+			modules.stream().map(Supplier::get).forEach(this::install);
 		}
 
 	}
