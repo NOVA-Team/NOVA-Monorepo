@@ -9,16 +9,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 /**
  * @author Calclavia
  */
-public class WrapperEventManager {
-
-	//Called when requesting strong power of a block
-	public final EventBus<RedstoneEvent> onStrongPower = new EventBus<>();
-
-	//Called when requesting weak power of a block
-	public final EventBus<RedstoneEvent> onWeakPower = new EventBus<>();
-
-	//Called when asked if a block can connect to Redstone
-	public final EventBus<RedstoneConnectEvent> onCanConnect = new EventBus<>();
+public class WrapperEvents {
 
 	public static class RedstoneConnectEvent extends GlobalEvents.BlockEvent {
 		public final Direction direction;
@@ -30,11 +21,21 @@ public class WrapperEventManager {
 		}
 	}
 
-	public static class RedstoneEvent extends GlobalEvents.BlockEvent {
+	public static class StrongRedstoneEvent extends GlobalEvents.BlockEvent {
 		public final Direction direction;
 		public int power;
 
-		public RedstoneEvent(World world, Vector3D position, Direction direction) {
+		public StrongRedstoneEvent(World world, Vector3D position, Direction direction) {
+			super(world, position);
+			this.direction = direction;
+		}
+	}
+
+	public static class WeakRedstoneEvent extends GlobalEvents.BlockEvent {
+		public final Direction direction;
+		public int power;
+
+		public WeakRedstoneEvent(World world, Vector3D position, Direction direction) {
 			super(world, position);
 			this.direction = direction;
 		}

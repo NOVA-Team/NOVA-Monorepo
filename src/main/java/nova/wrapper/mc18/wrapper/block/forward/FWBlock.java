@@ -23,8 +23,7 @@ import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.shape.Cuboid;
 import nova.internal.core.Game;
-import nova.wrapper.mc18.launcher.NovaMinecraft;
-import nova.wrapper.mc18.util.WrapperEventManager;
+import nova.wrapper.mc18.util.WrapperEvents;
 import nova.wrapper.mc18.wrapper.block.world.BWWorld;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -267,24 +266,24 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public boolean canConnectRedstone(IBlockAccess access, BlockPos pos, EnumFacing side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		WrapperEventManager.RedstoneConnectEvent event = new WrapperEventManager.RedstoneConnectEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
-		NovaMinecraft.eventManager.onCanConnect.publish(event);
+		WrapperEvents.RedstoneConnectEvent event = new WrapperEvents.RedstoneConnectEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
+		Game.events().events.publish(event);
 		return event.canConnect;
 	}
 
 	@Override
 	public int isProvidingWeakPower(IBlockAccess access, BlockPos pos, IBlockState state, EnumFacing side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		WrapperEventManager.RedstoneEvent event = new WrapperEventManager.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
-		NovaMinecraft.eventManager.onWeakPower.publish(event);
+		WrapperEvents.RedstoneEvent event = new WrapperEvents.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
+		Game.events().events.publish(event);
 		return event.power;
 	}
 
 	@Override
 	public int isProvidingStrongPower(IBlockAccess access, BlockPos pos, IBlockState state, EnumFacing side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		WrapperEventManager.RedstoneEvent event = new WrapperEventManager.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
-		NovaMinecraft.eventManager.onStrongPower.publish(event);
+		WrapperEvents.RedstoneEvent event = new WrapperEvents.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
+		Game.events().events.publish(event);
 		return event.power;
 	}
 

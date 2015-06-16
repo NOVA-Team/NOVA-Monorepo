@@ -32,9 +32,7 @@ import nova.wrapper.mc18.depmodules.NetworkModule;
 import nova.wrapper.mc18.depmodules.RenderModule;
 import nova.wrapper.mc18.depmodules.SaveModule;
 import nova.wrapper.mc18.depmodules.TickerModule;
-import nova.wrapper.mc18.depmodules.WrapperEventModule;
 import nova.wrapper.mc18.recipes.MinecraftRecipeRegistry;
-import nova.wrapper.mc18.util.WrapperEventManager;
 import nova.wrapper.mc18.wrapper.VectorConverter;
 import nova.wrapper.mc18.wrapper.block.BlockConverter;
 import nova.wrapper.mc18.wrapper.block.world.WorldConverter;
@@ -72,8 +70,6 @@ public class NovaMinecraft {
 	private static ModLoader<NativeLoader> nativeLoader;
 	private static Set<Loadable> nativeConverters;
 
-	public static WrapperEventManager eventManager;
-
 	/**
 	 * ORDER OF LOADING.
 	 *
@@ -95,7 +91,6 @@ public class NovaMinecraft {
 			diep.install(ClientModule.class);
 			diep.install(GameInfoModule.class);
 			diep.install(RenderModule.class);
-			diep.install(WrapperEventModule.class);
 
 			Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
 
@@ -103,9 +98,6 @@ public class NovaMinecraft {
 			launcher = new NovaLauncher(diep, modClasses);
 
 			Game.inject(diep);
-
-			//Inject eventManager
-			eventManager = diep.getInjector().get().resolve(Dependency.dependency(WrapperEventManager.class));
 
 			/**
 			 * Register native converters
