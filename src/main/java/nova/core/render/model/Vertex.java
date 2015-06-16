@@ -21,8 +21,13 @@ public class Vertex implements Cloneable {
 	 */
 	public Color color;
 
-	public Vertex(Vector3D vert, Vector2D uv) {
-		this.vec = vert;
+	/**
+	 * Constructor for vertex
+	 * @param vertex coordinates in 3D sapce.
+	 * @param uv coordinates on the texture.
+	 */
+	public Vertex(Vector3D vertex, Vector2D uv) {
+		this.vec = vertex;
 		this.uv = uv;
 		this.color = Color.white;
 	}

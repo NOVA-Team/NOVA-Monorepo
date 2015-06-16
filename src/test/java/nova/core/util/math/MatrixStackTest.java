@@ -69,4 +69,23 @@ public class MatrixStackTest {
 
 	}
 
+	@Test
+	public void testCloneCtor() {
+		ms.translate(Vector3DUtil.ONE);
+		ms.scale(Vector3DUtil.ONE.scalarMultiply(2));
+		ms.pushMatrix();
+		ms.rotate(Vector3D.PLUS_J, Math.PI / 2);
+		MatrixStack ms2 = new MatrixStack(ms);
+		assertThat(ms.apply(Vector3D.PLUS_K)).isEqualTo(ms2.apply(Vector3D.PLUS_K));
+		ms.popMatrix();
+		ms2.popMatrix();
+		assertThat(ms.apply(Vector3D.PLUS_K)).isEqualTo(ms2.apply(Vector3D.PLUS_K));
+	}
+
+	@Test
+	public void testMatrixLoadingCtor() {
+		ms.translate(Vector3DUtil.ONE);
+		MatrixStack ms2 = new MatrixStack(ms.getMatrix());
+		assertThat(ms.apply(Vector3D.PLUS_K)).isEqualTo(ms2.apply(Vector3D.PLUS_K));
+	}
 }

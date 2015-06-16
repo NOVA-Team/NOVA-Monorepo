@@ -10,18 +10,30 @@ import java.util.Stack;
 public class MatrixStack implements Transformer {
 
 	private final Stack<RealMatrix> stack;
+
 	private RealMatrix current = MatrixUtils.createRealIdentityMatrix(4);
 
+	/**
+	 * Creates new MatrixStack. Constains no transfomation base matrix.
+	 */
 	public MatrixStack() {
 		this.stack = new Stack<>();
 	}
 
+	/**
+	 * Clone construcotr of MatrixStack
+	 * @param clone instance to be cloned
+	 */
 	public MatrixStack(MatrixStack clone) {
 		//noinspection unchecked
 		this.stack = (Stack<RealMatrix>) clone.stack.clone();
 		this.current = clone.current.copy();
 	}
 
+	/**
+	 * Creates new MatrixStack with starting matrix.
+	 * @param current Transforation matrix to start from.
+	 */
 	public MatrixStack(RealMatrix current) {
 		this.stack = new Stack<>();
 		this.current = current;
@@ -37,7 +49,8 @@ public class MatrixStack implements Transformer {
 	/**
 	 * Replaces current transformation matrix by an identity current.
 	 *
-	 * @param matrix The new matrix to use
+	 * @param matrix The new matrix to use.
+	 * @return this for chaining.
 	 */
 	public MatrixStack loadMatrix(RealMatrix matrix) {
 		current = matrix;
@@ -120,7 +133,7 @@ public class MatrixStack implements Transformer {
 	 * @param x scale.
 	 * @param y scale.
 	 * @param z scale.
-	 * @return The scaled matrix
+	 * @return this for chaining.
 	 */
 	public MatrixStack scale(double x, double y, double z) {
 		current = current.preMultiply(TransformUtil.scaleMatrix(x, y, z));
@@ -140,6 +153,7 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Pushes matrix onto the stack. Use it to save current state of MatrixStack in case of branching transformations.
+	 * @return this for chaining.
 	 */
 	public MatrixStack pushMatrix() {
 		stack.add(current);
@@ -148,6 +162,7 @@ public class MatrixStack implements Transformer {
 
 	/**
 	 * Pops matrix from stack. Use it to restore saved transformation.
+	 * @return this for chaining.
 	 */
 	public MatrixStack popMatrix() {
 		current = stack.pop();
