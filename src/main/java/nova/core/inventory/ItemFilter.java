@@ -6,7 +6,7 @@ import nova.core.item.Item;
 import java.util.function.Predicate;
 
 /**
- * A filter that only accepts a specific sub-type of {@link Item}. For use withPriority
+ * A filter that only accepts a specific sub-type of {@link Item}. For use with
  * {@link Slot}.
  * 
  * @author Vic Nightfall

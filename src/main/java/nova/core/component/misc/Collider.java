@@ -19,8 +19,8 @@ import java.util.function.Supplier;
 
 public class Collider extends Component {
 	/**
-	 * Called when an entity collides withPriority this object. More specifically, when
-	 * the entity's block bounds coincide withPriority the bounds of this object.
+	 * Called when an entity collides with this object. More specifically, when
+	 * the entity's block bounds coincide with the bounds of this object.
 	 * Entity - the colliding entity
 	 */
 	public EventBus<CollideEvent> collideEvent = new EventBus<>();

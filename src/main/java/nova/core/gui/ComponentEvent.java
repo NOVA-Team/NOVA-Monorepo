@@ -63,7 +63,7 @@ public abstract class ComponentEvent extends CancelableEvent {
 
 	/**
 	 * {@link ComponentEvent} which can be sent over the network. Has to be
-	 * registered withPriority
+	 * registered with
 	 * {@link GuiEventFactory#registerNetworkEvent(java.util.function.Function)}
 	 * 
 	 * @author Vic Nightfall

@@ -306,7 +306,7 @@ public abstract class GuiComponent<O extends GuiComponent<O, T>, T extends Nativ
 	}
 
 	/**
-	 * Triggers an event for the external listeners registered withPriority
+	 * Triggers an event for the external listeners registered with
 	 * registerEventListener
 	 * @param event ComponentEvent to trigger
 	 */

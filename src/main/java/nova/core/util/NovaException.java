@@ -14,7 +14,7 @@ public abstract class NovaException extends RuntimeException {
 	}
 
 	/**
-	 * Formatted withPriority {@link String#format(String, Object...)}
+	 * Formatted with {@link String#format(String, Object...)}
 	 *
 	 * @param message The error message
 	 * @param parameters additional parameters

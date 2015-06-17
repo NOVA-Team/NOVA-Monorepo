@@ -90,7 +90,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	public <T> T makeObjectWithDep(Class<T> classToConstruct) throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		Stream<Constructor<?>> candidates = Arrays.stream(classToConstruct.getConstructors());
 
-		//get constructor withPriority most parameters.
+		//get constructor with most parameters.
 		Optional<Constructor<?>> ocons = candidates.max(Comparator.comparingInt((constructor) -> constructor.getParameterTypes().length));
 
 		Constructor<?> cons = ocons.get();

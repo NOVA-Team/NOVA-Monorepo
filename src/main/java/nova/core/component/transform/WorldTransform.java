@@ -3,7 +3,7 @@ package nova.core.component.transform;
 import nova.core.world.World;
 
 /**
- * A transform that is linked withPriority a world.
+ * A transform that is linked with a world.
  * @author Calclavia
  */
 public class WorldTransform<P> extends PositionTransform<P> {

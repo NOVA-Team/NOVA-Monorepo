@@ -97,7 +97,7 @@ public abstract class GuiManager extends Manager<Gui, GuiFactory> {
 	/**
 	 * Closes the currently open NOVA {@link Gui} on the client side, if
 	 * present, and returns to the in-game GUI. It will not affect any native
-	 * GUIs that might exist along withPriority NOVA.
+	 * GUIs that might exist along with NOVA.
 	 * @throws IllegalSideException if called on the server side
 	 */
 	@Sided(Side.CLIENT)

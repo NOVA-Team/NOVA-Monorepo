@@ -93,7 +93,7 @@ public class NativeManager {
 	public <T> T toNova(Object nativeObject) {
 		NativeConverter converter = findConverter(nativeConverters, nativeObject);
 		if (converter == null) {
-			throw new NativeException("NativeManager.toNova: Converter for " + nativeObject + " withPriority class " + nativeObject.getClass() + " does not exist!");
+			throw new NativeException("NativeManager.toNova: Converter for " + nativeObject + " with class " + nativeObject.getClass() + " does not exist!");
 		}
 
 		return (T) converter.toNova(nativeObject);
@@ -105,7 +105,7 @@ public class NativeManager {
 	public <T> T toNative(Object novaObject) {
 		NativeConverter converter = findConverter(novaConverters, novaObject);
 		if (converter == null) {
-			throw new NativeException("NativeManager.toNative: Converter for " + novaObject + " withPriority class " + novaObject.getClass() + " does not exist!");
+			throw new NativeException("NativeManager.toNative: Converter for " + novaObject + " with class " + novaObject.getClass() + " does not exist!");
 		}
 
 		return (T) converter.toNative(novaObject);

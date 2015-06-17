@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface FluidBlock {
 
 	/**
-	 * Returns the Fluid associated withPriority this Block.
+	 * Returns the Fluid associated with this Block.
 	 */
 	Optional<Fluid> getFluid();
 

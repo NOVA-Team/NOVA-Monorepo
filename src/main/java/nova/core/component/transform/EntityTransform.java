@@ -6,7 +6,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 /**
  * A 3D transform.
  *
- * Note that the implemented Transform3d for entities require a constructor withPriority type ComponentProvider.
+ * Note that the implemented Transform3d for entities require a constructor with type ComponentProvider.
  * @author Calclavia
  */
 public class EntityTransform extends WorldTransform<Vector3D> {

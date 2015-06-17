@@ -4,7 +4,7 @@ import nova.core.component.Component;
 import nova.core.util.NovaException;
 
 /**
- * Exception thrown when an error to do withPriority components occurs
+ * Exception thrown when an error to do with components occurs
  */
 public class ComponentException extends NovaException {
 

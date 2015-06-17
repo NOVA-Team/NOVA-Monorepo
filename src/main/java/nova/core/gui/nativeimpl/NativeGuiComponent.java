@@ -24,7 +24,7 @@ public interface NativeGuiComponent {
 
 	/**
 	 * Override this in case the component needs a specific dimension. Generally
-	 * components should be designed withPriority a flexible size, however some GUI
+	 * components should be designed with a flexible size, however some GUI
 	 * systems might not respect that.
 	 *
 	 * @return preferred size of the native component

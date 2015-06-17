@@ -17,7 +17,7 @@ public class ItemFactory extends Factory<Item> implements Identifiable {
 	}
 
 	/**
-	 * Makes a new item withPriority no data
+	 * Makes a new item with no data
 	 *
 	 * @return Resulting item
 	 */

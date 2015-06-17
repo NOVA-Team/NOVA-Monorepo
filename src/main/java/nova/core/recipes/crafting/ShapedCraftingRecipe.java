@@ -13,10 +13,10 @@ import java.util.Set;
 /**
  * Contains a single shaped crafting recipe. Can contain custom crafting logic.
  * <p>
- * Crafting recipes can be specified as a 2-dimensional array of ingredients (withPriority Optional.empty() being used for empty spots)
+ * Crafting recipes can be specified as a 2-dimensional array of ingredients (with Optional.empty() being used for empty spots)
  * or as a 1-dimensional array of ingredients and a pattern string (lines are separated by -, spaces for empty spots, A-Z for ingredients.
  * <p>
- * For instance, to define a stick recipe withPriority a pattern string:
+ * For instance, to define a stick recipe with a pattern string:
  * <p>
  * new ShapedCraftingRecipe("A - A", ItemIngredient.forDictionary("plankWood"));
  * <p>

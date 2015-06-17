@@ -3,7 +3,7 @@ package nova.core.fluid.component;
 import nova.core.fluid.Fluid;
 
 /**
- * Objects withPriority this interface declare their ability to consume {@link Fluid FluidStacks}
+ * Objects with this interface declare their ability to consume {@link Fluid FluidStacks}
  * @see FluidConsumer
  */
 public interface FluidConsumer {

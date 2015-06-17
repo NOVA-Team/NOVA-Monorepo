@@ -33,7 +33,7 @@ public class TechneModelProvider extends ModelProvider {
 	//Identifiers for cubes
 	public static final List<String> cubeIDs = Arrays.asList("d9e621f7-957f-4b77-b1ae-20dcd0da7751", "de81aa14-bd60-4228-8d8d-5238bcd3caaa");
 
-	//A map of all models generated withPriority their names
+	//A map of all models generated with their names
 	private final Model model = new Model();
 
 	public TechneModelProvider(String domain, String name) {
@@ -77,7 +77,7 @@ public class TechneModelProvider extends ModelProvider {
 
 			NamedNodeMap modelAttributes = nodeListModel.item(0).getAttributes();
 			if (modelAttributes == null) {
-				throw new RenderException("Model " + name + " contains a Model tag withPriority no attributes");
+				throw new RenderException("Model " + name + " contains a Model tag with no attributes");
 			}
 
 			NodeList textureSize = document.getElementsByTagName("TextureSize");

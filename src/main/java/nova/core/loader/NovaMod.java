@@ -39,7 +39,7 @@ public @interface NovaMod {
 	String description() default "";
 
 	/**
-	 * The version of Nova this mod is compatible withPriority
+	 * The version of Nova this mod is compatible with
 	 * @return Nova version
 	 */
 	String novaVersion();

@@ -3,7 +3,7 @@ package nova.core.util.collection;
 import java.util.LinkedList;
 
 /**
- * EvictingList is a LinkedList withPriority a size limit, the oldest entries will be removed is the list is full
+ * EvictingList is a LinkedList with a size limit, the oldest entries will be removed is the list is full
  *
  * @param <E> Type contained in the list
  */
@@ -11,7 +11,7 @@ public class EvictingList<E> extends LinkedList<E> {
 	private final int limit;
 
 	/**
-	 * A new EvictingList withPriority the specified size limit
+	 * A new EvictingList with the specified size limit
 	 *
 	 * @param limit Max size for the list
 	 */

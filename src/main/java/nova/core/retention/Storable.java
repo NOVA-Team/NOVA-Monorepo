@@ -3,7 +3,7 @@ package nova.core.retention;
 import nova.core.util.ReflectionUtil;
 
 /**
- * Classes withPriority this interface declare ability to store and load itself.
+ * Classes with this interface declare ability to store and load itself.
  * Therefore, classes using this interface must have an empty constructor for new instantiation from load.
  */
 public interface Storable {
@@ -12,7 +12,7 @@ public interface Storable {
 	 * Saves all the data of this object.
 	 * See {@link Data} for what data is storable.
 	 *
-	 * The default implementation saves all fields tagged withPriority @Storable.
+	 * The default implementation saves all fields tagged with @Storable.
 	 *
 	 * @param data The data object to put values in.
 	 */

@@ -104,7 +104,7 @@ public abstract class NetworkManager {
 	}
 
 	/**
-	 * Syncs a PacketHandler between server and client, withPriority a specific packet ID
+	 * Syncs a PacketHandler between server and client, with a specific packet ID
 	 *
 	 * @param id The packet ID
 	 * @param sender sender {@link Syncable}

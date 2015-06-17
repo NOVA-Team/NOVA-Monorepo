@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * A component that defines a connection withPriority another.  C is the connector type
+ * A component that defines a connection with another.  C is the connector type
  * @author Calclavia
  */
 public class Connectable<C> extends Component {

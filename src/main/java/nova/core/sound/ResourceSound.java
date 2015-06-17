@@ -1,7 +1,7 @@
 package nova.core.sound;
 
 /**
- * a sound object withPriority a resource on the client.
+ * a sound object with a resource on the client.
  * @author skyem123
  */
 public class ResourceSound extends Sound {

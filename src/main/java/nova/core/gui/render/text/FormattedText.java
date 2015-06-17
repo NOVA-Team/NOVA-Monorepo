@@ -76,7 +76,7 @@ public class FormattedText implements Iterable<FormattedText> {
 	}
 
 	public TextFormat getFormat() {
-		// TODO Could interfere withPriority the cache when modified.
+		// TODO Could interfere with the cache when modified.
 		return format;
 	}
 
@@ -92,9 +92,9 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * Parses an arbitrary String to {@link FormattedText}. The format applied
 	 * has the following syntax: {@code &<tag>[data];} There are two types of
 	 * tags, tags without additional data are flags, i.e they are toggled each
-	 * time. {@code &rt;} turns all flags back to {@code false}. Tags withPriority
+	 * time. {@code &rt;} turns all flags back to {@code false}. Tags with
 	 * additional data are not affected by {@code &rt;}. Tags can be escaped
-	 * withPriority an {@code \} character. The case is taken into account, only
+	 * with an {@code \} character. The case is taken into account, only
 	 * lowercase characters are permitted for tags.
 	 * </p>
 	 *
@@ -140,7 +140,7 @@ public class FormattedText implements Iterable<FormattedText> {
 	 * <tr>
 	 * <td>{@code &cr[ARGB];}</td>
 	 * <td>Sets the text color to the given color, you can use
-	 * {@link Color#argb()}. Colors prefixed withPriority {@code #} are interpreted as
+	 * {@link Color#argb()}. Colors prefixed with {@code #} are interpreted as
 	 * hexadecimal.</td>
 	 * <td style='color: blue;'>
 	 * "The quick brown fox jumps over the lazy dog"</td>
@@ -203,7 +203,7 @@ public class FormattedText implements Iterable<FormattedText> {
 						format.color = Color.argb(Integer.parseInt(matcher.group(4)));
 					} else {
 						// Parse hex string, needs to be a long as
-						// Integer.parseInt doesn't deal withPriority the sign here.
+						// Integer.parseInt doesn't deal with the sign here.
 						format.color = Color.argb((int) Long.parseLong(matcher.group(5).substring(1), 16));
 					}
 				} catch (NumberFormatException e) {

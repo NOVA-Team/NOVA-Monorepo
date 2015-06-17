@@ -267,7 +267,7 @@ public class ReflectionUtil {
 	}
 
 	/**
-	 * Invokes an action on each field annotated withPriority specified annotation of
+	 * Invokes an action on each field annotated with specified annotation of
 	 * given object
 	 *
 	 * @param <T> Annotation type

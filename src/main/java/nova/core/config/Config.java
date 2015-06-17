@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * This annotation is used to fetch and load configs easily.
  * Configs are saved in
  * <a href="https://github.com/typesafehub/config/blob/master/HOCON.md">HOCON (Human-Optimized Config Object Notation)</a>
- * format, which is a nice JSON superset withPriority less pedantic syntax and comments.
+ * format, which is a nice JSON superset with less pedantic syntax and comments.
  * It has a tree structure, so any element could be reached via package-like path.<p>
  * Example usage:
  * <pre>
@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * }
  * baz = string
  * </pre><p>
- * For root values you could just use {@code &#64;Config} annotation withPriority no parameters:
+ * For root values you could just use {@code &#64;Config} annotation with no parameters:
  * <pre>
  * &#64;Config
  * public String baz = "default";

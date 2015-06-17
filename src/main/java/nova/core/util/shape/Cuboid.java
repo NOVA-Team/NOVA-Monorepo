@@ -33,7 +33,7 @@ public class Cuboid extends Shape<Cuboid, Cuboid> {
 	}
 
 	/**
-	 * New Cuboid withPriority the specified coordinates as bounds
+	 * New Cuboid with the specified coordinates as bounds
 	 *
 	 * @param minX min x coord
 	 * @param minY min y coord

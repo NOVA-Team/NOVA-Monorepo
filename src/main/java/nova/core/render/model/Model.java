@@ -51,7 +51,7 @@ public class Model implements Iterable<Model>, Cloneable {
 
 
 	/**
-	 * Binds all the faces and all child models withPriority this texture.
+	 * Binds all the faces and all child models with this texture.
 	 * @param texture The texture
 	 */
 	public void bind(Texture texture) {
@@ -103,7 +103,7 @@ public class Model implements Iterable<Model>, Cloneable {
 	}
 
 	/**
-	 * Combines child models withPriority names into one model withPriority its children being the children selected.
+	 * Combines child models with names into one model with its children being the children selected.
 	 * @param newModelName The new name for the model
 	 * @param names The names of the child models
 	 * @return The new model containing all the children.
@@ -113,7 +113,7 @@ public class Model implements Iterable<Model>, Cloneable {
 	}
 
 	/**
-	 * Combines child models withPriority names into one model withPriority its children being the children selected.
+	 * Combines child models with names into one model with its children being the children selected.
 	 * @param newModelName The new name for the model
 	 * @param predicate The condition to select children
 	 * @return The new model containing all the children.
@@ -133,7 +133,7 @@ public class Model implements Iterable<Model>, Cloneable {
 	}
 
 	/**
-	 * Flattens the model into a set of models withPriority no additional transformations,
+	 * Flattens the model into a set of models with no additional transformations,
 	 * applying all the transformations into the individual vertices.
 	 * @param matrixStack transformation matrix.
 	 * @return Resulting set of models
@@ -143,7 +143,7 @@ public class Model implements Iterable<Model>, Cloneable {
 
 		matrixStack.pushMatrix();
 		matrixStack.transform(matrix.getMatrix());
-		//Create a new model withPriority transformation applied.
+		//Create a new model with transformation applied.
 		Model transformedModel = clone();
 		// correct formula for Normal Matrix is transpose(inverse(mat3(model_mat))
 		// we have to augemnt that to 4x4
