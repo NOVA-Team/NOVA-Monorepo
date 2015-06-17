@@ -34,7 +34,7 @@ public class EntityManager {
 	/**
 	 * Returns entity by its name.
 	 * @param name Name of entity to search for.
-	 * @return {@link nova.core.entity.Entity} that was searched for·
+	 * @return {@link nova.core.entity.Entity} that was searched for
 	 */
 	public Optional<EntityFactory> getEntityFactory(String name) {
 		return registry.get(name);
