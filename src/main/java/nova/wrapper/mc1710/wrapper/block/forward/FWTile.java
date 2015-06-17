@@ -52,7 +52,7 @@ public class FWTile extends TileEntity {
 	public void validate() {
 		super.validate();
 
-		block.add(new MCBlockTransform(block, new BWWorld(getWorldObj()), new Vector3D(xCoord, yCoord, zCoord)));
+		block.add(new MCBlockTransform(block, Game.natives().toNova(getWorldObj()), new Vector3D(xCoord, yCoord, zCoord)));
 
 		if (cacheData != null && block instanceof Storable) {
 			((Storable) block).load(cacheData);

@@ -36,7 +36,6 @@ import nova.core.util.shape.Cuboid;
 import nova.internal.core.Game;
 import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEvents;
-import nova.wrapper.mc1710.wrapper.block.world.BWWorld;
 import nova.wrapper.mc1710.wrapper.render.BWModel;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.lwjgl.opengl.GL11;
@@ -54,6 +53,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
 
 /**
  * A Minecraft to Nova block wrapper
+ *
  * @author Calclavia
  */
 public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
@@ -100,7 +100,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 			System.out.println("Error: Block in TileWrapper is null.");
 		}
-		return getBlockInstance(new BWWorld(access), position);
+		return getBlockInstance((nova.core.world.World) Game.natives().toNova(access), position);
 
 	}
 
