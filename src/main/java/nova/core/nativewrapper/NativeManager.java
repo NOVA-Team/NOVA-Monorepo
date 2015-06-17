@@ -76,15 +76,14 @@ public class NativeManager {
 
 	private NativeConverter findConverter(Map<Class<?>, NativeConverter> map, Object obj) {
 		Class<?> clazz = obj.getClass();
-		NativeConverter nc = map.get(clazz);
-		while (nc == null) {
-			clazz = clazz.getSuperclass();
-			if (clazz == Object.class) {
-				return null;
-			}
-			nc = map.get(clazz);
-		}
-		return nc;
+
+		return map
+			.entrySet()
+			.stream()
+			.filter(e -> e.getKey().isAssignableFrom(clazz))
+			.findFirst()
+			.map(Map.Entry::getValue)
+			.orElse(null);
 	}
 
 	/**
