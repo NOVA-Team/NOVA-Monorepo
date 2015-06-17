@@ -24,7 +24,6 @@ import nova.core.util.Direction;
 import nova.core.util.shape.Cuboid;
 import nova.internal.core.Game;
 import nova.wrapper.mc18.util.WrapperEvents;
-import nova.wrapper.mc18.wrapper.block.world.BWWorld;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
@@ -37,6 +36,7 @@ import java.util.stream.Collectors;
 
 /**
  * A Minecraft to Nova block wrapper
+ *
  * @author Calclavia
  */
 public class FWBlock extends net.minecraft.block.Block {
@@ -76,7 +76,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 			System.out.println("Error: Block in TileWrapper is null.");
 		}
-		return getBlockInstance(new BWWorld(access), position);
+		return getBlockInstance((nova.core.world.World) Game.natives().toNova(access), position);
 
 	}
 

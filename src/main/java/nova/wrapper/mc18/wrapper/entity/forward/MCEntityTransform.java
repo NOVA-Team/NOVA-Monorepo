@@ -6,6 +6,7 @@ import nova.core.component.transform.EntityTransform;
 import nova.core.util.math.RotationUtil;
 import nova.core.util.math.Vector3DUtil;
 import nova.core.world.World;
+import nova.internal.core.Game;
 import nova.wrapper.mc18.wrapper.block.world.BWWorld;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -27,7 +28,7 @@ public class MCEntityTransform extends EntityTransform {
 
 	@Override
 	public World world() {
-		return new BWWorld(wrapper.worldObj);
+		return Game.natives().toNova(wrapper.worldObj);
 	}
 
 	@Override
