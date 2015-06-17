@@ -274,7 +274,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public int isProvidingWeakPower(IBlockAccess access, BlockPos pos, IBlockState state, EnumFacing side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		WrapperEvents.RedstoneEvent event = new WrapperEvents.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
+		WrapperEvents.WeakRedstoneEvent event = new WrapperEvents.WeakRedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
 		Game.events().events.publish(event);
 		return event.power;
 	}
@@ -282,7 +282,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public int isProvidingStrongPower(IBlockAccess access, BlockPos pos, IBlockState state, EnumFacing side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		WrapperEvents.RedstoneEvent event = new WrapperEvents.RedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
+		WrapperEvents.StrongRedstoneEvent event = new WrapperEvents.StrongRedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
 		Game.events().events.publish(event);
 		return event.power;
 	}
