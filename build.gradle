@@ -84,7 +84,13 @@ processResources {
 
 task deobfJar(type: Jar) {
 	from sourceSets.main.output
+	//from project(':core').sourceSets.main.output
 	classifier = 'deobf'
+	manifest {
+		attributes 'FMLCorePlugin': 'nova.wrapper.mc18.NovaMinecraftCore'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+		attributes 'FMLAT': 'nova_at.cfg'
+	}
 }
 
 shadowJar {
