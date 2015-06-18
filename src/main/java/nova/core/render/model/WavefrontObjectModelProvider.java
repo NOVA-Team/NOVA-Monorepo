@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  *
  * @author Thog
  */
-public class WavefrontObjectModel extends ModelProvider {
+public class WavefrontObjectModelProvider extends ModelProvider {
 
 	private static Pattern vertexPattern = Pattern.compile("(v( (\\-)?\\d+\\.\\d+){3,4} *\\n)|(v( (\\-)?\\d+\\.\\d+){3,4} *$)");
 	private static Pattern vertexNormalPattern = Pattern.compile("(vn( (\\-)?\\d+\\.\\d+){3,4} *\\n)|(vn( (\\-)?\\d+\\.\\d+){3,4} *$)");
@@ -35,7 +35,7 @@ public class WavefrontObjectModel extends ModelProvider {
 	private ArrayList<Vector3D> vertices = new ArrayList<>();
 	private ArrayList<Vector2D> textureCoordinates = new ArrayList<>();
 
-	public WavefrontObjectModel(String domain, String name) {
+	public WavefrontObjectModelProvider(String domain, String name) {
 		super(domain, name);
 	}
 
