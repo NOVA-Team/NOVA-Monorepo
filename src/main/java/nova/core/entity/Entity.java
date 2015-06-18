@@ -33,7 +33,7 @@ public class Entity extends ComponentProvider implements UniqueIdentifiable, Bui
 	 * @return The {@link nova.core.util.Factory} that refers to this
 	 * Block factory.
 	 */
-	public final Factory<Entity> factory() {
+	public final Factory<? extends Entity> factory() {
 		return Game.entities().getFactory(getID()).get();
 	}
 

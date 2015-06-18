@@ -7,7 +7,7 @@ import nova.core.util.Registry;
 
 public class EntityManager extends Manager<Entity>{
 
-	private EntityManager(Registry<Factory<Entity>> registry, GameStatusEventBus gseb) {
+	private EntityManager(Registry<Factory<? extends Entity>> registry, GameStatusEventBus gseb) {
 		super(registry, gseb, Entity.class);
 	}
 

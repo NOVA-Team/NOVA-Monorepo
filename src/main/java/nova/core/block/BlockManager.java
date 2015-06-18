@@ -18,7 +18,7 @@ public class BlockManager extends Manager<Block> {
 	public final EventBus<BlockRegisteredEvent> blockRegisteredListeners = new CancelableEventBus<>();
 	private final Supplier<ItemManager> itemManager;
 
-	private BlockManager(Registry<Factory<Block>> registry, GameStatusEventBus gseb, Supplier<ItemManager> itemManager) {
+	private BlockManager(Registry<Factory<? extends Block>> registry, GameStatusEventBus gseb, Supplier<ItemManager> itemManager) {
 		super(registry,gseb, Block.class);
 		this.itemManager = itemManager;
 	}
@@ -35,12 +35,12 @@ public class BlockManager extends Manager<Block> {
 	 * Gets the factory registered for block that represents air.
 	 * @return air block's factory.
 	 */
-	public Factory<Block> getAirBlockFactory() {
+	public Factory<? extends Block> getAirBlockFactory() {
 		return Game.blocks().getFactory("air").get();
 	}
 
 	@Override
-	public Factory<Block> beforeRegister(Factory<Block> factory) {
+	public Factory<? extends Block> beforeRegister(Factory<? extends Block> factory) {
 		if (!factory.ID.isPresent()) {
 			throw new RegistrationException(String.format("Factory passed for registration is not named. [%s]", factory));
 		}
@@ -56,9 +56,9 @@ public class BlockManager extends Manager<Block> {
 
 	@CancelableEvent.Cancelable
 	public static class BlockRegisteredEvent extends CancelableEvent {
-		public Factory<Block> blockFactory;
+		public Factory<? extends Block> blockFactory;
 
-		public BlockRegisteredEvent(Factory<Block> blockFactory) {
+		public BlockRegisteredEvent(Factory<? extends Block> blockFactory) {
 			this.blockFactory = blockFactory;
 		}
 	}

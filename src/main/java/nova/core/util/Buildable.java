@@ -14,11 +14,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public interface Buildable<T extends Buildable<T>> extends Identifiable {
-	Factory<T> factory();
+	Factory<? extends T> factory();
 
 	default void afterConstruction(Optional<Object[]> typeArguments, Optional<Object[]> instanceArguments) {}
 
 	default void afterFinalizers() {}
+
+
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
@@ -40,7 +42,7 @@ public interface Buildable<T extends Buildable<T>> extends Identifiable {
 		ID[] value();
 	}
 
-	static <T extends Buildable<T>> Set<Factory<T>> factoriesFor(Class<T> clazz) {
+	static <L extends Buildable<L>> Set<Factory<? extends L>> factoriesFor(Class<? extends L> clazz) {
 		List<ID> listID = Lists.newLinkedList();
 
 		Optional<IDs> IDs = Optional.ofNullable(clazz.getAnnotation(IDs.class));
@@ -49,7 +51,7 @@ public interface Buildable<T extends Buildable<T>> extends Identifiable {
 		Optional<ID> ID = Optional.ofNullable(clazz.getAnnotation(ID.class));
 		ID.ifPresent(listID::add);
 
-		Factory<T> base = Factory.of(clazz);
+		Factory<? extends L> base = Factory.of(clazz);
 		if (listID.isEmpty()) {
 			return Collections.singleton(base);
 		}

@@ -49,7 +49,7 @@ public abstract class Sound implements Buildable<Sound> {
 	 * @return The {@link nova.core.util.Factory} that refers to this
 	 * Block factory.
 	 */
-	public final Factory<Sound> factory() {
+	public final Factory<? extends Sound> factory() {
 		return Game.sound().get().getFactory(getID()).get();
 	}
 }

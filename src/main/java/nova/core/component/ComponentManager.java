@@ -21,12 +21,12 @@ public class ComponentManager extends Manager<Component> {
 
 	private Map<Class<? extends Component>, String> classToComponent = new HashMap<>();
 
-	private ComponentManager(Registry<Factory<Component>> registry, GameStatusEventBus gseb) {
+	private ComponentManager(Registry<Factory<? extends Component>> registry, GameStatusEventBus gseb) {
 		super(registry, gseb, Component.class);
 	}
 
 	@Override
-	public Factory<Component> beforeRegister(Factory<Component> factory) {
+	public Factory<? extends Component> beforeRegister(Factory<? extends Component> factory) {
 		classToComponent.put(factory.clazz, factory.getID());
 		return factory;
 	}
@@ -40,7 +40,7 @@ public class ComponentManager extends Manager<Component> {
 	 */
 	@SuppressWarnings("unchecked")
 	public <N> N make(Class<N> theInterface, Object... args) {
-		Optional<Factory<Component>> first = all().stream()
+		Optional<Factory<? extends Component>> first = all().stream()
 			.filter(n -> theInterface.isAssignableFrom(n.clazz))
 			.findFirst();
 

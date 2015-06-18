@@ -39,7 +39,7 @@ public abstract class Item extends ComponentProvider implements Buildable<Item>,
 	 * Called to get the ItemFactory that refers to this Block class.
 	 * @return The {@link nova.core.util.Factory} that refers to this Block class.
 	 */
-	public final Factory<Item> factory() {
+	public final Factory<? extends Item> factory() {
 		return Game.items().getItem(this.getID()).get();
 	}
 

@@ -122,8 +122,8 @@ public class RayTraceTest {
 
 	@NovaMod(id = "rayTrace", name = "ray", version = "1.0", novaVersion = "0.0.1")
 	public static class RayTraceMod implements Loadable {
-		public static Factory<Block> solid;
-		public static Factory<Entity> testEntity;
+		public static Factory<? extends Block> solid;
+		public static Factory<? extends Entity> testEntity;
 
 		final BlockManager blockManager;
 		final EntityManager entityManager;

@@ -12,7 +12,7 @@ import nova.internal.core.Game;
  * A Component is intended as a data holder and provides data to be processed in a ComponentProvider.
  * @author Calclavia
  */
-public abstract class Component implements Buildable {
+public abstract class Component implements Buildable<Component> {
 
 	public final EventBus<Event> events = new EventBus<>();
 
@@ -26,7 +26,7 @@ public abstract class Component implements Buildable {
 		return ID;
 	}
 
-	public final Factory<Component> factory() {
+	public final Factory<? extends Component> factory() {
 		return Game.components().getFactory(getID()).get();
 	}
 
