@@ -101,7 +101,7 @@ public final class Factory<T extends Buildable> implements Identifiable {
 	}
 
 	/**
-	 * Creates new instance without instance arguments. {@see Factory#make(Object...)}.
+	 * Creates new instance without instance arguments. {@linkplain Factory#make(Object...)}.
 	 * @return a new instance for this factory.
 	 */
 	public T make() {
