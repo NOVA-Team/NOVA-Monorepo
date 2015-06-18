@@ -41,14 +41,20 @@ public class Model implements Iterable<Model>, Cloneable {
 	public int blendSFactor = -1;
 	public int blendDFactor = -1;
 
+	/**
+	 * Creates named model.
+	 * @param name to be used.
+	 */
 	public Model(String name) {
 		this.name = Objects.requireNonNull(name, "Model name cannot be null!");
 	}
 
+	/**
+	 * Creates unnamed model.
+	 */
 	public Model() {
 		this("");
 	}
-
 
 	/**
 	 * Binds all the faces and all child models with this texture.
@@ -60,7 +66,7 @@ public class Model implements Iterable<Model>, Cloneable {
 
 	/**
 	 * Binds the texture to the model, and all its children.
-	 * @param texture
+	 * @param texture to be used to as for this model and sub-models.
 	 */
 	public void bindAll(Texture texture) {
 		bind(texture);
@@ -85,7 +91,9 @@ public class Model implements Iterable<Model>, Cloneable {
 	}
 
 	public Model addChild(Model child) {
-		children.add(child);
+		if (child != null) {
+			children.add(child);
+		}
 		return this;
 	}
 

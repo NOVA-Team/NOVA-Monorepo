@@ -13,6 +13,11 @@ public abstract class ModelProvider {
 	//The name of the file
 	public final String name;
 
+	/**
+	 * Creates new ModelProvider
+	 * @param domain dolain of the assets.
+	 * @param name name of the model.
+	 */
 	public ModelProvider(String domain, String name) {
 		this.domain = domain;
 		this.name = name;

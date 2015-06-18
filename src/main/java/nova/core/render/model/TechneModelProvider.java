@@ -36,6 +36,11 @@ public class TechneModelProvider extends ModelProvider {
 	//A map of all models generated with their names
 	private final Model model = new Model();
 
+	/**
+	 * Creates new ModelProvider
+	 * @param domain dolain of the assets.
+	 * @param name name of the model.
+	 */
 	public TechneModelProvider(String domain, String name) {
 		super(domain, name);
 	}
@@ -133,30 +138,37 @@ public class TechneModelProvider extends ModelProvider {
 					if (shapeChildValue != null) {
 						shapeChildValue = shapeChildValue.trim();
 
-						if (shapeChildName.equals("IsMirrored")) {
-							mirrored = !shapeChildValue.equals("False");
-						} else if (shapeChildName.equals("Offset")) {
-							offset = shapeChildValue.split(",");
-						} else if (shapeChildName.equals("Position")) {
-							position = shapeChildValue.split(",");
-						} else if (shapeChildName.equals("Rotation")) {
-							rotation = shapeChildValue.split(",");
-						} else if (shapeChildName.equals("Size")) {
-							size = shapeChildValue.split(",");
-						} else if (shapeChildName.equals("TextureOffset")) {
-							textureOffset = shapeChildValue.split(",");
+						switch (shapeChildName) {
+							case "IsMirrored":
+								mirrored = !shapeChildValue.equals("False");
+								break;
+							case "Offset":
+								offset = shapeChildValue.split(",");
+								break;
+							case "Position":
+								position = shapeChildValue.split(",");
+								break;
+							case "Rotation":
+								rotation = shapeChildValue.split(",");
+								break;
+							case "Size":
+								size = shapeChildValue.split(",");
+								break;
+							case "TextureOffset":
+								textureOffset = shapeChildValue.split(",");
+								break;
 						}
 					}
 				}
 
-				/**
-				 * 	Generate new models
-				 * 	Models in Techne are based on cubes.
-				 * 	Each cube is, by default, skewed to the side. They are not centered.
-				 *
-				 * 	Everything is scaled by a factor of 16.
-				 * 	The y coordinate is inversed, y = 24 is the surface
-				 * 	The z coordinate is inverted, too.
+				/*
+				  	Generate new models
+				  	Models in Techne are based on cubes.
+				  	Each cube is, by default, skewed to the side. They are not centered.
+
+				  	Everything is scaled by a factor of 16.
+				  	The y coordinate is inversed, y = 24 is the surface
+				  	The z coordinate is inverted, too.
 				 */
 				double positionX = Double.parseDouble(position[0]) / 16d;
 				double positionY = (16 - Double.parseDouble(position[1])) / 16d;

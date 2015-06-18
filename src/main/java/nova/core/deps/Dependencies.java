@@ -6,10 +6,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author rx14
+ * Collection of dependencies.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Dependencies {
+	/**
+	 * Collect depenencies.
+	 * @return a list of dependencies.
+	 */
 	Dependency[] value();
 }

@@ -32,15 +32,20 @@ public class Vertex implements Cloneable {
 		this.color = Color.white;
 	}
 
+	/**
+	 * Creates new instance of vertex using separate doubles.
+	 * @param x coordinate in space.
+	 * @param y coordinate in space.
+	 * @param z coordinate in space.
+	 * @param u coordinate on texture.
+	 * @param v coordinate on texture.
+	 */
 	public Vertex(double x, double y, double z, double u, double v) {
 		this(new Vector3D(x, y, z), new Vector2D(u, v));
 	}
 
-	public Vertex setColor(Color color) {
-		this.color = color;
-		return this;
-	}
 
+	@Override
 	public String toString() {
 		MathContext cont = new MathContext(4, RoundingMode.HALF_UP);
 		return "Vertex5[" + new BigDecimal(vec.getX(), cont) + ", " + new BigDecimal(vec.getY(), cont) + ", " + new BigDecimal(vec.getZ(), cont) + "]" +

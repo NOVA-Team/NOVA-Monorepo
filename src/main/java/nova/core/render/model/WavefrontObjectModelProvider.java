@@ -35,6 +35,11 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 	private ArrayList<Vector3D> vertices = new ArrayList<>();
 	private ArrayList<Vector2D> textureCoordinates = new ArrayList<>();
 
+	/**
+	 * Creates new ModelProvider
+	 * @param domain dolain of the assets.
+	 * @param name name of the model.
+	 */
 	public WavefrontObjectModelProvider(String domain, String name) {
 		super(domain, name);
 	}
@@ -85,9 +90,6 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		} catch (IOException e) {
 			throw new RenderException("Model " + name + " could not be read", e);
 		} finally {
-			try {
-				stream.close();
-			} catch (IOException e) {}
 			this.cleanUp();
 		}
 	}

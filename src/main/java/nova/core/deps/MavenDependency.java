@@ -32,6 +32,10 @@ public class MavenDependency {
 		this.ext = ext;
 	}
 
+	/**
+	 * Creates new maven dependency using Dependency annotation.
+	 * @param annotation to be used as a source of data.
+	 */
 	public MavenDependency(Dependency annotation) {
 		this.repoURL = annotation.mavenRepo();
 
