@@ -334,9 +334,9 @@ public final class Color {
 	 * Creates Color instance from HSL color format using vector as source of components.
 	 *
 	 * @param hsl vector which components will be used as HSL color components.
-	 * X -> H
-	 * Y -> S
-	 * Z -> L
+	 * X -&gt; H,
+	 * Y -&gt; S,
+	 * Z -&gt; L
 	 * @return a color instance.
 	 */
 	public static Color hsl(Vector3D hsl) {
