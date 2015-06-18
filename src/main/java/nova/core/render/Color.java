@@ -1,17 +1,13 @@
 package nova.core.render;
 
 import nova.core.util.NovaException;
+import nova.core.util.math.MathUtil;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * Arbitrary immutable color object. Holds a color in argb space.
- *
- * @author Vic Nightfall
  */
-public class Color {
-
-	// TODO Extend Operator?
-	// TODO Document me!
+public final class Color {
 	// TODO Test me!
 	/**
 	 * White color.
@@ -72,35 +68,104 @@ public class Color {
 		this.value = argb;
 	}
 
+	/**
+	 * Creates Color instance out of integer components.
+	 * Clamps input variables into 0-255 range.
+	 * Uses the most opaque alpha value.
+	 *
+	 * @param red component.
+	 * @param green component.
+	 * @param blue component.
+	 * @return a color instance.
+	 */
 	public static Color rgbc(int red, int green, int blue) {
 		return rgbac(red, green, blue, 255);
 	}
 
+	/**
+	 * Creates Color instance out of integer components.
+	 * Uses the most opaque alpha value.
+	 *
+	 * @param red component.
+	 * @param green component.
+	 * @param blue component.
+	 * @return a color instance.
+	 * @throws ColorRangeException if component variables are out of 0-255 range.
+	 */
 	public static Color rgb(int red, int green, int blue) {
 		return rgba(red, green, blue, 255);
 	}
 
+	/**
+	 * Creates Color instance out of double components.
+	 * Uses the most opaque alpha value.
+	 * Clamps input variables into 0-1 range.
+	 *
+	 * @param red component.
+	 * @param green component.
+	 * @param blue component.
+	 * @return a color instance.
+	 */
 	public static Color rgbfc(double red, double green, double blue) {
 		return rgbafc(red, green, blue, 1F);
 	}
 
+	/**
+	 * Creates Color instance out of double components.
+	 * Uses the most opaque alpha value.
+	 * Clamps input variables into 0-1 range.
+	 *
+	 * @param red component.
+	 * @param green component.
+	 * @param blue component.
+	 * @return a color instance.
+	 * @throws ColorRangeException if component variables are out of 0-1 range.
+	 */
 	public static Color rgbf(double red, double green, double blue) {
 		return rgbaf(red, green, blue, 1F);
 	}
 
+	/**
+	 * Creates Color instance out of packed RGB data.
+	 *
+	 * @param rgb data occupying lower 24bits.
+	 * @return a color instance.
+	 */
 	public static Color rgb(int rgb) {
 		return rgba(rgb, 255);
 	}
 
+	/**
+	 * Creates Color instance out of integer components.
+	 * Uses the most opaque alpha value.
+	 *
+	 * @param red component.
+	 * @param green component.
+	 * @param blue component.
+	 * @param alpha component.
+	 * @return a color instance.
+	 * @throws ColorRangeException if component variables are out of 0-255 range.
+	 */
 	public static Color rgbac(int red, int green, int blue, int alpha) {
-		red = Math.max(Math.min(255, red), 0);
-		green = Math.max(Math.min(255, green), 0);
-		blue = Math.max(Math.min(255, blue), 0);
-		alpha = Math.max(Math.min(255, alpha), 0);
+		red = MathUtil.clamp(red, 0, 255);
+		green = MathUtil.clamp(green, 0, 255);
+		blue = MathUtil.clamp(blue, 0, 255);
+		alpha = MathUtil.clamp(alpha, 0, 255);
 		int argb = alpha << 24 | red << 16 | green << 8 | blue;
 		return argb(argb);
 	}
 
+	/**
+	 * Creates Color instance out of integer components.
+	 * Uses the most opaque alpha value.
+	 *
+	 * @param red component.
+	 * @param green component.
+	 * @param blue component.
+	 * @param alpha component.
+	 * @return a color instance.
+	 * @throws ColorRangeException if component variables are out of 0-255 range.
+	 */
 	public static Color rgba(int red, int green, int blue, int alpha) {
 		if (red > 255 || red < 0 || green > 255 || green < 0 || blue > 255 || blue < 0 || alpha > 255 || blue < 0) {
 			throw new ColorRangeException(red, green, blue, alpha);
@@ -108,20 +173,58 @@ public class Color {
 		return rgbac(red, green, blue, alpha);
 	}
 
+	/**
+	 * Creates Color instance out of double components.
+	 * Uses the most opaque alpha value.
+	 * Clamps input variables into 0-1 range.
+	 *
+	 * @param red component.
+	 * @param green component.
+	 * @param blue component.
+	 * @param alpha component.
+	 * @return a color instance.
+	 */
 	public static Color rgbafc(double red, double green, double blue, double alpha) {
 		return rgbac((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255));
 	}
 
+	/**
+	 * Creates Color instance out of double components.
+	 * Uses the most opaque alpha value.
+	 * Clamps input variables into 0-1 range.
+	 *
+	 * @param red component.
+	 * @param green component.
+	 * @param blue component.
+	 * @param alpha component.
+	 * @return a color instance.
+	 * @throws ColorRangeException if component variables are out of 0-1 range.
+	 */
 	public static Color rgbaf(double red, double green, double blue, double alpha) {
 		return rgba((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255));
 	}
 
+	/**
+	 * Creates Color instance out of packed RGB data and byte alpha component.
+	 *
+	 * @param rgb packed into lower 24bits.
+	 * @param alpha will be clamped into 0-255 range.
+	 * @return a color instance.
+	 */
 	public static Color rgbac(int rgb, int alpha) {
-		alpha = Math.max(Math.min(255, alpha), 0);
+		alpha = MathUtil.clamp(alpha, 0, 255);
 		int value = rgb & 0xFFFFFF | alpha << 24;
 		return argb(value);
 	}
 
+	/**
+	 * Creates Color instance out of packed RGB data and byte alpha component.
+	 *
+	 * @param rgb packed into lower 24bits.
+	 * @param alpha component.
+	 * @return a color instance.
+	 * @throws ColorRangeException if alpha component is out of 0-255 range.
+	 */
 	public static Color rgba(int rgb, int alpha) {
 		if (alpha > 255 || alpha < 0) {
 			throw new ColorRangeException(alpha);
@@ -129,18 +232,45 @@ public class Color {
 		return rgbac(rgb, alpha);
 	}
 
+	/**
+	 * Creates Color instance out of packed RGB data and double alpha component.
+	 *
+	 * @param rgb packed into lower 24bits.
+	 * @param alpha will be clamped into 0-1 range.
+	 * @return a color instance.
+	 */
 	public static Color rgbafc(int rgb, float alpha) {
 		return rgbac(rgb, (int) (alpha * 255));
 	}
 
+	/**
+	 * Creates Color instance out of packed RGB data and double alpha component.
+	 *
+	 * @param rgb packed into lower 24bits.
+	 * @param alpha component.
+	 * @return a color instance.
+	 * @throws ColorRangeException if alpha component is out of 0-1 range.
+	 */
 	public static Color rgbaf(int rgb, float alpha) {
 		return rgba(rgb, (int) (alpha * 255));
 	}
 
+	/**
+	 * Creates Color instance out of packed ARGB data.
+	 *
+	 * @param argb packed into 32bits.
+	 * @return a color instance.
+	 */
 	public static Color argb(int argb) {
 		return new Color(argb);
 	}
 
+	/**
+	 * Creates Color instance out of packed RGBA data.
+	 *
+	 * @param rgba packed into 32bits.
+	 * @return a color instance.
+	 */
 	public static Color rgba(int rgba) {
 		int alpha = rgba & 0xFF;
 		int argb = rgba << 8;
@@ -148,6 +278,14 @@ public class Color {
 		return argb(argb);
 	}
 
+	/**
+	 * Creates Color instance from HSL color format.
+	 *
+	 * @param h component.
+	 * @param s component.
+	 * @param l component.
+	 * @return a color instance.
+	 */
 	public static Color hsl(double h, double s, double l) {
 
 		if (s == 0) {
@@ -155,7 +293,7 @@ public class Color {
 			return rgbc(c, c, c);
 		}
 
-		double t1 = 0;
+		double t1;
 		if (l < 0.5F) {
 			t1 = l * (1 + s);
 		} else {
@@ -192,82 +330,175 @@ public class Color {
 		}
 	}
 
+	/**
+	 * Creates Color instance from HSL color format using vector as source of components.
+	 *
+	 * @param hsl vector which components will be used as HSL color components.
+	 * X -> H
+	 * Y -> S
+	 * Z -> L
+	 * @return a color instance.
+	 */
 	public static Color hsl(Vector3D hsl) {
 		return hsl(hsl.getX(), hsl.getY(), hsl.getZ());
 	}
 
+	/**
+	 * @return packed color in ARGB format.
+	 */
 	public int argb() {
 		return value;
 	}
 
+	/**
+	 * @return packed color in RGBA format.
+	 */
 	public int rgba() {
 		return (red() << 24) | (green() << 16) | (blue() << 8) | (alpha());
 	}
 
+	/**
+	 * @return red component of the color in lowest 8bit of the integer.
+	 */
 	public int red() {
-		return value >> 16 & 0xFF;
+		return value >>> 16 & 0xFF;
 	}
 
+	/**
+	 * @return green component of the color in lowest 8bit of the integer.
+	 */
 	public int green() {
-		return value >> 8 & 0xFF;
+		return value >>> 8 & 0xFF;
 	}
 
+	/**
+	 * @return blue component of the color in lowest 8bit of the integer.
+	 */
 	public int blue() {
 		return value & 0xFF;
 	}
 
+	/**
+	 * @return alpha component of the color in lowest 8bit of the integer.
+	 */
 	public int alpha() {
-		return value >> 24 & 0xFF;
+		return value >>> 24 & 0xFF;
 	}
 
+	/**
+	 * Creates Color instance with replaced red component.
+	 *
+	 * @param red a new red component.
+	 * @return a new Color instance.
+	 */
 	public Color red(int red) {
 		return rgba(red, green(), blue(), alpha());
 	}
 
+	/**
+	 * Creates Color instance with replaced green component.
+	 *
+	 * @param green a new green component.
+	 * @return a new Color instance.
+	 */
 	public Color green(int green) {
 		return rgba(red(), green, blue(), alpha());
 	}
 
+	/**
+	 * Creates Color instance with replaced blue component.
+	 *
+	 * @param blue a new blue component.
+	 * @return a new Color instance.
+	 */
 	public Color blue(int blue) {
 		return rgba(red(), green(), blue, alpha());
 	}
 
+	/**
+	 * Creates Color instance with replaced alpha component.
+	 *
+	 * @param alpha a new alpha component.
+	 * @return a new Color instance.
+	 */
 	public Color alpha(int alpha) {
 		return rgba(red(), green(), blue(), alpha);
 	}
 
+	/**
+	 * @return red component of the color as a normalized float.
+	 */
 	public float redf() {
 		return red() / 255F;
 	}
 
+	/**
+	 * @return green component of the color as a normalized float.
+	 */
 	public float greenf() {
 		return green() / 255F;
 	}
 
+	/**
+	 * @return blue component of the color as a normalized float.
+	 */
 	public float bluef() {
 		return blue() / 255F;
 	}
 
+	/**
+	 * @return alpha component of the color as a normalized float.
+	 */
 	public float alphaf() {
 		return alpha() / 255F;
 	}
 
+	/**
+	 * Creates Color instance with replaced red component.
+	 *
+	 * @param red a new red component.
+	 * @return a new Color instance.
+	 */
 	public Color redf(float red) {
 		return rgba((int) (red * 255), green(), blue(), alpha());
 	}
 
+	/**
+	 * Creates Color instance with replaced green component.
+	 *
+	 * @param green a new green component.
+	 * @return a new Color instance.
+	 */
 	public Color greenf(float green) {
 		return rgba(red(), (int) (green * 255), blue(), alpha());
 	}
 
+	/**
+	 * Creates Color instance with replaced blue component.
+	 *
+	 * @param blue a new blue component.
+	 * @return a new Color instance.
+	 */
 	public Color bluef(float blue) {
 		return rgba(red(), green(), (int) (blue * 255), alpha());
 	}
 
+	/**
+	 * Creates Color instance with replaced alpha component.
+	 *
+	 * @param alpha a new alpha component.
+	 * @return a new Color instance.
+	 */
 	public Color alphaf(float alpha) {
 		return rgba(red(), green(), blue(), (int) (alpha * 255));
 	}
 
+	/**
+	 * Performs alpha color blending.
+	 *
+	 * @param color color to blend with.
+	 * @return a new, bended, Color instance.
+	 */
 	public Color blend(Color color) {
 		int aA = alpha();
 		int aB = color.alpha();
@@ -279,30 +510,70 @@ public class Color {
 		return rgbac(r, g, b, a);
 	}
 
+	/**
+	 * Performs addition operation.
+	 *
+	 * @param color color to be added.
+	 * @return a new Color instance.
+	 */
 	public Color add(Color color) {
 		return rgbac(red() + color.red(), green() + color.green(), blue() + color.blue(), alpha());
 	}
 
-	public Color substract(Color color) {
+	/**
+	 * Performs subtraction operation.
+	 *
+	 * @param color color to be subtracted.
+	 * @return a new Color instance.
+	 */
+	public Color subtract(Color color) {
 		return rgbac(red() - color.red(), green() - color.green(), blue() - color.blue(), alpha());
 	}
 
+	/**
+	 * Performs multiplication operation.
+	 *
+	 * @param color color to be multiplied.
+	 * @return a new Color instance.
+	 */
 	public Color multiply(Color color) {
 		return rgbac(red() * color.red(), green() * color.green(), blue() * color.blue(), alpha());
 	}
 
+	/**
+	 * Performs division operation.
+	 *
+	 * @param color color to be divisor.
+	 * @return a new Color instance.
+	 */
 	public Color divide(Color color) {
 		return rgbac(red() / color.red(), green() / color.green(), blue() / color.blue(), alpha());
 	}
 
+	/**
+	 * Performs average operation.
+	 *
+	 * @param color color to second part of the average.
+	 * @return a new Color instance.
+	 */
 	public Color average(Color color) {
 		return rgbac((red() + color.red()) / 2, (green() + color.green()) / 2, (blue() + color.blue()) / 2, (alpha() + color.alpha()) / 2);
 	}
 
+	/**
+	 * Performs negation operation.
+	 *
+	 * @return a new Color instance.
+	 */
 	public Color negate() {
 		return rgbac(255 - red(), 255 - green(), 255 - blue(), alpha());
 	}
 
+	/**
+	 * Getter for HSL components.
+	 *
+	 * @return a vector with HSL components.
+	 */
 	public Vector3D hsl() {
 
 		float r = redf();
@@ -359,8 +630,8 @@ public class Color {
 		float g = greenf();
 		float b = bluef();
 
-		float min = Math.min(Math.min(r, g), b);
-		float max = Math.max(Math.max(r, g), b);
+		float min = (float) MathUtil.min(r, g, b);
+		float max = (float) MathUtil.max(r, g, b);
 
 		return lighting(min, max);
 	}
@@ -371,8 +642,8 @@ public class Color {
 		float g = greenf();
 		float b = bluef();
 
-		float min = Math.min(Math.min(r, g), b);
-		float max = Math.max(Math.max(r, g), b);
+		float min = (float) MathUtil.min(r, g, b);
+		float max = (float) MathUtil.max(r, g, b);
 
 		float l = lighting(min, max);
 		return saturation(min, max, l);
@@ -384,8 +655,8 @@ public class Color {
 		float g = greenf();
 		float b = bluef();
 
-		float min = Math.min(Math.min(r, g), b);
-		float max = Math.max(Math.max(r, g), b);
+		float min = (float) MathUtil.min(r, g, b);
+		float max = (float) MathUtil.max(r, g, b);
 
 		return hue(r, g, b, min, max);
 	}
@@ -405,6 +676,11 @@ public class Color {
 		return hsl(h, hsl.getY(), hsl.getZ()).alpha(alpha());
 	}
 
+	/**
+	 * Calculates complementary color to this color instance.
+	 *
+	 * @return a new Color which is complementary to current.
+	 */
 	public Color complementary() {
 		Vector3D hsl = hsl();
 		double h = hsl.getY() + 180F;
@@ -418,13 +694,7 @@ public class Color {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || obj.getClass() != Color.class) {
-			return false;
-		}
-		return value == ((Color) obj).value;
+		return this == obj || (obj != null && obj.getClass() == Color.class) && value == ((Color) obj).value;
 	}
 
 	public static class ColorRangeException extends NovaException {
