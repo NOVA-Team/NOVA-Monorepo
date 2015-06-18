@@ -169,6 +169,84 @@ public class MathUtil {
 	}
 
 	/**
+	 * Returns the smaller number of a and b.
+	 * @param a
+	 * @param b
+	 * @return min
+	 */
+	public static float min(float a, float b) {
+		return a < b ? a : b;
+	}
+
+	/**
+	 * Returns the smaller number of a, b and c.
+	 * @param a
+	 * @param b
+	 * @param c
+	 * @return min
+	 */
+	public static float min(float a, float b, float c) {
+		return min(min(a, b), c);
+	}
+
+	/**
+	 * Returns the smallest number contained in the provided array.
+	 * @param numbers Array of numbers
+	 * @return min
+	 */
+	public static float min(float... numbers) {
+		if (numbers.length < 1) {
+			throw new IllegalArgumentException();
+		}
+		float min = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			if (numbers[i] < min) {
+				min = numbers[i];
+			}
+		}
+		return min;
+	}
+
+	/**
+	 * Returns the bigger number of a and b.
+	 * @param a
+	 * @param b
+	 * @return max
+	 */
+	public static float max(float a, float b) {
+		return a > b ? a : b;
+	}
+
+	/**
+	 * Returns the bigger number of a, b and c.
+	 * @param a
+	 * @param b
+	 * @param c
+	 * @return max
+	 */
+	public static float max(float a, float b, float c) {
+		return max(max(a, b), c);
+	}
+
+	/**
+	 * Returns the biggest number contained in the provided array.
+	 * @param numbers Array of numbers
+	 * @return max
+	 */
+	public static float max(float... numbers) {
+		if (numbers.length < 1) {
+			throw new IllegalArgumentException();
+		}
+		float max = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			if (numbers[i] > max) {
+				max = numbers[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
 	 * Clamps the given number so that {@code min <= a <= max}
 	 * @param a
 	 * @param min lower limit

@@ -630,8 +630,8 @@ public final class Color {
 		float g = greenf();
 		float b = bluef();
 
-		float min = (float) MathUtil.min(r, g, b);
-		float max = (float) MathUtil.max(r, g, b);
+		float min = MathUtil.min(r, g, b);
+		float max = MathUtil.max(r, g, b);
 
 		return lighting(min, max);
 	}
@@ -642,8 +642,8 @@ public final class Color {
 		float g = greenf();
 		float b = bluef();
 
-		float min = (float) MathUtil.min(r, g, b);
-		float max = (float) MathUtil.max(r, g, b);
+		float min = MathUtil.min(r, g, b);
+		float max = MathUtil.max(r, g, b);
 
 		float l = lighting(min, max);
 		return saturation(min, max, l);
@@ -655,8 +655,8 @@ public final class Color {
 		float g = greenf();
 		float b = bluef();
 
-		float min = (float) MathUtil.min(r, g, b);
-		float max = (float) MathUtil.max(r, g, b);
+		float min = MathUtil.min(r, g, b);
+		float max = MathUtil.max(r, g, b);
 
 		return hue(r, g, b, min, max);
 	}

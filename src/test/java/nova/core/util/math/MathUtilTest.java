@@ -36,6 +36,17 @@ public class MathUtilTest {
         assertThat(MathUtil.max(0d,1d,2d,4d)).isEqualTo(4d);
         assertThat(MathUtil.max(0d,4d,2d,1d)).isEqualTo(4d);
         assertThat(MathUtil.max(4d,2d,0d,1d)).isEqualTo(4d);
+
+	    assertThat(MathUtil.max(1d,2d)).isEqualTo(2d);
+	    assertThat(MathUtil.max(2d,1d)).isEqualTo(2d);
+
+	    assertThat(MathUtil.max(0f,1f,2f)).isEqualTo(2f);
+	    assertThat(MathUtil.max(0f,2f,1f)).isEqualTo(2f);
+	    assertThat(MathUtil.max(2f,0f,1f)).isEqualTo(2f);
+
+	    assertThat(MathUtil.max(0f,1f,2f,4f)).isEqualTo(4f);
+	    assertThat(MathUtil.max(0f,4f,2f,1f)).isEqualTo(4f);
+	    assertThat(MathUtil.max(4f,2f,0f,1f)).isEqualTo(4f);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -72,6 +83,17 @@ public class MathUtilTest {
         assertThat(MathUtil.min(0d, 1d, 2d, 4d)).isEqualTo(0d);
         assertThat(MathUtil.min(0d, 4d, 2d, 1d)).isEqualTo(0d);
         assertThat(MathUtil.min(4d, 2d, 0d, 1d)).isEqualTo(0d);
+	    
+	    assertThat(MathUtil.min(1f, 2f)).isEqualTo(1f);
+	    assertThat(MathUtil.min(2f, 1f)).isEqualTo(1f);
+
+	    assertThat(MathUtil.min(0f,1f,2f)).isEqualTo(0f);
+	    assertThat(MathUtil.min(0f, 2f, 1f)).isEqualTo(0f);
+	    assertThat(MathUtil.min(2f, 0f, 1f)).isEqualTo(0f);
+
+	    assertThat(MathUtil.min(0f, 1f, 2f, 4f)).isEqualTo(0f);
+	    assertThat(MathUtil.min(0f, 4f, 2f, 1f)).isEqualTo(0f);
+	    assertThat(MathUtil.min(4f, 2f, 0f, 1f)).isEqualTo(0f);
     }
 
     @Test(expected = IllegalArgumentException.class)
