@@ -185,7 +185,7 @@ public final class Color {
 	 * @return a color instance.
 	 */
 	public static Color rgbafc(double red, double green, double blue, double alpha) {
-		return rgbac((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255));
+		return rgbac(colorConvert(red), colorConvert(green), colorConvert(blue), colorConvert(alpha));
 	}
 
 	/**
@@ -201,7 +201,14 @@ public final class Color {
 	 * @throws ColorRangeException if component variables are out of 0-1 range.
 	 */
 	public static Color rgbaf(double red, double green, double blue, double alpha) {
-		return rgba((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255));
+		return rgba(colorConvert(red), colorConvert(green), colorConvert(blue), colorConvert(alpha));
+	}
+
+	private static int colorConvert(double component) {
+		return (int) Math.floor(component == 1.0 ? 255d : component * 256.0);
+	}
+	private static int colorConvert(float component) {
+		return (int) Math.floor(component == 1.0 ? 255d : component * 256.0);
 	}
 
 	/**
@@ -240,7 +247,7 @@ public final class Color {
 	 * @return a color instance.
 	 */
 	public static Color rgbafc(int rgb, float alpha) {
-		return rgbac(rgb, (int) (alpha * 255));
+		return rgbac(rgb, colorConvert(alpha));
 	}
 
 	/**
@@ -252,7 +259,7 @@ public final class Color {
 	 * @throws ColorRangeException if alpha component is out of 0-1 range.
 	 */
 	public static Color rgbaf(int rgb, float alpha) {
-		return rgba(rgb, (int) (alpha * 255));
+		return rgba(rgb, colorConvert(alpha));
 	}
 
 	/**
@@ -460,7 +467,7 @@ public final class Color {
 	 * @return a new Color instance.
 	 */
 	public Color redf(float red) {
-		return rgba((int) (red * 255), green(), blue(), alpha());
+		return rgba(colorConvert(red), green(), blue(), alpha());
 	}
 
 	/**
@@ -470,7 +477,7 @@ public final class Color {
 	 * @return a new Color instance.
 	 */
 	public Color greenf(float green) {
-		return rgba(red(), (int) (green * 255), blue(), alpha());
+		return rgba(red(), colorConvert(green), blue(), alpha());
 	}
 
 	/**
@@ -480,7 +487,7 @@ public final class Color {
 	 * @return a new Color instance.
 	 */
 	public Color bluef(float blue) {
-		return rgba(red(), green(), (int) (blue * 255), alpha());
+		return rgba(red(), green(), colorConvert(blue), alpha());
 	}
 
 	/**
@@ -490,7 +497,7 @@ public final class Color {
 	 * @return a new Color instance.
 	 */
 	public Color alphaf(float alpha) {
-		return rgba(red(), green(), blue(), (int) (alpha * 255));
+		return rgba(red(), green(), blue(), colorConvert(alpha));
 	}
 
 	/**
@@ -500,14 +507,14 @@ public final class Color {
 	 * @return a new, bended, Color instance.
 	 */
 	public Color blend(Color color) {
-		int aA = alpha();
-		int aB = color.alpha();
+		float aA = alphaf();
+		float aB = color.alphaf();
 
-		int r = (int) ((red() * aA / 255F) + (color.red() * aB * (255F - aA) / (255F * 255F)));
-		int g = (int) ((green() * aA / 255F) + (color.green() * aB * (255F - aA) / (255F * 255F)));
-		int b = (int) ((blue() * aA / 255F) + (color.blue() * aB * (255F - aA) / (255F * 255F)));
-		int a = (int) (aA + (aB * (255F - aA) / 255F));
-		return rgbac(r, g, b, a);
+		float r = (redf() * aA) + (color.redf() * aB * (1 - aA));
+		float g = (greenf() * aA) + (color.greenf() * aB * (1 - aA));
+		float b = (bluef() * aA ) + (color.bluef() * aB * (1 - aA));
+		float a = aA + (aB * (1 - aA));
+		return rgbafc(r, g, b, a);
 	}
 
 	/**
