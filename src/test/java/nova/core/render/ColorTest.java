@@ -6,6 +6,7 @@ import static nova.testutils.NovaAssertions.*;
 import static nova.core.render.Color.*;
 
 public class ColorTest {
+	
 	@Test
 	public void testRGBC() {
 		assertThat(rgbc(300, 300, 300)).isEqualTo(white);
@@ -82,9 +83,5 @@ public class ColorTest {
 	public void testRGBAfError() {
 		rgbaf(255, -0.01, 300, -100);
 	}
-
-
-
-
 
 }

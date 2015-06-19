@@ -14,8 +14,8 @@ public class MathUtil {
 
 	/**
 	 * Returns the smaller number of a and b.
-	 * @param a
-	 * @param b
+	 * @param a value.
+	 * @param b value.
 	 * @return min
 	 */
 	public static int min(int a, int b) {
@@ -24,9 +24,9 @@ public class MathUtil {
 
 	/**
 	 * Returns the smaller number of a, b and c.
-	 * @param a
-	 * @param b
-	 * @param c
+	 * @param a value.
+	 * @param b value.
+	 * @param c value.
 	 * @return min
 	 */
 	public static int min(int a, int b, int c) {
@@ -53,8 +53,8 @@ public class MathUtil {
 
 	/**
 	 * Returns the bigger number of a and b.
-	 * @param a
-	 * @param b
+	 * @param a value.
+	 * @param b value.
 	 * @return max
 	 */
 	public static int max(int a, int b) {
@@ -63,9 +63,9 @@ public class MathUtil {
 
 	/**
 	 * Returns the bigger number of a, b and c.
-	 * @param a
-	 * @param b
-	 * @param c
+	 * @param a value.
+	 * @param b value.
+	 * @param c value.
 	 * @return max
 	 */
 	public static int max(int a, int b, int c) {
@@ -92,8 +92,8 @@ public class MathUtil {
 
 	/**
 	 * Returns the smaller number of a and b.
-	 * @param a
-	 * @param b
+	 * @param a value.
+	 * @param b value.
 	 * @return min
 	 */
 	public static double min(double a, double b) {
@@ -102,9 +102,9 @@ public class MathUtil {
 
 	/**
 	 * Returns the smaller number of a, b and c.
-	 * @param a
-	 * @param b
-	 * @param c
+	 * @param a value.
+	 * @param b value.
+	 * @param c value.
 	 * @return min
 	 */
 	public static double min(double a, double b, double c) {
@@ -131,8 +131,8 @@ public class MathUtil {
 
 	/**
 	 * Returns the bigger number of a and b.
-	 * @param a
-	 * @param b
+	 * @param a value.
+	 * @param b value.
 	 * @return max
 	 */
 	public static double max(double a, double b) {
@@ -141,9 +141,9 @@ public class MathUtil {
 
 	/**
 	 * Returns the bigger number of a, b and c.
-	 * @param a
-	 * @param b
-	 * @param c
+	 * @param a value.
+	 * @param b value.
+	 * @param c value.
 	 * @return max
 	 */
 	public static double max(double a, double b, double c) {
@@ -170,8 +170,8 @@ public class MathUtil {
 
 	/**
 	 * Returns the smaller number of a and b.
-	 * @param a
-	 * @param b
+	 * @param a value.
+	 * @param b value.
 	 * @return min
 	 */
 	public static float min(float a, float b) {
@@ -180,9 +180,9 @@ public class MathUtil {
 
 	/**
 	 * Returns the smaller number of a, b and c.
-	 * @param a
-	 * @param b
-	 * @param c
+	 * @param a value.
+	 * @param b value.
+	 * @param c value.
 	 * @return min
 	 */
 	public static float min(float a, float b, float c) {
@@ -209,8 +209,8 @@ public class MathUtil {
 
 	/**
 	 * Returns the bigger number of a and b.
-	 * @param a
-	 * @param b
+	 * @param a value.
+	 * @param b value.
 	 * @return max
 	 */
 	public static float max(float a, float b) {
@@ -219,9 +219,9 @@ public class MathUtil {
 
 	/**
 	 * Returns the bigger number of a, b and c.
-	 * @param a
-	 * @param b
-	 * @param c
+	 * @param a value.
+	 * @param b value.
+	 * @param c value.
 	 * @return max
 	 */
 	public static float max(float a, float b, float c) {
@@ -248,7 +248,7 @@ public class MathUtil {
 	
 	/**
 	 * Clamps the given number so that {@code min <= a <= max}
-	 * @param a
+	 * @param a value.
 	 * @param min lower limit
 	 * @param max upper limit
 	 * @return {@code min <= a <= max}
@@ -259,7 +259,7 @@ public class MathUtil {
 
 	/**
 	 * Clamps the given number so that {@code min <= a <= max}
-	 * @param a
+	 * @param a value.
 	 * @param min lower limit
 	 * @param max upper limit
 	 * @return {@code min <= a <= max}
@@ -270,6 +270,8 @@ public class MathUtil {
 
 	/**
 	 * Linear interpolates isBetween point a and point b
+	 * @param a value.
+	 * @param b value.
 	 * @param f A percentage value isBetween 0 to 1
 	 * @return The interpolated value
 	 */
@@ -310,6 +312,9 @@ public class MathUtil {
 	}
 
 	/**
+	 * @param a value.
+	 * @param x value.
+	 * @param b value.
 	 * @return True if x is greater than a and less than b
 	 */
 	public static boolean isBetween(double a, double x, double b) {
