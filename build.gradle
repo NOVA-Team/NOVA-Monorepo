@@ -32,13 +32,6 @@ compileJava {
 	options.compilerArgs << '-Xlint'
 }
 
-compileTestJava {
-	sourceCompatibility = '1.8'
-	targetCompatibility = '1.8'
-	options.encoding = 'UTF-8'
-	options.fork = true
-	options.compilerArgs << '-Xlint'
-}
 
 runClient {
 	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc1710.NovaMinecraftCore'
