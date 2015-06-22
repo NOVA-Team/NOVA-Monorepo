@@ -140,6 +140,11 @@ publishing {
 	}
 }
 
-artifactoryPublish {
-	publications "main"
+artifactory {
+	publish {
+		defaults {
+			publications("main")
+			publishPom = true
+		}
+	}
 }
