@@ -1,10 +1,12 @@
 apply plugin: 'forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'maven-publish'
+apply plugin: "com.jfrog.artifactory"
 
 buildscript {
 	dependencies {
 		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1"
 	}
 }
 
@@ -136,4 +138,8 @@ publishing {
 			}
 		}
 	}
+}
+
+artifactoryPublish {
+	publications "main"
 }
