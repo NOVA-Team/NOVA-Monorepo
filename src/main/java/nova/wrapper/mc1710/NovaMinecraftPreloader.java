@@ -114,6 +114,9 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 
 				if (fn.contains("!")) {
 					fn = fn.substring(0, fn.indexOf('!')).replaceFirst("file:", "");
+					if (fn.startsWith("/")) {
+						fn = fn.substring(1);
+					}
 					if (!addedPacks.contains(fn)) {
 						addedPacks.add(fn);
 						packs.add(new NovaResourcePack(new File(fn), novaMod.id(), novaMod.domains()));
