@@ -20,6 +20,9 @@ import nova.wrapper.mc1710.util.ReflectionUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -110,16 +113,20 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 				Class<?> c = classesMap.get(novaMod);
 
 				//Add jar resource pack
-				String fn = c.getProtectionDomain().getCodeSource().getLocation().getPath();
+				String fn = c.getProtectionDomain().getCodeSource().getLocation().toExternalForm();
 
 				if (fn.contains("!")) {
-					fn = fn.substring(0, fn.indexOf('!')).replaceFirst("file:", "");
-					if (fn.startsWith("/")) {
-						fn = fn.substring(1);
+					fn = fn.substring(0, fn.indexOf('!')).replaceFirst("jar:", "");
+					File file;
+					try {
+						file = new File(new URL(fn).toURI());
+					} catch (MalformedURLException | URISyntaxException e) {
+						file = new File(fn); //This will probably not work on Windows, but we can at least try
 					}
+
 					if (!addedPacks.contains(fn)) {
 						addedPacks.add(fn);
-						packs.add(new NovaResourcePack(new File(fn), novaMod.id(), novaMod.domains()));
+						packs.add(new NovaResourcePack(file, novaMod.id(), novaMod.domains()));
 						System.out.println("Registered NOVA jar resource pack: " + fn);
 					}
 				} else {
