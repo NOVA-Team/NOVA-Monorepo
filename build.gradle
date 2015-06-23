@@ -98,9 +98,38 @@ shadowJar {
 		           "Specification-Title": "NovaCore")
 	}
 }
+/**
+ * Create fat jar file with all dependencies included.
+ */
+configurations {
+	includedLibs
+}
+
+dependencies {
+	includedLibs group: "nova.core", name: "NovaCore", version: property("nova.core.version"), changing: true
+	includedLibs group: "nova.core", name: "NovaCore", version: property("nova.core.version"), changing: true
+	includedLibs 'com.google.guava:guava:18.0'
+	includedLibs 'org.msgpack:msgpack-core:0.7.0-p4'
+	includedLibs 'com.typesafe:config:1.2.1'
+	includedLibs 'se.jbee:silk-di:0.6'
+	includedLibs 'org.slf4j:slf4j-api:1.7.10'
+	includedLibs 'org.apache.commons:commons-math3:3.5'
+}
+
+task fatJar(type: Jar) {
+	manifest {
+		attributes 'FMLCorePlugin': 'nova.wrapper.mc1710.NovaMinecraftCore'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+		attributes 'FMLAT': 'nova_at.cfg'
+	}
+	classifier = 'fat'
+	from {configurations.includedLibs.collect {it.isDirectory() ? it : zipTree(it)}}
+	with jar
+}
 
 artifacts {
 	archives deobfJar
+	archives fatJar
 }
 
 publishing {
@@ -113,6 +142,7 @@ publishing {
 			artifact sourcesJar
 			artifact deobfJar
 			artifact javadocJar
+			artifact fatJar
 
 			pom.withXml(writePom(project.properties))
 			pom.withXml { xml ->
