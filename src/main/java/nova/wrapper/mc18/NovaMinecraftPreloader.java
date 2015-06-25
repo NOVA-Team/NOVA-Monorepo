@@ -3,6 +3,7 @@ package nova.wrapper.mc18;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -12,8 +13,10 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
+import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import nova.core.loader.NovaMod;
+import nova.core.util.ClassLoaderUtil;
 import nova.wrapper.mc18.render.NovaFolderResourcePack;
 import nova.wrapper.mc18.render.NovaResourcePack;
 import nova.wrapper.mc18.util.ReflectionUtil;
@@ -55,6 +58,24 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 
 	@Subscribe
 	public void load(FMLConstructionEvent event) {
+		try {
+			//Apache Commons Hack
+			Field launchHandlerField = FMLLaunchHandler.class.getDeclaredField("INSTANCE");
+			launchHandlerField.setAccessible(true);
+			FMLLaunchHandler launchHandler = (FMLLaunchHandler) launchHandlerField.get(null);
+			Field clField = FMLLaunchHandler.class.getDeclaredField("classLoader");
+			clField.setAccessible(true);
+			LaunchClassLoader classLoader = (LaunchClassLoader) clField.get(launchHandler);
+			//Obfuscation?
+			Field setField = LaunchClassLoader.class.getDeclaredField("classLoaderExceptions");
+			setField.setAccessible(true);
+			Set<String> classLoaderExceptions = (Set) setField.get(classLoader);
+			classLoaderExceptions.remove("org.apache.");
+			System.out.println("Successfully hacked 'org.apache' out of launcher exclusion");
+		} catch (Exception e) {
+			throw new ClassLoaderUtil.ClassLoaderException(e);
+		}
+
 		// Scan mod classes
 		ASMDataTable asmData = event.getASMHarvestedData();
 
