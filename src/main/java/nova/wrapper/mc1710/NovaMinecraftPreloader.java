@@ -11,9 +11,12 @@ import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.launchwrapper.LaunchClassLoader;
 import nova.core.loader.NovaMod;
+import nova.core.util.ClassLoaderUtil;
 import nova.wrapper.mc1710.render.NovaFolderResourcePack;
 import nova.wrapper.mc1710.render.NovaResourcePack;
 import nova.wrapper.mc1710.util.ReflectionUtil;
@@ -55,6 +58,24 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 
 	@Subscribe
 	public void load(FMLConstructionEvent event) {
+		try {
+			//Apache Commons Hack
+			Field launchHandlerField = FMLLaunchHandler.class.getDeclaredField("INSTANCE");
+			launchHandlerField.setAccessible(true);
+			FMLLaunchHandler launchHandler = (FMLLaunchHandler) launchHandlerField.get(null);
+			Field clField = FMLLaunchHandler.class.getDeclaredField("classLoader");
+			clField.setAccessible(true);
+			LaunchClassLoader classLoader = (LaunchClassLoader) clField.get(launchHandler);
+			//Obfuscation?
+			Field setField = LaunchClassLoader.class.getDeclaredField("classLoaderExceptions");
+			setField.setAccessible(true);
+			Set<String> classLoaderExceptions = (Set) setField.get(classLoader);
+			classLoaderExceptions.remove("org.apache.");
+			System.out.println("Successfully hacked 'org.apache' out of launcher exclusion");
+		} catch (Exception e) {
+			throw new ClassLoaderUtil.ClassLoaderException(e);
+		}
+
 		// Scan mod classes
 		ASMDataTable asmData = event.getASMHarvestedData();
 
