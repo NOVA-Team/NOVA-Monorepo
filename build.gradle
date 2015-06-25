@@ -124,12 +124,8 @@ task fatJar(type: Jar) {
 	with jar
 }
 
-shadowJar {
-	manifest {
-		attributes("Implementation-Title": project.name,
-			"Implementation-Version": version,
-			"Specification-Title": "NovaCore")
-	}
+reobf {
+	reobf(fatJar) {spec -> spec.classpath = configurations.compile}
 }
 
 artifacts {
