@@ -91,13 +91,6 @@ task deobfJar(type: Jar) {
 	}
 }
 
-shadowJar {
-	manifest {
-		attributes("Implementation-Title": project.name,
-		           "Implementation-Version": version,
-		           "Specification-Title": "NovaCore")
-	}
-}
 /**
  * Create fat jar file with all dependencies included.
  */
@@ -127,6 +120,10 @@ task fatJar(type: Jar) {
 	with jar
 }
 
+reobf {
+	reobf(fatJar) {spec -> spec.classpath = configurations.compile}
+}
+
 artifacts {
 	archives deobfJar
 	archives fatJar
@@ -145,7 +142,7 @@ publishing {
 			artifact fatJar
 
 			pom.withXml(writePom(project.properties))
-			pom.withXml { xml ->
+			pom.withXml {xml ->
 				def children = xml.asNode().get("dependencies")[0]
 				for (child in children) {
 					def artifactId = child.get("artifactId")[0].value()[0]
