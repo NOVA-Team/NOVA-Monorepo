@@ -1,26 +1,12 @@
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
 
-buildscript {
-	repositories {
-		mavenLocal()
-		jcenter()
-		maven {
-			name "nova"
-			url 'http://maven.novaapi.net/'
-		}
-	}
-	dependencies {
-		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
-		classpath 'us.phildop:gradle-sublimetext-plugin:0.5.3'
-		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1"
-	}
-}
-
 apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shared-scripts/java.gradle"
 
-apply plugin: 'maven-publish'
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: "com.jfrog.artifactory"
+plugins {
+	id "maven-publish"
+	id "com.jfrog.artifactory" version "3.1.1"
+	id "com.github.johnrengelman.shadow" version "1.2.1"
+}
 
 dependencies {
 	compile 'com.google.guava:guava:18.0'
