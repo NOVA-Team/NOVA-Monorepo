@@ -1,12 +1,12 @@
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
 
-apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shared-scripts/java.gradle"
-
 plugins {
 	id "maven-publish"
 	id "com.jfrog.artifactory" version "3.1.1"
 	id "com.github.johnrengelman.shadow" version "1.2.1"
 }
+
+apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shared-scripts/java.gradle"
 
 dependencies {
 	compile 'com.google.guava:guava:18.0'
