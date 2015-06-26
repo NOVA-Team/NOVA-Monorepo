@@ -70,7 +70,7 @@ publishing {
 
 			artifact javadocJar
 			artifact shadowJar
-			artifact sourceJar
+			artifact sourcesJar
 			artifact wrapperTestJar
 			artifact apiJar
 
