@@ -20,7 +20,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
-import nova.core.render.RenderException;
 import nova.core.render.texture.BlockTexture;
 import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
@@ -109,11 +108,13 @@ public class RenderUtility {
 			return textureMap.get(texture);
 		}
 
-		throw new RenderException("Texture cannot be found: " + texture);
+		//Fallback to MC texture
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(texture.domain + ":" + texture.getPath().replaceFirst("textures/", "").replace(".png", ""));
 	}
 
 	/**
 	 * Handles NOVA texture registration.
+	 *
 	 * @param event Event
 	 */
 	@SubscribeEvent
