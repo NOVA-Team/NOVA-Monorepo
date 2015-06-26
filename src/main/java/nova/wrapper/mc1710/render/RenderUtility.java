@@ -90,7 +90,8 @@ public class RenderUtility {
 			return iconMap.get(texture);
 		}
 
-		throw new RenderException("Texture cannot be found: " + texture);
+		//Fallback to MC texture
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(texture.domain + ":" + texture.getPath().replaceFirst("textures/", "").replace(".png", ""));
 	}
 
 	/**
