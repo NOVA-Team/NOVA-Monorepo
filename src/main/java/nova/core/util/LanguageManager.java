@@ -7,6 +7,21 @@ import java.util.Map;
  * @author Calclavia
  */
 public abstract class LanguageManager {
+
+	/**
+	 * Registers a custom key-value language pair
+	 *
+	 * @param language The language ID
+	 * @param key The unlocalized key
+	 * @param value The localized value
+	 */
+	public abstract void register(String language, String key, String value);
+
+	/**
+	 * @return Gets the current language string ID
+	 */
+	public abstract String getCurrentLanguage();
+
 	public abstract String translate(String key);
 
 	/**

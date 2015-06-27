@@ -15,6 +15,16 @@ public class FakeLanguageModule extends BinderModule {
 
 	public static class FakeLanguageManager extends LanguageManager {
 		@Override
+		public void register(String language, String key, String value) {
+
+		}
+
+		@Override
+		public String getCurrentLanguage() {
+			return "en_US";
+		}
+
+		@Override
 		public String translate(String key) {
 			return key;
 		}
