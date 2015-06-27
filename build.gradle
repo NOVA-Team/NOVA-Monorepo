@@ -1,21 +1,20 @@
-apply plugin: 'forge'
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'maven-publish'
-apply plugin: "com.jfrog.artifactory"
+plugins {
+	id "com.jfrog.artifactory" version "3.1.1"
+	id "com.github.johnrengelman.shadow" version "1.2.1"
+	id "maven-publish"
+}
 
-buildscript {
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1"
-	}
+configurations {
+	fatJar
+	compile.extendsFrom fatJar
 }
 
 dependencies {
 	if (project.hasProperty("nova.core.location")) {
-		compile project(":NovaCore")
+		fatJar project(":NovaCore")
 		testCompile project(path: ':NovaCore', configuration: 'wrapperTests')
 	} else {
-		compile group: "nova.core", name: "NovaCore", version: property("nova.core.version"), changing: true
+		fatJar group: "nova.core", name: "NovaCore", version: property("nova.core.version"), changing: true
 		testCompile group: "nova.core", name: "NovaCore", version: property("nova.core.version"), classifier: "wrappertests", changing: true
 	}
 
@@ -24,60 +23,12 @@ dependencies {
 	testRuntime 'org.slf4j:slf4j-simple:1.7.10'
 }
 
-compileJava {
-	sourceCompatibility = '1.8'
-	targetCompatibility = '1.8'
-	options.encoding = 'UTF-8'
-	options.fork = true
-	options.compilerArgs << '-Xlint'
-}
-
-compileTestJava {
-	sourceCompatibility = '1.8'
-	targetCompatibility = '1.8'
-	options.encoding = 'UTF-8'
-	options.fork = true
-	options.compilerArgs << '-Xlint'
-}
-
-runClient {
-	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc1710.NovaMinecraftCore'
-}
-runServer {
-	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc1710.NovaMinecraftCore'
-}
-
 jar {
 	from project(':core').sourceSets.main.output
 	manifest {
 		attributes 'FMLCorePlugin': 'nova.wrapper.mc1710.NovaMinecraftCore'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
 		attributes 'FMLAT': 'nova_at.cfg'
-
-	}
-}
-
-minecraft {
-	version = property("forge.version")
-	runDir = "run"
-}
-
-processResources {
-	// this will ensure that this task is redone when the versions change.
-	inputs.property "version", project.version
-	inputs.property "mcversion", project.minecraft.version
-
-	// replace stuff in mcmod.info, nothing else
-	from(sourceSets.main.resources.srcDirs) {
-		include 'mcmod.info'
-
-		// replace version and mcversion
-		expand 'version': project.version, 'mcversion': project.minecraft.version
-	}
-
-	// copy everything else, thats not the mcmod.info
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
 	}
 }
 
@@ -94,34 +45,20 @@ task deobfJar(type: Jar) {
 /**
  * Create fat jar file with all dependencies included.
  */
-configurations {
-	includedLibs
-}
-
-dependencies {
-	includedLibs group: "nova.core", name: "NovaCore", version: property("nova.core.version"), changing: true
-	includedLibs group: "nova.core", name: "NovaCore", version: property("nova.core.version"), changing: true
-	includedLibs 'com.google.guava:guava:18.0'
-	includedLibs 'org.msgpack:msgpack-core:0.7.0-p4'
-	includedLibs 'com.typesafe:config:1.2.1'
-	includedLibs 'se.jbee:silk-di:0.6'
-	includedLibs 'org.slf4j:slf4j-api:1.7.10'
-	includedLibs 'org.apache.commons:commons-math3:3.5'
-}
-
 task fatJar(type: Jar) {
+	configurations.fatJar.each { dep ->
+		from(project.zipTree(dep)){
+			exclude 'META-INF', 'META-INF/**'
+		}
+	}
+	with jar
+
 	manifest {
 		attributes 'FMLCorePlugin': 'nova.wrapper.mc1710.NovaMinecraftCore'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
 		attributes 'FMLAT': 'nova_at.cfg'
 	}
 	classifier = 'fat'
-	from {configurations.includedLibs.collect {it.isDirectory() ? it : zipTree(it)}}
-	with jar
-}
-
-reobf {
-	reobf(fatJar) {spec -> spec.classpath = configurations.compile}
 }
 
 artifacts {
@@ -154,13 +91,6 @@ publishing {
 			}
 		}
 	}
-	repositories {
-		if (System.getenv("MAVEN_DIR") != null) {
-			maven {
-				url System.getenv("MAVEN_DIR")
-			}
-		}
-	}
 }
 
 artifactory {
@@ -169,5 +99,38 @@ artifactory {
 			publications("main")
 			publishPom = true
 		}
+	}
+}
+
+apply plugin: 'forge'
+
+minecraft {
+	version = property("forge.version")
+	runDir = "run"
+}
+
+reobf {
+	reobf(fatJar) {spec -> spec.classpath = configurations.compile}
+}
+
+runClient {
+	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc1710.NovaMinecraftCore'
+}
+
+runServer {
+	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc1710.NovaMinecraftCore'
+}
+
+processResources {
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+		expand 'version': project.version, 'mcversion': project.minecraft.version
+	}
+
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
 	}
 }
