@@ -176,7 +176,7 @@ public class RenderUtility {
 							ModelBlock modelBlock = event.modelBakery.itemModelGenerator.makeItemModel(event.modelBakery.textureMap, modelGenerated);
 							TextureAtlasSprite mcTexture = RenderUtility.instance.getTexture(texture.get());
 							event.modelBakery.sprites.put(new ResourceLocation(mcTexture.getIconName().replace("items/", "")), mcTexture);
-							IBakedModel iBakedModel = event.modelBakery.bakeModel(modelBlock, ModelRotation.X0_Y0, true);
+							IBakedModel iBakedModel = event.modelBakery.bakeModel(modelBlock, ModelRotation.X0_Y0, false);
 							event.modelRegistry.putObject(itemLocation, iBakedModel);
 						} else {
 							//The item has a custom renderer
