@@ -23,12 +23,6 @@ import java.util.List;
 public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, IFlexibleBakedModel {
 
 	private final Item item;
-	protected static final ModelBlock MODEL_DEFAULT;
-	private static final ItemModelGenerator itemModelGenerator = new ItemModelGenerator();
-
-	static {
-		MODEL_DEFAULT = ModelBlock.deserialize("{\"elements\":[{  \"from\": [0, 0, 0],   \"to\": [16, 16, 16],   \"faces\": {       \"down\": {\"uv\": [0, 0, 16, 16], \"texture\":\"\"}   }}]}");
-	}
 
 	public FWSmartItemModel(Item item) {
 		super();

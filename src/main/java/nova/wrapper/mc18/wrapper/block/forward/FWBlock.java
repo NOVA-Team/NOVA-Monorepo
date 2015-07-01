@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -261,6 +262,11 @@ public class FWBlock extends net.minecraft.block.Block {
 		} else {
 			return 0;
 		}
+	}
+
+	@Override
+	public EnumWorldBlockLayer getBlockLayer() {
+		return EnumWorldBlockLayer.TRANSLUCENT;
 	}
 
 	@Override
