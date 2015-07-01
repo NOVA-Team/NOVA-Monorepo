@@ -2,6 +2,8 @@ package nova.wrapper.mc18.wrapper.render;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
@@ -19,6 +21,7 @@ import nova.internal.core.Game;
 import nova.wrapper.mc18.render.RenderUtility;
 import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
 
+import javax.vecmath.Vector3f;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +38,10 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 		super();
 		this.block = block;
 		this.isItem = isDummy;
+		// Change the default transforms to the default full Block transforms
+		this.itemCameraTransforms = new ItemCameraTransforms(
+				new ItemTransformVec3f(new Vector3f(10, -45, 170), new Vector3f(0, 1.5f, -2.75f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person
+				ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
 	}
 
 	//Block rendering
