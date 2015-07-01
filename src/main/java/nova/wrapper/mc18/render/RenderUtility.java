@@ -3,18 +3,18 @@ package nova.wrapper.mc18.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.ModelBlock;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.client.resources.model.ModelRotation;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.TRSRTransformation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -59,6 +59,11 @@ public class RenderUtility {
 
 	//NOVA Texture to MC TextureAtlasSprite
 	private final HashMap<Texture, TextureAtlasSprite> textureMap = new HashMap<>();
+
+	// Cruft needed to generate default item models
+	protected static final ItemModelGenerator ITEM_MODEL_GENERATOR = new ItemModelGenerator();
+	protected static final FaceBakery FACE_BAKERY = new FaceBakery();
+	protected static final ModelBlock MODEL_GENERATED = ModelBlock.deserialize("{\"elements\":[{  \"from\": [0, 0, 0],   \"to\": [16, 16, 16],   \"faces\": {       \"down\": {\"uv\": [0, 0, 16, 16], \"texture\":\"\"}   }}]}");
 
 	/**
 	 * Enables blending.
@@ -169,17 +174,29 @@ public class RenderUtility {
 						Optional<Texture> texture = dummy.get(ItemRenderer.class).texture;
 
 						if (texture.isPresent()) {
-							//Default item rendering hack
-							ModelBlock modelGenerated = ModelBakery.MODEL_GENERATED;
-							modelGenerated.name = itemLocation.toString();
-							modelGenerated.textures.put("layer0", texture.get().getResource());
-							ModelBlock modelBlock = event.modelBakery.itemModelGenerator.makeItemModel(event.modelBakery.textureMap, modelGenerated);
-							TextureAtlasSprite mcTexture = RenderUtility.instance.getTexture(texture.get());
-							event.modelBakery.sprites.put(new ResourceLocation(mcTexture.getIconName().replace("items/", "")), mcTexture);
-							IBakedModel iBakedModel = event.modelBakery.bakeModel(modelBlock, ModelRotation.X0_Y0, false);
-							event.modelRegistry.putObject(itemLocation, iBakedModel);
+							MODEL_GENERATED.textures.put("layer0", texture.get().getResource());
+							MODEL_GENERATED.name = itemLocation.toString();
+
+							// This is the key part, it takes the texture and makes the "3d" one wide voxel model
+							ModelBlock itemModel = ITEM_MODEL_GENERATOR.makeItemModel(new FakeTextureMap(dummy), MODEL_GENERATED);
+
+							// This was taken from ModelBakery and simplified for the generation of our Items
+							SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(itemModel).setTexture(getTexture(texture.get()));
+							for (BlockPart blockpart : (Iterable<BlockPart>) itemModel.getElements()) {
+								for (EnumFacing enumfacing : (Iterable<EnumFacing>) blockpart.mapFaces.keySet()) {
+									BlockPartFace blockpartface = (BlockPartFace) blockpart.mapFaces.get(enumfacing);
+									BakedQuad bakedQuad = FACE_BAKERY.makeBakedQuad(blockpart.positionFrom, blockpart.positionTo, blockpartface, getTexture(texture.get()), enumfacing, ModelRotation.X0_Y0, blockpart.partRotation, false, blockpart.shade);
+
+									if (blockpartface.cullFace == null || !TRSRTransformation.isInteger(ModelRotation.X0_Y0.getMatrix())) {
+										builder.addGeneralQuad(bakedQuad);
+									} else {
+
+										builder.addFaceQuad(ModelRotation.X0_Y0.rotate(blockpartface.cullFace), bakedQuad);
+									}
+								}
+							}
+							event.modelRegistry.putObject(itemLocation, builder.makeBakedModel());
 						} else {
-							//The item has a custom renderer
 							event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(dummy));
 						}
 					}
@@ -199,5 +216,24 @@ public class RenderUtility {
 				throw new RuntimeException("IO Exception reading model format", e);
 			}
 		});
+	}
+
+	private class FakeTextureMap extends TextureMap {
+		private final nova.core.item.Item item;
+		public FakeTextureMap(nova.core.item.Item item) {
+			super("");
+			this.item = item;
+		}
+
+		@Override
+		public TextureAtlasSprite getAtlasSprite(String iconName) {
+			if (item.has(ItemRenderer.class)) {
+				ItemRenderer itemRenderer = item.get(ItemRenderer.class);
+				if (itemRenderer.texture.isPresent()) {
+					return RenderUtility.instance.getTexture(itemRenderer.texture.get());
+				}
+			}
+			return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+		}
 	}
 }
