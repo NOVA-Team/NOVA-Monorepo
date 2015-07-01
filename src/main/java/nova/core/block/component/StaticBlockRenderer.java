@@ -11,8 +11,7 @@ import nova.core.util.shape.Cuboid;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 /**
  * A static block renderer for blocks.
@@ -37,9 +36,9 @@ public class StaticBlockRenderer extends StaticRenderer {
 	/**
 	 * Called when this block is to be rendered.
 	 * Direction - The direction to render
-	 * Returns -  true if the side should render
+	 * Returns - true if the side should render
 	 */
-	public Function<Direction, Boolean> renderSide = (dir) -> true;
+	public Predicate<Direction> renderSide = (dir) -> true;
 
 	/**
 	 * Gets the color of a specific face. This is called by the default block
@@ -75,7 +74,7 @@ public class StaticBlockRenderer extends StaticRenderer {
 		return this;
 	}
 
-	public StaticBlockRenderer setRenderSide(Function<Direction, Boolean> renderSide) {
+	public StaticBlockRenderer setRenderSide(Predicate<Direction> renderSide) {
 		this.renderSide = renderSide;
 		return this;
 	}
