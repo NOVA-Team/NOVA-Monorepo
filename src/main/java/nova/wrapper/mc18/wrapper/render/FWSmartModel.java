@@ -3,6 +3,7 @@ package nova.wrapper.mc18.wrapper.render;
 import com.google.common.primitives.Ints;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
@@ -12,6 +13,7 @@ import nova.core.render.model.Vertex;
 import nova.core.util.Direction;
 import nova.wrapper.mc18.render.RenderUtility;
 
+import javax.vecmath.Vector3f;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 public abstract class FWSmartModel implements IFlexibleBakedModel {
 
 	protected final VertexFormat format;
+	// Default item transforms. Can be changed in subclasses.
+	protected ItemCameraTransforms itemCameraTransforms = ItemCameraTransforms.DEFAULT;
 
 	public FWSmartModel() {
 		this.format = new VertexFormat();
@@ -91,6 +95,6 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 
 	@Override
 	public ItemCameraTransforms getItemCameraTransforms() {
-		return ItemCameraTransforms.DEFAULT;
+		return itemCameraTransforms;
 	}
 }
