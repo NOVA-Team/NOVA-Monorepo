@@ -1,27 +1,39 @@
 package nova.core.block.component;
 
 import nova.core.block.Block;
+import nova.core.component.misc.Collider;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.render.Color;
 import nova.core.render.model.BlockModelUtil;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
+import nova.core.util.shape.Cuboid;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * A static block renderer for blocks.
  * @author Calclavia
  */
 public class StaticBlockRenderer extends StaticRenderer {
+
 	/**
 	 * Called to get the texture of this block for a certain side.
 	 * side - The side of the block that the texture is for.
 	 * Returns -  An optional of the texture.
 	 */
 	public Function<Direction, Optional<Texture>> texture = (dir) -> Optional.empty();
+
+	/**
+	 * Called to get a shape of this block to be rendered.
+	 * Defaults to collision box or to Cuboid.ONE, if there
+	 * is no Collider supplied.
+	 */
+	public Supplier<Cuboid> bounds = () -> provider.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
+
 	/**
 	 * Called when this block is to be rendered.
 	 * Direction - The direction to render
@@ -50,6 +62,16 @@ public class StaticBlockRenderer extends StaticRenderer {
 	public StaticBlockRenderer setTexture(Texture t) {
 		Objects.requireNonNull(t, "Texture is null, please initiate the texture before the block");
 		this.texture = (dir) -> Optional.of(t);
+		return this;
+	}
+
+	public StaticBlockRenderer setBounds(Cuboid bounds) {
+		this.bounds = () -> bounds;
+		return this;
+	}
+
+	public StaticBlockRenderer setBounds(Supplier<Cuboid> bounds) {
+		this.bounds = bounds;
 		return this;
 	}
 
