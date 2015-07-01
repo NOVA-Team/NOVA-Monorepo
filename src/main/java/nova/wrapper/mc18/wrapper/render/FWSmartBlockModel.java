@@ -40,7 +40,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 		this.isItem = isDummy;
 		// Change the default transforms to the default full Block transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
-				new ItemTransformVec3f(new Vector3f(10, -45, 170), new Vector3f(0, 1.5f, -2.75f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person
+			new ItemTransformVec3f(new Vector3f(10, -45, 170), new Vector3f(0, 0.09375f, -0.171875f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person
 				ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
 	}
 

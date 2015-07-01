@@ -266,7 +266,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public EnumWorldBlockLayer getBlockLayer() {
-		return EnumWorldBlockLayer.TRANSLUCENT;
+		return EnumWorldBlockLayer.CUTOUT;
 	}
 
 	@Override
