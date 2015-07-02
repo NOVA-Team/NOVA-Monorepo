@@ -24,11 +24,11 @@ public class BlockModelUtil {
 	 * @return This Model
 	 */
 	public static Model drawBlock(Model model, Block block) {
-		Optional<Collider> collider = block.getOp(Collider.class);
-		Optional<StaticBlockRenderer> staticRenderer = block.getOp(StaticBlockRenderer.class);
+		Optional<StaticBlockRenderer> staticRendererOp = block.getOp(StaticBlockRenderer.class);
 
-		if (collider.isPresent() && staticRenderer.isPresent()) {
-			Cuboid boundingBox = collider.get().boundingBox.get();
+		if (staticRendererOp.isPresent()) {
+			StaticBlockRenderer staticRenderer = staticRendererOp.get();
+			Cuboid boundingBox = staticRenderer.bounds.get();
 			double minX = boundingBox.min.getX() - 0.5;
 			double minY = boundingBox.min.getY() - 0.5;
 			double minZ = boundingBox.min.getZ() - 0.5;
@@ -36,40 +36,40 @@ public class BlockModelUtil {
 			double maxY = boundingBox.max.getY() - 0.5;
 			double maxZ = boundingBox.max.getZ() - 0.5;
 
-			if (staticRenderer.get().renderSide.apply(Direction.DOWN)) {
-				Color downColor = staticRenderer.get().colorMultiplier.apply(Direction.DOWN);
+			if (staticRenderer.renderSide.test(Direction.DOWN)) {
+				Color downColor = staticRenderer.colorMultiplier.apply(Direction.DOWN);
 				Face face = drawDown(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.get().texture.apply(Direction.DOWN);
+				face.texture = staticRenderer.texture.apply(Direction.DOWN);
 				face.vertices.forEach(v -> v.color = downColor);
 			}
-			if (staticRenderer.get().renderSide.apply(Direction.UP)) {
-				Color upColor = staticRenderer.get().colorMultiplier.apply(Direction.UP);
+			if (staticRenderer.renderSide.test(Direction.UP)) {
+				Color upColor = staticRenderer.colorMultiplier.apply(Direction.UP);
 				Face face = drawUp(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.get().texture.apply(Direction.UP);
+				face.texture = staticRenderer.texture.apply(Direction.UP);
 				face.vertices.forEach(v -> v.color = upColor);
 			}
-			if (staticRenderer.get().renderSide.apply(Direction.NORTH)) {
-				Color northColor = staticRenderer.get().colorMultiplier.apply(Direction.NORTH);
+			if (staticRenderer.renderSide.test(Direction.NORTH)) {
+				Color northColor = staticRenderer.colorMultiplier.apply(Direction.NORTH);
 				Face face = drawNorth(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.get().texture.apply(Direction.NORTH);
+				face.texture = staticRenderer.texture.apply(Direction.NORTH);
 				face.vertices.forEach(v -> v.color = northColor);
 			}
-			if (staticRenderer.get().renderSide.apply(Direction.SOUTH)) {
-				Color southColor = staticRenderer.get().colorMultiplier.apply(Direction.SOUTH);
+			if (staticRenderer.renderSide.test(Direction.SOUTH)) {
+				Color southColor = staticRenderer.colorMultiplier.apply(Direction.SOUTH);
 				Face face = drawSouth(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.get().texture.apply(Direction.SOUTH);
+				face.texture = staticRenderer.texture.apply(Direction.SOUTH);
 				face.vertices.forEach(v -> v.color = southColor);
 			}
-			if (staticRenderer.get().renderSide.apply(Direction.WEST)) {
-				Color westColor = staticRenderer.get().colorMultiplier.apply(Direction.WEST);
+			if (staticRenderer.renderSide.test(Direction.WEST)) {
+				Color westColor = staticRenderer.colorMultiplier.apply(Direction.WEST);
 				Face face = drawWest(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.get().texture.apply(Direction.WEST);
+				face.texture = staticRenderer.texture.apply(Direction.WEST);
 				face.vertices.forEach(v -> v.color = westColor);
 			}
-			if (staticRenderer.get().renderSide.apply(Direction.EAST)) {
-				Color eastColor = staticRenderer.get().colorMultiplier.apply(Direction.EAST);
+			if (staticRenderer.renderSide.test(Direction.EAST)) {
+				Color eastColor = staticRenderer.colorMultiplier.apply(Direction.EAST);
 				Face face = drawEast(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.get().texture.apply(Direction.EAST);
+				face.texture = staticRenderer.texture.apply(Direction.EAST);
 				face.vertices.forEach(v -> v.color = eastColor);
 			}
 			return model;
