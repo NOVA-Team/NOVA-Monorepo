@@ -104,7 +104,6 @@ public class BlockProperties extends Component {
 	 * Sets that the block should allow light through
 	 *
 	 * @return This instance for chaining if desired.
-	 * @see
 	 */
 	public BlockProperties setTransparent() {
 		allowsLightThrough = true;
