@@ -1,5 +1,6 @@
 package nova.wrapper.mc18.wrapper.block.world;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
@@ -72,7 +73,11 @@ public class BWWorld extends World {
 	public boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args) {
 		//TODO: Implement object arguments
 		net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.getDummy());
-		return world().setBlockState(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()), (mcBlock != null ? mcBlock : Blocks.air).getDefaultState());
+		BlockPos pos = new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ());
+		net.minecraft.block.Block actualBlock = mcBlock != null ? mcBlock : Blocks.air;
+		IBlockState defaultState = actualBlock.getDefaultState();
+		IBlockState extendedState = actualBlock.getExtendedState(defaultState, world(), pos);
+		return world().setBlockState(pos, extendedState);
 	}
 
 	@Override

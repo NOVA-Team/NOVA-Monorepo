@@ -75,7 +75,11 @@ public class FWBlock extends net.minecraft.block.Block {
 				return ((FWTile) access.getTileEntity(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()))).getBlock();
 			}
 
-			System.out.println("Error: Block in TileWrapper is null.");
+			try {
+				throw new RuntimeException("Error: Block in TileWrapper is null for " + block);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return getBlockInstance((nova.core.world.World) Game.natives().toNova(access), position);
 
@@ -131,7 +135,11 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		return FWTileLoader.loadTile(block.getID());
+		FWTile fwTile = FWTileLoader.loadTile(block.getID());
+		if (lastExtendedStatePos != null) {
+			fwTile.block.getOrAdd(new MCBlockTransform(block, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
+		}
+		return fwTile;
 	}
 
 	//TODO: Hacks
