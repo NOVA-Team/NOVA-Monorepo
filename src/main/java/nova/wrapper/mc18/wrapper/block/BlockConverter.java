@@ -52,6 +52,10 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 			return ((FWBlock) nativeBlock).block;
 		}
 
+		if (nativeBlock == Blocks.air) {
+			return Game.blocks().getAirBlock();
+		}
+
 		return new BWBlock(nativeBlock);
 	}
 
