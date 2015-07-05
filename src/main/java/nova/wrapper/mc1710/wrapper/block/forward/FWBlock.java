@@ -344,6 +344,11 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		return blockRenderingID;
 	}
 
+	@Override
+	public int getRenderBlockPass() {
+		return 1;
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
