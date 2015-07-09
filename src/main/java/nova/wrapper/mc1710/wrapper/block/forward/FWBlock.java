@@ -296,6 +296,11 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	}
 
 	@Override
+	public boolean renderAsNormalBlock() {
+		return isNormalCube();
+	}
+
+	@Override
 	public int getLightValue(IBlockAccess access, int x, int y, int z) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		Optional<LightEmitter> opEmitter = blockInstance.getOp(LightEmitter.class);
