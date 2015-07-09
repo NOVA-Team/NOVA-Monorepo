@@ -172,7 +172,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	public Direction calculateDirectionFromEntity(Entity entity) {
 		if (provider instanceof Block) {
 			Vector3D position = entity.position();
-			if (FastMath.abs(position.getX() - ((Block) provider).y()) < 2.0F && FastMath.abs(position.getZ() - ((Block) provider).z()) < 2.0F) {
+			if (FastMath.abs(position.getX() - ((Block) provider).x()) < 2.0F && FastMath.abs(position.getZ() - ((Block) provider).z()) < 2.0F) {
 				double height = position.add(entity.get(Living.class).faceDisplacement.get()).getY();
 
 				if (height - ((Block) provider).y() > 2.0D) {
