@@ -72,7 +72,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		if (hasTileEntity(null)) {
 			FWTile tileWrapper = (FWTile) access.getTileEntity(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()));
 			if (tileWrapper != null && tileWrapper.getBlock() != null) {
-				return ((FWTile) access.getTileEntity(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()))).getBlock();
+				return tileWrapper.getBlock();
 			}
 
 			try {
@@ -138,11 +138,12 @@ public class FWBlock extends net.minecraft.block.Block {
 		FWTile fwTile = FWTileLoader.loadTile(block.getID());
 		if (lastExtendedStatePos != null) {
 			fwTile.block.getOrAdd(new MCBlockTransform(block, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
+			lastExtendedStatePos = null;
 		}
 		return fwTile;
 	}
 
-	//TODO: Hacks
+	//TODO: Hack. Bad practice.
 	public IBlockAccess lastExtendedWorld;
 	public BlockPos lastExtendedStatePos;
 
