@@ -261,6 +261,11 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
+	public boolean isFullCube() {
+		return isNormalCube();
+	}
+
+	@Override
 	public int getLightValue(IBlockAccess access, BlockPos pos) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
 		Optional<LightEmitter> opEmitter = blockInstance.getOp(LightEmitter.class);
