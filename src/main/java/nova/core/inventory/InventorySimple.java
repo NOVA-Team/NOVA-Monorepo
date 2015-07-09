@@ -98,7 +98,12 @@ public class InventorySimple extends Component implements Inventory, Storable, S
 	@Override
 	public void load(Data data) {
 		items = new Item[(int) data.get("size")];
-		IntStream.range(0, size()).forEach(i -> items[i] = (Item) Data.unserialize(data.get(i + "")));
+		IntStream.range(0, size()).forEach(i -> {
+			Data itemData = data.get(i + "");
+			if (itemData != null) {
+				items[i] = (Item) Data.unserialize(itemData);
+			}
+		});
 	}
 
 	@Override
