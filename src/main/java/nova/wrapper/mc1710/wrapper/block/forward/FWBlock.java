@@ -95,7 +95,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		if (hasTileEntity(0)) {
 			FWTile tileWrapper = (FWTile) access.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ());
 			if (tileWrapper != null && tileWrapper.getBlock() != null) {
-				return ((FWTile) access.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ())).getBlock();
+				return tileWrapper.getBlock();
 			}
 
 			System.out.println("Error: Block in TileWrapper is null.");
