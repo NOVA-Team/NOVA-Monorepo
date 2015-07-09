@@ -32,6 +32,7 @@ public class InventorySimple extends Component implements Inventory, Storable, S
 	/**
 	 * Tells if this inventory has changed since last
 	 * invocation of {@link #clearChanged()}
+	 *
 	 * @return Whether the inventory has changed
 	 */
 	public boolean hasChanged() {
@@ -97,7 +98,7 @@ public class InventorySimple extends Component implements Inventory, Storable, S
 	@Override
 	public void load(Data data) {
 		items = new Item[(int) data.get("size")];
-		IntStream.range(0, size()).forEach(i -> items[i] = data.get(i + ""));
+		IntStream.range(0, size()).forEach(i -> items[i] = (Item) Data.unserialize(data.get(i + "")));
 	}
 
 	@Override
