@@ -16,6 +16,6 @@ public class ComponentException extends NovaException {
 	}
 
 	public ComponentException(String message, Component component, Object... parameters) {
-		this(message, component.getClass());
+		this(message, component.getClass(), parameters);
 	}
 }

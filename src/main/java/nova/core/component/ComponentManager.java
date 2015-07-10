@@ -1,28 +1,84 @@
 package nova.core.component;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import nova.core.component.exception.ComponentException;
+import nova.core.util.ClassLoaderUtil;
 import nova.core.util.Factory;
 import nova.core.util.Manager;
 import nova.core.util.RegistrationException;
 import nova.core.util.Registry;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-
 /**
  * Used to instantiate components.
  *
- * You should ALWAYS call ComponentManager.make() in order to create new components.
- * Do not create new instances of components yourself.
+ * You should ALWAYS call ComponentManager.make() in order to create new
+ * components. Do not create new instances of components yourself.
+ * 
  * @author Calclavia
  */
 public class ComponentManager extends Manager<Component, ComponentManager.ComponentFactory> {
 
 	private Map<Class<? extends Component>, String> classToComponent = new HashMap<>();
+	private Map<Class<?>, Supplier<Component>> passthroughComponents = new HashMap<>();
 
 	private ComponentManager(Registry<ComponentFactory> registry) {
 		super(registry);
+	}
+
+	// TODO Not sure how this is meant to be. I added this here, in case that it
+	// fits better otherwise, feel free to move it around.
+	/**
+	 * Use this to register components tagged with {@link Passthrough}.
+	 * 
+	 * @param component
+	 */
+	public void registerNativePassthrough(Supplier<Component> component) {
+		Component dummy = component.get();
+		Passthrough[] pts = dummy.getClass().getAnnotationsByType(Passthrough.class);
+		Class<?> componentClazz = dummy.getClass();
+
+		if (pts.length == 0)
+			throw new ComponentException("No passthrough defined by component %s.", componentClazz, componentClazz);
+		for (Passthrough pt : pts) {
+			try {
+				Class<?> intfClazz = Class.forName(pt.value());
+				if (!intfClazz.isInstance(dummy)) {
+					throw new ComponentException("Invalid passthrough \"%s\" on component %s, the specified interface isn't implemented.", componentClazz, intfClazz, componentClazz);
+				}
+				// TODO This might cause mods to conflict with each other as
+				// they are trying to implement the same common interface using
+				// different components
+				if (passthroughComponents.containsKey(intfClazz)) {
+					throw new ComponentException("Duplicate component %s for interface %s.", componentClazz, componentClazz, intfClazz);
+				}
+				passthroughComponents.put(intfClazz, component);
+			} catch (ClassNotFoundException e) {
+				throw new ClassLoaderUtil.ClassLoaderException(e);
+			}
+		}
+	}
+
+	/**
+	 * Internal
+	 */
+	@Deprecated
+	public Set<Component> generatePassthroughtComponents(Object nativeObject) {
+		Class<?> nativeClazz = nativeObject.getClass();
+		Set<Supplier<Component>> componentSuppliers = new HashSet<>();
+		for (Class<?> intfClazz : nativeClazz.getInterfaces()) {
+			if (passthroughComponents.containsKey(intfClazz)) {
+				componentSuppliers.add(passthroughComponents.get(intfClazz));
+			}
+		}
+		return componentSuppliers.stream().map(supplier -> supplier.get()).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -37,7 +93,9 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 	}
 
 	/**
-	 * Instantiates a new node based on its interface. This is not as reliable as make with componentID.
+	 * Instantiates a new node based on its interface. This is not as reliable
+	 * as make with componentID.
+	 * 
 	 * @param theInterface The interface associated with the new component
 	 * @param args The arguments for the component's constructor
 	 * @param <N> The node type
@@ -58,6 +116,7 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 
 	/**
 	 * Instantiates a new node based on its componentID.
+	 * 
 	 * @param componentID - The ID of the node
 	 * @param args - The arguments for the constructor
 	 * @return A new node.
