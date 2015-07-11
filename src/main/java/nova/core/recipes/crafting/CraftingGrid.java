@@ -16,7 +16,7 @@ public interface CraftingGrid {
 	String typeCrafting = "crafting";
 
 	/**
-	 * Represents the player that is currently using this crafting grid. Can be an {@code Optional.empty()}.
+	 * Represents the player that is currently using this crafting grid.
 	 * @return crafting grid player
 	 */
 	Optional<Player> getPlayer();
@@ -29,7 +29,7 @@ public interface CraftingGrid {
 	int size();
 
 	/**
-	 * Gets the stack in a specified slot. Can be an {@code Optional.empty()}.
+	 * Gets the stack in a specified slot.
 	 * @param slot slot index
 	 * @return item stack in the given slot
 	 */
