@@ -16,7 +16,7 @@ public interface CraftingGrid {
 	String typeCrafting = "crafting";
 
 	/**
-	 * Represents the player that is currently using this crafting grid. Can be null.
+	 * Represents the player that is currently using this crafting grid.
 	 * @return crafting grid player
 	 */
 	Optional<Player> getPlayer();
@@ -29,14 +29,14 @@ public interface CraftingGrid {
 	int size();
 
 	/**
-	 * Gets the stack in a specified slot. Can be null if empty.
+	 * Gets the stack in a specified slot.
 	 * @param slot slot index
 	 * @return item stack in the given slot
 	 */
 	Optional<Item> getStack(int slot);
 
 	/**
-	 * Modifies the stack in the given slot. If the modification is not possible, this method returns null. If modification
+	 * Modifies the stack in the given slot. If the modification is not possible, this method returns false. If modification
 	 * was successful, returns true.
 	 *
 	 * Slots in a crafting grid should also be ordered with the slots at the y=0 first, starting from smallest x to
