@@ -80,6 +80,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 						try {
 							return Class.forName(c.getCanonicalName() + "$");
 						} catch (Exception e) {
+							e.printStackTrace();
 							throw new ExceptionInInitializerError("Failed to load NOVA mod: " + c);
 						}
 					}
