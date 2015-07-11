@@ -2,9 +2,11 @@ package nova.wrapper.mc18.launcher;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -40,9 +42,12 @@ public class ClientProxy extends CommonProxy {
 		super.registerItem(item);
 
 		//Hacks to inject custom item definition
-		ModelLoader.setCustomMeshDefinition(item, stack -> {
-				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
-				return new ModelResourceLocation(itemRL, "inventory");
+		ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition() {
+				@Override
+				public ModelResourceLocation getModelLocation(ItemStack stack) {
+					ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
+					return new ModelResourceLocation(itemRL, "inventory");
+				}
 			}
 		);
 	}
@@ -53,9 +58,13 @@ public class ClientProxy extends CommonProxy {
 
 		//Hack to inject custom itemblock definition
 		Item itemFromBlock = Item.getItemFromBlock(block);
-		ModelLoader.setCustomMeshDefinition(itemFromBlock, stack -> {
-				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(itemFromBlock);
-				return new ModelResourceLocation(itemRL, "inventory");
+
+		ModelLoader.setCustomMeshDefinition(itemFromBlock, new ItemMeshDefinition() {
+				@Override
+				public ModelResourceLocation getModelLocation(ItemStack stack) {
+					ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(itemFromBlock);
+					return new ModelResourceLocation(itemRL, "inventory");
+				}
 			}
 		);
 	}

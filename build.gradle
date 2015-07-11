@@ -46,8 +46,8 @@ task deobfJar(type: Jar) {
  * Create fat jar file with all dependencies included.
  */
 task fatJar(type: Jar) {
-	configurations.fatJar.each { dep ->
-		from(project.zipTree(dep)){
+	configurations.fatJar.each {dep ->
+		from(project.zipTree(dep)) {
 			exclude 'META-INF', 'META-INF/**'
 		}
 	}
@@ -105,7 +105,7 @@ artifactory {
 apply plugin: 'forge'
 
 minecraft {
-	version = property("forge.version")
+	version = property("minecraft.version") + "-" + property("forge.version")
 	mappings = 'stable_nodoc_16'
 	runDir = "run"
 }
