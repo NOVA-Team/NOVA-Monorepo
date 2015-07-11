@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
  * 
  * <p>
  * A passthrough component has to be registered with
- * {@link ComponentManager#registerNativePassthrough(java.util.function.Supplier)}
+ * {@link ComponentManager#registerNativePassthrough(Class)}
  * </p>
  * 
  * @author Vic Nightfall

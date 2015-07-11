@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import nova.core.component.exception.ComponentException;
 import nova.core.util.ClassLoaderUtil;
@@ -27,7 +25,7 @@ import nova.core.util.Registry;
 public class ComponentManager extends Manager<Component, ComponentManager.ComponentFactory> {
 
 	private Map<Class<? extends Component>, String> classToComponent = new HashMap<>();
-	private Map<Class<?>, Supplier<Component>> passthroughComponents = new HashMap<>();
+	private Map<Class<?>, Class<? extends Component>> passthroughComponents = new HashMap<>();
 
 	private ComponentManager(Registry<ComponentFactory> registry) {
 		super(registry);
@@ -38,19 +36,16 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 	/**
 	 * Use this to register components tagged with {@link Passthrough}.
 	 * 
-	 * @param component
+	 * @param componentClazz
 	 */
-	public void registerNativePassthrough(Supplier<Component> component) {
-		Component dummy = component.get();
-		Passthrough[] pts = dummy.getClass().getAnnotationsByType(Passthrough.class);
-		Class<?> componentClazz = dummy.getClass();
-
+	public void registerNativePassthrough(Class<? extends Component> componentClazz) {
+		Passthrough[] pts = componentClazz.getAnnotationsByType(Passthrough.class);
 		if (pts.length == 0)
 			throw new ComponentException("No passthrough defined by component %s.", componentClazz, componentClazz);
 		for (Passthrough pt : pts) {
 			try {
 				Class<?> intfClazz = Class.forName(pt.value());
-				if (!intfClazz.isInstance(dummy)) {
+				if (!intfClazz.isAssignableFrom(componentClazz)) {
 					throw new ComponentException("Invalid passthrough \"%s\" on component %s, the specified interface isn't implemented.", componentClazz, intfClazz, componentClazz);
 				}
 				// TODO This might cause mods to conflict with each other as
@@ -59,7 +54,7 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 				if (passthroughComponents.containsKey(intfClazz)) {
 					throw new ComponentException("Duplicate component %s for interface %s.", componentClazz, componentClazz, intfClazz);
 				}
-				passthroughComponents.put(intfClazz, component);
+				passthroughComponents.put(intfClazz, componentClazz);
 			} catch (ClassNotFoundException e) {
 				throw new ClassLoaderUtil.ClassLoaderException(e);
 			}
@@ -70,15 +65,15 @@ public class ComponentManager extends Manager<Component, ComponentManager.Compon
 	 * Internal
 	 */
 	@Deprecated
-	public Set<Component> generatePassthroughtComponents(Object nativeObject) {
+	public Set<Class<? extends Component>> getPassthroughtComponents(Object nativeObject) {
 		Class<?> nativeClazz = nativeObject.getClass();
-		Set<Supplier<Component>> componentSuppliers = new HashSet<>();
+		Set<Class<? extends Component>> componentClazzes = new HashSet<>();
 		for (Class<?> intfClazz : nativeClazz.getInterfaces()) {
 			if (passthroughComponents.containsKey(intfClazz)) {
-				componentSuppliers.add(passthroughComponents.get(intfClazz));
+				componentClazzes.add(passthroughComponents.get(intfClazz));
 			}
 		}
-		return componentSuppliers.stream().map(supplier -> supplier.get()).collect(Collectors.toSet());
+		return componentClazzes;
 	}
 
 	@Override
