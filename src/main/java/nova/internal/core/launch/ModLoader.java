@@ -116,6 +116,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 							try {
 								return makeObjectWithDep(entry.getValue());
 							} catch (Exception ex) {
+								ex.printStackTrace();
 								System.out.println("Failed to load NOVA Java mod: " + entry);
 								throw new ExceptionInInitializerError(ex);
 							}
@@ -153,6 +154,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 								return loadable;
 							} catch (Exception ex) {
+								ex.printStackTrace();
 								System.out.println("Failed to load NOVA Scala mod: " + entry);
 								throw new ExceptionInInitializerError(ex);
 							}
