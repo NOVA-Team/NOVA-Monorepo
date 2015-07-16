@@ -5,7 +5,7 @@ import org.assertj.core.data.Offset;
 import org.junit.Before;
 import org.junit.Test;
 
-import static nova.testutils.NovaAssertions.*;
+import static nova.testutils.NovaAssertions.assertThat;
 
 public class ProfilerTest {
 	Profiler profiler;
@@ -42,8 +42,8 @@ public class ProfilerTest {
 		profiler.end();
 
 		// To check the unit. Doesn't work well on Travis.
-		//assertThat(lap).isBetween(500d, 40000d);
-		//assertThat(profiler.lastTime()).isBetween(2500d, 200000d);
+		//assertThat(lap).isCloseTo(2 / 1e3, Offset.offset(2 / 1e3));
+		//assertThat(profiler.lastTime()).isCloseTo(10 / 1e3, Offset.offset(2 / 1e3));
 
 		assertThat(profiler.average()).isCloseTo((lap + profiler.lastTime()) / 2, NovaAssertions.offsetD);
 	}
@@ -77,9 +77,7 @@ public class ProfilerTest {
 		profiler.start();
 		Thread.sleep(10);
 		profiler.end();
-		assertThat(profiler.toString())
-			.startsWith("testProfiler")     // Profiler name
-			.contains(String.valueOf(profiler.lastTime() / 1e6)); // Result in seconds.
+		assertThat(profiler.toString()).startsWith("testProfiler");    // Profiler name.
 	}
 
 	@Test(expected = IllegalStateException.class)

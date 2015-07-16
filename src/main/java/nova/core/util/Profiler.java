@@ -1,7 +1,5 @@
 package nova.core.util;
 
-import nova.internal.core.Game;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +20,7 @@ public final class Profiler {
 
 	/**
 	 * Creates new profiler.
+	 *
 	 * @param name of this profiler.
 	 */
 	public Profiler(String name) {
@@ -30,8 +29,9 @@ public final class Profiler {
 
 	/**
 	 * Starts this profiler.
-	 * @throws IllegalStateException if profiler is currently running. See {@link Profiler#isRunning()}
+	 *
 	 * @return {@code this} for chaining.
+	 * @throws IllegalStateException if profiler is currently running. See {@link Profiler#isRunning()}
 	 */
 	public Profiler start() {
 		assureRightState("start", false);
@@ -42,8 +42,9 @@ public final class Profiler {
 
 	/**
 	 * Ends current profiling session. Saves result for average calculations.
-	 * @throws IllegalStateException if profiler is not currently running. See {@link Profiler#isRunning()}
+	 *
 	 * @return time elapsed since last start or lap measured in microseconds.
+	 * @throws IllegalStateException if profiler is not currently running. See {@link Profiler#isRunning()}
 	 */
 	public double end() {
 		assureRightState("end", true);
@@ -57,8 +58,9 @@ public final class Profiler {
 	/**
 	 * Helper method for loop time measurements.
 	 * Class {@link Profiler#end()} and then {@link Profiler#start()}
-	 * @throws IllegalStateException if profiler is not currently running. See {@link Profiler#isRunning()}
+	 *
 	 * @return time in microseconds previous lap took.
+	 * @throws IllegalStateException if profiler is not currently running. See {@link Profiler#isRunning()}
 	 */
 	public double lap() {
 		assureRightState("lap", true);
@@ -70,6 +72,7 @@ public final class Profiler {
 
 	/**
 	 * States whether profiler is currently performing time measurements.
+	 *
 	 * @return {@code true} if profiler is running.
 	 */
 	public boolean isRunning() {
@@ -78,18 +81,20 @@ public final class Profiler {
 
 	/**
 	 * Measures time since last (lap)start of this profiler.
-	 * @throws IllegalStateException if profiler is not currently running. See {@link Profiler#isRunning()}
+	 *
 	 * @return time elapsed since last start or lap measured in microseconds.
+	 * @throws IllegalStateException if profiler is not currently running. See {@link Profiler#isRunning()}
 	 */
 	public double elapsed() {
 		assureRightState("elapsed", true);
 
-		return (System.nanoTime() - time) / 1000d;
+		return (System.nanoTime() - time) / 1e9d;
 	}
 
 	/**
 	 * Getter for last cycle time.
-	 * @return time in microseconds between last start-lap/lap-lap/lap-end or start-end cycle.
+	 *
+	 * @return time in seconds between last start-lap/lap-lap/lap-end or start-end cycle.
 	 */
 	public double lastTime() {
 		return lastTime;
@@ -97,6 +102,7 @@ public final class Profiler {
 
 	/**
 	 * Calculates average time between cycles.
+	 *
 	 * @return average time in microseconds.
 	 */
 	public double average() {
@@ -105,6 +111,7 @@ public final class Profiler {
 
 	/**
 	 * Getter for lap timing.
+	 *
 	 * @return unmodifiable list of elapsed times between cycles.
 	 */
 	public List<Double> results() {
@@ -113,6 +120,7 @@ public final class Profiler {
 
 	/**
 	 * Clears saved results for average computations.
+	 *
 	 * @return this for chaining.
 	 */
 	public Profiler clearResults() {
@@ -122,7 +130,7 @@ public final class Profiler {
 
 	@Override
 	public String toString() {
-		return name + " took " + (lastTime / 1e6d) + " seconds";
+		return name + " took " + lastTime() + " seconds";
 	}
 
 	private void assureRightState(String method, boolean shouldBeRunning) {
