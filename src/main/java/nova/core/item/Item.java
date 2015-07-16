@@ -3,7 +3,6 @@ package nova.core.item;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.event.Event;
-import nova.core.event.EventBus;
 import nova.core.render.Color;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
@@ -16,8 +15,6 @@ import java.util.Optional;
 
 //TODO: This Storable implementation is flawed and not based on ID.
 public abstract class Item extends ComponentProvider implements Identifiable, Storable {
-
-	public final EventBus<Event> events = new EventBus<>();
 
 	/**
 	 * The amount of this item that is present.
