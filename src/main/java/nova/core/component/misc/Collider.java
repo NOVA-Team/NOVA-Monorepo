@@ -6,7 +6,7 @@ package nova.core.component.misc;
 
 import nova.core.component.Component;
 import nova.core.entity.Entity;
-import nova.core.event.EventBus;
+import nova.core.event.Event;
 import nova.core.event.EventListener;
 import nova.core.util.shape.Cuboid;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -18,13 +18,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Collider extends Component {
-	/**
-	 * Called when an entity collides with this object. More specifically, when
-	 * the entity's block bounds coincide with the bounds of this object.
-	 * Entity - the colliding entity
-	 */
-	public EventBus<CollideEvent> collideEvent = new EventBus<>();
-
 	/**
 	 * A general cuboid that represents the bounds of this object.
 	 */
@@ -59,7 +52,7 @@ public class Collider extends Component {
 	}
 
 	public Collider onCollide(EventListener<CollideEvent> listener) {
-		this.collideEvent.on(CollideEvent.class).bind(listener::onEvent);
+		this.events.on(CollideEvent.class).bind(listener::onEvent);
 		return this;
 	}
 
@@ -83,7 +76,16 @@ public class Collider extends Component {
 		return this;
 	}
 
-	public static class CollideEvent {
+	/**
+	 * Called when an entity collides with this object. More specifically, when
+	 * the entity's block bounds coincides with the bounds of this object.
+	 *
+	 * Note that a full block can never collide with another entity as the entity
+	 * does not go within the block's boundaries.
+	 *
+	 * Entity - the colliding entity
+	 */
+	public static class CollideEvent extends Event {
 		public final Entity entity;
 
 		public CollideEvent(Entity entity) {
