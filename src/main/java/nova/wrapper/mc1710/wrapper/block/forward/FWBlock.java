@@ -225,7 +225,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
-		blockInstance.getOp(Collider.class).ifPresent(collider -> collider.collideEvent.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
+		blockInstance.getOp(Collider.class).ifPresent(collider -> collider.events.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
 	}
 
 	@Override
