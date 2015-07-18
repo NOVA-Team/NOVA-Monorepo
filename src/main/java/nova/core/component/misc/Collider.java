@@ -5,6 +5,7 @@ package nova.core.component.misc;
  */
 
 import nova.core.component.Component;
+import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.event.Event;
 import nova.core.event.EventListener;
@@ -18,6 +19,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Collider extends Component {
+	public final ComponentProvider provider;
+
 	/**
 	 * A general cuboid that represents the bounds of this object.
 	 */
@@ -42,17 +45,16 @@ public class Collider extends Component {
 	 */
 	public Supplier<Boolean> isOpaqueCube = isCube;
 
+	public Collider(ComponentProvider provider) {
+		this.provider = provider;
+	}
+
 	public Collider setBoundingBox(Cuboid boundingBox) {
 		return setBoundingBox(() -> boundingBox);
 	}
 
 	public Collider setBoundingBox(Supplier<Cuboid> boundingBox) {
 		this.boundingBox = boundingBox;
-		return this;
-	}
-
-	public Collider onCollide(EventListener<CollideEvent> listener) {
-		this.events.on(CollideEvent.class).bind(listener::onEvent);
 		return this;
 	}
 

@@ -25,8 +25,6 @@ import java.util.Set;
  */
 public abstract class Block extends ComponentProvider implements Identifiable {
 
-	public final EventBus<Event> events = new EventBus<>();
-
 	/**
 	 * Called when the block is registered.
 	 */

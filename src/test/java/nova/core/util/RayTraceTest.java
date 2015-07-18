@@ -127,7 +127,7 @@ public class RayTraceTest {
 		public void preInit() {
 			solid = Game.blocks().register(args -> {
 				FakeBlock solid = new FakeBlock("solid");
-				solid.add(new Collider());
+				solid.add(new Collider(solid));
 				return solid;
 			});
 

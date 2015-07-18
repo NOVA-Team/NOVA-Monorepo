@@ -17,8 +17,6 @@ import java.util.Optional;
 //TODO: This Storable implementation is flawed and not based on ID.
 public abstract class Item extends ComponentProvider implements Identifiable, Storable {
 
-	public final EventBus<Event> events = new EventBus<>();
-
 	/**
 	 * The amount of this item that is present.
 	 */

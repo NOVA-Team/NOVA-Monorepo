@@ -16,8 +16,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public abstract class Entity extends ComponentProvider implements UniqueIdentifiable, Identifiable, Stateful {
 
-	public final EventBus<Event> events = new EventBus<>();
-
 	public final EntityTransform transform() {
 		return get(EntityTransform.class);
 	}
