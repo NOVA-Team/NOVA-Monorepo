@@ -192,7 +192,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		blockInstance.getOp(Collider.class).ifPresent(collider -> collider.collideEvent.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
+		blockInstance.getOp(Collider.class).ifPresent(collider -> collider.events.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
 	}
 
 	@Override
