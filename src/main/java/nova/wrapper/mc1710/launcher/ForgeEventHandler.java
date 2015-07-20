@@ -17,12 +17,12 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 public class ForgeEventHandler {
 	@SubscribeEvent
 	public void worldUnload(WorldEvent.Load evt) {
-		Game.events().events.publish(new GlobalEvents.WorldEvent.Load(Game.natives().toNova(evt.world)));
+		Game.events().publish(new GlobalEvents.WorldEvent.Load(Game.natives().toNova(evt.world)));
 	}
 
 	@SubscribeEvent
 	public void worldLoad(WorldEvent.Unload evt) {
-		Game.events().events.publish(new GlobalEvents.WorldEvent.Unload(Game.natives().toNova(evt.world)));
+		Game.events().publish(new GlobalEvents.WorldEvent.Unload(Game.natives().toNova(evt.world)));
 	}
 
 	@SubscribeEvent
@@ -44,7 +44,7 @@ public class ForgeEventHandler {
 			GlobalEvents.PlayerInteractEvent.Action.values()[event.action.ordinal()]
 		);
 
-		Game.events().events.publish(evt);
+		Game.events().publish(evt);
 
 		event.useBlock = Event.Result.values()[evt.useBlock.ordinal()];
 		event.useItem = Event.Result.values()[evt.useItem.ordinal()];
