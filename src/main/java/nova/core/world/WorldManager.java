@@ -19,12 +19,12 @@ public class WorldManager extends Manager<World, Factory<World>> {
 	public final Set<World> clientWorlds = new HashSet<>();
 	public final Set<World> serverWorlds = new HashSet<>();
 
-	public WorldManager(Registry<Factory<World>> registry) {
+	public WorldManager(Registry<Factory<World>> registry, GlobalEvents events) {
 		super(registry);
 
 		//Bind events
-		Game.events().events.on(GlobalEvents.WorldEvent.Load.class).bind(evt -> sidedWorlds().add(evt.world));
-		Game.events().events.on(GlobalEvents.WorldEvent.Unload.class).bind(evt -> sidedWorlds().remove(evt.world));
+		events.on(GlobalEvents.WorldEvent.Load.class).bind(evt -> sidedWorlds().add(evt.world));
+		events.on(GlobalEvents.WorldEvent.Unload.class).bind(evt -> sidedWorlds().remove(evt.world));
 	}
 
 	@Override

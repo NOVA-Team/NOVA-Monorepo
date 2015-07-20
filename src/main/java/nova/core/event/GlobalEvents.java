@@ -10,9 +10,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  *
  * @author Calclavia
  */
-public class GlobalEvents {
-
-	public EventBus<Event> events = new EventBus<>();
+public class GlobalEvents extends EventBus<Event> {
 
 	public static class ServerStartingEvent extends Event {
 
