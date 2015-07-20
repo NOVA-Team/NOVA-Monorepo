@@ -219,12 +219,12 @@ public class NovaMinecraft {
 
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
-		Game.events().events.publish(new GlobalEvents.ServerStartingEvent());
+		Game.events().publish(new GlobalEvents.ServerStartingEvent());
 	}
 
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent event) {
-		Game.events().events.publish(new GlobalEvents.ServerStoppingEvent());
+		Game.events().publish(new GlobalEvents.ServerStoppingEvent());
 	}
 
 }
