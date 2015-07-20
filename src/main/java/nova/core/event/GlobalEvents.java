@@ -7,6 +7,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * Global event manager that handles general events that are not object specific.
+ *
  * @author Calclavia
  */
 public class GlobalEvents {
@@ -72,4 +73,31 @@ public class GlobalEvents {
 			LEFT_CLICK_BLOCK
 		}
 	}
+
+	public static abstract class WorldEvent extends Event {
+		public final World world;
+
+		public WorldEvent(World world) {
+			this.world = world;
+		}
+
+		/**
+		 * Called when a world loads.
+		 */
+		public static class Load extends WorldEvent {
+			public Load(World world) {
+				super(world);
+			}
+		}
+
+		/**
+		 * Called when a world unloads.
+		 */
+		public static class Unload extends WorldEvent {
+			public Unload(World world) {
+				super(world);
+			}
+		}
+	}
+
 }

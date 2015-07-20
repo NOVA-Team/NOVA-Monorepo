@@ -1,5 +1,6 @@
 package nova.core.world;
 
+import nova.core.event.GlobalEvents;
 import nova.core.util.Factory;
 import nova.core.util.Manager;
 import nova.core.util.Registry;
@@ -20,6 +21,10 @@ public class WorldManager extends Manager<World, Factory<World>> {
 
 	public WorldManager(Registry<Factory<World>> registry) {
 		super(registry);
+
+		//Bind events
+		Game.events().events.on(GlobalEvents.WorldEvent.Load.class).bind(evt -> sidedWorlds().add(evt.world));
+		Game.events().events.on(GlobalEvents.WorldEvent.Unload.class).bind(evt -> sidedWorlds().remove(evt.world));
 	}
 
 	@Override
