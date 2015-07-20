@@ -17,12 +17,12 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 public class ForgeEventHandler {
 	@SubscribeEvent
 	public void worldUnload(WorldEvent.Load evt) {
-		Game.worlds().sidedWorlds().add(Game.natives().toNova(evt.world));
+		Game.events().events.publish(new GlobalEvents.WorldEvent.Load(Game.natives().toNova(evt.world)));
 	}
 
 	@SubscribeEvent
 	public void worldLoad(WorldEvent.Unload evt) {
-		Game.worlds().sidedWorlds().remove(Game.natives().toNova(evt.world));
+		Game.events().events.publish(new GlobalEvents.WorldEvent.Unload(Game.natives().toNova(evt.world)));
 	}
 
 	@SubscribeEvent
