@@ -1,40 +1,18 @@
 package nova.core.event;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
- * A base class for an event that may or may not be cancelable, depending on
- * weather a sub event has the {@link CancelableEvent.Cancelable} annotation on.
- * @author Vic Nightfall
+ * A base class for an cancelable event.
+ * @author Vic Nightfall, anti344
  */
-public abstract class CancelableEvent extends Event implements Cancelable {
+public abstract class CancelableEvent extends Event {
 
 	private boolean canceled;
-	private boolean isCancelable;
 
-	public CancelableEvent() {
-		isCancelable = getClass().isAnnotationPresent(CancelableEvent.Cancelable.class);
-	}
-
-	@Override
 	public void cancel() {
-		if (!isCancelable) {
-			throw new EventCancelException("Attempted to cancel an uncancellable event %s !", getClass());
-		}
 		canceled = true;
 	}
 
-	@Override
 	public boolean isCanceled() {
 		return canceled;
-	}
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	public @interface Cancelable {
-
 	}
 }

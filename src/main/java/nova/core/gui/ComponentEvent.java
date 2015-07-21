@@ -86,7 +86,6 @@ public abstract class ComponentEvent extends CancelableEvent {
 		}
 	}
 
-	@Cancelable
 	public static class ActionEvent extends SidedComponentEvent {
 
 		public ActionEvent(GuiComponent<?, ?> component) {

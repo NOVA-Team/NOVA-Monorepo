@@ -57,7 +57,6 @@ public class BlockManager extends Manager<Block, BlockFactory> {
 		return event.blockFactory;
 	}
 
-	@CancelableEvent.Cancelable
 	public static class BlockRegisteredEvent extends CancelableEvent {
 		public BlockFactory blockFactory;
 

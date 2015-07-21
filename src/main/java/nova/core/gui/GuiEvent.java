@@ -24,7 +24,6 @@ public class GuiEvent extends CancelableEvent {
 	 * 
 	 * @author Vic Nightfall
 	 */
-	@Cancelable
 	public static class MouseEvent extends GuiEvent {
 
 		public final int mouseX;
@@ -48,7 +47,6 @@ public class GuiEvent extends CancelableEvent {
 		}
 	}
 
-	@Cancelable
 	public static class MouseWheelEvent extends GuiEvent {
 
 		public final int scrollAmount;
@@ -58,7 +56,6 @@ public class GuiEvent extends CancelableEvent {
 		}
 	}
 
-	@Cancelable
 	public static class KeyEvent extends GuiEvent {
 
 		public final Key key;

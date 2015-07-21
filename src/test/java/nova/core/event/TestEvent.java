@@ -3,7 +3,7 @@ package nova.core.event;
 /**
  * @author Stan Hebben
  */
-public class TestEvent implements Cancelable {
+public class TestEvent extends CancelableEvent {
 	private final StringBuilder output;
 
 	private boolean canceled = false;
