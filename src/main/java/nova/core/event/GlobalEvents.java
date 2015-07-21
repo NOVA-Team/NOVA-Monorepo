@@ -49,7 +49,6 @@ public class GlobalEvents extends EventBus<Event> {
 		}
 	}
 
-	@CancelableEvent.Cancelable
 	public static class PlayerInteractEvent extends CancelableEvent {
 		public final World world;
 		public final Vector3D position;

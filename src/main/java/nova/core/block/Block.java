@@ -120,7 +120,6 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	/**
 	 * Block Events
 	 */
-	@CancelableEvent.Cancelable
 	public static class NeighborChangeEvent extends CancelableEvent {
 		public final Optional<Vector3D> neighborPosition;
 

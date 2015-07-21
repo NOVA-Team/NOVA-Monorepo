@@ -15,7 +15,7 @@ import java.util.HashMap;
  * @param <T> -Describe me-
  * @author Vic Nightfall
  */
-public class SidedEventBus<T extends Cancelable> extends CancelableEventBus<T> {
+public class SidedEventBus<T extends CancelableEvent> extends CancelableEventBus<T> {
 
 	private NetworkEventProcessor eventProcessor;
 	private boolean checkListenedBeforeSend = true;
