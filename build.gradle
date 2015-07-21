@@ -10,7 +10,6 @@ apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shar
 
 dependencies {
 	compile 'com.google.guava:guava:18.0'
-	compile 'org.msgpack:msgpack-core:0.7.0-p4'
 	compile 'com.typesafe:config:1.2.1'
 	compile 'se.jbee:silk-di:0.6'
 	compile 'org.slf4j:slf4j-api:1.7.10'
