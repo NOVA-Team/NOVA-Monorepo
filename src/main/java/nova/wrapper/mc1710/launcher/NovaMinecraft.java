@@ -8,7 +8,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.common.MinecraftForge;
 import nova.core.component.ComponentProvider;
@@ -39,7 +38,6 @@ import nova.wrapper.mc1710.wrapper.cuboid.CuboidConverter;
 import nova.wrapper.mc1710.wrapper.data.DataWrapper;
 import nova.wrapper.mc1710.wrapper.entity.EntityConverter;
 import nova.wrapper.mc1710.wrapper.entity.forward.MCRigidBody;
-import nova.wrapper.mc1710.wrapper.gui.MCGuiFactory;
 import nova.wrapper.mc1710.wrapper.inventory.InventoryConverter;
 import nova.wrapper.mc1710.wrapper.item.ItemConverter;
 import nova.wrapper.mc1710.wrapper.item.OreDictionaryIntegration;
@@ -53,7 +51,7 @@ import java.util.stream.Collectors;
  *
  * @author Calclavia
  */
-@Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name, version = NovaMinecraftPreloader.version)
+@Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name, version = NovaMinecraftPreloader.version, acceptableRemoteVersions = "*")
 public class NovaMinecraft {
 
 	public static final String id = "nova";
@@ -177,8 +175,6 @@ public class NovaMinecraft {
 			MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
 			FMLCommonHandler.instance().bus().register(new FMLEventHandler());
 			MinecraftForge.EVENT_BUS.register(Game.retention());
-
-			NetworkRegistry.INSTANCE.registerGuiHandler(this, new MCGuiFactory.GuiHandler());
 		} catch (Exception e) {
 			System.out.println("Error during preInit");
 			e.printStackTrace();

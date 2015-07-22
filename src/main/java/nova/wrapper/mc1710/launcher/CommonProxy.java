@@ -1,5 +1,6 @@
 package nova.wrapper.mc1710.launcher;
 
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,6 +10,7 @@ import nova.core.loader.Loadable;
 import nova.wrapper.mc1710.wrapper.block.forward.FWBlock;
 import nova.wrapper.mc1710.wrapper.block.forward.FWTile;
 import nova.wrapper.mc1710.wrapper.entity.forward.FWEntity;
+import nova.wrapper.mc1710.wrapper.gui.MCGuiFactory;
 import nova.wrapper.mc1710.wrapper.item.FWItem;
 
 import java.util.Set;
