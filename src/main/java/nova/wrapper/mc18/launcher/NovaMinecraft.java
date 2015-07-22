@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
 import nova.core.component.ComponentProvider;
 import nova.core.deps.MavenDependency;
@@ -40,11 +39,9 @@ import nova.wrapper.mc18.wrapper.cuboid.CuboidConverter;
 import nova.wrapper.mc18.wrapper.data.DataWrapper;
 import nova.wrapper.mc18.wrapper.entity.EntityConverter;
 import nova.wrapper.mc18.wrapper.entity.forward.MCRigidBody;
-import nova.wrapper.mc18.wrapper.gui.MCGuiFactory;
 import nova.wrapper.mc18.wrapper.inventory.InventoryConverter;
 import nova.wrapper.mc18.wrapper.item.ItemConverter;
 import nova.wrapper.mc18.wrapper.item.OreDictionaryIntegration;
-import se.jbee.inject.Dependency;
 
 import java.util.List;
 import java.util.Set;
@@ -54,7 +51,7 @@ import java.util.stream.Collectors;
  * The main Nova Minecraft Wrapper loader, using Minecraft Forge.
  * @author Calclavia
  */
-@Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name, version = NovaMinecraftPreloader.version)
+@Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name, version = NovaMinecraftPreloader.version, acceptableRemoteVersions = "*")
 public class NovaMinecraft {
 
 	public static final String id = "nova";
@@ -179,8 +176,6 @@ public class NovaMinecraft {
 			MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
 			FMLCommonHandler.instance().bus().register(new FMLEventHandler());
 			MinecraftForge.EVENT_BUS.register(Game.retention());
-
-			NetworkRegistry.INSTANCE.registerGuiHandler(this, new MCGuiFactory.GuiHandler());
 		} catch (Exception e) {
 			System.out.println("Error during preInit");
 			e.printStackTrace();

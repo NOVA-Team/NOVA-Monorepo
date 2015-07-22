@@ -3,6 +3,7 @@ package nova.wrapper.mc18.manager;
 import net.minecraft.client.Minecraft;
 import nova.core.entity.Entity;
 import nova.core.game.ClientManager;
+import nova.wrapper.mc18.launcher.NovaMinecraft;
 import nova.wrapper.mc18.wrapper.entity.BWEntity;
 
 /**
@@ -12,7 +13,7 @@ public class FWClientManager extends ClientManager {
 
 	@Override
 	public Entity getPlayer() {
-		return new BWEntity(Minecraft.getMinecraft().thePlayer);
+		return new BWEntity(NovaMinecraft.proxy.getClientPlayer());
 	}
 
 	@Override

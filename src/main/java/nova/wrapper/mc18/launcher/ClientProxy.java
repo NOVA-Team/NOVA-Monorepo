@@ -13,6 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.wrapper.mc18.render.RenderUtility;
@@ -22,6 +23,7 @@ import nova.wrapper.mc18.wrapper.block.forward.FWTileRenderer;
 import nova.wrapper.mc18.wrapper.entity.forward.FWEntity;
 import nova.wrapper.mc18.wrapper.entity.forward.FWEntityFX;
 import nova.wrapper.mc18.wrapper.entity.forward.FWEntityRenderer;
+import nova.wrapper.mc18.wrapper.gui.MCGuiFactory;
 import nova.wrapper.mc18.wrapper.item.FWItem;
 
 /**
@@ -35,6 +37,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(FWTile.class, FWTileRenderer.instance);
 		RenderingRegistry.registerEntityRenderingHandler(FWEntity.class, FWEntityRenderer.instance);
 		RenderUtility.instance.preInit();
+
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new MCGuiFactory.GuiHandler());
 	}
 
 	@Override
