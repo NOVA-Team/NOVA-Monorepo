@@ -1,9 +1,10 @@
 package nova.wrapper.mc1710.wrapper.render;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import nova.core.render.RenderException;
-import nova.core.render.RenderManager;
 import nova.core.render.texture.Texture;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
@@ -12,12 +13,12 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.util.Iterator;
 
-public class MCRenderManager extends RenderManager {
+/**
+ * @author Calclavia
+ */
+public class BWClientRenderManager extends BWRenderManager {
 
-	public static ResourceLocation toResourceLocation(Texture texture) {
-		return new ResourceLocation(texture.domain, texture.getPath());
-	}
-
+	@SideOnly(Side.CLIENT)
 	@Override
 	public Vector2D getDimension(Texture texture) {
 		ResourceLocation loc = toResourceLocation(texture);
@@ -37,6 +38,6 @@ public class MCRenderManager extends RenderManager {
 		} catch (Exception e) {
 			throw new RenderException("Couldn't load texture " + texture.getPath(), e);
 		}
-		return new Vector2D(16, 16);
+		return super.getDimension(texture);
 	}
 }
