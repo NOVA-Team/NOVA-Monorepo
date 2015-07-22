@@ -25,6 +25,7 @@ import nova.wrapper.mc18.wrapper.entity.forward.FWEntityFX;
 import nova.wrapper.mc18.wrapper.entity.forward.FWEntityRenderer;
 import nova.wrapper.mc18.wrapper.gui.MCGuiFactory;
 import nova.wrapper.mc18.wrapper.item.FWItem;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
  * @author Calclavia
