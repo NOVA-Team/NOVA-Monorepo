@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.Stateful;
+import nova.core.block.component.BlockProperties;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
@@ -27,12 +28,7 @@ import nova.internal.core.Game;
 import nova.wrapper.mc18.util.WrapperEvents;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +47,16 @@ public class FWBlock extends net.minecraft.block.Block {
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
 	public FWBlock(BlockFactory factory) {
-		super(Material.piston);
+		super(factory.getDummy().has(BlockProperties.class) ? new MCBlockProperties(factory.getDummy().get(BlockProperties.class)).toMcMaterial() : Material.piston);
+		if (this.getMaterial() instanceof MCBlockProperties.ProxyMaterial) {
+			this.stepSound = ((MCBlockProperties.ProxyMaterial) this.getMaterial()).getSoundType();
+		} else {
+			BlockProperties properties = factory.getDummy().add(new BlockProperties());
+			properties.setBlockSound(BlockProperties.BlockSoundTrigger.BREAK, soundTypeStone.getBreakSound());
+			properties.setBlockSound(BlockProperties.BlockSoundTrigger.PLACE, soundTypeStone.getPlaceSound());
+			properties.setBlockSound(BlockProperties.BlockSoundTrigger.WALK, soundTypeStone.getStepSound());
+			this.stepSound = soundTypeStone;
+		}
 		this.factory = factory;
 		this.block = factory.getDummy();
 		this.blockClass = block.getClass();

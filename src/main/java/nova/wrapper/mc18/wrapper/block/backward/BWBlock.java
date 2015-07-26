@@ -11,6 +11,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
+import nova.core.block.component.BlockProperties;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
 import nova.core.component.transform.BlockTransform;
@@ -40,9 +41,17 @@ public class BWBlock extends Block implements Storable {
 
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
+
 		BlockTransform transform = add(new BlockTransform());
 		transform.setWorld(world);
 		transform.setPosition(pos);
+
+		BlockProperties blockMaterial = add(new BlockProperties());
+		blockMaterial.setLightTransmission(!mcBlock.getMaterial().blocksLight());
+		blockMaterial.setBlockSound(BlockProperties.BlockSoundTrigger.PLACE, mcBlock.stepSound.getPlaceSound());
+		blockMaterial.setBlockSound(BlockProperties.BlockSoundTrigger.BREAK, mcBlock.stepSound.getBreakSound());
+		blockMaterial.setBlockSound(BlockProperties.BlockSoundTrigger.WALK, mcBlock.stepSound.getStepSound());
+
 		add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0F);
 		add(new Collider(this))
 			.setBoundingBox(() -> new Cuboid(mcBlock.getBlockBoundsMinX(), mcBlock.getBlockBoundsMinY(), mcBlock.getBlockBoundsMinZ(), mcBlock.getBlockBoundsMaxX(), mcBlock.getBlockBoundsMaxY(), mcBlock.getBlockBoundsMaxZ()))
