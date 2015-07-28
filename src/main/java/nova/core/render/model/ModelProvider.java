@@ -1,5 +1,7 @@
 package nova.core.render.model;
 
+import nova.core.render.Asset;
+
 import java.io.InputStream;
 
 /**
@@ -7,20 +9,16 @@ import java.io.InputStream;
  *
  * @author Calclavia
  */
-public abstract class ModelProvider {
-	//The domain of the assets
-	public final String domain;
-	//The name of the file
-	public final String name;
+public abstract class ModelProvider extends Asset {
 
 	/**
 	 * Creates new ModelProvider
+	 *
 	 * @param domain dolain of the assets.
 	 * @param name name of the model.
 	 */
 	public ModelProvider(String domain, String name) {
-		this.domain = domain;
-		this.name = name;
+		super(domain, name);
 	}
 
 	/**
