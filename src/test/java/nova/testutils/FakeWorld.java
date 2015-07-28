@@ -8,6 +8,7 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
+import nova.core.sound.SoundFactory;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -105,7 +106,7 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public void playSoundAtPosition(Vector3D position, Sound sound) {
+	public void playSoundAtPosition(Vector3D position, SoundFactory sound) {
 		//TODO: Implement
 	}
 

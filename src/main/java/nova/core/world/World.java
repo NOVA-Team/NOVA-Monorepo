@@ -6,6 +6,7 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
+import nova.core.sound.SoundFactory;
 import nova.core.util.Identifiable;
 import nova.core.util.shape.Cuboid;
 import nova.internal.core.Game;
@@ -114,7 +115,7 @@ public abstract class World implements Identifiable {
 	 * Plays a sound at a certain position.
 	 *
 	 * @param position The position in the world of the sound.
-	 * @param sound The sound that will be played.
+	 * @param soundFactory The sound factory that will create the sound to be played.
 	 */
-	public abstract void playSoundAtPosition(Vector3D position, Sound sound);
+	public abstract void playSoundAtPosition(Vector3D position, SoundFactory soundFactory);
 }
