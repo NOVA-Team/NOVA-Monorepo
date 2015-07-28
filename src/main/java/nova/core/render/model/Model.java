@@ -173,7 +173,7 @@ public class Model implements Iterable<Model>, Cloneable {
 	}
 
 	@Override
-	protected Model clone() {
+	public Model clone() {
 		Model model = new Model(name);
 		model.faces.addAll(faces.stream().map(Face::clone).collect(Collectors.toSet()));
 		model.children.addAll(children.stream().map(Model::clone).collect(Collectors.toSet()));
