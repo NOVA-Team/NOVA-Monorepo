@@ -2,7 +2,13 @@ package nova.wrapper.mc18.launcher;
 
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
-import nova.wrapper.mc18.depmodules.*;
+import nova.wrapper.mc18.depmodules.ClientModule;
+import nova.wrapper.mc18.depmodules.GameInfoModule;
+import nova.wrapper.mc18.depmodules.KeyModule;
+import nova.wrapper.mc18.depmodules.LanguageModule;
+import nova.wrapper.mc18.depmodules.RenderModule;
+import nova.wrapper.mc18.depmodules.SaveModule;
+import nova.wrapper.mc18.depmodules.TickerModule;
 import nova.wrappertests.depmodules.FakeNetworkModule;
 import org.junit.Test;
 import se.jbee.inject.bootstrap.Bundle;
@@ -21,7 +27,6 @@ public class NovaLauncherTest extends nova.wrappertests.NovaLauncherTest {
 	public List<Class<? extends Bundle>> getModules() {
 		return Arrays.<Class<? extends Bundle>>asList(
 			ClientModule.class,
-			GuiModule.class,
 			KeyModule.class,
 			LanguageModule.class,
 			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.

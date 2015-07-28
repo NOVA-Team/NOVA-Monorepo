@@ -1,6 +1,6 @@
 package nova.wrapper.mc18.depmodules;
 
-import nova.core.gui.InputManager;
+import nova.core.game.InputManager;
 import nova.wrapper.mc18.util.MCInputManager;
 import se.jbee.inject.bind.BinderModule;
 

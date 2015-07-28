@@ -24,7 +24,6 @@ import nova.internal.core.launch.NovaLauncher;
 import nova.wrapper.mc18.NovaMinecraftPreloader;
 import nova.wrapper.mc18.depmodules.ClientModule;
 import nova.wrapper.mc18.depmodules.GameInfoModule;
-import nova.wrapper.mc18.depmodules.GuiModule;
 import nova.wrapper.mc18.depmodules.KeyModule;
 import nova.wrapper.mc18.depmodules.LanguageModule;
 import nova.wrapper.mc18.depmodules.NetworkModule;
@@ -49,6 +48,7 @@ import java.util.stream.Collectors;
 
 /**
  * The main Nova Minecraft Wrapper loader, using Minecraft Forge.
+ *
  * @author Calclavia
  */
 @Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name, version = NovaMinecraftPreloader.version, acceptableRemoteVersions = "*")
@@ -79,7 +79,6 @@ public class NovaMinecraft {
 			 * Search through all classes withPriority @NovaMod
 			 */
 			DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
-			diep.install(GuiModule.class);
 			diep.install(NetworkModule.class);
 			diep.install(SaveModule.class);
 			diep.install(TickerModule.class);

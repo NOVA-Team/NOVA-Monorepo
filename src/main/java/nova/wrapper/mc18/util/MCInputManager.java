@@ -1,10 +1,11 @@
 package nova.wrapper.mc18.util;
 
-import nova.core.gui.InputManager;
+import nova.core.game.InputManager;
 import org.lwjgl.input.Keyboard;
 
 /**
  * The MC KeyManager
+ *
  * @author Calclavia
  */
 // TODO: Does not work yet. Need a full map between the input and LWGL input.

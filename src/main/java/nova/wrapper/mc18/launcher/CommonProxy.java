@@ -10,7 +10,6 @@ import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
 import nova.wrapper.mc18.wrapper.block.forward.FWTile;
 import nova.wrapper.mc18.wrapper.block.forward.FWTileUpdater;
 import nova.wrapper.mc18.wrapper.entity.forward.FWEntity;
-import nova.wrapper.mc18.wrapper.gui.MCGuiFactory;
 import nova.wrapper.mc18.wrapper.item.FWItem;
 
 import java.util.Set;
