@@ -1,7 +1,6 @@
 package nova.wrapper.mc18.launcher;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nova.core.entity.Entity;
