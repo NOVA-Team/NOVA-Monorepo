@@ -1,6 +1,6 @@
 package nova.wrapper.mc1710.util;
 
-import nova.core.gui.InputManager;
+import nova.core.game.InputManager;
 import org.lwjgl.input.Keyboard;
 
 /**

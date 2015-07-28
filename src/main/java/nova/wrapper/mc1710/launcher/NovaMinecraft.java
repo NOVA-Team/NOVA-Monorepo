@@ -24,7 +24,6 @@ import nova.internal.core.launch.NovaLauncher;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
 import nova.wrapper.mc1710.depmodules.ClientModule;
 import nova.wrapper.mc1710.depmodules.GameInfoModule;
-import nova.wrapper.mc1710.depmodules.GuiModule;
 import nova.wrapper.mc1710.depmodules.KeyModule;
 import nova.wrapper.mc1710.depmodules.LanguageModule;
 import nova.wrapper.mc1710.depmodules.NetworkModule;
@@ -79,7 +78,6 @@ public class NovaMinecraft {
 			 * Search through all classes withPriority @NovaMod
 			 */
 			DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
-			diep.install(GuiModule.class);
 			diep.install(NetworkModule.class);
 			diep.install(SaveModule.class);
 			diep.install(TickerModule.class);

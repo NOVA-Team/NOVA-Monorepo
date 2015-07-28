@@ -3,7 +3,6 @@ package nova.wrapper.mc1710.launcher;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +18,6 @@ import nova.wrapper.mc1710.wrapper.block.forward.FWTileRenderer;
 import nova.wrapper.mc1710.wrapper.entity.forward.FWEntity;
 import nova.wrapper.mc1710.wrapper.entity.forward.FWEntityFX;
 import nova.wrapper.mc1710.wrapper.entity.forward.FWEntityRenderer;
-import nova.wrapper.mc1710.wrapper.gui.MCGuiFactory;
 import nova.wrapper.mc1710.wrapper.item.FWItem;
 
 /**
@@ -33,8 +31,6 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(FWTile.class, FWTileRenderer.instance);
 		RenderingRegistry.registerEntityRenderingHandler(FWEntity.class, FWEntityRenderer.instance);
 		RenderUtility.instance.preInit();
-
-		NetworkRegistry.INSTANCE.registerGuiHandler(NovaMinecraft.instance, new MCGuiFactory.GuiHandler());
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import nova.wrapper.mc1710.network.discriminator.NovaPacket;
 import nova.wrapper.mc1710.network.discriminator.PacketAbstract;
-import nova.wrapper.mc1710.network.discriminator.PacketGui;
 import nova.wrapper.mc1710.network.discriminator.PacketPlayerItem;
 
 /**
@@ -17,7 +16,6 @@ public class ChannelHandler extends FMLIndexedMessageToMessageCodec<PacketAbstra
 	public ChannelHandler() {
 		addDiscriminator(0, NovaPacket.class);
 		addDiscriminator(1, PacketPlayerItem.class);
-		addDiscriminator(2, PacketGui.class);
 	}
 
 	@Override

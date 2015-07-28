@@ -4,7 +4,6 @@ import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.wrapper.mc1710.depmodules.ClientModule;
 import nova.wrapper.mc1710.depmodules.GameInfoModule;
-import nova.wrapper.mc1710.depmodules.GuiModule;
 import nova.wrapper.mc1710.depmodules.KeyModule;
 import nova.wrapper.mc1710.depmodules.LanguageModule;
 import nova.wrapper.mc1710.depmodules.RenderModule;
@@ -28,7 +27,6 @@ public class NovaLauncherTest extends nova.wrappertests.NovaLauncherTest {
 	public List<Class<? extends Bundle>> getModules() {
 		return Arrays.<Class<? extends Bundle>>asList(
 			ClientModule.class,
-			GuiModule.class,
 			KeyModule.class,
 			LanguageModule.class,
 			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.
