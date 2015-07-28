@@ -3,9 +3,11 @@ package nova.core.util;
 import java.util.function.Function;
 
 /**
+ * Factories are immutable object builders that create objects.
  * @param <T> Type of produced object
  * @author Calclavia
  */
+//TODO: Remove args
 public class Factory<T extends Identifiable> implements Identifiable {
 	protected final Function<Object[], T> constructor;
 	protected T dummy;
@@ -14,9 +16,14 @@ public class Factory<T extends Identifiable> implements Identifiable {
 		this.constructor = constructor;
 	}
 
+	public T build(Object... args) {
+		return constructor.apply(args);
+	}
+
 	public T getDummy() {
 		if (dummy == null) {
-			dummy = constructor.apply(new Object[0]);
+			//TODO: This will cause problems!
+			dummy = build();
 		}
 		return dummy;
 	}
