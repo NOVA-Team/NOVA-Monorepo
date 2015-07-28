@@ -4,8 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import nova.core.block.component.BlockProperties;
-import nova.core.sound.ResourceSound;
 import nova.core.sound.Sound;
+import nova.core.sound.SoundFactory;
 
 /**
  * Created by winsock on 7/2/15.
@@ -13,7 +13,8 @@ import nova.core.sound.Sound;
 public class MCBlockProperties extends BlockProperties {
 	private Material mcMaterial = null;
 
-	public MCBlockProperties() {}
+	public MCBlockProperties() {
+	}
 
 	public MCBlockProperties(BlockProperties copy) {
 		this.blockSoundSoundMap = copy.blockSoundSoundMap;
@@ -58,13 +59,12 @@ public class MCBlockProperties extends BlockProperties {
 			@Override
 			public String getBreakSound() {
 				if (MCBlockProperties.this.blockSoundSoundMap.containsKey(BlockSoundTrigger.BREAK)) {
-					Sound sound = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.BREAK);
-					if (sound instanceof ResourceSound) {
-						if (((ResourceSound) sound).domain.isEmpty() && !((ResourceSound) sound).resource.contains(".")) {
-							return "dig." + ((ResourceSound) sound).resource;
-						}
-						return sound.getID();
+					SoundFactory soundFactory = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.BREAK);
+					Sound sound = soundFactory.getDummy();
+					if (sound.domain.isEmpty() && !sound.name.contains(".")) {
+						return "dig." + sound.name;
 					}
+					return sound.getID();
 				}
 				return super.getBreakSound();
 			}
@@ -72,13 +72,12 @@ public class MCBlockProperties extends BlockProperties {
 			@Override
 			public String getStepSound() {
 				if (MCBlockProperties.this.blockSoundSoundMap.containsKey(BlockSoundTrigger.WALK)) {
-					Sound sound = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.WALK);
-					if (sound instanceof ResourceSound) {
-						if (((ResourceSound) sound).domain.isEmpty() && !((ResourceSound) sound).resource.contains(".")) {
-							return "step." + ((ResourceSound) sound).resource;
-						}
-						return sound.getID();
+					SoundFactory soundFactory = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.WALK);
+					Sound sound = soundFactory.getDummy();
+					if (sound.domain.isEmpty() && !sound.name.contains(".")) {
+						return "step." + sound.name;
 					}
+					return sound.getID();
 				}
 				return super.getStepSound();
 			}
@@ -86,13 +85,12 @@ public class MCBlockProperties extends BlockProperties {
 			@Override
 			public String getPlaceSound() {
 				if (MCBlockProperties.this.blockSoundSoundMap.containsKey(BlockSoundTrigger.WALK)) {
-					Sound sound = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.WALK);
-					if (sound instanceof ResourceSound) {
-						if (((ResourceSound) sound).domain.isEmpty()) {
-							return ((ResourceSound) sound).resource;
-						}
-						return sound.getID();
+					SoundFactory soundFactory = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.WALK);
+					Sound sound = soundFactory.getDummy();
+					if (sound.domain.isEmpty()) {
+						return sound.name;
 					}
+					return sound.getID();
 				}
 				// By default MC uses the block break sound for block placement
 				return this.getBreakSound();
