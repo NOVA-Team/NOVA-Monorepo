@@ -1,4 +1,4 @@
-package nova.core.gui;
+package nova.core.game;
 
 import com.google.common.collect.HashBiMap;
 
@@ -36,7 +36,7 @@ public abstract class InputManager {
 
 	/**
 	 * Is the key current down?
-	 * 
+	 *
 	 * @return
 	 */
 	public abstract boolean isKeyDown(Key key);

@@ -2,7 +2,6 @@ package nova.core.network;
 
 import nova.core.entity.Entity;
 import nova.core.event.SidedEventBus;
-import nova.core.gui.Gui;
 import nova.core.util.NovaException;
 import nova.core.world.World;
 import nova.internal.core.Game;
@@ -58,7 +57,7 @@ public @interface NetworkTarget {
 		 * access to the remote {@link World} or {@link Entity Entities}. Any
 		 * changes on the client side have to be synchronized with the
 		 * {@link #SERVER} side using {@link Packet Packets} or internal
-		 * synchronizing methods as provided by {@link Gui}, {@link Entity} and
+		 * synchronizing methods as provided by {@link Entity} and
 		 * others.
 		 *
 		 * @see NetworkTarget
@@ -107,6 +106,7 @@ public @interface NetworkTarget {
 
 		/**
 		 * Returns the {@link Side} of the current execution environment.
+		 *
 		 * @return current side
 		 * @see NetworkManager#getSide()
 		 */
@@ -153,8 +153,9 @@ public @interface NetworkTarget {
 		 * @return Opposite side
 		 */
 		public Side opposite() {
-			if (this == BOTH || this == NONE)
+			if (this == BOTH || this == NONE) {
 				return this;
+			}
 			return this == CLIENT ? SERVER : CLIENT;
 		}
 
@@ -178,8 +179,9 @@ public @interface NetworkTarget {
 		 */
 		public void assertSide() {
 			Side current = get();
-			if (this != current)
+			if (this != current) {
 				throw new IllegalSideException(this, Thread.currentThread().getStackTrace()[2]);
+			}
 		}
 	}
 

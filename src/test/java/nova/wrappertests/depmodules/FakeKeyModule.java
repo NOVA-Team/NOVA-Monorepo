@@ -1,6 +1,6 @@
 package nova.wrappertests.depmodules;
 
-import nova.core.gui.InputManager;
+import nova.core.game.InputManager;
 import se.jbee.inject.bind.BinderModule;
 
 /**

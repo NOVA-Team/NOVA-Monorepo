@@ -6,7 +6,7 @@ import nova.core.entity.EntityManager;
 import nova.core.event.GlobalEvents;
 import nova.core.game.ClientManager;
 import nova.core.game.GameInfo;
-import nova.core.gui.InputManager;
+import nova.core.game.InputManager;
 import nova.core.item.ItemDictionary;
 import nova.core.item.ItemManager;
 import nova.core.nativewrapper.NativeManager;

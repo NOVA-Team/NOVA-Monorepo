@@ -6,7 +6,6 @@ import nova.internal.core.launch.NovaLauncher;
 import nova.testutils.FakeBlock;
 import nova.wrappertests.depmodules.FakeClientModule;
 import nova.wrappertests.depmodules.FakeGameInfoModule;
-import nova.wrappertests.depmodules.FakeGuiModule;
 import nova.wrappertests.depmodules.FakeKeyModule;
 import nova.wrappertests.depmodules.FakeLanguageModule;
 import nova.wrappertests.depmodules.FakeNetworkModule;
@@ -33,7 +32,6 @@ public class NovaLauncherTestFactory {
 	public List<Class<? extends Bundle>> getModules() {
 		return Arrays.<Class<? extends Bundle>>asList(
 			FakeClientModule.class,
-			FakeGuiModule.class,
 			FakeKeyModule.class,
 			FakeLanguageModule.class,
 			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.
@@ -46,6 +44,7 @@ public class NovaLauncherTestFactory {
 
 	/**
 	 * Creates a fake launcher to allow mods to unit test.
+	 *
 	 * @return
 	 */
 	public NovaLauncher createLauncher() {
