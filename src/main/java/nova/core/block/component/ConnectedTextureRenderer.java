@@ -7,7 +7,7 @@ import nova.core.component.transform.BlockTransform;
 import nova.core.render.model.BlockModelUtil;
 import nova.core.render.model.Face;
 import nova.core.render.model.Model;
-import nova.core.render.model.StaticCubeTextureCoordinates;
+import nova.core.render.block.StaticCubeTextureCoordinates;
 import nova.core.render.model.VertexModel;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;

@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A component provider provides the components associated with the object.
+ * A component block provides the components associated with the object.
  * <p>
  * {@code ComponentProvider} is implemented in blocks or entities.
  * @author Calclavia
@@ -28,10 +28,10 @@ public abstract class ComponentProvider {
 	private Map<Class<? extends Component>, Component> componentMap = new HashMap<>();
 
 	/**
-	 * Adds a component to the provider.
+	 * Adds a component to the block.
 	 * @param component The component to add.
 	 * @return the component.
-	 * @throws ComponentException when the component already exists on the provider.
+	 * @throws ComponentException when the component already exists on the block.
 	 */
 	public final <C extends Component> C add(C component) {
 		if (has(component.getClass())) {
@@ -44,7 +44,7 @@ public abstract class ComponentProvider {
 	}
 
 	/**
-	 * Adds a component to the provider if it is not present.
+	 * Adds a component to the block if it is not present.
 	 * @param component The component to add.
 	 * @return the component.
 	 */
@@ -60,7 +60,7 @@ public abstract class ComponentProvider {
 	}
 
 	/**
-	 * Removes a component from the provider.
+	 * Removes a component from the block.
 	 * @param component The component to remove
 	 * @return the component removed.
 	 */
@@ -72,7 +72,7 @@ public abstract class ComponentProvider {
 
 	/**
 	 * @param componentType the component type to check.
-	 * @return true if the component exists on the provider.
+	 * @return true if the component exists on the block.
 	 */
 	public final boolean has(Class<?> componentType) {
 		return componentMap.keySet().stream()
@@ -80,7 +80,7 @@ public abstract class ComponentProvider {
 	}
 
 	/**
-	 * Removes the component from the provider.
+	 * Removes the component from the block.
 	 * @param componentType the component type.
 	 * @return the component removed.
 	 * @throws ComponentException when the component dies not exist.

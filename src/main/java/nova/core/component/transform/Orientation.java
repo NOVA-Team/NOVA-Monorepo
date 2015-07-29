@@ -43,14 +43,14 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	protected Direction orientation = Direction.UNKNOWN;
 
 	/**
-	 * @param provider The provider to apply discrete orientations to
+	 * @param provider The block to apply discrete orientations to
 	 */
 	public Orientation(ComponentProvider provider) {
 		this.provider = provider;
 	}
 
 	/**
-	 * Hooks the needed events intro the provider to rotate based on the side that is hit when placing the block
+	 * Hooks the needed events intro the block to rotate based on the side that is hit when placing the block
 	 * @return The Orientation instance
 	 */
 	public Orientation hookBasedOnHitSide() {
@@ -68,7 +68,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	}
 
 	/**
-	 * Hooks the needed events intro the provider to rotate based on the {@link Entity}'s rotation when placing the block
+	 * Hooks the needed events intro the block to rotate based on the {@link Entity}'s rotation when placing the block
 	 * @return The Orientation instance
 	 */
 	public Orientation hookBasedOnEntity() {
@@ -86,7 +86,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	}
 
 	/**
-	 * Hooks the needed events intro the provider to rotate when the block is right clicked.
+	 * Hooks the needed events intro the block to rotate when the block is right clicked.
 	 * @return The Orientation instance
 	 */
 	public Orientation hookRightClickRotate() {
