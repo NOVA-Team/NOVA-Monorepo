@@ -23,8 +23,8 @@ public class SoundFactory extends Factory<Sound> {
 	 */
 	public final float volume;
 
-	public SoundFactory(Supplier<Sound> constructor) {
-		this(args -> constructor.get(), 1, 1, 1);
+	public SoundFactory(Function<Object[], Sound> constructor) {
+		this(constructor, 1, 1, 1);
 	}
 
 	public SoundFactory(Function<Object[], Sound> constructor, float pitch, float speed, float volume) {
