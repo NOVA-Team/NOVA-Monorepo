@@ -32,6 +32,13 @@ public enum Direction {
 	@Deprecated
 	public static final Direction[] DIRECTIONS = VALID_DIRECTIONS;
 
+	/**
+	 * Directions in a 2 dimensional space.
+	 */
+	public static final Direction[] FLAT_DIRECTIONS = new Direction[] {
+			NORTH, SOUTH, WEST, EAST
+	};
+
 	private static final Direction[] values = Direction.values();
 	public final int x, y, z;
 	public final Rotation rotation;
