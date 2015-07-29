@@ -18,9 +18,19 @@ public enum Direction {
 	EAST(1, 0, 0),
 	UNKNOWN(0, 0, 0);
 
-	public static final Direction[] DIRECTIONS = new Direction[] {
-		DOWN, UP, NORTH, SOUTH, WEST, EAST
+	/**
+	 * Contains all valid directions.
+	 */
+	public static final Direction[] VALID_DIRECTIONS =  new Direction[] {
+			DOWN, UP, NORTH, SOUTH, WEST, EAST
 	};
+
+	/**
+	 * Includes valid directions
+	 * @deprecated use {@link Direction#VALID_DIRECTIONS} instead.
+	 */
+	@Deprecated
+	public static final Direction[] DIRECTIONS = VALID_DIRECTIONS;
 
 	private static final Direction[] values = Direction.values();
 	public final int x, y, z;
