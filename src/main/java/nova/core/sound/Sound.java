@@ -8,7 +8,9 @@ import nova.core.util.Identifiable;
  *
  * @author skyem123
  */
+//TODO: Merge with ECS?
 public class Sound extends Asset implements Identifiable {
+
 	/**
 	 * Changes the pitch of the sound.
 	 * This does not change the speed of the sound so it can it be used to compensate for the speed of the sound changing to pitch.
@@ -27,20 +29,5 @@ public class Sound extends Asset implements Identifiable {
 
 	public Sound(String domain, String name) {
 		super(domain, name);
-	}
-
-	public Sound withPitch(float pitch) {
-		this.pitch = pitch;
-		return this;
-	}
-
-	public Sound withSpeed(float speed) {
-		this.speed = speed;
-		return this;
-	}
-
-	public Sound withVolume(float volume) {
-		this.volume = volume;
-		return this;
 	}
 }
