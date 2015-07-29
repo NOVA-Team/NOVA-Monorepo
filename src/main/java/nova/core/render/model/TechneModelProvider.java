@@ -1,7 +1,8 @@
 package nova.core.render.model;
 
 import nova.core.render.RenderException;
-import nova.core.render.block.CubeTextureCoordinates;
+import nova.core.render.pipeline.BlockRenderer;
+import nova.core.render.pipeline.CubeTextureCoordinates;
 import nova.core.util.math.MatrixStack;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
@@ -197,7 +198,7 @@ public class TechneModelProvider extends ModelProvider {
 
 				final String modelName = shapeName;
 				VertexModel modelPart = new VertexModel(modelName);
-				BlockModelUtil.drawCube(
+				BlockRenderer.drawCube(
 					modelPart,
 					offsetX,
 					offsetY - sizeY,

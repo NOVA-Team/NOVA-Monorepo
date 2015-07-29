@@ -1,7 +1,8 @@
-package nova.core.render.block;
+package nova.core.render.pipeline;
 
 import nova.core.block.Block;
 import nova.core.component.misc.Collider;
+import nova.core.component.transform.Orientation;
 import nova.core.render.Color;
 import nova.core.render.RenderException;
 import nova.core.render.model.Face;
@@ -24,7 +25,7 @@ import java.util.function.Supplier;
  *
  * @author Calclavia
  */
-public class BlockRenderStream {
+public abstract class BlockRenderer implements Consumer<RenderStream> {
 
 	public final Block block;
 
@@ -57,42 +58,63 @@ public class BlockRenderStream {
 	 */
 	public Function<Direction, Color> colorMultiplier = (dir) -> Color.white;
 
-	public BlockRenderStream(Block block) {
+	public BlockRenderer(Block block) {
 		this.block = block;
 		bounds = () -> block.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
 	}
 
-	public BlockRenderStream with(Function<Direction, Optional<Texture>> texture) {
+	public BlockRenderer with(Function<Direction, Optional<Texture>> texture) {
 		this.texture = texture;
 		return this;
 	}
 
-	public BlockRenderStream with(Texture t) {
+	public BlockRenderer with(Texture t) {
 		Objects.requireNonNull(t, "Texture is null, please initiate the texture before the block");
 		this.texture = (dir) -> Optional.of(t);
 		return this;
 	}
 
-	public BlockRenderStream with(Supplier<Cuboid> bounds) {
+	public BlockRenderer with(Supplier<Cuboid> bounds) {
 		this.bounds = bounds;
 		return this;
 	}
 
-	public BlockRenderStream filter(Predicate<Direction> renderSide) {
+	public BlockRenderer with(Cuboid bounds) {
+		this.bounds = () -> bounds;
+		return this;
+	}
+
+	public BlockRenderer filter(Predicate<Direction> renderSide) {
 		this.renderSide = renderSide;
 		return this;
 	}
 
-	public BlockRenderStream withColor(Function<Direction, Color> colorMultiplier) {
+	public BlockRenderer withColor(Color colorMultiplier) {
+		this.colorMultiplier = dir -> colorMultiplier;
+		return this;
+	}
+
+	public BlockRenderer withColor(Function<Direction, Color> colorMultiplier) {
 		this.colorMultiplier = colorMultiplier;
 		return this;
 	}
 
-	/**
-	 * @return A model consumer that appends the block model to the parent model.
-	 */
-	public Consumer<Model> build() {
-		return model -> model.addChild(draw(new VertexModel()));
+	@Override
+	public void accept(RenderStream renderStream) {
+		renderStream.result = model -> model.addChild(draw(new VertexModel()));
+	}
+
+	public static class ApplyOrientation implements Consumer<Model> {
+		public final Orientation orientation;
+
+		public ApplyOrientation(Orientation orientation) {
+			this.orientation = orientation;
+		}
+
+		@Override
+		public void accept(Model model) {
+			model.matrix.rotate(orientation.orientation().rotation);
+		}
 	}
 
 	/**
