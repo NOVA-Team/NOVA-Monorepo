@@ -11,22 +11,19 @@ import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 import nova.core.block.Block;
-import nova.core.block.component.StaticBlockRenderer;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.ItemBlock;
-import nova.core.render.texture.Texture;
-import nova.core.util.Direction;
 import nova.internal.core.Game;
 import nova.wrapper.mc18.render.RenderUtility;
 import nova.wrapper.mc18.wrapper.block.forward.FWBlock;
 
 import javax.vecmath.Vector3f;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Generates a smart model based on a NOVA Model
+ *
  * @author Calclavia
  */
 public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel, ISmartItemModel, IFlexibleBakedModel {
@@ -41,7 +38,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 		// Change the default transforms to the default full Block transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
 			new ItemTransformVec3f(new Vector3f(10, -45, 170), new Vector3f(0, 0.09375f, -0.171875f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person
-				ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
+			ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
 	}
 
 	//Block rendering
@@ -89,12 +86,13 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 
 	@Override
 	public TextureAtlasSprite getTexture() {
-		if (block.has(StaticBlockRenderer.class)) {
-			Optional<Texture> apply = block.get(StaticBlockRenderer.class).texture.apply(Direction.UNKNOWN);
+		/*
+		if (block.has(StaticRenderer.class)) {
+			Optional<Texture> apply = block.get(StaticRenderer.class).texture.apply(Direction.UNKNOWN);
 			if (apply.isPresent()) {
 				return RenderUtility.instance.getTexture(apply.get());
 			}
-		}
+		}*/
 
 		if (block.has(ItemRenderer.class)) {
 			ItemRenderer itemRenderer = block.get(ItemRenderer.class);
