@@ -30,7 +30,7 @@ public class MCRigidBody extends RigidBody {
 
 	public MCRigidBody(ComponentProvider provider) {
 		super(provider);
-		//TODO: This nullable provider is horrible. Change this.
+		//TODO: This nullable block is horrible. Change this.
 		if (provider != null) {
 			entity = (nova.core.entity.Entity) provider;
 		}

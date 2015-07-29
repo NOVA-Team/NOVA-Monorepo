@@ -105,7 +105,7 @@ public class ComponentInjector<T> implements Opcodes {
 		String name = Type.getInternalName(baseClazz);
 		String classname = name + "_$$_NOVA_" + cache.size();
 
-		// Inject provider field
+		// Inject block field
 		clazzNode.visit(V1_8, ACC_PUBLIC | ACC_SUPER, classname, null, name, intfComponentMap.keySet().stream().map(Type::getInternalName).toArray(s -> new String[s]));
 		clazzNode.visitField(ACC_PRIVATE | ACC_FINAL, "$$_provider", Type.getDescriptor(ComponentProvider.class), null, null).visitEnd();
 
@@ -147,7 +147,7 @@ public class ComponentInjector<T> implements Opcodes {
 				MethodVisitor mv = clazzNode.visitMethod(ACC_PUBLIC, m.getName(), descr, null, ASMHelper.getExceptionTypes(m));
 				mv.visitCode();
 
-				// load provider instance
+				// load block instance
 				mv.visitVarInsn(ALOAD, 0);
 				mv.visitFieldInsn(GETFIELD, classname, "$$_provider", Type.getDescriptor(ComponentProvider.class));
 				mv.visitLdcInsn(clazzConst);
