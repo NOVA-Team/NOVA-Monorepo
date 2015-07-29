@@ -23,18 +23,15 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.Stateful;
 import nova.core.block.component.LightEmitter;
-import nova.core.block.component.StaticBlockRenderer;
 import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
-import nova.core.render.texture.Texture;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.math.MatrixStack;
 import nova.core.util.shape.Cuboid;
 import nova.internal.core.Game;
-import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.util.WrapperEvents;
 import nova.wrapper.mc1710.wrapper.render.BWModel;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -159,6 +156,8 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public IIcon getIcon(IBlockAccess access, int x, int y, int z, int side) {
+		//TODO: Fill in something
+		/*
 		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
 		Optional<StaticBlockRenderer> opRenderer = blockInstance.getOp(StaticBlockRenderer.class);
 		if (opRenderer.isPresent()) {
@@ -166,19 +165,21 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 			if (texture.isPresent()) {
 				return RenderUtility.instance.getIcon(texture.get());
 			}
-		}
+		}*/
 		return null;
 	}
 
 	@Override
 	public IIcon getIcon(int side, int meta) {
+		//TODO: Fill in something
+		/*
 		Optional<StaticBlockRenderer> opRenderer = block.getOp(StaticBlockRenderer.class);
 		if (opRenderer.isPresent()) {
 			Optional<Texture> texture = opRenderer.get().texture.apply(Direction.values()[side]);
 			if (texture.isPresent()) {
 				return RenderUtility.instance.getIcon(texture.get());
 			}
-		}
+		}*/
 		return null;
 	}
 
