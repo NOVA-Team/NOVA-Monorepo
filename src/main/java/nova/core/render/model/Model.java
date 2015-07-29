@@ -1,6 +1,7 @@
 package nova.core.render.model;
 
 import nova.core.render.texture.Texture;
+import nova.core.util.collection.TreeNode;
 import nova.core.util.math.MatrixStack;
 import nova.core.util.math.TransformUtil;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
@@ -10,39 +11,44 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Spliterator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A model is capable of containing multiple faces.
+ *
  * @author Calclavia
  */
-public class Model implements Iterable<Model>, Cloneable {
+public class Model extends TreeNode<Model> implements Cloneable {
 
-	//The name of the model
+	/**
+	 * The name of the model
+	 */
 	public final String name;
+
 	/**
 	 * A list of all the shapes drawn.
 	 */
 	public final Set<Face> faces = new HashSet<>();
-	public final Set<Model> children = new HashSet<>();
 
+	/**
+	 * The transformation matrix.
+	 */
 	public MatrixStack matrix = new MatrixStack();
 
 	public Vector2D textureOffset = Vector2D.ZERO;
 
+	//TODO: There should be a better method to handle this.
 	//GL Blending
 	public int blendSFactor = -1;
 	public int blendDFactor = -1;
 
 	/**
 	 * Creates named model.
+	 *
 	 * @param name to be used.
 	 */
 	public Model(String name) {
@@ -58,6 +64,7 @@ public class Model implements Iterable<Model>, Cloneable {
 
 	/**
 	 * Binds all the faces and all child models with this texture.
+	 *
 	 * @param texture The texture
 	 */
 	public void bind(Texture texture) {
@@ -66,6 +73,7 @@ public class Model implements Iterable<Model>, Cloneable {
 
 	/**
 	 * Binds the texture to the model, and all its children.
+	 *
 	 * @param texture to be used to as for this model and sub-models.
 	 */
 	public void bindAll(Texture texture) {
@@ -76,6 +84,7 @@ public class Model implements Iterable<Model>, Cloneable {
 	/**
 	 * Starts drawing, by returning an Face for the Model to work on.
 	 * Add vertices to this Face and finish it by calling drawFace()
+	 *
 	 * @return new {@link Face}
 	 */
 	public Face createFace() {
@@ -84,26 +93,11 @@ public class Model implements Iterable<Model>, Cloneable {
 
 	/**
 	 * Finish drawing the Face by adding it into the list of Faces.
+	 *
 	 * @param Face - The finished masterpiece.
 	 */
 	public void drawFace(Face Face) {
 		faces.add(Face);
-	}
-
-	public Model addChild(Model child) {
-		if (child != null) {
-			children.add(child);
-		}
-		return this;
-	}
-
-	public Model removeChild(Model child) {
-		children.remove(child);
-		return this;
-	}
-
-	public Stream<Model> stream() {
-		return children.stream();
 	}
 
 	public Set<Model> flatten() {
@@ -112,6 +106,7 @@ public class Model implements Iterable<Model>, Cloneable {
 
 	/**
 	 * Combines child models with names into one model with its children being the children selected.
+	 *
 	 * @param newModelName The new name for the model
 	 * @param names The names of the child models
 	 * @return The new model containing all the children.
@@ -122,6 +117,7 @@ public class Model implements Iterable<Model>, Cloneable {
 
 	/**
 	 * Combines child models with names into one model with its children being the children selected.
+	 *
 	 * @param newModelName The new name for the model
 	 * @param predicate The condition to select children
 	 * @return The new model containing all the children.
@@ -143,6 +139,7 @@ public class Model implements Iterable<Model>, Cloneable {
 	/**
 	 * Flattens the model into a set of models with no additional transformations,
 	 * applying all the transformations into the individual vertices.
+	 *
 	 * @param matrixStack transformation matrix.
 	 * @return Resulting set of models
 	 */
@@ -180,16 +177,6 @@ public class Model implements Iterable<Model>, Cloneable {
 		model.matrix = new MatrixStack(matrix);
 		model.textureOffset = textureOffset;
 		return model;
-	}
-
-	@Override
-	public Iterator<Model> iterator() {
-		return children.iterator();
-	}
-
-	@Override
-	public Spliterator<Model> spliterator() {
-		return children.spliterator();
 	}
 
 	@Override
