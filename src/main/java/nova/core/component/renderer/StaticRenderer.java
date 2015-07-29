@@ -12,6 +12,7 @@ public class StaticRenderer extends Renderer {
 
 	public final ComponentProvider provider;
 
+	//TODO: We don't need provider
 	public StaticRenderer(ComponentProvider provider) {
 		this.provider = provider;
 	}

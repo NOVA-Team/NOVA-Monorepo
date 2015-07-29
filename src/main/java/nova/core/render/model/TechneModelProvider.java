@@ -36,7 +36,7 @@ public class TechneModelProvider extends ModelProvider {
 	public static final List<String> cubeIDs = Arrays.asList("d9e621f7-957f-4b77-b1ae-20dcd0da7751", "de81aa14-bd60-4228-8d8d-5238bcd3caaa");
 
 	//A map of all models generated with their names
-	private final Model model = new VertexModel();
+	private final VertexModel model = new VertexModel();
 
 	/**
 	 * Creates new ModelProvider
@@ -234,7 +234,7 @@ public class TechneModelProvider extends ModelProvider {
 	}
 
 	@Override
-	public Model getModel() {
+	public VertexModel getModel() {
 		return model.clone();
 	}
 
