@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  *
  * @author Calclavia
  */
-public abstract class BlockRenderer implements Consumer<RenderStream> {
+public class BlockRenderer extends RenderTransmutation {
 
 	public final Block block;
 
@@ -63,23 +63,23 @@ public abstract class BlockRenderer implements Consumer<RenderStream> {
 		bounds = () -> block.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
 	}
 
-	public BlockRenderer with(Function<Direction, Optional<Texture>> texture) {
+	public BlockRenderer withTexture(Function<Direction, Optional<Texture>> texture) {
 		this.texture = texture;
 		return this;
 	}
 
-	public BlockRenderer with(Texture t) {
+	public BlockRenderer withTexture(Texture t) {
 		Objects.requireNonNull(t, "Texture is null, please initiate the texture before the block");
 		this.texture = (dir) -> Optional.of(t);
 		return this;
 	}
 
-	public BlockRenderer with(Supplier<Cuboid> bounds) {
+	public BlockRenderer withBounds(Supplier<Cuboid> bounds) {
 		this.bounds = bounds;
 		return this;
 	}
 
-	public BlockRenderer with(Cuboid bounds) {
+	public BlockRenderer withBounds(Cuboid bounds) {
 		this.bounds = () -> bounds;
 		return this;
 	}
@@ -101,6 +101,7 @@ public abstract class BlockRenderer implements Consumer<RenderStream> {
 
 	@Override
 	public void accept(RenderStream renderStream) {
+		super.accept(renderStream);
 		renderStream.result = model -> model.addChild(draw(new VertexModel()));
 	}
 
@@ -441,12 +442,12 @@ public abstract class BlockRenderer implements Consumer<RenderStream> {
 	}
 
 	/**
-	 * Binds the specified texturecoordinates to the model for the specified cuboid for rendering
+	 * Binds the specified texture coordinates to the model for the specified cuboid for rendering
 	 *
 	 * @param model The model to apply the textures to
-	 * @param cuboid The cuboid where the moddel aplies to
-	 * @param textureCoordinates The texturecoordinates to use
-	 * @return The model with the textures aplied
+	 * @param cuboid The cuboid where the model applies to
+	 * @param textureCoordinates The texture coordinates to use
+	 * @return The model with the textures applied
 	 */
 	public static VertexModel drawCube(VertexModel model, Cuboid cuboid, CubeTextureCoordinates textureCoordinates) {
 		return drawCube(model, cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ(), textureCoordinates);
