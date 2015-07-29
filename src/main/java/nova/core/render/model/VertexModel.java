@@ -3,6 +3,7 @@ package nova.core.render.model;
 import nova.core.render.texture.Texture;
 import nova.core.util.math.MatrixStack;
 import nova.core.util.math.TransformUtil;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -23,6 +24,7 @@ public class VertexModel extends Model {
 	 * A list of all the faces to be drawn.
 	 */
 	public final Set<Face> faces = new HashSet<>();
+	public Vector2D textureOffset = Vector2D.ZERO;
 
 	public VertexModel() {
 	}

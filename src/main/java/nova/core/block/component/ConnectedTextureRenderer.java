@@ -8,6 +8,7 @@ import nova.core.render.model.BlockModelUtil;
 import nova.core.render.model.Face;
 import nova.core.render.model.Model;
 import nova.core.render.model.StaticCubeTextureCoordinates;
+import nova.core.render.model.VertexModel;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.math.RotationUtil;
@@ -19,6 +20,7 @@ import java.util.function.Supplier;
 
 /**
  * Renders connected texture for a block.
+ *
  * @author Calclavia
  */
 @Require(Collider.class)
@@ -59,7 +61,9 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 
 	protected void renderStatic(Model model) {
 		//Render the block face
-		BlockModelUtil.drawBlock(model, block);
+		VertexModel vModel = new VertexModel();
+		BlockModelUtil.drawBlock(vModel, block);
+		model.addChild(vModel);
 
 		//Render the block edge
 		for (Direction dir : Direction.DIRECTIONS)
@@ -84,7 +88,7 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 
 			int mask = connectMask.get();
 			if ((mask & (1 << absDir.ordinal())) == 0) {
-				Model innerModel = new Model();
+				VertexModel innerModel = new VertexModel();
 				innerModel.matrix.rotate(direction.toVector(), Math.PI / 2 * r);
 				Face face = BlockModelUtil.drawDir(direction, innerModel, bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ(), StaticCubeTextureCoordinates.instance);
 				face.texture = Optional.of(edgeTexture);

@@ -34,7 +34,7 @@ public class TechneModelProvider extends ModelProvider {
 	public static final List<String> cubeIDs = Arrays.asList("d9e621f7-957f-4b77-b1ae-20dcd0da7751", "de81aa14-bd60-4228-8d8d-5238bcd3caaa");
 
 	//A map of all models generated with their names
-	private final Model model = new Model();
+	private final Model model = new VertexModel();
 
 	/**
 	 * Creates new ModelProvider
@@ -195,7 +195,7 @@ public class TechneModelProvider extends ModelProvider {
 					sizeX, sizeY, sizeZ);
 
 				final String modelName = shapeName;
-				Model modelPart = new Model(modelName);
+				VertexModel modelPart = new VertexModel(modelName);
 				BlockModelUtil.drawCube(
 					modelPart,
 					offsetX,
