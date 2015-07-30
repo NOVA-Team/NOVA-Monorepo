@@ -8,6 +8,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -19,14 +20,14 @@ import java.util.stream.Collectors;
  */
 public class CustomModel extends Model {
 
-	public final Runnable render;
+	public final Consumer<CustomModel> render;
 
-	public CustomModel(String name, Runnable render) {
+	public CustomModel(String name, Consumer<CustomModel> render) {
 		super(name);
 		this.render = render;
 	}
 
-	public CustomModel(Runnable render) {
+	public CustomModel(Consumer<CustomModel> render) {
 		this.render = render;
 	}
 
