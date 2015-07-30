@@ -9,6 +9,12 @@ import nova.core.item.Item;
 import nova.core.render.model.CustomModel;
 import nova.core.retention.Storable;
 import nova.wrapper.mc1710.wrapper.render.BWClientRenderManager;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+
+import java.nio.ByteOrder;
+import java.nio.DoubleBuffer;
+import java.util.Arrays;
 
 /**
  * @author Stan
@@ -36,9 +42,18 @@ public class BWItem extends Item implements Storable {
 
 		add(new ItemRenderer())
 			.onRender(model -> {
-					model.addChild(new CustomModel(() -> {
+					model.addChild(new CustomModel(self -> {
 						Tessellator.instance.draw();
+						GL11.glPushMatrix();
+						DoubleBuffer buffer = BufferUtils.createDoubleBuffer(4 * 4);
+						double[] flatArray = Arrays.stream(self.matrix.getMatrix().getData())
+							.flatMapToDouble(Arrays::stream)
+							.toArray();
+						buffer.put(flatArray);
+						buffer.position(0);
+						GL11.glMultMatrix(buffer);
 						BWClientRenderManager.renderItem.doRender(fakeEntity, 0, 0, 0, 0, 0);
+						GL11.glPopMatrix();
 						Tessellator.instance.startDrawingQuads();
 					}));
 				}

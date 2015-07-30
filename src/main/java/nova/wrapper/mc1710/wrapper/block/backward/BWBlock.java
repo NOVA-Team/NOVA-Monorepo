@@ -64,7 +64,7 @@ public class BWBlock extends Block implements Storable {
 					.collect(Collectors.toSet());
 			});
 		add(new StaticRenderer(this))
-			.onRender(model -> model.addChild(new CustomModel(() -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z()))));
+			.onRender(model -> model.addChild(new CustomModel(self -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z()))));
 		//TODO: Set selection bounds
 	}
 

@@ -116,7 +116,7 @@ public class BWModel extends MeshModel {
 					});
 				} else if (model instanceof CustomModel) {
 					CustomModel customModel = (CustomModel) model;
-					customModel.render.run();
+					customModel.render.accept(customModel);
 				}
 			}
 		);
