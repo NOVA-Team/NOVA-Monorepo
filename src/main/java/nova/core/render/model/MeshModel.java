@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  *
  * @author Calclavia
  */
-public class VertexModel extends Model {
+public class MeshModel extends Model {
 
 	/**
 	 * A list of all the faces to be drawn.
@@ -26,10 +26,10 @@ public class VertexModel extends Model {
 	public final Set<Face> faces = new HashSet<>();
 	public Vector2D textureOffset = Vector2D.ZERO;
 
-	public VertexModel() {
+	public MeshModel() {
 	}
 
-	public VertexModel(String name) {
+	public MeshModel(String name) {
 		super(name);
 	}
 
@@ -50,8 +50,8 @@ public class VertexModel extends Model {
 	public void bindAll(Texture texture) {
 		bind(texture);
 		stream()
-			.filter(m -> m instanceof VertexModel)
-			.map(m -> (VertexModel) m)
+			.filter(m -> m instanceof MeshModel)
+			.map(m -> (MeshModel) m)
 			.forEach(m -> m.bindAll(texture));
 	}
 
@@ -70,7 +70,7 @@ public class VertexModel extends Model {
 		matrixStack.pushMatrix();
 		matrixStack.transform(matrix.getMatrix());
 		//Create a new model with transformation applied.
-		VertexModel transformedModel = clone();
+		MeshModel transformedModel = clone();
 		// correct formula for Normal Matrix is transpose(inverse(mat3(model_mat))
 		// we have to augemnt that to 4x4
 		RealMatrix normalMatrix3x3 = new LUDecomposition(matrixStack.getMatrix().getSubMatrix(0, 2, 0, 2), 1e-5).getSolver().getInverse().transpose();
@@ -93,15 +93,13 @@ public class VertexModel extends Model {
 
 	@Override
 	protected Model newModel(String name) {
-		return new VertexModel(name);
+		return new MeshModel(name);
 	}
 
 	@Override
-	public VertexModel clone() {
-		VertexModel model = new VertexModel(name);
+	public MeshModel clone() {
+		MeshModel model = (MeshModel) super.clone();
 		model.faces.addAll(faces.stream().map(Face::clone).collect(Collectors.toSet()));
-		model.children.addAll(stream().map(Model::clone).collect(Collectors.toSet()));
-		model.matrix = new MatrixStack(matrix);
 		return model;
 	}
 

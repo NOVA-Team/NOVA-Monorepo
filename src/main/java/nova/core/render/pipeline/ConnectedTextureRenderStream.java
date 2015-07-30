@@ -4,7 +4,7 @@ import nova.core.block.Block;
 import nova.core.component.transform.BlockTransform;
 import nova.core.render.model.Face;
 import nova.core.render.model.Model;
-import nova.core.render.model.VertexModel;
+import nova.core.render.model.MeshModel;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.math.RotationUtil;
@@ -46,7 +46,7 @@ public class ConnectedTextureRenderStream extends BlockRenderStream {
 
 		consumer = model -> {
 			//Render the block face
-			VertexModel vModel = new VertexModel();
+			MeshModel vModel = new MeshModel();
 			draw(vModel);
 			model.addChild(vModel);
 
@@ -79,7 +79,7 @@ public class ConnectedTextureRenderStream extends BlockRenderStream {
 
 			int mask = connectMask.get();
 			if ((mask & (1 << absDir.ordinal())) == 0) {
-				VertexModel innerModel = new VertexModel();
+				MeshModel innerModel = new MeshModel();
 				innerModel.matrix.rotate(direction.toVector(), Math.PI / 2 * r);
 				Face face = drawDir(direction, innerModel, bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ(), StaticCubeTextureCoordinates.instance);
 				face.texture = Optional.of(edgeTexture);

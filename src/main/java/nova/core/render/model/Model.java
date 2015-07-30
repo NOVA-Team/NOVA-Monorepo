@@ -95,7 +95,13 @@ public abstract class Model extends TreeNode<Model> implements Cloneable {
 	protected abstract Model newModel(String name);
 
 	@Override
-	public abstract Model clone();
+	public Model clone() {
+		Model model = newModel(name);
+		model.children.addAll(stream().map(Model::clone).collect(Collectors.toSet()));
+		model.matrix = new MatrixStack(matrix);
+		return model;
+	}
+
 
 	@Override
 	public String toString() {

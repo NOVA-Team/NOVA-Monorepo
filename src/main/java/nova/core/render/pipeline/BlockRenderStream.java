@@ -2,20 +2,17 @@ package nova.core.render.pipeline;
 
 import nova.core.block.Block;
 import nova.core.component.misc.Collider;
-import nova.core.component.transform.Orientation;
 import nova.core.render.Color;
 import nova.core.render.RenderException;
 import nova.core.render.model.Face;
-import nova.core.render.model.Model;
 import nova.core.render.model.Vertex;
-import nova.core.render.model.VertexModel;
+import nova.core.render.model.MeshModel;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.shape.Cuboid;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -61,7 +58,7 @@ public class BlockRenderStream extends RenderStream {
 	public BlockRenderStream(Block block) {
 		this.block = block;
 		bounds = () -> block.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
-		consumer = model -> model.addChild(draw(new VertexModel()));
+		consumer = model -> model.addChild(draw(new MeshModel()));
 	}
 
 	public BlockRenderStream withTexture(Function<Direction, Optional<Texture>> texture) {
@@ -105,7 +102,7 @@ public class BlockRenderStream extends RenderStream {
 	 * @param model VertexModel to use
 	 * @return This VertexModel
 	 */
-	public VertexModel draw(VertexModel model) {
+	public MeshModel draw(MeshModel model) {
 		Cuboid boundingBox = bounds.get();
 		double minX = boundingBox.min.getX() - 0.5;
 		double minY = boundingBox.min.getY() - 0.5;
@@ -167,7 +164,7 @@ public class BlockRenderStream extends RenderStream {
 	 * @return The bottom face of the model
 	 */
 	public static Face drawDown(
-		VertexModel model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
@@ -200,7 +197,7 @@ public class BlockRenderStream extends RenderStream {
 	 * @return The top face of the model
 	 */
 	public static Face drawUp(
-		VertexModel model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
@@ -233,7 +230,7 @@ public class BlockRenderStream extends RenderStream {
 	 * @return The north face of the model
 	 */
 	public static Face drawNorth(
-		VertexModel model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
@@ -267,7 +264,7 @@ public class BlockRenderStream extends RenderStream {
 	 * @return The south face of the model
 	 */
 	public static Face drawSouth(
-		VertexModel model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
@@ -301,7 +298,7 @@ public class BlockRenderStream extends RenderStream {
 	 * @return The west face of the model
 	 */
 	public static Face drawWest(
-		VertexModel model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
@@ -335,7 +332,7 @@ public class BlockRenderStream extends RenderStream {
 	 * @return The east face of the model
 	 */
 	public static Face drawEast(
-		VertexModel model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
@@ -370,7 +367,7 @@ public class BlockRenderStream extends RenderStream {
 	 * @return The face of the model in that dirction
 	 */
 	public static Face drawDir(Direction dir,
-		VertexModel model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
@@ -406,8 +403,8 @@ public class BlockRenderStream extends RenderStream {
 	 * @param textureCoordinates Texture coordinates to render
 	 * @return The cube model with textures
 	 */
-	public static VertexModel drawCube(
-		VertexModel model,
+	public static MeshModel drawCube(
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
@@ -430,11 +427,11 @@ public class BlockRenderStream extends RenderStream {
 	 * @param textureCoordinates The texture coordinates to use
 	 * @return The model with the textures applied
 	 */
-	public static VertexModel drawCube(VertexModel model, Cuboid cuboid, CubeTextureCoordinates textureCoordinates) {
+	public static MeshModel drawCube(MeshModel model, Cuboid cuboid, CubeTextureCoordinates textureCoordinates) {
 		return drawCube(model, cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ(), textureCoordinates);
 	}
 
-	public static VertexModel drawCube(VertexModel model) {
+	public static MeshModel drawCube(MeshModel model) {
 		return drawCube(model, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, StaticCubeTextureCoordinates.instance);
 	}
 
