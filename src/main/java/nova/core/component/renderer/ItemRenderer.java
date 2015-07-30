@@ -10,6 +10,8 @@ import java.util.Optional;
  * This interface specifies that a block requires custom static item rendering.
  * (That is, called upon item render or network synchronization.)
  */
+//Item renderer should not exist. Instead, blocks should just edit the default ItemBlock renderer...
+@Deprecated
 public class ItemRenderer extends Renderer {
 
 	/**

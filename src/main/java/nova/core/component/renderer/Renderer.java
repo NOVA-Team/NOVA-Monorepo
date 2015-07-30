@@ -15,7 +15,7 @@ public abstract class Renderer extends Component {
 	 */
 	public Consumer<Model> onRender = model -> {};
 
-	public Renderer setOnRender(Consumer<Model> onRender) {
+	public Renderer onRender(Consumer<Model> onRender) {
 		this.onRender = onRender;
 		return this;
 	}

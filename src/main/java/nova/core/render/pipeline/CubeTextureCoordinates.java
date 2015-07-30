@@ -1,4 +1,4 @@
-package nova.core.render.model;
+package nova.core.render.pipeline;
 
 /**
  * @author Stan

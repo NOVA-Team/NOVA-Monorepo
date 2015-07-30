@@ -1,81 +1,153 @@
-package nova.core.render.model;
+package nova.core.render.pipeline;
 
 import nova.core.block.Block;
-import nova.core.block.component.StaticBlockRenderer;
 import nova.core.component.misc.Collider;
 import nova.core.render.Color;
 import nova.core.render.RenderException;
+import nova.core.render.model.Face;
+import nova.core.render.model.Vertex;
+import nova.core.render.model.MeshModel;
+import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.shape.Cuboid;
 
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
- * Block model helper methods
+ * A block rendering builder that generates a function that renders a block model.
+ *
  * @author Calclavia
  */
-public class BlockModelUtil {
+public class BlockRenderStream extends RenderStream {
 
+	public final Block block;
+
+	/**
+	 * Called to get the texture of this block for a certain side.
+	 * side - The side of the block that the texture is for.
+	 * Returns -  An optional of the texture.
+	 */
+	public Function<Direction, Optional<Texture>> texture = (dir) -> Optional.empty();
+
+	/**
+	 * Called to get a shape of this block to be rendered.
+	 * Defaults to collision box or to Cuboid.ONE, if there
+	 * is no Collider supplied.
+	 */
+	public Supplier<Cuboid> bounds;
+
+	/**
+	 * Called when this block is to be rendered.
+	 * Direction - The direction to render
+	 * Returns - true if the side should render
+	 */
+	public Predicate<Direction> renderSide = (dir) -> true;
+
+	/**
+	 * Gets the color of a specific face. This is called by the default block
+	 * renderer.
+	 * direction - The side of the block.
+	 * Returns the color
+	 */
+	public Function<Direction, Color> colorMultiplier = (dir) -> Color.white;
+
+	public BlockRenderStream(Block block) {
+		this.block = block;
+		bounds = () -> block.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
+		consumer = model -> model.addChild(draw(new MeshModel()));
+	}
+
+	public BlockRenderStream withTexture(Function<Direction, Optional<Texture>> texture) {
+		this.texture = texture;
+		return this;
+	}
+
+	public BlockRenderStream withTexture(Texture t) {
+		Objects.requireNonNull(t, "Texture is null, please initiate the texture before the block");
+		this.texture = (dir) -> Optional.of(t);
+		return this;
+	}
+
+	public BlockRenderStream withBounds(Supplier<Cuboid> bounds) {
+		this.bounds = bounds;
+		return this;
+	}
+
+	public BlockRenderStream withBounds(Cuboid bounds) {
+		this.bounds = () -> bounds;
+		return this;
+	}
+
+	public BlockRenderStream filter(Predicate<Direction> renderSide) {
+		this.renderSide = renderSide;
+		return this;
+	}
+
+	public BlockRenderStream withColor(Color colorMultiplier) {
+		this.colorMultiplier = dir -> colorMultiplier;
+		return this;
+	}
+
+	public BlockRenderStream withColor(Function<Direction, Color> colorMultiplier) {
+		this.colorMultiplier = colorMultiplier;
+		return this;
+	}
 	/**
 	 * Draws a standard block.
 	 *
-	 * @param model Model to use
-	 * @param block Block to draw
-	 * @return This Model
+	 * @param model VertexModel to use
+	 * @return This VertexModel
 	 */
-	public static Model drawBlock(Model model, Block block) {
-		Optional<StaticBlockRenderer> staticRendererOp = block.getOp(StaticBlockRenderer.class);
+	public MeshModel draw(MeshModel model) {
+		Cuboid boundingBox = bounds.get();
+		double minX = boundingBox.min.getX() - 0.5;
+		double minY = boundingBox.min.getY() - 0.5;
+		double minZ = boundingBox.min.getZ() - 0.5;
+		double maxX = boundingBox.max.getX() - 0.5;
+		double maxY = boundingBox.max.getY() - 0.5;
+		double maxZ = boundingBox.max.getZ() - 0.5;
 
-		if (staticRendererOp.isPresent()) {
-			StaticBlockRenderer staticRenderer = staticRendererOp.get();
-			Cuboid boundingBox = staticRenderer.bounds.get();
-			double minX = boundingBox.min.getX() - 0.5;
-			double minY = boundingBox.min.getY() - 0.5;
-			double minZ = boundingBox.min.getZ() - 0.5;
-			double maxX = boundingBox.max.getX() - 0.5;
-			double maxY = boundingBox.max.getY() - 0.5;
-			double maxZ = boundingBox.max.getZ() - 0.5;
-
-			if (staticRenderer.renderSide.test(Direction.DOWN)) {
-				Color downColor = staticRenderer.colorMultiplier.apply(Direction.DOWN);
-				Face face = drawDown(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.texture.apply(Direction.DOWN);
-				face.vertices.forEach(v -> v.color = downColor);
-			}
-			if (staticRenderer.renderSide.test(Direction.UP)) {
-				Color upColor = staticRenderer.colorMultiplier.apply(Direction.UP);
-				Face face = drawUp(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.texture.apply(Direction.UP);
-				face.vertices.forEach(v -> v.color = upColor);
-			}
-			if (staticRenderer.renderSide.test(Direction.NORTH)) {
-				Color northColor = staticRenderer.colorMultiplier.apply(Direction.NORTH);
-				Face face = drawNorth(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.texture.apply(Direction.NORTH);
-				face.vertices.forEach(v -> v.color = northColor);
-			}
-			if (staticRenderer.renderSide.test(Direction.SOUTH)) {
-				Color southColor = staticRenderer.colorMultiplier.apply(Direction.SOUTH);
-				Face face = drawSouth(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.texture.apply(Direction.SOUTH);
-				face.vertices.forEach(v -> v.color = southColor);
-			}
-			if (staticRenderer.renderSide.test(Direction.WEST)) {
-				Color westColor = staticRenderer.colorMultiplier.apply(Direction.WEST);
-				Face face = drawWest(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.texture.apply(Direction.WEST);
-				face.vertices.forEach(v -> v.color = westColor);
-			}
-			if (staticRenderer.renderSide.test(Direction.EAST)) {
-				Color eastColor = staticRenderer.colorMultiplier.apply(Direction.EAST);
-				Face face = drawEast(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
-				face.texture = staticRenderer.texture.apply(Direction.EAST);
-				face.vertices.forEach(v -> v.color = eastColor);
-			}
-			return model;
+		if (renderSide.test(Direction.DOWN)) {
+			Color downColor = colorMultiplier.apply(Direction.DOWN);
+			Face face = drawDown(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+			face.texture = texture.apply(Direction.DOWN);
+			face.vertices.forEach(v -> v.color = downColor);
 		}
-
-		return null;
+		if (renderSide.test(Direction.UP)) {
+			Color upColor = colorMultiplier.apply(Direction.UP);
+			Face face = drawUp(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+			face.texture = texture.apply(Direction.UP);
+			face.vertices.forEach(v -> v.color = upColor);
+		}
+		if (renderSide.test(Direction.NORTH)) {
+			Color northColor = colorMultiplier.apply(Direction.NORTH);
+			Face face = drawNorth(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+			face.texture = texture.apply(Direction.NORTH);
+			face.vertices.forEach(v -> v.color = northColor);
+		}
+		if (renderSide.test(Direction.SOUTH)) {
+			Color southColor = colorMultiplier.apply(Direction.SOUTH);
+			Face face = drawSouth(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+			face.texture = texture.apply(Direction.SOUTH);
+			face.vertices.forEach(v -> v.color = southColor);
+		}
+		if (renderSide.test(Direction.WEST)) {
+			Color westColor = colorMultiplier.apply(Direction.WEST);
+			Face face = drawWest(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+			face.texture = texture.apply(Direction.WEST);
+			face.vertices.forEach(v -> v.color = westColor);
+		}
+		if (renderSide.test(Direction.EAST)) {
+			Color eastColor = colorMultiplier.apply(Direction.EAST);
+			Face face = drawEast(model, minX, minY, minZ, maxX, maxY, maxZ, StaticCubeTextureCoordinates.instance);
+			face.texture = texture.apply(Direction.EAST);
+			face.vertices.forEach(v -> v.color = eastColor);
+		}
+		return model;
 	}
 
 	/**
@@ -92,12 +164,12 @@ public class BlockModelUtil {
 	 * @return The bottom face of the model
 	 */
 	public static Face drawDown(
-		Model model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
 
-		Face down = model.createFace();
+		Face down = new Face();
 		down.normal = Direction.DOWN.toVector();
 		//Top-left corner
 		down.drawVertex(new Vertex(maxX, minY, maxZ, textureCoordinates.getBottomMinU(), textureCoordinates.getBottomMinV()));
@@ -125,12 +197,12 @@ public class BlockModelUtil {
 	 * @return The top face of the model
 	 */
 	public static Face drawUp(
-		Model model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
 
-		Face up = model.createFace();
+		Face up = new Face();
 		up.normal = Direction.UP.toVector();
 		//Bottom-left corner
 		up.drawVertex(new Vertex(maxX, maxY, minZ, textureCoordinates.getTopMinU(), textureCoordinates.getTopMaxV()));
@@ -158,12 +230,12 @@ public class BlockModelUtil {
 	 * @return The north face of the model
 	 */
 	public static Face drawNorth(
-		Model model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
 
-		Face north = model.createFace();
+		Face north = new Face();
 		north.normal = Direction.NORTH.toVector();
 		//Top-left corner
 		north.drawVertex(new Vertex(minX, maxY, minZ, textureCoordinates.getNorthMinU(), textureCoordinates.getNorthMinV()));
@@ -192,12 +264,12 @@ public class BlockModelUtil {
 	 * @return The south face of the model
 	 */
 	public static Face drawSouth(
-		Model model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
 
-		Face south = model.createFace();
+		Face south = new Face();
 		south.normal = Direction.SOUTH.toVector();
 		//Bottom-left corner
 		south.drawVertex(new Vertex(minX, minY, maxZ, textureCoordinates.getSouthMinU(), textureCoordinates.getSouthMaxV()));
@@ -226,12 +298,12 @@ public class BlockModelUtil {
 	 * @return The west face of the model
 	 */
 	public static Face drawWest(
-		Model model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
 
-		Face west = model.createFace();
+		Face west = new Face();
 		west.normal = Direction.WEST.toVector();
 		//Bottom-left corner
 		west.drawVertex(new Vertex(minX, minY, minZ, textureCoordinates.getWestMinU(), textureCoordinates.getWestMaxV()));
@@ -260,12 +332,12 @@ public class BlockModelUtil {
 	 * @return The east face of the model
 	 */
 	public static Face drawEast(
-		Model model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
 
-		Face east = model.createFace();
+		Face east = new Face();
 		east.normal = Direction.EAST.toVector();
 		//Top-left corner
 		east.drawVertex(new Vertex(maxX, maxY, minZ, textureCoordinates.getEastMinU(), textureCoordinates.getEastMinV()));
@@ -295,7 +367,7 @@ public class BlockModelUtil {
 	 * @return The face of the model in that dirction
 	 */
 	public static Face drawDir(Direction dir,
-		Model model,
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
@@ -331,8 +403,8 @@ public class BlockModelUtil {
 	 * @param textureCoordinates Texture coordinates to render
 	 * @return The cube model with textures
 	 */
-	public static Model drawCube(
-		Model model,
+	public static MeshModel drawCube(
+		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
 		CubeTextureCoordinates textureCoordinates) {
@@ -348,17 +420,18 @@ public class BlockModelUtil {
 	}
 
 	/**
-	 * Binds the specified texturecoordinates to the model for the specified cuboid for rendering
+	 * Binds the specified texture coordinates to the model for the specified cuboid for rendering
+	 *
 	 * @param model The model to apply the textures to
-	 * @param cuboid The cuboid where the moddel aplies to
-	 * @param textureCoordinates The texturecoordinates to use
-	 * @return The model with the textures aplied
+	 * @param cuboid The cuboid where the model applies to
+	 * @param textureCoordinates The texture coordinates to use
+	 * @return The model with the textures applied
 	 */
-	public static Model drawCube(Model model, Cuboid cuboid, CubeTextureCoordinates textureCoordinates) {
+	public static MeshModel drawCube(MeshModel model, Cuboid cuboid, CubeTextureCoordinates textureCoordinates) {
 		return drawCube(model, cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ(), textureCoordinates);
 	}
 
-	public static Model drawCube(Model model) {
+	public static MeshModel drawCube(MeshModel model) {
 		return drawCube(model, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, StaticCubeTextureCoordinates.instance);
 	}
 

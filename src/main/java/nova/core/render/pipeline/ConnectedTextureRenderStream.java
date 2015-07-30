@@ -1,13 +1,10 @@
-package nova.core.block.component;
+package nova.core.render.pipeline;
 
 import nova.core.block.Block;
-import nova.core.component.Require;
-import nova.core.component.misc.Collider;
 import nova.core.component.transform.BlockTransform;
-import nova.core.render.model.BlockModelUtil;
 import nova.core.render.model.Face;
 import nova.core.render.model.Model;
-import nova.core.render.model.StaticCubeTextureCoordinates;
+import nova.core.render.model.MeshModel;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.math.RotationUtil;
@@ -17,15 +14,8 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-/**
- * Renders connected texture for a block.
- * @author Calclavia
- */
-@Require(Collider.class)
-public class ConnectedTextureRenderer extends StaticBlockRenderer {
-
+public class ConnectedTextureRenderStream extends BlockRenderStream {
 	public final Texture edgeTexture;
-	private final Block block;
 
 	/**
 	 * The mask the represents which sides the block should render its connected texture.
@@ -40,35 +30,40 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 	 */
 	public int faceMask = 0xff;
 
-	public ConnectedTextureRenderer(Block provider, Texture edgeTexture) {
-		super(provider);
-		this.block = provider;
+	public ConnectedTextureRenderStream(Block block, Texture edgeTexture) {
+		super(block);
+		this.edgeTexture = edgeTexture;
+
 		connectMask = () -> {
-			if (block.has(BlockTransform.class)) {
+			if (this.block.has(BlockTransform.class)) {
 				return Arrays.stream(Direction.DIRECTIONS)
-					.filter(d -> block.world().getBlock(block.position().add(d.toVector())).get().sameType(block))
+					.filter(d -> this.block.world().getBlock(this.block.position().add(d.toVector())).get().sameType(this.block))
 					.map(d -> 1 << d.ordinal())
 					.reduce(0, (b, a) -> a | b);
 			}
 			return 0x0;
 		};
 
-		onRender = this::renderStatic;
-		this.edgeTexture = edgeTexture;
+		consumer = model -> {
+			//Render the block face
+			MeshModel vModel = new MeshModel();
+			draw(vModel);
+			model.addChild(vModel);
+
+			//Render the block edge
+			for (Direction dir : Direction.DIRECTIONS)
+				if ((faceMask & (1 << dir.ordinal())) != 0) {
+					renderFace(dir, model);
+				}
+		};
 	}
 
-	protected void renderStatic(Model model) {
-		//Render the block face
-		BlockModelUtil.drawBlock(model, block);
-
-		//Render the block edge
-		for (Direction dir : Direction.DIRECTIONS)
-			if ((faceMask & (1 << dir.ordinal())) != 0) {
-				renderFace(dir, model);
-			}
+	public ConnectedTextureRenderStream withConnectMask(Supplier<Integer> connectMask) {
+		this.connectMask = connectMask;
+		return this;
 	}
 
-	public ConnectedTextureRenderer setFaceMask(int faceMask) {
+	public ConnectedTextureRenderStream withFaceMask(int faceMask) {
 		this.faceMask = faceMask;
 		return this;
 	}
@@ -76,7 +71,7 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 	//Apply connected texture on top face
 	protected void renderFace(Direction direction, Model model) {
 		for (int r = 0; r < 4; r++) {
-			Cuboid bound = provider.get(Collider.class).boundingBox.get()
+			Cuboid bound = bounds.get()
 				.subtract(0.5) //Correct translation
 				.add(direction.toVector().scalarMultiply(r * 0.0001d)); //Lift up texture slightly, preventing z-fighting
 
@@ -84,9 +79,9 @@ public class ConnectedTextureRenderer extends StaticBlockRenderer {
 
 			int mask = connectMask.get();
 			if ((mask & (1 << absDir.ordinal())) == 0) {
-				Model innerModel = new Model();
+				MeshModel innerModel = new MeshModel();
 				innerModel.matrix.rotate(direction.toVector(), Math.PI / 2 * r);
-				Face face = BlockModelUtil.drawDir(direction, innerModel, bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ(), StaticCubeTextureCoordinates.instance);
+				Face face = drawDir(direction, innerModel, bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ(), StaticCubeTextureCoordinates.instance);
 				face.texture = Optional.of(edgeTexture);
 				//TODO: Support colors
 				model.children.add(innerModel);

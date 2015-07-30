@@ -4,16 +4,19 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.stream.Stream;
 
 /**
  * A node inside of a tree structure.
  *
  * @param <S> - Self type
  */
-public class TreeNode<S extends TreeNode> {
+public class TreeNode<S extends TreeNode> implements Iterable<S> {
 
 	/**
 	 * The children of the node.
@@ -58,11 +61,13 @@ public class TreeNode<S extends TreeNode> {
 	 * Remove a childnode
 	 *
 	 * @param child The childnode to remove
+	 * @return This
 	 */
 	@SuppressWarnings("unchecked")
-	public void removeChild(S child) {
+	public S removeChild(S child) {
 		children.remove(child);
 		child.setParent(Optional.empty());
+		return (S) this;
 	}
 
 	/**
@@ -71,22 +76,22 @@ public class TreeNode<S extends TreeNode> {
 	 * @return A set containing the direct childnodes
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<S> getChildren() {
+	public Set<S> children() {
 		return children;
 	}
 
 	/**
-	 * Get all childnodes and there childnodes
+	 * Gets all child nodes recursively
 	 *
-	 * @return A set containing all childnodes and there childnodes
+	 * @return A set containing all child nodes and their descendants
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<S> getAllChildren() {
+	public Set<S> descendants() {
 		Set<S> perms = new HashSet<>();
 
 		for (S child : children) {
 			perms.add(child);
-			perms.addAll(child.getAllChildren());
+			perms.addAll(child.descendants());
 		}
 
 		return perms;
@@ -94,6 +99,7 @@ public class TreeNode<S extends TreeNode> {
 
 	/**
 	 * Checks recursively to see if any of the children can match the given child.
+	 *
 	 * @param targetChild - The target match to find.
 	 * @return True if the tree structure contains the targetPerm.
 	 */
@@ -116,7 +122,7 @@ public class TreeNode<S extends TreeNode> {
 	 * @return Gets the hierarchy of the tree ordered from the root node to the current node.
 	 */
 	@SuppressWarnings("unchecked")
-	public List<S> getHierarchy() {
+	public List<S> hierarchy() {
 		List<S> hierarchy = new ArrayList<>();
 
 		Optional<S> currentParent = parent;
@@ -129,4 +135,17 @@ public class TreeNode<S extends TreeNode> {
 		return Lists.reverse(hierarchy);
 	}
 
+	public Stream<S> stream() {
+		return children.stream();
+	}
+
+	@Override
+	public Iterator<S> iterator() {
+		return children.iterator();
+	}
+
+	@Override
+	public Spliterator<S> spliterator() {
+		return children.spliterator();
+	}
 }

@@ -30,8 +30,8 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 	private static Pattern subModelPattern = Pattern.compile("([go]([^\\\\ ]*+)*\\n)|([go]( [^\\\\ ]*+) *$)");
 	private static Matcher globalMatcher;
 	//A map of all models generated with their names
-	private final Model model = new Model();
-	private Model currentModel = null;
+	private final MeshModel model = new MeshModel();
+	private MeshModel currentModel = null;
 	private ArrayList<Vector3D> vertices = new ArrayList<>();
 	private ArrayList<Vector2D> textureCoordinates = new ArrayList<>();
 
@@ -69,7 +69,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 					}
 				} else if (currentLine.startsWith("f ")) {
 					if (currentModel == null) {
-						currentModel = new Model("Default");
+						currentModel = new MeshModel("Default");
 					}
 
 					Face face = parseToFace(currentLine, lineCount);
@@ -77,7 +77,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 						currentModel.faces.add(face);
 					}
 				} else if (currentLine.startsWith("g ") | currentLine.startsWith("o ")) {
-					Model subModel = parseToModel(currentLine, lineCount);
+					MeshModel subModel = parseToModel(currentLine, lineCount);
 					if (subModel != null) {
 						if (currentModel != null) {
 							model.children.add(currentModel);
@@ -210,11 +210,11 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		return face;
 	}
 
-	private Model parseToModel(String line, int lineNumber) {
+	private MeshModel parseToModel(String line, int lineNumber) {
 		if (isValid(line, subModelPattern)) {
 			String trimmedLine = line.substring(line.indexOf(" ") + 1);
 			if (!trimmedLine.isEmpty()) {
-				return new Model(trimmedLine);
+				return new MeshModel(trimmedLine);
 			}
 		} else {
 			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");

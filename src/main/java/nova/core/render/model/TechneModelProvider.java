@@ -1,6 +1,8 @@
 package nova.core.render.model;
 
 import nova.core.render.RenderException;
+import nova.core.render.pipeline.BlockRenderStream;
+import nova.core.render.pipeline.CubeTextureCoordinates;
 import nova.core.util.math.MatrixStack;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
@@ -34,7 +36,7 @@ public class TechneModelProvider extends ModelProvider {
 	public static final List<String> cubeIDs = Arrays.asList("d9e621f7-957f-4b77-b1ae-20dcd0da7751", "de81aa14-bd60-4228-8d8d-5238bcd3caaa");
 
 	//A map of all models generated with their names
-	private final Model model = new Model();
+	private final MeshModel model = new MeshModel();
 
 	/**
 	 * Creates new ModelProvider
@@ -195,8 +197,8 @@ public class TechneModelProvider extends ModelProvider {
 					sizeX, sizeY, sizeZ);
 
 				final String modelName = shapeName;
-				Model modelPart = new Model(modelName);
-				BlockModelUtil.drawCube(
+				MeshModel modelPart = new MeshModel(modelName);
+				BlockRenderStream.drawCube(
 					modelPart,
 					offsetX,
 					offsetY - sizeY,
@@ -232,7 +234,7 @@ public class TechneModelProvider extends ModelProvider {
 	}
 
 	@Override
-	public Model getModel() {
+	public MeshModel getModel() {
 		return model.clone();
 	}
 
