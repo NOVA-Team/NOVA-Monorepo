@@ -8,6 +8,7 @@ import nova.core.component.renderer.ItemRenderer;
 import nova.core.item.Item;
 import nova.core.render.model.CustomModel;
 import nova.core.retention.Storable;
+import nova.wrapper.mc1710.render.RenderUtility;
 import nova.wrapper.mc1710.wrapper.render.BWClientRenderManager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
