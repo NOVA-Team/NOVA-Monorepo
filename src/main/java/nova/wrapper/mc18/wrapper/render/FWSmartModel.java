@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import nova.core.render.model.Model;
 import nova.core.render.model.Vertex;
-import nova.core.render.model.VertexModel;
+import nova.core.render.model.MeshModel;
 import nova.core.util.Direction;
 import nova.wrapper.mc18.render.RenderUtility;
 
@@ -39,9 +39,9 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 			.stream()
 			.flatMap(
 				model -> {
-					if (model instanceof VertexModel) {
-						VertexModel vertexModel = (VertexModel) model;
-						return vertexModel.faces
+					if (model instanceof MeshModel) {
+						MeshModel meshModel = (MeshModel) model;
+						return meshModel.faces
 							.stream()
 							.map(
 								face -> {

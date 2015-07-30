@@ -5,8 +5,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
-import nova.core.render.model.Model;
-import nova.core.render.model.VertexModel;
+import nova.core.render.model.MeshModel;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
 import nova.wrapper.mc18.render.RenderUtility;
@@ -14,9 +13,10 @@ import nova.wrapper.mc18.render.RenderUtility;
 import java.util.Optional;
 
 /**
+ * BWModel for dynamic rendering
  * @author Calclavia
  */
-public class BWModel extends VertexModel {
+public class BWModel extends MeshModel {
 
 	public void render() {
 		render(Optional.empty());
@@ -32,9 +32,9 @@ public class BWModel extends VertexModel {
 		 */
 		flatten().forEach(
 			model -> {
-				if (model instanceof VertexModel) {
-					VertexModel vertexModel = (VertexModel) model;
-					vertexModel.faces.forEach(face ->
+				if (model instanceof MeshModel) {
+					MeshModel meshModel = (MeshModel) model;
+					meshModel.faces.forEach(face ->
 					{
 						// Brightness is defined as: skyLight << 20 | blockLight << 4
 						if (face.getBrightness() >= 0) {
