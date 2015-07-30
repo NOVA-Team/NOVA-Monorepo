@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  *
  * @author Calclavia
  */
-public class BlockRenderer extends RenderTransmutation {
+public class BlockRenderStream extends RenderStream {
 
 	public final Block block;
 
@@ -58,66 +58,47 @@ public class BlockRenderer extends RenderTransmutation {
 	 */
 	public Function<Direction, Color> colorMultiplier = (dir) -> Color.white;
 
-	public BlockRenderer(Block block) {
+	public BlockRenderStream(Block block) {
 		this.block = block;
 		bounds = () -> block.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
+		consumer = model -> model.addChild(draw(new VertexModel()));
 	}
 
-	public BlockRenderer withTexture(Function<Direction, Optional<Texture>> texture) {
+	public BlockRenderStream withTexture(Function<Direction, Optional<Texture>> texture) {
 		this.texture = texture;
 		return this;
 	}
 
-	public BlockRenderer withTexture(Texture t) {
+	public BlockRenderStream withTexture(Texture t) {
 		Objects.requireNonNull(t, "Texture is null, please initiate the texture before the block");
 		this.texture = (dir) -> Optional.of(t);
 		return this;
 	}
 
-	public BlockRenderer withBounds(Supplier<Cuboid> bounds) {
+	public BlockRenderStream withBounds(Supplier<Cuboid> bounds) {
 		this.bounds = bounds;
 		return this;
 	}
 
-	public BlockRenderer withBounds(Cuboid bounds) {
+	public BlockRenderStream withBounds(Cuboid bounds) {
 		this.bounds = () -> bounds;
 		return this;
 	}
 
-	public BlockRenderer filter(Predicate<Direction> renderSide) {
+	public BlockRenderStream filter(Predicate<Direction> renderSide) {
 		this.renderSide = renderSide;
 		return this;
 	}
 
-	public BlockRenderer withColor(Color colorMultiplier) {
+	public BlockRenderStream withColor(Color colorMultiplier) {
 		this.colorMultiplier = dir -> colorMultiplier;
 		return this;
 	}
 
-	public BlockRenderer withColor(Function<Direction, Color> colorMultiplier) {
+	public BlockRenderStream withColor(Function<Direction, Color> colorMultiplier) {
 		this.colorMultiplier = colorMultiplier;
 		return this;
 	}
-
-	@Override
-	public void accept(RenderStream renderStream) {
-		super.accept(renderStream);
-		renderStream.result = model -> model.addChild(draw(new VertexModel()));
-	}
-
-	public static class ApplyOrientation implements Consumer<Model> {
-		public final Orientation orientation;
-
-		public ApplyOrientation(Orientation orientation) {
-			this.orientation = orientation;
-		}
-
-		@Override
-		public void accept(Model model) {
-			model.matrix.rotate(orientation.orientation().rotation);
-		}
-	}
-
 	/**
 	 * Draws a standard block.
 	 *

@@ -2,44 +2,38 @@ package nova.core.render.pipeline;
 
 import nova.core.render.model.Model;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * Handles model render pipeline.
+ * A render transmutation transforms a {@link RenderStream}.
  *
  * @author Calclavia
  */
-public class RenderStream extends RenderTransmutation {
-	public Consumer<Model> result = model -> {
+public class RenderStream {
+
+	protected Optional<RenderStream> prev = Optional.empty();
+
+	protected Consumer<Model> consumer = model -> {
 	};
 
-	public static <T extends RenderTransmutation> T of(T transmutator) {
-		return new RenderStream().transmute(transmutator);
-	}
-
-	public RenderStream() {
-		renderStream = this;
-	}
-
 	/**
-	 * Applies an action to the result model
+	 * Applies a new RenderStream to the current stream.
+	 * This method essentially allow you to switch between render streams in the rendering pipeline.
 	 *
-	 * @param consumer The action to apply.
-	 * @return The RenderStream
+	 * @param stream The stream to apply.
+	 * @return The new RenderStream
 	 */
-	public RenderStream apply(Consumer<Model> consumer) {
-		result.andThen(consumer);
-		return this;
+	public <T extends RenderStream> T apply(T stream) {
+		stream.prev = Optional.of(this);
+		return stream;
 	}
 
-	/**
-	 * Applies an action to the result model
-	 *
-	 * @param transmutator The action to apply.
-	 * @return The RenderStream
-	 */
-	public <T extends RenderTransmutation> T transmute(T transmutator) {
-		transmutator.accept(this);
-		return transmutator;
+	public Consumer<Model> build() {
+		if (prev.isPresent()) {
+			return prev.get().build().andThen(consumer);
+		}
+
+		return this.consumer;
 	}
 }

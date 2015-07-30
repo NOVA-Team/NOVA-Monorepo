@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class ConnectedTextureRenderer extends BlockRenderer {
+public class ConnectedTextureRenderStream extends BlockRenderStream {
 	public final Texture edgeTexture;
 
 	/**
@@ -30,7 +30,7 @@ public class ConnectedTextureRenderer extends BlockRenderer {
 	 */
 	public int faceMask = 0xff;
 
-	public ConnectedTextureRenderer(Block block, Texture edgeTexture) {
+	public ConnectedTextureRenderStream(Block block, Texture edgeTexture) {
 		super(block);
 		this.edgeTexture = edgeTexture;
 
@@ -43,14 +43,27 @@ public class ConnectedTextureRenderer extends BlockRenderer {
 			}
 			return 0x0;
 		};
+
+		consumer = model -> {
+			//Render the block face
+			VertexModel vModel = new VertexModel();
+			draw(vModel);
+			model.addChild(vModel);
+
+			//Render the block edge
+			for (Direction dir : Direction.DIRECTIONS)
+				if ((faceMask & (1 << dir.ordinal())) != 0) {
+					renderFace(dir, model);
+				}
+		};
 	}
 
-	public ConnectedTextureRenderer withConnectMask(Supplier<Integer> connectMask) {
+	public ConnectedTextureRenderStream withConnectMask(Supplier<Integer> connectMask) {
 		this.connectMask = connectMask;
 		return this;
 	}
 
-	public ConnectedTextureRenderer withFaceMask(int faceMask) {
+	public ConnectedTextureRenderStream withFaceMask(int faceMask) {
 		this.faceMask = faceMask;
 		return this;
 	}
@@ -74,22 +87,5 @@ public class ConnectedTextureRenderer extends BlockRenderer {
 				model.children.add(innerModel);
 			}
 		}
-	}
-
-	@Override
-	public void accept(RenderStream renderStream) {
-		renderStream.result = model -> {
-			//Render the block face
-			VertexModel vModel = new VertexModel();
-			draw(vModel);
-			model.addChild(vModel);
-
-			//Render the block edge
-			for (Direction dir : Direction.DIRECTIONS)
-				if ((faceMask & (1 << dir.ordinal())) != 0) {
-					renderFace(dir, model);
-				}
-		};
-
 	}
 }
