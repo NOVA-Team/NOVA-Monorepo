@@ -1,5 +1,6 @@
 package nova.wrapper.mc1710.wrapper.block.backward;
 
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,8 +11,10 @@ import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
+import nova.core.component.renderer.StaticRenderer;
 import nova.core.component.transform.BlockTransform;
 import nova.core.item.ItemFactory;
+import nova.core.render.model.CustomModel;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
@@ -60,6 +63,8 @@ public class BWBlock extends Block implements Storable {
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			});
+		add(new StaticRenderer(this))
+			.onRender(model -> model.addChild(new CustomModel(() -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z()))));
 		//TODO: Set selection bounds
 	}
 

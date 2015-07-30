@@ -3,6 +3,8 @@ package nova.wrapper.mc1710.wrapper.render;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import nova.core.render.RenderException;
 import nova.core.render.texture.Texture;
@@ -17,6 +19,14 @@ import java.util.Iterator;
  * @author Calclavia
  */
 public class BWClientRenderManager extends BWRenderManager {
+
+	//TODO: Would this break server?
+	@SideOnly(Side.CLIENT)
+	public static RenderItem renderItem = new RenderItem();
+
+	static {
+		renderItem.setRenderManager(RenderManager.instance);
+	}
 
 	@SideOnly(Side.CLIENT)
 	@Override

@@ -6,7 +6,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
-import nova.core.render.model.VertexModel;
+import nova.core.render.model.CustomModel;
+import nova.core.render.model.MeshModel;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
 import nova.core.util.math.Vector3DUtil;
@@ -18,7 +19,7 @@ import java.util.Optional;
 /**
  * @author Calclavia
  */
-public class BWModel extends VertexModel {
+public class BWModel extends MeshModel {
 
 	/**
 	 * Completes this rendering for a block.
@@ -44,9 +45,9 @@ public class BWModel extends VertexModel {
 		 */
 		flatten().forEach(
 			model -> {
-				if (model instanceof VertexModel) {
-					VertexModel vertexModel = (VertexModel) model;
-					vertexModel.faces.forEach(face ->
+				if (model instanceof MeshModel) {
+					MeshModel meshModel = (MeshModel) model;
+					meshModel.faces.forEach(face ->
 					{
 						// Brightness is defined as: skyLight << 20 | blockLight << 4
 						if (face.getBrightness() >= 0) {
@@ -113,8 +114,10 @@ public class BWModel extends VertexModel {
 							);
 						}
 					});
+				} else if (model instanceof CustomModel) {
+					CustomModel customModel = (CustomModel) model;
+					customModel.render.run();
 				}
-				//TODO: Handle BW Rendering
 			}
 		);
 	}
