@@ -1,7 +1,12 @@
 package nova.core.render.model;
 
 import nova.core.util.math.MatrixStack;
+import nova.core.util.math.TransformUtil;
+import org.apache.commons.math3.linear.LUDecomposition;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,6 +37,18 @@ public class CustomModel extends Model {
 
 	@Override
 	public Set<Model> flatten(MatrixStack matrixStack) {
-		return null;
+		Set<Model> models = new HashSet<>();
+
+		matrixStack.pushMatrix();
+		matrixStack.transform(matrix.getMatrix());
+		//Create a new model with transformation applied.
+		Model transformedModel = clone();
+		transformedModel.matrix.loadMatrix(matrixStack.getMatrix());
+		models.add(transformedModel);
+
+		//Flatten child models
+		models.addAll(children.stream().flatMap(m -> m.flatten(matrixStack).stream()).collect(Collectors.toSet()));
+		matrixStack.popMatrix();
+		return models;
 	}
 }
