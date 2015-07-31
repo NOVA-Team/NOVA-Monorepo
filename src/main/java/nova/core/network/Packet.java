@@ -6,11 +6,7 @@ import nova.core.retention.Storable;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -61,6 +57,8 @@ public interface Packet {
 			writeString((String) data);
 		} else if (data instanceof Enum) {
 			writeEnum((Enum) data);
+		} else if (data instanceof Optional) {
+			writeOptional((Optional) data);
 		} else if (data instanceof Data) {
 			writeData((Data) data);
 		} else if (data instanceof Syncable) {
@@ -215,6 +213,16 @@ public interface Packet {
 			writeShort(getType(obj.getClass()));
 			write(obj);
 		});
+		return this;
+	}
+
+	default Packet writeOptional(Optional optional) {
+		if (optional.isPresent()) {
+			writeShort(getType(optional.get().getClass()));
+			write(optional.get());
+		} else {
+			writeShort(-1);
+		}
 		return this;
 	}
 
@@ -376,6 +384,15 @@ public interface Packet {
 		return set;
 	}
 
+	default <T> Optional<T> readOptional() {
+		short type = readShort();
+		if (type != -1) {
+			return (Optional<T>) Optional.of(read(Data.dataTypes[type]));
+		} else {
+			return Optional.empty();
+		}
+	}
+
 	default Vector2D readVector2D() {
 		return new Vector2D(readDouble(), readDouble());
 	}
@@ -403,6 +420,8 @@ public interface Packet {
 			return (T) Double.valueOf(readDouble());
 		} else if (clazz == String.class) {
 			return (T) readString();
+		} else if (clazz == Optional.class) {
+			return (T) readOptional();
 		}
 		//Special data types that all convert into Data.
 		else if (Syncable.class.isAssignableFrom(clazz)) {
