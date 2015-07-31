@@ -3,8 +3,10 @@ package nova.wrapper.mc18.render;
 import com.google.common.base.Charsets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.util.ResourceLocation;
+import nova.wrapper.mc18.NovaMinecraftPreloader;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -43,32 +45,19 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 		try {
 			return new BufferedInputStream(new FileInputStream(new File(this.resourcePackFile, transform(path))));
 		} catch (IOException e) {
-			if (path.endsWith("sound.json")) {
-				JsonObject fakeSoundJSON = new JsonObject();
-
-				JsonObject sound = new JsonObject();
-				sound.addProperty("category", "ambient");
-				JsonArray sounds = new JsonArray();
-				sound.add("sounds", sounds);
-				fakeSoundJSON.add("soundName", sound);
-
-				return new ByteArrayInputStream(fakeSoundJSON.toString().getBytes(Charsets.UTF_8));
+			if (path.endsWith("sounds.json")) {
+				return new ByteArrayInputStream(NovaMinecraftPreloader.generateSoundJSON(this).getBytes(Charsets.UTF_8));
 			} else if (path.equals("pack.mcmeta")) {
-				return new ByteArrayInputStream(("{\n" +
-					" \"pack\": {\n" +
-					" \"description\": \"NOVA mod resource pack\",\n" +
-					" \"pack_format\": 1\n" +
-					"}\n" +
-					"}").getBytes(Charsets.UTF_8));
+				return new ByteArrayInputStream(NovaMinecraftPreloader.generatePackMcmeta().getBytes(Charsets.UTF_8));
 			} else {
 				if (path.endsWith(".mcmeta")) {
 					return new ByteArrayInputStream("{}".getBytes());
 				}
 				throw e;
 			}
-
 		}
 	}
+
 
 	@Override
 	public boolean hasResourceName(String path) {
@@ -78,7 +67,7 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 	@Override
 	public boolean resourceExists(ResourceLocation rl) {
 		//Hack Sounds
-		if (rl.getResourcePath().endsWith("sounds.json")) {
+		if (rl.getResourcePath().endsWith("sounds.json") || rl.getResourcePath().endsWith("pack.mcmeta")) {
 			return true;
 		}
 

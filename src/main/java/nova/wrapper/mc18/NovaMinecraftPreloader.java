@@ -2,6 +2,10 @@ package nova.wrapper.mc18;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import net.minecraft.client.resources.AbstractResourcePack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -173,6 +177,57 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * Dynamically generates a sound JSON file based on a resource pack's file structure.
+	 *
+	 * If it's a folder, then load it as a sound collection.
+	 * A sound collection falls under the same resource name. When called to play, it will pick a random sound from the collection to play it.
+	 *
+	 * If it's just a sound file, then load the sound file
+	 */
+	public static String generateSoundJSON(AbstractResourcePack pack) {
+		JsonObject fakeSoundJSON = new JsonObject();
+
+		for (String domain : (Set<String>) pack.getResourceDomains()) {
+			//Load all sounds in the assets/domain/sounds/*
+			File folder = new File(pack.resourcePackFile, "assets/" + domain + "/sounds/");
+
+			if (folder.exists()) {
+				File[] listOfFiles = folder.listFiles();
+
+				for (int i = 0; i < listOfFiles.length; i++) {
+					File listedFile = listOfFiles[i];
+
+					JsonObject sound = new JsonObject();
+					sound.addProperty("category", "ambient");
+					JsonArray sounds = new JsonArray();
+
+					String listedName = listedFile.getName().replaceFirst("[.][^.]+$", "");
+					if (listedFile.isFile()) {
+						sounds.add(new JsonPrimitive(listedName));
+					} else if (listedFile.isDirectory()) {
+						for (File soundItemFile : listedFile.listFiles())
+							sounds.add(new JsonPrimitive(listedName + "/" + soundItemFile.getName().replaceFirst("[.][^.]+$", "")));
+					}
+
+					sound.add("sounds", sounds);
+					fakeSoundJSON.add(listedName, sound);
+				}
+			}
+		}
+
+		return fakeSoundJSON.toString();
+	}
+
+	public static String generatePackMcmeta() {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("description", "NOVA mod resource pack");
+		jsonObject.addProperty("pack_format", "1");
+		JsonObject outerObj = new JsonObject();
+		outerObj.add("pack", jsonObject);
+		return outerObj.toString();
 	}
 
 	/**

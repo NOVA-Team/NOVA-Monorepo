@@ -11,7 +11,6 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
-import nova.core.sound.SoundFactory;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.internal.core.Game;
@@ -137,8 +136,7 @@ public class BWWorld extends World {
 	}
 
 	@Override
-	public void playSoundAtPosition(Vector3D position, SoundFactory soundFactory) {
-		Sound sound = soundFactory.getDummy();
+	public void playSoundAtPosition(Vector3D position, Sound sound) {
 		world().playSoundEffect(position.getX(), position.getY(), position.getZ(), sound.getID(), sound.volume, sound.pitch);
 	}
 }

@@ -5,7 +5,6 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import nova.core.block.component.BlockProperties;
 import nova.core.sound.Sound;
-import nova.core.sound.SoundFactory;
 
 /**
  * Created by winsock on 7/2/15.
@@ -59,8 +58,7 @@ public class MCBlockProperties extends BlockProperties {
 			@Override
 			public String getBreakSound() {
 				if (MCBlockProperties.this.blockSoundSoundMap.containsKey(BlockSoundTrigger.BREAK)) {
-					SoundFactory soundFactory = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.BREAK);
-					Sound sound = soundFactory.getDummy();
+					Sound sound = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.BREAK);
 					if (sound.domain.isEmpty() && !sound.name.contains(".")) {
 						return "dig." + sound.name;
 					}
@@ -72,8 +70,7 @@ public class MCBlockProperties extends BlockProperties {
 			@Override
 			public String getStepSound() {
 				if (MCBlockProperties.this.blockSoundSoundMap.containsKey(BlockSoundTrigger.WALK)) {
-					SoundFactory soundFactory = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.WALK);
-					Sound sound = soundFactory.getDummy();
+					Sound sound = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.WALK);
 					if (sound.domain.isEmpty() && !sound.name.contains(".")) {
 						return "step." + sound.name;
 					}
@@ -85,8 +82,7 @@ public class MCBlockProperties extends BlockProperties {
 			@Override
 			public String getPlaceSound() {
 				if (MCBlockProperties.this.blockSoundSoundMap.containsKey(BlockSoundTrigger.WALK)) {
-					SoundFactory soundFactory = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.WALK);
-					Sound sound = soundFactory.getDummy();
+					Sound sound = MCBlockProperties.this.blockSoundSoundMap.get(BlockSoundTrigger.WALK);
 					if (sound.domain.isEmpty()) {
 						return sound.name;
 					}
