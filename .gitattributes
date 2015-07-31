@@ -1,1 +1,32 @@
-* text eol=lf
+# Set default behaviour, in case users don't have core.autocrlf set.
+text eol=lf
+
+# These files are text and should be normalized (convert crlf => lf)
+*.java       text
+*.xml        text
+*.cmd        text
+*.sh         text
+*.txt        text
+*.md         text
+*.js         text
+*.jsp        text
+*.html       text
+*.htm        text
+*.vm         text
+.project     text
+.classpath   text
+*.properties text
+*.txt        text
+*.bat        text
+*.launch     text
+
+# Denote all files that are truly binary and should not be modified.
+*.png    binary
+*.jpg    binary
+*.jar    binary
+*.class  binary
+*.gz     binary
+*.tar    binary
+*.dll    binary
+*.exe    binary
+*.zip    binary
