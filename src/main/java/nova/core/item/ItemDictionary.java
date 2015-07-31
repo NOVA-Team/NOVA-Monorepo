@@ -5,5 +5,5 @@ import nova.core.util.Dictionary;
 /**
  * @author Stan Hebben
  */
-public class ItemDictionary extends Dictionary<String> {
+public class ItemDictionary extends Dictionary<Item> {
 }
