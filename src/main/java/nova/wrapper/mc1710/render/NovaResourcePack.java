@@ -2,9 +2,13 @@ package nova.wrapper.mc1710.render;
 
 import com.google.common.base.Charsets;
 import net.minecraft.client.resources.FileResourcePack;
+import net.minecraft.util.ResourceLocation;
+import nova.wrapper.mc1710.NovaMinecraftPreloader;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -34,25 +38,35 @@ public class NovaResourcePack extends FileResourcePack {
 	}
 
 	@Override
+	protected InputStream getInputStreamByName(String path) throws IOException {
+		try {
+			return new BufferedInputStream(new FileInputStream(new File(this.resourcePackFile, transform(path))));
+		} catch (IOException e) {
+			if (path.endsWith("sounds.json")) {
+				return new ByteArrayInputStream(NovaMinecraftPreloader.generateSoundJSON(this).getBytes(Charsets.UTF_8));
+			} else if (path.equals("pack.mcmeta")) {
+				return new ByteArrayInputStream(NovaMinecraftPreloader.generatePackMcmeta().getBytes(Charsets.UTF_8));
+			} else {
+				if (path.endsWith(".mcmeta")) {
+					return new ByteArrayInputStream("{}".getBytes());
+				}
+				throw e;
+			}
+		}
+	}
+
+	@Override
 	public boolean hasResourceName(String path) {
 		return super.hasResourceName(transform(path));
 	}
 
 	@Override
-	protected InputStream getInputStreamByName(String path) throws IOException {
-		try {
-			return super.getInputStreamByName(transform(path));
-		} catch (IOException e) {
-			if (path.equals("pack.mcmeta")) {
-				return new ByteArrayInputStream(("{\n" +
-					" \"pack\": {\n" +
-					" \"description\": \"NOVA mod resource pack\",\n" +
-					" \"pack_format\": 1\n" +
-					"}\n" +
-					"}").getBytes(Charsets.UTF_8));
-			} else {
-				throw e;
-			}
+	public boolean resourceExists(ResourceLocation rl) {
+		//Hack Sounds and McMeta
+		if (rl.getResourcePath().endsWith("sounds.json") || rl.getResourcePath().endsWith("pack.mcmeta")) {
+			return true;
 		}
+
+		return super.resourceExists(rl);
 	}
 }

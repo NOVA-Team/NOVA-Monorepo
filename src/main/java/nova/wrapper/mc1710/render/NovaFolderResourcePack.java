@@ -3,6 +3,8 @@ package nova.wrapper.mc1710.render;
 import com.google.common.base.Charsets;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.util.ResourceLocation;
+import nova.wrapper.mc1710.NovaMinecraftPreloader;
+
 import java.util.Arrays;
 
 import java.io.BufferedInputStream;
@@ -37,22 +39,14 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 	}
 
 	@Override
-	public boolean hasResourceName(String path) {
-		return super.hasResourceName(transform(path));
-	}
-
-	@Override
 	protected InputStream getInputStreamByName(String path) throws IOException {
 		try {
 			return new BufferedInputStream(new FileInputStream(new File(this.resourcePackFile, transform(path))));
 		} catch (IOException e) {
-			if (path.equals("pack.mcmeta")) {
-				return new ByteArrayInputStream(("{\n" +
-					" \"pack\": {\n" +
-					" \"description\": \"NOVA mod resource pack\",\n" +
-					" \"pack_format\": 1\n" +
-					"}\n" +
-					"}").getBytes(Charsets.UTF_8));
+			if (path.endsWith("sounds.json")) {
+				return new ByteArrayInputStream(NovaMinecraftPreloader.generateSoundJSON(this).getBytes(Charsets.UTF_8));
+			} else if (path.equals("pack.mcmeta")) {
+				return new ByteArrayInputStream(NovaMinecraftPreloader.generatePackMcmeta().getBytes(Charsets.UTF_8));
 			} else {
 				if (path.endsWith(".mcmeta")) {
 					return new ByteArrayInputStream("{}".getBytes());
@@ -63,7 +57,17 @@ public class NovaFolderResourcePack extends FolderResourcePack {
 	}
 
 	@Override
+	public boolean hasResourceName(String path) {
+		return super.hasResourceName(transform(path));
+	}
+
+	@Override
 	public boolean resourceExists(ResourceLocation rl) {
+		//Hack Sounds
+		if (rl.getResourcePath().endsWith("sounds.json") || rl.getResourcePath().endsWith("pack.mcmeta")) {
+			return true;
+		}
+
 		return new File(resourcePackFile, "assets/" + rl.getResourceDomain() + "/" + rl.getResourcePath()).isFile() || new File(resourcePackFile, rl.getResourceDomain() + "/" + rl.getResourcePath().replace(".mcmeta", "")).isFile();
 	}
 }
