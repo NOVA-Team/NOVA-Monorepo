@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Stan
@@ -25,17 +26,15 @@ public class OreItemIngredient implements ItemIngredient {
 
 	@Override
 	public Optional<Collection<String>> getPossibleItemIds() {
-		return Optional.of(Game.itemDictionary().get(name));
+		return Optional.of(Game.itemDictionary().get(name).stream().map(Item::getID).collect(Collectors.toList()));
 	}
 
 	@Override
 	public Optional<Collection<Item>> getExampleItems() {
 		List<Item> result = new ArrayList<Item>();
 
-		Game.itemDictionary().get(name)
-			.forEach(itemId -> result.add(Game.items().get(itemId).get()));
 
-		return Optional.of(result);
+		return Optional.of(Game.itemDictionary().get(name));
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class OreItemIngredient implements ItemIngredient {
 
 	@Override
 	public boolean matches(Item item) {
-		return Game.itemDictionary().get(name).contains(item.getID());
+		return Game.itemDictionary().get(name).contains(item);
 	}
 
 	@Override
