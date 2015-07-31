@@ -59,6 +59,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	@Subscribe
 	public void load(FMLConstructionEvent event) {
 		try {
+			//TODO: Use AT
 			//Apache Commons Hack
 			Field launchHandlerField = FMLLaunchHandler.class.getDeclaredField("INSTANCE");
 			launchHandlerField.setAccessible(true);
@@ -107,6 +108,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 				newMods.add(new DummyNovaMod(fakeMeta));
 			}
 		});
+		//TODO: Use AT
 		ReflectionUtil.setPrivateObject(Loader.instance(), newMods, "mods");
 
 		// Register resource packs

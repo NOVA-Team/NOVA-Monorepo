@@ -35,6 +35,9 @@ public class NovaResourcePack extends FileResourcePack {
 
 	@Override
 	public boolean hasResourceName(String path) {
+		if (path.endsWith("sounds.json")) {
+			return true;
+		}
 		return super.hasResourceName(transform(path));
 	}
 
