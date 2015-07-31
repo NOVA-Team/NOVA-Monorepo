@@ -4,7 +4,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import nova.core.component.Component;
 import nova.core.sound.Sound;
-import nova.core.sound.SoundFactory;
 
 import java.util.Optional;
 
@@ -27,8 +26,8 @@ public class BlockProperties extends Component {
 		CUSTOM_TRIGGER
 	}
 
-	public BiMap<BlockSoundTrigger, SoundFactory> blockSoundSoundMap = HashBiMap.create();
-	public Optional<BiMap<String, SoundFactory>> customDefinedSounds;
+	public BiMap<BlockSoundTrigger, Sound> blockSoundSoundMap = HashBiMap.create();
+	public Optional<BiMap<String, Sound>> customDefinedSounds;
 
 	/**
 	 * This boolean determines if the block should allow light through itself or not.
@@ -42,7 +41,7 @@ public class BlockProperties extends Component {
 	 * @param sound The sound to play on the triggering of the trigger
 	 * @return This instance for chaining if desired.
 	 */
-	public BlockProperties setBlockSound(BlockSoundTrigger trigger, SoundFactory sound) {
+	public BlockProperties setBlockSound(BlockSoundTrigger trigger, Sound sound) {
 		if (trigger == BlockSoundTrigger.CUSTOM_TRIGGER) {
 			return this;
 		}
@@ -51,7 +50,7 @@ public class BlockProperties extends Component {
 	}
 
 	public BlockProperties setBlockSound(BlockSoundTrigger trigger, String soundResourceString) {
-		return setBlockSound(trigger, new SoundFactory(args -> new Sound("", soundResourceString)));
+		return setBlockSound(trigger, new Sound("", soundResourceString));
 	}
 
 	/**
@@ -61,7 +60,7 @@ public class BlockProperties extends Component {
 	 * @param sound The sound to associate with the id
 	 * @return This instance for chaining if desired.
 	 */
-	public BlockProperties setCustomBlockSound(String id, SoundFactory sound) {
+	public BlockProperties setCustomBlockSound(String id, Sound sound) {
 		if (!customDefinedSounds.isPresent()) {
 			customDefinedSounds = Optional.of(HashBiMap.create());
 		}
@@ -75,7 +74,7 @@ public class BlockProperties extends Component {
 	 * @param trigger The trigger to get the sound for
 	 * @return The sound object associated with the trigger
 	 */
-	public SoundFactory getSound(BlockSoundTrigger trigger) {
+	public Sound getSound(BlockSoundTrigger trigger) {
 		if (trigger == BlockSoundTrigger.CUSTOM_TRIGGER) {
 			return null;
 		}
@@ -91,7 +90,7 @@ public class BlockProperties extends Component {
 	 * @param customId The custom id of the sound
 	 * @return The sound object associated with the custom Id
 	 */
-	public SoundFactory getCustomSound(String customId) {
+	public Sound getCustomSound(String customId) {
 		if (!customDefinedSounds.isPresent()) {
 			return null;
 		}
