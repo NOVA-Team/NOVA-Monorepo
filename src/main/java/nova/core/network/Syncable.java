@@ -43,7 +43,14 @@ public interface Syncable {
 			if (Arrays.stream(annotation.ids()).anyMatch(i -> i == packet.getID())) {
 				try {
 					field.setAccessible(true);
-					packet.write(field.get(this));
+					Object value = field.get(this);
+					if(value != null) {
+						packet.write(value);
+					} else {
+						throw new NullPointerException(
+								String.format("Field %s in class: %s is null. Syncing nulls is not supported. Use Optional instead.",
+										field.getName(), getClass()));
+					}
 					field.setAccessible(false);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
