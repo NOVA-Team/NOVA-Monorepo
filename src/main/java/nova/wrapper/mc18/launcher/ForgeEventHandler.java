@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import nova.core.event.GlobalEvents;
+import nova.core.item.Item;
 import nova.core.item.ItemDictionary;
 import nova.internal.core.Game;
 import nova.wrapper.mc18.wrapper.item.ItemConverter;
@@ -32,9 +33,9 @@ public class ForgeEventHandler {
 	public void onOreRegister(OreDictionary.OreRegisterEvent event) {
 		ItemDictionary novaItemDictionary = Game.itemDictionary();
 
-		String id = ItemConverter.instance().getNovaItem(event.Ore).getID();
-		if (!novaItemDictionary.get(event.Name).contains(id)) {
-			novaItemDictionary.add(event.Name, id);
+		Item item = ItemConverter.instance().getNovaItem(event.Ore);
+		if (!novaItemDictionary.get(event.Name).contains(item)) {
+			novaItemDictionary.add(event.Name, item);
 		}
 	}
 
