@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.client.resources.AbstractResourcePack;
+import net.minecraft.client.resources.FileResourcePack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -31,12 +32,15 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class NovaMinecraftPreloader extends DummyModContainer {
 	public static final String version = "0.0.1";
@@ -191,29 +195,80 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		JsonObject fakeSoundJSON = new JsonObject();
 
 		for (String domain : (Set<String>) pack.getResourceDomains()) {
-			//Load all sounds in the assets/domain/sounds/*
-			File folder = new File(pack.resourcePackFile, "assets/" + domain + "/sounds/");
 
-			if (folder.exists()) {
-				File[] listOfFiles = folder.listFiles();
+			if (pack instanceof FileResourcePack) {
+				//For zip resource packs
+				try {
+					ZipFile zipFile = new ZipFile(pack.resourcePackFile);
 
-				for (int i = 0; i < listOfFiles.length; i++) {
-					File listedFile = listOfFiles[i];
+					if (zipFile.getEntry("assets/" + domain + "/sounds/") != null) {
+						Enumeration zipEntries = zipFile.entries();
 
-					JsonObject sound = new JsonObject();
-					sound.addProperty("category", "ambient");
-					JsonArray sounds = new JsonArray();
+						while (zipEntries.hasMoreElements()) {
+							String zipPath = ((ZipEntry) zipEntries.nextElement()).getName();
+							System.out.println(zipPath);
 
-					String listedName = listedFile.getName().replaceFirst("[.][^.]+$", "");
-					if (listedFile.isFile()) {
-						sounds.add(new JsonPrimitive(listedName));
-					} else if (listedFile.isDirectory()) {
-						for (File soundItemFile : listedFile.listFiles())
-							sounds.add(new JsonPrimitive(listedName + "/" + soundItemFile.getName().replaceFirst("[.][^.]+$", "")));
+							String prefix = "assets/" + domain + "/sounds/";
+							if (zipPath.startsWith(prefix) && !zipPath.equals(prefix)) {
+								String soundName = zipPath.replaceFirst(prefix, "").replaceFirst("[.][^.]+$", "");
+								ZipEntry entry = zipFile.getEntry(zipPath);
+
+								if (!soundName.contains("/")) {
+									JsonObject sound = new JsonObject();
+									sound.addProperty("category", "ambient");
+									JsonArray sounds = new JsonArray();
+
+									if (entry.isDirectory()) {
+										//Sound Collection
+										Enumeration zipEntries2 = zipFile.entries();
+										while (zipEntries2.hasMoreElements()) {
+											String zipPath2 = ((ZipEntry) zipEntries2.nextElement()).getName();
+
+											if (zipPath2.startsWith(prefix + soundName + "/") && !zipFile.getEntry(zipPath2).isDirectory()) {
+												String randomSoundName = zipPath2.replaceFirst(prefix + soundName + "/", "");
+												sounds.add(new JsonPrimitive(soundName + "/" + randomSoundName.replaceFirst("[.][^.]+$", "")));
+											}
+										}
+									} else {
+										sounds.add(new JsonPrimitive(soundName));
+									}
+									sound.add("sounds", sounds);
+									fakeSoundJSON.add(soundName, sound);
+								}
+							}
+						}
 					}
 
-					sound.add("sounds", sounds);
-					fakeSoundJSON.add(listedName, sound);
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new ExceptionInInitializerError("Error generating fake sound JSON file.");
+				}
+			} else {
+				//For folder resource packs
+				//Load all sounds in the assets/domain/sounds/*
+				File folder = new File(pack.resourcePackFile, "assets/" + domain + "/sounds/");
+
+				if (folder.exists()) {
+					File[] listOfFiles = folder.listFiles();
+
+					for (int i = 0; i < listOfFiles.length; i++) {
+						File listedFile = listOfFiles[i];
+
+						JsonObject sound = new JsonObject();
+						sound.addProperty("category", "ambient");
+						JsonArray sounds = new JsonArray();
+
+						String listedName = listedFile.getName().replaceFirst("[.][^.]+$", "");
+						if (listedFile.isFile()) {
+							sounds.add(new JsonPrimitive(listedName));
+						} else if (listedFile.isDirectory()) {
+							for (File soundItemFile : listedFile.listFiles())
+								sounds.add(new JsonPrimitive(listedName + "/" + soundItemFile.getName().replaceFirst("[.][^.]+$", "")));
+						}
+
+						sound.add("sounds", sounds);
+						fakeSoundJSON.add(listedName, sound);
+					}
 				}
 			}
 		}
