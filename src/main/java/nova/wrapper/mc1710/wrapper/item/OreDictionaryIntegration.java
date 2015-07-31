@@ -24,7 +24,7 @@ public class OreDictionaryIntegration {
 		ItemDictionary novaItemDictionary = Game.itemDictionary();
 
 		for (String oredictEntry : novaItemDictionary.keys()) {
-			for (String oreValue : novaItemDictionary.get(oredictEntry)) {
+			for (Item oreValue : novaItemDictionary.get(oredictEntry)) {
 				OreDictionary.registerOre(oredictEntry, ItemConverter.instance().toNative(oreValue));
 			}
 		}
@@ -32,9 +32,8 @@ public class OreDictionaryIntegration {
 		for (String oredictEntry : OreDictionary.getOreNames()) {
 			for (ItemStack oreValue : OreDictionary.getOres(oredictEntry)) {
 				Item novaItem = ItemConverter.instance().getNovaItem(oreValue);
-				String id = novaItem.getID();
-				if (!novaItemDictionary.get(oredictEntry).contains(id))
-					novaItemDictionary.add(oredictEntry, id);
+				if (!novaItemDictionary.get(oredictEntry).contains(novaItem))
+					novaItemDictionary.add(oredictEntry, novaItem);
 			}
 		}
 
@@ -42,13 +41,13 @@ public class OreDictionaryIntegration {
 		novaItemDictionary.whenEntryRemoved(this::onEntryRemoved);
 	}
 
-	private void onEntryAdded(Dictionary.AddEvent<String> event) {
+	private void onEntryAdded(Dictionary.AddEvent<Item> event) {
 		if (!OreDictionary.getOres(event.key).contains(event.value)) {
 			OreDictionary.registerOre(event.key, ItemConverter.instance().toNative(event.value));
 		}
 	}
 
-	private void onEntryRemoved(Dictionary.RemoveEvent<String> event) {
+	private void onEntryRemoved(Dictionary.RemoveEvent<Item> event) {
 		int id = OreDictionary.getOreID(event.key);
 		ItemStack itemStack = ItemConverter.instance().toNative(event.value);
 		ItemStack toRemove = null;
