@@ -5,9 +5,8 @@ import nova.core.component.misc.Collider;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.loader.Loadable;
-import nova.core.loader.NovaMod;
+import nova.core.loader.Mod;
 import nova.core.util.math.RotationUtil;
-import nova.core.util.math.Vector3DUtil;
 import nova.internal.core.Game;
 import nova.internal.core.launch.NovaLauncher;
 import nova.testutils.FakeBlock;
@@ -118,7 +117,7 @@ public class RayTraceTest {
 
 	//TODO: Make ray trace entity unit test
 
-	@NovaMod(id = "rayTrace", name = "ray", version = "1.0", novaVersion = "0.0.1")
+	@Mod(id = "rayTrace", name = "ray", version = "1.0", novaVersion = "0.0.1")
 	public static class RayTraceMod implements Loadable {
 		public static BlockFactory solid;
 		public static EntityFactory testEntity;

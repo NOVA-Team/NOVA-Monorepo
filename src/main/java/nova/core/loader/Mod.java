@@ -8,38 +8,44 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * An annotation placed on the mod's main loading class.
+ * An annotation placed on the NOVA mod's main loading class.
+ *
  * @author Calclavia
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface NovaMod {
+public @interface Mod {
 	/**
 	 * The unique mod identifier for this mod
+	 *
 	 * @return Mod ID
 	 */
 	String id();
 
 	/**
 	 * The user friendly name for the mod
+	 *
 	 * @return Mod name
 	 */
 	String name();
 
 	/**
 	 * The version identifier of this mod
+	 *
 	 * @return Mod Version
 	 */
 	String version();
 
 	/**
 	 * A simple description of the mod.
+	 *
 	 * @return Mod description
 	 */
 	String description() default "";
 
 	/**
 	 * The version of Nova this mod is compatible with
+	 *
 	 * @return Nova version
 	 */
 	String novaVersion();
@@ -48,6 +54,7 @@ public @interface NovaMod {
 	 * The domains used by the mod for its assets.
 	 * These domain names are used to load the assets from file.
 	 * The assets should be placed in assets/domain/*
+	 *
 	 * @return An array of domain names.
 	 */
 	String[] domains() default {};
@@ -60,19 +67,22 @@ public @interface NovaMod {
 	 * "x" is the version wildcard.
 	 * Adding "f" after the version will force the dependency to be a requirement.
 	 * E.g: BuildCraft@6.1.x?
+	 *
 	 * @return The dependencies
 	 */
 	String[] dependencies() default {};
 
 	/**
 	 * Modules of Dependency Injection that will be added to core injector allowing provision of modules by mods.
+	 *
 	 * @return The modules
 	 */
 	Class<? extends Bundle>[] modules() default {};
 
 	/**
-	 * Is this NovaMod a plugin? A NOVA Plugin is usually an API and wrapper that works along NOVA to add more native features to NOVA.
-	 * @return True if the mod is a NOVA Plugin.
+	 * This method is used by APIs to allow them to load before most mods load.
+	 *
+	 * @return The priority for the plugin to load. The higher the number, the higher the load priority.
 	 */
-	boolean isPlugin() default false;
+	int priority() default 0;
 }

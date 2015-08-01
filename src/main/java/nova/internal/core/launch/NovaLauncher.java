@@ -3,7 +3,7 @@ package nova.internal.core.launch;
 import nova.core.deps.Dependencies;
 import nova.core.deps.Dependency;
 import nova.core.deps.MavenDependency;
-import nova.core.loader.NovaMod;
+import nova.core.loader.Mod;
 import nova.core.util.NovaException;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
@@ -34,19 +34,21 @@ import java.util.stream.Stream;
  * <li>{@link #init()}</li>
  * <li>{@link #postInit()}</li>
  * </ol>
+ *
  * @author Calclavia, Kubuxu
  */
-public class NovaLauncher extends ModLoader<NovaMod> {
+public class NovaLauncher extends ModLoader<Mod> {
 
-	private Map<NovaMod, List<MavenDependency>> neededDeps;
+	private Map<Mod, List<MavenDependency>> neededDeps;
 
 	/**
 	 * Creates NovaLauncher.
+	 *
 	 * @param modClasses mods to instantialize.
 	 * @param diep is required as we are installing additional modules to it.
 	 */
 	public NovaLauncher(DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
-		super(NovaMod.class, diep, modClasses);
+		super(Mod.class, diep, modClasses);
 
 		/**
 		 * Install all DI modules
@@ -60,7 +62,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 	public void load() {
 		super.load();
 
-		TopologicalSort.DirectedGraph<NovaMod> modGraph = new TopologicalSort.DirectedGraph<>();
+		TopologicalSort.DirectedGraph<Mod> modGraph = new TopologicalSort.DirectedGraph<>();
 
 		mods.keySet().forEach(modGraph::addNode);
 
@@ -69,7 +71,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 			mod -> {
 				Map<String, String> depMap = dependencyToMap(mod.dependencies());
 				depMap.forEach((id, version) -> {
-					Optional<NovaMod> dependent = mods.keySet()
+					Optional<Mod> dependent = mods.keySet()
 						.stream()
 						.filter(m2 -> m2.id().equals(id))
 						.findFirst();
@@ -79,6 +81,14 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 						modGraph.addEdge(dependent.get(), mod);
 					}
 				});
+
+				//Priority check
+				mods.keySet().forEach(
+					compareMod -> {
+						if (mod.priority() < compareMod.priority()) {
+							modGraph.addEdge(compareMod, mod);
+						}
+					});
 			}
 		);
 
@@ -89,7 +99,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 			.map(mods::get)
 			.forEachOrdered(orderedMods::add);
 
-		Game.logger().info("NOVA Mods Loaded: " + mods.size());
+		Game.logger().info("NOVA mods loaded: " + mods.size());
 	}
 
 	public Map<String, String> dependencyToMap(String[] dependencies) {
@@ -103,7 +113,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 		super.preInit();
 	}
 
-	public Map<NovaMod, List<MavenDependency>> getNeededDeps() {
+	public Map<Mod, List<MavenDependency>> getNeededDeps() {
 		if (neededDeps == null) {
 			throw new IllegalStateException("Dependencies have not been generated");
 		}
@@ -133,7 +143,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 			return;
 		}
 
-		neededDeps.put(mod.getAnnotation(NovaMod.class), deps);
+		neededDeps.put(mod.getAnnotation(Mod.class), deps);
 	}
 
 	//TODO: Separate into Util library
@@ -142,6 +152,7 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 		 * Sort the input graph into a topologically sorted list
 		 *
 		 * Uses the reverse depth first search as outlined in ...
+		 *
 		 * @param graph
 		 * @return The sorted mods list.
 		 */
@@ -184,7 +195,8 @@ public class NovaLauncher extends ModLoader<NovaMod> {
 					return;
 				}
 
-				throw new NovaException("There was a cycle detected in the input graph, sorting is not possible", node) {};
+				throw new NovaException("There was a cycle detected in the input graph, sorting is not possible", node) {
+				};
 			}
 
 			// Visit this node
