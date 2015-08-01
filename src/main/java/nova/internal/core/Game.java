@@ -1,6 +1,7 @@
 package nova.internal.core;
 
 import nova.core.block.BlockManager;
+import nova.core.command.CommandManager;
 import nova.core.component.ComponentManager;
 import nova.core.entity.EntityManager;
 import nova.core.event.GlobalEvents;
@@ -46,6 +47,7 @@ public class Game {
 	private final InputManager inputManager;
 	private final ComponentManager componentManager;
 	private final NativeManager nativeManager;
+	private final CommandManager commandManager;
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
@@ -80,6 +82,7 @@ public class Game {
 		InputManager inputManager,
 		NativeManager nativeManager,
 		ComponentManager componentManager,
+		CommandManager commandManager,
 		UpdateTicker.SynchronizedTicker syncTicker,
 		UpdateTicker.ThreadTicker threadTicker) {
 
@@ -102,6 +105,7 @@ public class Game {
 		this.inputManager = inputManager;
 		this.nativeManager = nativeManager;
 		this.componentManager = componentManager;
+		this.commandManager = commandManager;
 
 		this.syncTicker = syncTicker;
 		this.threadTicker = threadTicker;
@@ -188,6 +192,10 @@ public class Game {
 
 	public static NativeManager natives() {
 		return instance.nativeManager;
+	}
+
+	public static CommandManager commands() {
+		return instance.commandManager;
 	}
 
 	/**
