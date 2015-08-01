@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import nova.core.loader.NovaMod;
+import nova.core.loader.Mod;
 import nova.core.util.ClassLoaderUtil;
 import nova.wrapper.mc18.render.NovaFolderResourcePack;
 import nova.wrapper.mc18.render.NovaResourcePack;
@@ -89,7 +89,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		ASMDataTable asmData = event.getASMHarvestedData();
 
 		modClasses = asmData
-			.getAll(NovaMod.class.getName())
+			.getAll(Mod.class.getName())
 			.stream()
 			.map(d -> d.getClassName())
 			.map(c -> {
@@ -107,14 +107,12 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		newMods.addAll(fmlMods);
 		modClasses.forEach(mod -> {
 			ModMetadata fakeMeta = new ModMetadata();
-			NovaMod annotation = mod.getAnnotation(NovaMod.class);
-			if (!annotation.isPlugin()) {
-				fakeMeta.modId = annotation.id();
-				fakeMeta.name = annotation.name();
-				fakeMeta.version = annotation.version();
-				fakeMeta.description = annotation.description();
-				newMods.add(new DummyNovaMod(fakeMeta));
-			}
+			Mod annotation = mod.getAnnotation(Mod.class);
+			fakeMeta.modId = annotation.id();
+			fakeMeta.name = annotation.name();
+			fakeMeta.version = annotation.version();
+			fakeMeta.description = annotation.description();
+			newMods.add(new DummyNovaMod(fakeMeta));
 		});
 		//TODO: Use AT
 		ReflectionUtil.setPrivateObject(Loader.instance(), newMods, "mods");
@@ -126,10 +124,10 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	}
 
 	public void registerResourcePacks() {
-		Map<NovaMod, Class<?>> classesMap = modClasses
+		Map<Mod, Class<?>> classesMap = modClasses
 			.stream()
-			.filter(clazz -> clazz.getAnnotation(NovaMod.class) != null)
-			.collect(Collectors.toMap((clazz) -> clazz.getAnnotation(NovaMod.class), Function.identity()));
+			.filter(clazz -> clazz.getAnnotation(Mod.class) != null)
+			.collect(Collectors.toMap((clazz) -> clazz.getAnnotation(Mod.class), Function.identity()));
 
 		try {
 			// The same list exists in the Minecraft class, but that can be SRG or not.

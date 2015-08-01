@@ -14,12 +14,10 @@ import nova.core.component.ComponentProvider;
 import nova.core.deps.MavenDependency;
 import nova.core.event.GlobalEvents;
 import nova.core.loader.Loadable;
-import nova.core.loader.NativeLoader;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.deps.DepDownloader;
 import nova.internal.core.launch.InitializationException;
-import nova.internal.core.launch.ModLoader;
 import nova.internal.core.launch.NovaLauncher;
 import nova.wrapper.mc18.NovaMinecraftPreloader;
 import nova.wrapper.mc18.depmodules.ClientModule;
@@ -64,7 +62,6 @@ public class NovaMinecraft {
 	public static NovaMinecraft instance;
 	private static NovaLauncher launcher;
 
-	private static ModLoader<NativeLoader> nativeLoader;
 	private static Set<Loadable> nativeConverters;
 
 	/**
@@ -138,25 +135,6 @@ public class NovaMinecraft {
 			/**
 			 * Instantiate native loaders
 			 */
-			nativeLoader = new ModLoader<>(NativeLoader.class, diep,
-				evt.getAsmData()
-					.getAll(NativeLoader.class.getName())
-					.stream()
-					.map(d -> d.getClassName())
-					.map(c -> {
-						try {
-							return Class.forName(c);
-						} catch (ClassNotFoundException e) {
-							throw new ExceptionInInitializerError(e);
-						}
-					})
-					.filter(c -> mcId.equals(c.getAnnotation(NativeLoader.class).forGame()))
-					.collect(Collectors.toSet())
-			);
-
-			nativeLoader.load();
-
-			nativeLoader.preInit();
 			nativeConverters = Game.natives().getNativeConverters().stream().filter(n -> n instanceof Loadable).map(n -> (Loadable) n).collect(Collectors.toSet());
 			nativeConverters.stream().forEachOrdered(Loadable::preInit);
 			launcher.preInit();
@@ -187,7 +165,6 @@ public class NovaMinecraft {
 		try {
 
 			proxy.init();
-			nativeLoader.init();
 			nativeConverters.stream().forEachOrdered(Loadable::init);
 			launcher.init();
 		} catch (Exception e) {
@@ -201,7 +178,6 @@ public class NovaMinecraft {
 	public void postInit(FMLPostInitializationEvent evt) {
 		try {
 			proxy.postInit();
-			nativeLoader.postInit();
 			nativeConverters.stream().forEachOrdered(Loadable::postInit);
 			launcher.postInit();
 		} catch (Exception e) {
