@@ -1,4 +1,4 @@
 rootProject.name = 'NovaCore'
 
 include "minecraft:1.8"
-include "minecraft:1.7.10"
+include "minecraft:1.7"

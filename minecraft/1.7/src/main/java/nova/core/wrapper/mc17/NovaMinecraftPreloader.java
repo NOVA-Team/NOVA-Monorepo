@@ -1,30 +1,30 @@
-package nova.core.wrapper.mc18;
+package nova.core.wrapper.mc17;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.DummyModContainer;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.LoadController;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.discovery.ASMDataTable;
+import cpw.mods.fml.common.event.FMLConstructionEvent;
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.resources.AbstractResourcePack;
 import net.minecraft.client.resources.FileResourcePack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.DummyModContainer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.LoadController;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.ModMetadata;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
-import net.minecraftforge.fml.common.event.FMLConstructionEvent;
-import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import nova.core.loader.Mod;
 import nova.core.util.ClassLoaderUtil;
-import nova.core.wrapper.mc18.render.NovaFolderResourcePack;
-import nova.core.wrapper.mc18.render.NovaResourcePack;
-import nova.core.wrapper.mc18.util.ReflectionUtil;
+import nova.core.wrapper.mc17.render.NovaFolderResourcePack;
+import nova.core.wrapper.mc17.render.NovaResourcePack;
+import nova.core.wrapper.mc17.util.ReflectionUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -169,7 +169,6 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	@Subscribe
 	public void load(FMLConstructionEvent event) {
 		try {
-			//TODO: Use AT
 			//Apache Commons Hack
 			Field launchHandlerField = FMLLaunchHandler.class.getDeclaredField("INSTANCE");
 			launchHandlerField.setAccessible(true);
@@ -216,7 +215,6 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			fakeMeta.description = annotation.description();
 			newMods.add(new DummyNovaMod(fakeMeta));
 		});
-		//TODO: Use AT
 		ReflectionUtil.setPrivateObject(Loader.instance(), newMods, "mods");
 
 		// Register resource packs
@@ -264,7 +262,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 					//Add folder resource pack location. The folderLocation is the root of the project, including the packages of classes, and an assets folder inside.
 					String folderLocation = c.getProtectionDomain().getCodeSource().getLocation().getPath();
 					String classPath = c.getCanonicalName().replaceAll("\\.", "/");
-					folderLocation = folderLocation.replaceFirst("file:", "").replace(classPath, "").replace("/.class", "").replaceAll("%20", " ");
+					folderLocation = folderLocation.replaceAll("^file:", "").replace(classPath + ".class", "").replaceAll("%20", " ");
 					File folderFile = new File(folderLocation);
 					if (!new File(folderFile, "assets").isDirectory()) {
 						//Try IDEA workaround.
