@@ -38,8 +38,7 @@ public interface ItemWrapperMethods {
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		Item item = Game.natives().toNova(itemStack);
 		item.events.publish(new Item.RightClickEvent(new BWEntity(player)));
-		ItemConverter.instance().updateMCItemStack(itemStack, item);
-		return itemStack;
+		return	ItemConverter.instance().updateMCItemStack(itemStack, item);
 	}
 
 	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {

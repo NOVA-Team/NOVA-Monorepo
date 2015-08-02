@@ -27,6 +27,7 @@ import java.util.Set;
 
 /**
  * The main class responsible for wrapping items.
+ *
  * @author Calclavia, Stan Hebben
  */
 public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable {
@@ -130,6 +131,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	 */
 	public ItemStack updateMCItemStack(ItemStack itemStack, Item item) {
 		itemStack.stackSize = item.count();
+		if (itemStack.stackSize <= 0) {
+			return null;
+		}
+
 		itemStack.setTagCompound(Game.natives().toNative(item.factory().saveItem(item)));
 		return itemStack;
 	}

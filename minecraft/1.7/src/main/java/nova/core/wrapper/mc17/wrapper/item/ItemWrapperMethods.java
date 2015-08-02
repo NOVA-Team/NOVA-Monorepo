@@ -20,6 +20,7 @@ import java.util.Optional;
 
 /**
  * An interface implemented by ItemBlockWrapper and ItemWrapper classes to override Minecraft's item events.
+ *
  * @author Calclavia
  */
 public interface ItemWrapperMethods extends IItemRenderer {
@@ -43,8 +44,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		Item item = Game.natives().toNova(itemStack);
 		item.events.publish(new Item.RightClickEvent(new BWEntity(player)));
-		ItemConverter.instance().updateMCItemStack(itemStack, item);
-		return itemStack;
+		return ItemConverter.instance().updateMCItemStack(itemStack, item);
 	}
 
 	default IIcon getIconFromDamage(int p_77617_1_) {

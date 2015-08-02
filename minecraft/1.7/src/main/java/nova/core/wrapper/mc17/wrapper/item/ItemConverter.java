@@ -130,6 +130,9 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	 */
 	public net.minecraft.item.ItemStack updateMCItemStack(ItemStack itemStack, nova.core.item.Item item) {
 		itemStack.stackSize = item.count();
+		if (itemStack.stackSize <= 0) {
+			return null;
+		}
 		itemStack.setTagCompound(Game.natives().toNative(item.factory().saveItem(item)));
 		return itemStack;
 	}
