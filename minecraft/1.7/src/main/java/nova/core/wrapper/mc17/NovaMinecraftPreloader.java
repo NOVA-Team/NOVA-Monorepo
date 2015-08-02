@@ -81,7 +81,6 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 
 						while (zipEntries.hasMoreElements()) {
 							String zipPath = ((ZipEntry) zipEntries.nextElement()).getName();
-							System.out.println(zipPath);
 
 							String prefix = "assets/" + domain + "/sounds/";
 							if (zipPath.startsWith(prefix) && !zipPath.equals(prefix)) {
@@ -192,7 +191,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		modClasses = asmData
 			.getAll(Mod.class.getName())
 			.stream()
-			.map(d -> d.getClassName())
+			.map(ASMDataTable.ASMData::getClassName)
 			.map(c -> {
 				try {
 					return Class.forName(c);
