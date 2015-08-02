@@ -57,7 +57,7 @@ public class NovaMinecraft {
 	public static final String name = "NOVA";
 	public static final String mcId = "minecraft";
 
-	@SidedProxy(clientSide = "nova.wrapper.mc18.launcher.ClientProxy", serverSide = "nova.wrapper.mc18.launcher.CommonProxy")
+	@SidedProxy(clientSide = "nova.core.wrapper.mc18.launcher.ClientProxy", serverSide = "nova.core.wrapper.mc18.launcher.CommonProxy")
 	public static CommonProxy proxy;
 	@Mod.Instance(id)
 	public static NovaMinecraft instance;
