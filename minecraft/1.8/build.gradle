@@ -4,6 +4,8 @@ apply plugin: "com.jfrog.artifactory"
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "maven-publish"
 
+idea.module.name = "Core-MC-1.8"
+
 configurations {
 	fatJar
 	compile.extendsFrom fatJar
