@@ -7,6 +7,7 @@
 # Sources
 !/src
 !/guidelines
+!/minecraft
 
 # github
 !/.gitignore

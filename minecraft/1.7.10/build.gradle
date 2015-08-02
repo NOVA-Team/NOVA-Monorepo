@@ -1,8 +1,8 @@
-plugins {
-	id "com.jfrog.artifactory" version "3.1.1"
-	id "com.github.johnrengelman.shadow" version "1.2.1"
-	id "maven-publish"
-}
+apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shared-scripts/java.gradle"
+
+apply plugin: "com.jfrog.artifactory"
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "maven-publish"
 
 configurations {
 	fatJar
@@ -10,13 +10,8 @@ configurations {
 }
 
 dependencies {
-	if (project.hasProperty("nova.core.location")) {
-		fatJar project(":NovaCore")
-		testCompile project(path: ':NovaCore', configuration: 'wrapperTests')
-	} else {
-		fatJar group: "nova.core", name: "NovaCore", version: property("nova.core.version"), changing: true
-		testCompile group: "nova.core", name: "NovaCore", version: property("nova.core.version"), classifier: "wrappertests", changing: true
-	}
+	fatJar project(":")
+	testCompile project(path: ':', configuration: 'wrapperTests')
 
 	testCompile "junit:junit:4.12"
 	testCompile 'org.assertj:assertj-core:3.0.0'
@@ -24,7 +19,6 @@ dependencies {
 }
 
 jar {
-	from project(':core').sourceSets.main.output
 	manifest {
 		attributes 'FMLCorePlugin': 'nova.wrapper.mc1710.NovaMinecraftCore'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
