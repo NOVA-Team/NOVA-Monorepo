@@ -67,6 +67,8 @@ publishing {
 		main(MavenPublication) {
 			from components.java
 
+			artifactId "NOVA-Core"
+
 			artifact javadocJar
 			artifact shadowJar
 			artifact sourcesJar
