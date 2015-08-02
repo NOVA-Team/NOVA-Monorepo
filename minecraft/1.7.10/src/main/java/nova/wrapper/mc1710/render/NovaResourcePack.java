@@ -5,10 +5,8 @@ import net.minecraft.client.resources.FileResourcePack;
 import net.minecraft.util.ResourceLocation;
 import nova.wrapper.mc1710.NovaMinecraftPreloader;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -40,7 +38,7 @@ public class NovaResourcePack extends FileResourcePack {
 	@Override
 	protected InputStream getInputStreamByName(String path) throws IOException {
 		try {
-			return new BufferedInputStream(new FileInputStream(new File(this.resourcePackFile, transform(path))));
+			return super.getInputStreamByName(transform(path));
 		} catch (IOException e) {
 			if (path.endsWith("sounds.json")) {
 				return new ByteArrayInputStream(NovaMinecraftPreloader.generateSoundJSON(this).getBytes(Charsets.UTF_8));
