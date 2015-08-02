@@ -1,0 +1,7 @@
+*
+
+!/build.gradle
+!/.gitignore
+
+!/1.8
+!/1.7.10

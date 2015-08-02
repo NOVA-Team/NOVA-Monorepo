@@ -1,0 +1,131 @@
+apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shared-scripts/java.gradle"
+
+apply plugin: "com.jfrog.artifactory"
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "maven-publish"
+
+configurations {
+	fatJar
+	compile.extendsFrom fatJar
+}
+
+dependencies {
+	fatJar project(":")
+	testCompile project(path: ':', configuration: 'wrapperTests')
+
+	testCompile "junit:junit:4.12"
+	testCompile 'org.assertj:assertj-core:3.0.0'
+	testRuntime 'org.slf4j:slf4j-simple:1.7.10'
+}
+
+jar {
+	manifest {
+		attributes 'FMLCorePlugin': 'nova.wrapper.mc18.NovaMinecraftCore'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+		attributes 'FMLAT': 'nova_at.cfg'
+	}
+}
+
+task deobfJar(type: Jar) {
+	from sourceSets.main.output
+	classifier = 'deobf'
+	manifest {
+		attributes 'FMLCorePlugin': 'nova.wrapper.mc18.NovaMinecraftCore'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+		attributes 'FMLAT': 'nova_at.cfg'
+	}
+}
+
+/**
+ * Create fat jar file with all dependencies included.
+ */
+task fatJar(type: Jar) {
+	configurations.fatJar.each {dep ->
+		from(project.zipTree(dep)) {
+			exclude 'META-INF', 'META-INF/**'
+		}
+	}
+	with jar
+
+	manifest {
+		attributes 'FMLCorePlugin': 'nova.wrapper.mc18.NovaMinecraftCore'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+		attributes 'FMLAT': 'nova_at.cfg'
+	}
+	classifier = 'fat'
+}
+
+artifacts {
+	archives deobfJar
+	archives fatJar
+}
+
+publishing {
+	publications {
+		main(MavenPublication) {
+			from components.java
+
+			artifactId "NovaWrapper-MC1.8"
+
+			artifact sourcesJar
+			artifact javadocJar
+			artifact deobfJar
+			artifact fatJar
+
+			pom.withXml(writePom(project.properties))
+			pom.withXml {xml ->
+				def children = xml.asNode().get("dependencies")[0]
+				for (child in children) {
+					def artifactId = child.get("artifactId")[0].value()[0]
+					if (artifactId.equals("forgeSrc") || artifactId.equals("forgeBin")) {
+						children.remove(child)
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+artifactory {
+	publish {
+		defaults {
+			publications("main")
+			publishPom = true
+		}
+	}
+}
+
+apply plugin: 'forge'
+
+minecraft {
+	version = property("minecraft.version") + "-" + property("forge.version")
+	mappings = 'stable_nodoc_16'
+	runDir = "run"
+}
+
+reobf {
+	reobf(fatJar) {spec -> spec.classpath = configurations.compile}
+}
+
+runClient {
+	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc18.NovaMinecraftCore'
+}
+
+runServer {
+	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc18.NovaMinecraftCore'
+}
+
+processResources {
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+		expand 'version': project.version, 'mcversion': project.minecraft.version
+	}
+
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
+}
