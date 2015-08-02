@@ -67,7 +67,7 @@ publishing {
 		main(MavenPublication) {
 			from components.java
 
-			artifactId "NovaWrapper-MC1.8"
+			artifactId "NOVA-Core-Wrapper-MC1.8"
 
 			artifact sourcesJar
 			artifact javadocJar
