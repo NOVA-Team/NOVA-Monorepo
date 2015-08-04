@@ -18,8 +18,26 @@ public enum Direction {
 	EAST(1, 0, 0),
 	UNKNOWN(0, 0, 0);
 
-	public static final Direction[] DIRECTIONS = new Direction[] {
-		DOWN, UP, NORTH, SOUTH, WEST, EAST
+	/**
+	 * Contains all valid directions.
+	 */
+	public static final Direction[] VALID_DIRECTIONS =  new Direction[] {
+			DOWN, UP, NORTH, SOUTH, WEST, EAST
+	};
+
+	/**
+	 * Includes valid directions
+	 * @deprecated use {@link Direction#VALID_DIRECTIONS} instead.
+	 * TODO: Remove in: 0.1.0
+	 */
+	@Deprecated
+	public static final Direction[] DIRECTIONS = VALID_DIRECTIONS;
+
+	/**
+	 * Directions in a 2 dimensional space.
+	 */
+	public static final Direction[] FLAT_DIRECTIONS = new Direction[] {
+			NORTH, SOUTH, WEST, EAST
 	};
 
 	private static final Direction[] values = Direction.values();
@@ -74,7 +92,7 @@ public enum Direction {
 		if (this == Direction.UNKNOWN) {
 			return this;
 		} else {
-			return DIRECTIONS[this.ordinal() ^ 1];
+			return VALID_DIRECTIONS[this.ordinal() ^ 1];
 		}
 	}
 
