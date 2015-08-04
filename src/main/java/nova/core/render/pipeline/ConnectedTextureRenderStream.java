@@ -36,7 +36,7 @@ public class ConnectedTextureRenderStream extends BlockRenderStream {
 
 		connectMask = () -> {
 			if (this.block.has(BlockTransform.class)) {
-				return Arrays.stream(Direction.DIRECTIONS)
+				return Arrays.stream(Direction.VALID_DIRECTIONS)
 					.filter(d -> this.block.world().getBlock(this.block.position().add(d.toVector())).get().sameType(this.block))
 					.map(d -> 1 << d.ordinal())
 					.reduce(0, (b, a) -> a | b);
@@ -51,7 +51,7 @@ public class ConnectedTextureRenderStream extends BlockRenderStream {
 			model.addChild(vModel);
 
 			//Render the block edge
-			for (Direction dir : Direction.DIRECTIONS)
+			for (Direction dir : Direction.VALID_DIRECTIONS)
 				if ((faceMask & (1 << dir.ordinal())) != 0) {
 					renderFace(dir, model);
 				}

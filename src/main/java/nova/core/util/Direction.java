@@ -28,6 +28,7 @@ public enum Direction {
 	/**
 	 * Includes valid directions
 	 * @deprecated use {@link Direction#VALID_DIRECTIONS} instead.
+	 * TODO: Remove in: 0.1.0
 	 */
 	@Deprecated
 	public static final Direction[] DIRECTIONS = VALID_DIRECTIONS;
@@ -91,7 +92,7 @@ public enum Direction {
 		if (this == Direction.UNKNOWN) {
 			return this;
 		} else {
-			return DIRECTIONS[this.ordinal() ^ 1];
+			return VALID_DIRECTIONS[this.ordinal() ^ 1];
 		}
 	}
 
