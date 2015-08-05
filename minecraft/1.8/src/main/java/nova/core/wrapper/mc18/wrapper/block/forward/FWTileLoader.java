@@ -49,7 +49,7 @@ public final class FWTileLoader {
 		if (blockFactory.isPresent()) {
 			return blockFactory.get().makeBlock();
 		} else {
-			throw new RuntimeException("Error! Invalid NOVA block ID");
+			throw new RuntimeException("Error! Invalid NOVA block ID: " + blockID);
 		}
 	}
 }
