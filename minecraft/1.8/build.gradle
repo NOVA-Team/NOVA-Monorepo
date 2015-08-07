@@ -5,6 +5,7 @@ apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "maven-publish"
 
 idea.module.name = "Core-MC-1.8"
+archivesBaseName = "NOVA-Core-Wrapper-MC1.8"
 
 configurations {
 	fatJar
@@ -67,7 +68,7 @@ publishing {
 		main(MavenPublication) {
 			from components.java
 
-			artifactId "NOVA-Core-Wrapper-MC1.8"
+			artifactId archivesBaseName
 
 			artifact sourcesJar
 			artifact javadocJar
