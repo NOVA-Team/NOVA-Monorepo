@@ -19,6 +19,7 @@ import nova.core.wrapper.mc18.render.RenderUtility;
 import nova.core.wrapper.mc18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc18.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc18.wrapper.block.forward.FWTileRenderer;
+import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntityParticle;
 import nova.core.wrapper.mc18.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc18.wrapper.entity.forward.FWEntityFX;
 import nova.core.wrapper.mc18.wrapper.entity.forward.FWEntityRenderer;
@@ -84,8 +85,13 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public Entity spawnParticle(net.minecraft.world.World world, EntityFactory factory) {
+		if (factory.getDummy() instanceof BWEntityParticle) {
+			//	EnumParticleTypes.getParticleFromId(factory.getID().replaceFirst("minecraft:",""));
+		}
+
 		FWEntityFX bwEntityFX = new FWEntityFX(world, factory);
 		FMLClientHandler.instance().getClient().effectRenderer.addEffect(bwEntityFX);
+
 		return bwEntityFX.wrapped;
 	}
 

@@ -1,11 +1,12 @@
 package nova.core.wrapper.mc17.wrapper.entity;
 
 import nova.core.entity.Entity;
+import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.wrapper.mc17.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc17.wrapper.entity.forward.MCEntityTransform;
 
-public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity> {
+public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, Loadable {
 
 	@Override
 	public Class<Entity> getNovaSide() {
@@ -36,6 +37,10 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 		}
 
 		throw new IllegalArgumentException("Entity wrapper is invalid (where did this object come from?)");
+	}
+
+	@Override
+	public void preInit() {
 
 	}
 }

@@ -1,4 +1,4 @@
-package nova.core.wrapper.mc18.wrapper.entity;
+package nova.core.wrapper.mc18.wrapper.entity.backward;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

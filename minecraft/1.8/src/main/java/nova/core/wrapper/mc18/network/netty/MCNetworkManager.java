@@ -19,7 +19,7 @@ import nova.core.wrapper.mc18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc18.network.MCPacket;
 import nova.core.wrapper.mc18.network.discriminator.NovaPacket;
 import nova.core.wrapper.mc18.network.discriminator.PacketAbstract;
-import nova.core.wrapper.mc18.wrapper.entity.BWEntity;
+import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntity;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.EnumMap;

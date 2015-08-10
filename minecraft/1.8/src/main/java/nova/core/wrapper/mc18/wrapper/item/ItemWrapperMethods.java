@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
-import nova.core.wrapper.mc18.wrapper.entity.BWEntity;
+import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntity;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -15,6 +15,7 @@ import java.util.Optional;
 
 /**
  * An interface implemented by ItemBlockWrapper and ItemWrapper classes to override Minecraft's item events.
+ *
  * @author Calclavia
  */
 public interface ItemWrapperMethods {
@@ -38,7 +39,7 @@ public interface ItemWrapperMethods {
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		Item item = Game.natives().toNova(itemStack);
 		item.events.publish(new Item.RightClickEvent(new BWEntity(player)));
-		return	ItemConverter.instance().updateMCItemStack(itemStack, item);
+		return ItemConverter.instance().updateMCItemStack(itemStack, item);
 	}
 
 	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
