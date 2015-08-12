@@ -203,6 +203,8 @@ public class Args {
 		return check(enumClass, index);
 	}
 
+	// TODO: Player check
+
 	// Misc
 
 	public boolean hasArg(int index) {
