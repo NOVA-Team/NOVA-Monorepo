@@ -35,14 +35,10 @@ public class CommandTest {
 
 	public static class ExplodeCommand extends Command {
 		@Override
-		public void handle(Player player, String... params) throws CommandException {
-			if (params.length == 1) {
-				if (params[0] != null && params[0].contains("radius")) {
-					return;
-				}
+		public void handle(Player player, Args params) throws CommandException {
+			if (params.checkString(0).equals("radius")) {
+				
 			}
-
-			throw new CommandException("Invalid command parameters!");
 		}
 
 		@Override
