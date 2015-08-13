@@ -14,7 +14,7 @@ import nova.core.world.World;
 import nova.core.wrapper.mc17.launcher.NovaMinecraft;
 import nova.core.wrapper.mc17.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc17.wrapper.block.forward.FWBlock;
-import nova.core.wrapper.mc17.wrapper.entity.BWEntity;
+import nova.core.wrapper.mc17.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc17.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc17.wrapper.entity.forward.MCEntityTransform;
 import nova.internal.core.Game;

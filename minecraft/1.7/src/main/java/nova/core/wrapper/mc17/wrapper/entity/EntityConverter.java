@@ -1,8 +1,11 @@
 package nova.core.wrapper.mc17.wrapper.entity;
 
+import net.minecraft.client.particle.EntityFX;
 import nova.core.entity.Entity;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
+import nova.core.wrapper.mc17.wrapper.entity.backward.BWEntity;
+import nova.core.wrapper.mc17.wrapper.entity.backward.BWEntityFX;
 import nova.core.wrapper.mc17.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc17.wrapper.entity.forward.MCEntityTransform;
 
@@ -41,6 +44,9 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 
 	@Override
 	public void preInit() {
-
+		//TODO: Register particle fxs
+		/**
+		 * Backward register all particle effects
+		 */
 	}
 }

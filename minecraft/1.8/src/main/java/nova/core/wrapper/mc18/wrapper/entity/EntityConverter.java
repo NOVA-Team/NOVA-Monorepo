@@ -1,14 +1,20 @@
 package nova.core.wrapper.mc18.wrapper.entity;
 
+import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.entity.Entity;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntity;
-import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntityParticle;
+import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntityFX;
 import nova.core.wrapper.mc18.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc18.wrapper.entity.forward.MCEntityTransform;
 import nova.internal.core.Game;
+
+import java.util.Map;
 
 public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, Loadable {
 
@@ -44,10 +50,18 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void preInit() {
-		//Backward register all particle fxs as entities
+		/**
+		 * Backward register all particle effects
+		 */
 		for (EnumParticleTypes type : EnumParticleTypes.values()) {
-			Game.entities().register(args -> new BWEntityParticle(type.getParticleName()));
+			Game.entities().register(args -> {
+				//Look up for particle factory and pass it into BWEntityFX
+				Map<Integer, IParticleFactory> particleMap = FMLClientHandler.instance().getClient().effectRenderer.field_178932_g;
+				IParticleFactory particleFactory = particleMap.get(type.getParticleID());
+				return new BWEntityFX(particleFactory.getEntityFX(0, null, 0, 0, 0, 0, 0, 0));
+			});
 		}
 	}
 }
