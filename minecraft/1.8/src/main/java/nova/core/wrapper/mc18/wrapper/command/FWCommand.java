@@ -49,7 +49,7 @@ public class FWCommand implements ICommand {
 	public void processCommand(ICommandSender p_71515_1_, String[] p_71515_2_) throws CommandException {
 		Entity entity = Game.natives().toNova(p_71515_1_);
 		try {
-			command.handle(entity.get(Player.class), p_71515_2_);
+			command.handle(entity.get(Player.class), String.join(" ", p_71515_2_));
 		} catch (Command.CommandException e) {
 			throw new CommandException(e.getMessage());
 		}
