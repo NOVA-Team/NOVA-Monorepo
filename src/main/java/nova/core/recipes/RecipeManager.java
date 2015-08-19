@@ -1,8 +1,8 @@
 package nova.core.recipes;
 
-import nova.core.event.EventBus;
-import nova.core.event.EventListener;
-import nova.core.event.EventListenerHandle;
+import nova.core.event.bus.EventBus;
+import nova.core.event.bus.EventListener;
+import nova.core.event.bus.EventListenerHandle;
 
 import java.util.*;
 

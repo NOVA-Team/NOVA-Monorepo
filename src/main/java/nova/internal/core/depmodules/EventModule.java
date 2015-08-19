@@ -1,6 +1,6 @@
 package nova.internal.core.depmodules;
 
-import nova.core.event.GlobalEvents;
+import nova.core.event.bus.GlobalEvents;
 import se.jbee.inject.bind.BinderModule;
 import se.jbee.inject.util.Scoped;
 

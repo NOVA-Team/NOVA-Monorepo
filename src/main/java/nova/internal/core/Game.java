@@ -4,7 +4,7 @@ import nova.core.block.BlockManager;
 import nova.core.command.CommandManager;
 import nova.core.component.ComponentManager;
 import nova.core.entity.EntityManager;
-import nova.core.event.GlobalEvents;
+import nova.core.event.bus.GlobalEvents;
 import nova.core.game.ClientManager;
 import nova.core.game.GameInfo;
 import nova.core.game.InputManager;

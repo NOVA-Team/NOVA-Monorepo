@@ -1,4 +1,4 @@
-package nova.core.event;
+package nova.core.event.bus;
 
 /**
  * Event listeners listen to a single event type.

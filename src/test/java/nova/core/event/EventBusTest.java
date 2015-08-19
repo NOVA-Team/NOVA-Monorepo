@@ -1,5 +1,7 @@
 package nova.core.event;
 
+import nova.core.event.bus.EventBus;
+import nova.core.event.bus.EventListenerHandle;
 import org.junit.Test;
 
 import static nova.testutils.NovaAssertions.assertThat;

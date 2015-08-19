@@ -1,5 +1,7 @@
 package nova.core.event;
 
+import nova.core.event.bus.EventListener;
+
 /**
  * Created by Stan on 5/02/2015.
  */

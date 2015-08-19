@@ -31,7 +31,7 @@ import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.math.MatrixStack;
 import nova.core.util.shape.Cuboid;
-import nova.core.wrapper.mc17.util.WrapperEvents;
+import nova.core.wrapper.mc17.util.WrapperEvent;
 import nova.core.wrapper.mc17.wrapper.render.BWModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -316,7 +316,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public boolean canConnectRedstone(IBlockAccess access, int x, int y, int z, int side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
-		WrapperEvents.RedstoneConnectEvent event = new WrapperEvents.RedstoneConnectEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
+		WrapperEvent.RedstoneConnect event = new WrapperEvent.RedstoneConnect(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
 		Game.events().publish(event);
 		return event.canConnect;
 	}
@@ -324,7 +324,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public int isProvidingWeakPower(IBlockAccess access, int x, int y, int z, int side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
-		WrapperEvents.WeakRedstoneEvent event = new WrapperEvents.WeakRedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
+		WrapperEvent.WeakRedstone event = new WrapperEvent.WeakRedstone(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
 		Game.events().publish(event);
 		return event.power;
 	}
@@ -332,7 +332,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public int isProvidingStrongPower(IBlockAccess access, int x, int y, int z, int side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
-		WrapperEvents.StrongRedstoneEvent event = new WrapperEvents.StrongRedstoneEvent(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
+		WrapperEvent.StrongRedstone event = new WrapperEvent.StrongRedstone(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side));
 		Game.events().publish(event);
 		return event.power;
 	}

@@ -5,7 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.oredict.OreDictionary;
-import nova.core.event.GlobalEvents;
+import nova.core.event.bus.GlobalEvents;
 import nova.core.item.Item;
 import nova.core.item.ItemDictionary;
 import nova.core.wrapper.mc17.wrapper.item.ItemConverter;
@@ -18,12 +18,12 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 public class ForgeEventHandler {
 	@SubscribeEvent
 	public void worldUnload(WorldEvent.Load evt) {
-		Game.events().publish(new GlobalEvents.WorldEvent.Load(Game.natives().toNova(evt.world)));
+		Game.events().publish(new nova.core.event.WorldEvent.Load(Game.natives().toNova(evt.world)));
 	}
 
 	@SubscribeEvent
 	public void worldLoad(WorldEvent.Unload evt) {
-		Game.events().publish(new GlobalEvents.WorldEvent.Unload(Game.natives().toNova(evt.world)));
+		Game.events().publish(new nova.core.event.WorldEvent.Unload(Game.natives().toNova(evt.world)));
 	}
 
 	@SubscribeEvent
@@ -38,11 +38,11 @@ public class ForgeEventHandler {
 
 	@SubscribeEvent
 	public void playerInteractEvent(PlayerInteractEvent event) {
-		GlobalEvents.PlayerInteractEvent evt = new GlobalEvents.PlayerInteractEvent(
+		nova.core.event.EntityEvent.PlayerInteract evt = new nova.core.event.EntityEvent.PlayerInteract(
 			Game.natives().toNova(event.world),
 			new Vector3D(event.x, event.y, event.z),
 			Game.natives().toNova(event.entityPlayer),
-			GlobalEvents.PlayerInteractEvent.Action.values()[event.action.ordinal()]
+			nova.core.event.EntityEvent.PlayerInteract.Action.values()[event.action.ordinal()]
 		);
 
 		Game.events().publish(evt);

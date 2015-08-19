@@ -1,5 +1,6 @@
 package nova.core.event;
 
+import nova.core.event.bus.CancelableEventBus;
 import org.junit.Test;
 
 import static nova.testutils.NovaAssertions.assertThat;

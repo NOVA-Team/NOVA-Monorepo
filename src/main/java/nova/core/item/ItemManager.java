@@ -2,9 +2,9 @@ package nova.core.item;
 
 import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
-import nova.core.event.EventBus;
-import nova.core.event.EventListener;
-import nova.core.event.EventListenerHandle;
+import nova.core.event.bus.EventBus;
+import nova.core.event.bus.EventListener;
+import nova.core.event.bus.EventListenerHandle;
 import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.util.Manager;
 import nova.core.util.Registry;

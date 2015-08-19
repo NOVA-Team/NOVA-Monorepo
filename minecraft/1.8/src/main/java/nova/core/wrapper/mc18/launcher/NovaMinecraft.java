@@ -12,7 +12,8 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
 import nova.core.component.ComponentProvider;
 import nova.core.deps.MavenDependency;
-import nova.core.event.GlobalEvents;
+import nova.core.event.ServerEvent;
+import nova.core.event.bus.GlobalEvents;
 import nova.core.loader.Loadable;
 import nova.core.wrapper.mc18.NovaMinecraftPreloader;
 import nova.core.wrapper.mc18.depmodules.ClientModule;
@@ -191,13 +192,13 @@ public class NovaMinecraft {
 
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
-		Game.events().publish(new GlobalEvents.ServerStartingEvent());
+		Game.events().publish(new ServerEvent.Start());
 		Game.commands().forEach(command -> event.registerServerCommand(Game.natives().toNative(command)));
 	}
 
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent event) {
-		Game.events().publish(new GlobalEvents.ServerStoppingEvent());
+		Game.events().publish(new ServerEvent.Stop());
 	}
 
 }

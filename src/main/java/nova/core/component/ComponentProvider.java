@@ -1,8 +1,8 @@
 package nova.core.component;
 
 import nova.core.component.exception.ComponentException;
-import nova.core.event.Event;
-import nova.core.event.EventBus;
+import nova.core.event.bus.Event;
+import nova.core.event.bus.EventBus;
 
 import java.util.Collection;
 import java.util.HashMap;

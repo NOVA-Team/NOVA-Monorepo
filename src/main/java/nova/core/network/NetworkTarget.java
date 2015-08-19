@@ -1,7 +1,7 @@
 package nova.core.network;
 
 import nova.core.entity.Entity;
-import nova.core.event.SidedEventBus;
+import nova.core.event.bus.SidedEventBus;
 import nova.core.util.NovaException;
 import nova.core.world.World;
 import nova.internal.core.Game;
