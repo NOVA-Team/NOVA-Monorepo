@@ -5,7 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.oredict.OreDictionary;
-import nova.core.event.bus.GlobalEvents;
+import nova.core.event.PlayerEvent;
 import nova.core.item.Item;
 import nova.core.item.ItemDictionary;
 import nova.core.wrapper.mc17.wrapper.item.ItemConverter;
@@ -37,12 +37,22 @@ public class ForgeEventHandler {
 	}
 
 	@SubscribeEvent
+	public void playerJoin(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent evt) {
+		Game.events().publish(new PlayerEvent.Join(Game.natives().toNova(evt.player)));
+	}
+
+	@SubscribeEvent
+	public void playerLeave(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent evt) {
+		Game.events().publish(new PlayerEvent.Leave(Game.natives().toNova(evt.player)));
+	}
+
+	@SubscribeEvent
 	public void playerInteractEvent(PlayerInteractEvent event) {
-		nova.core.event.EntityEvent.PlayerInteract evt = new nova.core.event.EntityEvent.PlayerInteract(
+		nova.core.event.PlayerEvent.Interact evt = new nova.core.event.PlayerEvent.Interact(
 			Game.natives().toNova(event.world),
 			new Vector3D(event.x, event.y, event.z),
 			Game.natives().toNova(event.entityPlayer),
-			nova.core.event.EntityEvent.PlayerInteract.Action.values()[event.action.ordinal()]
+			nova.core.event.PlayerEvent.Interact.Action.values()[event.action.ordinal()]
 		);
 
 		Game.events().publish(evt);
