@@ -2,8 +2,6 @@ package nova.core.event;
 
 import nova.core.entity.Entity;
 import nova.core.event.bus.CancelableEvent;
-import nova.core.world.World;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * All events related to the entity

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author TheSandromatic
@@ -30,7 +31,6 @@ public class NativeManager {
 
 	/**
 	 * Registers a component to a native interface.
-	 *
 	 * @param component A component. Must extend INTERFACE.
 	 * @param nativeInterface the class of the INTERFACE.
 	 */
@@ -40,7 +40,6 @@ public class NativeManager {
 
 	/**
 	 * Gets the interface registered for a component.
-	 *
 	 * @param component the component.
 	 * @return The interface on the native side.
 	 */
@@ -50,7 +49,6 @@ public class NativeManager {
 
 	/**
 	 * Gets the component registered for an interface.
-	 *
 	 * @param nativeInterface the interface.
 	 * @return the component registered to it.
 	 */
@@ -75,6 +73,7 @@ public class NativeManager {
 	}
 
 	private NativeConverter findConverter(Map<Class<?>, NativeConverter> map, Object obj) {
+		Objects.requireNonNull(obj);
 		Class<?> clazz = obj.getClass();
 
 		return map
@@ -90,6 +89,7 @@ public class NativeManager {
 	 * Converts a native object to a nova object. This method has autocast, is DANGEROUS and may crash.
 	 */
 	public <T> T toNova(Object nativeObject) {
+		Objects.requireNonNull(nativeObject);
 		NativeConverter converter = findConverter(nativeConverters, nativeObject);
 		if (converter == null) {
 			throw new NativeException("NativeManager.toNova: Converter for " + nativeObject + " with class " + nativeObject.getClass() + " does not exist!");
@@ -102,6 +102,7 @@ public class NativeManager {
 	 * Converts a nova object to a native object. This method has autocast, is DANGEROUS and may crash.
 	 */
 	public <T> T toNative(Object novaObject) {
+		Objects.requireNonNull(novaObject);
 		NativeConverter converter = findConverter(novaConverters, novaObject);
 		if (converter == null) {
 			throw new NativeException("NativeManager.toNative: Converter for " + novaObject + " with class " + novaObject.getClass() + " does not exist!");
