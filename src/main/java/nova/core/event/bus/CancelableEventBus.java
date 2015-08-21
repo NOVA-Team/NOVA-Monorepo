@@ -1,4 +1,4 @@
-package nova.core.event;
+package nova.core.event.bus;
 
 /**
  * Variant of {@link EventBus} which stops publishing events after they are

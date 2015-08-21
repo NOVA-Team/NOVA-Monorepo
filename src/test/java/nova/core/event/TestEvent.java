@@ -1,5 +1,7 @@
 package nova.core.event;
 
+import nova.core.event.bus.CancelableEvent;
+
 /**
  * @author Stan Hebben
  */

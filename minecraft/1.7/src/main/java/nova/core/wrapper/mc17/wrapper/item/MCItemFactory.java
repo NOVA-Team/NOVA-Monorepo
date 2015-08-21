@@ -45,7 +45,7 @@ public class MCItemFactory extends ItemFactory {
 
 		BWItem mcItem = (BWItem) item;
 
-		Data result = Game.natives().toNova(mcItem.getTag());
+		Data result = mcItem.getTag() != null ? Game.natives().toNova(mcItem.getTag()) : new Data();
 		if (result == null) {
 			result = new Data();
 		}

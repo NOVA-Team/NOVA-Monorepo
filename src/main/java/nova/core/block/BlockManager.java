@@ -1,8 +1,8 @@
 package nova.core.block;
 
-import nova.core.event.CancelableEvent;
-import nova.core.event.CancelableEventBus;
-import nova.core.event.EventBus;
+import nova.core.event.bus.CancelableEvent;
+import nova.core.event.bus.CancelableEventBus;
+import nova.core.event.bus.EventBus;
 import nova.core.item.ItemManager;
 import nova.core.util.Manager;
 import nova.core.util.Registry;

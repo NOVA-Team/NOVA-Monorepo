@@ -5,6 +5,7 @@ apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "maven-publish"
 
 idea.module.name = "Core-MC-1.7"
+archivesBaseName = "NOVA-Core-Wrapper-MC1.7"
 
 configurations {
 	fatJar
@@ -22,7 +23,7 @@ dependencies {
 
 jar {
 	manifest {
-		attributes 'FMLCorePlugin': 'nova.wrapper.mc1710.NovaMinecraftCore'
+		attributes 'FMLCorePlugin': 'nova.core.wrapper.mc17.NovaMinecraftCore'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
 		attributes 'FMLAT': 'nova_at.cfg'
 	}
@@ -32,7 +33,7 @@ task deobfJar(type: Jar) {
 	from sourceSets.main.output
 	classifier = 'deobf'
 	manifest {
-		attributes 'FMLCorePlugin': 'nova.wrapper.mc1710.NovaMinecraftCore'
+		attributes 'FMLCorePlugin': 'nova.core.wrapper.mc17.NovaMinecraftCore'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
 		attributes 'FMLAT': 'nova_at.cfg'
 	}
@@ -50,7 +51,7 @@ task fatJar(type: Jar) {
 	with jar
 
 	manifest {
-		attributes 'FMLCorePlugin': 'nova.wrapper.mc1710.NovaMinecraftCore'
+		attributes 'FMLCorePlugin': 'nova.core.wrapper.mc17.NovaMinecraftCore'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
 		attributes 'FMLAT': 'nova_at.cfg'
 	}
@@ -67,7 +68,7 @@ publishing {
 		main(MavenPublication) {
 			from components.java
 
-			artifactId "NOVA-Core-Wrapper-MC1.7"
+			artifactId archivesBaseName
 
 			artifact sourcesJar
 			artifact deobfJar
@@ -110,11 +111,11 @@ reobf {
 }
 
 runClient {
-	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc1710.NovaMinecraftCore'
+	jvmArgs '-Dfml.coreMods.load=nova.core.wrapper.mc17.NovaMinecraftCore'
 }
 
 runServer {
-	jvmArgs '-Dfml.coreMods.load=nova.wrapper.mc1710.NovaMinecraftCore'
+	jvmArgs '-Dfml.coreMods.load=nova.core.wrapper.mc17.NovaMinecraftCore'
 }
 
 processResources {

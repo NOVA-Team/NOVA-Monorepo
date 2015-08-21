@@ -52,7 +52,7 @@ public abstract class NovaAssertions extends Assertions{
 
         /**
          * Returns difference between objects.
-         * @param other object from which the difference is to be calculated.
+         * @param actual object from which the difference is to be calculated.
          * @param other object to which the difference is to be calculated.
          * @return the difference
          */

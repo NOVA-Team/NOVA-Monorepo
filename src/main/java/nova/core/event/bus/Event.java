@@ -1,4 +1,4 @@
-package nova.core.event;
+package nova.core.event.bus;
 
 /**
  * All events extend this class.

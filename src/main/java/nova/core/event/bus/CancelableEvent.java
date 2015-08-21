@@ -1,4 +1,4 @@
-package nova.core.event;
+package nova.core.event.bus;
 
 /**
  * A base class for an cancelable event.

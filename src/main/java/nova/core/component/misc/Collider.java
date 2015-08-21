@@ -7,8 +7,7 @@ package nova.core.component.misc;
 import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
-import nova.core.event.Event;
-import nova.core.event.EventListener;
+import nova.core.event.bus.Event;
 import nova.core.util.shape.Cuboid;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 

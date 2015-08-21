@@ -3,8 +3,6 @@ package nova.core.entity;
 import nova.core.block.Stateful;
 import nova.core.component.ComponentProvider;
 import nova.core.component.transform.EntityTransform;
-import nova.core.event.Event;
-import nova.core.event.EventBus;
 import nova.core.util.Identifiable;
 import nova.core.util.UniqueIdentifiable;
 import nova.core.world.World;

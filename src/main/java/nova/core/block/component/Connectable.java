@@ -1,8 +1,8 @@
 package nova.core.block.component;
 
 import nova.core.component.Component;
-import nova.core.event.Event;
-import nova.core.event.EventBus;
+import nova.core.event.bus.Event;
+import nova.core.event.bus.EventBus;
 
 import java.util.Collections;
 import java.util.Set;

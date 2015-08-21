@@ -1,6 +1,6 @@
 package nova.core.block;
 
-import nova.core.event.Event;
+import nova.core.event.bus.Event;
 
 /**
  * This interface should be implemented by any block willing to keep a

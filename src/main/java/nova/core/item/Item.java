@@ -2,8 +2,7 @@ package nova.core.item;
 
 import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
-import nova.core.event.Event;
-import nova.core.event.EventBus;
+import nova.core.event.bus.Event;
 import nova.core.render.Color;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
