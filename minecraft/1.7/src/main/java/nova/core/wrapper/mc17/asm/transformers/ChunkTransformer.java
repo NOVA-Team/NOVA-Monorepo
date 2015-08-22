@@ -42,7 +42,7 @@ public class ChunkTransformer implements Transformer {
 		list.add(new VarInsnNode(ILOAD, 9));
 		list.add(new VarInsnNode(ALOAD, 4));
 		list.add(new VarInsnNode(ILOAD, 5));
-		list.add(new MethodInsnNode(INVOKESTATIC, "nova/wrapper/mc1710/asm/StaticForwarder", "chunkSetBlockEvent", "(Lnet/minecraft/world/chunk/Chunk;IIILnet/minecraft/block/Block;ILnet/minecraft/block/Block;I)V", false));
+		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc17/asm/StaticForwarder", "chunkSetBlockEvent", "(Lnet/minecraft/world/chunk/Chunk;IIILnet/minecraft/block/Block;ILnet/minecraft/block/Block;I)V", false));
 
 		AbstractInsnNode lastInsn = method.instructions.getLast();
 		while (lastInsn instanceof LabelNode || lastInsn instanceof LineNumberNode) {
