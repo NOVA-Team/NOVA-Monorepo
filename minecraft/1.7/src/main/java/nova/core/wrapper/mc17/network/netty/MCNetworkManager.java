@@ -19,7 +19,7 @@ import nova.core.wrapper.mc17.launcher.NovaMinecraft;
 import nova.core.wrapper.mc17.network.MCPacket;
 import nova.core.wrapper.mc17.network.discriminator.NovaPacket;
 import nova.core.wrapper.mc17.network.discriminator.PacketAbstract;
-import nova.core.wrapper.mc17.wrapper.entity.BWEntity;
+import nova.core.wrapper.mc17.wrapper.entity.backward.BWEntity;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.EnumMap;
