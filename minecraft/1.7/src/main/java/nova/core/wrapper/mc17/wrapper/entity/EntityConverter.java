@@ -1,6 +1,7 @@
 package nova.core.wrapper.mc17.wrapper.entity;
 
-import net.minecraft.client.particle.EntityFX;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nova.core.entity.Entity;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
@@ -8,6 +9,7 @@ import nova.core.wrapper.mc17.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc17.wrapper.entity.backward.BWEntityFX;
 import nova.core.wrapper.mc17.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc17.wrapper.entity.forward.MCEntityTransform;
+import nova.internal.core.Game;
 
 public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, Loadable {
 
@@ -43,10 +45,16 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void preInit() {
-		//TODO: Register particle fxs
 		/**
 		 * Backward register all particle effects
 		 */
+		BWEntityFX.fxMap.forEach((k, v) ->
+				Game.entities().register(args -> {
+					//Look up for particle factory and pass it into BWEntityFX
+					return new BWEntityFX(k);
+				})
+		);
 	}
 }

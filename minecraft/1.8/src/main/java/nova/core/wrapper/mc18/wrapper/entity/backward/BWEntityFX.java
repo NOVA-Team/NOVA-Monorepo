@@ -15,6 +15,7 @@ import net.minecraft.client.particle.EntityEnchantmentTableParticleFX;
 import net.minecraft.client.particle.EntityExplodeFX;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.particle.EntityFireworkSparkFX;
+import net.minecraft.client.particle.EntityFireworkStarterFX_Factory;
 import net.minecraft.client.particle.EntityFishWakeFX;
 import net.minecraft.client.particle.EntityFlameFX;
 import net.minecraft.client.particle.EntityFootStepFX;
@@ -37,6 +38,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import nova.internal.core.Game;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -45,66 +47,112 @@ import java.util.Map;
  */
 public class BWEntityFX extends BWEntity {
 
-	public final EntityFX wrapped;
-	private final HashBiMap<Integer, Class<? extends EntityFX>> fxMap = HashBiMap.create();
+	private final int particleID;
 
-	public BWEntityFX(EntityFX wrapped) {
-		super(wrapped);
-		this.wrapped = wrapped;
+	public static final HashBiMap<Integer, Class<? extends EntityFX>> FX_CLASS_MAP = HashBiMap.create();
+	public static final Map<Integer, IParticleFactory> FX_FACTORY_MAP = new HashMap<>();
 
-		fxMap.put(EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), EntityExplodeFX.class);
-		fxMap.put(EnumParticleTypes.WATER_BUBBLE.getParticleID(), EntityBubbleFX.class);
-		fxMap.put(EnumParticleTypes.WATER_SPLASH.getParticleID(), EntitySplashFX.class);
-		fxMap.put(EnumParticleTypes.WATER_WAKE.getParticleID(), EntityFishWakeFX.class);
-		fxMap.put(EnumParticleTypes.WATER_DROP.getParticleID(), EntityRainFX.class);
-		fxMap.put(EnumParticleTypes.SUSPENDED.getParticleID(), EntitySuspendFX.class);
-		fxMap.put(EnumParticleTypes.SUSPENDED_DEPTH.getParticleID(), EntityAuraFX.class);
-		fxMap.put(EnumParticleTypes.CRIT.getParticleID(), EntityCrit2FX.class);
-		fxMap.put(EnumParticleTypes.CRIT_MAGIC.getParticleID(), EntityCrit2FX.class);
-		fxMap.put(EnumParticleTypes.SMOKE_NORMAL.getParticleID(), EntitySmokeFX.class);
-		fxMap.put(EnumParticleTypes.SMOKE_LARGE.getParticleID(), EntityCritFX.class);
-		fxMap.put(EnumParticleTypes.SPELL.getParticleID(), EntitySpellParticleFX.class);
-		fxMap.put(EnumParticleTypes.SPELL_INSTANT.getParticleID(), EntitySpellParticleFX.class);
-		fxMap.put(EnumParticleTypes.SPELL_MOB.getParticleID(), EntitySpellParticleFX.class);
-		fxMap.put(EnumParticleTypes.SPELL_MOB_AMBIENT.getParticleID(), EntitySpellParticleFX.class);
-		fxMap.put(EnumParticleTypes.SPELL_WITCH.getParticleID(), EntitySpellParticleFX.class);
-		fxMap.put(EnumParticleTypes.DRIP_WATER.getParticleID(), EntityDropParticleFX.class);
-		fxMap.put(EnumParticleTypes.DRIP_LAVA.getParticleID(), EntityDropParticleFX.class);
-		fxMap.put(EnumParticleTypes.VILLAGER_ANGRY.getParticleID(), EntityHeartFX.class);
-		fxMap.put(EnumParticleTypes.VILLAGER_HAPPY.getParticleID(), EntityAuraFX.class);
-		fxMap.put(EnumParticleTypes.TOWN_AURA.getParticleID(), EntityAuraFX.class);
-		fxMap.put(EnumParticleTypes.NOTE.getParticleID(), EntityNoteFX.class);
-		fxMap.put(EnumParticleTypes.PORTAL.getParticleID(), EntityPortalFX.class);
-		fxMap.put(EnumParticleTypes.ENCHANTMENT_TABLE.getParticleID(), EntityEnchantmentTableParticleFX.class);
-		fxMap.put(EnumParticleTypes.FLAME.getParticleID(), EntityFlameFX.class);
-		fxMap.put(EnumParticleTypes.LAVA.getParticleID(), EntityLavaFX.class);
-		fxMap.put(EnumParticleTypes.FOOTSTEP.getParticleID(), EntityFootStepFX.class);
-		fxMap.put(EnumParticleTypes.CLOUD.getParticleID(), EntityCloudFX.class);
-		fxMap.put(EnumParticleTypes.REDSTONE.getParticleID(), EntityReddustFX.class);
-		fxMap.put(EnumParticleTypes.SNOWBALL.getParticleID(), EntityBreakingFX.class);
-		fxMap.put(EnumParticleTypes.SNOW_SHOVEL.getParticleID(), EntitySnowShovelFX.class);
-		fxMap.put(EnumParticleTypes.SLIME.getParticleID(), EntityBreakingFX.class);
-		fxMap.put(EnumParticleTypes.HEART.getParticleID(), EntityHeartFX.class);
-		fxMap.put(EnumParticleTypes.BARRIER.getParticleID(), Barrier.class);
-		fxMap.put(EnumParticleTypes.ITEM_CRACK.getParticleID(), EntityBreakingFX.class);
-		fxMap.put(EnumParticleTypes.BLOCK_CRACK.getParticleID(), EntityDiggingFX.class);
-		fxMap.put(EnumParticleTypes.BLOCK_DUST.getParticleID(), EntityBlockDustFX.class);
-		fxMap.put(EnumParticleTypes.EXPLOSION_HUGE.getParticleID(), EntityHugeExplodeFX.class);
-		fxMap.put(EnumParticleTypes.EXPLOSION_LARGE.getParticleID(), EntityLargeExplodeFX.class);
-		fxMap.put(EnumParticleTypes.FIREWORKS_SPARK.getParticleID(), EntityFireworkSparkFX.class);
-		fxMap.put(EnumParticleTypes.MOB_APPEARANCE.getParticleID(), MobAppearance.class);
+	static {
+		//TODO: Handle duplicate fxs using a function instead of a map
+		FX_CLASS_MAP.put(EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), EntityExplodeFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.WATER_BUBBLE.getParticleID(), EntityBubbleFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.WATER_SPLASH.getParticleID(), EntitySplashFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.WATER_WAKE.getParticleID(), EntityFishWakeFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.WATER_DROP.getParticleID(), EntityRainFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.SUSPENDED.getParticleID(), EntitySuspendFX.class);
+		//FX_CLASS_MAP.put(EnumParticleTypes.SUSPENDED_DEPTH.getParticleID(), EntityAuraFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.CRIT.getParticleID(), EntityCrit2FX.class);
+		//FX_CLASS_MAP.put(EnumParticleTypes.CRIT_MAGIC.getParticleID(), EntityCrit2FX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.SMOKE_NORMAL.getParticleID(), EntitySmokeFX.class);
+		//FX_CLASS_MAP.put(EnumParticleTypes.SMOKE_LARGE.getParticleID(), EntityCritFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.SPELL.getParticleID(), EntitySpellParticleFX.class);
+		/*FX_CLASS_MAP.put(EnumParticleTypes.SPELL_INSTANT.getParticleID(), EntitySpellParticleFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.SPELL_MOB.getParticleID(), EntitySpellParticleFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.SPELL_MOB_AMBIENT.getParticleID(), EntitySpellParticleFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.SPELL_WITCH.getParticleID(), EntitySpellParticleFX.class);*/
+		FX_CLASS_MAP.put(EnumParticleTypes.DRIP_WATER.getParticleID(), EntityDropParticleFX.class);
+		//FX_CLASS_MAP.put(EnumParticleTypes.DRIP_LAVA.getParticleID(), EntityDropParticleFX.class);
+		//FX_CLASS_MAP.put(EnumParticleTypes.VILLAGER_ANGRY.getParticleID(), EntityHeartFX.class);
+		//FX_CLASS_MAP.put(EnumParticleTypes.VILLAGER_HAPPY.getParticleID(), EntityAuraFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.TOWN_AURA.getParticleID(), EntityAuraFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.NOTE.getParticleID(), EntityNoteFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.PORTAL.getParticleID(), EntityPortalFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.ENCHANTMENT_TABLE.getParticleID(), EntityEnchantmentTableParticleFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.FLAME.getParticleID(), EntityFlameFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.LAVA.getParticleID(), EntityLavaFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.FOOTSTEP.getParticleID(), EntityFootStepFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.CLOUD.getParticleID(), EntityCloudFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.REDSTONE.getParticleID(), EntityReddustFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.SNOWBALL.getParticleID(), EntityBreakingFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.SNOW_SHOVEL.getParticleID(), EntitySnowShovelFX.class);
+		//FX_CLASS_MAP.put(EnumParticleTypes.SLIME.getParticleID(), EntityBreakingFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.HEART.getParticleID(), EntityHeartFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.BARRIER.getParticleID(), Barrier.class);
+		//FX_CLASS_MAP.put(EnumParticleTypes.ITEM_CRACK.getParticleID(), EntityBreakingFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.BLOCK_CRACK.getParticleID(), EntityDiggingFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.BLOCK_DUST.getParticleID(), EntityBlockDustFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.EXPLOSION_HUGE.getParticleID(), EntityHugeExplodeFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.EXPLOSION_LARGE.getParticleID(), EntityLargeExplodeFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.FIREWORKS_SPARK.getParticleID(), EntityFireworkSparkFX.class);
+		FX_CLASS_MAP.put(EnumParticleTypes.MOB_APPEARANCE.getParticleID(), MobAppearance.class);
+
+		FX_FACTORY_MAP.put(EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), new EntityExplodeFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.WATER_BUBBLE.getParticleID(), new EntityBubbleFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.WATER_SPLASH.getParticleID(), new EntitySplashFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.WATER_WAKE.getParticleID(), new EntityFishWakeFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.WATER_DROP.getParticleID(), new EntityRainFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SUSPENDED.getParticleID(), new EntitySuspendFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SUSPENDED_DEPTH.getParticleID(), new EntityAuraFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.CRIT.getParticleID(), new EntityCrit2FX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.CRIT_MAGIC.getParticleID(), new EntityCrit2FX.MagicFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SMOKE_NORMAL.getParticleID(), new EntitySmokeFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SMOKE_LARGE.getParticleID(), new EntityCritFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SPELL.getParticleID(), new EntitySpellParticleFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SPELL_INSTANT.getParticleID(), new EntitySpellParticleFX.InstantFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SPELL_MOB.getParticleID(), new EntitySpellParticleFX.MobFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SPELL_MOB_AMBIENT.getParticleID(), new EntitySpellParticleFX.AmbientMobFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SPELL_WITCH.getParticleID(), new EntitySpellParticleFX.WitchFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.DRIP_WATER.getParticleID(), new EntityDropParticleFX.WaterFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.DRIP_LAVA.getParticleID(), new EntityDropParticleFX.LavaFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.VILLAGER_ANGRY.getParticleID(), new EntityHeartFX.AngryVillagerFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.VILLAGER_HAPPY.getParticleID(), new EntityAuraFX.HappyVillagerFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.TOWN_AURA.getParticleID(), new EntityAuraFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.NOTE.getParticleID(), new EntityNoteFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.PORTAL.getParticleID(), new EntityPortalFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.ENCHANTMENT_TABLE.getParticleID(), new EntityEnchantmentTableParticleFX.EnchantmentTable());
+		FX_FACTORY_MAP.put(EnumParticleTypes.FLAME.getParticleID(), new EntityFlameFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.LAVA.getParticleID(), new EntityLavaFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.FOOTSTEP.getParticleID(), new EntityFootStepFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.CLOUD.getParticleID(), new EntityCloudFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.REDSTONE.getParticleID(), new EntityReddustFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SNOWBALL.getParticleID(), new EntityBreakingFX.SnowballFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SNOW_SHOVEL.getParticleID(), new EntitySnowShovelFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.SLIME.getParticleID(), new EntityBreakingFX.SlimeFactory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.HEART.getParticleID(), new EntityHeartFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.BARRIER.getParticleID(), new Barrier.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.ITEM_CRACK.getParticleID(), new EntityBreakingFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.BLOCK_CRACK.getParticleID(), new EntityDiggingFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.BLOCK_DUST.getParticleID(), new EntityBlockDustFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.EXPLOSION_HUGE.getParticleID(), new EntityHugeExplodeFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.EXPLOSION_LARGE.getParticleID(), new EntityLargeExplodeFX.Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.FIREWORKS_SPARK.getParticleID(), new EntityFireworkStarterFX_Factory());
+		FX_FACTORY_MAP.put(EnumParticleTypes.MOB_APPEARANCE.getParticleID(), new MobAppearance.Factory());
+	}
+
+	public BWEntityFX(int particleID) {
+		//TODO: NPE
+		super(null);
+		this.particleID = particleID;
 	}
 
 	public EntityFX createEntityFX() {
 		//Look up for particle factory and pass it into BWEntityFX
-		Map<Integer, IParticleFactory> particleMap = FMLClientHandler.instance().getClient().effectRenderer.field_178932_g;
-		int particleID = fxMap.inverse().get(wrapped.getClass());
-		IParticleFactory particleFactory = particleMap.get(particleID);
+		IParticleFactory particleFactory = (IParticleFactory) FMLClientHandler.instance().getClient().effectRenderer.field_178932_g.get(particleID);
 		return particleFactory.getEntityFX(0, Game.natives().toNative(world()), x(), y(), z(), 0, 0, 0, 0);
 	}
 
 	@Override
 	public String getID() {
-		return Game.info().name + ":" + EnumParticleTypes.getParticleFromId(fxMap.inverse().get(wrapped.getClass())).getParticleName();
+		return Game.info().name + ":" + EnumParticleTypes.getParticleFromId(particleID).getParticleName();
 	}
 }
