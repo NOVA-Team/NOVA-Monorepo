@@ -39,7 +39,6 @@ import nova.internal.core.Game;
  */
 public class BWEntityFX extends BWEntity {
 
-	public final String particleID;
 	public static final HashBiMap<String, Class<? extends EntityFX>> fxMap = HashBiMap.create();
 
 	static {
@@ -85,6 +84,8 @@ public class BWEntityFX extends BWEntity {
 		fxMap.put("fireworksSpark", EntityFireworkSparkFX.class);
 	}
 
+	public final String particleID;
+
 	public BWEntityFX(String particleID) {
 		//TODO: NPE?
 		super(null);
@@ -94,7 +95,7 @@ public class BWEntityFX extends BWEntity {
 	public EntityFX createEntityFX() {
 		//Look up for particle factory and pass it into BWEntityFX
 		//TODO: Handle velocity?
-		return FMLClientHandler.instance().getClient().renderGlobal.doSpawnParticle(particleID, x(), y(), z(), 0, 0, 0);
+		return FMLClientHandler.instance().getClient().renderGlobal.doSpawnParticle(particleID, 0, 0, 0, 0, 0, 0);
 	}
 
 	@Override

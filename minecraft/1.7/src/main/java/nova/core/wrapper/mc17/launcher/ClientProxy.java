@@ -22,6 +22,7 @@ import nova.core.wrapper.mc17.wrapper.entity.forward.FWEntityFX;
 import nova.core.wrapper.mc17.wrapper.entity.forward.FWEntityRenderer;
 import nova.core.wrapper.mc17.wrapper.item.FWItem;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * @author Calclavia
@@ -85,6 +86,10 @@ public class ClientProxy extends CommonProxy {
 		//Backward entity particle unwrapper
 		if (entity instanceof BWEntityFX) {
 			EntityFX entityFX = ((BWEntityFX) entity).createEntityFX();
+			Vector3D position = entity.position();
+			entityFX.posX = position.getX();
+			entityFX.posY = position.getY();
+			entityFX.posZ = position.getZ();
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(entityFX);
 			return Game.natives().toNova(entityFX);
 		} else {

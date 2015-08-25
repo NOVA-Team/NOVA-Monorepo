@@ -26,6 +26,7 @@ import nova.core.wrapper.mc18.wrapper.entity.forward.FWEntityFX;
 import nova.core.wrapper.mc18.wrapper.entity.forward.FWEntityRenderer;
 import nova.core.wrapper.mc18.wrapper.item.FWItem;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * @author Calclavia
@@ -89,7 +90,7 @@ public class ClientProxy extends CommonProxy {
 	public Entity spawnParticle(net.minecraft.world.World world, EntityFactory factory) {
 		//Backward entity particle unwrapper
 		if (factory.getDummy() instanceof BWEntityFX) {
-			EntityFX entityFX = ((BWEntityFX) factory.make()).createEntityFX();
+			EntityFX entityFX = ((BWEntityFX) factory.make()).createEntityFX(world);
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(entityFX);
 			return Game.natives().toNova(entityFX);
 		} else {
@@ -103,7 +104,11 @@ public class ClientProxy extends CommonProxy {
 	public Entity spawnParticle(net.minecraft.world.World world, Entity entity) {
 		//Backward entity particle unwrapper
 		if (entity instanceof BWEntityFX) {
-			EntityFX entityFX = ((BWEntityFX) entity).createEntityFX();
+			EntityFX entityFX = ((BWEntityFX) entity).createEntityFX(world);
+			Vector3D position = entity.position();
+			entityFX.posX = position.getX();
+			entityFX.posY = position.getY();
+			entityFX.posZ = position.getZ();
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(entityFX);
 			return Game.natives().toNova(entityFX);
 		} else {

@@ -47,8 +47,6 @@ import java.util.Map;
  */
 public class BWEntityFX extends BWEntity {
 
-	private final int particleID;
-
 	public static final HashBiMap<Integer, Class<? extends EntityFX>> FX_CLASS_MAP = HashBiMap.create();
 	public static final Map<Integer, IParticleFactory> FX_FACTORY_MAP = new HashMap<>();
 
@@ -139,16 +137,18 @@ public class BWEntityFX extends BWEntity {
 		FX_FACTORY_MAP.put(EnumParticleTypes.MOB_APPEARANCE.getParticleID(), new MobAppearance.Factory());
 	}
 
+	private final int particleID;
+
 	public BWEntityFX(int particleID) {
 		//TODO: NPE
 		super(null);
 		this.particleID = particleID;
 	}
 
-	public EntityFX createEntityFX() {
+	public EntityFX createEntityFX(net.minecraft.world.World world) {
 		//Look up for particle factory and pass it into BWEntityFX
 		IParticleFactory particleFactory = (IParticleFactory) FMLClientHandler.instance().getClient().effectRenderer.field_178932_g.get(particleID);
-		return particleFactory.getEntityFX(0, Game.natives().toNative(world()), x(), y(), z(), 0, 0, 0, 0);
+		return particleFactory.getEntityFX(0, world, 0, 0, 0, 0, 0, 0, 0);
 	}
 
 	@Override
