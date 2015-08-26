@@ -1,6 +1,5 @@
 package nova.core.component.renderer;
 
-import nova.core.component.ComponentProvider;
 import nova.core.render.pipeline.RenderStream;
 
 /**
@@ -10,10 +9,4 @@ import nova.core.render.pipeline.RenderStream;
  */
 public class StaticRenderer extends Renderer {
 
-	public final ComponentProvider provider;
-
-	//TODO: We don't need provider
-	public StaticRenderer(ComponentProvider provider) {
-		this.provider = provider;
-	}
 }
