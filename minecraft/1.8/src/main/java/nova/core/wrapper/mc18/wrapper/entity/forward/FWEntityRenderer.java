@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import nova.core.component.renderer.DynamicRenderer;
 import nova.core.wrapper.mc18.render.RenderUtility;
 import nova.core.wrapper.mc18.wrapper.render.BWModel;
@@ -25,7 +26,7 @@ public class FWEntityRenderer extends Render {
 	public static final FWEntityRenderer instance = new FWEntityRenderer();
 
 	public FWEntityRenderer() {
-		super(Minecraft.getMinecraft().getRenderManager());
+		super(FMLClientHandler.instance().getClient().getRenderManager());
 	}
 
 	public static void render(Entity wrapper, nova.core.entity.Entity entity, double x, double y, double z) {

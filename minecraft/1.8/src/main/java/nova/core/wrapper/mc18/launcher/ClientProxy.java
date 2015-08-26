@@ -37,8 +37,13 @@ public class ClientProxy extends CommonProxy {
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(RenderUtility.instance);
 		ClientRegistry.bindTileEntitySpecialRenderer(FWTile.class, FWTileRenderer.instance);
-		RenderingRegistry.registerEntityRenderingHandler(FWEntity.class, FWEntityRenderer.instance);
 		RenderUtility.instance.preInit();
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		RenderingRegistry.registerEntityRenderingHandler(FWEntity.class, FWEntityRenderer.instance);
 	}
 
 	@Override
