@@ -20,7 +20,9 @@ public class CommonProxy implements Loadable {
 	@Override
 	public void preInit() {
 		GameRegistry.registerTileEntity(FWTile.class, "novaTile");
-		EntityRegistry.registerModEntity(FWEntity.class, "novaEntity", EntityRegistry.findGlobalUniqueEntityId(), NovaMinecraft.instance, 64, 20, true);
+		int globalUniqueEntityId = EntityRegistry.findGlobalUniqueEntityId();
+		EntityRegistry.registerGlobalEntityID(FWEntity.class, "novaEntity", globalUniqueEntityId);
+		EntityRegistry.registerModEntity(FWEntity.class, "novaEntity", globalUniqueEntityId, NovaMinecraft.instance, 64, 20, true);
 	}
 
 	public void registerResourcePacks(Set<Class<?>> modClasses) {

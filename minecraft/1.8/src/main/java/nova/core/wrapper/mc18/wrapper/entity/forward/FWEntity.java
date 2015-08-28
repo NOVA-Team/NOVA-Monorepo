@@ -24,6 +24,7 @@ public class FWEntity extends net.minecraft.entity.Entity {
 	public final EntityTransform transform;
 	boolean firstTick = true;
 
+	//TODO: Need a less argument constructor for retention
 	public FWEntity(World world, EntityFactory factory, Object... args) {
 		super(world);
 		this.wrapped = factory.make(args);
