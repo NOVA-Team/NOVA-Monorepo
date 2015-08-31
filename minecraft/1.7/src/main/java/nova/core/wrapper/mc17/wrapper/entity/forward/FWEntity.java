@@ -117,7 +117,7 @@ public class FWEntity extends net.minecraft.entity.Entity {
 		this.posY = y;
 		this.posZ = z;
 		double fX = this.width / 2d;
-		double fY = this.height;
+		double fY = this.height / 2d;
 		this.boundingBox.setBounds(x - fX, y - fY, z - fX, x + fX, y + fY, z + fX);
 	}
 
