@@ -104,10 +104,16 @@ public class FWEntity extends net.minecraft.entity.Entity {
 				.get();
 			///.scalarMultiply(transform.scale());
 
-			//Sadly Minecraft doesn't support rotated cuboids. And fixed x-z sizes. We take average..
-			float width = (float) ((size.max.getX() - size.min.getX()) + (size.max.getZ() - size.min.getZ())) / 2;
-			float height = (float) (size.max.getY() - size.min.getY());
-			setSize(width, height);
+			setBounds(size);
+		}
+	}
+
+	@Override
+	protected void setSize(float width, float height) {
+		if (width != this.width || height != this.height) {
+			this.width = width;
+			this.height = height;
+			setBounds(new Cuboid(-width / 2, -height / 2, -width / 2, width / 2, height / 2, width / 2));
 		}
 	}
 
@@ -116,9 +122,17 @@ public class FWEntity extends net.minecraft.entity.Entity {
 		this.posX = x;
 		this.posY = y;
 		this.posZ = z;
-		double fX = this.width / 2d;
-		double fY = this.height / 2d;
-		this.boundingBox.setBounds(x - fX, y - fY, z - fX, x + fX, y + fY, z + fX);
+		//Reset the bounding box
+		setBounds(Game.natives().toNova(getBoundingBox()));
+	}
+
+	/**
+	 * Sets the bounding box of the entity based on NOVA cuboid bounds
+	 * @param bounds NOVA Cuboid bounds
+	 */
+	public void setBounds(Cuboid bounds) {
+		Cuboid translated = bounds.add(transform.position());
+		boundingBox.setBounds(translated.min.getX(), translated.min.getY(), translated.min.getZ(), translated.max.getX(), translated.max.getY(), translated.max.getZ());
 	}
 
 	@Override
