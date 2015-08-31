@@ -112,6 +112,16 @@ public class FWEntity extends net.minecraft.entity.Entity {
 	}
 
 	@Override
+	public void setPosition(double x, double y, double z) {
+		this.posX = x;
+		this.posY = y;
+		this.posZ = z;
+		double fX = this.width / 2d;
+		double fY = this.height;
+		this.boundingBox.setBounds(x - fX, y - fY, z - fX, x + fX, y + fY, z + fX);
+	}
+
+	@Override
 	public void setDead() {
 		wrapped.events.publish(new Stateful.UnloadEvent());
 		super.setDead();

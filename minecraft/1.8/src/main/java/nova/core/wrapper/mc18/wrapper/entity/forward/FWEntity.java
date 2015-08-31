@@ -1,6 +1,7 @@
 package nova.core.wrapper.mc18.wrapper.entity.forward;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
@@ -109,6 +110,16 @@ public class FWEntity extends net.minecraft.entity.Entity {
 			float height = (float) (size.max.getY() - size.min.getY());
 			setSize(width, height);
 		}
+	}
+
+	@Override
+	public void setPosition(double x, double y, double z) {
+		this.posX = x;
+		this.posY = y;
+		this.posZ = z;
+		double fX = this.width / 2d;
+		double fY = this.height;
+		this.setEntityBoundingBox(new AxisAlignedBB(x - fX, y - fY, z - fX, x + fX, y + fY, z + fX));
 	}
 
 	@Override
