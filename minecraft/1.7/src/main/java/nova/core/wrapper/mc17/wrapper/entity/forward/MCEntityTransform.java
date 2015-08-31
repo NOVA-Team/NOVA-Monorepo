@@ -52,9 +52,7 @@ public class MCEntityTransform extends EntityTransform {
 		if (wrapper instanceof EntityPlayerMP) {
 			((EntityPlayerMP) wrapper).playerNetServerHandler.setPlayerLocation(position.getX(), position.getY(), position.getZ(), wrapper.rotationYaw, wrapper.rotationPitch);
 		} else {
-			wrapper.posX = position.getX();
-			wrapper.posY = position.getY();
-			wrapper.posZ = position.getZ();
+			wrapper.setPosition(position.getX(), position.getY(), position.getZ());
 		}
 	}
 

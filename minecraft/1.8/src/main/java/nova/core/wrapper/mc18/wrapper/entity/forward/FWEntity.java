@@ -58,6 +58,7 @@ public class FWEntity extends net.minecraft.entity.Entity {
 		//MC calls entityInit() before we finish wrapping, so this variable is required to check if wrapped exists.
 		if (wrapped != null) {
 			wrapped.events.publish(new Stateful.LoadEvent());
+			updateCollider();
 		}
 	}
 
@@ -78,6 +79,21 @@ public class FWEntity extends net.minecraft.entity.Entity {
 			((Updater) wrapped).update(deltaTime);
 		}
 
+		updateCollider();
+
+		/**
+		 * Update all components in the entity.
+		 */
+		wrapped.components()
+			.stream()
+			.filter(component -> component instanceof Updater)
+			.forEach(component -> ((Updater) component).update(deltaTime));
+	}
+
+	/**
+	 * Wraps the entity collider values
+	 */
+	public void updateCollider() {
 		//Wrap entity collider
 		if (wrapped.has(Collider.class)) {
 			Collider collider = wrapped.get(Collider.class);
@@ -93,14 +109,6 @@ public class FWEntity extends net.minecraft.entity.Entity {
 			float height = (float) (size.max.getY() - size.min.getY());
 			setSize(width, height);
 		}
-
-		/**
-		 * Update all components in the entity.
-		 */
-		wrapped.components()
-			.stream()
-			.filter(component -> component instanceof Updater)
-			.forEach(component -> ((Updater) component).update(deltaTime));
 	}
 
 	@Override
