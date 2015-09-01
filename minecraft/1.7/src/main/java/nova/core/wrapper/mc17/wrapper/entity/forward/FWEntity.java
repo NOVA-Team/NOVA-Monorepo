@@ -123,7 +123,7 @@ public class FWEntity extends net.minecraft.entity.Entity {
 		this.posY = y;
 		this.posZ = z;
 		//Reset the bounding box
-		setBounds(Game.natives().toNova(getBoundingBox()));
+		setBounds(Game.natives().toNova(getBoundingBox() != null ? getBoundingBox() : Cuboid.ZERO));
 	}
 
 	/**
