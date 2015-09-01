@@ -131,7 +131,7 @@ public class FWEntity extends net.minecraft.entity.Entity {
 	 * @param bounds NOVA Cuboid bounds
 	 */
 	public void setBounds(Cuboid bounds) {
-		setEntityBoundingBox(Game.natives().toNative(bounds.add(transform.position())));
+		setEntityBoundingBox(Game.natives().toNative(transform != null ? bounds.add(transform.position()) : bounds));
 	}
 
 	@Override
