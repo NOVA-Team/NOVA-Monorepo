@@ -1,7 +1,9 @@
 package nova.core.wrapper.mc18.wrapper.entity.forward;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
@@ -18,18 +20,20 @@ import nova.internal.core.Game;
  * Entity wrapper
  * @author Calclavia
  */
-public class FWEntity extends net.minecraft.entity.Entity {
+public class FWEntity extends net.minecraft.entity.Entity implements IEntityAdditionalSpawnData {
 
-	public final Entity wrapped;
-	public final EntityTransform transform;
+	protected Entity wrapped;
+	protected final EntityTransform transform;
 	boolean firstTick = true;
 
-	//TODO: Need a less argument constructor for retention
-	public FWEntity(World world, EntityFactory factory, Object... args) {
-		super(world);
-		this.wrapped = factory.make(args);
+	public FWEntity(World worldIn) {
+		super(worldIn);
 		this.transform = new MCEntityTransform(this);
-		wrapped.add(transform);
+	}
+
+	public FWEntity(World world, EntityFactory factory, Object... args) {
+		this(world);
+		setWrapped(factory.make(args));
 		entityInit();
 	}
 
@@ -37,6 +41,10 @@ public class FWEntity extends net.minecraft.entity.Entity {
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		if (wrapped instanceof Storable) {
 			((Storable) wrapped).load(Game.natives().toNova(nbt));
+		}
+		if (wrapped == null) {
+			//This entity was saved to disk.
+			setWrapped(Game.entities().getFactory(nbt.getString("novaID")).get().make());
 		}
 	}
 
@@ -47,6 +55,42 @@ public class FWEntity extends net.minecraft.entity.Entity {
 			((Storable) wrapped).save(data);
 			DataWrapper.instance().toNative(nbt, data);
 		}
+		nbt.setString("novaID", wrapped.getID());
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer) {
+		//Write the ID of the entity to client
+		String id = wrapped.getID();
+		char[] chars = id.toCharArray();
+		buffer.writeInt(chars.length);
+
+		for (char c : chars)
+			buffer.writeChar(c);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf buffer) {
+		//Load the client ID
+		String id = "";
+		int length = buffer.readInt();
+		for (int i = 0; i < length; i++)
+			id += buffer.readChar();
+
+		setWrapped(Game.entities().getFactory(id).get().make());
+	}
+
+	private void setWrapped(Entity wrapped) {
+		this.wrapped = wrapped;
+		wrapped.add(transform);
+	}
+
+	public Entity getWrapped() {
+		return wrapped;
+	}
+
+	public EntityTransform getTransform() {
+		return transform;
 	}
 
 	/**
@@ -64,30 +108,34 @@ public class FWEntity extends net.minecraft.entity.Entity {
 
 	@Override
 	public void onUpdate() {
-		if (firstTick) {
-			prevPosX = posX;
-			prevPosY = posY;
-			prevPosZ = posZ;
-			setPosition(posX, posY, posZ);
-			firstTick = false;
+		if (wrapped != null) {
+			if (firstTick) {
+				prevPosX = posX;
+				prevPosY = posY;
+				prevPosZ = posZ;
+				setPosition(posX, posY, posZ);
+				firstTick = false;
+			}
+
+			super.onUpdate();
+			double deltaTime = 0.05;
+
+			if (wrapped instanceof Updater) {
+				((Updater) wrapped).update(deltaTime);
+			}
+
+			updateCollider();
+
+			/**
+			 * Update all components in the entity.
+			 */
+			wrapped.components()
+				.stream()
+				.filter(component -> component instanceof Updater)
+				.forEach(component -> ((Updater) component).update(deltaTime));
+		} else {
+			Game.logger().error("Ticking entity without wrapped entity object.");
 		}
-
-		super.onUpdate();
-		double deltaTime = 0.05;
-
-		if (wrapped instanceof Updater) {
-			((Updater) wrapped).update(deltaTime);
-		}
-
-		updateCollider();
-
-		/**
-		 * Update all components in the entity.
-		 */
-		wrapped.components()
-			.stream()
-			.filter(component -> component instanceof Updater)
-			.forEach(component -> ((Updater) component).update(deltaTime));
 	}
 
 	/**
@@ -139,4 +187,5 @@ public class FWEntity extends net.minecraft.entity.Entity {
 		wrapped.events.publish(new Stateful.UnloadEvent());
 		super.setDead();
 	}
+
 }

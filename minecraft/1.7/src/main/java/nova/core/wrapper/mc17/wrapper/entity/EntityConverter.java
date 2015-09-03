@@ -27,7 +27,7 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 	public Entity toNova(net.minecraft.entity.Entity mcEntity) {
 		//Prevents dual wrapping
 		if (mcEntity instanceof FWEntity) {
-			return ((FWEntity) mcEntity).wrapped;
+			return ((FWEntity) mcEntity).getWrapped();
 		}
 
 		return new BWEntity(mcEntity);

@@ -80,7 +80,7 @@ public class BWWorld extends World {
 		FWEntity bwEntity = new FWEntity(world(), factory, args);
 		bwEntity.forceSpawn = true;
 		world().spawnEntityInWorld(bwEntity);
-		return bwEntity.wrapped;
+		return bwEntity.getWrapped();
 	}
 
 	@Override
