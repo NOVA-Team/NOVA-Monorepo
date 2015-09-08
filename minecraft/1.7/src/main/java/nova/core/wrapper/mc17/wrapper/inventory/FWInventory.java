@@ -3,7 +3,7 @@ package nova.core.wrapper.mc17.wrapper.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import nova.core.inventory.Inventory;
+import nova.core.component.inventory.Inventory;
 import nova.core.wrapper.mc17.wrapper.item.ItemConverter;
 
 public class FWInventory implements IInventory {

@@ -2,7 +2,7 @@ package nova.core.wrapper.mc18.wrapper.inventory;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import nova.core.inventory.Inventory;
+import nova.core.component.inventory.Inventory;
 import nova.core.item.Item;
 import nova.internal.core.Game;
 

@@ -1,6 +1,5 @@
-package nova.core.fluid;
+package nova.core.component.fluid;
 
-import nova.core.fluid.component.TankSimple;
 import nova.core.retention.Data;
 import org.junit.Test;
 

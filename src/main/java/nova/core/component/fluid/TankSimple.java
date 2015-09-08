@@ -1,6 +1,5 @@
-package nova.core.fluid.component;
+package nova.core.component.fluid;
 
-import nova.core.fluid.Fluid;
 import nova.core.network.Packet;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;

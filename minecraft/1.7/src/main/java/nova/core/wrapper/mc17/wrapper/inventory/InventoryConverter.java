@@ -1,7 +1,7 @@
 package nova.core.wrapper.mc17.wrapper.inventory;
 
 import net.minecraft.inventory.IInventory;
-import nova.core.inventory.Inventory;
+import nova.core.component.inventory.Inventory;
 import nova.core.nativewrapper.NativeConverter;
 
 /**

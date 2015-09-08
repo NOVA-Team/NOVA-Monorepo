@@ -1,7 +1,7 @@
 package nova.core.entity.component;
 
+import nova.core.component.inventory.InventoryPlayer;
 import nova.core.entity.Entity;
-import nova.core.inventory.component.InventoryPlayer;
 
 /**
  * Basic representation of Player

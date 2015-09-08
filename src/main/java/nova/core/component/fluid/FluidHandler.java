@@ -1,4 +1,4 @@
-package nova.core.fluid.component;
+package nova.core.component.fluid;
 
 import nova.core.component.Component;
 import nova.core.util.Direction;

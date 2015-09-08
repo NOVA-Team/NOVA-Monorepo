@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IChatComponent;
-import nova.core.inventory.Inventory;
+import nova.core.component.inventory.Inventory;
 import nova.core.wrapper.mc18.wrapper.item.ItemConverter;
 
 public class FWInventory implements IInventory {

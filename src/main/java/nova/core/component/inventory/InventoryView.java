@@ -1,4 +1,4 @@
-package nova.core.inventory;
+package nova.core.component.inventory;
 
 import nova.core.item.Item;
 

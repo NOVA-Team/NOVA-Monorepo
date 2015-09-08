@@ -1,6 +1,4 @@
-package nova.core.fluid.component;
-
-import nova.core.fluid.Fluid;
+package nova.core.component.fluid;
 
 import java.util.Optional;
 

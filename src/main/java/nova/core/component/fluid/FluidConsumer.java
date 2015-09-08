@@ -1,6 +1,4 @@
-package nova.core.fluid.component;
-
-import nova.core.fluid.Fluid;
+package nova.core.component.fluid;
 
 /**
  * Objects with this interface declare their ability to consume {@link Fluid FluidStacks}

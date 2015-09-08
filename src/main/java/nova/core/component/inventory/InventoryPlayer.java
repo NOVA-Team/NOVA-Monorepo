@@ -1,6 +1,5 @@
-package nova.core.inventory.component;
+package nova.core.component.inventory;
 
-import nova.core.inventory.Inventory;
 import nova.core.item.Item;
 
 import java.util.Optional;

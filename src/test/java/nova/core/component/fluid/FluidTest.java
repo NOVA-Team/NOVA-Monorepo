@@ -1,4 +1,4 @@
-package nova.core.fluid;
+package nova.core.component.fluid;
 
 import org.junit.Test;
 
