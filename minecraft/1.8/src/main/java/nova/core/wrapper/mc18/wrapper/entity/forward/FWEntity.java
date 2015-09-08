@@ -117,7 +117,8 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 				firstTick = false;
 			}
 
-			super.onUpdate();
+			//onEntityUpdate();
+
 			double deltaTime = 0.05;
 
 			if (wrapped instanceof Updater) {
@@ -171,7 +172,9 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		this.posY = y;
 		this.posZ = z;
 		//Reset the bounding box
-		setBounds(getBoundingBox() != null ? Game.natives().toNova(getBoundingBox()) : Cuboid.ZERO);
+		if (getBoundingBox() != null) {
+			setBounds(Game.natives().toNova(getBoundingBox()));
+		}
 	}
 
 	/**
@@ -179,7 +182,10 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	 * @param bounds NOVA Cuboid bounds
 	 */
 	public void setBounds(Cuboid bounds) {
-		setEntityBoundingBox(Game.natives().toNative(transform != null ? bounds.add(transform.position()) : bounds));
+		//TODO: Fix moveEntity auto-centering
+		if (transform != null) {
+			setEntityBoundingBox(Game.natives().toNative(bounds.add(transform.position())));
+		}
 	}
 
 	@Override

@@ -92,6 +92,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	public EntityTransform getTransform() {
 		return transform;
 	}
+
 	/**
 	 * All methods below here are exactly the same between FWEntity and FWEntityFX.
 	 * *****************************************************************************
@@ -107,7 +108,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 
 	@Override
 	public void onUpdate() {
-		if(wrapped != null) {
+		if (wrapped != null) {
 			if (firstTick) {
 				prevPosX = posX;
 				prevPosY = posY;
@@ -170,7 +171,9 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		this.posY = y;
 		this.posZ = z;
 		//Reset the bounding box
-		setBounds(getBoundingBox() != null ? Game.natives().toNova(getBoundingBox()) : Cuboid.ZERO);
+		if (getBoundingBox() != null) {
+			setBounds(Game.natives().toNova(getBoundingBox()));
+		}
 	}
 
 	/**
@@ -178,6 +181,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	 * @param bounds NOVA Cuboid bounds
 	 */
 	public void setBounds(Cuboid bounds) {
+		//TODO: Fix moveEntity auto-centering
 		Cuboid translated = transform != null ? bounds.add(transform.position()) : bounds;
 		boundingBox.setBounds(translated.min.getX(), translated.min.getY(), translated.min.getZ(), translated.max.getX(), translated.max.getY(), translated.max.getZ());
 	}
