@@ -13,7 +13,6 @@ import net.minecraftforge.fml.relauncher.FMLInjectionData;
 import nova.core.component.ComponentProvider;
 import nova.core.deps.MavenDependency;
 import nova.core.event.ServerEvent;
-import nova.core.event.bus.GlobalEvents;
 import nova.core.loader.Loadable;
 import nova.core.wrapper.mc18.NovaMinecraftPreloader;
 import nova.core.wrapper.mc18.depmodules.ClientModule;
@@ -32,7 +31,7 @@ import nova.core.wrapper.mc18.wrapper.command.CommandConverter;
 import nova.core.wrapper.mc18.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc18.wrapper.data.DataWrapper;
 import nova.core.wrapper.mc18.wrapper.entity.EntityConverter;
-import nova.core.wrapper.mc18.wrapper.entity.forward.MCRigidBody;
+import nova.core.wrapper.mc18.wrapper.entity.forward.BWRigidBody;
 import nova.core.wrapper.mc18.wrapper.inventory.InventoryConverter;
 import nova.core.wrapper.mc18.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc18.wrapper.item.OreDictionaryIntegration;
@@ -116,7 +115,7 @@ public class NovaMinecraft {
 			/**
 			 * Set up components
 			 */
-			Game.components().register(args -> args.length > 0 ? new MCRigidBody((ComponentProvider) args[0]) : new MCRigidBody(null));
+			Game.components().register(args -> args.length > 0 ? new BWRigidBody((ComponentProvider) args[0]) : new BWRigidBody(null));
 
 			/**
 			 * Download dependencies

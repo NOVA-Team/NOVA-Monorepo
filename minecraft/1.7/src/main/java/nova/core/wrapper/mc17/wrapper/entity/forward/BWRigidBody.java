@@ -15,8 +15,23 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  * Velocity
  * @author Calclavia
  */
-public class MCRigidBody extends RigidBody {
+public class BWRigidBody extends RigidBody {
 	private Entity entity;
+
+	private double mass = 1;
+
+	/**
+	 * Translation
+	 */
+	private double drag = 0;
+
+	private Vector3D gravity = new Vector3D(0, -9.81, 0);
+
+	/**
+	 * Rotation
+	 */
+	private double angularDrag = 0;
+	private Rotation angularVelocity = Rotation.IDENTITY;
 
 	/**
 	 * Translation
@@ -28,7 +43,7 @@ public class MCRigidBody extends RigidBody {
 	 */
 	private Vector3D netTorque = Vector3D.ZERO;
 
-	public MCRigidBody(ComponentProvider provider) {
+	public BWRigidBody(ComponentProvider provider) {
 		super(provider);
 		//TODO: This nullable block is horrible. Change this.
 		if (provider != null) {
@@ -109,5 +124,54 @@ public class MCRigidBody extends RigidBody {
 	@Override
 	public void addForce(Vector3D force) {
 		netForce = netForce.add(force.scalarMultiply(1 / mass()));
+	}
+
+	/**
+	 * Mass in kilograms. Default is 1 kg.
+	 */
+	public double getMass() {
+		return mass;
+	}
+
+	public void setMass(double mass) {
+		this.mass = mass;
+	}
+
+	public double getDrag() {
+		return drag;
+	}
+
+	public void setDrag(double drag) {
+		this.drag = drag;
+	}
+
+	/**
+	 * Gravity is an acceleration.
+	 */
+	public Vector3D getGravity() {
+		return gravity;
+	}
+
+	public void setGravity(Vector3D gravity) {
+		this.gravity = gravity;
+	}
+
+	/**
+	 * Rotation Methods
+	 */
+	public double getAngularDrag() {
+		return angularDrag;
+	}
+
+	public void setAngularDrag(double angularDrag) {
+		this.angularDrag = angularDrag;
+	}
+
+	public Rotation getAngularVelocity() {
+		return angularVelocity;
+	}
+
+	public void setAngularVelocity(Rotation angularVelocity) {
+		this.angularVelocity = angularVelocity;
 	}
 }

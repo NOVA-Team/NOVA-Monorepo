@@ -14,21 +14,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 public abstract class RigidBody extends Component implements Updater {
 	public final ComponentProvider provider;
 
-	private double mass = 1;
-
-	/**
-	 * Translation
-	 */
-	private double drag = 0;
-	private Vector3D velocity = Vector3D.ZERO;
-	private Vector3D gravity = new Vector3D(0, -9.81, 0);
-
-	/**
-	 * Rotation
-	 */
-	private double angularDrag = 0;
-	private Rotation angularVelocity = Rotation.IDENTITY;
-
 	public RigidBody(ComponentProvider provider) {
 		this.provider = provider;
 	}
@@ -36,62 +21,38 @@ public abstract class RigidBody extends Component implements Updater {
 	/**
 	 * Mass in kilograms. Default is 1 kg.
 	 */
-	public double getMass() {
-		return mass;
-	}
+	public abstract double getMass();
 
-	public void setMass(double mass) {
-		this.mass = mass;
-	}
+	public abstract void setMass(double mass);
 
 	/**
 	 * Velocity is how fast the body is moving
 	 */
-	public Vector3D getVelocity() {
-		return velocity;
-	}
+	public abstract Vector3D getVelocity();
 
-	public void setVelocity(Vector3D velocity) {
-		this.velocity = velocity;
-	}
+	public abstract void setVelocity(Vector3D velocity);
 
-	public double getDrag() {
-		return drag;
-	}
+	public abstract double getDrag();
 
-	public void setDrag(double drag) {
-		this.drag = drag;
-	}
+	public abstract void setDrag(double drag);
 
 	/**
 	 * Gravity is an acceleration.
 	 */
-	public Vector3D getGravity() {
-		return gravity;
-	}
+	public abstract Vector3D getGravity();
 
-	public void setGravity(Vector3D gravity) {
-		this.gravity = gravity;
-	}
+	public abstract void setGravity(Vector3D gravity);
 
 	/**
 	 * Rotation Methods
 	 */
-	public double getAngularDrag() {
-		return angularDrag;
-	}
+	public abstract double getAngularDrag();
 
-	public void setAngularDrag(double angularDrag) {
-		this.angularDrag = angularDrag;
-	}
+	public abstract void setAngularDrag(double angularDrag);
 
-	public Rotation getAngularVelocity() {
-		return angularVelocity;
-	}
+	public abstract Rotation getAngularVelocity();
 
-	public void setAngularVelocity(Rotation angularVelocity) {
-		this.angularVelocity = angularVelocity;
-	}
+	public abstract void setAngularVelocity(Rotation angularVelocity);
 
 	/**
 	 * Forces
@@ -127,10 +88,5 @@ public abstract class RigidBody extends Component implements Updater {
 
 	public final Rotation angularVelocity() {
 		return getAngularVelocity();
-	}
-
-	@Override
-	public final String getID() {
-		return null;
 	}
 }
