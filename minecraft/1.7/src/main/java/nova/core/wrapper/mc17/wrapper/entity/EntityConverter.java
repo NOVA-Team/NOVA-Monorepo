@@ -50,11 +50,8 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 		/**
 		 * Backward register all particle effects
 		 */
-		BWEntityFX.fxMap.forEach((k, v) ->
-				Game.entities().register(args -> {
-					//Look up for particle factory and pass it into BWEntityFX
-					return new BWEntityFX(k);
-				})
-		);
+
+		//Look up for particle factory and pass it into BWEntityFX
+		BWEntityFX.fxMap.forEach((k, v) -> Game.entities().register(() -> new BWEntityFX(k)));
 	}
 }

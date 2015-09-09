@@ -1,6 +1,5 @@
 package nova.core.wrapper.mc18.wrapper.entity.forward;
 
-import nova.core.component.ComponentProvider;
 import nova.core.entity.Entity;
 import nova.core.entity.component.RigidBody;
 import nova.core.util.math.RotationUtil;
@@ -16,8 +15,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  * @author Calclavia
  */
 public class BWRigidBody extends RigidBody {
-	private Entity entity;
-
 	private double mass = 1;
 
 	/**
@@ -43,16 +40,12 @@ public class BWRigidBody extends RigidBody {
 	 */
 	private Vector3D netTorque = Vector3D.ZERO;
 
-	public BWRigidBody(ComponentProvider provider) {
-		super(provider);
-		//TODO: This nullable block is horrible. Change this.
-		if (provider != null) {
-			entity = (Entity) provider;
-		}
+	private net.minecraft.entity.Entity mcEntity() {
+		return getProvider().get(MCEntityTransform.class).wrapper;
 	}
 
-	private net.minecraft.entity.Entity mcEntity() {
-		return entity.get(MCEntityTransform.class).wrapper;
+	private Entity entity() {
+		return (Entity) getProvider();
 	}
 
 	@Override
@@ -85,7 +78,7 @@ public class BWRigidBody extends RigidBody {
 		//Integrate angular velocity to angular displacement
 		Rotation angularVel = angularVelocity();
 		Rotation deltaRotation = RotationUtil.slerp(Rotation.IDENTITY, angularVel, deltaTime);
-		entity.transform().setRotation(entity.rotation().applyTo(deltaRotation));
+		entity().transform().setRotation(entity().rotation().applyTo(deltaRotation));
 
 		//Integrate torque to angular velocity
 		Vector3D torque = netTorque.scalarMultiply(deltaTime);

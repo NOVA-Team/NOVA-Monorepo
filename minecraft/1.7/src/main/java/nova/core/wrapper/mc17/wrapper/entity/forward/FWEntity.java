@@ -33,7 +33,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 
 	public FWEntity(World world, EntityFactory factory, Object... args) {
 		this(world);
-		setWrapped(factory.make(args));
+		setWrapped(factory.build());
 		entityInit();
 	}
 
@@ -44,7 +44,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		}
 		if (wrapped == null) {
 			//This entity was saved to disk.
-			setWrapped(Game.entities().get(nbt.getString("novaID")).get().make());
+			setWrapped(Game.entities().get(nbt.getString("novaID")).get().build());
 		}
 	}
 
@@ -77,7 +77,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		for (int i = 0; i < length; i++)
 			id += buffer.readChar();
 
-		setWrapped(Game.entities().get(id).get().make());
+		setWrapped(Game.entities().get(id).get().build());
 	}
 
 	public Entity getWrapped() {

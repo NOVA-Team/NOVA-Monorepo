@@ -94,8 +94,9 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public Entity spawnParticle(net.minecraft.world.World world, EntityFactory factory) {
 		//Backward entity particle unwrapper
-		if (factory.getDummy() instanceof BWEntityFX) {
-			EntityFX entityFX = ((BWEntityFX) factory.make()).createEntityFX(world);
+		Entity build = factory.build();
+		if (build instanceof BWEntityFX) {
+			EntityFX entityFX = ((BWEntityFX) build).createEntityFX(world);
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(entityFX);
 			return Game.natives().toNova(entityFX);
 		} else {

@@ -166,7 +166,7 @@ public class RenderUtility {
 	public void onModelBakeEvent(ModelBakeEvent event) {
 		//Register all blocks
 		Game.blocks().registry.forEach(blockFactory -> {
-			Object blockObj = Game.natives().toNative(blockFactory.getDummy());
+			Object blockObj = Game.natives().toNative(blockFactory.build());
 			if (blockObj instanceof FWBlock) {
 				FWBlock block = (FWBlock) blockObj;
 				ResourceLocation blockRL = (ResourceLocation) net.minecraft.block.Block.blockRegistry.getNameForObject(block);
@@ -174,18 +174,18 @@ public class RenderUtility {
 				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(itemFromBlock);
 				ModelResourceLocation blockLocation = new ModelResourceLocation(blockRL, "normal");
 				ModelResourceLocation itemLocation = new ModelResourceLocation(itemRL, "inventory");
-				if (block.block.has(StaticRenderer.class)) {
-					event.modelRegistry.putObject(blockLocation, new FWSmartBlockModel(block.block, true));
+				if (block.dummy.has(StaticRenderer.class)) {
+					event.modelRegistry.putObject(blockLocation, new FWSmartBlockModel(block.dummy, true));
 				} else {
 					event.modelRegistry.putObject(blockLocation, new FWEmptyModel());
 				}
-				event.modelRegistry.putObject(itemLocation, new FWSmartBlockModel(block.block, true));
+				event.modelRegistry.putObject(itemLocation, new FWSmartBlockModel(block.dummy, true));
 			}
 		});
 
 		//Register all items
 		Game.items().registry.forEach(itemFactory -> {
-			Object stackObj = Game.natives().toNative(itemFactory.getDummy());
+			Object stackObj = Game.natives().toNative(itemFactory.build());
 			if (stackObj instanceof ItemStack) {
 				Item itemObj = ((ItemStack) stackObj).getItem();
 				if (itemObj instanceof FWItem) {
@@ -193,7 +193,7 @@ public class RenderUtility {
 					ResourceLocation objRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
 					ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
 
-					nova.core.item.Item dummy = item.getItemFactory().getDummy();
+					nova.core.item.Item dummy = item.getItemFactory().build();
 
 					if (dummy.has(ItemRenderer.class)) {
 						Optional<Texture> texture = dummy.get(ItemRenderer.class).texture;

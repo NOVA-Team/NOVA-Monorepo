@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * @author Calclavia
  */
 public class FWBlock extends net.minecraft.block.Block {
-	public final Block block;
+	public final Block dummy;
 	/**
 	 * Reference to the wrapper Nova block
 	 */
@@ -54,20 +54,21 @@ public class FWBlock extends net.minecraft.block.Block {
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
 	public FWBlock(BlockFactory factory) {
-		super(factory.getDummy().has(BlockProperties.class) ? new MCBlockProperties(factory.getDummy().get(BlockProperties.class)).toMcMaterial() : Material.piston);
+		//TODO: Hack build() method
+		super(factory.build().has(BlockProperties.class) ? new MCBlockProperties(factory.build().get(BlockProperties.class)).toMcMaterial() : Material.piston);
+		this.factory = factory;
+		this.dummy = factory.build();
 		if (this.getMaterial() instanceof MCBlockProperties.ProxyMaterial) {
 			this.stepSound = ((MCBlockProperties.ProxyMaterial) this.getMaterial()).getSoundType();
 		} else {
-			BlockProperties properties = factory.getDummy().add(new BlockProperties());
+			BlockProperties properties = dummy.add(new BlockProperties());
 			properties.setBlockSound(BlockProperties.BlockSoundTrigger.BREAK, soundTypeStone.getBreakSound());
 			properties.setBlockSound(BlockProperties.BlockSoundTrigger.PLACE, soundTypeStone.getPlaceSound());
 			properties.setBlockSound(BlockProperties.BlockSoundTrigger.WALK, soundTypeStone.getStepSound());
 			this.stepSound = soundTypeStone;
 		}
-		this.factory = factory;
-		this.block = factory.getDummy();
-		this.blockClass = block.getClass();
-		this.setUnlocalizedName(block.getID());
+		this.blockClass = dummy.getClass();
+		this.setUnlocalizedName(dummy.getID());
 
 		// Recalculate super constructor things after loading the block properly
 		this.fullBlock = isOpaqueCube();
@@ -88,7 +89,7 @@ public class FWBlock extends net.minecraft.block.Block {
 			}
 
 			try {
-				throw new RuntimeException("Error: Block in TileWrapper is null for " + block);
+				throw new RuntimeException("Error: Block in TileWrapper is null for " + dummy);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -99,7 +100,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	private Block getBlockInstance(nova.core.world.World world, Vector3D position) {
 		// TODO: Implement obj args
-		Block block = factory.makeBlock();
+		Block block = factory.build();
 		block.add(new MCBlockTransform(block, world, position));
 		return block;
 	}
@@ -147,9 +148,9 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		FWTile fwTile = FWTileLoader.loadTile(block.getID());
+		FWTile fwTile = FWTileLoader.loadTile(dummy.getID());
 		if (lastExtendedStatePos != null) {
-			fwTile.block.getOrAdd(new MCBlockTransform(block, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
+			fwTile.block.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
 			lastExtendedStatePos = null;
 		}
 		return fwTile;
@@ -244,12 +245,12 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public boolean isOpaqueCube() {
-		if (block == null) {
+		if (dummy == null) {
 			// Superconstructor fix. -10 style points.
 			return true;
 		}
 
-		Optional<Collider> blockCollider = block.getOp(Collider.class);
+		Optional<Collider> blockCollider = dummy.getOp(Collider.class);
 
 		if (blockCollider.isPresent()) {
 			return blockCollider.get().isOpaqueCube.get();
@@ -260,7 +261,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public boolean isNormalCube() {
-		Optional<Collider> blockCollider = block.getOp(Collider.class);
+		Optional<Collider> blockCollider = dummy.getOp(Collider.class);
 
 		if (blockCollider.isPresent()) {
 			return blockCollider.get().isCube.get();

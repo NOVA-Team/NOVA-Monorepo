@@ -22,7 +22,12 @@ public abstract class Component implements Identifiable {
 
 	Component setProvider(ComponentProvider provider) {
 		this.provider = provider;
+		onProviderChange();
 		return this;
+	}
+
+	public void onProviderChange() {
+
 	}
 
 	@Override

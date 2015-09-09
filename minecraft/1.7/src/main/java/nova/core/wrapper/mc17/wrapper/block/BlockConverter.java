@@ -9,6 +9,7 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.component.Category;
+import nova.core.event.BlockEvent;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.wrapper.mc17.launcher.NovaMinecraft;
@@ -53,7 +54,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		}
 
 		if (nativeBlock == Blocks.air) {
-			return Game.blocks().getAirBlock();
+			return Game.blocks().getAirBlock().build();
 		}
 
 		return new BWBlock(nativeBlock);
@@ -84,19 +85,14 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	private void registerMinecraftToNOVA() {
 		//TODO: Will this register ALL Forge mod blocks as well?
 		BlockManager blockManager = Game.blocks();
-		net.minecraft.block.Block.blockRegistry.forEach(obj -> blockManager.register(args -> new BWBlock((net.minecraft.block.Block) obj)));
+		net.minecraft.block.Block.blockRegistry.forEach(obj -> blockManager.register(new BlockFactory(() -> new BWBlock((net.minecraft.block.Block) obj), false)));
 	}
 
 	private void registerNOVAToMinecraft() {
 		BlockManager blockManager = Game.blocks();
 
 		//Register air block
-		BlockFactory airBlock = new BlockFactory((args) -> new BWBlock(Blocks.air) {
-			@Override
-			public void onRegister() {
-
-			}
-
+		BlockFactory airBlock = new BlockFactory(() -> new BWBlock(Blocks.air) {
 			@Override
 			public boolean canReplace() {
 				return true;
@@ -106,12 +102,12 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 			public String getID() {
 				return "air";
 			}
-		});
+		}, false);
 
 		blockManager.register(airBlock);
 
 		//NOTE: There should NEVER be blocks already registered in preInit() stage of a NativeConverter.
-		blockManager.blockRegisteredListeners.add(event -> registerNovaBlock(event.blockFactory));
+		Game.events().on(BlockEvent.Register.class).bind(evt -> registerNovaBlock(evt.blockFactory));
 	}
 
 	private void registerNovaBlock(BlockFactory blockFactory) {
