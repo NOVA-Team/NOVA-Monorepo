@@ -48,8 +48,8 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public boolean setBlock(Vector3D position, BlockFactory blockFactory) {
-		Block newBlock = blockFactory.build();
+	public boolean setBlock(Vector3D position, BlockFactory factory) {
+		Block newBlock = factory.build();
 		BlockTransform component = new BlockTransform();
 		component.setPosition(position);
 		component.setWorld(this);

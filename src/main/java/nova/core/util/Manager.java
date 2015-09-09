@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 /**
  * @author Calclavia
  */
-public abstract class Manager<T extends Identifiable, F extends Factory<T>> {
+public abstract class Manager<T extends Identifiable, F extends Factory<F, T>> {
 	public final Registry<F> registry;
 
 	public Manager(Registry<F> registry) {
@@ -17,7 +17,6 @@ public abstract class Manager<T extends Identifiable, F extends Factory<T>> {
 	 * Register a new object construction factory.
 	 *
 	 * Note that you make use: register(BlockStone::new), passing a method reference.
-	 *
 	 * @param constructor Instance supplier {@link Supplier}
 	 * @return The factory
 	 */

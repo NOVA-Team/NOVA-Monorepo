@@ -2,7 +2,6 @@ package nova.core.world;
 
 import nova.core.event.WorldEvent;
 import nova.core.event.bus.GlobalEvents;
-import nova.core.util.Factory;
 import nova.core.util.Manager;
 import nova.core.util.Registry;
 import nova.internal.core.Game;
@@ -12,7 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class WorldManager extends Manager<World, Factory<World>> {
+public class WorldManager extends Manager<World, WorldFactory> {
 
 	/**
 	 * The set of worlds that currently exist
@@ -20,7 +19,7 @@ public class WorldManager extends Manager<World, Factory<World>> {
 	public final Set<World> clientWorlds = new HashSet<>();
 	public final Set<World> serverWorlds = new HashSet<>();
 
-	public WorldManager(Registry<Factory<World>> registry, GlobalEvents events) {
+	public WorldManager(Registry<WorldFactory> registry, GlobalEvents events) {
 		super(registry);
 
 		//Bind events
@@ -29,8 +28,8 @@ public class WorldManager extends Manager<World, Factory<World>> {
 	}
 
 	@Override
-	public Factory<World> register(Supplier<World> constructor) {
-		return register(new Factory<>(constructor));
+	public WorldFactory register(Supplier<World> constructor) {
+		return register(new WorldFactory(constructor));
 	}
 
 	public Set<World> sidedWorlds() {

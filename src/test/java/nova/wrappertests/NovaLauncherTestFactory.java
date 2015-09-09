@@ -1,5 +1,6 @@
 package nova.wrappertests;
 
+import nova.core.block.BlockFactory;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.launch.NovaLauncher;
@@ -44,7 +45,6 @@ public class NovaLauncherTestFactory {
 
 	/**
 	 * Creates a fake launcher to allow mods to unit test.
-	 *
 	 * @return
 	 */
 	public NovaLauncher createLauncher() {
@@ -59,12 +59,7 @@ public class NovaLauncherTestFactory {
 		/**
 		 * Register fake air block
 		 */
-		Game.blocks().register((args) -> new FakeBlock("air") {
-			@Override
-			public void onRegister() {
-
-			}
-		});
+		Game.blocks().register(new BlockFactory(() -> new FakeBlock("air"), false));
 
 		launcher.generateDependencies();
 		launcher.load();

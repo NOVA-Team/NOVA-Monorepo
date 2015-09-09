@@ -26,4 +26,5 @@ public class FluidManager extends Manager<Fluid, FluidFactory> {
 		registry.register(factory);
 		return factory;
 	}
+
 }

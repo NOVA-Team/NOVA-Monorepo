@@ -5,25 +5,40 @@ import java.util.function.Supplier;
 
 /**
  * Factories are immutable object builders that create objects.
+ * @param <S> The self type
  * @param <T> Type of produced object
  * @author Calclavia
  */
-public class Factory<T extends Identifiable> implements Identifiable {
+public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> implements Identifiable {
 	protected final Supplier<T> constructor;
 	protected final String id;
-	protected Function<T, T> processor = obj -> obj;
+	protected final Function<T, T> processor;
 
-	public Factory(Supplier<T> constructor) {
+	/**
+	 * Creates a new factory with a constructor function that instantiates the factory object,
+	 * and with a processor that is capable of mutating the instantiated object after its initialization.
+	 *
+	 * A factory's processor may be modified to allow specific customization of instantiated objects before it is used.
+	 * @param constructor The construction function
+	 * @param processor The processor function
+	 */
+	public Factory(Supplier<T> constructor, Function<T, T> processor) {
 		this.constructor = constructor;
+		this.processor = processor;
 
-		//TODO: Do blocks really need to store its ID inside? Or should it be stored in the factory? This prevents generating dummies.
+		//TODO: Do blocks really need to store its ID inside? Or should it be stored in the factory? This prevents generating dummies. Consider @Identifiable
 		id = build().getID();
 	}
 
-	public Factory<T> process(Function<T, T> processor) {
-		this.processor.compose(processor);
-		return this;
+	public Factory(Supplier<T> constructor) {
+		this(constructor, obj -> obj);
 	}
+
+	public S process(Function<T, T> processor) {
+		return selfConstructor(constructor, this.processor.compose(processor));
+	}
+
+	public abstract S selfConstructor(Supplier<T> constructor, Function<T, T> processor);
 
 	/**
 	 * @return A new instance of T based on the construction method
