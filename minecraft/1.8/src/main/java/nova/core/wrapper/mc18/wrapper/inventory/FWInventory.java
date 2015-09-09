@@ -28,13 +28,15 @@ public class FWInventory implements IInventory {
 	@Override
 	public ItemStack decrStackSize(int slot, int amount) {
 		ItemStack stack = getStackInSlot(slot);
-		stack.stackSize -= amount;
-		if (stack.stackSize < 0) {
+		ItemStack ret = stack.copy();
+		ret.stackSize = Math.min(ret.stackSize, amount);
+		stack.stackSize -= ret.stackSize;
+		if (stack.stackSize <= 0) {
 			setInventorySlotContents(slot, null);
 			return null;
 		}
 		markDirty();
-		return stack;
+		return ret;
 	}
 
 	@Override
