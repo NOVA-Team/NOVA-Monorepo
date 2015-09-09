@@ -48,8 +48,8 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args) {
-		Block newBlock = blockFactory.makeBlock();
+	public boolean setBlock(Vector3D position, BlockFactory blockFactory) {
+		Block newBlock = blockFactory.build();
 		BlockTransform component = new BlockTransform();
 		component.setPosition(position);
 		component.setWorld(this);
@@ -59,8 +59,8 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public Entity addEntity(EntityFactory factory, Object... args) {
-		Entity make = factory.make(args);
+	public Entity addEntity(EntityFactory factory) {
+		Entity make = factory.build();
 		EntityTransform component = new EntityTransform();
 		component.setWorld(this);
 		make.add(component);

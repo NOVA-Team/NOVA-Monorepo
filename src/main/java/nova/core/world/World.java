@@ -16,28 +16,24 @@ import java.util.Set;
 
 /**
  * An in-game world
- *
  * @author Calclavia
  */
 public abstract class World implements Identifiable {
 
 	/**
 	 * Marks a position to render static.
-	 *
 	 * @param position The position to perform the static re-rendering.
 	 */
 	public abstract void markStaticRender(Vector3D position);
 
 	/**
 	 * Marks a specific block to indicate it changed.
-	 *
 	 * @param position The position being changed.
 	 */
 	public abstract void markChange(Vector3D position);
 
 	/**
 	 * Gets the block which occupies the given position.
-	 *
 	 * @param position The position to query.
 	 * @return The block at the position. If the block is air, it will return the air block. If no block is present (the void), it will return an empty optional.
 	 */
@@ -45,17 +41,14 @@ public abstract class World implements Identifiable {
 
 	/**
 	 * Sets the block occupying a given position.
-	 *
 	 * @param position The position of the block to set.
 	 * @param blockFactory The block factory.
-	 * @param args The block constructor arguments.
 	 * @return {@code true} if the replace was successful.
 	 */
-	public abstract boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args);
+	public abstract boolean setBlock(Vector3D position, BlockFactory blockFactory);
 
 	/**
 	 * Removes the block in the specified position.
-	 *
 	 * @param position the position of the block to remove.
 	 * @return {@code true} if the block was removed.
 	 */
@@ -65,14 +58,12 @@ public abstract class World implements Identifiable {
 
 	/**
 	 * Creates an entity
-	 *
 	 * @param factory The entity factory
 	 */
-	public abstract Entity addEntity(EntityFactory factory, Object... args);
+	public abstract Entity addEntity(EntityFactory factory);
 
 	/**
 	 * Creates an entity that holds an item
-	 *
 	 * @param item The item
 	 */
 	public abstract Entity addEntity(Vector3D position, Item item);
@@ -96,7 +87,6 @@ public abstract class World implements Identifiable {
 
 	/**
 	 * Gets an entity based on its UUID
-	 *
 	 * @param uniqueID The entity's unique ID
 	 * @return The entity or empty if the entity does not exist.
 	 */
@@ -104,7 +94,6 @@ public abstract class World implements Identifiable {
 
 	/**
 	 * Gets a set of entities within a certain bound
-	 *
 	 * @param bound The boundary
 	 * @return A set of entities.
 	 */
@@ -112,7 +101,6 @@ public abstract class World implements Identifiable {
 
 	/**
 	 * Plays a sound at a certain position.
-	 *
 	 * @param position The position in the world of the sound.
 	 * @param soundFactory The sound factory that will create the sound to be played.
 	 */
