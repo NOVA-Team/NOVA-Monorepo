@@ -49,7 +49,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	public Block toNova(net.minecraft.block.Block nativeBlock) {
 		//Prevent recursive wrapping
 		if (nativeBlock instanceof FWBlock) {
-			return ((FWBlock) nativeBlock).block;
+			return ((FWBlock) nativeBlock).dummy;
 		}
 
 		if (nativeBlock == Blocks.air) {
@@ -120,9 +120,9 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		NovaMinecraft.proxy.registerBlock(blockWrapper);
 		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
 
-		if (blockWrapper.block.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
+		if (blockWrapper.dummy.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 			//Add into creative tab
-			Category category = blockWrapper.block.get(Category.class);
+			Category category = blockWrapper.dummy.get(Category.class);
 			Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
 				.filter(tab -> tab.getTabLabel().equals(category.name))
 				.findFirst();

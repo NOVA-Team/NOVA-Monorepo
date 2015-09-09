@@ -60,7 +60,7 @@ public abstract class World implements Identifiable {
 	 * @return {@code true} if the block was removed.
 	 */
 	public boolean removeBlock(Vector3D position) {
-		return setBlock(position, Game.blocks().getAirBlockFactory());
+		return setBlock(position, Game.blocks().getAirBlock());
 	}
 
 	/**

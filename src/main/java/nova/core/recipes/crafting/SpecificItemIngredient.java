@@ -82,7 +82,7 @@ public class SpecificItemIngredient implements ItemIngredient {
 		Optional<ItemFactory> itemFactory = Game.items().getItem(itemId);
 
 		if (itemFactory.isPresent()) {
-			return itemFactory.get().makeItem();
+			return itemFactory.get().build();
 		}
 
 		throw new RegistrationException("Missing item: " + itemId);

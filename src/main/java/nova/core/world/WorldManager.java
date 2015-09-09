@@ -10,7 +10,7 @@ import nova.internal.core.Game;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class WorldManager extends Manager<World, Factory<World>> {
 
@@ -29,7 +29,7 @@ public class WorldManager extends Manager<World, Factory<World>> {
 	}
 
 	@Override
-	public Factory<World> register(Function<Object[], World> constructor) {
+	public Factory<World> register(Supplier<World> constructor) {
 		return register(new Factory<>(constructor));
 	}
 

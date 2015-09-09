@@ -46,8 +46,12 @@ public interface Tank extends FluidConsumer, FluidProvider {
 		return false;
 	}
 
-	default boolean hasFluidType(FluidFactory factory) {
-		return hasFluidType(factory.getDummy());
+	default boolean hasFluidType(FluidFactory sample) {
+		if (hasFluid()) {
+			return getFluid().get().sameType(sample);
+		}
+
+		return false;
 	}
 
 }

@@ -6,7 +6,6 @@ import nova.core.entity.Entity;
 import nova.core.event.bus.CancelableEvent;
 import nova.core.event.bus.Event;
 import nova.core.item.Item;
-import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
@@ -24,16 +23,8 @@ import java.util.Set;
  */
 public abstract class Block extends ComponentProvider implements Identifiable {
 
-	/**
-	 * Called when the block is registered.
-	 */
-	public void onRegister() {
-		//Register the itemblock
-		Game.items().register((args) -> new ItemBlock(factory()));
-	}
-
 	public ItemFactory getItemFactory() {
-		return Game.items().getItemFactoryFromBlock(factory());
+		return Game.items().getItemFromBlock(factory());
 	}
 
 	/**
@@ -42,7 +33,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 * Block class.
 	 */
 	public final BlockFactory factory() {
-		return Game.blocks().getFactory(getID()).get();
+		return Game.blocks().get(getID()).get();
 	}
 
 	public final BlockTransform transform() {
@@ -246,7 +237,7 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 		public Set<Item> drops;
 
 		public DropEvent(Block block) {
-			this.drops = Collections.singleton(block.getItemFactory().makeItem());
+			this.drops = Collections.singleton(block.getItemFactory().build());
 		}
 	}
 }

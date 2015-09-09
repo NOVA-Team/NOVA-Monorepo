@@ -73,7 +73,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 				data.put("damage", itemStack.getItemDamage());
 			}
 
-			return itemFactory.makeItem(data);
+			return itemFactory.build(data);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	public ItemStack toNative(ItemFactory itemFactory) {
-		WrappedNBTTagCompound tag = new WrappedNBTTagCompound(itemFactory.makeItem());
+		WrappedNBTTagCompound tag = new WrappedNBTTagCompound(itemFactory.build());
 
 		MinecraftItemMapping mapping = get(itemFactory);
 		if (mapping == null) {
@@ -115,7 +115,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	public ItemStack toNative(String id) {
-		return toNative(Game.items().getItem(id).get().makeItem().setCount(1));
+		return toNative(Game.items().getItem(id).get().build().setCount(1));
 	}
 
 	public MinecraftItemMapping get(ItemFactory item) {
@@ -135,7 +135,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			return null;
 		}
 
-		itemStack.setTagCompound(Game.natives().toNative(item.factory().saveItem(item)));
+		itemStack.setTagCompound(Game.natives().toNative(item.factory().save(item)));
 		return itemStack;
 	}
 

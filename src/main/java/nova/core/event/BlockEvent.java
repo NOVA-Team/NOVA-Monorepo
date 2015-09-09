@@ -1,6 +1,7 @@
 package nova.core.event;
 
 import nova.core.block.Block;
+import nova.core.block.BlockFactory;
 import nova.core.event.bus.CancelableEvent;
 import nova.core.world.World;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -14,6 +15,14 @@ public abstract class BlockEvent extends CancelableEvent {
 	public BlockEvent(World world, Vector3D position) {
 		this.world = world;
 		this.position = position;
+	}
+
+	public static class Register extends CancelableEvent {
+		public BlockFactory blockFactory;
+
+		public Register(BlockFactory blockFactory) {
+			this.blockFactory = blockFactory;
+		}
 	}
 
 	/**

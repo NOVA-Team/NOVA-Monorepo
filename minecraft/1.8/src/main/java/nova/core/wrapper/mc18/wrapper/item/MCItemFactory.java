@@ -38,7 +38,7 @@ public class MCItemFactory extends ItemFactory {
 	}
 
 	@Override
-	public Data saveItem(Item item) {
+	public Data save(Item item) {
 		if (!(item instanceof BWItem)) {
 			throw new IllegalArgumentException("This factory can only handle MCItems");
 		}

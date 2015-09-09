@@ -1,25 +1,30 @@
 package nova.core.block;
 
+import nova.core.item.ItemBlock;
 import nova.core.util.Factory;
 import nova.core.util.Identifiable;
+import nova.internal.core.Game;
 
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
- * @author Stan Hebben
+ * The factory type for blocks.
+ * @author Calclavia
  */
 public class BlockFactory extends Factory<Block> implements Identifiable {
 
-	public BlockFactory(Function<Object[], Block> constructor) {
-		super(constructor);
+	public BlockFactory(Supplier<Block> constructor) {
+		this(constructor, true);
 	}
 
-	/**
-	 * Creates a new instance of this block with blockAccess and position parameters.
-	 * @return A new block instance with these parameters.
-	 */
-	public Block makeBlock(Object... args) {
-		Block newBlock = constructor.apply(args);
-		return newBlock;
+	public BlockFactory(Supplier<Block> constructor, boolean generateItemBlock) {
+		super(constructor);
+
+		if (generateItemBlock) {
+			process(block -> {
+				Game.items().register(() -> new ItemBlock(this));
+				return block;
+			});
+		}
 	}
 }

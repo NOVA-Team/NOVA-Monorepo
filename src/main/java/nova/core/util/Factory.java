@@ -1,34 +1,38 @@
 package nova.core.util;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Factories are immutable object builders that create objects.
  * @param <T> Type of produced object
  * @author Calclavia
  */
-//TODO: Remove args
 public class Factory<T extends Identifiable> implements Identifiable {
-	protected final Function<Object[], T> constructor;
-	protected T dummy;
+	protected final Supplier<T> constructor;
+	protected final String id;
+	protected Function<T, T> processor = obj -> obj;
 
-	public Factory(Function<Object[], T> constructor) {
+	public Factory(Supplier<T> constructor) {
 		this.constructor = constructor;
+
+		//TODO: Do blocks really need to store its ID inside? Or should it be stored in the factory? This prevents generating dummies.
+		id = build().getID();
 	}
 
-	public T build(Object... args) {
-		return constructor.apply(args);
+	public Factory<T> process(Function<T, T> processor) {
+		this.processor.compose(processor);
+		return this;
 	}
 
-	public T getDummy() {
-		if (dummy == null) {
-			//TODO: This will cause problems!
-			dummy = build();
-		}
-		return dummy;
+	/**
+	 * @return A new instance of T based on the construction method
+	 */
+	public T build() {
+		return processor.apply(constructor.get());
 	}
 
 	public String getID() {
-		return getDummy().getID();
+		return id;
 	}
 }

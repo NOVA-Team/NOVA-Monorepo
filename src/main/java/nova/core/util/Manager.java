@@ -1,7 +1,7 @@
 package nova.core.util;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author Calclavia
@@ -14,27 +14,22 @@ public abstract class Manager<T extends Identifiable, F extends Factory<T>> {
 	}
 
 	public F register(Class<? extends T> registerType) {
-		return register((args) -> ReflectionUtil.newInstance(registerType, args));
+		return register(() -> ReflectionUtil.newInstance(registerType));
 	}
 
-	public abstract F register(Function<Object[], T> constructor);
+	/**
+	 * Register a new object construction factory.
+	 * @param constructor Instance supplier {@link Supplier}
+	 * @return The factory
+	 */
+	public abstract F register(Supplier<T> constructor);
 
 	public F register(F factory) {
 		registry.register(factory);
 		return factory;
 	}
 
-	public Optional<T> get(String name) {
-		Optional<F> factory = getFactory(name);
-
-		if (factory.isPresent()) {
-			return Optional.of(factory.get().getDummy());
-		}
-
-		return Optional.empty();
-	}
-
-	public Optional<F> getFactory(String name) {
+	public Optional<F> get(String name) {
 		return registry.get(name);
 	}
 }

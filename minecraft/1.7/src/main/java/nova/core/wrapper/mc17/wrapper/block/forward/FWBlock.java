@@ -54,7 +54,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_BIT;
  * @author Calclavia
  */
 public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRenderingHandler, IItemRenderer {
-	public final Block block;
+	public final Block dummy;
 	/**
 	 * Reference to the wrapper Nova block
 	 */
@@ -70,9 +70,9 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	public FWBlock(BlockFactory factory) {
 		super(Material.piston);
 		this.factory = factory;
-		this.block = factory.getDummy();
-		this.blockClass = block.getClass();
-		this.setBlockName(block.getID());
+		this.dummy = factory.build();
+		this.blockClass = dummy.getClass();
+		this.setBlockName(dummy.getID());
 
 		// Recalculate super constructor things after loading the block properly
 		this.opaque = isOpaqueCube();
@@ -102,8 +102,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	}
 
 	private Block getBlockInstance(nova.core.world.World world, Vector3D position) {
-		// TODO: Implement obj args
-		Block block = factory.makeBlock();
+		Block block = factory.build();
 		block.add(new MCBlockTransform(block, world, position));
 		return block;
 	}
@@ -151,7 +150,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
-		return FWTileLoader.loadTile(block.getID());
+		return FWTileLoader.loadTile(dummy.getID());
 	}
 
 	@Override
@@ -271,12 +270,12 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public boolean isOpaqueCube() {
-		if (block == null) {
+		if (dummy == null) {
 			// Superconstructor fix. -10 style points.
 			return true;
 		}
 
-		Optional<Collider> blockCollider = block.getOp(Collider.class);
+		Optional<Collider> blockCollider = dummy.getOp(Collider.class);
 
 		if (blockCollider.isPresent()) {
 			return blockCollider.get().isOpaqueCube.get();
@@ -287,7 +286,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public boolean isNormalCube() {
-		Optional<Collider> blockCollider = block.getOp(Collider.class);
+		Optional<Collider> blockCollider = dummy.getOp(Collider.class);
 
 		if (blockCollider.isPresent()) {
 			return blockCollider.get().isCube.get();
@@ -358,7 +357,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
-		Optional<ItemRenderer> opRenderer = this.block.getOp(ItemRenderer.class);
+		Optional<ItemRenderer> opRenderer = this.dummy.getOp(ItemRenderer.class);
 		if (opRenderer.isPresent()) {
 			GL11.glPushAttrib(GL_TEXTURE_BIT);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
