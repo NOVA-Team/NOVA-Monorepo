@@ -3,6 +3,8 @@ package nova.core.component;
 import nova.core.component.exception.ComponentException;
 import nova.core.event.bus.Event;
 import nova.core.event.bus.EventBus;
+import nova.internal.core.Game;
+import se.jbee.inject.Dependency;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,10 +24,17 @@ public abstract class ComponentProvider {
 
 	public final EventBus<Event> events = new EventBus<>();
 
-	public EventBus<ComponentAdded> onComponentAdded = new EventBus<>();
-	public EventBus<ComponentRemoved> onComponentRemoved = new EventBus<>();
-
 	private Map<Class<? extends Component>, Component> componentMap = new HashMap<>();
+
+	/**
+	 * Adds a new component based on its superclass or interface using dependency injection.
+	 * @param theInterface The interface or abstract class associated with the new component
+	 * @param <C> The node type
+	 * @return A new node of N type.
+	 */
+	public final <C extends Component> C add(Class<C> theInterface) {
+		return add(Game.injector().resolve(Dependency.dependency(theInterface)));
+	}
 
 	/**
 	 * Adds a component to the block.
@@ -38,8 +47,14 @@ public abstract class ComponentProvider {
 			throw new ComponentException("Attempt to add two components of the type %s to " + this, component);
 		}
 
+		//Place component into component map
 		componentMap.put(component.getClass(), component);
-		onComponentAdded.publish(new ComponentAdded(component));
+
+		//Set component's provider.
+		component.setProvider(this);
+
+		//Publish component add event
+		events.publish(new ComponentAdded(component));
 		return component;
 	}
 
@@ -54,9 +69,7 @@ public abstract class ComponentProvider {
 			return get((Class<C>) component.getClass());
 		}
 
-		componentMap.put(component.getClass(), component);
-		onComponentAdded.publish(new ComponentAdded(component));
-		return component;
+		return add(component);
 	}
 
 	/**
@@ -65,12 +78,19 @@ public abstract class ComponentProvider {
 	 * @return the component removed.
 	 */
 	public final <C extends Component> C remove(C component) {
+		//Remove component based on class
 		componentMap.remove(component.getClass());
-		onComponentRemoved.publish(new ComponentRemoved(component));
+
+		//Set provider on component to null
+		component.setProvider(null);
+
+		//Publish component event
+		events.publish(new ComponentRemoved(component));
 		return component;
 	}
 
 	/**
+	 * Checks if a component type exists in this provider.
 	 * @param componentType the component type to check.
 	 * @return true if the component exists on the block.
 	 */
@@ -92,7 +112,12 @@ public abstract class ComponentProvider {
 		}
 
 		C component = (C) componentMap.remove(componentType);
-		onComponentRemoved.publish(new ComponentRemoved(component));
+
+		//Set provider on component to null
+		component.setProvider(null);
+
+		//Publish component event
+		events.publish(new ComponentRemoved(component));
 		return component;
 	}
 
@@ -140,7 +165,7 @@ public abstract class ComponentProvider {
 		return new HashSet<>(componentMap.values());
 	}
 
-	public static class ComponentAdded {
+	public static class ComponentAdded extends Event {
 		public final Component component;
 
 		public ComponentAdded(Component component) {
@@ -148,7 +173,7 @@ public abstract class ComponentProvider {
 		}
 	}
 
-	public static class ComponentRemoved {
+	public static class ComponentRemoved extends Event {
 		public final Component component;
 
 		public ComponentRemoved(Component component) {
