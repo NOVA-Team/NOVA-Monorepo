@@ -26,14 +26,6 @@ public enum Direction {
 	};
 
 	/**
-	 * Includes valid directions
-	 * @deprecated use {@link Direction#VALID_DIRECTIONS} instead.
-	 * TODO: Remove in: 0.1.0
-	 */
-	@Deprecated
-	public static final Direction[] DIRECTIONS = VALID_DIRECTIONS;
-
-	/**
 	 * Directions in a 2 dimensional space.
 	 */
 	public static final Direction[] FLAT_DIRECTIONS = new Direction[] {
