@@ -26,6 +26,7 @@ import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.launch.NovaLauncher;
 import nova.testutils.FakeBlock;
 import nova.wrappertests.depmodules.FakeClientModule;
+import nova.wrappertests.depmodules.FakeComponentModule;
 import nova.wrappertests.depmodules.FakeGameInfoModule;
 import nova.wrappertests.depmodules.FakeKeyModule;
 import nova.wrappertests.depmodules.FakeLanguageModule;
@@ -40,6 +41,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
+ * A factory that allows a mod to easily unit test launching with NOVA.
  * @author Calclavia
  */
 public class NovaLauncherTestFactory {
@@ -59,6 +61,7 @@ public class NovaLauncherTestFactory {
 			FakeRenderModule.class,
 			FakeSaveModule.class,
 			FakeTickerModule.class,
+			FakeComponentModule.class,
 			FakeGameInfoModule.class
 		);
 	}
