@@ -16,6 +16,7 @@ import nova.core.world.World;
 import nova.core.wrapper.mc18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc18.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc18.wrapper.block.forward.FWBlock;
+import nova.core.wrapper.mc18.wrapper.block.forward.MCBlockTransform;
 import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc18.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc18.wrapper.entity.forward.MCEntityTransform;
@@ -60,7 +61,9 @@ public class BWWorld extends World {
 	public Optional<Block> getBlock(Vector3D position) {
 		net.minecraft.block.Block mcBlock = access.getBlockState(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ())).getBlock();
 		if (mcBlock == null || mcBlock == Blocks.air) {
-			return Optional.of(Game.blocks().getAirBlock().build());
+			Block airBlock = Game.blocks().getAirBlock().build();
+			airBlock.add(new MCBlockTransform(airBlock, this, position));
+			return Optional.of(airBlock);
 		} else if (mcBlock instanceof FWBlock) {
 			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
 		} else {
