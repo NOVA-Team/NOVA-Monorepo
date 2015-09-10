@@ -17,7 +17,7 @@ public class ItemFactory extends Factory<ItemFactory, Item> implements Identifia
 		super(constructor);
 	}
 
-	public ItemFactory(Supplier<Item> constructor, Function<Item, Item> processor) {
+	private ItemFactory(Supplier<Item> constructor, Function<Item, Item> processor) {
 		super(constructor, processor);
 	}
 

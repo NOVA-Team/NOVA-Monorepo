@@ -10,8 +10,8 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> implements Identifiable {
-	protected final Supplier<T> constructor;
 	protected final String id;
+	protected final Supplier<T> constructor;
 	protected final Function<T, T> processor;
 
 	/**

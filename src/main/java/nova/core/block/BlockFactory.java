@@ -1,5 +1,7 @@
 package nova.core.block;
 
+import nova.core.event.BlockEvent;
+import nova.core.event.bus.EventListener;
 import nova.core.item.ItemBlock;
 import nova.core.util.Factory;
 import nova.internal.core.Game;
@@ -13,31 +15,33 @@ import java.util.function.Supplier;
  */
 public class BlockFactory extends Factory<BlockFactory, Block> {
 
+	private BlockFactory(Supplier<Block> constructor, Function<Block, Block> processor) {
+		super(constructor, processor);
+	}
+
 	public BlockFactory(Supplier<Block> constructor) {
-		this(constructor, true);
+		this(constructor, evt -> {
+			Game.items().register(() -> new ItemBlock(evt.blockFactory));
+		});
 	}
 
 	/**
 	 * Initializes a BlockFactory. A specific implementation of item block generation
-	 * may be provided by calling process() manually.
+	 * may be provided by post create.
 	 * @param constructor The constructor function
-	 * @param generateItemBlock Flag for automatic item block generation.
+	 * @param postCreate Function for registering item blocks
 	 */
-	public BlockFactory(Supplier<Block> constructor, boolean generateItemBlock) {
-		this(constructor, block -> {
-			if (generateItemBlock) {
-				Game.items().register(() -> new ItemBlock(block.factory()));
-			}
-			return block;
-		});
+	public BlockFactory(Supplier<Block> constructor, EventListener<BlockEvent.Register> postCreate) {
+		super(constructor);
+		postCreate(postCreate);
 	}
 
-	public BlockFactory(Supplier<Block> constructor, Function<Block, Block> processor) {
-		super(constructor, processor);
+	protected void postCreate(EventListener<BlockEvent.Register> postCreate) {
+		Game.events().on(BlockEvent.Register.class).bind(postCreate);
 	}
 
 	@Override
 	public BlockFactory selfConstructor(Supplier<Block> constructor, Function<Block, Block> processor) {
-		return new BlockFactory(constructor,processor);
+		return new BlockFactory(constructor, processor);
 	}
 }

@@ -17,6 +17,7 @@ import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc17.launcher.NovaMinecraft;
 import nova.core.wrapper.mc17.util.ModCreativeTab;
+import nova.core.wrapper.mc17.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
 
@@ -164,10 +165,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 		net.minecraft.item.Item itemWrapper;
 
-		Item build = itemFactory.build();
-		if (build instanceof ItemBlock) {
-			BlockFactory blockFactory = ((ItemBlock) build).blockFactory;
-			net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.build());
+		Item dummy = itemFactory.build();
+		if (dummy instanceof ItemBlock) {
+			BlockFactory blockFactory = ((ItemBlock) dummy).blockFactory;
+			net.minecraft.block.Block mcBlock = BlockConverter.instance().toNative(blockFactory);
 			itemWrapper = net.minecraft.item.Item.getItemFromBlock(mcBlock);
 			if (itemWrapper == null) {
 				throw new InitializationException("ItemConverter: Missing block: " + itemFactory.getID());
@@ -180,13 +181,13 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		map.put(itemFactory, minecraftItemMapping);
 
 		// Don't register ItemBlocks twice
-		if (!(build instanceof ItemBlock)) {
+		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
 			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
 
-			if (build.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
+			if (dummy.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
-				Category category = build.get(Category.class);
+				Category category = dummy.get(Category.class);
 				Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
 					.filter(tab -> tab.getTabLabel().equals(category.name))
 					.findFirst();

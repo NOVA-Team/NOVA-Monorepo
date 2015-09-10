@@ -86,7 +86,8 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	private void registerMinecraftToNOVA() {
 		//TODO: Will this register ALL Forge mod blocks as well?
 		BlockManager blockManager = Game.blocks();
-		net.minecraft.block.Block.blockRegistry.forEach(obj -> blockManager.register(new BlockFactory(() -> new BWBlock((net.minecraft.block.Block) obj), false)));
+		net.minecraft.block.Block.blockRegistry.forEach(obj -> blockManager.register(new BlockFactory(() -> new BWBlock((net.minecraft.block.Block) obj), evt -> {
+		})));
 	}
 
 	private void registerNOVAToMinecraft() {
@@ -103,7 +104,8 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 			public String getID() {
 				return "air";
 			}
-		}, false);
+		}, evt -> {
+		});
 
 		blockManager.register(airBlock);
 

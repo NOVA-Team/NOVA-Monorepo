@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import nova.core.block.BlockFactory;
 import nova.core.component.Category;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
@@ -17,6 +18,7 @@ import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc18.util.ModCreativeTab;
+import nova.core.wrapper.mc18.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
 
@@ -166,7 +168,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 		Item dummy = itemFactory.build();
 		if (dummy instanceof ItemBlock) {
-			net.minecraft.block.Block mcBlock = Game.natives().toNative(dummy);
+			BlockFactory blockFactory = ((ItemBlock) dummy).blockFactory;
+			net.minecraft.block.Block mcBlock = BlockConverter.instance().toNative(blockFactory);
 			itemWrapper = net.minecraft.item.Item.getItemFromBlock(mcBlock);
 			if (itemWrapper == null) {
 				throw new InitializationException("ItemConverter: Missing block: " + itemFactory.getID());

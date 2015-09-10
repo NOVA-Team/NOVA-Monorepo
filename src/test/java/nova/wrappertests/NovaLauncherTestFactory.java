@@ -59,7 +59,8 @@ public class NovaLauncherTestFactory {
 		/**
 		 * Register fake air block
 		 */
-		Game.blocks().register(new BlockFactory(() -> new FakeBlock("air"), false));
+		Game.blocks().register(new BlockFactory(() -> new FakeBlock("air"), evt -> {
+		}));
 
 		launcher.generateDependencies();
 		launcher.load();
