@@ -25,35 +25,6 @@ public class EventBus<T> {
 	}
 
 	/**
-	 * Adds an EventListener to the bus.
-	 * @param listener event listener
-	 * @return event listener's handle
-	 */
-	@Deprecated
-	public EventListenerHandle<T> add(EventListener<T> listener) {
-		return on().bind(listener);
-	}
-
-	@Deprecated
-	public EventListenerHandle<T> add(EventListener<T> listener, int priority) {
-
-		return on().withPriority(priority).bind(listener);
-	}
-
-	/**
-	 * Use on(clazz)
-	 */
-	@Deprecated
-	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz) {
-		return on(clazz).bind(listener);
-	}
-
-	@Deprecated
-	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, int priority) {
-		return on(clazz).withPriority(priority).bind(listener);
-	}
-
-	/**
 	 * Removes an EventListener from the list.
 	 * @param listener listener to be removed
 	 * @return true if the listener was removed, false it it wasn't there
@@ -112,6 +83,43 @@ public class EventBus<T> {
 		return new EventBinder<>(Optional.of(clazz));
 	}
 
+	/**
+	 * A wrapper for an event listener that only accepts a specific type of
+	 * event.
+	 * @param <E> event type
+	 * @param <T> super type
+	 * @author Vic Nightfall
+	 */
+	protected static class SingleEventListener<E extends T, T> implements EventListener<T> {
+		private final Class<E> eventClass;
+		private final EventListener<E> wrappedListener;
+
+		/**
+		 * Constructs a new single typed Event listener.
+		 * @param wrappedListener The listener which gets called when the event
+		 * was accepted.
+		 * @param eventClass The event to listen for, Any posted event that is
+		 * an instance of said class will get passed through to the
+		 * wrapped listener instance.
+		 */
+		public SingleEventListener(EventListener<E> wrappedListener, Class<E> eventClass) {
+			this.eventClass = eventClass;
+			this.wrappedListener = wrappedListener;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public void onEvent(T event) {
+			if (eventClass.isInstance(event)) {
+				wrappedListener.onEvent((E) event);
+			}
+		}
+	}
+
+	// #######################
+	// ### Private classes ###
+	// #######################
+
 	public class EventBinder<E extends T> {
 		private final Optional<Class<E>> clazz;
 		private int priority = PRIORITY_DEFAULT;
@@ -161,10 +169,6 @@ public class EventBus<T> {
 		}
 	}
 
-	// #######################
-	// ### Private classes ###
-	// #######################
-
 	protected class EventListenerNode implements EventListenerHandle<T> {
 		protected final EventListener<T> listener;
 		protected final int priority;
@@ -195,39 +199,6 @@ public class EventBus<T> {
 				} else {
 					next.prev = prev;
 				}
-			}
-		}
-	}
-
-	/**
-	 * A wrapper for an event listener that only accepts a specific type of
-	 * event.
-	 * @param <E> event type
-	 * @param <T> super type
-	 * @author Vic Nightfall
-	 */
-	protected static class SingleEventListener<E extends T, T> implements EventListener<T> {
-		private final Class<E> eventClass;
-		private final EventListener<E> wrappedListener;
-
-		/**
-		 * Constructs a new single typed Event listener.
-		 * @param wrappedListener The listener which gets called when the event
-		 * was accepted.
-		 * @param eventClass The event to listen for, Any posted event that is
-		 * an instance of said class will get passed through to the
-		 * wrapped listener instance.
-		 */
-		public SingleEventListener(EventListener<E> wrappedListener, Class<E> eventClass) {
-			this.eventClass = eventClass;
-			this.wrappedListener = wrappedListener;
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public void onEvent(T event) {
-			if (eventClass.isInstance(event)) {
-				wrappedListener.onEvent((E) event);
 			}
 		}
 	}

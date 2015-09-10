@@ -11,7 +11,6 @@ import java.util.HashMap;
  * and allows registration of handlers that only listen on a specific
  * {@link Side}. <b>Remember to {@link Side#reduce() reduce} the scope of any
  * {@link SidedEvent} that was sent over the network!</b>
- *
  * @param <T> -Describe me-
  * @author Vic Nightfall
  */
@@ -26,8 +25,9 @@ public class SidedEventBus<T extends CancelableEvent> extends CancelableEventBus
 	}
 
 	private void add(Class<?> clazz, Side side) {
-		if (side == Side.NONE)
+		if (side == Side.NONE) {
 			throw new IllegalArgumentException("Can't specify a sided event without a scope!");
+		}
 		Side side2 = listenedNetworkEvents.get(clazz);
 		if (side2 != null) {
 			if (side2 != Side.BOTH && side2 != side) {
@@ -52,45 +52,6 @@ public class SidedEventBus<T extends CancelableEvent> extends CancelableEventBus
 			clazz2 = clazz2.getSuperclass();
 		}
 		return false;
-	}
-
-	@Override
-	@Deprecated
-	public EventListenerHandle<T> add(EventListener<T> listener) {
-		// Disables the checking mechanism as now there is a listener that
-		// listens for everything on every side. Whoever called this clearly
-		// doesn't care about network load or anything else.
-		checkListenedBeforeSend = false;
-		return super.add(listener);
-	}
-
-	@Override
-	@Deprecated
-	public EventListenerHandle<T> add(EventListener<T> listener, int priority) {
-		checkListenedBeforeSend = false;
-		return super.add(listener, priority);
-	}
-
-	@Override
-	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz) {
-		add(clazz, Side.BOTH);
-		return super.add(listener, clazz);
-	}
-
-	@Override
-	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, int priority) {
-		add(clazz, Side.BOTH);
-		return super.add(listener, clazz, priority);
-	}
-
-	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, Side sideToListen) {
-		add(clazz, sideToListen);
-		return super.add(new SidedEventListener<E, T>(listener, clazz, sideToListen), PRIORITY_DEFAULT);
-	}
-
-	public <E extends T> EventListenerHandle<T> add(EventListener<E> listener, Class<E> clazz, Side sideToListen, int priority) {
-		add(clazz, sideToListen);
-		return super.add(new SidedEventListener<E, T>(listener, clazz, sideToListen), priority);
 	}
 
 	@Override
@@ -124,7 +85,6 @@ public class SidedEventBus<T extends CancelableEvent> extends CancelableEventBus
 		/**
 		 * Gets called if the parent {@link SidedEventBus.SidedEventListener}
 		 * received an event that needs to be sent over the network.
-		 *
 		 * @param event The event
 		 */
 		void handleEvent(SidedEvent event);
@@ -134,7 +94,6 @@ public class SidedEventBus<T extends CancelableEvent> extends CancelableEventBus
 	 * An event that specifies a {@link NetworkTarget}. Set the target by either
 	 * overriding {@link #getTarget()} or by using the annotation
 	 * {@link NetworkTarget} on the inherited class.
-	 *
 	 * @author Vic Nightfall
 	 */
 	public interface SidedEvent extends Syncable {

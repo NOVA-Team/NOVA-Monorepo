@@ -4,7 +4,12 @@ import nova.core.event.bus.EventBus;
 import nova.core.event.bus.EventListener;
 import nova.core.event.bus.EventListenerHandle;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The RecipeManager manages all recipes (of any type) in the game.
@@ -44,13 +49,13 @@ public class RecipeManager {
 	public <T extends Recipe> EventListenerHandle<RecipeAddedEvent<T>> whenRecipeAdded(
 		Class<T> type,
 		EventListener<RecipeAddedEvent<T>> listener) {
-		return getRecipeList(type).recipeAddedListeners.add(listener);
+		return getRecipeList(type).recipeAddedListeners.on().bind(listener);
 	}
 
 	public <T extends Recipe> EventListenerHandle<RecipeRemovedEvent<T>> whenRecipeRemoved(
 		Class<T> type,
 		EventListener<RecipeRemovedEvent<T>> listener) {
-		return getRecipeList(type).recipeRemovedListeners.add(listener);
+		return getRecipeList(type).recipeRemovedListeners.on().bind(listener);
 	}
 
 	// #######################

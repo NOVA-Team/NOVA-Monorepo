@@ -98,11 +98,11 @@ public class Dictionary<T> {
 	}
 
 	public EventListenerHandle<AddEvent<T>> whenEntryAdded(EventListener<AddEvent<T>> listener) {
-		return addEventListeners.add(listener);
+		return addEventListeners.on().bind(listener);
 	}
 
 	public EventListenerHandle<RemoveEvent<T>> whenEntryRemoved(EventListener<RemoveEvent<T>> listener) {
-		return removeEventListeners.add(listener);
+		return removeEventListeners.on().bind(listener);
 	}
 
 	public static class AddEvent<T> {
