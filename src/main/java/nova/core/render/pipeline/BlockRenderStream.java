@@ -1,12 +1,34 @@
+/*
+ * Copyright (c) 2015 NOVA, All rights reserved.
+ * This library is free software, licensed under GNU Lesser General Public License version 3
+ *
+ * This file is part of NOVA.
+ *
+ * NOVA is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * NOVA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package nova.core.render.pipeline;
+
+
 
 import nova.core.block.Block;
 import nova.core.component.misc.Collider;
 import nova.core.render.Color;
 import nova.core.render.RenderException;
 import nova.core.render.model.Face;
-import nova.core.render.model.Vertex;
 import nova.core.render.model.MeshModel;
+import nova.core.render.model.Vertex;
 import nova.core.render.texture.Texture;
 import nova.core.util.Direction;
 import nova.core.util.shape.Cuboid;
@@ -15,9 +37,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-/**
+import java.util.function.Supplier;/**
  * A block rendering builder that generates a function that renders a block model.
  *
  * @author Calclavia

@@ -1,17 +1,37 @@
+/*
+ * Copyright (c) 2015 NOVA, All rights reserved.
+ * This library is free software, licensed under GNU Lesser General Public License version 3
+ *
+ * This file is part of NOVA.
+ *
+ * NOVA is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * NOVA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package nova.core.command;
+
+
+
+import nova.core.entity.component.Player;
+import nova.core.util.Identifiable;
+import nova.core.util.NovaException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import nova.core.entity.component.Player;
-import nova.core.util.Identifiable;
-import nova.core.util.NovaException;
-
-/**
+import java.util.regex.Pattern;/**
  * The command type.
  *
  * The ID of the command is the command name.

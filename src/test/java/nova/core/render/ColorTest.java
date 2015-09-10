@@ -1,9 +1,40 @@
+/*
+ * Copyright (c) 2015 NOVA, All rights reserved.
+ * This library is free software, licensed under GNU Lesser General Public License version 3
+ *
+ * This file is part of NOVA.
+ *
+ * NOVA is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * NOVA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package nova.core.render;
 
 import org.junit.Test;
 
-import static nova.testutils.NovaAssertions.*;
-import static nova.core.render.Color.*;
+import static nova.core.render.Color.ColorRangeException;
+import static nova.core.render.Color.black;
+import static nova.core.render.Color.darkGray;
+import static nova.core.render.Color.rgb;
+import static nova.core.render.Color.rgba;
+import static nova.core.render.Color.rgbac;
+import static nova.core.render.Color.rgbaf;
+import static nova.core.render.Color.rgbafc;
+import static nova.core.render.Color.rgbc;
+import static nova.core.render.Color.rgbf;
+import static nova.core.render.Color.rgbfc;
+import static nova.core.render.Color.white;
+import static nova.testutils.NovaAssertions.assertThat;
 
 public class ColorTest {
 	
