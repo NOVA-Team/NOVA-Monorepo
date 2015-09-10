@@ -55,7 +55,7 @@ public class BWWorld extends World {
 	public Optional<Block> getBlock(Vector3D position) {
 		net.minecraft.block.Block mcBlock = access.getBlock((int) position.getX(), (int) position.getY(), (int) position.getZ());
 		if (mcBlock == null || mcBlock == Blocks.air) {
-			return Optional.of(Game.blocks().getAirBlock());
+			return Optional.of(Game.blocks().getAirBlock().build());
 		} else if (mcBlock instanceof FWBlock) {
 			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
 		} else {
@@ -64,9 +64,9 @@ public class BWWorld extends World {
 	}
 
 	@Override
-	public boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args) {
+	public boolean setBlock(Vector3D position, BlockFactory blockFactory) {
 		//TODO: Implement object arguments
-		net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.getDummy());
+		net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.build());
 		return world().setBlock((int) position.getX(), (int) position.getY(), (int) position.getZ(), mcBlock != null ? mcBlock : Blocks.air);
 	}
 
@@ -76,8 +76,8 @@ public class BWWorld extends World {
 	}
 
 	@Override
-	public Entity addEntity(EntityFactory factory, Object... args) {
-		FWEntity bwEntity = new FWEntity(world(), factory, args);
+	public Entity addEntity(EntityFactory factory) {
+		FWEntity bwEntity = new FWEntity(world(), factory);
 		bwEntity.forceSpawn = true;
 		world().spawnEntityInWorld(bwEntity);
 		return bwEntity.getWrapped();

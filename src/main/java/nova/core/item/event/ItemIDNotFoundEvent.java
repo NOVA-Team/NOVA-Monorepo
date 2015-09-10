@@ -1,11 +1,12 @@
 package nova.core.item.event;
 
+import nova.core.event.bus.Event;
 import nova.core.item.ItemFactory;
 
 /**
- * Created by Stan on 3/02/2015.
+ * @author Stan
  */
-public class ItemIDNotFoundEvent {
+public class ItemIDNotFoundEvent extends Event {
 	public final String id;
 
 	private ItemFactory remappedFactory = null;

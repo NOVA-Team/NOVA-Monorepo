@@ -30,7 +30,7 @@ public class FWEntityFX extends EntityFX {
 
 	public FWEntityFX(World world, EntityFactory factory) {
 		super(world, 0, 0, 0);
-		this.wrapped = factory.make();
+		this.wrapped = factory.build();
 		this.transform = new MCEntityTransform(this);
 		wrapped.add(transform);
 		entityInit();

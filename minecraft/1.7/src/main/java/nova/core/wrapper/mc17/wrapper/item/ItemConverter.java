@@ -17,6 +17,7 @@ import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc17.launcher.NovaMinecraft;
 import nova.core.wrapper.mc17.util.ModCreativeTab;
+import nova.core.wrapper.mc17.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
 
@@ -72,7 +73,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 				data.put("damage", itemStack.getItemDamage());
 			}
 
-			return itemFactory.makeItem(data);
+			return itemFactory.build(data);
 		}
 	}
 
@@ -86,7 +87,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		if (item instanceof BWItem) {
 			return ((BWItem) item).makeItemStack(item.count());
 		} else {
-			ItemFactory itemFactory = Game.items().getItem(item.getID()).get();
+			ItemFactory itemFactory = Game.items().get(item.getID()).get();
 			WrappedNBTTagCompound tag = new WrappedNBTTagCompound(item);
 
 			MinecraftItemMapping mapping = get(itemFactory);
@@ -101,7 +102,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	public ItemStack toNative(ItemFactory itemFactory) {
-		WrappedNBTTagCompound tag = new WrappedNBTTagCompound(itemFactory.makeItem());
+		WrappedNBTTagCompound tag = new WrappedNBTTagCompound(itemFactory.build());
 
 		MinecraftItemMapping mapping = get(itemFactory);
 		if (mapping == null) {
@@ -114,7 +115,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	public ItemStack toNative(String id) {
-		return toNative(Game.items().getItem(id).get().makeItem().setCount(1));
+		return toNative(Game.items().get(id).get().build().setCount(1));
 	}
 
 	public MinecraftItemMapping get(ItemFactory item) {
@@ -133,7 +134,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		if (itemStack.stackSize <= 0) {
 			return null;
 		}
-		itemStack.setTagCompound(Game.natives().toNative(item.factory().saveItem(item)));
+		itemStack.setTagCompound(Game.natives().toNative(item.factory().save(item)));
 		return itemStack;
 	}
 
@@ -147,11 +148,9 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	private void registerNOVAItemsToMinecraft() {
-		ItemManager itemManager = Game.items();
-
 		//There should be no items registered during Native Converter preInit()
 		//	item.registry.forEach(this::registerNOVAItem);
-		itemManager.whenItemRegistered(this::onItemRegistered);
+		Game.events().on(ItemManager.ItemRegistrationEvent.class).bind(this::onItemRegistered);
 	}
 
 	private void onItemRegistered(ItemManager.ItemRegistrationEvent event) {
@@ -166,9 +165,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 		net.minecraft.item.Item itemWrapper;
 
-		if (itemFactory.getDummy() instanceof ItemBlock) {
-			BlockFactory blockFactory = ((ItemBlock) (itemFactory.getDummy())).blockFactory;
-			net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.getDummy());
+		Item dummy = itemFactory.build();
+		if (dummy instanceof ItemBlock) {
+			BlockFactory blockFactory = ((ItemBlock) dummy).blockFactory;
+			net.minecraft.block.Block mcBlock = BlockConverter.instance().toNative(blockFactory);
 			itemWrapper = net.minecraft.item.Item.getItemFromBlock(mcBlock);
 			if (itemWrapper == null) {
 				throw new InitializationException("ItemConverter: Missing block: " + itemFactory.getID());
@@ -181,13 +181,13 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		map.put(itemFactory, minecraftItemMapping);
 
 		// Don't register ItemBlocks twice
-		if (!(itemFactory.getDummy() instanceof ItemBlock)) {
+		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
 			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
 
-			if (itemFactory.getDummy().has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
+			if (dummy.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
-				Category category = itemFactory.getDummy().get(Category.class);
+				Category category = dummy.get(Category.class);
 				Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
 					.filter(tab -> tab.getTabLabel().equals(category.name))
 					.findFirst();
@@ -213,7 +213,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	private void registerSubtypeResolution() {
-		Game.items().whenIDNotFound(this::onIDNotFound);
+		Game.events().on(ItemIDNotFoundEvent.class).bind(this::onIDNotFound);
 	}
 
 	private void onIDNotFound(ItemIDNotFoundEvent event) {

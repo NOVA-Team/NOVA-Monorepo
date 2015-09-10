@@ -46,7 +46,7 @@ public class ItemBlock extends Item {
 
 	protected boolean onPostPlace(Entity entity, World world, Vector3D placePos, Direction side, Vector3D hit) {
 		Optional<Block> opBlock = world.getBlock(placePos);
-		if (opBlock.isPresent() && opBlock.get().sameType(blockFactory.getDummy())) {
+		if (opBlock.isPresent() && opBlock.get().sameType(blockFactory)) {
 			//TODO: What if the block is NOT placed by a player?
 			opBlock.get().events.publish(new Block.PlaceEvent(entity, side, hit, this));
 			if (opBlock.get().has(BlockProperties.class)) {

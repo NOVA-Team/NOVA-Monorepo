@@ -16,7 +16,7 @@ public class MCItemFactory extends ItemFactory {
 	private final int meta;
 
 	public MCItemFactory(net.minecraft.item.Item item, int meta) {
-		super((args) -> new BWItem(item, meta, null));
+		super(() -> new BWItem(item, meta, null));
 
 		this.item = item;
 		this.meta = meta;
@@ -31,14 +31,14 @@ public class MCItemFactory extends ItemFactory {
 	}
 
 	@Override
-	public Item makeItem(Data data, Object... args) {
+	public Item build(Data data) {
 		int meta = (Integer) data.getOrDefault("damage", this.meta);
 		NBTTagCompound nbtData = Game.natives().toNative(data);
 		return new BWItem(item, meta, nbtData);
 	}
 
 	@Override
-	public Data saveItem(Item item) {
+	public Data save(Item item) {
 		if (!(item instanceof BWItem)) {
 			throw new IllegalArgumentException("This factory can only handle MCItems");
 		}

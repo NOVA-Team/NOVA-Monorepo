@@ -26,7 +26,7 @@ public abstract class Item extends ComponentProvider implements Identifiable, St
 	 * @return The {@link nova.core.item.ItemFactory} that refers to this Block class.
 	 */
 	public final ItemFactory factory() {
-		return Game.items().getItem(this.getID()).get();
+		return Game.items().get(getID()).get();
 	}
 
 	public int getMaxCount() {
@@ -62,7 +62,7 @@ public abstract class Item extends ComponentProvider implements Identifiable, St
 
 	@Override
 	public Item clone() {
-		return factory().makeItem(factory().saveItem(this));
+		return factory().build(factory().save(this));
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class Item extends ComponentProvider implements Identifiable, St
 		}
 		Item item = (Item) o;
 		//Makes sure the stored data and stacksize are the same in items.
-		return sameItemType(item) && factory().saveItem(this).equals(item.factory().saveItem(item)) && item.count == count;
+		return sameItemType(item) && factory().save(this).equals(item.factory().save(item)) && item.count == count;
 	}
 
 	/**

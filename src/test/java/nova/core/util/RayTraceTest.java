@@ -104,7 +104,7 @@ public class RayTraceTest {
 	public void testEdge() {
 		fakeWorld.setBlock(new Vector3D(0, 0, 2), RayTraceMod.solid);
 
-		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults1 = new RayTracer(Ray.fromInterval(Vector3D.ZERO, Direction.SOUTH.toVector().add(new Vector3D(0.1,0.1,0))))
+		List<RayTracer.RayTraceBlockResult> rayTraceBlockResults1 = new RayTracer(Ray.fromInterval(Vector3D.ZERO, Direction.SOUTH.toVector().add(new Vector3D(0.1, 0.1, 0))))
 			.setDistance(10)
 			.rayTraceBlocks(fakeWorld)
 			.collect(Collectors.toList());
@@ -124,13 +124,13 @@ public class RayTraceTest {
 
 		@Override
 		public void preInit() {
-			solid = Game.blocks().register(args -> {
+			solid = Game.blocks().register(() -> {
 				FakeBlock solid = new FakeBlock("solid");
 				solid.add(new Collider(solid));
 				return solid;
 			});
 
-			testEntity = Game.entities().register(objects -> new Entity() {
+			testEntity = Game.entities().register(() -> new Entity() {
 				@Override
 				public String getID() {
 					return "test";

@@ -1,7 +1,6 @@
 package nova.core.entity.component;
 
 import nova.core.component.Component;
-import nova.core.component.ComponentProvider;
 import nova.core.component.Updater;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -12,12 +11,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 //TODO: Don't only use Scala method convention names
 public abstract class RigidBody extends Component implements Updater {
-	public final ComponentProvider provider;
-
-	public RigidBody(ComponentProvider provider) {
-		this.provider = provider;
-	}
-
 	/**
 	 * Mass in kilograms. Default is 1 kg.
 	 */

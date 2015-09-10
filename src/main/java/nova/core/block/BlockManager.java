@@ -1,36 +1,24 @@
 package nova.core.block;
 
-import nova.core.event.bus.CancelableEvent;
-import nova.core.event.bus.CancelableEventBus;
-import nova.core.event.bus.EventBus;
-import nova.core.item.ItemManager;
+import nova.core.event.BlockEvent;
 import nova.core.util.Manager;
 import nova.core.util.Registry;
 import nova.internal.core.Game;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class BlockManager extends Manager<Block, BlockFactory> {
 
-	public final EventBus<BlockRegisteredEvent> blockRegisteredListeners = new CancelableEventBus<>();
-	private final Supplier<ItemManager> itemManager;
-
-	private BlockManager(Registry<BlockFactory> registry, Supplier<ItemManager> itemManager) {
+	private BlockManager(Registry<BlockFactory> registry) {
 		super(registry);
-		this.itemManager = itemManager;
 	}
 
 	/**
 	 * Gets the block registered that represents air.
-	 * @return
+	 * @return The air block factory
 	 */
-	public Block getAirBlock() {
-		return Game.blocks().get("air").get();
-	}
-
-	public BlockFactory getAirBlockFactory() {
-		return Game.blocks().getFactory("air").get();
+	public BlockFactory getAirBlock() {
+		return get("air").get();
 	}
 
 	/**
@@ -39,7 +27,7 @@ public class BlockManager extends Manager<Block, BlockFactory> {
 	 * @return Dummy block
 	 */
 	@Override
-	public BlockFactory register(Function<Object[], Block> constructor) {
+	public BlockFactory register(Supplier<Block> constructor) {
 		return register(new BlockFactory(constructor));
 	}
 
@@ -50,18 +38,10 @@ public class BlockManager extends Manager<Block, BlockFactory> {
 	 */
 	@Override
 	public BlockFactory register(BlockFactory factory) {
-		BlockRegisteredEvent event = new BlockRegisteredEvent(factory);
-		blockRegisteredListeners.publish(event);
+		BlockEvent.Register event = new BlockEvent.Register(factory);
+		Game.events().publish(event);
 		registry.register(event.blockFactory);
-		event.blockFactory.getDummy().onRegister();
 		return event.blockFactory;
 	}
 
-	public static class BlockRegisteredEvent extends CancelableEvent {
-		public BlockFactory blockFactory;
-
-		public BlockRegisteredEvent(BlockFactory blockFactory) {
-			this.blockFactory = blockFactory;
-		}
-	}
 }

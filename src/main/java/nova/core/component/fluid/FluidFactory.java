@@ -1,25 +1,25 @@
 package nova.core.component.fluid;
 
 import nova.core.util.Factory;
-import nova.core.util.Identifiable;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author Calclavia
  */
-public class FluidFactory extends Factory<Fluid> implements Identifiable {
+public class FluidFactory extends Factory<FluidFactory, Fluid> {
 
-	public FluidFactory(Function<Object[], Fluid> constructor) {
+	public FluidFactory(Supplier<Fluid> constructor) {
 		super(constructor);
 	}
 
-	/**
-	 * Creates a new instance of this Fluid.
-	 * @return A new Fluid instance with these parameters.
-	 */
-	public Fluid makeFluid(Object... args) {
-		Fluid newFluid = constructor.apply(args);
-		return newFluid;
+	public FluidFactory(Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
+		super(constructor, processor);
+	}
+
+	@Override
+	public FluidFactory selfConstructor(Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
+		return new FluidFactory(constructor, processor);
 	}
 }

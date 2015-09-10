@@ -3,7 +3,7 @@ package nova.core.component.fluid;
 import nova.core.util.Manager;
 import nova.core.util.Registry;
 
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class FluidManager extends Manager<Fluid, FluidFactory> {
 	public final FluidFactory water;
@@ -11,12 +11,13 @@ public class FluidManager extends Manager<Fluid, FluidFactory> {
 
 	private FluidManager(Registry<FluidFactory> fluidRegistry) {
 		super(fluidRegistry);
-		this.water = register((args) -> new Fluid("water"));
-		this.lava = register((args) -> new Fluid("lava"));
+		//TODO: Too Minecraft specific. Implementation should be hidden.
+		this.water = register(() -> new Fluid("water"));
+		this.lava = register(() -> new Fluid("lava"));
 	}
 
 	@Override
-	public FluidFactory register(Function<Object[], Fluid> constructor) {
+	public FluidFactory register(Supplier<Fluid> constructor) {
 		return register(new FluidFactory(constructor));
 	}
 
@@ -25,4 +26,5 @@ public class FluidManager extends Manager<Fluid, FluidFactory> {
 		registry.register(factory);
 		return factory;
 	}
+
 }

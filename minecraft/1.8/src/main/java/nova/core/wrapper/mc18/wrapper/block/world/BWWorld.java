@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 
 /**
  * The backwards world wrapper.
- *
  * @author Calclavia
  */
 public class BWWorld extends World {
@@ -61,7 +60,7 @@ public class BWWorld extends World {
 	public Optional<Block> getBlock(Vector3D position) {
 		net.minecraft.block.Block mcBlock = access.getBlockState(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ())).getBlock();
 		if (mcBlock == null || mcBlock == Blocks.air) {
-			return Optional.of(Game.blocks().getAirBlock());
+			return Optional.of(Game.blocks().getAirBlock().build());
 		} else if (mcBlock instanceof FWBlock) {
 			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
 		} else {
@@ -70,9 +69,9 @@ public class BWWorld extends World {
 	}
 
 	@Override
-	public boolean setBlock(Vector3D position, BlockFactory blockFactory, Object... args) {
-		//TODO: Implement object arguments
-		net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.getDummy());
+	public boolean setBlock(Vector3D position, BlockFactory blockFactory) {
+		//TODO: Do not call blockFactory.build()
+		net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.build());
 		BlockPos pos = new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ());
 		net.minecraft.block.Block actualBlock = mcBlock != null ? mcBlock : Blocks.air;
 		IBlockState defaultState = actualBlock.getDefaultState();
@@ -86,8 +85,8 @@ public class BWWorld extends World {
 	}
 
 	@Override
-	public Entity addEntity(EntityFactory factory, Object... args) {
-		FWEntity bwEntity = new FWEntity(world(), factory, args);
+	public Entity addEntity(EntityFactory factory) {
+		FWEntity bwEntity = new FWEntity(world(), factory);
 		bwEntity.forceSpawn = true;
 		world().spawnEntityInWorld(bwEntity);
 		return bwEntity.getWrapped();

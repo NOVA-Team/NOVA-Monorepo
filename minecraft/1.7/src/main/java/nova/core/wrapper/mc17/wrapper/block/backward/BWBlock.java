@@ -69,10 +69,6 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	@Override
-	public void onRegister() {
-	}
-
-	@Override
 	public ItemFactory getItemFactory() {
 		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
 	}

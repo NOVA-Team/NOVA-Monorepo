@@ -45,9 +45,9 @@ public final class FWTileLoader {
 	}
 
 	private static Block createBlock(String blockID) {
-		Optional<BlockFactory> blockFactory = Game.blocks().getFactory(blockID);
+		Optional<BlockFactory> blockFactory = Game.blocks().get(blockID);
 		if (blockFactory.isPresent()) {
-			return blockFactory.get().makeBlock();
+			return blockFactory.get().build();
 		} else {
 			throw new RuntimeException("Error! Invalid NOVA block ID: " + blockID);
 		}

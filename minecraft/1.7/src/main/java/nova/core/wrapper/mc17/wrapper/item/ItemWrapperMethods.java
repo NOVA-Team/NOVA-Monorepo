@@ -20,7 +20,6 @@ import java.util.Optional;
 
 /**
  * An interface implemented by ItemBlockWrapper and ItemWrapper classes to override Minecraft's item events.
- *
  * @author Calclavia
  */
 public interface ItemWrapperMethods extends IItemRenderer {
@@ -30,7 +29,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
 		Item item = Game.natives().toNova(itemStack);
 		item.setCount(itemStack.stackSize).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
-		getItemFactory().saveItem(item);
+		getItemFactory().save(item);
 	}
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
@@ -48,7 +47,8 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default IIcon getIconFromDamage(int p_77617_1_) {
-		Item item = getItemFactory().getDummy();
+		//TODO: Can we prevent building new items?
+		Item item = getItemFactory().build();
 		if (item.has(ItemRenderer.class) && item.get(ItemRenderer.class).texture.isPresent()) {
 			return RenderUtility.instance.getIcon(item.get(ItemRenderer.class).texture.get());
 		}

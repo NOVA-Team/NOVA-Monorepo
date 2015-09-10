@@ -53,9 +53,7 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 		 */
 		//Look up for particle factory and pass it into BWEntityFX
 		for (EnumParticleTypes type : EnumParticleTypes.values()) {
-			Game.entities().register(args -> {
-				return new BWEntityFX(type.getParticleID());
-			});
+			Game.entities().register(() -> new BWEntityFX(type.getParticleID()));
 		}
 	}
 }

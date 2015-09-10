@@ -1,40 +1,43 @@
 package nova.core.util;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author Calclavia
  */
-public abstract class Manager<T extends Identifiable, F extends Factory<T>> {
+public abstract class Manager<T extends Identifiable, F extends Factory<F, T>> {
 	public final Registry<F> registry;
 
 	public Manager(Registry<F> registry) {
 		this.registry = registry;
 	}
 
-	public F register(Class<? extends T> registerType) {
-		return register((args) -> ReflectionUtil.newInstance(registerType, args));
-	}
+	/**
+	 * Register a new object construction factory.
+	 *
+	 * Note that you make use: register(BlockStone::new), passing a method reference.
+	 * @param constructor Instance supplier {@link Supplier}
+	 * @return The factory
+	 */
+	public abstract F register(Supplier<T> constructor);
 
-	public abstract F register(Function<Object[], T> constructor);
-
+	/**
+	 * Register a new object construction factory.
+	 * @param factory The construction factory
+	 * @return The factory
+	 */
 	public F register(F factory) {
 		registry.register(factory);
 		return factory;
 	}
 
-	public Optional<T> get(String name) {
-		Optional<F> factory = getFactory(name);
-
-		if (factory.isPresent()) {
-			return Optional.of(factory.get().getDummy());
-		}
-
-		return Optional.empty();
-	}
-
-	public Optional<F> getFactory(String name) {
+	/**
+	 * Gets an object by its registered name.
+	 * @param name Registered name
+	 * @return The object
+	 */
+	public Optional<F> get(String name) {
 		return registry.get(name);
 	}
 }
