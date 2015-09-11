@@ -266,7 +266,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			return map.inverse().get(mapping);
 		}
 
-		MCItemFactory itemFactory = new MCItemFactory(item, meta);
+		BWItemFactory itemFactory = new BWItemFactory(item, meta);
 		map.put(itemFactory, mapping);
 
 		Game.items().register(itemFactory);

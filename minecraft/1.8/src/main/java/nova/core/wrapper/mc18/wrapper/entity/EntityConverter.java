@@ -24,6 +24,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.entity.Entity;
+import nova.core.entity.EntityFactory;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntity;
@@ -31,6 +32,8 @@ import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntityFX;
 import nova.core.wrapper.mc18.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc18.wrapper.entity.forward.MCEntityTransform;
 import nova.internal.core.Game;
+
+import java.util.Optional;
 
 public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, Loadable {
 
@@ -51,7 +54,16 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 			return ((FWEntity) mcEntity).getWrapped();
 		}
 
-		return new BWEntity(mcEntity);
+		//TODO: Make this BWRegistry non-lazy
+		//Lazy registry
+		String id = mcEntity.getClass().getName();
+		Optional<EntityFactory> entityFactory = Game.entities().get(id);
+
+		if (entityFactory.isPresent()) {
+			return entityFactory.get().build();
+		} else {
+			return Game.entities().register(id, () -> new BWEntity(mcEntity)).build();
+		}
 	}
 
 	@Override
@@ -73,7 +85,7 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 		 */
 		//Look up for particle factory and pass it into BWEntityFX
 		for (EnumParticleTypes type : EnumParticleTypes.values()) {
-			Game.entities().register(() -> new BWEntityFX(type.getParticleID()));
+			Game.entities().register(Game.info().name + ":" + type.getParticleName(), () -> new BWEntityFX(type.getParticleID()));
 		}
 	}
 }

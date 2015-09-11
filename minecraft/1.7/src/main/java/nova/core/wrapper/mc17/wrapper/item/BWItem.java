@@ -44,8 +44,6 @@ public class BWItem extends Item implements Storable {
 	private final int meta;
 	private final NBTTagCompound tag;
 
-	private final String id;
-
 	EntityItem fakeEntity = new EntityItem(null, 0, 0, 0, makeItemStack(count()));
 
 	public BWItem(ItemStack itemStack) {
@@ -56,8 +54,6 @@ public class BWItem extends Item implements Storable {
 		this.item = item;
 		this.meta = meta;
 		this.tag = tag;
-
-		id = net.minecraft.item.Item.itemRegistry.getNameForObject(item) + (item.getHasSubtypes() ? ":" + meta : "");
 
 		add(new ItemRenderer())
 			.onRender(model -> {
@@ -97,11 +93,6 @@ public class BWItem extends Item implements Storable {
 			result.setTagCompound(tag);
 		}
 		return result;
-	}
-
-	@Override
-	public String getID() {
-		return id;
 	}
 
 	@Override

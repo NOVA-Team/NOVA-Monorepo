@@ -39,6 +39,13 @@ public class FluidFactory extends Factory<FluidFactory, Fluid> {
 	}
 
 	@Override
+	public Fluid build() {
+		Fluid build = super.build();
+		build.factory = this;
+		return build;
+	}
+
+	@Override
 	protected FluidFactory selfConstructor(String id, Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
 		return new FluidFactory(id, constructor, processor);
 	}

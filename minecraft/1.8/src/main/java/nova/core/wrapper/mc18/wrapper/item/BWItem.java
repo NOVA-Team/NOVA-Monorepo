@@ -34,8 +34,6 @@ public class BWItem extends Item implements Storable {
 	private final int meta;
 	private final NBTTagCompound tag;
 
-	private final String id;
-
 	public BWItem(ItemStack itemStack) {
 		this(itemStack.getItem(), itemStack.getHasSubtypes() ? itemStack.getItemDamage() : 0, itemStack.getTagCompound());
 	}
@@ -44,8 +42,6 @@ public class BWItem extends Item implements Storable {
 		this.item = item;
 		this.meta = meta;
 		this.tag = tag;
-
-		id = net.minecraft.item.Item.itemRegistry.getNameForObject(item) + (item.getHasSubtypes() ? ":" + meta : "");
 	}
 
 	public net.minecraft.item.Item getItem() {
@@ -66,11 +62,6 @@ public class BWItem extends Item implements Storable {
 			result.setTagCompound(tag);
 		}
 		return result;
-	}
-
-	@Override
-	public String getID() {
-		return id;
 	}
 
 	@Override

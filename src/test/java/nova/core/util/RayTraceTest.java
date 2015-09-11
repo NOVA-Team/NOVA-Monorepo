@@ -20,6 +20,7 @@
 
 package nova.core.util;
 
+import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.component.misc.Collider;
 import nova.core.entity.Entity;
@@ -29,7 +30,6 @@ import nova.core.loader.Mod;
 import nova.core.util.math.RotationUtil;
 import nova.internal.core.Game;
 import nova.internal.core.launch.NovaLauncher;
-import nova.testutils.FakeBlock;
 import nova.testutils.FakeWorld;
 import nova.wrappertests.NovaLauncherTestFactory;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
@@ -144,18 +144,16 @@ public class RayTraceTest {
 
 		@Override
 		public void preInit() {
-			solid = Game.blocks().register(() -> {
-				FakeBlock solid = new FakeBlock("solid");
-				solid.add(new Collider(solid));
-				return solid;
-			});
-
-			testEntity = Game.entities().register(() -> new Entity() {
-				@Override
-				public String getID() {
-					return "test";
+			solid = Game.blocks().register(
+				"solid",
+				() -> {
+					Block solid = new Block();
+					solid.add(new Collider(solid));
+					return solid;
 				}
-			});
+			);
+
+			testEntity = Game.entities().register("test", Entity::new);
 		}
 	}
 }

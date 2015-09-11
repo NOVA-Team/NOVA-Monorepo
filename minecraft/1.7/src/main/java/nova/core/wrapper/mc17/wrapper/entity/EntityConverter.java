@@ -23,6 +23,7 @@ package nova.core.wrapper.mc17.wrapper.entity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import nova.core.entity.Entity;
+import nova.core.entity.EntityFactory;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.wrapper.mc17.wrapper.entity.backward.BWEntity;
@@ -30,6 +31,8 @@ import nova.core.wrapper.mc17.wrapper.entity.backward.BWEntityFX;
 import nova.core.wrapper.mc17.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc17.wrapper.entity.forward.MCEntityTransform;
 import nova.internal.core.Game;
+
+import java.util.Optional;
 
 public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, Loadable {
 
@@ -50,7 +53,16 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 			return ((FWEntity) mcEntity).getWrapped();
 		}
 
-		return new BWEntity(mcEntity);
+		//TODO: Make this BWRegistry non-lazy
+		//Lazy registry
+		String id = mcEntity.getClass().getName();
+		Optional<EntityFactory> entityFactory = Game.entities().get(id);
+
+		if (entityFactory.isPresent()) {
+			return entityFactory.get().build();
+		} else {
+			return Game.entities().register(id, () -> new BWEntity(mcEntity)).build();
+		}
 	}
 
 	@Override
@@ -72,6 +84,6 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 		 */
 
 		//Look up for particle factory and pass it into BWEntityFX
-		BWEntityFX.fxMap.forEach((k, v) -> Game.entities().register(() -> new BWEntityFX(k)));
+		BWEntityFX.fxMap.forEach((k, v) -> Game.entities().register(Game.info().name + ":" + k, () -> new BWEntityFX(k)));
 	}
 }

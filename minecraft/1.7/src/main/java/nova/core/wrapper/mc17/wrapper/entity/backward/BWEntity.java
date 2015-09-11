@@ -66,11 +66,6 @@ public class BWEntity extends Entity {
 		}
 	}
 
-	@Override
-	public String getID() {
-		return entity.getClass().getName();
-	}
-
 	public static class MCPlayer extends Player {
 		public final BWEntity bwEntity;
 		public final net.minecraft.entity.player.EntityPlayer entity;

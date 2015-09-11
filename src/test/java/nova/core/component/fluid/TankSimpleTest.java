@@ -21,6 +21,9 @@
 package nova.core.component.fluid;
 
 import nova.core.retention.Data;
+import nova.internal.core.Game;
+import nova.wrappertests.NovaLauncherTestFactory;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -32,42 +35,47 @@ import static nova.testutils.NovaAssertions.assertThat;
  */
 public class TankSimpleTest {
 
-    @Test
-    public void testBasic() {
-        TankSimple tank = new TankSimple(150);
+	@Before
+	public void setUp() {
+		new NovaLauncherTestFactory().createLauncher();
+	}
 
-        assertThat(tank.hasFluid()).isFalse();
-        assertThat(tank.addFluid(new Fluid("water").setAmount(100))).isEqualTo(100);
-        assertThat(tank.getFluidAmount()).isEqualTo(100);
-        assertThat(tank.addFluid(new Fluid("lava").setAmount(100))).isEqualTo(0);
-        assertThat(tank.getFluidAmount()).isEqualTo(100);
-        assertThat(tank.addFluid(new Fluid("water").setAmount(100))).isEqualTo(50);
-        assertThat(tank.getFluidAmount()).isEqualTo(150);
-
-        assertThat(tank.removeFluid(100)).isEqualTo(Optional.of(new Fluid("water").withAmount(100)));
-        assertThat(tank.getFluidAmount()).isEqualTo(50);
-        assertThat(tank.removeFluid(100)).isEqualTo(Optional.of(new Fluid("water").withAmount(50)));
-        assertThat(tank.getFluidAmount()).isEqualTo(0);
-
-        assertThat(tank.addFluid(new Fluid("lava").setAmount(100))).isEqualTo(100);
-        assertThat(tank.getFluidAmount()).isEqualTo(100);
-    }
-
-    @Test
-    public void storeTest() {
+	@Test
+	public void testBasic() {
 		TankSimple tank = new TankSimple(150);
-		assertThat(tank.addFluid(new Fluid("water").setAmount(100))).isEqualTo(100);
+		
+		assertThat(tank.hasFluid()).isFalse();
+		assertThat(tank.addFluid(Game.fluids().water.build().setAmount(100))).isEqualTo(100);
+		assertThat(tank.getFluidAmount()).isEqualTo(100);
+		assertThat(tank.addFluid(Game.fluids().lava.build().setAmount(100))).isEqualTo(0);
+		assertThat(tank.getFluidAmount()).isEqualTo(100);
+		assertThat(tank.addFluid(Game.fluids().water.build().setAmount(100))).isEqualTo(50);
+		assertThat(tank.getFluidAmount()).isEqualTo(150);
 
-        Data tankData = new Data();
-        tank.save(tankData);
+		assertThat(tank.removeFluid(100)).isEqualTo(Optional.of(Game.fluids().water.build().withAmount(100)));
+		assertThat(tank.getFluidAmount()).isEqualTo(50);
+		assertThat(tank.removeFluid(100)).isEqualTo(Optional.of(Game.fluids().water.build().withAmount(50)));
+		assertThat(tank.getFluidAmount()).isEqualTo(0);
 
-        //TODO: Should store capacity?
-        tank = new TankSimple(150);
-        tank.load(tankData);
+		assertThat(tank.addFluid(Game.fluids().lava.build().setAmount(100))).isEqualTo(100);
+		assertThat(tank.getFluidAmount()).isEqualTo(100);
+	}
 
-        assertThat(tank.hasFluid()).isTrue();
-        assertThat(tank.hasFluidType(new Fluid("water"))).isTrue();
-        assertThat(tank.getFluid().get().equals(new Fluid("water").setAmount(100))).isTrue();
-    }
+	@Test
+	public void storeTest() {
+		TankSimple tank = new TankSimple(150);
+		assertThat(tank.addFluid(Game.fluids().water.build().setAmount(100))).isEqualTo(100);
+
+		Data tankData = new Data();
+		tank.save(tankData);
+
+		//TODO: Should store capacity?
+		tank = new TankSimple(150);
+		tank.load(tankData);
+
+		assertThat(tank.hasFluid()).isTrue();
+		assertThat(tank.hasFluidType(Game.fluids().water.build())).isTrue();
+		assertThat(tank.getFluid().get().equals(Game.fluids().water.build().setAmount(100))).isTrue();
+	}
 
 }

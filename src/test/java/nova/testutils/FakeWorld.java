@@ -59,7 +59,7 @@ public class FakeWorld extends World {
 	@Override
 	public Optional<Block> getBlock(Vector3D position) {
 		//Gives a fake block to represent air
-		FakeBlock air = new FakeBlock("air");
+		Block air = new Block();
 		BlockTransform component = new BlockTransform();
 		component.setPosition(position);
 		component.setWorld(this);

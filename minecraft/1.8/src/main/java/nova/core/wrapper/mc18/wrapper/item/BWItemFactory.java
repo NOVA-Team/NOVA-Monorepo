@@ -31,12 +31,12 @@ import nova.internal.core.Game;
  * @author Stan
  * @since 3/02/2015.
  */
-public class MCItemFactory extends ItemFactory {
+public class BWItemFactory extends ItemFactory {
 	private final net.minecraft.item.Item item;
 	private final int meta;
 
-	public MCItemFactory(net.minecraft.item.Item item, int meta) {
-		super(() -> new BWItem(item, meta, null));
+	public BWItemFactory(net.minecraft.item.Item item, int meta) {
+		super(net.minecraft.item.Item.itemRegistry.getNameForObject(item) + (item.getHasSubtypes() ? ":" + meta : ""), () -> new BWItem(item, meta, null));
 
 		this.item = item;
 		this.meta = meta;

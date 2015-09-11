@@ -23,6 +23,7 @@ package nova.internal.core;
 import nova.core.block.BlockManager;
 import nova.core.command.CommandManager;
 import nova.core.component.ComponentManager;
+import nova.core.component.fluid.FluidManager;
 import nova.core.entity.EntityManager;
 import nova.core.event.bus.GlobalEvents;
 import nova.core.game.ClientManager;
@@ -63,6 +64,7 @@ public class Game {
 	private final GlobalEvents eventManager;
 	private final NetworkManager networkManager;
 	private final RetentionManager retentionManager;
+	private final FluidManager fluidManager;
 	private final LanguageManager languageManager;
 	private final InputManager inputManager;
 	private final ComponentManager componentManager;
@@ -96,6 +98,7 @@ public class Game {
 		CraftingRecipeManager craftingRecipeManager,
 		ItemDictionary itemDictionary,
 		GlobalEvents eventManager,
+		FluidManager fluidManager,
 		NetworkManager networkManager,
 		RetentionManager retentionManager,
 		LanguageManager languageManager,
@@ -120,6 +123,7 @@ public class Game {
 		this.itemDictionary = itemDictionary;
 		this.eventManager = eventManager;
 		this.networkManager = networkManager;
+		this.fluidManager = fluidManager;
 		this.retentionManager = retentionManager;
 		this.languageManager = languageManager;
 		this.inputManager = inputManager;
@@ -216,6 +220,10 @@ public class Game {
 
 	public static CommandManager commands() {
 		return instance.commandManager;
+	}
+
+	public static FluidManager fluids() {
+		return instance.fluidManager;
 	}
 
 	/**
