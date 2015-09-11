@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc17.wrapper.item;
 
 import net.minecraft.nbt.NBTTagCompound;
+import nova.core.component.misc.FactoryProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
@@ -54,7 +55,9 @@ public class BWItemFactory extends ItemFactory {
 	public Item build(Data data) {
 		int meta = (Integer) data.getOrDefault("damage", this.meta);
 		NBTTagCompound nbtData = Game.natives().toNative(data);
-		return new BWItem(item, meta, nbtData);
+		BWItem bwItem = new BWItem(item, meta, nbtData);
+		bwItem.add(new FactoryProvider(this));
+		return bwItem;
 	}
 
 	@Override

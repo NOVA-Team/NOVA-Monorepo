@@ -83,8 +83,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			return getNovaItem(new ItemStack(itemStack.getItem(), 1, 0));
 		}
 
-		if (itemStack.getTagCompound() != null && itemStack.getTagCompound() instanceof WrappedNBTTagCompound) {
-			return ((WrappedNBTTagCompound) itemStack.getTagCompound()).getItem();
+		if (itemStack.getTagCompound() != null && itemStack.getTagCompound() instanceof FWNBTTagCompound) {
+			return ((FWNBTTagCompound) itemStack.getTagCompound()).getItem();
 		} else {
 			ItemFactory itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
 
@@ -108,7 +108,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			return ((BWItem) item).makeItemStack(item.count());
 		} else {
 			ItemFactory itemFactory = Game.items().get(item.getID()).get();
-			WrappedNBTTagCompound tag = new WrappedNBTTagCompound(item);
+			FWNBTTagCompound tag = new FWNBTTagCompound(item);
 
 			MinecraftItemMapping mapping = get(itemFactory);
 			if (mapping == null) {
@@ -122,7 +122,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	public ItemStack toNative(ItemFactory itemFactory) {
-		WrappedNBTTagCompound tag = new WrappedNBTTagCompound(itemFactory.build());
+		FWNBTTagCompound tag = new FWNBTTagCompound(itemFactory.build());
 
 		MinecraftItemMapping mapping = get(itemFactory);
 		if (mapping == null) {

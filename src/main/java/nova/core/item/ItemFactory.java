@@ -61,9 +61,10 @@ public class ItemFactory extends Factory<ItemFactory, Item> implements Identifia
 	 * @return Resulting item
 	 */
 	public Item build(Data data) {
-		Item newItem = super.build();
-		newItem.load(data);
-		return newItem;
+		Item build = super.build();
+		build.load(data);
+		build.add(new FactoryProvider(this));
+		return build;
 	}
 
 	public Data save(Item item) {
