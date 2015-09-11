@@ -32,13 +32,13 @@ public class FluidManager extends Manager<Fluid, FluidFactory> {
 	private FluidManager(Registry<FluidFactory> fluidRegistry) {
 		super(fluidRegistry);
 		//TODO: Too Minecraft specific. Implementation should be hidden.
-		this.water = register(() -> new Fluid("water"));
-		this.lava = register(() -> new Fluid("lava"));
+		this.water = register("water", Fluid::new);
+		this.lava = register("lava", Fluid::new);
 	}
 
 	@Override
-	public FluidFactory register(Supplier<Fluid> constructor) {
-		return register(new FluidFactory(constructor));
+	public FluidFactory register(String id, Supplier<Fluid> constructor) {
+		return register(new FluidFactory(id, constructor));
 	}
 
 	@Override

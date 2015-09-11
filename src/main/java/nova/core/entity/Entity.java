@@ -22,6 +22,7 @@ package nova.core.entity;
 
 import nova.core.block.Stateful;
 import nova.core.component.ComponentProvider;
+import nova.core.component.misc.FactoryProvider;
 import nova.core.component.transform.EntityTransform;
 import nova.core.util.Identifiable;
 import nova.core.util.UniqueIdentifiable;
@@ -32,7 +33,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 /**
  * An entity is an object in the world that has a position.
  */
-public abstract class Entity extends ComponentProvider implements UniqueIdentifiable, Identifiable, Stateful {
+public class Entity extends ComponentProvider implements UniqueIdentifiable, Identifiable, Stateful {
 
 	public final EntityTransform transform() {
 		return get(EntityTransform.class);
@@ -90,9 +91,17 @@ public abstract class Entity extends ComponentProvider implements UniqueIdentifi
 		transform().setRotation(rotation);
 	}
 
+	public final EntityFactory getFactory() {
+		return (EntityFactory) get(FactoryProvider.class).factory;
+	}
+
+	@Override
+	public final String getID() {
+		return getFactory().getID();
+	}
+
 	@Override
 	public String getUniqueID() {
-		//TODO: Is this safe? I'm not sure what to do here
 		return get(UniqueIdentifiable.class).getUniqueID();
 	}
 }

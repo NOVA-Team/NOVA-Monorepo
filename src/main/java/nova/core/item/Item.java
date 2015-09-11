@@ -16,16 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.item;
+ */
+
+package nova.core.item;
 
 import nova.core.component.ComponentProvider;
+import nova.core.component.misc.FactoryProvider;
 import nova.core.entity.Entity;
 import nova.core.event.bus.Event;
 import nova.core.render.Color;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
-import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.List;
@@ -43,8 +45,13 @@ public abstract class Item extends ComponentProvider implements Identifiable, St
 	 * Called to get the ItemFactory that refers to this Block class.
 	 * @return The {@link nova.core.item.ItemFactory} that refers to this Block class.
 	 */
-	public final ItemFactory factory() {
-		return Game.items().get(getID()).get();
+	public final ItemFactory getFactory() {
+		return (ItemFactory) get(FactoryProvider.class).factory;
+	}
+
+	@Override
+	public final String getID() {
+		return getFactory().getID();
 	}
 
 	public int getMaxCount() {
@@ -80,7 +87,7 @@ public abstract class Item extends ComponentProvider implements Identifiable, St
 
 	@Override
 	public Item clone() {
-		return factory().build(factory().save(this));
+		return getFactory().build(getFactory().save(this));
 	}
 
 	/**
@@ -101,7 +108,7 @@ public abstract class Item extends ComponentProvider implements Identifiable, St
 		}
 		Item item = (Item) o;
 		//Makes sure the stored data and stacksize are the same in items.
-		return sameItemType(item) && factory().save(this).equals(item.factory().save(item)) && item.count == count;
+		return sameItemType(item) && getFactory().save(this).equals(item.getFactory().save(item)) && item.count == count;
 	}
 
 	/**

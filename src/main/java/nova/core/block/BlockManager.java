@@ -47,8 +47,8 @@ public class BlockManager extends Manager<Block, BlockFactory> {
 	 * @return Dummy block
 	 */
 	@Override
-	public BlockFactory register(Supplier<Block> constructor) {
-		return register(new BlockFactory(constructor));
+	public BlockFactory register(String id, Supplier<Block> constructor) {
+		return register(new BlockFactory(id, constructor));
 	}
 
 	/**

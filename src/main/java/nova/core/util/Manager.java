@@ -23,7 +23,6 @@ package nova.core.util;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-
 /**
  * A manager holds a registry of factories.
  * @author Calclavia
@@ -42,7 +41,7 @@ public abstract class Manager<T extends Identifiable, F extends Factory<F, T>> {
 	 * @param constructor Instance supplier {@link Supplier}
 	 * @return The factory
 	 */
-	public abstract F register(Supplier<T> constructor);
+	public abstract F register(String id, Supplier<T> constructor);
 
 	/**
 	 * Register a new object construction factory.

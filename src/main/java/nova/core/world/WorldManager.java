@@ -48,8 +48,8 @@ public class WorldManager extends Manager<World, WorldFactory> {
 	}
 
 	@Override
-	public WorldFactory register(Supplier<World> constructor) {
-		return register(new WorldFactory(constructor));
+	public WorldFactory register(String id, Supplier<World> constructor) {
+		return register(new WorldFactory(id, constructor));
 	}
 
 	public Set<World> sidedWorlds() {

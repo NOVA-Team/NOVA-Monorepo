@@ -46,8 +46,8 @@ public class ItemManager extends Manager<Item, ItemFactory> {
 	 * @return Dummy item
 	 */
 	@Override
-	public ItemFactory register(Supplier<Item> constructor) {
-		return register(new ItemFactory(constructor));
+	public ItemFactory register(String id, Supplier<Item> constructor) {
+		return register(new ItemFactory(id, constructor));
 	}
 
 	@Override

@@ -30,16 +30,16 @@ import java.util.function.Supplier;
  */
 public class FluidFactory extends Factory<FluidFactory, Fluid> {
 
-	public FluidFactory(Supplier<Fluid> constructor) {
-		super(constructor);
+	public FluidFactory(String id, Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
+		super(id, constructor, processor);
 	}
 
-	public FluidFactory(Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
-		super(constructor, processor);
+	public FluidFactory(String id, Supplier<Fluid> constructor) {
+		super(id, constructor);
 	}
 
 	@Override
-	public FluidFactory selfConstructor(Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
-		return new FluidFactory(constructor, processor);
+	protected FluidFactory selfConstructor(String id, Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
+		return new FluidFactory(id, constructor, processor);
 	}
 }

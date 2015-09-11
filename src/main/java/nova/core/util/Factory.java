@@ -58,24 +58,16 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 		this(id, constructor, obj -> obj);
 	}
 
-	public Factory(Supplier<T> constructor, Function<T, T> processor) {
-		this(constructor.get().getClass().toString(), constructor, processor);
-	}
-
-	public Factory(Supplier<T> constructor) {
-		this(constructor.get().getClass().toString(), constructor);
-	}
-
 	/**
 	 * Adds a processor to the factory
 	 * @param processor A processor that mutates the construction
 	 * @return Self
 	 */
 	public S process(Function<T, T> processor) {
-		return selfConstructor(constructor, this.processor.compose(processor));
+		return selfConstructor(id, constructor, this.processor.compose(processor));
 	}
 
-	public abstract S selfConstructor(Supplier<T> constructor, Function<T, T> processor);
+	protected abstract S selfConstructor(String id, Supplier<T> constructor, Function<T, T> processor);
 
 	/**
 	 * @return A new instance of T based on the construction method

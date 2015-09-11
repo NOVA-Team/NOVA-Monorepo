@@ -155,7 +155,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			return null;
 		}
 
-		itemStack.setTagCompound(Game.natives().toNative(item.factory().save(item)));
+		itemStack.setTagCompound(Game.natives().toNative(item.getFactory().save(item)));
 		return itemStack;
 	}
 

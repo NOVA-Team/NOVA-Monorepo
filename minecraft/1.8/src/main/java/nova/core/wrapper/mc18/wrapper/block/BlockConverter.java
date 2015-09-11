@@ -88,7 +88,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 			return ((BWBlock) novaBlock).mcBlock;
 		}
 
-		return toNative(novaBlock.factory());
+		return toNative(novaBlock.getFactory());
 	}
 
 	public net.minecraft.block.Block toNative(BlockFactory blockFactory) {

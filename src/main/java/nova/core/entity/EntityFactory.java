@@ -20,6 +20,7 @@
 
 package nova.core.entity;
 
+import nova.core.component.misc.FactoryProvider;
 import nova.core.util.Factory;
 
 import java.util.function.Function;
@@ -30,16 +31,23 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public class EntityFactory extends Factory<EntityFactory, Entity> {
-	public EntityFactory(Supplier<Entity> constructor) {
-		super(constructor);
+	public EntityFactory(String id, Supplier<Entity> constructor, Function<Entity, Entity> processor) {
+		super(id, constructor, processor);
 	}
 
-	public EntityFactory(Supplier<Entity> constructor, Function<Entity, Entity> processor) {
-		super(constructor, processor);
+	public EntityFactory(String id, Supplier<Entity> constructor) {
+		super(id, constructor);
 	}
 
 	@Override
-	public EntityFactory selfConstructor(Supplier<Entity> constructor, Function<Entity, Entity> processor) {
-		return new EntityFactory(constructor, processor);
+	protected EntityFactory selfConstructor(String id, Supplier<Entity> constructor, Function<Entity, Entity> processor) {
+		return new EntityFactory(id, constructor, processor);
+	}
+
+	@Override
+	public Entity build() {
+		Entity build = super.build();
+		build.add(new FactoryProvider(this));
+		return build;
 	}
 }

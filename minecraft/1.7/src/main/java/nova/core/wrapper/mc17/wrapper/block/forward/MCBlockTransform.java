@@ -53,12 +53,12 @@ public class MCBlockTransform extends BlockTransform {
 	@Override
 	public void setWorld(World world) {
 		this.world.removeBlock(position);
-		world.setBlock(position, block.factory());
+		world.setBlock(position, block.getFactory());
 	}
 
 	@Override
 	public void setPosition(Vector3D position) {
 		world.removeBlock(position);
-		world.setBlock(position, block.factory());
+		world.setBlock(position, block.getFactory());
 	}
 }

@@ -16,8 +16,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.item;
+ */
 
+package nova.core.item;
+
+import nova.core.component.misc.FactoryProvider;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.Factory;
@@ -30,13 +33,12 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public class ItemFactory extends Factory<ItemFactory, Item> implements Identifiable {
-
-	public ItemFactory(Supplier<Item> constructor) {
-		super(constructor);
+	public ItemFactory(String id, Supplier<Item> constructor, Function<Item, Item> processor) {
+		super(id, constructor, processor);
 	}
 
-	private ItemFactory(Supplier<Item> constructor, Function<Item, Item> processor) {
-		super(constructor, processor);
+	public ItemFactory(String id, Supplier<Item> constructor) {
+		super(id, constructor);
 	}
 
 	/**
@@ -45,11 +47,12 @@ public class ItemFactory extends Factory<ItemFactory, Item> implements Identifia
 	 */
 	@Override
 	public Item build() {
+		Item build = super.build();
 		Data data = new Data();
-		Item newItem = super.build();
-		data.className = newItem.getClass().getName();
-		newItem.load(data);
-		return newItem;
+		data.className = build.getClass().getName();
+		build.load(data);
+		build.add(new FactoryProvider(this));
+		return build;
 	}
 
 	/**
@@ -70,7 +73,7 @@ public class ItemFactory extends Factory<ItemFactory, Item> implements Identifia
 	}
 
 	@Override
-	public ItemFactory selfConstructor(Supplier<Item> constructor, Function<Item, Item> processor) {
-		return new ItemFactory(constructor, processor);
+	protected ItemFactory selfConstructor(String id, Supplier<Item> constructor, Function<Item, Item> processor) {
+		return new ItemFactory(id, constructor, processor);
 	}
 }

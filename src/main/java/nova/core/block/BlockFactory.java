@@ -20,6 +20,7 @@
 
 package nova.core.block;
 
+import nova.core.component.misc.FactoryProvider;
 import nova.core.event.BlockEvent;
 import nova.core.event.bus.EventListener;
 import nova.core.item.ItemBlock;
@@ -34,14 +35,13 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public class BlockFactory extends Factory<BlockFactory, Block> {
-
-	private BlockFactory(Supplier<Block> constructor, Function<Block, Block> processor) {
-		super(constructor, processor);
+	public BlockFactory(String id, Supplier<Block> constructor, Function<Block, Block> processor) {
+		super(id, constructor, processor);
 	}
 
-	public BlockFactory(Supplier<Block> constructor) {
-		this(constructor, evt -> {
-			Game.items().register(() -> new ItemBlock(evt.blockFactory));
+	public BlockFactory(String id, Supplier<Block> constructor) {
+		this(id, constructor, evt -> {
+			Game.items().register(id, () -> new ItemBlock(evt.blockFactory));
 		});
 	}
 
@@ -51,8 +51,8 @@ public class BlockFactory extends Factory<BlockFactory, Block> {
 	 * @param constructor The constructor function
 	 * @param postCreate Function for registering item blocks
 	 */
-	public BlockFactory(Supplier<Block> constructor, EventListener<BlockEvent.Register> postCreate) {
-		super(constructor);
+	public BlockFactory(String id, Supplier<Block> constructor, EventListener<BlockEvent.Register> postCreate) {
+		super(id, constructor);
 		postCreate(postCreate);
 	}
 
@@ -61,7 +61,14 @@ public class BlockFactory extends Factory<BlockFactory, Block> {
 	}
 
 	@Override
-	public BlockFactory selfConstructor(Supplier<Block> constructor, Function<Block, Block> processor) {
-		return new BlockFactory(constructor, processor);
+	protected BlockFactory selfConstructor(String id, Supplier<Block> constructor, Function<Block, Block> processor) {
+		return new BlockFactory(id, constructor, processor);
+	}
+
+	@Override
+	public Block build() {
+		Block build = super.build();
+		build.add(new FactoryProvider(this));
+		return build;
 	}
 }

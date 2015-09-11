@@ -21,6 +21,7 @@
 package nova.core.block;
 
 import nova.core.component.ComponentProvider;
+import nova.core.component.misc.FactoryProvider;
 import nova.core.component.transform.BlockTransform;
 import nova.core.entity.Entity;
 import nova.core.event.bus.CancelableEvent;
@@ -41,10 +42,10 @@ import java.util.Set;
 /**
  * @author Calclavia
  */
-public abstract class Block extends ComponentProvider implements Identifiable {
+public class Block extends ComponentProvider implements Identifiable {
 
 	public ItemFactory getItemFactory() {
-		return Game.items().getItemFromBlock(factory());
+		return Game.items().getItemFromBlock(getFactory());
 	}
 
 	/**
@@ -52,8 +53,13 @@ public abstract class Block extends ComponentProvider implements Identifiable {
 	 * @return The {@link nova.core.block.BlockFactory} that refers to this
 	 * Block class.
 	 */
-	public final BlockFactory factory() {
-		return Game.blocks().get(getID()).get();
+	public final BlockFactory getFactory() {
+		return (BlockFactory) get(FactoryProvider.class).factory;
+	}
+
+	@Override
+	public final String getID() {
+		return getFactory().getID();
 	}
 
 	public final BlockTransform transform() {
