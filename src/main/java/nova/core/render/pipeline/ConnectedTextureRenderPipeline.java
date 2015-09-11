@@ -34,7 +34,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class ConnectedTextureRenderStream extends BlockRenderStream {
+public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 	public final Texture edgeTexture;
 
 	/**
@@ -50,7 +50,7 @@ public class ConnectedTextureRenderStream extends BlockRenderStream {
 	 */
 	public int faceMask = 0xff;
 
-	public ConnectedTextureRenderStream(Block block, Texture edgeTexture) {
+	public ConnectedTextureRenderPipeline(Block block, Texture edgeTexture) {
 		super(block);
 		this.edgeTexture = edgeTexture;
 
@@ -78,12 +78,12 @@ public class ConnectedTextureRenderStream extends BlockRenderStream {
 		};
 	}
 
-	public ConnectedTextureRenderStream withConnectMask(Supplier<Integer> connectMask) {
+	public ConnectedTextureRenderPipeline withConnectMask(Supplier<Integer> connectMask) {
 		this.connectMask = connectMask;
 		return this;
 	}
 
-	public ConnectedTextureRenderStream withFaceMask(int faceMask) {
+	public ConnectedTextureRenderPipeline withFaceMask(int faceMask) {
 		this.faceMask = faceMask;
 		return this;
 	}

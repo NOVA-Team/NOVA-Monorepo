@@ -42,7 +42,7 @@ import java.util.function.Supplier;/**
  *
  * @author Calclavia
  */
-public class BlockRenderStream extends RenderStream {
+public class BlockRenderPipeline extends RenderPipeline {
 
 	public final Block block;
 
@@ -75,44 +75,44 @@ public class BlockRenderStream extends RenderStream {
 	 */
 	public Function<Direction, Color> colorMultiplier = (dir) -> Color.white;
 
-	public BlockRenderStream(Block block) {
+	public BlockRenderPipeline(Block block) {
 		this.block = block;
 		bounds = () -> block.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
 		consumer = model -> model.addChild(draw(new MeshModel()));
 	}
 
-	public BlockRenderStream withTexture(Function<Direction, Optional<Texture>> texture) {
+	public BlockRenderPipeline withTexture(Function<Direction, Optional<Texture>> texture) {
 		this.texture = texture;
 		return this;
 	}
 
-	public BlockRenderStream withTexture(Texture t) {
+	public BlockRenderPipeline withTexture(Texture t) {
 		Objects.requireNonNull(t, "Texture is null, please initiate the texture before the block");
 		this.texture = (dir) -> Optional.of(t);
 		return this;
 	}
 
-	public BlockRenderStream withBounds(Supplier<Cuboid> bounds) {
+	public BlockRenderPipeline withBounds(Supplier<Cuboid> bounds) {
 		this.bounds = bounds;
 		return this;
 	}
 
-	public BlockRenderStream withBounds(Cuboid bounds) {
+	public BlockRenderPipeline withBounds(Cuboid bounds) {
 		this.bounds = () -> bounds;
 		return this;
 	}
 
-	public BlockRenderStream filter(Predicate<Direction> renderSide) {
+	public BlockRenderPipeline filter(Predicate<Direction> renderSide) {
 		this.renderSide = renderSide;
 		return this;
 	}
 
-	public BlockRenderStream withColor(Color colorMultiplier) {
+	public BlockRenderPipeline withColor(Color colorMultiplier) {
 		this.colorMultiplier = dir -> colorMultiplier;
 		return this;
 	}
 
-	public BlockRenderStream withColor(Function<Direction, Color> colorMultiplier) {
+	public BlockRenderPipeline withColor(Function<Direction, Color> colorMultiplier) {
 		this.colorMultiplier = colorMultiplier;
 		return this;
 	}

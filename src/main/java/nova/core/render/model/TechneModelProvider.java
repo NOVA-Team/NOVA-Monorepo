@@ -19,7 +19,7 @@
  */package nova.core.render.model;
 
 import nova.core.render.RenderException;
-import nova.core.render.pipeline.BlockRenderStream;
+import nova.core.render.pipeline.BlockRenderPipeline;
 import nova.core.render.pipeline.CubeTextureCoordinates;
 import nova.core.util.math.MatrixStack;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -216,7 +216,7 @@ public class TechneModelProvider extends ModelProvider {
 
 				final String modelName = shapeName;
 				MeshModel modelPart = new MeshModel(modelName);
-				BlockRenderStream.drawCube(
+				BlockRenderPipeline.drawCube(
 					modelPart,
 					offsetX,
 					offsetY - sizeY,

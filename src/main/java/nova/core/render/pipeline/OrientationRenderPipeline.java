@@ -22,10 +22,10 @@ package nova.core.render.pipeline;
 
 import nova.core.component.transform.Orientation;
 
-public class OrientationRenderStream extends RenderStream {
+public class OrientationRenderPipeline extends RenderPipeline {
 	public final Orientation orientation;
 
-	public OrientationRenderStream(Orientation orientation) {
+	public OrientationRenderPipeline(Orientation orientation) {
 		this.orientation = orientation;
 		consumer = model -> model.matrix.rotate(orientation.orientation().rotation);
 	}
