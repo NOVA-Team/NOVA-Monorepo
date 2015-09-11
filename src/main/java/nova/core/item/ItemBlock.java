@@ -76,9 +76,4 @@ public class ItemBlock extends Item {
 
 		return true;
 	}
-
-	@Override
-	public String getID() {
-		return blockFactory.getID();
-	}
 }

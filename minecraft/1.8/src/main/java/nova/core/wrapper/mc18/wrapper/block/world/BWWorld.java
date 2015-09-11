@@ -37,6 +37,7 @@ import nova.core.wrapper.mc18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc18.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc18.wrapper.block.forward.MCBlockTransform;
+import nova.core.wrapper.mc18.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc18.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc18.wrapper.entity.forward.MCEntityTransform;
@@ -145,7 +146,7 @@ public class BWWorld extends World {
 	public Entity addEntity(Vector3D position, Item item) {
 		EntityItem entityItem = new EntityItem(world(), position.getX(), position.getY(), position.getZ(), Game.natives().toNative(item));
 		world().spawnEntityInWorld(entityItem);
-		return new BWEntity(entityItem);
+		return Game.natives().toNova(entityItem);
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class EntityManager extends Manager<Entity, EntityFactory> {
 	 * @return The entity factory
 	 */
 	@Override
-	public EntityFactory register(Supplier<Entity> constructor) {
-		return register(new EntityFactory(constructor));
+	public EntityFactory register(String id, Supplier<Entity> constructor) {
+		return register(new EntityFactory(id, constructor));
 	}
 }

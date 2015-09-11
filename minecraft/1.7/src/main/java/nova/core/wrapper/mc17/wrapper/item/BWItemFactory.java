@@ -18,9 +18,10 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc18.wrapper.item;
+package nova.core.wrapper.mc17.wrapper.item;
 
 import net.minecraft.nbt.NBTTagCompound;
+import nova.core.component.misc.FactoryProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
@@ -31,12 +32,12 @@ import nova.internal.core.Game;
  * @author Stan
  * @since 3/02/2015.
  */
-public class MCItemFactory extends ItemFactory {
+public class BWItemFactory extends ItemFactory {
 	private final net.minecraft.item.Item item;
 	private final int meta;
 
-	public MCItemFactory(net.minecraft.item.Item item, int meta) {
-		super(() -> new BWItem(item, meta, null));
+	public BWItemFactory(net.minecraft.item.Item item, int meta) {
+		super(net.minecraft.item.Item.itemRegistry.getNameForObject(item) + (item.getHasSubtypes() ? ":" + meta : ""), () -> new BWItem(item, meta, null));
 
 		this.item = item;
 		this.meta = meta;
@@ -54,7 +55,9 @@ public class MCItemFactory extends ItemFactory {
 	public Item build(Data data) {
 		int meta = (Integer) data.getOrDefault("damage", this.meta);
 		NBTTagCompound nbtData = Game.natives().toNative(data);
-		return new BWItem(item, meta, nbtData);
+		BWItem bwItem = new BWItem(item, meta, nbtData);
+		bwItem.add(new FactoryProvider(this));
+		return bwItem;
 	}
 
 	@Override

@@ -20,11 +20,11 @@
 
 package nova.wrappertests;
 
+import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.launch.NovaLauncher;
-import nova.testutils.FakeBlock;
 import nova.wrappertests.depmodules.FakeClientModule;
 import nova.wrappertests.depmodules.FakeComponentModule;
 import nova.wrappertests.depmodules.FakeGameInfoModule;
@@ -82,8 +82,7 @@ public class NovaLauncherTestFactory {
 		/**
 		 * Register fake air block
 		 */
-		Game.blocks().register(new BlockFactory(() -> new FakeBlock("air"), evt -> {
-		}));
+		Game.blocks().register(new BlockFactory("air", Block::new, evt -> {}));
 
 		launcher.generateDependencies();
 		launcher.load();

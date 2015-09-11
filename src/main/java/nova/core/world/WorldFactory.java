@@ -30,17 +30,16 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public class WorldFactory extends Factory<WorldFactory, World> {
-
-	public WorldFactory(Supplier<World> constructor, Function<World, World> processor) {
-		super(constructor, processor);
+	public WorldFactory(String id, Supplier<World> constructor, Function<World, World> processor) {
+		super(id, constructor, processor);
 	}
 
-	public WorldFactory(Supplier<World> constructor) {
-		super(constructor);
+	public WorldFactory(String id, Supplier<World> constructor) {
+		super(id, constructor);
 	}
 
 	@Override
-	public WorldFactory selfConstructor(Supplier<World> constructor, Function<World, World> processor) {
-		return new WorldFactory(constructor, processor);
+	protected WorldFactory selfConstructor(String id, Supplier<World> constructor, Function<World, World> processor) {
+		return new WorldFactory(id, constructor, processor);
 	}
 }

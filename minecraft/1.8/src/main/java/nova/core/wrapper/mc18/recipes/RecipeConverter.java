@@ -111,7 +111,7 @@ public class RecipeConverter {
 
 	private static ItemStack wrapSpecific(SpecificItemIngredient ingredient) {
 		for (Item item : ingredient.getExampleItems().get()) {
-			return Game.natives().toNative(item.factory().build());
+			return Game.natives().toNative(item.getFactory().build());
 		}
 
 		throw new AssertionError("this can't be!");

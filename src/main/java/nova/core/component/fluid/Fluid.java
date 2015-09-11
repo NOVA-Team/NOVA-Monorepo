@@ -21,9 +21,11 @@
 package nova.core.component.fluid;
 
 import nova.core.block.BlockFactory;
+import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.Identifiable;
+import nova.internal.core.Game;
 
 import java.util.Optional;
 
@@ -33,29 +35,13 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	 */
 	public static final int bucketVolume = 1000;
 	/**
-	 * The ID of the fluid. Optional string for auxiliary constructor.
-	 */
-	@Store(key = "id")
-	private String id;
-	/**
 	 * Fluid amount is measured in liters.
 	 */
 	@Store(key = "amount")
 	private int amount = 1;
 
-	/**
-	 * An empty constructor, for fluids that will extend this fluid class.
-	 */
-	public Fluid() {
-		id = "";
-	}
-
-	/**
-	 * Creates new Fluid withPriority an ID
-	 */
-	public Fluid(String id) {
-		this.id = id;
-	}
+	//TODO: Public instance variable is not good practice
+	public FluidFactory factory;
 
 	/**
 	 * @return Amount of fluid
@@ -76,7 +62,6 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 
 	/**
 	 * Adds fluid to this FluidStack
-	 *
 	 * @param amount Amount of fluid to add
 	 * @return Size added
 	 */
@@ -88,7 +73,6 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 
 	/**
 	 * Removes fluid to this FluidStack
-	 *
 	 * @param amount Amount of fluid to remove
 	 * @return Fluid removed
 	 */
@@ -100,13 +84,12 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 
 	@Override
 	public Fluid clone() {
-		Fluid cloned = new Fluid(getID()).setAmount(amount());
+		Fluid cloned = factory.build().setAmount(amount());
 		return cloned;
 	}
 
 	/**
 	 * Returns new FluidStack of the same {@link Fluid} with specified fluid
-	 *
 	 * @param amount Amount of fluid in cloned FluidStack
 	 * @return new FluidStack
 	 */
@@ -118,7 +101,6 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 
 	/**
 	 * Gets the block associated with this fluid.
-	 *
 	 * @return The block. There may be no block associated with this fluid.
 	 */
 	public Optional<BlockFactory> getBlockFactory() {
@@ -136,7 +118,6 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 
 	/**
 	 * Check if this FluidStack is of type of another FluidStack
-	 *
 	 * @param stack The another Fluid
 	 * @return Result
 	 */
@@ -145,8 +126,8 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	}
 
 	@Override
-	public String getID() {
-		return id;
+	public final String getID() {
+		return factory.getID();
 	}
 
 	@Override
@@ -154,4 +135,15 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 		return 31 * amount + getID().hashCode();
 	}
 
+	@Override
+	public void save(Data data) {
+		Storable.super.save(data);
+		data.put("id", factory.getID());
+	}
+
+	@Override
+	public void load(Data data) {
+		Storable.super.load(data);
+		factory = Game.fluids().get(data.get("id")).get();
+	}
 }

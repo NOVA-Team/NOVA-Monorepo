@@ -170,9 +170,4 @@ public class BWEntityFX extends BWEntity {
 		IParticleFactory particleFactory = (IParticleFactory) FMLClientHandler.instance().getClient().effectRenderer.field_178932_g.get(particleID);
 		return particleFactory.getEntityFX(0, world, 0, 0, 0, 0, 0, 0, 0);
 	}
-
-	@Override
-	public String getID() {
-		return Game.info().name + ":" + EnumParticleTypes.getParticleFromId(particleID).getParticleName();
-	}
 }

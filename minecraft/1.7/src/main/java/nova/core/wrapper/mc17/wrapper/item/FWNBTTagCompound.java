@@ -18,23 +18,40 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.testutils;
+package nova.core.wrapper.mc17.wrapper.item;
 
-import nova.core.block.Block;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import nova.core.item.Item;
+
+import java.util.Iterator;
 
 /**
- * @author Calclavia
+ * A wrapped NBTTagCompound object that references the item instance
+ * @author Stan
+ * @since 3/02/2015.
  */
-public class FakeBlock extends Block {
+public class FWNBTTagCompound extends NBTTagCompound {
+	private final Item item;
 
-	private final String id;
+	public FWNBTTagCompound(Item item) {
+		this.item = item;
+	}
 
-	public FakeBlock(String id) {
-		this.id = id;
+	public Item getItem() {
+		return item;
 	}
 
 	@Override
-	public String getID() {
-		return id;
+	public NBTBase copy() {
+		FWNBTTagCompound result = new FWNBTTagCompound(item);
+		Iterator iterator = this.func_150296_c().iterator();
+
+		while (iterator.hasNext()) {
+			String s = (String) iterator.next();
+			result.setTag(s, getTag(s).copy());
+		}
+
+		return result;
 	}
 }

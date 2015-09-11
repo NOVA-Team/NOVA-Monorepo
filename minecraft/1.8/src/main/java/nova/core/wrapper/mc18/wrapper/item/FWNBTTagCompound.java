@@ -18,15 +18,32 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.render.pipeline;
+package nova.core.wrapper.mc18.wrapper.item;
 
-import nova.core.component.transform.Orientation;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import nova.core.item.Item;
 
-public class OrientationRenderStream extends RenderStream {
-	public final Orientation orientation;
+/**
+ * A wrapped NBTTagCompound object that references the item instance
+ * @author Stan
+ * @since 3/02/2015.
+ */
+public class FWNBTTagCompound extends NBTTagCompound {
+	private final Item item;
 
-	public OrientationRenderStream(Orientation orientation) {
-		this.orientation = orientation;
-		consumer = model -> model.matrix.rotate(orientation.orientation().rotation);
+	public FWNBTTagCompound(Item item) {
+		this.item = item;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	@Override
+	public NBTBase copy() {
+		FWNBTTagCompound result = new FWNBTTagCompound(item);
+		getKeySet().forEach(s -> result.setTag((String) s, getTag((String) s).copy()));
+		return result;
 	}
 }

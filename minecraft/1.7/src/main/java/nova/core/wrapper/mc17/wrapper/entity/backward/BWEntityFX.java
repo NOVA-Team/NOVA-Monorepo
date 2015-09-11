@@ -117,9 +117,4 @@ public class BWEntityFX extends BWEntity {
 		//TODO: Handle velocity?
 		return FMLClientHandler.instance().getClient().renderGlobal.doSpawnParticle(particleID, 0, 0, 0, 0, 0, 0);
 	}
-
-	@Override
-	public String getID() {
-		return Game.info().name + ":" + particleID;
-	}
 }
