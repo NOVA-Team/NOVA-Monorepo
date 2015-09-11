@@ -30,8 +30,13 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> implements Identifiable {
+	//The ID of the factory
 	protected final String id;
+
+	//The constructor function
 	protected final Supplier<T> constructor;
+
+	//The processor function
 	protected final Function<T, T> processor;
 
 	/**
@@ -39,21 +44,33 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	 * and with a processor that is capable of mutating the instantiated object after its initialization.
 	 *
 	 * A factory's processor may be modified to allow specific customization of instantiated objects before it is used.
+	 * @param id The identifier for this factory type
 	 * @param constructor The construction function
 	 * @param processor The processor function
 	 */
-	public Factory(Supplier<T> constructor, Function<T, T> processor) {
+	public Factory(String id, Supplier<T> constructor, Function<T, T> processor) {
+		this.id = id;
 		this.constructor = constructor;
 		this.processor = processor;
+	}
 
-		//TODO: Do blocks really need to store its ID inside? Or should it be stored in the factory? This prevents generating dummies. Consider @Identifiable
-		id = build().getID();
+	public Factory(String id, Supplier<T> constructor) {
+		this(id, constructor, obj -> obj);
+	}
+
+	public Factory(Supplier<T> constructor, Function<T, T> processor) {
+		this(constructor.get().getClass().toString(), constructor, processor);
 	}
 
 	public Factory(Supplier<T> constructor) {
-		this(constructor, obj -> obj);
+		this(constructor.get().getClass().toString(), constructor);
 	}
 
+	/**
+	 * Adds a processor to the factory
+	 * @param processor A processor that mutates the construction
+	 * @return Self
+	 */
 	public S process(Function<T, T> processor) {
 		return selfConstructor(constructor, this.processor.compose(processor));
 	}

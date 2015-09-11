@@ -23,7 +23,9 @@ package nova.core.util;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+
 /**
+ * A manager holds a registry of factories.
  * @author Calclavia
  */
 public abstract class Manager<T extends Identifiable, F extends Factory<F, T>> {
