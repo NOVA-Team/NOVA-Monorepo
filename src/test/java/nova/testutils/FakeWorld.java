@@ -30,6 +30,7 @@ import nova.core.item.Item;
 import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.HashMap;
@@ -59,7 +60,7 @@ public class FakeWorld extends World {
 	@Override
 	public Optional<Block> getBlock(Vector3D position) {
 		//Gives a fake block to represent air
-		Block air = new Block();
+		Block air = Game.blocks().getAirBlock().build();
 		BlockTransform component = new BlockTransform();
 		component.setPosition(position);
 		component.setWorld(this);
