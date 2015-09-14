@@ -36,7 +36,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 public class Entity extends ComponentProvider implements UniqueIdentifiable, Identifiable, Stateful {
 
 	public final EntityTransform transform() {
-		return get(EntityTransform.class);
+		return components.get(EntityTransform.class);
 	}
 
 	public final World world() {
@@ -92,7 +92,7 @@ public class Entity extends ComponentProvider implements UniqueIdentifiable, Ide
 	}
 
 	public final EntityFactory getFactory() {
-		return (EntityFactory) get(FactoryProvider.class).factory;
+		return (EntityFactory) components.get(FactoryProvider.class).factory;
 	}
 
 	@Override
@@ -102,6 +102,6 @@ public class Entity extends ComponentProvider implements UniqueIdentifiable, Ide
 
 	@Override
 	public String getUniqueID() {
-		return get(UniqueIdentifiable.class).getUniqueID();
+		return components.get(UniqueIdentifiable.class).getUniqueID();
 	}
 }

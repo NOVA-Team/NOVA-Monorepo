@@ -139,9 +139,9 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
 		NovaMinecraft.proxy.postRegisterBlock(blockWrapper);
 
-		if (blockWrapper.dummy.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
+		if (blockWrapper.dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 			//Add into creative tab
-			Category category = blockWrapper.dummy.get(Category.class);
+			Category category = blockWrapper.dummy.components.get(Category.class);
 			Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
 				.filter(tab -> tab.getTabLabel().equals(category.name))
 				.findFirst();

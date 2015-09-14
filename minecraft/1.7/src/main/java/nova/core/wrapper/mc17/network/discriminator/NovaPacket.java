@@ -66,7 +66,7 @@ public class NovaPacket extends PacketAbstract {
 			MCNetworkManager network = (MCNetworkManager) Game.network();
 			PacketHandler<?> packetHandler = network.getPacketType(data.readInt());
 			int subId = data.readInt();
-			MCPacket packet = new MCPacket(data.slice(), ((Entity) Game.natives().toNova(player)).get(Player.class));
+			MCPacket packet = new MCPacket(data.slice(), ((Entity) Game.natives().toNova(player)).components.get(Player.class));
 			//Set the ID of the packet
 			packet.setID(subId);
 			packetHandler.read(packet);

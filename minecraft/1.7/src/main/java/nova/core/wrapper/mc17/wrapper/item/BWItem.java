@@ -55,7 +55,7 @@ public class BWItem extends Item implements Storable {
 		this.meta = meta;
 		this.tag = tag;
 
-		add(new ItemRenderer())
+		components.add(new ItemRenderer())
 			.onRender(model -> {
 					model.addChild(new CustomModel(self -> {
 						Tessellator.instance.draw();

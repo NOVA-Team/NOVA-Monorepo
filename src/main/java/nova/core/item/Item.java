@@ -46,7 +46,7 @@ public class Item extends ComponentProvider implements Identifiable, Storable {
 	 * @return The {@link nova.core.item.ItemFactory} that refers to this Block class.
 	 */
 	public final ItemFactory getFactory() {
-		return (ItemFactory) get(FactoryProvider.class).factory;
+		return (ItemFactory) components.get(FactoryProvider.class).factory;
 	}
 
 	@Override

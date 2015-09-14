@@ -43,9 +43,9 @@ public class BWEntity extends Entity {
 
 	public BWEntity(net.minecraft.entity.Entity entity) {
 		this.entity = entity;
-		add(new MCEntityTransform(entity));
+		components.add(new MCEntityTransform(entity));
 
-		add(new Damageable() {
+		components.add(new Damageable() {
 			@Override
 			public void damage(double amount, DamageType type) {
 				if (type == DamageType.generic) {
@@ -57,10 +57,10 @@ public class BWEntity extends Entity {
 
 		if (entity instanceof EntityLivingBase) {
 			if (entity instanceof EntityPlayer) {
-				MCPlayer player = add(new MCPlayer(this));
+				MCPlayer player = components.add(new MCPlayer(this));
 				player.faceDisplacement = () -> Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight());
 			} else {
-				Living living = add(new Living());
+				Living living = components.add(new Living());
 				living.faceDisplacement = () -> Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight());
 			}
 		}

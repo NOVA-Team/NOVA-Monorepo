@@ -47,7 +47,6 @@ import java.util.Set;
 
 /**
  * The main class responsible for wrapping items.
- *
  * @author Calclavia, Stan Hebben
  */
 public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable {
@@ -205,9 +204,9 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
 			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
 
-			if (dummy.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
+			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
-				Category category = dummy.get(Category.class);
+				Category category = dummy.components.get(Category.class);
 				Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
 					.filter(tab -> tab.getTabLabel().equals(category.name))
 					.findFirst();

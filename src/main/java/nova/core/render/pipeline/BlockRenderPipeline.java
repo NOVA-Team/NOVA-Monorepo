@@ -77,7 +77,7 @@ public class BlockRenderPipeline extends RenderPipeline {
 
 	public BlockRenderPipeline(Block block) {
 		this.block = block;
-		bounds = () -> block.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
+		bounds = () -> block.components.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
 		consumer = model -> model.addChild(draw(new MeshModel()));
 	}
 

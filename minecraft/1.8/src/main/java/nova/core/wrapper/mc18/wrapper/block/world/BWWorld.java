@@ -37,8 +37,6 @@ import nova.core.wrapper.mc18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc18.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc18.wrapper.block.forward.MCBlockTransform;
-import nova.core.wrapper.mc18.wrapper.entity.EntityConverter;
-import nova.core.wrapper.mc18.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc18.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc18.wrapper.entity.forward.MCEntityTransform;
 import nova.internal.core.Game;
@@ -83,7 +81,7 @@ public class BWWorld extends World {
 		net.minecraft.block.Block mcBlock = access.getBlockState(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ())).getBlock();
 		if (mcBlock == null || mcBlock == Blocks.air) {
 			Block airBlock = Game.blocks().getAirBlock().build();
-			airBlock.add(new MCBlockTransform(airBlock, this, position));
+			airBlock.components.add(new MCBlockTransform(airBlock, this, position));
 			return Optional.of(airBlock);
 		} else if (mcBlock instanceof FWBlock) {
 			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
@@ -128,7 +126,7 @@ public class BWWorld extends World {
 
 	@Override
 	public void removeEntity(Entity entity) {
-		net.minecraft.entity.Entity wrapper = entity.get(MCEntityTransform.class).wrapper;
+		net.minecraft.entity.Entity wrapper = entity.components.get(MCEntityTransform.class).wrapper;
 		wrapper.setDead();
 		world().removeEntity(wrapper);
 	}

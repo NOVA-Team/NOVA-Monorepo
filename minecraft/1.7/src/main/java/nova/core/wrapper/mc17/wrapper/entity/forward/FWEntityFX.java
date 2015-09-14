@@ -52,7 +52,7 @@ public class FWEntityFX extends EntityFX {
 		super(world, 0, 0, 0);
 		this.wrapped = factory.build();
 		this.transform = new MCEntityTransform(this);
-		wrapped.add(transform);
+		wrapped.components.add(transform);
 		entityInit();
 	}
 
@@ -60,7 +60,7 @@ public class FWEntityFX extends EntityFX {
 		super(world, 0, 0, 0);
 		this.wrapped = entity;
 		this.transform = new MCEntityTransform(this);
-		wrapped.add(transform);
+		wrapped.components.add(transform);
 		entityInit();
 	}
 
@@ -116,8 +116,8 @@ public class FWEntityFX extends EntityFX {
 		}
 
 		//Wrap entity collider
-		if (wrapped.has(Collider.class)) {
-			Collider collider = wrapped.get(Collider.class);
+		if (wrapped.components.has(Collider.class)) {
+			Collider collider = wrapped.components.get(Collider.class);
 
 			//Transform cuboid based on entity.
 			Cuboid size = collider

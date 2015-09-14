@@ -47,11 +47,11 @@ public class ItemRenderer extends Renderer {
 
 	public ItemRenderer(ComponentProvider provider) {
 		onRender = model -> {
-			Optional<StaticRenderer> opComponent = provider.getOp(StaticRenderer.class);
+			Optional<StaticRenderer> opComponent = provider.components.getOp(StaticRenderer.class);
 			if (opComponent.isPresent()) {
 				opComponent.get().onRender.accept(model);
 			} else {
-				provider.getOp(DynamicRenderer.class).ifPresent(c -> c.onRender.accept(model));
+				provider.components.getOp(DynamicRenderer.class).ifPresent(c -> c.onRender.accept(model));
 			}
 		};
 	}

@@ -148,7 +148,7 @@ public class RayTraceTest {
 				"solid",
 				() -> {
 					Block solid = new Block();
-					solid.add(new Collider(solid));
+					solid.components.add(new Collider(solid));
 					return solid;
 				}
 			);

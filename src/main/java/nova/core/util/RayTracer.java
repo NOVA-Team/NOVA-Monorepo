@@ -58,7 +58,7 @@ public class RayTracer {
 	 * @param entity The entity
 	 */
 	public RayTracer(Entity entity) {
-		this(new Ray(entity.position().add(entity.has(Living.class) ? entity.get(Living.class).faceDisplacement.get() : Vector3D.ZERO), entity.rotation().applyTo(Vector3DUtil.FORWARD)));
+		this(new Ray(entity.position().add(entity.components.has(Living.class) ? entity.components.get(Living.class).faceDisplacement.get() : Vector3D.ZERO), entity.rotation().applyTo(Vector3DUtil.FORWARD)));
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class RayTracer {
 	public Stream<RayTraceBlockResult> rayTraceBlocks(Stream<Block> blockStream) {
 		return
 			(doParallel() ? blockStream.parallel() : blockStream)
-				.filter(block -> block.has(Collider.class))
+				.filter(block -> block.components.has(Collider.class))
 				.flatMap(block -> rayTraceCollider(block, (pos, cuboid) -> new RayTraceBlockResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid, block)))
 				.sorted();
 	}
@@ -123,25 +123,25 @@ public class RayTracer {
 		return rayTraceEntities(
 			world.getEntities(Cuboid.ZERO.expand(distance).add(ray.origin))
 				.stream()
-				.filter(entity -> entity.has(Collider.class))
+				.filter(entity -> entity.components.has(Collider.class))
 		);
 	}
 
 	public Stream<RayTraceEntityResult> rayTraceEntities(Stream<Entity> entityStream) {
 		return
 			(doParallel() ? entityStream.parallel() : entityStream)
-				.filter(entity -> entity.has(Collider.class))
+				.filter(entity -> entity.components.has(Collider.class))
 				.flatMap(entity -> rayTraceCollider(entity, (pos, cuboid) -> new RayTraceEntityResult(pos, ray.origin.distance(pos), cuboid.sideOf(pos), cuboid, entity)))
 				.sorted();
 	}
 
 	public <R extends RayTraceResult> Stream<R> rayTraceCollider(ComponentProvider colliderProvider, BiFunction<Vector3D, Cuboid, R> resultMapper) {
 		return
-			colliderProvider.get(Collider.class)
+			colliderProvider.components.get(Collider.class)
 				.occlusionBoxes
 				.apply(Optional.empty())
 				.stream()
-				.map(cuboid -> cuboid.add((Vector3D) colliderProvider.get(WorldTransform.class).position()))
+				.map(cuboid -> cuboid.add((Vector3D) colliderProvider.components.get(WorldTransform.class).position()))
 				.map(cuboid -> rayTrace(cuboid, resultMapper))
 				.filter(Optional::isPresent)
 				.map(Optional::get);
