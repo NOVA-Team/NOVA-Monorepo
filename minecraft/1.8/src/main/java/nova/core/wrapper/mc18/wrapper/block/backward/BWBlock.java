@@ -62,18 +62,18 @@ public class BWBlock extends Block implements Storable {
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
 
-		BlockTransform transform = add(new BlockTransform());
+		BlockTransform transform = components.add(new BlockTransform());
 		transform.setWorld(world);
 		transform.setPosition(pos);
 
-		BlockProperties blockMaterial = add(new BlockProperties());
+		BlockProperties blockMaterial = components.add(new BlockProperties());
 		blockMaterial.setLightTransmission(!mcBlock.getMaterial().blocksLight());
 		blockMaterial.setBlockSound(BlockProperties.BlockSoundTrigger.PLACE, mcBlock.stepSound.getPlaceSound());
 		blockMaterial.setBlockSound(BlockProperties.BlockSoundTrigger.BREAK, mcBlock.stepSound.getBreakSound());
 		blockMaterial.setBlockSound(BlockProperties.BlockSoundTrigger.WALK, mcBlock.stepSound.getStepSound());
 
-		add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0F);
-		add(new Collider(this))
+		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0F);
+		components.add(new Collider(this))
 			.setBoundingBox(() -> new Cuboid(mcBlock.getBlockBoundsMinX(), mcBlock.getBlockBoundsMinY(), mcBlock.getBlockBoundsMinZ(), mcBlock.getBlockBoundsMaxX(), mcBlock.getBlockBoundsMaxY(), mcBlock.getBlockBoundsMaxZ()))
 			.setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
@@ -81,7 +81,7 @@ public class BWBlock extends Block implements Storable {
 					Game.natives().toNative(world()),
 					new BlockPos(x(), y(), z()),
 					blockState(),
-					Game.natives().toNative(entity.isPresent() ? entity.get().get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),
+					Game.natives().toNative(entity.isPresent() ? entity.get().components.get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),
 					aabbs,
 					entity.isPresent() ? Game.natives().toNative(entity.get()) : null
 				);

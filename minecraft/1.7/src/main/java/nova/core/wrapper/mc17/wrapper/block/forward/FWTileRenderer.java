@@ -41,7 +41,7 @@ public class FWTileRenderer extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float p_147500_8_) {
 		Block block = ((FWTile) tile).getBlock();
-		Optional<DynamicRenderer> opRenderer = block.getOp(DynamicRenderer.class);
+		Optional<DynamicRenderer> opRenderer = block.components.getOp(DynamicRenderer.class);
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();
 			model.matrix.translate(x + 0.5, y + 0.5, z + 0.5);

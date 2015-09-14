@@ -45,7 +45,7 @@ public class FWEntityRenderer extends Render {
 	public static final FWEntityRenderer instance = new FWEntityRenderer();
 
 	public static void render(Entity wrapper, nova.core.entity.Entity entity, double x, double y, double z) {
-		Optional<DynamicRenderer> opRenderer = entity.getOp(DynamicRenderer.class);
+		Optional<DynamicRenderer> opRenderer = entity.components.getOp(DynamicRenderer.class);
 
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();

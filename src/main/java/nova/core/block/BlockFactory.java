@@ -68,7 +68,7 @@ public class BlockFactory extends Factory<BlockFactory, Block> {
 	@Override
 	public Block build() {
 		Block build = super.build();
-		build.add(new FactoryProvider(this));
+		build.components.add(new FactoryProvider(this));
 		return build;
 	}
 }

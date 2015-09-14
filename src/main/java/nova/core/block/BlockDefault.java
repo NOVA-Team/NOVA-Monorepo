@@ -29,6 +29,6 @@ import nova.core.component.misc.Collider;
  */
 public abstract class BlockDefault extends Block {
 	public BlockDefault() {
-		add(new Collider(this));
+		components.add(new Collider(this));
 	}
 }

@@ -43,7 +43,6 @@ import java.util.List;
 
 /**
  * Generates a smart model based on a NOVA Model
- *
  * @author Calclavia
  */
 public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel, ISmartItemModel, IFlexibleBakedModel {
@@ -68,7 +67,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 
 		Block blockInstance = block.getBlockInstance(block.lastExtendedWorld, Game.natives().toNova(block.lastExtendedStatePos));
 
-		if (blockInstance.has(StaticRenderer.class)) {
+		if (blockInstance.components.has(StaticRenderer.class)) {
 			return new FWSmartBlockModel(blockInstance, false);
 		}
 
@@ -79,7 +78,8 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
 		ItemBlock item = Game.natives().toNova(stack);
-		ItemRenderer renderer = item.has(ItemRenderer.class) ? item.get(ItemRenderer.class) : block.has(ItemRenderer.class) ? block.get(ItemRenderer.class) : null;
+		ItemRenderer renderer =
+			item.components.has(ItemRenderer.class) ? item.components.get(ItemRenderer.class) : block.components.has(ItemRenderer.class) ? block.components.get(ItemRenderer.class) : null;
 
 		if (renderer != null) {
 			return new FWSmartBlockModel(block, true);
@@ -94,10 +94,10 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 		blockModel.matrix.translate(0.5, 0.5, 0.5);
 
 		if (isItem) {
-			ItemRenderer renderer = block.get(ItemRenderer.class);
+			ItemRenderer renderer = block.components.get(ItemRenderer.class);
 			renderer.onRender.accept(blockModel);
 		} else {
-			StaticRenderer renderer = block.get(StaticRenderer.class);
+			StaticRenderer renderer = block.components.get(StaticRenderer.class);
 			renderer.onRender.accept(blockModel);
 		}
 
@@ -107,15 +107,15 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 	@Override
 	public TextureAtlasSprite getTexture() {
 		/*
-		if (block.has(StaticRenderer.class)) {
-			Optional<Texture> apply = block.get(StaticRenderer.class).texture.apply(Direction.UNKNOWN);
+		if (block.components.has(StaticRenderer.class)) {
+			Optional<Texture> apply = block.components.get(StaticRenderer.class).texture.apply(Direction.UNKNOWN);
 			if (apply.isPresent()) {
-				return RenderUtility.instance.getTexture(apply.get());
+				return RenderUtility.instance.getTexture(apply.components.get());
 			}
 		}*/
 
-		if (block.has(ItemRenderer.class)) {
-			ItemRenderer itemRenderer = block.get(ItemRenderer.class);
+		if (block.components.has(ItemRenderer.class)) {
+			ItemRenderer itemRenderer = block.components.get(ItemRenderer.class);
 			if (itemRenderer.texture.isPresent()) {
 				return RenderUtility.instance.getTexture(itemRenderer.texture.get());
 			}

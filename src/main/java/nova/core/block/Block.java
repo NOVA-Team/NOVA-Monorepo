@@ -54,7 +54,7 @@ public class Block extends ComponentProvider implements Identifiable {
 	 * Block class.
 	 */
 	public final BlockFactory getFactory() {
-		return (BlockFactory) get(FactoryProvider.class).factory;
+		return (BlockFactory) components.get(FactoryProvider.class).factory;
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class Block extends ComponentProvider implements Identifiable {
 	}
 
 	public final BlockTransform transform() {
-		return get(BlockTransform.class);
+		return components.get(BlockTransform.class);
 	}
 
 	public final World world() {

@@ -106,7 +106,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 
 	private void setWrapped(Entity wrapped) {
 		this.wrapped = wrapped;
-		wrapped.add(transform);
+		wrapped.components.add(transform);
 	}
 
 	public EntityTransform getTransform() {
@@ -164,8 +164,8 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	 */
 	public void updateCollider() {
 		//Wrap entity collider
-		if (wrapped.has(Collider.class)) {
-			Collider collider = wrapped.get(Collider.class);
+		if (wrapped.components.has(Collider.class)) {
+			Collider collider = wrapped.components.get(Collider.class);
 
 			//Transform cuboid based on entity.
 			Cuboid size = collider

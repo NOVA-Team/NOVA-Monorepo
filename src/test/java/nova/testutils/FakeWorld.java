@@ -64,7 +64,7 @@ public class FakeWorld extends World {
 		BlockTransform component = new BlockTransform();
 		component.setPosition(position);
 		component.setWorld(this);
-		air.add(component);
+		air.components.add(component);
 		return Optional.of(blockMap.getOrDefault(position, air));
 	}
 
@@ -74,7 +74,7 @@ public class FakeWorld extends World {
 		BlockTransform component = new BlockTransform();
 		component.setPosition(position);
 		component.setWorld(this);
-		newBlock.add(component);
+		newBlock.components.add(component);
 		blockMap.put(position, newBlock);
 		return true;
 	}
@@ -84,7 +84,7 @@ public class FakeWorld extends World {
 		Entity make = factory.build();
 		EntityTransform component = new EntityTransform();
 		component.setWorld(this);
-		make.add(component);
+		make.components.add(component);
 		entities.add(make);
 		return make;
 	}

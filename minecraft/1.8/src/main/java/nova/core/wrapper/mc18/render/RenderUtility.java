@@ -88,7 +88,7 @@ public class RenderUtility {
 	protected static final FaceBakery FACE_BAKERY = new FaceBakery();
 	// Ugly D:
 	protected static final ModelBlock MODEL_GENERATED = ModelBlock.deserialize(
-			"{\"" +
+		"{\"" +
 			"elements\":[{" +
 			"  \"from\": [0, 0, 0], " +
 			"  \"to\": [16, 16, 16], " +
@@ -164,7 +164,6 @@ public class RenderUtility {
 
 	/**
 	 * Handles NOVA texture registration.
-	 *
 	 * @param event Event
 	 */
 	@SubscribeEvent
@@ -194,7 +193,7 @@ public class RenderUtility {
 				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(itemFromBlock);
 				ModelResourceLocation blockLocation = new ModelResourceLocation(blockRL, "normal");
 				ModelResourceLocation itemLocation = new ModelResourceLocation(itemRL, "inventory");
-				if (block.dummy.has(StaticRenderer.class)) {
+				if (block.dummy.components.has(StaticRenderer.class)) {
 					event.modelRegistry.putObject(blockLocation, new FWSmartBlockModel(block.dummy, true));
 				} else {
 					event.modelRegistry.putObject(blockLocation, new FWEmptyModel());
@@ -215,8 +214,8 @@ public class RenderUtility {
 
 					nova.core.item.Item dummy = item.getItemFactory().build();
 
-					if (dummy.has(ItemRenderer.class)) {
-						Optional<Texture> texture = dummy.get(ItemRenderer.class).texture;
+					if (dummy.components.has(ItemRenderer.class)) {
+						Optional<Texture> texture = dummy.components.get(ItemRenderer.class).texture;
 
 						if (texture.isPresent()) {
 							MODEL_GENERATED.textures.put("layer0", texture.get().getResource());
@@ -265,6 +264,7 @@ public class RenderUtility {
 
 	private class FakeTextureMap extends TextureMap {
 		private final nova.core.item.Item item;
+
 		public FakeTextureMap(nova.core.item.Item item) {
 			super("");
 			this.item = item;
@@ -272,8 +272,8 @@ public class RenderUtility {
 
 		@Override
 		public TextureAtlasSprite getAtlasSprite(String iconName) {
-			if (item.has(ItemRenderer.class)) {
-				ItemRenderer itemRenderer = item.get(ItemRenderer.class);
+			if (item.components.has(ItemRenderer.class)) {
+				ItemRenderer itemRenderer = item.components.get(ItemRenderer.class);
 				if (itemRenderer.texture.isPresent()) {
 					return RenderUtility.instance.getTexture(itemRenderer.texture.get());
 				}

@@ -67,7 +67,7 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 
 	@Override
 	public net.minecraft.entity.Entity toNative(Entity novaObj) {
-		MCEntityTransform transform = novaObj.get(MCEntityTransform.class);
+		MCEntityTransform transform = novaObj.components.get(MCEntityTransform.class);
 
 		if (transform.wrapper instanceof FWEntity) {
 			return transform.wrapper;

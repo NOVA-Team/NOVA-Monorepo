@@ -60,7 +60,7 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 	public IBakedModel handleItemState(ItemStack stack) {
 		Item item = Game.natives().toNova(stack);
 
-		if (item.has(ItemRenderer.class)) {
+		if (item.components.has(ItemRenderer.class)) {
 			return new FWSmartItemModel(item);
 		}
 
@@ -69,9 +69,9 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 
 	@Override
 	public List<BakedQuad> getGeneralQuads() {
-		if (item.has(ItemRenderer.class)) {
+		if (item.components.has(ItemRenderer.class)) {
 			BWModel model = new BWModel();
-			ItemRenderer renderer = item.get(ItemRenderer.class);
+			ItemRenderer renderer = item.components.get(ItemRenderer.class);
 			model.matrix.translate(0.5, 0.5, 0.5);
 			renderer.onRender.accept(model);
 			return modelToQuads(model);
@@ -82,8 +82,8 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 
 	@Override
 	public TextureAtlasSprite getTexture() {
-		if (item.has(ItemRenderer.class)) {
-			ItemRenderer itemRenderer = item.get(ItemRenderer.class);
+		if (item.components.has(ItemRenderer.class)) {
+			ItemRenderer itemRenderer = item.components.get(ItemRenderer.class);
 			if (itemRenderer.texture.isPresent()) {
 				return RenderUtility.instance.getTexture(itemRenderer.texture.get());
 			}
@@ -94,6 +94,6 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 
 	@Override
 	public boolean isGui3d() {
-		return item.has(ItemRenderer.class);
+		return item.components.has(ItemRenderer.class);
 	}
 }

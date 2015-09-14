@@ -60,11 +60,11 @@ public class BWBlock extends Block implements Storable {
 
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
-		BlockTransform transform = add(new BlockTransform());
+		BlockTransform transform = components.add(new BlockTransform());
 		transform.setWorld(world);
 		transform.setPosition(pos);
-		add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), x(), y(), z()) / 15.0F);
-		add(new Collider(this))
+		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), x(), y(), z()) / 15.0F);
+		components.add(new Collider(this))
 			.setBoundingBox(() -> new Cuboid(mcBlock.getBlockBoundsMinX(), mcBlock.getBlockBoundsMinY(), mcBlock.getBlockBoundsMinZ(), mcBlock.getBlockBoundsMaxX(), mcBlock.getBlockBoundsMaxY(), mcBlock.getBlockBoundsMaxZ()))
 			.setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
@@ -73,7 +73,7 @@ public class BWBlock extends Block implements Storable {
 					(int) position().getX(),
 					(int) position().getY(),
 					(int) position().getZ(),
-					Game.natives().toNative(entity.isPresent() ? entity.get().get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),
+					Game.natives().toNative(entity.isPresent() ? entity.get().components.get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),
 					aabbs,
 					entity.isPresent() ? Game.natives().toNative(entity.get()) : null
 				);
@@ -83,7 +83,7 @@ public class BWBlock extends Block implements Storable {
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			});
-		add(new StaticRenderer())
+		components.add(new StaticRenderer())
 			.onRender(model -> model.addChild(new CustomModel(self -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z()))));
 		//TODO: Set selection bounds
 	}

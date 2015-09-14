@@ -193,7 +193,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 		if (provider instanceof Block) {
 			Vector3D position = entity.position();
 			if (FastMath.abs(position.getX() - ((Block) provider).x()) < 2.0F && FastMath.abs(position.getZ() - ((Block) provider).z()) < 2.0F) {
-				double height = position.add(entity.get(Living.class).faceDisplacement.get()).getY();
+				double height = position.add(entity.components.get(Living.class).faceDisplacement.get()).getY();
 
 				if (height - ((Block) provider).y() > 2.0D) {
 					return Direction.fromOrdinal(1);

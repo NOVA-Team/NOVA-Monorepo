@@ -51,7 +51,7 @@ public class ItemFactory extends Factory<ItemFactory, Item> implements Identifia
 		Data data = new Data();
 		data.className = build.getClass().getName();
 		build.load(data);
-		build.add(new FactoryProvider(this));
+		build.components.add(new FactoryProvider(this));
 		return build;
 	}
 
@@ -63,7 +63,7 @@ public class ItemFactory extends Factory<ItemFactory, Item> implements Identifia
 	public Item build(Data data) {
 		Item build = super.build();
 		build.load(data);
-		build.add(new FactoryProvider(this));
+		build.components.add(new FactoryProvider(this));
 		return build;
 	}
 

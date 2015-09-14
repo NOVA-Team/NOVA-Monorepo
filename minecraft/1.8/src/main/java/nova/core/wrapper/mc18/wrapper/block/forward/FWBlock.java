@@ -16,7 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.wrapper.mc18.wrapper.block.forward;
+ */
+
+package nova.core.wrapper.mc18.wrapper.block.forward;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -56,7 +58,6 @@ import java.util.stream.Collectors;
 
 /**
  * A Minecraft to Nova block wrapper
- *
  * @author Calclavia
  */
 public class FWBlock extends net.minecraft.block.Block {
@@ -73,13 +74,13 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	public FWBlock(BlockFactory factory) {
 		//TODO: Hack build() method
-		super(factory.build().has(BlockProperties.class) ? new MCBlockProperties(factory.build().get(BlockProperties.class)).toMcMaterial() : Material.piston);
+		super(factory.build().components.has(BlockProperties.class) ? new MCBlockProperties(factory.build().components.get(BlockProperties.class)).toMcMaterial() : Material.piston);
 		this.factory = factory;
 		this.dummy = factory.build();
 		if (this.getMaterial() instanceof MCBlockProperties.ProxyMaterial) {
 			this.stepSound = ((MCBlockProperties.ProxyMaterial) this.getMaterial()).getSoundType();
 		} else {
-			BlockProperties properties = dummy.add(new BlockProperties());
+			BlockProperties properties = dummy.components.add(new BlockProperties());
 			properties.setBlockSound(BlockProperties.BlockSoundTrigger.BREAK, soundTypeStone.getBreakSound());
 			properties.setBlockSound(BlockProperties.BlockSoundTrigger.PLACE, soundTypeStone.getPlaceSound());
 			properties.setBlockSound(BlockProperties.BlockSoundTrigger.WALK, soundTypeStone.getStepSound());
@@ -119,7 +120,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	private Block getBlockInstance(nova.core.world.World world, Vector3D position) {
 		// TODO: Implement obj args
 		Block block = factory.build();
-		block.add(new MCBlockTransform(block, world, position));
+		block.components.add(new MCBlockTransform(block, world, position));
 		return block;
 	}
 
@@ -168,7 +169,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		FWTile fwTile = FWTileLoader.loadTile(dummy.getID());
 		if (lastExtendedStatePos != null) {
-			fwTile.block.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
+			fwTile.block.components.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
 			lastExtendedStatePos = null;
 		}
 		return fwTile;
@@ -219,14 +220,14 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		blockInstance.getOp(Collider.class).ifPresent(collider -> blockInstance.events.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
+		blockInstance.components.getOp(Collider.class).ifPresent(collider -> blockInstance.events.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
 	}
 
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess access, BlockPos pos) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		if (blockInstance.has(Collider.class)) {
-			Cuboid cuboid = blockInstance.get(Collider.class).boundingBox.get();
+		if (blockInstance.components.has(Collider.class)) {
+			Cuboid cuboid = blockInstance.components.get(Collider.class).boundingBox.get();
 			setBlockBounds((float) cuboid.min.getX(), (float) cuboid.min.getY(), (float) cuboid.min.getZ(), (float) cuboid.max.getX(), (float) cuboid.max.getY(), (float) cuboid.max.getZ());
 		}
 	}
@@ -235,8 +236,8 @@ public class FWBlock extends net.minecraft.block.Block {
 	public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
 
-		if (blockInstance.has(Collider.class)) {
-			Cuboid cuboid = blockInstance.get(Collider.class).boundingBox.get();
+		if (blockInstance.components.has(Collider.class)) {
+			Cuboid cuboid = blockInstance.components.get(Collider.class).boundingBox.get();
 			return Game.natives().toNative(cuboid.add(new Vector3D(pos.getX(), pos.getY(), pos.getZ())));
 		}
 		return super.getSelectedBoundingBox(world, pos);
@@ -245,7 +246,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		blockInstance.getOp(Collider.class).ifPresent(
+		blockInstance.components.getOp(Collider.class).ifPresent(
 			collider -> {
 				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(entity != null ? Game.natives().toNova(entity) : null));
 
@@ -268,7 +269,7 @@ public class FWBlock extends net.minecraft.block.Block {
 			return true;
 		}
 
-		Optional<Collider> blockCollider = dummy.getOp(Collider.class);
+		Optional<Collider> blockCollider = dummy.components.getOp(Collider.class);
 
 		if (blockCollider.isPresent()) {
 			return blockCollider.get().isOpaqueCube.get();
@@ -279,7 +280,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public boolean isNormalCube() {
-		Optional<Collider> blockCollider = dummy.getOp(Collider.class);
+		Optional<Collider> blockCollider = dummy.components.getOp(Collider.class);
 
 		if (blockCollider.isPresent()) {
 			return blockCollider.get().isCube.get();
@@ -296,7 +297,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public int getLightValue(IBlockAccess access, BlockPos pos) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		Optional<LightEmitter> opEmitter = blockInstance.getOp(LightEmitter.class);
+		Optional<LightEmitter> opEmitter = blockInstance.components.getOp(LightEmitter.class);
 
 		if (opEmitter.isPresent()) {
 			return Math.round(opEmitter.get().emittedLevel.get() * 15.0F);

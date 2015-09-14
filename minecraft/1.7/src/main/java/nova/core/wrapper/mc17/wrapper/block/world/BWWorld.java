@@ -77,7 +77,7 @@ public class BWWorld extends World {
 		net.minecraft.block.Block mcBlock = access.getBlock((int) position.getX(), (int) position.getY(), (int) position.getZ());
 		if (mcBlock == null || mcBlock == Blocks.air) {
 			Block airBlock = Game.blocks().getAirBlock().build();
-			airBlock.add(new MCBlockTransform(airBlock, this, position));
+			airBlock.components.add(new MCBlockTransform(airBlock, this, position));
 			return Optional.of(airBlock);
 		} else if (mcBlock instanceof FWBlock) {
 			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
@@ -118,7 +118,7 @@ public class BWWorld extends World {
 
 	@Override
 	public void removeEntity(Entity entity) {
-		net.minecraft.entity.Entity wrapper = entity.get(MCEntityTransform.class).wrapper;
+		net.minecraft.entity.Entity wrapper = entity.components.get(MCEntityTransform.class).wrapper;
 		wrapper.setDead();
 		world().removeEntity(wrapper);
 	}

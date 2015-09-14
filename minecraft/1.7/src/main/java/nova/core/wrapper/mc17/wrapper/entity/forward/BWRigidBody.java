@@ -61,7 +61,7 @@ public class BWRigidBody extends RigidBody {
 	private Vector3D netTorque = Vector3D.ZERO;
 
 	private net.minecraft.entity.Entity mcEntity() {
-		return getProvider().get(MCEntityTransform.class).wrapper;
+		return getProvider().components.get(MCEntityTransform.class).wrapper;
 	}
 
 	private Entity entity() {

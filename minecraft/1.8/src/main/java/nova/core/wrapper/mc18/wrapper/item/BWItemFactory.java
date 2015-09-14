@@ -56,7 +56,7 @@ public class BWItemFactory extends ItemFactory {
 		int meta = (Integer) data.getOrDefault("damage", this.meta);
 		NBTTagCompound nbtData = Game.natives().toNative(data);
 		BWItem bwItem = new BWItem(item, meta, nbtData);
-		bwItem.add(new FactoryProvider(this));
+		bwItem.components.add(new FactoryProvider(this));
 		return bwItem;
 	}
 

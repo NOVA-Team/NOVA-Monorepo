@@ -47,7 +47,7 @@ public class EntityFactory extends Factory<EntityFactory, Entity> {
 	@Override
 	public Entity build() {
 		Entity build = super.build();
-		build.add(new FactoryProvider(this));
+		build.components.add(new FactoryProvider(this));
 		return build;
 	}
 }

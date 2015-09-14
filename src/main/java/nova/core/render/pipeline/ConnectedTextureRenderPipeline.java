@@ -55,7 +55,7 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 		this.edgeTexture = edgeTexture;
 
 		connectMask = () -> {
-			if (this.block.has(BlockTransform.class)) {
+			if (this.block.components.has(BlockTransform.class)) {
 				return Arrays.stream(Direction.VALID_DIRECTIONS)
 					.filter(d -> this.block.world().getBlock(this.block.position().add(d.toVector())).get().sameType(this.block))
 					.map(d -> 1 << d.ordinal())
