@@ -20,14 +20,19 @@
 
 package nova.core.event.bus;
 
+import nova.internal.core.util.TopologicalSort;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * A general purpose event bus. This class is thread-safe and listeners can be
- * added or removed concurrently, no external locking is ever needed. Also, it's
- * very lightweight.
+ * added or removed concurrently, no external locking is ever needed.
  * @param <T> event type
- * @author Stan Hebben
+ * @author Stan Hebben, Calclavia
  */
 public class EventBus<T> {
 	public static final int PRIORITY_HIGH = 100;
@@ -35,13 +40,54 @@ public class EventBus<T> {
 	public static final int PRIORITY_LOW = -100;
 
 	// TODO: actually test concurrency
+	protected final List<EventListenerNode> unsortedListeners = new ArrayList<>();
+	protected List<EventListenerNode> sortedListeners;
 
-	// implements a linked list of nodes
-	protected volatile EventListenerNode first = null;
-	protected EventListenerNode last = null;
+	/**
+	 * Builds an ordered list cachedListeners. Sorts using topological sort algorithm.
+	 */
+	protected synchronized void buildCache() {
+		TopologicalSort.DirectedGraph<EventListenerNode> graph = new TopologicalSort.DirectedGraph<>();
+
+		unsortedListeners.forEach(graph::addNode);
+
+		//Create directed graph edges.
+		unsortedListeners.forEach(
+			node -> {
+				//Sort "after"
+				node.after.forEach(
+					name ->
+						unsortedListeners
+							.stream()
+							.filter(node2 -> node2.name.equals(name))
+							.findFirst()
+							.ifPresent(dependent -> graph.addEdge(dependent, node))
+				);
+
+				//Sort "before"
+				node.before.forEach(
+					name ->
+						unsortedListeners
+							.stream()
+							.filter(node2 -> node2.name.equals(name))
+							.findFirst()
+							.ifPresent(dependent -> graph.addEdge(node, dependent))
+				);
+
+				//Priority check
+				unsortedListeners
+					.stream()
+					.filter(compare -> node.priority < compare.priority)
+					.forEach(compare -> graph.addEdge(compare, node));
+			}
+		);
+
+		sortedListeners = TopologicalSort.topologicalSort(graph);
+	}
 
 	public synchronized void clear() {
-		first = last = null;
+		unsortedListeners.clear();
+		sortedListeners = null;
 	}
 
 	/**
@@ -50,18 +96,12 @@ public class EventBus<T> {
 	 * @return true if the listener was removed, false it it wasn't there
 	 */
 	public synchronized boolean remove(EventListener<T> listener) {
-		EventListenerNode current = first;
+		boolean didRemove = unsortedListeners.removeIf(node -> node.getListener().equals(listener));
 
-		while (current != null) {
-			if (current.listener.equals(listener)) {
-				current.close();
-				return true;
-			}
-
-			current = current.next;
+		if (didRemove) {
+			sortedListeners = null;
 		}
-
-		return false;
+		return didRemove;
 	}
 
 	/**
@@ -69,25 +109,25 @@ public class EventBus<T> {
 	 * @return true if empty
 	 */
 	public boolean isEmpty() {
-		return first == null;
+		return count() == 0;
+	}
+
+	public int count() {
+		return unsortedListeners.size();
 	}
 
 	/**
 	 * Publishes an event by calling all of the registered listeners.
 	 * @param event event to be published
 	 */
-	public void publish(T event) {
-		EventListenerNode current;
-
-		current = first;
-
-		while (current != null) {
-			current.listener.onEvent(event);
-
-			synchronized (this) {
-				current = current.next;
-			}
+	public synchronized void publish(T event) {
+		if (sortedListeners == null) {
+			buildCache();
 		}
+
+		sortedListeners
+			.stream()
+			.forEachOrdered(node -> node.getListener().onEvent(event));
 	}
 
 	/**
@@ -103,6 +143,83 @@ public class EventBus<T> {
 		return new EventBinder<>(Optional.of(clazz));
 	}
 
+	public class EventBinder<E extends T> {
+		private final Optional<Class<E>> clazz;
+		private int priority = PRIORITY_DEFAULT;
+		private String name;
+		private Set<String> before = new HashSet<>();
+		private Set<String> after = new HashSet<>();
+
+		public EventBinder(Optional<Class<E>> clazz) {
+			this.clazz = clazz;
+		}
+
+		/**
+		 * Sets the event's numeric priority.
+		 * Numeric priority overrules named priority.
+		 * @param priority An integer. The higher the number, the higher the priority.
+		 * @return This
+		 */
+		public EventBinder<E> withPriority(int priority) {
+			this.priority = priority;
+			return this;
+		}
+
+		/**
+		 * Sets the event to have a name.
+		 * @param name The event name.
+		 * @return This
+		 */
+		public EventBinder<E> withName(String name) {
+			this.name = name;
+			return this;
+		}
+
+		/**
+		 * Sets the event to occur before another event with given name.
+		 * @param name The other event name
+		 * @return This
+		 */
+		public EventBinder<E> before(String name) {
+			before.add(name);
+			return this;
+		}
+
+		/**
+		 * Sets the event to occur after another event with given name.
+		 * @param name The other event name
+		 * @return This
+		 */
+		public EventBinder<E> after(String name) {
+			after.add(name);
+			return this;
+		}
+
+		/**
+		 * Binds the event to the {@link EventBus}, finalizing all modifiers on the event.
+		 * @param list Event listener
+		 * @return The event handler
+		 */
+		public synchronized EventListenerHandle<T> bind(EventListener<E> list) {
+			EventListener<T> listener = clazz.isPresent() ? new TypedEventListener<>(list, clazz.get()) : (EventListener) list;
+
+			if (name != null && unsortedListeners.stream().filter(node -> node.name != null).anyMatch(node -> node.name.equals(name))) {
+				throw new EventException("Duplicate event listener name: " + name);
+			}
+
+			EventListenerNode node = new EventListenerNode(listener, name, priority, before, after);
+
+			unsortedListeners.add(node);
+			sortedListeners = null;
+
+			return node;
+		}
+	}
+
+	// #########################
+	// ### Protected classes ###
+	// #########################
+
 	/**
 	 * A wrapper for an event listener that only accepts a specific type of
 	 * event.
@@ -110,7 +227,7 @@ public class EventBus<T> {
 	 * @param <T> super type
 	 * @author Vic Nightfall
 	 */
-	protected static class SingleEventListener<E extends T, T> implements EventListener<T> {
+	protected static class TypedEventListener<E extends T, T> implements EventListener<T> {
 		private final Class<E> eventClass;
 		private final EventListener<E> wrappedListener;
 
@@ -122,7 +239,7 @@ public class EventBus<T> {
 		 * an instance of said class will get passed through to the
 		 * wrapped listener instance.
 		 */
-		public SingleEventListener(EventListener<E> wrappedListener, Class<E> eventClass) {
+		public TypedEventListener(EventListener<E> wrappedListener, Class<E> eventClass) {
 			this.eventClass = eventClass;
 			this.wrappedListener = wrappedListener;
 		}
@@ -136,68 +253,21 @@ public class EventBus<T> {
 		}
 	}
 
-	// #######################
-	// ### Private classes ###
-	// #######################
-
-	public class EventBinder<E extends T> {
-		private final Optional<Class<E>> clazz;
-		private int priority = PRIORITY_DEFAULT;
-
-		public EventBinder(Optional<Class<E>> clazz) {
-			this.clazz = clazz;
-		}
-
-		public EventBinder<E> withPriority(int priority) {
-			this.priority = priority;
-			return this;
-		}
-
-		public EventListenerHandle<T> bind(EventListener<E> list) {
-			EventListener<T> listener = clazz.isPresent() ? new SingleEventListener<>(list, clazz.get()) : (EventListener) list;
-
-			EventListenerNode node = new EventListenerNode(listener, priority);
-
-			synchronized (this) {
-				if (first == null) {
-					first = last = node;
-				} else {
-					// prioritized list: where to insert?
-					EventListenerNode previousNode = last;
-					while (previousNode != null && priority > previousNode.priority) {
-						previousNode = previousNode.prev;
-					}
-
-					if (previousNode == null) {
-						node.next = first;
-						first.prev = previousNode;
-						first = node;
-					} else {
-						if (previousNode.next == null) {
-							last = node;
-						} else {
-							previousNode.next.prev = node;
-						}
-
-						previousNode.next = node;
-						node.prev = previousNode;
-					}
-				}
-			}
-
-			return node;
-		}
-	}
-
 	protected class EventListenerNode implements EventListenerHandle<T> {
 		protected final EventListener<T> listener;
 		protected final int priority;
+		protected final String name;
+		protected final Set<String> before;
+		protected final Set<String> after;
 		protected EventListenerNode next = null;
 		protected EventListenerNode prev = null;
 
-		public EventListenerNode(EventListener<T> handler, int priority) {
+		public EventListenerNode(EventListener<T> handler, String name, int priority, Set<String> before, Set<String> after) {
 			this.listener = handler;
+			this.name = name;
 			this.priority = priority;
+			this.before = before;
+			this.after = after;
 		}
 
 		@Override
@@ -208,17 +278,8 @@ public class EventBus<T> {
 		@Override
 		public void close() {
 			synchronized (EventBus.this) {
-				if (prev == null) {
-					first = next;
-				} else {
-					prev.next = next;
-				}
-
-				if (next == null) {
-					last = prev;
-				} else {
-					next.prev = prev;
-				}
+				unsortedListeners.remove(this);
+				sortedListeners = null;
 			}
 		}
 	}

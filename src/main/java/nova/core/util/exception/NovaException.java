@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.util;
+package nova.core.util.exception;
 
 /**
  * General exception that can be thrown by Nova internals

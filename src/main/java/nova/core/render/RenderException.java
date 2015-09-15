@@ -20,7 +20,7 @@
 
 package nova.core.render;
 
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 public class RenderException extends NovaException {
 	public RenderException() {

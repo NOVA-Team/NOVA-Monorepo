@@ -20,7 +20,7 @@
 
 package nova.core.config;
 
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 public class ConfigException extends NovaException {
 	public ConfigException() {

@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.util;
+package nova.core.util.registry;
 
 import nova.core.retention.Storable;
 
@@ -30,7 +30,7 @@ import java.util.Map;
  * A manager that handles external file saving.
  * @author Calclavia
  */
-public abstract class RetentionManager {
+public abstract class RetentionManager extends Manager<RetentionManager> {
 
 	/**
 	 * A map of objects to be saved to disk.

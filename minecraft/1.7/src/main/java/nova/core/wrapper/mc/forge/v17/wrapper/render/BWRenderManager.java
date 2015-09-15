@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v17.wrapper.render;
 import net.minecraft.util.ResourceLocation;
 import nova.core.render.RenderManager;
 import nova.core.render.texture.Texture;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 public class BWRenderManager extends RenderManager {
@@ -34,5 +35,10 @@ public class BWRenderManager extends RenderManager {
 	@Override
 	public Vector2D getDimension(Texture texture) {
 		return new Vector2D(16, 16);
+	}
+
+	@Override
+	public void init() {
+		Game.events().publish(new Init(this));
 	}
 }

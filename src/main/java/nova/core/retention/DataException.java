@@ -20,7 +20,7 @@
 
 package nova.core.retention;
 
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 public class DataException extends NovaException {
 	public DataException() {

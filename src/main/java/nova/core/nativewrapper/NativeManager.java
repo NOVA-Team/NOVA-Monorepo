@@ -20,7 +20,7 @@
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 import java.util.ArrayList;
 import java.util.HashMap;

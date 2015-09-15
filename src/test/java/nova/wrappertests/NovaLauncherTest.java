@@ -43,8 +43,9 @@ public class NovaLauncherTest extends NovaLauncherTestFactory {
 
 	public void doLaunchAssert(NovaLauncher launcher) {
 		assertThat(launcher.getModClasses())
-			.hasSize(1)
-			.containsValues(TestMod.class);
+			.hasSize(2)
+			.containsValue(TestMod.class)
+			.containsValue(NoLoadableTestMod.class);
 	}
 
 	@Test

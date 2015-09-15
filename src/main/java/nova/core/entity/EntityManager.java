@@ -16,14 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.entity;
+ */
 
-import nova.core.util.Manager;
-import nova.core.util.Registry;
+package nova.core.entity;
+
+import nova.core.util.registry.FactoryManager;
+import nova.core.util.registry.Registry;
+import nova.internal.core.Game;
 
 import java.util.function.Supplier;
 
-public class EntityManager extends Manager<Entity, EntityFactory> {
+public class EntityManager extends FactoryManager<EntityManager, Entity, EntityFactory> {
 
 	private EntityManager(Registry<EntityFactory> registry) {
 		super(registry);
@@ -37,5 +40,16 @@ public class EntityManager extends Manager<Entity, EntityFactory> {
 	@Override
 	public EntityFactory register(String id, Supplier<Entity> constructor) {
 		return register(new EntityFactory(id, constructor));
+	}
+
+	@Override
+	public void init() {
+		Game.events().publish(new Init(this));
+	}
+
+	public class Init extends ManagerEvent<EntityManager> {
+		public Init(EntityManager manager) {
+			super(manager);
+		}
 	}
 }

@@ -16,27 +16,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.event.bus;
+ */
+
+package nova.core.event.bus;
 
 /**
  * Variant of {@link EventBus} which stops publishing events after they are
  * canceled.
- *
- * @author Stan Hebben
  * @param <T> {@link CancelableEvent Cancelable} event type
+ * @author Stan Hebben
  */
 public class CancelableEventBus<T extends CancelableEvent> extends EventBus<T> {
 	@Override
-	public void publish(T event) {
-		EventListenerNode current;
+	public synchronized void publish(T event) {
+		if (sortedListeners == null) {
+			buildCache();
+		}
 
-		current = first;
+		for (EventListenerNode node : sortedListeners) {
+			node.getListener().onEvent(event);
 
-		while (current != null && !event.isCanceled()) {
-			current.listener.onEvent(event);
-
-			synchronized (this) {
-				current = current.next;
+			if (event.isCanceled()) {
+				break;
 			}
 		}
 	}

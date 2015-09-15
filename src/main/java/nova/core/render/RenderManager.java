@@ -25,7 +25,8 @@ import nova.core.render.texture.BlockTexture;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
-import nova.core.util.Registry;
+import nova.core.util.registry.Manager;
+import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
@@ -34,7 +35,7 @@ import java.util.Optional;
 /**
  * @author Calclavia
  */
-public abstract class RenderManager {
+public abstract class RenderManager extends Manager<RenderManager> {
 
 	public final Registry<BlockTexture> blockTextures = new Registry<>();
 	public final Registry<ItemTexture> itemTextures = new Registry<>();
@@ -83,4 +84,10 @@ public abstract class RenderManager {
 
 	@Deprecated
 	public abstract Vector2D getDimension(Texture texture);
+
+	public class Init extends ManagerEvent<RenderManager> {
+		public Init(RenderManager manager) {
+			super(manager);
+		}
+	}
 }

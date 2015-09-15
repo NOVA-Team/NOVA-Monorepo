@@ -21,7 +21,7 @@
 package nova.core.component.exception;
 
 import nova.core.component.Component;
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 /**
  * Exception thrown when an error to do with components occurs

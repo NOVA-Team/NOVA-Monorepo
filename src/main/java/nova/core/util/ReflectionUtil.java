@@ -20,6 +20,7 @@
 
 import com.google.common.collect.ObjectArrays;
 import com.google.common.primitives.Primitives;
+import nova.core.util.exception.NovaException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;

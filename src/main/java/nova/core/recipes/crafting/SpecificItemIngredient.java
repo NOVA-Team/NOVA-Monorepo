@@ -20,7 +20,7 @@
 
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
-import nova.core.util.RegistrationException;
+import nova.core.util.exception.RegistrationException;
 import nova.internal.core.Game;
 
 import java.util.Collection;

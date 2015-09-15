@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */package nova.internal.core.launch;
 
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 public class InitializationException extends NovaException {
 	public InitializationException() {

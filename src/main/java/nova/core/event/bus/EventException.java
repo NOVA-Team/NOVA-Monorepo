@@ -20,7 +20,7 @@
 
 package nova.core.event.bus;
 
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 public class EventException extends NovaException {
 	public EventException() {

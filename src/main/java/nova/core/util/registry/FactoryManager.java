@@ -18,7 +18,9 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.util;
+package nova.core.util.registry;
+
+import nova.core.util.Identifiable;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -27,10 +29,11 @@ import java.util.function.Supplier;
  * A manager holds a registry of factories.
  * @author Calclavia
  */
-public abstract class Manager<T extends Identifiable, F extends Factory<F, T>> {
+//TODO: Registry methods should be encapsulated to the RegisterEvent
+public abstract class FactoryManager<S extends FactoryManager<S, T, F>, T extends Identifiable, F extends Factory<F, T>> extends Manager<S> {
 	public final Registry<F> registry;
 
-	public Manager(Registry<F> registry) {
+	public FactoryManager(Registry<F> registry) {
 		this.registry = registry;
 	}
 

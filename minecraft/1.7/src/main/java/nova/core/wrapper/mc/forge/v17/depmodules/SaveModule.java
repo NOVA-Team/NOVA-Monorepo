@@ -20,7 +20,7 @@
 
 package nova.core.wrapper.mc.forge.v17.depmodules;
 
-import nova.core.util.RetentionManager;
+import nova.core.util.registry.RetentionManager;
 import nova.core.wrapper.mc.forge.v17.manager.MCRetentionManager;
 import se.jbee.inject.bind.BinderModule;
 

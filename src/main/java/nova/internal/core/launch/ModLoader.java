@@ -28,7 +28,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -55,7 +54,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	/**
 	 * Mod Java classes
 	 */
-	protected final Map<ANNOTATION, Class<? extends Loadable>> javaClasses;
+	protected final Map<ANNOTATION, Class<?>> javaClasses;
 
 	/**
 	 * Mod Scala classes
@@ -65,7 +64,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	/**
 	 * Holds the instances of mods
 	 */
-	protected Map<ANNOTATION, Loadable> mods;
+	protected Map<ANNOTATION, Object> mods;
 
 	protected List<Loadable> orderedMods;
 
@@ -77,8 +76,6 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 		 * Final Java Classes
 		 */
 		javaClasses = modClasses.stream()
-			.filter(Loadable.class::isAssignableFrom)
-			.map(clazz -> (Class<? extends Loadable>) clazz.asSubclass(Loadable.class))
 			.filter(clazz -> clazz.getAnnotation(annotationType) != null)
 			.collect(Collectors.toMap((clazz) -> clazz.getAnnotation(annotationType), Function.identity()));
 
@@ -86,7 +83,6 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 		 * Find Scala Singleton Classes
 		 */
 		scalaClasses = modClasses.stream()
-			.filter(c -> !Loadable.class.isAssignableFrom(c))
 			.filter(c -> {
 				try {
 					Class.forName((c.getCanonicalName() + "$"));
@@ -131,7 +127,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 		 */
 		mods.putAll(
 			javaClasses.entrySet().stream()
-				.collect(Collectors.<Map.Entry<ANNOTATION, Class<? extends Loadable>>, ANNOTATION, Loadable>toMap(Map.Entry::getKey,
+				.collect(Collectors.<Map.Entry<ANNOTATION, Class<?>>, ANNOTATION, Object>toMap(Map.Entry::getKey,
 						entry -> {
 							try {
 								return makeObjectWithDep(entry.getValue());
@@ -183,8 +179,11 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				)
 		);
 
-		orderedMods = new ArrayList<>();
-		orderedMods.addAll(mods.values());
+		orderedMods = mods.values()
+			.stream()
+			.filter(mod -> mod.getClass().isAssignableFrom(Loadable.class))
+			.map(mod -> (Loadable) mod)
+			.collect(Collectors.toList());
 	}
 
 	@Override
@@ -227,11 +226,11 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 		return mods.keySet();
 	}
 
-	public Map<ANNOTATION, Loadable> getLoadedModMap() {
+	public Map<ANNOTATION, Object> getLoadedModMap() {
 		return new HashMap<>(mods);
 	}
 
-	public Map<ANNOTATION, Class<? extends Loadable>> getModClasses() {
+	public Map<ANNOTATION, Class<?>> getModClasses() {
 		return new HashMap<>(javaClasses);
 	}
 

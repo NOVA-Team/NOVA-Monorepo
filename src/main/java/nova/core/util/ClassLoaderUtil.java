@@ -18,6 +18,8 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */package nova.core.util;
 
+import nova.core.util.exception.NovaException;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;

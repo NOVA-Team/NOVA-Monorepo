@@ -21,7 +21,7 @@
 package nova.internal.core.di;
 
 import nova.core.util.MockIdentifiable;
-import nova.core.util.Registry;
+import nova.core.util.registry.Registry;
 import org.junit.Before;
 import org.junit.Test;
 import se.jbee.inject.Dependency;

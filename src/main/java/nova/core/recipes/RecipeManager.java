@@ -16,11 +16,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.recipes;
+ */
+
+package nova.core.recipes;
 
 import nova.core.event.bus.EventBus;
 import nova.core.event.bus.EventListener;
 import nova.core.event.bus.EventListenerHandle;
+import nova.core.util.registry.Manager;
+import nova.internal.core.Game;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,10 +35,9 @@ import java.util.Set;
 
 /**
  * The RecipeManager manages all recipes (of any type) in the game.
- *
  * @author Stan Hebben
  */
-public class RecipeManager {
+public class RecipeManager extends Manager<RecipeManager> {
 
 	private final Set<Recipe> recipes;
 	private final Map<Class<? extends Recipe>, RecipeList<Recipe>> recipesForType;
@@ -123,6 +126,17 @@ public class RecipeManager {
 			if (recipes.remove(recipe)) {
 				recipeRemovedListeners.publish(new RecipeRemovedEvent<>(recipe));
 			}
+		}
+	}
+
+	@Override
+	public void init() {
+		Game.events().publish(new Init(this));
+	}
+
+	public class Init extends ManagerEvent<RecipeManager> {
+		public Init(RecipeManager manager) {
+			super(manager);
 		}
 	}
 }

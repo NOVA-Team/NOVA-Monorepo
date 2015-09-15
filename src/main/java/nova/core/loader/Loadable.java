@@ -23,6 +23,7 @@
  *
  * @author Calclavia
  */
+@Deprecated
 public interface Loadable {
 	default void preInit() {
 	}
