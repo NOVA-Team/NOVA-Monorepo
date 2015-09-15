@@ -85,6 +85,11 @@ public abstract class RenderManager extends Manager<RenderManager> {
 	@Deprecated
 	public abstract Vector2D getDimension(Texture texture);
 
+	@Override
+	public void init() {
+		Game.events().publish(new Init(this));
+	}
+
 	public class Init extends ManagerEvent<RenderManager> {
 		public Init(RenderManager manager) {
 			super(manager);
