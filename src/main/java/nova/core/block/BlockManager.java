@@ -21,13 +21,13 @@
 package nova.core.block;
 
 import nova.core.event.BlockEvent;
-import nova.core.util.Manager;
+import nova.core.util.FactoryManager;
 import nova.core.util.Registry;
 import nova.internal.core.Game;
 
 import java.util.function.Supplier;
 
-public class BlockManager extends Manager<Block, BlockFactory> {
+public class BlockManager extends FactoryManager<BlockManager, Block, BlockFactory> {
 
 	private BlockManager(Registry<BlockFactory> registry) {
 		super(registry);

@@ -1,64 +1,31 @@
-/*
- * Copyright (c) 2015 NOVA, All rights reserved.
- * This library is free software, licensed under GNU Lesser General Public License version 3
- *
- * This file is part of NOVA.
- *
- * NOVA is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * NOVA is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package nova.core.util;
 
-import java.util.Optional;
-import java.util.function.Supplier;
+import nova.core.event.bus.Event;
+import nova.internal.core.Game;
 
 /**
- * A manager holds a registry of factories.
+ * A manager is a singleton object that manages a specific aspect of the game.
+ * @param <S> The self type
  * @author Calclavia
  */
-public abstract class Manager<T extends Identifiable, F extends Factory<F, T>> {
-	public final Registry<F> registry;
+public abstract class Manager<S extends Manager<S>> {
 
-	public Manager(Registry<F> registry) {
-		this.registry = registry;
+	/**
+	 * Publishes the register event
+	 */
+	@SuppressWarnings("unchecked")
+	public void publish() {
+		Game.events().publish(new ManagerEvent((S) this));
 	}
 
 	/**
-	 * Register a new object construction factory.
-	 *
-	 * Note that you make use: register(BlockStone::new), passing a method reference.
-	 * @param constructor Instance supplier {@link Supplier}
-	 * @return The factory
+	 * An event that is published when the manager is capable of registering.
 	 */
-	public abstract F register(String id, Supplier<T> constructor);
+	public class ManagerEvent extends Event {
+		public final S manager;
 
-	/**
-	 * Register a new object construction factory.
-	 * @param factory The construction factory
-	 * @return The factory
-	 */
-	public F register(F factory) {
-		registry.register(factory);
-		return factory;
-	}
-
-	/**
-	 * Gets an object by its registered name.
-	 * @param name Registered name
-	 * @return The object
-	 */
-	public Optional<F> get(String name) {
-		return registry.get(name);
+		public ManagerEvent(S manager) {
+			this.manager = manager;
+		}
 	}
 }

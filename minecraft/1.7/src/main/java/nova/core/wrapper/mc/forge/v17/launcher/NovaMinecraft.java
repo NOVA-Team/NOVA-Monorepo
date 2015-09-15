@@ -151,6 +151,11 @@ public class NovaMinecraft {
 			 */
 			nativeConverters = Game.natives().getNativeConverters().stream().filter(n -> n instanceof Loadable).map(n -> (Loadable) n).collect(Collectors.toSet());
 			nativeConverters.stream().forEachOrdered(Loadable::preInit);
+
+			Game.blocks().publish();
+			Game.items().publish();
+
+			//Load preInit
 			launcher.preInit();
 
 			// Initiate config system TODO: Storables
@@ -191,6 +196,7 @@ public class NovaMinecraft {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent evt) {
 		try {
+			Game.recipes().publish();
 			proxy.postInit();
 			nativeConverters.stream().forEachOrdered(Loadable::postInit);
 			launcher.postInit();

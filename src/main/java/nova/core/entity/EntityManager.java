@@ -18,12 +18,12 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */package nova.core.entity;
 
-import nova.core.util.Manager;
+import nova.core.util.FactoryManager;
 import nova.core.util.Registry;
 
 import java.util.function.Supplier;
 
-public class EntityManager extends Manager<Entity, EntityFactory> {
+public class EntityManager extends FactoryManager<EntityManager, Entity, EntityFactory> {
 
 	private EntityManager(Registry<EntityFactory> registry) {
 		super(registry);

@@ -22,7 +22,7 @@ package nova.core.world;
 
 import nova.core.event.WorldEvent;
 import nova.core.event.bus.GlobalEvents;
-import nova.core.util.Manager;
+import nova.core.util.FactoryManager;
 import nova.core.util.Registry;
 import nova.internal.core.Game;
 
@@ -31,7 +31,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class WorldManager extends Manager<World, WorldFactory> {
+public class WorldManager extends FactoryManager<WorldManager, World, WorldFactory> {
 
 	/**
 	 * The set of worlds that currently exist

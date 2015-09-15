@@ -20,12 +20,12 @@
 
 package nova.core.component.fluid;
 
-import nova.core.util.Manager;
+import nova.core.util.FactoryManager;
 import nova.core.util.Registry;
 
 import java.util.function.Supplier;
 
-public class FluidManager extends Manager<Fluid, FluidFactory> {
+public class FluidManager extends FactoryManager<FluidManager, Fluid, FluidFactory> {
 	public final FluidFactory water;
 	public final FluidFactory lava;
 

@@ -16,11 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.recipes;
+ */
+
+package nova.core.recipes;
 
 import nova.core.event.bus.EventBus;
 import nova.core.event.bus.EventListener;
 import nova.core.event.bus.EventListenerHandle;
+import nova.core.util.Manager;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,10 +34,9 @@ import java.util.Set;
 
 /**
  * The RecipeManager manages all recipes (of any type) in the game.
- *
  * @author Stan Hebben
  */
-public class RecipeManager {
+public class RecipeManager extends Manager<RecipeManager> {
 
 	private final Set<Recipe> recipes;
 	private final Map<Class<? extends Recipe>, RecipeList<Recipe>> recipesForType;

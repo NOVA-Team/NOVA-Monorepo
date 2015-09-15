@@ -24,14 +24,14 @@ import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.event.bus.CancelableEvent;
 import nova.core.item.event.ItemIDNotFoundEvent;
-import nova.core.util.Manager;
+import nova.core.util.FactoryManager;
 import nova.core.util.Registry;
 import nova.internal.core.Game;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class ItemManager extends Manager<Item, ItemFactory> {
+public class ItemManager extends FactoryManager<ItemManager, Item, ItemFactory> {
 
 	private final Supplier<BlockManager> blockManager;
 
