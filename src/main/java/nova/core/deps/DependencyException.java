@@ -20,7 +20,7 @@
 
 package nova.core.deps;
 
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 public class DependencyException extends NovaException {
 	public DependencyException() {

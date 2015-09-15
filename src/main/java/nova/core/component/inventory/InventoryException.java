@@ -20,7 +20,7 @@
 
 package nova.core.component.inventory;
 
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 public class InventoryException extends NovaException {
 	public InventoryException() {

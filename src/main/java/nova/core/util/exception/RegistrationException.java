@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.util;
+package nova.core.util.exception;
 
 /**
  * An exception thrown when registration in a manager, dictionary or registry fails.

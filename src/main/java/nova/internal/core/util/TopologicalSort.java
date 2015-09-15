@@ -1,6 +1,6 @@
 package nova.internal.core.util;
 
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 import java.util.ArrayList;
 import java.util.Collections;

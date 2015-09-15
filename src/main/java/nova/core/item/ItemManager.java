@@ -24,8 +24,8 @@ import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.event.bus.CancelableEvent;
 import nova.core.item.event.ItemIDNotFoundEvent;
-import nova.core.util.FactoryManager;
-import nova.core.util.Registry;
+import nova.core.util.registry.FactoryManager;
+import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
 
 import java.util.Optional;
@@ -85,6 +85,17 @@ public class ItemManager extends FactoryManager<ItemManager, Item, ItemFactory> 
 
 		public ItemRegistrationEvent(ItemFactory itemFactory) {
 			this.itemFactory = itemFactory;
+		}
+	}
+
+	@Override
+	public void init() {
+		Game.events().publish(new Init(this));
+	}
+
+	public class Init extends ManagerEvent<ItemManager> {
+		public Init(ItemManager manager) {
+			super(manager);
 		}
 	}
 }

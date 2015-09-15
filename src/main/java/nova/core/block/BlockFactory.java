@@ -24,7 +24,7 @@ import nova.core.component.misc.FactoryProvider;
 import nova.core.event.BlockEvent;
 import nova.core.event.bus.EventListener;
 import nova.core.item.ItemBlock;
-import nova.core.util.Factory;
+import nova.core.util.registry.Factory;
 import nova.internal.core.Game;
 
 import java.util.function.Function;

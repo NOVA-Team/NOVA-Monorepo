@@ -40,6 +40,11 @@ public class FakeRenderModule extends BinderModule {
 		public Vector2D getDimension(Texture texture) {
 			return Vector2D.ZERO;
 		}
+
+		@Override
+		public void init() {
+
+		}
 	}
 
 }

@@ -21,7 +21,7 @@
 package nova.wrappertests.depmodules;
 
 import nova.core.retention.Storable;
-import nova.core.util.RetentionManager;
+import nova.core.util.registry.RetentionManager;
 import se.jbee.inject.bind.BinderModule;
 
 import java.io.File;
@@ -50,6 +50,11 @@ public class FakeSaveModule extends BinderModule {
 		@Override
 		public File getSaveDirectory() {
 			return null;
+		}
+
+		@Override
+		public void init() {
+
 		}
 	}
 

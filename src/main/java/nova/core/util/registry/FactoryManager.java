@@ -18,7 +18,9 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.util;
+package nova.core.util.registry;
+
+import nova.core.util.Identifiable;
 
 import java.util.Optional;
 import java.util.function.Supplier;

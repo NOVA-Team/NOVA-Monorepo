@@ -22,8 +22,8 @@ package nova.core.world;
 
 import nova.core.event.WorldEvent;
 import nova.core.event.bus.GlobalEvents;
-import nova.core.util.FactoryManager;
-import nova.core.util.Registry;
+import nova.core.util.registry.FactoryManager;
+import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
 
 import java.util.HashSet;
@@ -64,5 +64,10 @@ public class WorldManager extends FactoryManager<WorldManager, World, WorldFacto
 			.stream()
 			.filter(world -> id.equals(world.getID()))
 			.findFirst();
+	}
+
+	@Override
+	public void init() {
+		//TODO: Implement
 	}
 }

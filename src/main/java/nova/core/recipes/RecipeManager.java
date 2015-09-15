@@ -23,7 +23,7 @@ package nova.core.recipes;
 import nova.core.event.bus.EventBus;
 import nova.core.event.bus.EventListener;
 import nova.core.event.bus.EventListenerHandle;
-import nova.core.util.Manager;
+import nova.core.util.registry.Manager;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -126,5 +126,10 @@ public class RecipeManager extends Manager<RecipeManager> {
 				recipeRemovedListeners.publish(new RecipeRemovedEvent<>(recipe));
 			}
 		}
+	}
+
+	@Override
+	public void init() {
+		//TODO: Implement
 	}
 }

@@ -20,8 +20,8 @@
 
 package nova.core.component.fluid;
 
-import nova.core.util.FactoryManager;
-import nova.core.util.Registry;
+import nova.core.util.registry.FactoryManager;
+import nova.core.util.registry.Registry;
 
 import java.util.function.Supplier;
 
@@ -47,4 +47,8 @@ public class FluidManager extends FactoryManager<FluidManager, Fluid, FluidFacto
 		return factory;
 	}
 
+	@Override
+	public void init() {
+		//TODO: Implement
+	}
 }

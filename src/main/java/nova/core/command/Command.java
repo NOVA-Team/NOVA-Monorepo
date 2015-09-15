@@ -24,7 +24,7 @@ package nova.core.command;
 
 import nova.core.entity.component.Player;
 import nova.core.util.Identifiable;
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 import java.util.ArrayList;
 import java.util.Collections;

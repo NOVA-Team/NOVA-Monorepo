@@ -21,8 +21,8 @@
 package nova.core.block;
 
 import nova.core.event.BlockEvent;
-import nova.core.util.FactoryManager;
-import nova.core.util.Registry;
+import nova.core.util.registry.FactoryManager;
+import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
 
 import java.util.function.Supplier;
@@ -64,4 +64,14 @@ public class BlockManager extends FactoryManager<BlockManager, Block, BlockFacto
 		return event.blockFactory;
 	}
 
+	@Override
+	public void init() {
+		Game.events().publish(new Init(this));
+	}
+
+	public class Init extends ManagerEvent<BlockManager> {
+		public Init(BlockManager manager) {
+			super(manager);
+		}
+	}
 }

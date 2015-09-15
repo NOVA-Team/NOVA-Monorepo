@@ -16,9 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.util;
+ */package nova.core.util.registry;
 
 import com.google.common.collect.HashBiMap;
+import nova.core.util.Identifiable;
 
 import java.util.Iterator;
 import java.util.Optional;

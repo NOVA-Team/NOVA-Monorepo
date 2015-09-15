@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */package nova.core.command;
 
-import nova.core.util.Registry;
+import nova.core.util.registry.Registry;
 
 /**
  * The command manager handles command registration.

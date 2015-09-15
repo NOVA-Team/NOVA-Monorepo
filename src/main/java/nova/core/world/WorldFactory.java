@@ -20,7 +20,7 @@
 
 package nova.core.world;
 
-import nova.core.util.Factory;
+import nova.core.util.registry.Factory;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

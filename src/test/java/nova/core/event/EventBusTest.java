@@ -22,7 +22,7 @@ package nova.core.event;
 
 import nova.core.event.bus.EventBus;
 import nova.core.event.bus.EventListenerHandle;
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 import org.junit.Test;
 
 import java.util.ArrayList;

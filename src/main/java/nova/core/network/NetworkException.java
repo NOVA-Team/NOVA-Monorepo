@@ -20,7 +20,7 @@
 
 package nova.core.network;
 
-import nova.core.util.NovaException;
+import nova.core.util.exception.NovaException;
 
 public class NetworkException extends NovaException {
 	public NetworkException() {

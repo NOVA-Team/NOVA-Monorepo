@@ -21,7 +21,7 @@
 package nova.internal.core.depmodules;
 
 import nova.core.util.Dictionary;
-import nova.core.util.Registry;
+import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
 import nova.internal.core.di.NovaScopes;
 import se.jbee.inject.bind.BinderModule;

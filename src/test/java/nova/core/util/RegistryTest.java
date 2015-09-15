@@ -20,6 +20,7 @@
 
 package nova.core.util;
 
+import nova.core.util.registry.Registry;
 import org.junit.Test;
 
 import static nova.testutils.NovaAssertions.assertThat;

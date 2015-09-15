@@ -1,7 +1,6 @@
-package nova.core.util;
+package nova.core.util.registry;
 
 import nova.core.event.bus.Event;
-import nova.internal.core.Game;
 
 /**
  * A manager is a singleton object that manages a specific aspect of the game.
@@ -9,19 +8,17 @@ import nova.internal.core.Game;
  * @author Calclavia
  */
 public abstract class Manager<S extends Manager<S>> {
-
 	/**
-	 * Publishes the register event
+	 * Initializes the manager event
 	 */
 	@SuppressWarnings("unchecked")
-	public void publish() {
-		Game.events().publish(new ManagerEvent((S) this));
-	}
+	public abstract void init();
 
 	/**
 	 * An event that is published when the manager is capable of registering.
 	 */
-	public class ManagerEvent extends Event {
+	//TODO: Should this class be here or placed in the event package? Might be inconsistent.
+	public static class ManagerEvent<S> extends Event {
 		public final S manager;
 
 		public ManagerEvent(S manager) {

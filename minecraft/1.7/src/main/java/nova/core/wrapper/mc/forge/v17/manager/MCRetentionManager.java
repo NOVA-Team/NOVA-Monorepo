@@ -29,7 +29,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.world.WorldEvent;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
-import nova.core.util.RetentionManager;
+import nova.core.util.registry.RetentionManager;
 import nova.internal.core.Game;
 
 import java.io.File;
@@ -160,5 +160,10 @@ public class MCRetentionManager extends RetentionManager {
 			lastSaveMills = System.currentTimeMillis();
 			saveAll();
 		}
+	}
+
+	@Override
+	public void init() {
+
 	}
 }

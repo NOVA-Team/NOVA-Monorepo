@@ -16,7 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.util;
+ */
+
+package nova.core.util.registry;
 
 import java.util.Map;
 
@@ -24,11 +26,10 @@ import java.util.Map;
  * Manages translations from key labels to values.
  * @author Calclavia
  */
-public abstract class LanguageManager {
+public abstract class LanguageManager extends Manager<LanguageManager> {
 
 	/**
 	 * Registers a custom key-value language pair
-	 *
 	 * @param language The language ID
 	 * @param key The unlocalized key
 	 * @param value The localized value
@@ -53,5 +54,11 @@ public abstract class LanguageManager {
 			str = str.replaceAll(replacement.getKey(), replacement.getValue());
 		}
 		return str;
+	}
+
+	public class Event extends ManagerEvent<LanguageManager> {
+		public Event(LanguageManager manager) {
+			super(manager);
+		}
 	}
 }

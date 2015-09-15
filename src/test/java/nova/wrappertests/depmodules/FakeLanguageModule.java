@@ -20,7 +20,7 @@
 
 package nova.wrappertests.depmodules;
 
-import nova.core.util.LanguageManager;
+import nova.core.util.registry.LanguageManager;
 import se.jbee.inject.bind.BinderModule;
 
 /**
@@ -47,6 +47,11 @@ public class FakeLanguageModule extends BinderModule {
 		@Override
 		public String translate(String key) {
 			return key;
+		}
+
+		@Override
+		public void init() {
+			
 		}
 	}
 }

@@ -23,7 +23,8 @@ package nova.core.wrapper.mc.forge.v18.util;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.LanguageRegistry;
-import nova.core.util.LanguageManager;
+import nova.core.util.registry.LanguageManager;
+import nova.internal.core.Game;
 
 /**
  * @author Calclavia
@@ -43,5 +44,10 @@ public class MCLanguageManager extends LanguageManager {
 	@Override
 	public String translate(String key) {
 		return StatCollector.translateToLocal(key);
+	}
+
+	@Override
+	public void init() {
+		Game.events().publish(new Event(this));
 	}
 }
