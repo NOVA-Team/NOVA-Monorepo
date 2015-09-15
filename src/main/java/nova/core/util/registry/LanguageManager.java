@@ -56,8 +56,8 @@ public abstract class LanguageManager extends Manager<LanguageManager> {
 		return str;
 	}
 
-	public class Event extends ManagerEvent<LanguageManager> {
-		public Event(LanguageManager manager) {
+	public class Init extends ManagerEvent<LanguageManager> {
+		public Init(LanguageManager manager) {
 			super(manager);
 		}
 	}

@@ -157,6 +157,7 @@ public class NovaMinecraft {
 			Game.blocks().init();
 			Game.items().init();
 			Game.entities().init();
+			Game.render().init();
 			Game.language().init();
 
 			launcher.preInit();

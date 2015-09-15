@@ -23,6 +23,7 @@ package nova.internal.core.launch;
 import nova.core.deps.Dependencies;
 import nova.core.deps.Dependency;
 import nova.core.deps.MavenDependency;
+import nova.core.loader.Loadable;
 import nova.core.loader.Mod;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
@@ -109,6 +110,8 @@ public class NovaLauncher extends ModLoader<Mod> {
 		TopologicalSort.topologicalSort(modGraph)
 			.stream()
 			.map(mods::get)
+			.filter(mod -> mod instanceof Loadable)
+			.map(mod -> (Loadable) mod)
 			.forEachOrdered(orderedMods::add);
 
 		Game.logger().info("NOVA mods loaded: " + mods.size());

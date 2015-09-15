@@ -24,6 +24,7 @@ import nova.core.event.bus.EventBus;
 import nova.core.event.bus.EventListener;
 import nova.core.event.bus.EventListenerHandle;
 import nova.core.util.registry.Manager;
+import nova.internal.core.Game;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -130,6 +131,12 @@ public class RecipeManager extends Manager<RecipeManager> {
 
 	@Override
 	public void init() {
-		//TODO: Implement
+		Game.events().publish(new Init(this));
+	}
+
+	public class Init extends ManagerEvent<RecipeManager> {
+		public Init(RecipeManager manager) {
+			super(manager);
+		}
 	}
 }

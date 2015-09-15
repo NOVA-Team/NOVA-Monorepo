@@ -48,6 +48,6 @@ public class MCLanguageManager extends LanguageManager {
 
 	@Override
 	public void init() {
-		Game.events().publish(new Event(this));
+		Game.events().publish(new Init(this));
 	}
 }
