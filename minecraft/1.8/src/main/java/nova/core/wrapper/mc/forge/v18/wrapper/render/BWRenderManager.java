@@ -36,9 +36,4 @@ public class BWRenderManager extends RenderManager {
 	public Vector2D getDimension(Texture texture) {
 		return new Vector2D(16, 16);
 	}
-
-	@Override
-	public void init() {
-		Game.events().publish(new Init(this));
-	}
 }
