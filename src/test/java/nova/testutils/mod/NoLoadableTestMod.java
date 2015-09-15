@@ -22,7 +22,7 @@ package nova.testutils.mod;
 
 import nova.core.loader.Mod;
 
-@Mod(id = "testmod", name = "Test Mod", version = "0.0.1", novaVersion = "0.1.0")
+@Mod(id = "testmod2", name = "Test Mod", version = "0.0.1", novaVersion = "0.1.0")
 public class NoLoadableTestMod {
 
 }
