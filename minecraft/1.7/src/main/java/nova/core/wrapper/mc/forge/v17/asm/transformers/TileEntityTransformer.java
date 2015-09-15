@@ -57,7 +57,7 @@ public class TileEntityTransformer implements Transformer {
 		InsnList list = new InsnList();
 		list.add(new VarInsnNode(ALOAD, 0));
 		list.add(new VarInsnNode(ALOAD, 2));
-		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc17/asm/StaticForwarder", "loadTileEntityHook", "(Lnet/minecraft/nbt/NBTTagCompound;Ljava/lang/Class;)Lnet/minecraft/tileentity/TileEntity;", false));
+		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc/forge/v17/asm/StaticForwarder", "loadTileEntityHook", "(Lnet/minecraft/nbt/NBTTagCompound;Ljava/lang/Class;)Lnet/minecraft/tileentity/TileEntity;", false));
 		list.add(new VarInsnNode(ASTORE, 1));
 
 		method.instructions.insert(method.instructions.get(22), list);

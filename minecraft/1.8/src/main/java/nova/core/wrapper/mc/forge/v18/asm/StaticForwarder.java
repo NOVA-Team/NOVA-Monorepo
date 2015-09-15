@@ -20,9 +20,10 @@
 
 package nova.core.wrapper.mc.forge.v18.asm;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import nova.core.event.BlockEvent;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWTile;
@@ -36,9 +37,15 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public class StaticForwarder {
 
-	public static void chunkSetBlockEvent(Chunk chunk, int x, int y, int z, Block oldBlock, int oldMeta, Block newBlock, int newMeta) {
+	public static void chunkSetBlockEvent(Chunk chunk, BlockPos pos, IBlockState oldBlockState, IBlockState newBlockState) {
 		// Publish the event
-		Game.events().publish(new BlockEvent.Change(Game.natives().toNova(chunk.getWorld()), new Vector3D((chunk.xPosition << 4) + x, y, (chunk.zPosition << 4) + z), Game.natives().toNova(oldBlock), Game.natives().toNova(newBlock)));
+		Game.events().publish(
+			new BlockEvent.Change(
+				Game.natives().toNova(chunk.getWorld()),
+				new Vector3D((chunk.xPosition << 4) + pos.getX(), pos.getY(), (chunk.zPosition << 4) + pos.getZ()),
+				Game.natives().toNova(oldBlockState.getBlock()), Game.natives().toNova(newBlockState.getBlock())
+			)
+		);
 	}
 
 	/**
