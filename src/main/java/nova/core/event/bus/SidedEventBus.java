@@ -124,7 +124,7 @@ public class SidedEventBus<T extends CancelableEvent> extends CancelableEventBus
 		}
 	}
 
-	protected static class SidedEventListener<E extends T, T> extends SingleEventListener<E, T> {
+	protected static class SidedEventListener<E extends T, T> extends TypedEventListener<E, T> {
 
 		public final Side side;
 
