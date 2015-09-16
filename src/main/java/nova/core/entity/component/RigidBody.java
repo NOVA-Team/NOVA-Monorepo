@@ -29,7 +29,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  * A rigid body component for entity physics.
  * @author Calclavia
  */
-//TODO: Don't only use Scala method convention names
 public abstract class RigidBody extends Component implements Updater {
 	/**
 	 * Mass in kilograms. Default is 1 kg.
