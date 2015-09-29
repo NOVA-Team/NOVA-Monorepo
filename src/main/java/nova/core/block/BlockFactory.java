@@ -21,12 +21,11 @@
 package nova.core.block;
 
 import nova.core.component.misc.FactoryProvider;
-import nova.core.event.BlockEvent;
-import nova.core.event.bus.EventListener;
 import nova.core.item.ItemBlock;
 import nova.core.util.registry.Factory;
 import nova.internal.core.Game;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -35,34 +34,32 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public class BlockFactory extends Factory<BlockFactory, Block> {
-	public BlockFactory(String id, Supplier<Block> constructor, Function<Block, Block> processor) {
+
+	final Consumer<BlockFactory> postRegister;
+
+	public BlockFactory(String id, Supplier<Block> constructor, Function<Block, Block> processor, Consumer<BlockFactory> postRegister) {
 		super(id, constructor, processor);
+		this.postRegister = postRegister;
 	}
 
 	public BlockFactory(String id, Supplier<Block> constructor) {
-		this(id, constructor, evt -> {
-			Game.items().register(id, () -> new ItemBlock(evt.blockFactory));
-		});
+		this(id, constructor, blockFactory -> Game.items().register(id, () -> new ItemBlock(blockFactory)));
 	}
 
 	/**
 	 * Initializes a BlockFactory. A specific implementation of item block generation
 	 * may be provided by post create.
 	 * @param constructor The constructor function
-	 * @param postCreate Function for registering item blocks
+	 * @param postRegister Function for registering item blocks
 	 */
-	public BlockFactory(String id, Supplier<Block> constructor, EventListener<BlockEvent.Register> postCreate) {
+	public BlockFactory(String id, Supplier<Block> constructor, Consumer<BlockFactory> postRegister) {
 		super(id, constructor);
-		postCreate(postCreate);
-	}
-
-	protected void postCreate(EventListener<BlockEvent.Register> postCreate) {
-		Game.events().on(BlockEvent.Register.class).bind(postCreate);
+		this.postRegister = postRegister;
 	}
 
 	@Override
 	protected BlockFactory selfConstructor(String id, Supplier<Block> constructor, Function<Block, Block> processor) {
-		return new BlockFactory(id, constructor, processor);
+		return new BlockFactory(id, constructor, processor, postRegister);
 	}
 
 	@Override
