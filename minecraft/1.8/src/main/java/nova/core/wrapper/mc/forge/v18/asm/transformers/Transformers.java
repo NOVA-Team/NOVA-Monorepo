@@ -35,8 +35,8 @@ public final class Transformers implements IClassTransformer {
 	private static Map<String, List<Transformer>> transformers = new HashMap<>();
 
 	public Transformers() {
-		registerTransformer(new ChunkTransformer(), "net.minecraft.world.chunk.Chunk");
-		registerTransformer(new TileEntityTransformer(), "net.minecraft.tileentity.TileEntity");
+		//registerTransformer(new ChunkTransformer(), "net.minecraft.world.chunk.Chunk");
+		//registerTransformer(new TileEntityTransformer(), "net.minecraft.tileentity.TileEntity");
 	}
 
 	public static void registerTransformer(Transformer transformer, String... classes) {

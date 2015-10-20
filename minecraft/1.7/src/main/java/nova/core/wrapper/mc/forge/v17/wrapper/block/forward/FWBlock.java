@@ -236,7 +236,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
-		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ));
+		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ), blockInstance);
 		blockInstance.events.publish(evt);
 		return evt.result;
 	}

@@ -64,7 +64,7 @@ artifacts {
 
 publishing {
 	publications {
-		main(MavenPublication) {
+		mavenJava(MavenPublication) {
 			from components.java
 
 			artifactId "NOVA-Core"
