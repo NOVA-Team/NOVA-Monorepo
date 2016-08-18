@@ -3,7 +3,7 @@ import org.gradle.plugins.ide.eclipse.model.SourceFolder
 plugins {
 	id "maven-publish"
 	id "com.jfrog.artifactory" version "3.1.1"
-	id "com.github.johnrengelman.shadow" version "1.2.1"
+	id "com.github.johnrengelman.shadow" version "1.2.3"
 }
 
 apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shared-scripts/java.gradle"
