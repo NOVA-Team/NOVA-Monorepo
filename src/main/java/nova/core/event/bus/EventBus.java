@@ -41,7 +41,7 @@ public class EventBus<T> {
 
 	// TODO: actually test concurrency
 	protected final List<EventListenerNode> unsortedListeners = new ArrayList<>();
-	protected List<EventListenerNode> sortedListeners;
+	private List<EventListenerNode> sortedListeners;
 
 	/**
 	 * Builds an ordered list cachedListeners. Sorts using topological sort algorithm.
@@ -85,9 +85,28 @@ public class EventBus<T> {
 		sortedListeners = TopologicalSort.topologicalSort(graph);
 	}
 
+	/**
+	 * Invalidates the sorted listeners. Call this after tweaking with unsortedListeners.
+	 */
+	protected synchronized void invalidateCache() {
+		sortedListeners = null;
+	}
+
+	/**
+	 * Retrieves the sorted listeners. Calls buildCache() if the listeners aren't sorted.
+	 * @return The sorted listeners.
+	 */
+	protected synchronized List<EventListenerNode> getSortedListeners() {
+		if (sortedListeners == null) {
+			buildCache();
+		}
+
+		return sortedListeners;
+	}
+
 	public synchronized void clear() {
 		unsortedListeners.clear();
-		sortedListeners = null;
+		invalidateCache();
 	}
 
 	/**
@@ -99,7 +118,7 @@ public class EventBus<T> {
 		boolean didRemove = unsortedListeners.removeIf(node -> node.getListener().equals(listener));
 
 		if (didRemove) {
-			sortedListeners = null;
+			invalidateCache();
 		}
 		return didRemove;
 	}
@@ -120,12 +139,8 @@ public class EventBus<T> {
 	 * Publishes an event by calling all of the registered listeners.
 	 * @param event event to be published
 	 */
-	public synchronized void publish(T event) {
-		if (sortedListeners == null) {
-			buildCache();
-		}
-
-		sortedListeners
+	public void publish(T event) {
+		getSortedListeners()
 			.stream()
 			.forEachOrdered(node -> node.getListener().onEvent(event));
 	}
@@ -210,7 +225,7 @@ public class EventBus<T> {
 			EventListenerNode node = new EventListenerNode(listener, name, priority, before, after);
 
 			unsortedListeners.add(node);
-			sortedListeners = null;
+			invalidateCache();
 
 			return node;
 		}
@@ -259,8 +274,6 @@ public class EventBus<T> {
 		protected final String name;
 		protected final Set<String> before;
 		protected final Set<String> after;
-		protected EventListenerNode next = null;
-		protected EventListenerNode prev = null;
 
 		public EventListenerNode(EventListener<T> handler, String name, int priority, Set<String> before, Set<String> after) {
 			this.listener = handler;
@@ -279,7 +292,7 @@ public class EventBus<T> {
 		public void close() {
 			synchronized (EventBus.this) {
 				unsortedListeners.remove(this);
-				sortedListeners = null;
+				invalidateCache();
 			}
 		}
 	}

@@ -29,11 +29,7 @@ package nova.core.event.bus;
 public class CancelableEventBus<T extends CancelableEvent> extends EventBus<T> {
 	@Override
 	public synchronized void publish(T event) {
-		if (sortedListeners == null) {
-			buildCache();
-		}
-
-		for (EventListenerNode node : sortedListeners) {
+		for (EventListenerNode node : getSortedListeners()) {
 			node.getListener().onEvent(event);
 
 			if (event.isCanceled()) {
