@@ -46,7 +46,6 @@ public class CoreBundle extends BootstrapperBundle {
 		add(RenderModule.class);
 		add(DictionaryModule.class);
 		add(SoundModule.class);
-		add(CommandModule.class);
 
 		add(RecipesModule.class);
 		add(CraftingModule.class);
