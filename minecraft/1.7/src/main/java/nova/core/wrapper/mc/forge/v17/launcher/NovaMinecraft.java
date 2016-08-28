@@ -46,7 +46,6 @@ import nova.core.wrapper.mc.forge.v17.depmodules.TickerModule;
 import nova.core.wrapper.mc.forge.v17.recipes.MinecraftRecipeRegistry;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
-import nova.core.wrapper.mc.forge.v17.wrapper.command.CommandConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.data.DataWrapper;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.EntityConverter;
@@ -121,7 +120,6 @@ public class NovaMinecraft {
 			Game.natives().registerConverter(new WorldConverter());
 			Game.natives().registerConverter(new CuboidConverter());
 			Game.natives().registerConverter(new InventoryConverter());
-			Game.natives().registerConverter(new CommandConverter());
 
 			/**
 			 * Initiate recipe and ore dictionary integration
@@ -213,8 +211,6 @@ public class NovaMinecraft {
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
 		Game.events().publish(new ServerEvent.Start());
-
-		Game.commands().forEach(command -> event.registerServerCommand(Game.natives().toNative(command)));
 	}
 
 	@Mod.EventHandler
