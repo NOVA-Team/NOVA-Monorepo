@@ -31,7 +31,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
-import nova.core.block.component.BlockProperties;
+import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
 import nova.core.component.transform.BlockTransform;
@@ -39,6 +39,7 @@ import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
+import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.world.BWWorld;
@@ -66,11 +67,12 @@ public class BWBlock extends Block implements Storable {
 		transform.setWorld(world);
 		transform.setPosition(pos);
 
-		BlockProperties blockMaterial = components.add(new BlockProperties());
-		blockMaterial.setLightTransmission(!mcBlock.getMaterial().blocksLight());
-		blockMaterial.setBlockSound(BlockProperties.BlockSoundTrigger.PLACE, mcBlock.stepSound.getPlaceSound());
-		blockMaterial.setBlockSound(BlockProperties.BlockSoundTrigger.BREAK, mcBlock.stepSound.getBreakSound());
-		blockMaterial.setBlockSound(BlockProperties.BlockSoundTrigger.WALK, mcBlock.stepSound.getStepSound());
+		components.add(new BlockProperty.Opacity().setLightTransmission(!mcBlock.getMaterial().blocksLight()));
+
+		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.stepSound.getPlaceSound()));
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", mcBlock.stepSound.getBreakSound()));
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", mcBlock.stepSound.getStepSound()));
 
 		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0F);
 		components.add(new Collider(this))
