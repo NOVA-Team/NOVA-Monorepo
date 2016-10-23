@@ -20,7 +20,7 @@
 
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
-import nova.core.block.component.BlockProperties;
+import nova.core.block.component.BlockProperty;
 import nova.core.entity.Entity;
 import nova.core.util.Direction;
 import nova.core.world.World;
@@ -67,8 +67,8 @@ public class ItemBlock extends Item {
 		if (opBlock.isPresent() && opBlock.get().sameType(blockFactory)) {
 			//TODO: What if the block is NOT placed by a player?
 			opBlock.get().events.publish(new Block.PlaceEvent(entity, side, hit, this));
-			if (opBlock.get().components.has(BlockProperties.class)) {
-				world.playSoundAtPosition(placePos, opBlock.get().components.get(BlockProperties.class).getSound(BlockProperties.BlockSoundTrigger.PLACE));
+			if (opBlock.get().components.has(BlockProperty.BlockSound.class)) {
+				world.playSoundAtPosition(placePos, opBlock.get().components.get(BlockProperty.BlockSound.class).getSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE));
 			}
 		}
 
