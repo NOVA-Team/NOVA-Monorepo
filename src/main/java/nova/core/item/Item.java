@@ -27,7 +27,8 @@ import nova.core.event.bus.Event;
 import nova.core.render.Color;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
-import nova.core.util.Identifiable;
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class Item extends ComponentProvider implements Identifiable, Storable {
 	}
 
 	@Override
-	public final String getID() {
+	public final Identifier getID() {
 		return getFactory().getID();
 	}
 

@@ -21,7 +21,7 @@
 package nova.core.sound;
 
 import nova.core.render.Asset;
-import nova.core.util.Identifiable;
+import nova.core.util.id.Identifiable;
 
 /**
  * An object representing a sound. (including the modification to pitch and volume, etc...)
