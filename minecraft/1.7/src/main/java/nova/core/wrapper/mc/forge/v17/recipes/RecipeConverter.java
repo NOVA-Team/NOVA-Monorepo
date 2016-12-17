@@ -84,7 +84,7 @@ public class RecipeConverter {
 		if (ingredient == null) {
 			return null;
 		} else if (ingredient instanceof ItemStack) {
-			return new SpecificItemIngredient(((Item) Game.natives().toNova(ingredient)).getID());
+			return new SpecificItemIngredient(((Item) Game.natives().toNova(ingredient)).getID().asString()); // TODO?
 		} else if (ingredient instanceof String) {
 			return new OreItemIngredient((String) ingredient);
 		} else if (ingredient instanceof List) {

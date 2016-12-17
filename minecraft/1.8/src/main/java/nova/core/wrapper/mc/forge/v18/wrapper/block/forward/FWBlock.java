@@ -20,6 +20,7 @@
 
 package nova.core.wrapper.mc.forge.v18.wrapper.block.forward;
 
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -37,11 +38,12 @@ import net.minecraft.world.World;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.Stateful;
-import nova.core.block.component.BlockProperties;
+import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
 import nova.core.retention.Storable;
+import nova.core.sound.Sound;
 import nova.core.util.Direction;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
@@ -72,22 +74,32 @@ public class FWBlock extends net.minecraft.block.Block {
 	public BlockPos lastExtendedStatePos;
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
+	private static Material getMcMaterial(BlockFactory factory) {
+		Block dummy = factory.build();
+		if (dummy.components.has(BlockProperty.Opacity.class)) {
+			// TODO allow color selection
+			return new ProxyMaterial(MapColor.grayColor, dummy.components.get(BlockProperty.Opacity.class));
+		} else {
+			return Material.piston;
+		}
+	}
+
 	public FWBlock(BlockFactory factory) {
 		//TODO: Hack build() method
-		super(factory.build().components.has(BlockProperties.class) ? new MCBlockProperties(factory.build().components.get(BlockProperties.class)).toMcMaterial() : Material.piston);
+		super(getMcMaterial(factory));
 		this.factory = factory;
 		this.dummy = factory.build();
-		if (this.getMaterial() instanceof MCBlockProperties.ProxyMaterial) {
-			this.stepSound = ((MCBlockProperties.ProxyMaterial) this.getMaterial()).getSoundType();
+		if (dummy.components.has(BlockProperty.BlockSound.class)) {
+			this.stepSound = new FWBlockSound(dummy.components.get(BlockProperty.BlockSound.class));
 		} else {
-			BlockProperties properties = dummy.components.add(new BlockProperties());
-			properties.setBlockSound(BlockProperties.BlockSoundTrigger.BREAK, soundTypeStone.getBreakSound());
-			properties.setBlockSound(BlockProperties.BlockSoundTrigger.PLACE, soundTypeStone.getPlaceSound());
-			properties.setBlockSound(BlockProperties.BlockSoundTrigger.WALK, soundTypeStone.getStepSound());
+			BlockProperty.BlockSound properties = dummy.components.add(new BlockProperty.BlockSound());
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundTypeStone.getBreakSound()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", soundTypeStone.getPlaceSound()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", soundTypeStone.getStepSound()));
 			this.stepSound = soundTypeStone;
 		}
 		this.blockClass = dummy.getClass();
-		this.setUnlocalizedName(dummy.getID());
+		this.setUnlocalizedName(dummy.getID().asString()); // TODO?
 
 		// Recalculate super constructor things after loading the block properly
 		this.fullBlock = isOpaqueCube();
@@ -167,7 +179,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		FWTile fwTile = FWTileLoader.loadTile(dummy.getID());
+		FWTile fwTile = FWTileLoader.loadTile(dummy.getID().asString()); // TODO?
 		if (lastExtendedStatePos != null) {
 			fwTile.block.components.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
 			lastExtendedStatePos = null;

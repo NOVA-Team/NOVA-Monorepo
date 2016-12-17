@@ -136,7 +136,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	private void registerNovaBlock(BlockFactory blockFactory) {
 		FWBlock blockWrapper = new FWBlock(blockFactory);
 		blockFactoryMap.put(blockFactory, blockWrapper);
-		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
+		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID().asString());
 		NovaMinecraft.proxy.postRegisterBlock(blockWrapper);
 
 		if (blockWrapper.dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {

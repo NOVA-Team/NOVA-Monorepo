@@ -21,7 +21,9 @@
 package nova.core.component;
 
 import nova.core.component.exception.ComponentException;
-import nova.core.util.Identifiable;
+import nova.core.util.id.ClassIdentifier;
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
 
 /**
  * Base interface for all Components.
@@ -51,7 +53,7 @@ public abstract class Component implements Identifiable {
 	}
 
 	@Override
-	public String getID() {
-		return getClass().getSimpleName();
+	public Identifier getID() {
+		return new ClassIdentifier(getClass());
 	}
 }
