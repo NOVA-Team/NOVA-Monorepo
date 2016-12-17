@@ -1,16 +1,19 @@
-buildscript{
-	repositories{
-		mavenCentral()
-		maven {
-			name "forge"
-			url "http://files.minecraftforge.net/maven"
+subprojects {
+	buildscript {
+		repositories {
+			mavenCentral()
+			maven {
+				name "forge"
+				url "http://files.minecraftforge.net/maven"
+			}
+			maven {
+				name "sonatype"
+				url "https://oss.sonatype.org/content/repositories/snapshots/"
+			}
 		}
-		maven {
-			name "sonatype"
-			url "https://oss.sonatype.org/content/repositories/snapshots/"
+		dependencies {
+			// Minecraft 1.11 requires newer ForgeGradle, while 1.7 and 1.8 require older.
+			classpath 'net.minecraftforge.gradle:ForgeGradle:' + property('forgeGradleVersion')
 		}
-	}
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
 	}
 }

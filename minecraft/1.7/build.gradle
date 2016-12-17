@@ -27,6 +27,8 @@ jar {
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
 		attributes 'FMLAT': 'nova_at.cfg'
 	}
+
+	from (sourceSets.main.resources)
 }
 
 task deobfJar(type: Jar) {
