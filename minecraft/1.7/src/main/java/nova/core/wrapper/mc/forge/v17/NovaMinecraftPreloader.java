@@ -53,7 +53,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +66,6 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	public static final String version = "0.0.1";
 	private static final ModMetadata md;
 	public static Set<Class<?>> modClasses;
-	public static Map<Class<?>, File> modClassToFile;
 
 	static {
 		md = new ModMetadata();
@@ -210,7 +208,6 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		// Scan mod classes
 		ASMDataTable asmData = event.getASMHarvestedData();
 
-		modClassToFile = new HashMap<>();
 		modClasses = asmData
 			.getAll(Mod.class.getName())
 			.stream()
@@ -235,7 +232,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			fakeMeta.name = annotation.name();
 			fakeMeta.version = annotation.version();
 			fakeMeta.description = annotation.description();
-			newMods.add(new DummyNovaMod(fakeMeta, mod));
+			newMods.add(new DummyNovaMod(fakeMeta));
 		});
 		ReflectionUtil.setPrivateObject(Loader.instance(), newMods, "mods");
 
@@ -280,7 +277,6 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 						packs.add(new NovaResourcePack(file, novaMod.id(), novaMod.domains()));
 						System.out.println("Registered NOVA jar resource pack: " + fn);
 					}
-					modClassToFile.put(c, file);
 				} else {
 					//Add folder resource pack location. The folderLocation is the root of the project, including the packages of classes, and an assets folder inside.
 					String folderLocation = c.getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -292,7 +288,6 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 						folderFile = new File(folderLocation.replaceAll("build[\\\\/]classes", "build/resources"));
 						folderFile = new File(folderFile, "assets").isDirectory() ? folderFile : new File(folderLocation);
 					}
-					modClassToFile.put(c, folderFile);
 
 					addedPacks.add(folderLocation);
 					packs.add(new NovaFolderResourcePack(folderFile, novaMod.id(), novaMod.domains()));
@@ -309,20 +304,8 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	 * A fake NovaMod to inject into FML.
 	 */
 	private static class DummyNovaMod extends DummyModContainer {
-		private final Class<?> mod;
-		private File source = null;
-
-		public DummyNovaMod(ModMetadata meta, Class<?> mod) {
+		public DummyNovaMod(ModMetadata meta) {
 			super(meta);
-			this.mod = mod;
-		}
-
-		@Override
-		public File getSource() {
-			if (this.source == null) {
-				this.source = NovaMinecraftPreloader.modClassToFile.get(mod);
-			}
-			return this.source;
 		}
 	}
 }

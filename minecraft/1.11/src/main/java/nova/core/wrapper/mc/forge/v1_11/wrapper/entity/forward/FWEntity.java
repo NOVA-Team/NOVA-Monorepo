@@ -36,6 +36,7 @@ import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.EnumSelector;
 import nova.core.util.shape.Cuboid;
+import nova.core.wrapper.mc.forge.v1_11.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.data.DataWrapper;
 import nova.internal.core.Game;
 
@@ -84,13 +85,13 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 			((Storable) wrapped).save(data);
 			DataWrapper.instance().toNative(nbt, data);
 		}
-		nbt.setString("novaID", wrapped.getID().asString()); // TODO?
+		nbt.setString("novaID", wrapped.getID());
 	}
 
 	@Override
 	public void writeSpawnData(ByteBuf buffer) {
 		//Write the ID of the entity to client
-		String id = wrapped.getID().asString(); // TODO?
+		String id = wrapped.getID();
 		char[] chars = id.toCharArray();
 		buffer.writeInt(chars.length);
 
@@ -132,6 +133,8 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		if (wrapped != null) {
 			wrapped.events.publish(new Stateful.LoadEvent());
 			updateCollider();
+			WrapperEvent.FWEntityCreate event = new WrapperEvent.FWEntityCreate(wrapped, this);
+			Game.events().publish(event);
 		}
 	}
 

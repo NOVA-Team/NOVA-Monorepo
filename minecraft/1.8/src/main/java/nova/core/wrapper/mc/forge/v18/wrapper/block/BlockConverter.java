@@ -24,8 +24,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
@@ -33,7 +31,6 @@ import nova.core.block.BlockManager;
 import nova.core.component.Category;
 import nova.core.event.BlockEvent;
 import nova.core.loader.Loadable;
-import nova.core.loader.Mod;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.wrapper.mc.forge.v18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v18.util.ModCreativeTab;
@@ -41,9 +38,7 @@ import nova.core.wrapper.mc.forge.v18.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItemBlock;
 import nova.internal.core.Game;
-import nova.internal.core.launch.ModLoader;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
@@ -141,8 +136,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	private void registerNovaBlock(BlockFactory blockFactory) {
 		FWBlock blockWrapper = new FWBlock(blockFactory);
 		blockFactoryMap.put(blockFactory, blockWrapper);
-		String blockId = blockFactory.getID();
-		registerNovaBlock(blockWrapper, blockId);
+		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
 		NovaMinecraft.proxy.postRegisterBlock(blockWrapper);
 
 		if (blockWrapper.dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
@@ -161,27 +155,5 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		}
 
 		System.out.println("[NOVA]: Registered '" + blockFactory.getID() + "' block.");
-	}
-
-	/**
-	 * Prevent forge from prefixing block IDs with "nova:"
-	 */
-	private void registerNovaBlock(FWBlock blockWrapper, String blockId) {
-		try {
-			Class<GameData> gameDataClass = GameData.class;
-			Method getMain = gameDataClass.getDeclaredMethod("getMain");
-			Method registerBlock = gameDataClass.getDeclaredMethod("registerBlock", net.minecraft.block.Block.class, String.class, Integer.TYPE);
-			Method registerItem = gameDataClass.getDeclaredMethod("registerItem", net.minecraft.item.Item.class, String.class, Integer.TYPE);
-			getMain.setAccessible(true);
-			registerBlock.setAccessible(true);
-			registerItem.setAccessible(true);
-			GameData gameData = (GameData) getMain.invoke(null);
-			registerBlock.invoke(gameData, blockWrapper, blockId, -1);
-			FWItemBlock itemWrapper = new FWItemBlock(blockWrapper);
-			registerItem.invoke(gameData, itemWrapper, blockId, -1);
-			GameData.getBlockItemMap().put(blockWrapper, itemWrapper);
-		} catch (ReflectiveOperationException e) {
-			GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockId);
-		}
 	}
 }

@@ -27,7 +27,7 @@ import se.jbee.inject.Supplier;
 import se.jbee.inject.bind.BinderModule;
 
 public class GameInfoModule extends BinderModule {
-	private static final GameInfo minecraft = new GameInfo("minecraft", "1.7.10");
+	private static final GameInfo minecraft = new GameInfo("minecraft", "1.11");
 
 	@Override
 	protected void declare() {

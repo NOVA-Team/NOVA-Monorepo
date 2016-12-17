@@ -28,10 +28,10 @@ import nova.core.component.misc.Damageable;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
 import nova.core.entity.component.Player;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.UUIDIdentifier;
+import nova.core.wrapper.mc.forge.v1_11.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.entity.forward.MCEntityTransform;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.inventory.BWInventory;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
@@ -47,7 +47,6 @@ public class BWEntity extends Entity {
 		this.entity = entity;
 		if (entity != null) {
 			components.add(new MCEntityTransform(entity));
-
 			components.add(new Damageable() {
 				@Override
 				public void damage(double amount, DamageType type) {
@@ -68,6 +67,9 @@ public class BWEntity extends Entity {
 				living.faceDisplacement = () -> Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight());
 			}
 		}
+
+		WrapperEvent.BWEntityCreate event = new WrapperEvent.BWEntityCreate(this, entity);
+		Game.events().publish(event);
 	}
 
 	public static class MCPlayer extends Player {
@@ -92,8 +94,8 @@ public class BWEntity extends Entity {
 		}
 
 		@Override
-		public Identifier getID() {
-			return new UUIDIdentifier(entity.getGameProfile().getId());
+		public String getID() {
+			return entity.getGameProfile().getId().toString();
 		}
 
 		@Override

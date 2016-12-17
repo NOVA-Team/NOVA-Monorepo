@@ -107,9 +107,9 @@ minecraft {
 	runDir = "run"
 }
 
-reobfJar {
-	// TODO Figure out what this was replaced by in ForgeGrade 2.2
-	//reobf(fatJar) {spec -> spec.classpath = configurations.compile}
+reobf {
+	// TODO Figure out how to make this work with maven-publish (creates a new task 'reobfFatJar' that isn't compatible with maven-publish)
+	fatJar {classpath += configurations.compile}
 }
 
 runClient {
@@ -125,11 +125,11 @@ processResources {
 	inputs.property "mcversion", project.minecraft.version
 
 	from(sourceSets.main.resources.srcDirs) {
-		include 'mcmod.info'
+		include 'mcmod.info', 'fmlbranding.properties'
 		expand 'version': project.version, 'mcversion': project.minecraft.version
 	}
 
 	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
+		exclude 'mcmod.info', 'fmlbranding.properties'
 	}
 }

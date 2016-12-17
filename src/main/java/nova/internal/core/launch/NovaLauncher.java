@@ -74,11 +74,6 @@ public class NovaLauncher extends ModLoader<Mod> {
 	@Override
 	public void load() {
 		super.load();
-	}
-
-	@Override
-	public void load(ProgressBar progressBar) {
-		super.load(progressBar);
 
 		TopologicalSort.DirectedGraph<Mod> modGraph = new TopologicalSort.DirectedGraph<>();
 
@@ -126,6 +121,11 @@ public class NovaLauncher extends ModLoader<Mod> {
 		return Arrays.stream(dependencies)
 			.map(s -> s.split("@", 1))
 			.collect(Collectors.toMap(s -> s[0], s -> s.length > 1 ? s[1] : ""));
+	}
+
+	@Override
+	public void preInit() {
+		super.preInit();
 	}
 
 	public Map<Mod, List<MavenDependency>> getNeededDeps() {

@@ -22,8 +22,6 @@ package nova.core.wrapper.mc.forge.v17.launcher;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.ProgressManager;
-import cpw.mods.fml.common.ProgressManager.ProgressBar;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -144,9 +142,7 @@ public class NovaMinecraft {
 				e.printStackTrace();
 			}
 
-			ProgressBar progressBar = ProgressManager.push("Loading NOVA mods", modClasses.size());
-			launcher.postInit(new FMLProgressBar(progressBar));
-			ProgressManager.pop(progressBar);
+			launcher.load();
 
 			/**
 			 * Instantiate native loaders
@@ -161,9 +157,7 @@ public class NovaMinecraft {
 			Game.language().init();
 
 			//Load preInit
-			progressBar = ProgressManager.push("Pre-initializing NOVA mods", modClasses.size());
-			launcher.preInit(new FMLProgressBar(progressBar));
-			ProgressManager.pop(progressBar);
+			launcher.preInit();
 
 			// Initiate config system TODO: Storables
 			//		launcher.getLoadedModMap().forEach((mod, loader) -> {
@@ -189,11 +183,10 @@ public class NovaMinecraft {
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent evt) {
 		try {
-			ProgressBar progressBar = ProgressManager.push("Initializing NOVA mods", NovaMinecraftPreloader.modClasses.size());
+
 			proxy.init();
 			nativeConverters.stream().forEachOrdered(Loadable::init);
-			launcher.init(new FMLProgressBar(progressBar));
-			ProgressManager.pop(progressBar);
+			launcher.init();
 		} catch (Exception e) {
 			System.out.println("Error during init");
 			e.printStackTrace();
@@ -204,12 +197,10 @@ public class NovaMinecraft {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent evt) {
 		try {
-			ProgressBar progressBar = ProgressManager.push("Post-initializing NOVA mods", NovaMinecraftPreloader.modClasses.size());
 			Game.recipes().init();
 			proxy.postInit();
 			nativeConverters.stream().forEachOrdered(Loadable::postInit);
-			launcher.postInit(new FMLProgressBar(progressBar));
-			ProgressManager.pop(progressBar);
+			launcher.postInit();
 		} catch (Exception e) {
 			System.out.println("Error during postInit");
 			e.printStackTrace();

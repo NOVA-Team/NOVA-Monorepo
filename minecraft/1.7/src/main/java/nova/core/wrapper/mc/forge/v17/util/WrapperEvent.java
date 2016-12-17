@@ -20,22 +20,10 @@
 
 package nova.core.wrapper.mc.forge.v17.util;
 
-import net.minecraft.item.ItemStack;
-import nova.core.block.Block;
-import nova.core.entity.Entity;
 import nova.core.event.BlockEvent;
-import nova.core.event.bus.CancelableEvent;
-import nova.core.event.bus.Event;
 import nova.core.util.Direction;
 import nova.core.world.World;
-import nova.core.wrapper.mc.forge.v17.wrapper.block.backward.BWBlock;
-import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWTile;
-import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntity;
-import nova.core.wrapper.mc.forge.v17.wrapper.entity.forward.FWEntity;
-import nova.core.wrapper.mc.forge.v17.wrapper.item.BWItem;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-
-import java.util.Optional;
 
 /**
  * @author Calclavia
@@ -69,65 +57,6 @@ public class WrapperEvent {
 		public WeakRedstone(World world, Vector3D position, Direction direction) {
 			super(world, position);
 			this.direction = direction;
-		}
-	}
-
-	public static class BWBlockCreate extends BlockEvent {
-		public final net.minecraft.block.Block mcBlock;
-		public final BWBlock novaBlock;
-
-		public BWBlockCreate(World world, Vector3D position, BWBlock novaBlock, net.minecraft.block.Block mcBlock) {
-			super(world, position);
-			this.novaBlock = novaBlock;
-			this.mcBlock = mcBlock;
-		}
-	}
-
-	public static class BWItemCreate extends CancelableEvent {
-		public final net.minecraft.item.Item mcItem;
-		public final BWItem novaItem;
-		public final Optional<ItemStack> itemStack;
-
-		public BWItemCreate(BWItem novaItem, net.minecraft.item.Item mcItem) {
-			this.novaItem = novaItem;
-			this.mcItem = mcItem;
-			this.itemStack = Optional.empty();
-		}
-
-		public BWItemCreate(BWItem novaItem, net.minecraft.item.Item mcItem, ItemStack itemStack) {
-			this.novaItem = novaItem;
-			this.mcItem = mcItem;
-			this.itemStack = Optional.of(itemStack);
-		}
-	}
-
-	public static class BWEntityCreate extends CancelableEvent {
-		public final net.minecraft.entity.Entity mcEntity;
-		public final BWEntity novaEntity;
-
-		public BWEntityCreate(net.minecraft.entity.Entity mcEntity, BWEntity novaEntity) {
-			this.mcEntity = mcEntity;
-			this.novaEntity = novaEntity;
-		}
-	}
-
-	public static class FWTileCreate extends Event {
-		public final Block novaBlock;
-		public final FWTile tileEntity;
-
-		public FWTileCreate(Block novaBlock, FWTile tileEntity) {
-			this.novaBlock = novaBlock;
-			this.tileEntity = tileEntity;
-		}
-	}
-
-	public static class FWEntityCreate extends Event {
-		public final Entity novaBlock;
-		public final FWEntity mcEntity;
-
-		public FWEntityCreate(Entity novaBlock, FWEntity mcEntity) {
-			this.novaBlock = novaBlock;
-			this.mcEntity = mcEntity;
 		}
 	}
 }

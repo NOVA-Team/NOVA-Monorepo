@@ -22,14 +22,20 @@ package nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import nova.core.item.Item;
 import nova.core.item.ItemFactory;
+import nova.core.wrapper.mc.forge.v1_11.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWBlock;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.capability.forward.FWCapabilityProvider;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.item.ItemWrapperMethods;
+import nova.internal.core.Game;
 
 import java.util.List;
 
@@ -40,6 +46,13 @@ public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWra
 
 	public FWItemBlock(FWBlock block) {
 		super(block);
+	}
+
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+		Item item = Game.natives().toNova(stack);
+		WrapperEvent.FWItemInitCapabilities event = new WrapperEvent.FWItemInitCapabilities(item, new FWCapabilityProvider());
+		return event.capabilityProvider.hasCapabilities() ? event.capabilityProvider : null;
 	}
 
 	@Override

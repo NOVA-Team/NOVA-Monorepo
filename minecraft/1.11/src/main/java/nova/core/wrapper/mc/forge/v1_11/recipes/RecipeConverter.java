@@ -84,11 +84,12 @@ public class RecipeConverter {
 		if (ingredient == null) {
 			return null;
 		} else if (ingredient instanceof ItemStack) {
-			return new SpecificItemIngredient(((Item) Game.natives().toNova(ingredient)).getID().asString()); // TODO?
+			return ((ItemStack) ingredient).isEmpty() ? null : ItemIngredient.forItem(net.minecraft.item.Item.REGISTRY.getNameForObject(((ItemStack) ingredient).getItem()).toString());
 		} else if (ingredient instanceof String) {
-			return new OreItemIngredient((String) ingredient);
+			return ItemIngredient.forDictionary((String) ingredient);
 		} else if (ingredient instanceof List) {
-			String oreDictEntry = findOreDictEntryFor((List) ingredient);
+			@SuppressWarnings("unchecked")
+			String oreDictEntry = findOreDictEntryFor((List<ItemStack>) ingredient);
 			if (oreDictEntry == null) {
 				return null;
 			}

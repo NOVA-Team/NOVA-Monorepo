@@ -162,7 +162,9 @@ public class FWTile extends TileEntity {
 	@Override
 	public void setPos(BlockPos pos) {
 		super.setPos(pos);
-		this.block.components.getOrAdd(new MCBlockTransform(this.block, Game.natives().toNova(this.getWorld()), Game.natives().toNova(this.getPos())));
+		if (this.block.components.has(MCBlockTransform.class))
+			this.block.components.remove(MCBlockTransform.class);
+		this.block.components.add(new MCBlockTransform(this.block, Game.natives().toNova(this.getWorld()), Game.natives().toNova(this.getPos())));
 	}
 
 	private static class FWPacketUpdateTileEntity<T extends INetHandler> extends SPacketUpdateTileEntity {

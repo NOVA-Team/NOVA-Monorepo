@@ -25,7 +25,6 @@ import nova.core.component.misc.FactoryProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
-import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
 import nova.internal.core.Game;
 
 /**
@@ -58,8 +57,6 @@ public class BWItemFactory extends ItemFactory {
 		NBTTagCompound nbtData = Game.natives().toNative(data);
 		BWItem bwItem = new BWItem(item, meta, nbtData);
 		bwItem.components.add(new FactoryProvider(this));
-		WrapperEvent.BWItemCreate event = new WrapperEvent.BWItemCreate(bwItem, item);
-		Game.events().publish(event);
 		return bwItem;
 	}
 

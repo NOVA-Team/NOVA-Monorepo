@@ -31,8 +31,6 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.StringIdentifier;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v1_11.launcher.NovaMinecraft;
@@ -160,12 +158,12 @@ public class BWWorld extends World {
 	}
 
 	@Override
-	public Identifier getID() {
-		return new StringIdentifier(world().provider.getDimensionType().getName());
+	public String getID() {
+		return world().provider.getDimensionType().getName();
 	}
 
 	@Override
 	public void playSoundAtPosition(Vector3D position, Sound sound) {
-		world().playSound(position.getX(), position.getY(), position.getZ(), SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.getID().asString())), SoundCategory.BLOCKS, sound.volume, sound.pitch, true);
+		world().playSound(position.getX(), position.getY(), position.getZ(), SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.getID())), SoundCategory.BLOCKS, sound.volume, sound.pitch, true);
 	}
 }

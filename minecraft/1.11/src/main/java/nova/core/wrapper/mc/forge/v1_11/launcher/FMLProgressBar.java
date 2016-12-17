@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
  *
  * @author ExE Boss
  */
-public class FMLProgressBar extends nova.internal.core.launch.ProgressBar {
+public class FMLProgressBar extends nova.core.util.AbstractProgressBar {
 
 	private final ProgressBar progressBar;
 
@@ -21,8 +21,14 @@ public class FMLProgressBar extends nova.internal.core.launch.ProgressBar {
 	}
 
 	@Override
-	public void step(String s) {
+	public void stepImpl(String s) {
 		if (this.progressBar.getStep() >= this.progressBar.getSteps()) return;
 		this.progressBar.step(s);
+	}
+
+	@Override
+	protected void finishImpl() {
+		while (progressBar.getStep() < progressBar.getSteps())
+			progressBar.step("");
 	}
 }

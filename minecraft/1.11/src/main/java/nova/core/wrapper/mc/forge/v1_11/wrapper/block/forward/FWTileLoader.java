@@ -29,7 +29,6 @@ import nova.core.component.fluid.SidedTankProvider;
 import nova.core.util.Direction;
 import nova.core.wrapper.mc.forge.v1_11.asm.lib.ComponentInjector;
 import nova.core.wrapper.mc.forge.v1_11.util.WrapperEvent;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.fluid.forward.FWFluidTank;
 import nova.internal.core.Game;
 
 import java.util.Arrays;

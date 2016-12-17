@@ -20,24 +20,16 @@
 
 package nova.core.wrapper.mc.forge.v1_11.wrapper.render.backward;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.render.model.MeshModel;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v1_11.render.RenderUtility;
 
-import java.lang.reflect.Constructor;
-import java.util.BitSet;
 import java.util.Optional;
 
 /**
@@ -63,8 +55,7 @@ public class BWModel extends MeshModel {
 				System.out.println(model);
 				if (model instanceof MeshModel) {
 					MeshModel meshModel = (MeshModel) model;
-					meshModel.faces.forEach(face ->
-					{
+					meshModel.faces.forEach(face -> {
 						System.out.println(face);
 						// TODO: See if this works, and possibly fix it
 						// Brightness is defined as: skyLight << 20 | blockLight << 4

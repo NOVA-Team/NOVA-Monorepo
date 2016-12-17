@@ -99,12 +99,16 @@ public class FWBlock extends net.minecraft.block.Block {
 			this.blockSoundType = SoundType.STONE;
 		}
 		this.blockClass = dummy.getClass();
-		this.setUnlocalizedName(dummy.getID().asString()); // TODO?
+		this.setUnlocalizedName(dummy.getID());
 
 		// Recalculate super constructor things after loading the block properly
 		this.fullBlock = getDefaultState().isOpaqueCube();
 		this.lightOpacity = this.fullBlock ? 255 : 0;
 		this.translucent = !this.fullBlock;
+	}
+
+	public BlockFactory getFactory() {
+		return this.factory;
 	}
 
 	public Block getBlockInstance(IBlockAccess access, Vector3D position) {
@@ -179,7 +183,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		return FWTileLoader.loadTile(dummy.getID().asString()); // TODO?
+		return FWTileLoader.loadTile(dummy.getID());
 	}
 
 	@Override

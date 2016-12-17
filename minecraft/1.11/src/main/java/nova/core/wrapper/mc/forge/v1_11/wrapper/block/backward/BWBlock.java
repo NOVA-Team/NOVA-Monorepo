@@ -77,9 +77,18 @@ public class BWBlock extends Block implements Storable {
 			soundType = mcBlock.getSoundType(blockState(), (net.minecraft.world.World)getMcBlockAccess(), new BlockPos(x(), y(), z()), null);
 		else
 			soundType = mcBlock.getSoundType();
-		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", soundType.getPlaceSound().getSoundName().getResourcePath()));
-		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundType.getBreakSound().getSoundName().getResourcePath()));
-		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("",soundType.getStepSound().getSoundName().getResourcePath()));
+		
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE,
+				new Sound(soundType.getPlaceSound().getSoundName().getResourceDomain(),
+				          soundType.getPlaceSound().getSoundName().getResourcePath()));
+
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK,
+				new Sound(soundType.getBreakSound().getSoundName().getResourceDomain(),
+				          soundType.getBreakSound().getSoundName().getResourcePath()));
+
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK,
+				new Sound(soundType.getStepSound().getSoundName().getResourceDomain(),
+				          soundType.getStepSound().getSoundName().getResourcePath()));
 
 		components.add(new LightEmitter()).setEmittedLevel(() -> blockState().getLightValue(getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0F);
 		components.add(new Collider(this))

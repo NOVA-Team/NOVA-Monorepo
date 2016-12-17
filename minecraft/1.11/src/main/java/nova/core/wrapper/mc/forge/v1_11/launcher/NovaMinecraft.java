@@ -154,8 +154,6 @@ public class NovaMinecraft {
 
 			ProgressBar progressBar = ProgressManager.push("Loading NOVA mods", modClasses.size(), true);
 			launcher.load(new FMLProgressBar(progressBar));
-			while (progressBar.getStep() < progressBar.getSteps())
-				progressBar.step("null");
 			ProgressManager.pop(progressBar);
 
 			/**
@@ -205,8 +203,6 @@ public class NovaMinecraft {
 			proxy.init();
 			nativeConverters.stream().forEachOrdered(Loadable::init);
 			launcher.init(new FMLProgressBar(progressBar));
-			while (progressBar.getStep() < progressBar.getSteps())
-				progressBar.step("null");
 			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
 			System.out.println("Error during init");
@@ -223,8 +219,6 @@ public class NovaMinecraft {
 			proxy.postInit();
 			nativeConverters.stream().forEachOrdered(Loadable::postInit);
 			launcher.postInit(new FMLProgressBar(progressBar));
-			while (progressBar.getStep() < progressBar.getSteps())
-				progressBar.step("null");
 			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
 			System.out.println("Error during postInit");

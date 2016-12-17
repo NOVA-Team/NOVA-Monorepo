@@ -25,7 +25,6 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.component.Updater;
 import nova.core.wrapper.mc.forge.v18.asm.lib.ComponentInjector;
-import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
 import nova.internal.core.Game;
 
 import java.util.Optional;
@@ -47,8 +46,6 @@ public final class FWTileLoader {
 			Block block = createBlock(blockID);
 			FWTile tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[0], new Object[0]) : injector.inject(block, new Class[0], new Object[0]);
 			tile.setBlock(block);
-			WrapperEvent.FWTileCreate event = new WrapperEvent.FWTileCreate(block, tile);
-			Game.events().publish(event);
 			return tile;
 		} catch (Exception e) {
 			throw new RuntimeException("Fatal error when trying to create a new NOVA tile.", e);
@@ -58,11 +55,9 @@ public final class FWTileLoader {
 	public static FWTile loadTile(String blockID) {
 		try {
 			Block block = createBlock(blockID);
-			FWTile tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[] { String.class }, new Object[] { blockID }) :
-						injector.inject(block, new Class[] { String.class }, new Object[] { blockID });
+			FWTile tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[] { String.class }, new Object[] { blockID }) : injector.inject(block, new Class[] {
+				String.class }, new Object[] { blockID });
 			tile.setBlock(block);
-			WrapperEvent.FWTileCreate event = new WrapperEvent.FWTileCreate(block, tile);
-			Game.events().publish(event);
 			return tile;
 		} catch (Exception e) {
 			throw new RuntimeException("Fatal error when trying to create a new NOVA tile.", e);

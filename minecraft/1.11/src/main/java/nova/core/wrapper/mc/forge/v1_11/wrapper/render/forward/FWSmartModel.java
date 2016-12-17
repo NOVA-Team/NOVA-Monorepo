@@ -22,6 +22,7 @@ package nova.core.wrapper.mc.forge.v1_11.wrapper.render.forward;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -31,6 +32,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
+import nova.core.render.model.CustomModel;
 import nova.core.render.model.MeshModel;
 import nova.core.render.model.Model;
 import nova.core.render.model.Vertex;
@@ -54,11 +56,9 @@ public abstract class FWSmartModel implements IBakedModel {
 
 	public FWSmartModel() {
 		this.format = new VertexFormat();
-		
 		this.format.addElement(DefaultVertexFormats.POSITION_3F);
 		this.format.addElement(DefaultVertexFormats.COLOR_4UB);
 		this.format.addElement(DefaultVertexFormats.TEX_2F);
-		this.format.addElement(DefaultVertexFormats.PADDING_1B);
 	}
 
 	public static int[] vertexToInts(Vertex vertex, TextureAtlasSprite texture) {
@@ -69,7 +69,6 @@ public abstract class FWSmartModel implements IBakedModel {
 			vertex.color.rgba(),
 			Float.floatToRawIntBits(texture.getInterpolatedU(16 * vertex.uv.getX())),
 			Float.floatToRawIntBits(texture.getInterpolatedV(16 * vertex.uv.getY())),
-			0
 		};
 	}
 
@@ -85,9 +84,11 @@ public abstract class FWSmartModel implements IBakedModel {
 							.stream()
 							.map(
 								face -> {
+									TextureAtlasSprite texture = face.texture.map(RenderUtility.instance::getTexture)
+										.orElse(Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite());
 									List<int[]> vertexData = face.vertices
 										.stream()
-										.map(v -> vertexToInts(v, RenderUtility.instance.getTexture(face.texture)))
+										.map(v -> vertexToInts(v, texture))
 										.collect(Collectors.toList());
 
 									int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
@@ -124,6 +125,12 @@ public abstract class FWSmartModel implements IBakedModel {
 	}
 
 	@Override
+	public TextureAtlasSprite getParticleTexture() {
+		return null;
+	}
+
+	@Override
+	@Deprecated
 	public ItemCameraTransforms getItemCameraTransforms() {
 		return itemCameraTransforms;
 	}

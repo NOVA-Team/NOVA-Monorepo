@@ -27,16 +27,13 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import nova.core.component.renderer.ItemRenderer;
+import nova.core.component.renderer.DynamicRenderer;
+import nova.core.component.renderer.Renderer;
+import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
-import nova.core.wrapper.mc.forge.v1_11.render.RenderUtility;
-import nova.internal.core.Game;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,44 +57,25 @@ public class FWSmartItemModel extends FWSmartModel implements IBakedModel {
 			ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
 	}
 
-	public IBakedModel handleItemState(ItemStack stack) {
-		Item item = Game.natives().toNova(stack);
-
-		if (item.components.has(ItemRenderer.class)) {
-			return new FWSmartItemModel(item);
-		}
-
-		return this;
-	}
-
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-		if (item.components.has(ItemRenderer.class)) {
-			BWModel model = new BWModel();
-			ItemRenderer renderer = item.components.get(ItemRenderer.class);
-			model.matrix.translate(0.5, 0.5, 0.5);
-			renderer.onRender.accept(model);
-			return modelToQuads(model);
+		BWModel model = new BWModel();
+		model.matrix.translate(0.5, 0.5, 0.5);
+
+		if (item.components.has(StaticRenderer.class)) {
+			StaticRenderer staticRenderer = item.components.get(StaticRenderer.class);
+			staticRenderer.onRender.accept(model);
+		} else if (item.components.has(DynamicRenderer.class)) {
+			DynamicRenderer dynamicRenderer = item.components.get(DynamicRenderer.class);
+			dynamicRenderer.onRender.accept(model);
 		}
 
-		return Collections.emptyList();
-	}
-
-	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		if (item.components.has(ItemRenderer.class)) {
-			ItemRenderer itemRenderer = item.components.get(ItemRenderer.class);
-			if (itemRenderer.texture.isPresent()) {
-				return RenderUtility.instance.getTexture(itemRenderer.texture.get());
-			}
-		}
-
-		return null;
+		return modelToQuads(model);
 	}
 
 	@Override
 	public boolean isGui3d() {
-		return item.components.has(ItemRenderer.class);
+		return item.components.has(Renderer.class);
 	}
 
 	@Override

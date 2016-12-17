@@ -27,16 +27,10 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import nova.core.block.Block;
-import nova.core.component.renderer.ItemRenderer;
+import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.StaticRenderer;
-import nova.core.item.ItemBlock;
-import nova.core.wrapper.mc.forge.v1_11.render.RenderUtility;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWBlock;
-import nova.internal.core.Game;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.List;
@@ -75,38 +69,23 @@ public class FWSmartBlockModel extends FWSmartModel implements IBakedModel {
 
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-		BWModel blockModel = new BWModel();
-		blockModel.matrix.translate(0.5, 0.5, 0.5);
+		BWModel model = new BWModel();
+		model.matrix.translate(0.5, 0.5, 0.5);
 
 		if (isItem) {
-			ItemRenderer renderer = block.components.get(ItemRenderer.class);
-			renderer.onRender.accept(blockModel);
+			if (block.components.has(StaticRenderer.class)) {
+				StaticRenderer staticRenderer = block.components.get(StaticRenderer.class);
+				staticRenderer.onRender.accept(model);
+			} else if (block.components.has(DynamicRenderer.class)) {
+				DynamicRenderer dynamicRenderer = block.components.get(DynamicRenderer.class);
+				dynamicRenderer.onRender.accept(model);
+			}
 		} else {
 			StaticRenderer renderer = block.components.get(StaticRenderer.class);
-			renderer.onRender.accept(blockModel);
+			renderer.onRender.accept(model);
 		}
 
-		return modelToQuads(blockModel);
-	}
-
-	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		/*
-		if (block.components.has(StaticRenderer.class)) {
-			Optional<Texture> apply = block.components.get(StaticRenderer.class).texture.apply(Direction.UNKNOWN);
-			if (apply.isPresent()) {
-				return RenderUtility.instance.getTexture(apply.components.get());
-			}
-		}*/
-
-		if (block.components.has(ItemRenderer.class)) {
-			ItemRenderer itemRenderer = block.components.get(ItemRenderer.class);
-			if (itemRenderer.texture.isPresent()) {
-				return RenderUtility.instance.getTexture(itemRenderer.texture.get());
-			}
-		}
-
-		return null;
+		return modelToQuads(model);
 	}
 
 	@Override

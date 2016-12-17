@@ -30,7 +30,7 @@ public class FWBlockSound extends SoundType {
 				SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation("dig." + sound.name));
 				return event == null ? super.getPlaceSound() : event;
 			}
-			SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.getID().asString())); // TODO?
+			SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.getID()));
 			return event == null ? super.getPlaceSound() : event;
 		}
 		return super.getBreakSound();
@@ -44,7 +44,7 @@ public class FWBlockSound extends SoundType {
 				SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation("step." + sound.name));
 				return event == null ? super.getPlaceSound() : event;
 			}
-			SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.getID().asString())); // TODO?
+			SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.getID()));
 			return event == null ? super.getPlaceSound() : event;
 		}
 		return super.getStepSound();
@@ -58,7 +58,7 @@ public class FWBlockSound extends SoundType {
 				SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.name));
 				return event == null ? super.getPlaceSound() : event;
 			}
-			SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.getID().asString())); // TODO?
+			SoundEvent event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.getID()));
 			return event == null ? super.getPlaceSound() : event;
 		}
 		// By default MC uses the block break sound for block placement

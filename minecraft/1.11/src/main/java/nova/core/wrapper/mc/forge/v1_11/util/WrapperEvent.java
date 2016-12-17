@@ -108,9 +108,9 @@ public class WrapperEvent {
 		public final net.minecraft.entity.Entity mcEntity;
 		public final BWEntity novaEntity;
 
-		public BWEntityCreate(net.minecraft.entity.Entity mcEntity, BWEntity novaEntity) {
-			this.mcEntity = mcEntity;
+		public BWEntityCreate(BWEntity novaEntity, net.minecraft.entity.Entity mcEntity) {
 			this.novaEntity = novaEntity;
+			this.mcEntity = mcEntity;
 		}
 	}
 
@@ -135,11 +135,11 @@ public class WrapperEvent {
 	}
 
 	public static class FWEntityCreate extends Event {
-		public final Entity novaBlock;
+		public final Entity novaEntity;
 		public final FWEntity mcEntity;
 
-		public FWEntityCreate(Entity novaBlock, FWEntity mcEntity) {
-			this.novaBlock = novaBlock;
+		public FWEntityCreate(Entity novaEntity, FWEntity mcEntity) {
+			this.novaEntity = novaEntity;
 			this.mcEntity = mcEntity;
 		}
 	}

@@ -78,7 +78,6 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 		return processor.apply(constructor.get());
 	}
 
-	@Override
 	public String getID() {
 		return id;
 	}
