@@ -103,7 +103,7 @@ apply plugin: 'forge'
 
 minecraft {
 	version = property("minecraft.version") + "-" + property("forge.version")
-	//mappings = 'snapshot_20161111'
+	mappings = 'snapshot_20161111'
 	runDir = "run"
 }
 
