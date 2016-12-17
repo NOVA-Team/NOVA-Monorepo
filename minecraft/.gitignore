@@ -3,5 +3,6 @@
 !/build.gradle
 !/.gitignore
 
+!/1.11
 !/1.8
 !/1.7
