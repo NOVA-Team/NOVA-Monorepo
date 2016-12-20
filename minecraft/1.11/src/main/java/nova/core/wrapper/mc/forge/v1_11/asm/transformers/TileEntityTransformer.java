@@ -52,7 +52,7 @@ public class TileEntityTransformer implements Transformer {
 
 		System.out.println("[NOVA] Transforming method " + method.name);
 
-		ASMHelper.removeBlock(method.instructions, new InstructionComparator.InsnListSection(method.instructions, 33, 36));
+		ASMHelper.removeBlock(method.instructions, new InstructionComparator.InsnListSection(method.instructions, 31, 44));
 
 		InsnList list = new InsnList();
 		list.add(new VarInsnNode(ALOAD, 0)); // World

@@ -1,0 +1,21 @@
+{
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "nova",
+    "name": "NOVA",
+    "description": "NOVA (Neatly Organized Voxel API) is a modding framework for voxel games.",
+    "version": "0.0.1",
+    "mcversion": "1.11",
+    "url": "http://novaapi.net/",
+    "updateUrl": "",
+    "authorList": [ "calclavia", "RX14", "AEnterprise", "magik6k", "Shadowfacts" ],
+    "credits": "Created by the NOVA Team.\nPorted to Minecraft 1.11 by: ExE Boss.",
+    "logoFile": "/assets/nova/textures/NOVA.png",
+    "screenshots": [],
+    "parent": "",
+    "requiredMods": [],
+    "dependencies": [],
+    "dependants": [],
+    "useDependencyInformation": true
+  }]
+}

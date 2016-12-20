@@ -107,7 +107,7 @@ public class RenderUtility {
 			"          \"rotation\": [ 0, -135, 25 ],\n" +
 			"          \"translation\": [ 0, 4, 2 ],\n" +
 			"          \"scale\": [ 1.7, 1.7, 1.7 ]\n" +
-			"      }\n" +
+			"      },\n" +
 			"      \"firstperson_lefthand\": {\n" +
 			"          \"rotation\": [ 0, 135, 25 ],\n" +
 			"          \"translation\": [ 0, 4, 2 ],\n" +

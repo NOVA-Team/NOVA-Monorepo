@@ -80,7 +80,7 @@ public class NovaMinecraft {
 	public static final String name = "NOVA";
 	public static final String mcId = "minecraft";
 
-	@SidedProxy(clientSide = "nova.core.wrapper.mc.forge.v18.launcher.ClientProxy", serverSide = "nova.core.wrapper.mc.forge.v18.launcher.CommonProxy")
+	@SidedProxy(clientSide = "nova.core.wrapper.mc.forge.v1_11.launcher.ClientProxy", serverSide = "nova.core.wrapper.mc.forge.v1_11.launcher.CommonProxy")
 	public static CommonProxy proxy;
 	@Mod.Instance(id)
 	public static NovaMinecraft instance;
@@ -162,6 +162,7 @@ public class NovaMinecraft {
 			nativeConverters = Game.natives().getNativeConverters().stream().filter(n -> n instanceof Loadable).map(n -> (Loadable) n).collect(Collectors.toSet());
 			nativeConverters.stream().forEachOrdered(Loadable::preInit);
 
+			// TODO: Make child mods section display names of loaded NOVA mods.
 			childModMetadata = Collections.emptySet();//.stream().filter(l -> l.getClass().isAnnotationPresent(nova.core.loader.Mod.class))
 					//.map(l -> ((nova.core.loader.Mod)l.getClass().getDeclaredAnnotation(nova.core.loader.Mod.class))).collect(Collectors.toSet());
 
