@@ -24,7 +24,6 @@ public class MCParticleTransform extends EntityTransform {
 	public MCParticleTransform(Particle wrapper) {
 		this.wrapper = wrapper;
 		this.setPivot(Vector3D.ZERO);
-		this.setScale(Vector3DUtil.ONE);
 	}
 
 	@Override
@@ -45,6 +44,17 @@ public class MCParticleTransform extends EntityTransform {
 	@Override
 	public void setPosition(Vector3D position) {
 		wrapper.setPosition(position.getX(), position.getY(), position.getZ());
+	}
+
+	@Override
+	public void setScale(Vector3D scale) {
+		// MC Particles only have one scale.
+		wrapper.particleScale = (float) ((scale.getX() + scale.getY() + scale.getZ()) / 3);
+	}
+
+	@Override
+	public Vector3D scale() {
+		return new Vector3D(wrapper.particleScale, wrapper.particleScale, wrapper.particleScale);
 	}
 
 	@Override
