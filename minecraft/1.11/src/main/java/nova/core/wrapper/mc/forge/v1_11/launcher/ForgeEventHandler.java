@@ -77,7 +77,7 @@ public class ForgeEventHandler {
 				((LeftClickBlock)event).setUseBlock(Event.Result.values()[evt.useBlock.ordinal()]);
 				((LeftClickBlock)event).setUseItem(Event.Result.values()[evt.useItem.ordinal()]);
 			}
-			event.setCanceled(evt.isCanceled());
+			if (event.isCancelable()) event.setCanceled(evt.isCanceled());
 		}
 	}
 
