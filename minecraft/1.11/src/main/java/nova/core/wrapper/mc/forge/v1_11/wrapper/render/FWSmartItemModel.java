@@ -20,21 +20,23 @@
 
 package nova.core.wrapper.mc.forge.v1_11.wrapper.render;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.item.Item;
 import nova.core.wrapper.mc.forge.v1_11.render.RenderUtility;
 import nova.internal.core.Game;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.client.renderer.block.model.*;
-import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -67,17 +69,18 @@ public class FWSmartItemModel extends FWSmartModel implements IBakedModel {
 		return this;
 	}
 
-//	public List<BakedQuad> getGeneralQuads() {
-//		if (item.components.has(ItemRenderer.class)) {
-//			BWModel model = new BWModel();
-//			ItemRenderer renderer = item.components.get(ItemRenderer.class);
-//			model.matrix.translate(0.5, 0.5, 0.5);
-//			renderer.onRender.accept(model);
-//			return modelToQuads(model);
-//		}
-//
-//		return Collections.emptyList();
-//	}
+	@Override
+	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+		if (item.components.has(ItemRenderer.class)) {
+			BWModel model = new BWModel();
+			ItemRenderer renderer = item.components.get(ItemRenderer.class);
+			model.matrix.translate(0.5, 0.5, 0.5);
+			renderer.onRender.accept(model);
+			return modelToQuads(model);
+		}
+
+		return Collections.emptyList();
+	}
 
 	@Override
 	public TextureAtlasSprite getParticleTexture() {

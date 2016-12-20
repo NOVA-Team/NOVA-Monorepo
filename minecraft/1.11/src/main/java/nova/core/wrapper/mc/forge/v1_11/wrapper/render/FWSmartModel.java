@@ -102,11 +102,6 @@ public abstract class FWSmartModel implements IBakedModel {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-		return Collections.emptyList();
-	}
-
-	@Override
 	public boolean isAmbientOcclusion() {
 		return true;
 	}

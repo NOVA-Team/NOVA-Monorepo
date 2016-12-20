@@ -22,19 +22,24 @@ package nova.core.wrapper.mc.forge.v1_11.wrapper.render;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.EnumFacing;
 
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
 
 /**
  * Generates a smart model based on a NOVA Model
  * @author Calclavia
  */
 public class FWEmptyModel extends FWSmartModel implements IBakedModel {
+
+	@Override
+	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+		return Collections.emptyList();
+	}
 
 	@Override
 	public TextureAtlasSprite getParticleTexture() {

@@ -22,11 +22,13 @@ package nova.core.wrapper.mc.forge.v1_11.wrapper.render;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import nova.core.block.Block;
 import nova.core.component.renderer.ItemRenderer;
 import nova.core.component.renderer.StaticRenderer;
@@ -34,10 +36,9 @@ import nova.core.item.ItemBlock;
 import nova.core.wrapper.mc.forge.v1_11.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWBlock;
 import nova.internal.core.Game;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.List;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -63,46 +64,21 @@ public class FWSmartBlockModel extends FWSmartModel implements IBakedModel {
 				ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT); // Ground, Fixed
 	}
 
-	//Block rendering
-	public IBakedModel handleBlockState(IBlockState state) {
-		FWBlock block = (FWBlock) state.getBlock();
+	@Override
+	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+		BWModel blockModel = new BWModel();
+		blockModel.matrix.translate(0.5, 0.5, 0.5);
 
-		Block blockInstance = block.getBlockInstance(block.lastExtendedWorld, Game.natives().toNova(block.lastExtendedStatePos));
-
-		if (blockInstance.components.has(StaticRenderer.class)) {
-			return new FWSmartBlockModel(blockInstance, false);
+		if (isItem) {
+			ItemRenderer renderer = block.components.get(ItemRenderer.class);
+			renderer.onRender.accept(blockModel);
+		} else {
+			StaticRenderer renderer = block.components.get(StaticRenderer.class);
+			renderer.onRender.accept(blockModel);
 		}
 
-		return new FWEmptyModel();
+		return modelToQuads(blockModel);
 	}
-
-	//Itemblock rendering
-	public IBakedModel handleItemState(ItemStack stack) {
-		ItemBlock item = Game.natives().toNova(stack);
-		ItemRenderer renderer =
-			item.components.has(ItemRenderer.class) ? item.components.get(ItemRenderer.class) : block.components.has(ItemRenderer.class) ? block.components.get(ItemRenderer.class) : null;
-
-		if (renderer != null) {
-			return new FWSmartBlockModel(block, true);
-		}
-
-		return new FWEmptyModel();
-	}
-
-//	public List<BakedQuad> getGeneralQuads() {
-//		BWModel blockModel = new BWModel();
-//		blockModel.matrix.translate(0.5, 0.5, 0.5);
-//
-//		if (isItem) {
-//			ItemRenderer renderer = block.components.get(ItemRenderer.class);
-//			renderer.onRender.accept(blockModel);
-//		} else {
-//			StaticRenderer renderer = block.components.get(StaticRenderer.class);
-//			renderer.onRender.accept(blockModel);
-//		}
-//
-//		return modelToQuads(blockModel);
-//	}
 
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
