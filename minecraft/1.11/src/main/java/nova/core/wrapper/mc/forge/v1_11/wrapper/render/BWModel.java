@@ -65,7 +65,7 @@ public class BWModel extends MeshModel {
 					MeshModel meshModel = (MeshModel) model;
 					meshModel.faces.forEach(face ->
 					{
-						// TODO: Figure out if ?
+						// TODO: See if this works, and possibly fix it
 						// Brightness is defined as: skyLight << 20 | blockLight << 4
 						if (face.getBrightness() >= 0) {
 							worldRenderer.lightmap((int)(face.getBrightness() * (15 << 20)), (int)(face.getBrightness() * (11 << 4)));
