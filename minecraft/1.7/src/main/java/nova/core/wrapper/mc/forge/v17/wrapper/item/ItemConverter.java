@@ -22,6 +22,8 @@ package nova.core.wrapper.mc.forge.v17.wrapper.item;
 
 import com.google.common.collect.HashBiMap;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -33,6 +35,7 @@ import nova.core.item.ItemFactory;
 import nova.core.item.ItemManager;
 import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.loader.Loadable;
+import nova.core.loader.Mod;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
@@ -40,7 +43,9 @@ import nova.core.wrapper.mc.forge.v17.util.ModCreativeTab;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
+import nova.internal.core.launch.ModLoader;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -192,17 +197,25 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			if (itemWrapper == null) {
 				throw new InitializationException("ItemConverter: Missing block: " + itemFactory.getID());
 			}
+			if (!itemFactory.getID().asString().equals(net.minecraft.item.Item.itemRegistry.getNameForObject(itemWrapper))) {
+				System.err.println("[NOVA]: ItemConverter: " + net.minecraft.item.Item.itemRegistry.getNameForObject(itemWrapper) + " != " + itemFactory.getID());
+				net.minecraft.item.Item newItemWrapper = (net.minecraft.item.Item)net.minecraft.item.Item.itemRegistry.getObject(itemFactory.getID().asString());
+				itemWrapper = newItemWrapper != null ? newItemWrapper : itemWrapper;
+			}
 		} else {
 			itemWrapper = new FWItem(itemFactory);
 		}
 
 		MinecraftItemMapping minecraftItemMapping = new MinecraftItemMapping(itemWrapper, 0);
-		map.put(itemFactory, minecraftItemMapping);
+		map.forcePut(itemFactory, minecraftItemMapping);
 
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
-			GameRegistry.registerItem(itemWrapper, itemFactory.getID().asString()); // TODO?
+			Optional<Mod> activeMod = ModLoader.<Mod>instance().activeMod();
+			String modId = activeMod.isPresent() ? activeMod.get().id() : Loader.instance().activeModContainer().getModId();
+			String itemId = itemFactory.getID().asString(); // TODO?
+			GameRegistry.registerItem(itemWrapper, itemId.contains(":") ? itemId : modId + ":" + itemId);
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
@@ -220,6 +233,23 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			}
 
 			System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
+		}
+	}
+
+	/**
+	 * Prevent forge from prefixing item IDs with "nova:"
+	 */
+	private void registerNovaBlock(FWItem itemWrapper, String blockId) {
+		try {
+			Class<GameData> gameDataClass = GameData.class;
+			Method getMain = gameDataClass.getDeclaredMethod("getMain");
+			Method registerItem = gameDataClass.getDeclaredMethod("registerItem", net.minecraft.item.Item.class, String.class, Integer.TYPE);
+			getMain.setAccessible(true);
+			registerItem.setAccessible(true);
+			GameData gameData = (GameData) getMain.invoke(null);
+			registerItem.invoke(gameData, itemWrapper, blockId, -1);
+		} catch (ReflectiveOperationException e) {
+			GameRegistry.registerItem(itemWrapper, blockId);
 		}
 	}
 

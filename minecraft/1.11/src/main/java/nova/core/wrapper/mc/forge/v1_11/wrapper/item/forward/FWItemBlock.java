@@ -22,25 +22,23 @@ package nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import nova.core.item.ItemFactory;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWBlock;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.ItemWrapperMethods;
 
 import java.util.List;
-
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.item.ItemWrapperMethods;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.item.ItemWrapperMethods;
 
 /**
  * @author Calclavia
  */
 public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWrapperMethods {
 
-	public FWItemBlock(net.minecraft.block.Block block) {
+	public FWItemBlock(FWBlock block) {
 		super(block);
 	}
 
