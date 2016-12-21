@@ -18,8 +18,9 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11.wrapper.render;
+package nova.core.wrapper.mc.forge.v1_11.wrapper.render.forward;
 
+import nova.core.wrapper.mc.forge.v1_11.wrapper.render.backward.BWModel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -29,74 +30,75 @@ import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import nova.core.block.Block;
 import nova.core.component.renderer.ItemRenderer;
-import nova.core.item.Item;
+import nova.core.component.renderer.StaticRenderer;
+import nova.core.item.ItemBlock;
 import nova.core.wrapper.mc.forge.v1_11.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWBlock;
 import nova.internal.core.Game;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Generates a smart model based on a NOVA Model
  * @author Calclavia
  */
-public class FWSmartItemModel extends FWSmartModel implements IBakedModel {
+public class FWSmartBlockModel extends FWSmartModel implements IBakedModel {
 
-	private final Item item;
+	private final Block block;
+	private final boolean isItem;
 
-	public FWSmartItemModel(Item item) {
+	public FWSmartBlockModel(Block block, boolean isDummy) {
 		super();
-		this.item = item;
-		// Change the default transforms to the default Item transforms
+		this.block = block;
+		this.isItem = isDummy;
+		// Change the default transforms to the default full Block transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
-			new ItemTransformVec3f(new Vector3f(-90, 0, 0), new Vector3f(0, 1, -3), new Vector3f(0.55f, 0.55f, 0.55f)), // Third Person
-			new ItemTransformVec3f(new Vector3f(-90, 0, 0), new Vector3f(0, 1, -3), new Vector3f(0.55f, 0.55f, 0.55f)), // Third Person
-			new ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 4, 2), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person
-			new ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 4, 2), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person
-			ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT,
-			ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
-	}
-
-	public IBakedModel handleItemState(ItemStack stack) {
-		Item item = Game.natives().toNova(stack);
-
-		if (item.components.has(ItemRenderer.class)) {
-			return new FWSmartItemModel(item);
-		}
-
-		return this;
+				new ItemTransformVec3f(new Vector3f(10, -45, 170), // Third Person (Left)
+						new Vector3f(0, 0.09375f, -0.171875f), new Vector3f(0.375f, 0.375f, 0.375f)),
+				new ItemTransformVec3f(new Vector3f(10, -45, 170), // Third Person (Right)
+						new Vector3f(0, 0.09375f, -0.171875f), new Vector3f(0.375f, 0.375f, 0.375f)),
+				ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, // First Person (Left, Right)
+				ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, // Head, Gui
+				ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT); // Ground, Fixed
 	}
 
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-		if (item.components.has(ItemRenderer.class)) {
-			BWModel model = new BWModel();
-			ItemRenderer renderer = item.components.get(ItemRenderer.class);
-			model.matrix.translate(0.5, 0.5, 0.5);
-			renderer.onRender.accept(model);
-			return modelToQuads(model);
+		BWModel blockModel = new BWModel();
+		blockModel.matrix.translate(0.5, 0.5, 0.5);
+
+		if (isItem) {
+			ItemRenderer renderer = block.components.get(ItemRenderer.class);
+			renderer.onRender.accept(blockModel);
+		} else {
+			StaticRenderer renderer = block.components.get(StaticRenderer.class);
+			renderer.onRender.accept(blockModel);
 		}
 
-		return Collections.emptyList();
+		return modelToQuads(blockModel);
 	}
 
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
-		if (item.components.has(ItemRenderer.class)) {
-			ItemRenderer itemRenderer = item.components.get(ItemRenderer.class);
+		/*
+		if (block.components.has(StaticRenderer.class)) {
+			Optional<Texture> apply = block.components.get(StaticRenderer.class).texture.apply(Direction.UNKNOWN);
+			if (apply.isPresent()) {
+				return RenderUtility.instance.getTexture(apply.components.get());
+			}
+		}*/
+
+		if (block.components.has(ItemRenderer.class)) {
+			ItemRenderer itemRenderer = block.components.get(ItemRenderer.class);
 			if (itemRenderer.texture.isPresent()) {
 				return RenderUtility.instance.getTexture(itemRenderer.texture.get());
 			}
 		}
 
 		return null;
-	}
-
-	@Override
-	public boolean isGui3d() {
-		return item.components.has(ItemRenderer.class);
 	}
 
 	@Override

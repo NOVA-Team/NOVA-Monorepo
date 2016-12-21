@@ -18,12 +18,11 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11.wrapper.render;
+package nova.core.wrapper.mc.forge.v1_11.wrapper.render.backward;
 
 import net.minecraft.util.ResourceLocation;
 import nova.core.render.RenderManager;
 import nova.core.render.texture.Texture;
-import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 public class BWRenderManager extends RenderManager {

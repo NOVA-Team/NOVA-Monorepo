@@ -22,6 +22,9 @@ package nova.core.wrapper.mc.forge.v1_11.recipes;
 
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.RecipeSorter.Category;
+import nova.core.item.Item;
 import nova.core.recipes.RecipeAddedEvent;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.RecipeRemovedEvent;
@@ -71,6 +74,14 @@ public class MinecraftRecipeRegistry {
 		ReflectionUtil.setCraftingRecipeList(new RecipeListWrapper(recipes));
 
 		System.out.println("Initialized recipes in " + (System.currentTimeMillis() - startTime) + " ms");
+
+		RecipeSorter.register("nova:shaped",	ShapedRecipeBasic.class, Category.SHAPED, "before:forge:shapedore");
+		RecipeSorter.register("nova:shaped.oredict",	ShapedRecipeOre.class, Category.SHAPED, "after:nova:shaped after:minecraft:shaped before:minecraft:shapeless");
+
+		RecipeSorter.register("nova:shapeless",	ShapelessRecipeBasic.class, Category.SHAPELESS, "after:minecraft:shapeless before:forge:shapelessore");
+		RecipeSorter.register("nova:shapeless.oredict",	ShapelessRecipeOre.class, Category.SHAPELESS, "after:nova:shapeless after:minecraft:shapeless");
+
+		RecipeSorter.register("nova:unknown",	NovaCraftingRecipe.class, Category.UNKNOWN, "");
 
 		recipeManager.whenRecipeAdded(CraftingRecipe.class, this::onNOVARecipeAdded);
 		recipeManager.whenRecipeRemoved(CraftingRecipe.class, this::onNOVARecipeRemoved);

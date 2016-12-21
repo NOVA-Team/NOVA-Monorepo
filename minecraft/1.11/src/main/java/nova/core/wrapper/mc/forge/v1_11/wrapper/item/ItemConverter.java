@@ -20,11 +20,16 @@
 
 package nova.core.wrapper.mc.forge.v1_11.wrapper.item;
 
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.backward.BWItemFactory;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.backward.BWItem;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward.FWNBTTagCompound;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward.FWItem;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nova.core.block.BlockFactory;
 import nova.core.component.Category;
@@ -34,6 +39,7 @@ import nova.core.item.ItemFactory;
 import nova.core.item.ItemManager;
 import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.loader.Loadable;
+import nova.core.loader.Mod;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v1_11.launcher.NovaMinecraft;
@@ -41,8 +47,10 @@ import nova.core.wrapper.mc.forge.v1_11.util.ModCreativeTab;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
+import nova.internal.core.launch.ModLoader;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -196,17 +204,25 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			if (itemWrapper == null) {
 				throw new InitializationException("ItemConverter: Missing block: " + itemFactory.getID());
 			}
+			if (!Objects.toString(net.minecraft.item.Item.REGISTRY.getNameForObject(itemWrapper)).equals(itemFactory.getID().asString())) {
+				System.err.println("ItemConverter: " + net.minecraft.item.Item.REGISTRY.getNameForObject(itemWrapper).toString() + " != " + itemFactory.getID());
+				net.minecraft.item.Item newItemWrapper = net.minecraft.item.Item.getByNameOrId(itemFactory.getID().asString());
+				itemWrapper = newItemWrapper != null ? newItemWrapper : itemWrapper;
+			}
 		} else {
 			itemWrapper = new FWItem(itemFactory);
 		}
 
 		MinecraftItemMapping minecraftItemMapping = new MinecraftItemMapping(itemWrapper, 0);
-		map.put(itemFactory, minecraftItemMapping);
+		map.forcePut(itemFactory, minecraftItemMapping);
 
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
-			GameRegistry.register(itemWrapper, new ResourceLocation(itemFactory.getID().asString()));
+			Optional<Mod> activeMod = ModLoader.<Mod>instance().activeMod();
+			String modId = activeMod.isPresent() ? activeMod.get().id() : Loader.instance().activeModContainer().getModId();
+			String itemId = itemFactory.getID().asString();
+			GameRegistry.register(itemWrapper, itemId.contains(":") ? new ResourceLocation(itemId) : new ResourceLocation(modId, itemId));
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
@@ -327,7 +343,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			if (item.getHasSubtypes()) {
 				return net.minecraft.item.Item.REGISTRY.getNameForObject(item) + ":" + meta;
 			} else {
-				return net.minecraft.item.Item.REGISTRY.getNameForObject(item).toString();
+				return Objects.toString(net.minecraft.item.Item.REGISTRY.getNameForObject(item));
 			}
 		}
 	}

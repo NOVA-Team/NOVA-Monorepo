@@ -18,31 +18,54 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11.wrapper.item;
+package nova.core.wrapper.mc.forge.v1_11.wrapper.item.backward;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.item.Item;
+import nova.core.retention.Storable;
 
 /**
- * A wrapped NBTTagCompound object that references the item instance
  * @author Stan
  * @since 3/02/2015.
  */
-public class FWNBTTagCompound extends NBTTagCompound {
-	private final Item item;
+public class BWItem extends Item implements Storable {
+	private final net.minecraft.item.Item item;
+	private final int meta;
+	private final NBTTagCompound tag;
 
-	public FWNBTTagCompound(Item item) {
-		this.item = item;
+	public BWItem(ItemStack itemStack) {
+		this(itemStack.getItem(), itemStack.getHasSubtypes() ? itemStack.getItemDamage() : 0, itemStack.getTagCompound());
 	}
 
-	public Item getItem() {
+	public BWItem(net.minecraft.item.Item item, int meta, NBTTagCompound tag) {
+		this.item = item;
+		this.meta = meta;
+		this.tag = tag;
+	}
+
+	public net.minecraft.item.Item getItem() {
 		return item;
 	}
 
-	@Override
-	public NBTTagCompound copy() {
-		FWNBTTagCompound result = new FWNBTTagCompound(item);
-		getKeySet().forEach(s -> result.setTag((String) s, getTag((String) s).copy()));
+	public int getMeta() {
+		return meta;
+	}
+
+	public NBTTagCompound getTag() {
+		return tag;
+	}
+
+	public ItemStack makeItemStack(int stackSize) {
+		ItemStack result = new ItemStack(item, stackSize, meta);
+		if (tag != null) {
+			result.setTagCompound(tag);
+		}
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return getID().asString(); // TODO?
 	}
 }

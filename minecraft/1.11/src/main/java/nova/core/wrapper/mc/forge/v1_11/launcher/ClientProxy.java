@@ -44,7 +44,7 @@ import nova.core.wrapper.mc.forge.v1_11.wrapper.particle.backward.BWParticle;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.particle.forward.FWParticle;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.entity.forward.FWEntityRenderer;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.item.FWItem;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward.FWItem;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 

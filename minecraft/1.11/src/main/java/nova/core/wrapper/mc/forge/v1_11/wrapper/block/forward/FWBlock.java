@@ -307,7 +307,13 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public boolean isFullCube(IBlockState state) {
-		return isNormalCube(state);
+		Optional<Collider> blockCollider = dummy.components.getOp(Collider.class);
+
+		if (blockCollider.isPresent()) {
+			return blockCollider.get().isCube.get();
+		} else {
+			return super.isFullCube(state);
+		}
 	}
 
 	@Override
