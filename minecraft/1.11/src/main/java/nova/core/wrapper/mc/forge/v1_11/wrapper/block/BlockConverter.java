@@ -144,7 +144,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		blockFactoryMap.put(blockFactory, blockWrapper);
 		Optional<Mod> activeMod = ModLoader.<Mod>instance().activeMod();
 		String modId = activeMod.isPresent() ? activeMod.get().id() : Loader.instance().activeModContainer().getModId();
-		String blockId = blockFactory.getID().asString();
+		String blockId = blockFactory.getID().asString(); // TODO?
 		ResourceLocation id = blockId.contains(":") ? new ResourceLocation(blockId) : new ResourceLocation(modId, blockId);
 		GameRegistry.register(blockWrapper, id);
 		GameRegistry.register(itemBlockWrapper, id);

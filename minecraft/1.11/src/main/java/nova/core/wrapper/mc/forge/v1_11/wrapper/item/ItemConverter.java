@@ -204,8 +204,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			if (itemWrapper == null) {
 				throw new InitializationException("ItemConverter: Missing block: " + itemFactory.getID());
 			}
-			if (!Objects.toString(net.minecraft.item.Item.REGISTRY.getNameForObject(itemWrapper)).equals(itemFactory.getID().asString())) {
-				System.err.println("ItemConverter: " + net.minecraft.item.Item.REGISTRY.getNameForObject(itemWrapper).toString() + " != " + itemFactory.getID());
+			if (!itemFactory.getID().asString().equals(Objects.toString(net.minecraft.item.Item.REGISTRY.getNameForObject(itemWrapper)))) {
+				System.err.println("[NOVA]: ItemConverter: " + net.minecraft.item.Item.REGISTRY.getNameForObject(itemWrapper) + " != " + itemFactory.getID());
 				net.minecraft.item.Item newItemWrapper = net.minecraft.item.Item.getByNameOrId(itemFactory.getID().asString());
 				itemWrapper = newItemWrapper != null ? newItemWrapper : itemWrapper;
 			}
@@ -221,7 +221,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
 			Optional<Mod> activeMod = ModLoader.<Mod>instance().activeMod();
 			String modId = activeMod.isPresent() ? activeMod.get().id() : Loader.instance().activeModContainer().getModId();
-			String itemId = itemFactory.getID().asString();
+			String itemId = itemFactory.getID().asString(); // TODO?
 			GameRegistry.register(itemWrapper, itemId.contains(":") ? new ResourceLocation(itemId) : new ResourceLocation(modId, itemId));
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
