@@ -18,19 +18,22 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11.wrapper.render;
+package nova.core.wrapper.mc.forge.v1_11.wrapper.render.backward;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.render.RenderException;
 import nova.core.render.texture.Texture;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.apache.logging.log4j.Level;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+
 import java.util.Iterator;
 
 /**
@@ -55,7 +58,9 @@ public class BWClientRenderManager extends BWRenderManager {
 				}
 			}
 		} catch (Exception e) {
-			throw new RenderException("Couldn't load texture " + texture.getPath(), e);
+			FMLLog.log("NOVA", Level.ERROR, new RenderException("Couldn't load texture " + texture.getPath(), e),
+					!texture.getResource().toLowerCase().equals(texture.getResource()) ?
+							"Minecraft doesn’t support textures with uppercase characters" : "");
 		}
 		return new Vector2D(16, 16);
 	}

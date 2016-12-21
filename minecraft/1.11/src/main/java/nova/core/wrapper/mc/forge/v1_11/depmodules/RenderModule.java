@@ -21,7 +21,7 @@
 package nova.core.wrapper.mc.forge.v1_11.depmodules;
 
 import nova.core.render.RenderManager;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.render.BWClientRenderManager;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.render.backward.BWClientRenderManager;
 import se.jbee.inject.bind.BinderModule;
 
 public class RenderModule extends BinderModule {

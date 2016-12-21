@@ -51,10 +51,10 @@ import nova.core.render.texture.BlockTexture;
 import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWBlock;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.item.FWItem;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.render.FWEmptyModel;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.render.FWSmartBlockModel;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.render.FWSmartItemModel;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward.FWItem;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.render.forward.FWEmptyModel;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.render.forward.FWSmartBlockModel;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.render.forward.FWSmartItemModel;
 import nova.internal.core.Game;
 import org.lwjgl.opengl.GL11;
 
@@ -158,6 +158,12 @@ public class RenderUtility {
 		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
 		glEnable(GL11.GL_TEXTURE_2D);
 		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+	}
+
+	public TextureAtlasSprite getTexture(Optional<Texture> texture) {
+		if (!texture.isPresent())
+			return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+		return getTexture(texture.get());
 	}
 
 	public TextureAtlasSprite getTexture(Texture texture) {

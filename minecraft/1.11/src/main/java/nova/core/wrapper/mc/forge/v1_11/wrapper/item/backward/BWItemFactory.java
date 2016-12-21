@@ -18,13 +18,15 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11.wrapper.item;
+package nova.core.wrapper.mc.forge.v1_11.wrapper.item.backward;
 
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
+import nova.core.util.id.Identifier;
+import nova.core.util.id.StringIdentifier;
 import nova.internal.core.Game;
 
 /**

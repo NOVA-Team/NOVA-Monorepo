@@ -30,7 +30,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import nova.core.component.renderer.DynamicRenderer;
 import nova.core.wrapper.mc.forge.v1_11.render.RenderUtility;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.render.BWModel;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.render.backward.BWModel;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Optional;

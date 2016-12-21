@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11.wrapper.item;
+package nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -30,6 +30,8 @@ import net.minecraft.world.World;
 import nova.core.item.ItemFactory;
 
 import java.util.List;
+
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.ItemWrapperMethods;
 
 /**
  * @author Calclavia

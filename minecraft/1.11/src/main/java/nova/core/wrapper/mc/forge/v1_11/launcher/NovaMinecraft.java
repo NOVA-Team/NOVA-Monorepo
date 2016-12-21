@@ -21,11 +21,9 @@
 package nova.core.wrapper.mc.forge.v1_11.launcher;
 
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.Metadata;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -63,9 +61,9 @@ import nova.internal.core.deps.DepDownloader;
 import nova.internal.core.launch.InitializationException;
 import nova.internal.core.launch.NovaLauncher;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -89,8 +87,6 @@ public class NovaMinecraft {
 	private static ModMetadata modMetadata;
 
 	private static Set<Loadable> nativeConverters;
-	private static Set<nova.core.loader.Mod> childModMetadata;
-	private static Set<ModContainer> childModContainers;
 
 	/**
 	 * ORDER OF LOADING.
@@ -162,10 +158,6 @@ public class NovaMinecraft {
 			nativeConverters = Game.natives().getNativeConverters().stream().filter(n -> n instanceof Loadable).map(n -> (Loadable) n).collect(Collectors.toSet());
 			nativeConverters.stream().forEachOrdered(Loadable::preInit);
 
-			// TODO: Make child mods section display names of loaded NOVA mods.
-			childModMetadata = Collections.emptySet();//.stream().filter(l -> l.getClass().isAnnotationPresent(nova.core.loader.Mod.class))
-					//.map(l -> ((nova.core.loader.Mod)l.getClass().getDeclaredAnnotation(nova.core.loader.Mod.class))).collect(Collectors.toSet());
-
 			Game.blocks().init();
 			Game.items().init();
 			Game.entities().init();
@@ -215,17 +207,6 @@ public class NovaMinecraft {
 			proxy.postInit();
 			nativeConverters.stream().forEachOrdered(Loadable::postInit);
 			launcher.postInit();
-
-			if (modMetadata.childMods == null) modMetadata.childMods = new ArrayList<>();
-			childModMetadata.stream().forEachOrdered((nova.core.loader.Mod m) -> {
-				ModMetadata forgeMetadata = new ModMetadata();
-				forgeMetadata.modId = m.id();
-				forgeMetadata.name  = m.name();
-				forgeMetadata.version = m.version();
-				forgeMetadata.description = m.description();
-				ModContainer modContainer = new DummyModContainer(forgeMetadata);
-				modMetadata.childMods.add(modContainer); // So that nova mods are shown alongside Forge mods.
-			});
 		} catch (Exception e) {
 			System.out.println("Error during postInit");
 			e.printStackTrace();
@@ -242,5 +223,4 @@ public class NovaMinecraft {
 	public void serverStopping(FMLServerStoppingEvent event) {
 		Game.events().publish(new ServerEvent.Stop());
 	}
-
 }

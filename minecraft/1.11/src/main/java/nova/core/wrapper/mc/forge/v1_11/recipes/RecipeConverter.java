@@ -139,20 +139,23 @@ public class RecipeConverter {
 		ItemIngredient[] ingredients = recipe.getIngredients();
 		int type = getRecipeType(ingredients);
 
-		if (type == TYPE_BASIC) {
-			ItemStack[] items = new ItemStack[ingredients.length];
-			for (int i = 0; i < ingredients.length; i++) {
-				items[i] = wrapSpecific((SpecificItemIngredient) ingredients[i]);
+		switch (type) {
+			case TYPE_BASIC: {
+				ItemStack[] items = new ItemStack[ingredients.length];
+				for (int i = 0; i < ingredients.length; i++) {
+					items[i] = wrapSpecific((SpecificItemIngredient) ingredients[i]);
+				}
+				return new ShapelessRecipeBasic(items, recipe);
 			}
-			return new ShapelessRecipeBasic(items, recipe);
-		} else if (type == TYPE_ORE) {
-			Object[] items = new Object[ingredients.length];
-			for (int i = 0; i < ingredients.length; i++) {
-				items[i] = getInternal(ingredients[i]);
+			case TYPE_ORE: {
+				Object[] items = new Object[ingredients.length];
+				for (int i = 0; i < ingredients.length; i++) {
+					items[i] = getInternal(ingredients[i]);
+				}
+				return new ShapelessRecipeOre(items, recipe);
 			}
-			return new ShapelessRecipeOre(items, recipe);
-		} else {
-			return new NovaCraftingRecipe(recipe);
+			default:
+				return new NovaCraftingRecipe(recipe);
 		}
 	}
 
@@ -165,47 +168,50 @@ public class RecipeConverter {
 		int type = getRecipeType(ingredients);
 
 		// construct recipe
-		if (type == TYPE_BASIC) {
-			ItemStack[] basicIngredients = new ItemStack[recipe.getHeight() * recipe.getWidth()];
-			for (int i = 0; i < ingredients.length; i++) {
-				basicIngredients[posx[i] + posy[i] * recipe.getWidth()] = wrapSpecific((SpecificItemIngredient) ingredients[i]);
-			}
-
-			return new ShapedRecipeBasic(basicIngredients, recipe);
-		} else if (type == TYPE_ORE) {
-			Object[] converted = new Object[recipe.getHeight() * recipe.getWidth()];
-			for (int i = 0; i < ingredients.length; i++) {
-				converted[posx[i] + posy[i] * recipe.getWidth()] = getInternal(ingredients[i]);
-			}
-
-			// arguments contents:
-			// 1) recipe patterns
-			// 2) characters + ingredients
-
-			int counter = 0;
-			String[] parts = new String[recipe.getHeight()];
-			ArrayList rarguments = new ArrayList();
-			for (int i = 0; i < recipe.getHeight(); i++) {
-				char[] pattern = new char[recipe.getWidth()];
-				for (int j = 0; j < recipe.getWidth(); j++) {
-					int off = i * recipe.getWidth() + j;
-					if (converted[off] == null) {
-						pattern[j] = ' ';
-					} else {
-						pattern[j] = (char) ('A' + counter);
-						rarguments.add(pattern[j]);
-						rarguments.add(converted[off]);
-						counter++;
-					}
+		switch (type) {
+			case TYPE_BASIC: {
+				ItemStack[] basicIngredients = new ItemStack[recipe.getHeight() * recipe.getWidth()];
+				for (int i = 0; i < ingredients.length; i++) {
+					basicIngredients[posx[i] + posy[i] * recipe.getWidth()] = wrapSpecific((SpecificItemIngredient) ingredients[i]);
 				}
-				parts[i] = new String(pattern);
+
+				return new ShapedRecipeBasic(basicIngredients, recipe);
 			}
+			case TYPE_ORE: {
+				Object[] converted = new Object[recipe.getHeight() * recipe.getWidth()];
+				for (int i = 0; i < ingredients.length; i++) {
+					converted[posx[i] + posy[i] * recipe.getWidth()] = getInternal(ingredients[i]);
+				}
 
-			rarguments.addAll(0, Arrays.asList(parts));
+				// arguments contents:
+				// 1) recipe patterns
+				// 2) characters + ingredients
 
-			return new ShapedRecipeOre(rarguments.toArray(), recipe);
-		} else {
-			return new NovaCraftingRecipe(recipe);
+				int counter = 0;
+				String[] parts = new String[recipe.getHeight()];
+				ArrayList rarguments = new ArrayList();
+				for (int i = 0; i < recipe.getHeight(); i++) {
+					char[] pattern = new char[recipe.getWidth()];
+					for (int j = 0; j < recipe.getWidth(); j++) {
+						int off = i * recipe.getWidth() + j;
+						if (converted[off] == null) {
+							pattern[j] = ' ';
+						} else {
+							pattern[j] = (char) ('A' + counter);
+							rarguments.add(pattern[j]);
+							rarguments.add(converted[off]);
+							counter++;
+						}
+					}
+					parts[i] = new String(pattern);
+				}
+
+				rarguments.addAll(0, Arrays.asList(parts));
+
+				return new ShapedRecipeOre(rarguments.toArray(), recipe);
+			}
+			default:
+				return new NovaCraftingRecipe(recipe);
 		}
 	}
 

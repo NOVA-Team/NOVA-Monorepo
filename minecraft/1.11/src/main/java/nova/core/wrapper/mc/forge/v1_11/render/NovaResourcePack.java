@@ -37,8 +37,8 @@ public class NovaResourcePack extends FileResourcePack {
 	private final String modid;
 	private final String[] domains;
 
-	public NovaResourcePack(File p_i1290_1_, String modid, String[] domains) {
-		super(p_i1290_1_);
+	public NovaResourcePack(File file, String modid, String[] domains) {
+		super(file);
 		this.modid = modid;
 		this.domains = domains;
 	}

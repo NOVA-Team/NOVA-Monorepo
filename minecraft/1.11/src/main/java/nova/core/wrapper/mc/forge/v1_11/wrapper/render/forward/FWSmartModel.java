@@ -18,9 +18,13 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11.wrapper.render;
+package nova.core.wrapper.mc.forge.v1_11.wrapper.render.forward;
 
 import com.google.common.primitives.Ints;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -36,9 +40,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -80,7 +81,7 @@ public abstract class FWSmartModel implements IBakedModel {
 								face -> {
 									List<int[]> vertexData = face.vertices
 										.stream()
-										.map(v -> vertexToInts(v, RenderUtility.instance.getTexture(face.texture.get())))
+										.map(v -> vertexToInts(v, RenderUtility.instance.getTexture(face.texture)))
 										.collect(Collectors.toList());
 
 									int[] data = Ints.concat(vertexData.toArray(new int[][] {}));

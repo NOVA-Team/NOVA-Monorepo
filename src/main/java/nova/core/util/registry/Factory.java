@@ -21,7 +21,11 @@
 package nova.core.util.registry;
 
 import nova.core.util.Identifiable;
+import nova.core.loader.Mod;
+import nova.internal.core.Game;
+import nova.internal.core.launch.ModLoader;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -51,7 +55,7 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	 * @param processor The processor function
 	 */
 	public Factory(String id, Supplier<T> constructor, Function<T, T> processor) {
-		this.id = id;
+		this.id = addPrefix(id);
 		this.constructor = constructor;
 		this.processor = processor;
 	}
@@ -79,6 +83,23 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	}
 
 	public String getID() {
+		return id;
+	}
+
+	private static String addPrefix(String id) {
+		int prefixEnd = id.lastIndexOf(':');
+		String oldPrefix = prefixEnd < 0 ? "" : id.substring(0, prefixEnd);
+		String newPrefix = null;
+		Optional<Mod> mod = ModLoader.<Mod>instance().activeMod();
+
+		if (mod.isPresent()) {
+			newPrefix = mod.get().id();
+		}
+
+		if (newPrefix != null && !oldPrefix.startsWith(newPrefix)) {
+			id = newPrefix + ':' + id;
+		}
+
 		return id;
 	}
 }

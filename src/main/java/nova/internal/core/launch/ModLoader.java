@@ -44,6 +44,8 @@ import java.util.stream.Stream;
  */
 public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
+	private static ModLoader instance;
+
 	protected final DependencyInjectionEntryPoint diep;
 
 	/**
@@ -66,9 +68,20 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	 */
 	protected Map<ANNOTATION, Object> mods;
 
+	/**
+	 * Holds the annotations of mod instances
+	 */
+	protected Map<Object, ANNOTATION> modAnnotations;
+
 	protected List<Loadable> orderedMods;
 
+	/**
+	 * The mod that is currently being pre-initialized, initialized or post-initialized
+	 */
+	protected Optional<ANNOTATION> activeMod = Optional.empty();
+
 	public ModLoader(Class<ANNOTATION> annotationType, DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
+		instance = this;
 		this.diep = diep;
 		this.annotationType = annotationType;
 
@@ -121,6 +134,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	public void load() {
 		mods = new HashMap<>();
+		modAnnotations = new HashMap<>();
 
 		/**
 		 * Instantiate Java mods
@@ -179,6 +193,8 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				)
 		);
 
+		modAnnotations.putAll(mods.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey)));
+
 		orderedMods = mods.values()
 			.stream()
 			.filter(mod -> mod.getClass().isAssignableFrom(Loadable.class))
@@ -190,36 +206,46 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	public void preInit() {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
+				activeMod = Optional.of(modAnnotations.get(mod));
 				mod.preInit();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during pre initialization phase", t);
 				throw new InitializationException(t);
 			}
 		});
+		activeMod = Optional.empty();
 	}
 
 	@Override
 	public void init() {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
+				activeMod = Optional.of(modAnnotations.get(mod));
 				mod.init();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during initialization phase", t);
 				throw new InitializationException(t);
 			}
 		});
+		activeMod = Optional.empty();
 	}
 
 	@Override
 	public void postInit() {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
+				activeMod = Optional.of(modAnnotations.get(mod));
 				mod.postInit();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during post initialization phase", t);
 				throw new InitializationException(t);
 			}
 		});
+		activeMod = Optional.empty();
+	}
+
+	public Optional<ANNOTATION> activeMod() {
+		return activeMod;
 	}
 
 	public Set<ANNOTATION> getLoadedMods() {
@@ -236,5 +262,15 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	public Map<ANNOTATION, Class<?>> getScalaClassesMap() {
 		return new HashMap<>(scalaClasses);
+	}
+
+	/**
+	 * Returns the mod loader.
+	 *
+	 * @param <T> The mod annotation, should be {@link nova.core.loader.Mod}.
+	 * @return The mod loader (if it exists).
+	 */
+	public static <T extends Annotation> ModLoader<T> instance() {
+		return (ModLoader<T>) instance;
 	}
 }
