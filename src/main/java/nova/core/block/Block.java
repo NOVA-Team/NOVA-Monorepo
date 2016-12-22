@@ -20,6 +20,7 @@
 
 package nova.core.block;
 
+import nova.core.block.component.BlockProperty;
 import nova.core.component.ComponentProvider;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.component.transform.BlockTransform;
@@ -104,7 +105,7 @@ public class Block extends ComponentProvider implements Identifiable {
 	 * @return The breaking difficulty.
 	 */
 	public double getHardness() {
-		return 1;
+		return components.getOp(BlockProperty.Hardness.class).orElseGet(BlockProperty.Hardness::new).getHardness();
 	}
 
 	/**
@@ -113,7 +114,7 @@ public class Block extends ComponentProvider implements Identifiable {
 	 * @return The resistance.
 	 */
 	public double getResistance() {
-		return 1;
+		return components.getOp(BlockProperty.Resistance.class).orElseGet(BlockProperty.Resistance::new).getResistance();
 	}
 
 	/**
@@ -127,6 +128,7 @@ public class Block extends ComponentProvider implements Identifiable {
 	/**
 	 * Called when an ItemBlock tries to place a block in this position whether to displace the place position or not.
 	 * If the ItemBlock does not displace the position, it will replace this block.
+	 * TODO move out into BlockProperty
 	 * @return True if by right clicking on this block, the placement of the new block should be displaced.
 	 */
 	public boolean shouldDisplacePlacement() {
