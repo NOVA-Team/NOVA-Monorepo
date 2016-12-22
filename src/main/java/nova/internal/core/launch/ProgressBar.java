@@ -38,8 +38,7 @@ public abstract class ProgressBar {
 	 * The default implementation is the same as calling:
 	 * {@link #step(java.lang.String) ProgressBar.step(state + ": " + clazz)}
 	 *
-	 * @param state
-	 * @param clazz
+	 * @param clazz The mod class
 	 */
 	public void step(Class<?> clazz) {
 		step(toStringMod(clazz));
@@ -49,13 +48,26 @@ public abstract class ProgressBar {
 	 * Advance one step.
 	 *
 	 * The default implementation is the same as calling:
-	 * {@link #step(java.lang.String) ProgressBar.step(state + ": " + clazz)}
+	 * {@link #step(java.lang.String) ProgressBar.step(message + ": " + clazz)}
 	 *
-	 * @param state
-	 * @param clazz
+	 * @param message The message to display before {@code clazz}
+	 * @param clazz The mod class
 	 */
-	public void step(String state, Class<?> clazz) {
-		step((state == null || state.isEmpty() ? "" : state + ": ") + toStringMod(clazz));
+	public void step(String message, Class<?> clazz) {
+		step((message == null || message.isEmpty() ? "" : message + ": ") + toStringMod(clazz));
+	}
+
+	/**
+	 * Advance one step.
+	 *
+	 * The default implementation is the same as calling:
+	 * {@link #step(java.lang.String) ProgressBar.step(clazz + ": " + message)}
+	 *
+	 * @param message The message to display before {@code clazz}
+	 * @param clazz The mod class
+	 */
+	public void step(Class<?> clazz, String message) {
+		step(toStringMod(clazz) + (message == null || message.isEmpty() ? "" : ": " + message));
 	}
 
 	protected static String toStringMod(Class<?> clazz) {
