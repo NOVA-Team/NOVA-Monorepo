@@ -28,6 +28,7 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import nova.core.render.model.MeshModel;
@@ -53,6 +54,11 @@ public abstract class FWSmartModel implements IBakedModel {
 
 	public FWSmartModel() {
 		this.format = new VertexFormat();
+		
+		this.format.addElement(DefaultVertexFormats.POSITION_3F);
+		this.format.addElement(DefaultVertexFormats.COLOR_4UB);
+		this.format.addElement(DefaultVertexFormats.TEX_2F);
+		this.format.addElement(DefaultVertexFormats.PADDING_1B);
 	}
 
 	public static int[] vertexToInts(Vertex vertex, TextureAtlasSprite texture) {

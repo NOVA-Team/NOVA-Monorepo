@@ -56,13 +56,21 @@ public class FWSmartBlockModel extends FWSmartModel implements IBakedModel {
 		this.isItem = isDummy;
 		// Change the default transforms to the default full Block transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
-				new ItemTransformVec3f(new Vector3f(10, -45, 170), // Third Person (Left)
-						new Vector3f(0, 0.09375f, -0.171875f), new Vector3f(0.375f, 0.375f, 0.375f)),
-				new ItemTransformVec3f(new Vector3f(10, -45, 170), // Third Person (Right)
-						new Vector3f(0, 0.09375f, -0.171875f), new Vector3f(0.375f, 0.375f, 0.375f)),
-				ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, // First Person (Left, Right)
-				ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, // Head, Gui
-				ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT); // Ground, Fixed
+				new ItemTransformVec3f(new Vector3f(75, 225, 0), // Third Person (Left)
+						new Vector3f(0, 0.1875f, 0.03125f), new Vector3f(0.375f, 0.375f, 0.375f)),
+				new ItemTransformVec3f(new Vector3f(75, 45, 0), // Third Person (Right)
+						new Vector3f(0, 0.1875f, 0.03125f), new Vector3f(0.375f, 0.375f, 0.375f)),
+				new ItemTransformVec3f(new Vector3f(0, 225, 0), // First Person (Left)
+						new Vector3f(0, 0, 0), new Vector3f(0.4f, 0.4f, 0.4f)),
+				new ItemTransformVec3f(new Vector3f(0, 45, 0), // First Person (Right)
+						new Vector3f(0, 0, 0), new Vector3f(0.4f, 0.4f, 0.4f)),
+				ItemTransformVec3f.DEFAULT, // Head
+				new ItemTransformVec3f(new Vector3f(30, 225, 0), // Gui
+						new Vector3f(0, 0, 0), new Vector3f(0.625f, 0.625f, 0.625f)),
+				new ItemTransformVec3f(new Vector3f(0, 0, 0), // Ground
+						new Vector3f(0, 0, 0), new Vector3f(0, 0, 0)),
+				new ItemTransformVec3f(new Vector3f(0, 0, 0), // Fixed
+						new Vector3f(0, 0, 0), new Vector3f(0, 0, 0)));
 	}
 
 	@Override

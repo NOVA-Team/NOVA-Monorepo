@@ -60,10 +60,12 @@ public class BWModel extends MeshModel {
 		 */
 		flatten().forEach(
 			model -> {
+				System.out.println(model);
 				if (model instanceof MeshModel) {
 					MeshModel meshModel = (MeshModel) model;
 					meshModel.faces.forEach(face ->
 					{
+						System.out.println(face);
 						// TODO: See if this works, and possibly fix it
 						// Brightness is defined as: skyLight << 20 | blockLight << 4
 						if (face.getBrightness() >= 0) {
@@ -77,6 +79,7 @@ public class BWModel extends MeshModel {
 
 						worldRenderer.normal((int) face.normal.getX(), (int) face.normal.getY(), (int) face.normal.getZ());
 
+						System.out.println(face.texture);
 						if (face.texture.isPresent()) {
 							if (entityRenderManager.isPresent() && face.texture.get() instanceof EntityTexture) {
 								//We're not working on an atlas, so just do... this.

@@ -25,6 +25,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.Metadata;
 import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.ProgressManager;
+import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -61,9 +63,7 @@ import nova.internal.core.deps.DepDownloader;
 import nova.internal.core.launch.InitializationException;
 import nova.internal.core.launch.NovaLauncher;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -150,7 +150,9 @@ public class NovaMinecraft {
 				e.printStackTrace();
 			}
 
-			launcher.load();
+			ProgressBar progressBar = ProgressManager.push("Loading NOVA mods", modClasses.size(), true);
+			launcher.load(new FMLProgressBar(progressBar));
+			ProgressManager.pop(progressBar);
 
 			/**
 			 * Instantiate native loaders
@@ -164,7 +166,9 @@ public class NovaMinecraft {
 			Game.render().init();
 			Game.language().init();
 
-			launcher.preInit();
+			progressBar = ProgressManager.push("Pre-initializing NOVA mods", modClasses.size(), true);
+			launcher.preInit(new FMLProgressBar(progressBar));
+			ProgressManager.pop(progressBar);
 
 			// Initiate config system TODO: Storables
 			//		launcher.getLoadedModMap().forEach((mod, loader) -> {
@@ -190,9 +194,11 @@ public class NovaMinecraft {
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent evt) {
 		try {
+			ProgressBar progressBar = ProgressManager.push("Initializing NOVA mods", NovaMinecraftPreloader.modClasses.size(), true);
 			proxy.init();
 			nativeConverters.stream().forEachOrdered(Loadable::init);
-			launcher.init();
+			launcher.init(new FMLProgressBar(progressBar));
+			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
 			System.out.println("Error during init");
 			e.printStackTrace();
@@ -203,10 +209,12 @@ public class NovaMinecraft {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent evt) {
 		try {
+			ProgressBar progressBar = ProgressManager.push("Post-initializing NOVA mods", NovaMinecraftPreloader.modClasses.size(), true);
 			Game.recipes().init();
 			proxy.postInit();
 			nativeConverters.stream().forEachOrdered(Loadable::postInit);
-			launcher.postInit();
+			launcher.postInit(new FMLProgressBar(progressBar));
+			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
 			System.out.println("Error during postInit");
 			e.printStackTrace();
