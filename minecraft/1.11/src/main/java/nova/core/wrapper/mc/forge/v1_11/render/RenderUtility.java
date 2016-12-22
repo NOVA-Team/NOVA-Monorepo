@@ -90,30 +90,32 @@ public class RenderUtility {
 	protected static final FaceBakery FACE_BAKERY = new FaceBakery();
 	// Ugly D:
 	protected static final ModelBlock MODEL_GENERATED = ModelBlock.deserialize(
-		"{\"" +
-			"elements\":[{" +
-			"  \"from\": [0, 0, 0], " +
-			"  \"to\": [16, 16, 16], " +
-			"  \"faces\": {" +
-			"      \"down\": {\"uv\": [0, 0, 16, 16], \"texture\":\"\"}" +
-			"  }}]," +
-			"  \"display\": {\n" +
-			"      \"thirdperson_righthand\": {\n" +
-			"          \"rotation\": [ -90, 0, 0 ],\n" +
-			"          \"translation\": [ 0, 1, -3 ],\n" +
-			"          \"scale\": [ 0.55, 0.55, 0.55 ]\n" +
-			"      },\n" +
-			"      \"firstperson_righthand\": {\n" +
-			"          \"rotation\": [ 0, -135, 25 ],\n" +
-			"          \"translation\": [ 0, 4, 2 ],\n" +
-			"          \"scale\": [ 1.7, 1.7, 1.7 ]\n" +
-			"      },\n" +
-			"      \"firstperson_lefthand\": {\n" +
-			"          \"rotation\": [ 0, 135, 25 ],\n" +
-			"          \"translation\": [ 0, 4, 2 ],\n" +
-			"          \"scale\": [ 1.7, 1.7, 1.7 ]\n" +
-			"      }\n" +
-			"}}");
+			"{" +
+			"	\"elements\":[{\n" +
+			"		\"from\": [0, 0, 0],\n" +
+			"		\"to\": [16, 16, 16],\n" +
+			"		\"faces\": {\n" +
+			"			\"down\": {\"uv\": [0, 0, 16, 16], \"texture\":\"\"}\n" +
+			"		}\n" +
+			"	}],\n" +
+			"	\"display\": {\n" +
+			"		\"thirdperson_righthand\": {\n" +
+			"			\"rotation\": [ -90, 0, 0 ],\n" +
+			"			\"translation\": [ 0, 1, -3 ],\n" +
+			"			\"scale\": [ 0.55, 0.55, 0.55 ]\n" +
+			"		},\n" +
+			"		\"firstperson_righthand\": {\n" +
+			"			\"rotation\": [ 0, -90, 25 ],\n" +
+			"			\"translation\": [ 0, 3.75, 2.3125 ],\n" +
+			"			\"scale\": [ 0.6, 0.6, 0.6 ]\n" +
+			"		},\n" +
+			"		\"firstperson_lefthand\": {\n" +
+			"			\"rotation\": [ 0, 90, -25 ],\n" +
+			"			\"translation\": [ 0, 3.75, 2.3125 ],\n" +
+			"			\"scale\": [ 0.6, 0.6, 0.6 ]\n" +
+			"		}\n" +
+			"	}\n" +
+			"}");
 	//NOVA Texture to MC TextureAtlasSprite
 	private final HashMap<Texture, TextureAtlasSprite> textureMap = new HashMap<>();
 
@@ -191,7 +193,10 @@ public class RenderUtility {
 
 	public void registerIcon(Texture texture, TextureStitchEvent.Pre event) {
 		String resPath = (texture instanceof BlockTexture ? "blocks" : texture instanceof ItemTexture ? "items" : "entities") + "/" + texture.resource;
-		textureMap.put(texture, event.getMap().registerSprite(new ResourceLocation(texture.domain, resPath)));
+		System.out.println(texture + " (" + texture.domain + ':' + resPath + ')');
+		TextureAtlasSprite sprite = event.getMap().registerSprite(new ResourceLocation(texture.domain, resPath));
+		textureMap.put(texture, sprite);
+		System.out.println(sprite);
 	}
 
 	@SubscribeEvent
@@ -288,7 +293,7 @@ public class RenderUtility {
 			if (item.components.has(ItemRenderer.class)) {
 				ItemRenderer itemRenderer = item.components.get(ItemRenderer.class);
 				if (itemRenderer.texture.isPresent()) {
-					return RenderUtility.instance.getTexture(itemRenderer.texture.get());
+					return RenderUtility.instance.getTexture(itemRenderer.texture);
 				}
 			}
 			return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
