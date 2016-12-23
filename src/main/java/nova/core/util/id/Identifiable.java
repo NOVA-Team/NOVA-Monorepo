@@ -20,6 +20,11 @@
 
 package nova.core.util.id;
 
+import nova.core.loader.Mod;
+import nova.internal.core.launch.ModLoader;
+
+import java.util.Optional;
+
 /**
  * A generic interface signifying that this object is identifiable
  * by an ID
@@ -41,5 +46,22 @@ public interface Identifiable {
 
 	default boolean sameType(Identifiable other) {
 		return getID().equals(other.getID());
+	}
+
+	static String addPrefix(String id, boolean force) {
+		int prefixEnd = id.lastIndexOf(':');
+		String oldPrefix = prefixEnd < 0 ? "" : id.substring(0, prefixEnd);
+		String newPrefix = null;
+		Optional<Mod> mod = ModLoader.<Mod>instance().activeMod();
+
+		if (mod.isPresent()) {
+			newPrefix = mod.get().id();
+		}
+
+		if (newPrefix != null && (force ? !oldPrefix.startsWith(newPrefix) : oldPrefix.isEmpty())) {
+			id = newPrefix + ':' + id;
+		}
+
+		return id;
 	}
 }

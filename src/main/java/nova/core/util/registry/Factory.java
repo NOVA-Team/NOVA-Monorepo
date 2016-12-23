@@ -57,7 +57,7 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	 * @param processor The processor function
 	 */
 	public Factory(String id, Supplier<T> constructor, Function<T, T> processor) {
-		this.id = addPrefix(id);
+		this.id = Identifiable.addPrefix(id, true);
 		this.constructor = constructor;
 		this.processor = processor;
 	}
@@ -87,22 +87,5 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	@Override
 	public Identifier getID() {
 		return new StringIdentifier(id);
-	}
-
-	private static String addPrefix(String id) {
-		int prefixEnd = id.lastIndexOf(':');
-		String oldPrefix = prefixEnd < 0 ? "" : id.substring(0, prefixEnd);
-		String newPrefix = null;
-		Optional<Mod> mod = ModLoader.<Mod>instance().activeMod();
-
-		if (mod.isPresent()) {
-			newPrefix = mod.get().id();
-		}
-
-		if (newPrefix != null && !oldPrefix.startsWith(newPrefix)) {
-			id = newPrefix + ':' + id;
-		}
-
-		return id;
 	}
 }
