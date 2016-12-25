@@ -30,6 +30,12 @@ import nova.core.block.Block;
 public interface FWCustomTileLoader {
 
 	/**
+	 * @param block The Nova Block
+	 * @return true if the block is supported, false if not.
+	 */
+	boolean isBlockSupported(Block block);
+
+	/**
 	 * Load a FWTile.
 	 *
 	 * @param block The Nova Block
