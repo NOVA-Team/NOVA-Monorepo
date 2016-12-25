@@ -57,7 +57,7 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	 * @param processor The processor function
 	 */
 	public Factory(String id, Supplier<T> constructor, Function<T, T> processor) {
-		this.id = Identifiable.addPrefix(id, true);
+		this.id = Identifiable.addPrefix(id, false);
 		this.constructor = constructor;
 		this.processor = processor;
 	}

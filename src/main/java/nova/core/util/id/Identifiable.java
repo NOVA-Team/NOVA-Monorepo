@@ -52,10 +52,10 @@ public interface Identifiable {
 		int prefixEnd = id.lastIndexOf(':');
 		String oldPrefix = prefixEnd < 0 ? "" : id.substring(0, prefixEnd);
 		String newPrefix = null;
-		Optional<Mod> mod = ModLoader.<Mod>instance().activeMod();
+		Optional mod = ModLoader.instance().activeMod();
 
-		if (mod.isPresent()) {
-			newPrefix = mod.get().id();
+		if (mod.isPresent() && mod.get() instanceof Mod) {
+			newPrefix = ((Mod)mod.get()).id();
 		}
 
 		if (newPrefix != null && (force ? !oldPrefix.startsWith(newPrefix) : oldPrefix.isEmpty())) {
