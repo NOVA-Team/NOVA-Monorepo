@@ -102,15 +102,15 @@ public class BWBlock extends Block implements Storable {
 		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
 	}
 
-	private IBlockAccess getMcBlockAccess() {
+	protected IBlockAccess getMcBlockAccess() {
 		return ((BWWorld) world()).access;
 	}
 
-	private IBlockState blockState() {
+	protected IBlockState blockState() {
 		return getMcBlockAccess().getBlockState(new BlockPos(x(), y(), z()));
 	}
 
-	private TileEntity getTileEntity() {
+	protected TileEntity getTileEntity() {
 		if (mcTileEntity == null && mcBlock.hasTileEntity(blockState())) {
 			mcTileEntity = getMcBlockAccess().getTileEntity(new BlockPos(x(), y(), z()));
 		}
