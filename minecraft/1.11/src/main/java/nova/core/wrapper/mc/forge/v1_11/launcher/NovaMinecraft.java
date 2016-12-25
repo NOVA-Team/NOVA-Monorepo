@@ -63,6 +63,7 @@ import nova.internal.core.deps.DepDownloader;
 import nova.internal.core.launch.InitializationException;
 import nova.internal.core.launch.NovaLauncher;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -87,6 +88,11 @@ public class NovaMinecraft {
 	private static ModMetadata modMetadata;
 
 	private static Set<Loadable> nativeConverters;
+	private static Set<Loadable> wrappers = new HashSet<>();
+
+	public static void registerNovaWrapper(Loadable wrapper) {
+		wrappers.add(wrapper);
+	}
 
 	/**
 	 * ORDER OF LOADING.
@@ -166,6 +172,8 @@ public class NovaMinecraft {
 			Game.render().init();
 			Game.language().init();
 
+			wrappers.stream().forEachOrdered(Loadable::preInit);
+
 			//Load preInit
 			progressBar = ProgressManager.push("Pre-initializing NOVA mods", modClasses.size(), true);
 			launcher.preInit(new FMLProgressBar(progressBar));
@@ -198,6 +206,7 @@ public class NovaMinecraft {
 			ProgressBar progressBar = ProgressManager.push("Initializing NOVA mods", NovaMinecraftPreloader.modClasses.size(), true);
 			proxy.init();
 			nativeConverters.stream().forEachOrdered(Loadable::init);
+			wrappers.stream().forEachOrdered(Loadable::init);
 			launcher.init(new FMLProgressBar(progressBar));
 			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
@@ -214,6 +223,7 @@ public class NovaMinecraft {
 			Game.recipes().init();
 			proxy.postInit();
 			nativeConverters.stream().forEachOrdered(Loadable::postInit);
+			wrappers.stream().forEachOrdered(Loadable::postInit);
 			launcher.postInit(new FMLProgressBar(progressBar));
 			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
