@@ -166,6 +166,7 @@ public class NovaMinecraft {
 			Game.render().init();
 			Game.language().init();
 
+			//Load preInit
 			progressBar = ProgressManager.push("Pre-initializing NOVA mods", modClasses.size(), true);
 			launcher.preInit(new FMLProgressBar(progressBar));
 			ProgressManager.pop(progressBar);
