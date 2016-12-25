@@ -40,7 +40,7 @@ public final class FWTileLoader {
 	private static ComponentInjector<FWTile> injector = new ComponentInjector<>(FWTile.class);
 	private static ComponentInjector<FWTileUpdater> updaterInjector = new ComponentInjector<>(FWTileUpdater.class);
 
-	private static Set<TileLoaderEntry> tileLoaders = new HashSet<>();
+	private static Set<FWCustomTileLoader> tileLoaders = new HashSet<>();
 
 	private FWTileLoader() {
 	}
@@ -54,15 +54,15 @@ public final class FWTileLoader {
 	 * @param predicate The predicate (use {@code block instanceof Annotation}).
 	 * @param customTileLoader The custom tile loader.
 	 */
-	public static void registerTileLoader(Predicate<Block> predicate, FWCustomTileLoader customTileLoader) {
-		tileLoaders.add(new TileLoaderEntry(predicate, customTileLoader));
+	public static void registerTileLoader(FWCustomTileLoader customTileLoader) {
+		tileLoaders.add(customTileLoader);
 	}
 
 	public static FWTile loadTile(NBTTagCompound data) {
 		try {
 			String blockID = data.getString("novaID");
 			Block block = createBlock(blockID);
-			Optional<TileLoaderEntry> customTileLoader = tileLoaders.stream().filter(tileLoader -> tileLoader.isValid(block)).findFirst();
+			Optional<FWCustomTileLoader> customTileLoader = tileLoaders.stream().filter(tileLoader -> tileLoader.isBlockSupported(block)).findFirst();
 			FWTile tile = customTileLoader.isPresent() ? customTileLoader.get().loadTile(block, data) : null;
 			if (tile == null)
 				tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[0], new Object[0]) :
@@ -77,7 +77,7 @@ public final class FWTileLoader {
 	public static FWTile loadTile(String blockID) {
 		try {
 			Block block = createBlock(blockID);
-			Optional<TileLoaderEntry> customTileLoader = tileLoaders.stream().filter(tileLoader -> tileLoader.isValid(block)).findFirst();
+			Optional<FWCustomTileLoader> customTileLoader = tileLoaders.stream().filter(tileLoader -> tileLoader.isBlockSupported(block)).findFirst();
 			FWTile tile = customTileLoader.isPresent() ? customTileLoader.get().loadTile(block, blockID) : null;
 			if (tile == null)
 				tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[] { String.class }, new Object[] { blockID }) :
@@ -95,28 +95,6 @@ public final class FWTileLoader {
 			return blockFactory.get().build();
 		} else {
 			throw new RuntimeException("Error! Invalid NOVA block ID: " + blockID);
-		}
-	}
-
-	private static final class TileLoaderEntry {
-		private final Predicate<Block> predicate;
-		private final FWCustomTileLoader customTileLoader;
-
-		public TileLoaderEntry(Predicate<Block> predicate, FWCustomTileLoader customTileLoader) {
-			this.predicate = predicate;
-			this.customTileLoader = customTileLoader;
-		}
-
-		public boolean isValid(Block block) {
-			return predicate.test(block);
-		}
-
-		public FWTile loadTile(Block block, NBTTagCompound data) {
-			return customTileLoader.loadTile(block, data);
-		}
-
-		public FWTile loadTile(Block block, String blockID) {
-			return customTileLoader.loadTile(block, blockID);
 		}
 	}
 }
