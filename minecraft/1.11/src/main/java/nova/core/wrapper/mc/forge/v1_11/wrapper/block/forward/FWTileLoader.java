@@ -51,7 +51,6 @@ public final class FWTileLoader {
 	 * Custom tile loaders are evaluated first.
 	 * This class is used as a fallback.
 	 *
-	 * @param predicate The predicate (use {@code block instanceof Annotation}).
 	 * @param customTileLoader The custom tile loader.
 	 */
 	public static void registerTileLoader(FWCustomTileLoader customTileLoader) {
