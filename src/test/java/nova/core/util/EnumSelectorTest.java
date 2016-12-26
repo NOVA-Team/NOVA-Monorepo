@@ -5,6 +5,8 @@
  */
 package nova.core.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,63 +18,115 @@ import static nova.testutils.NovaAssertions.assertThat;
  */
 public class EnumSelectorTest {
 
-	EnumSelector <EnumExample> enumSelectorExample;
+	EnumSelector <EnumExample> enumSelectorExample1;
+	EnumSelector <EnumExample> enumSelectorExample2;
 
 	public EnumSelectorTest() {
 	}
 
     @Before
     public void setUp() {
-		enumSelectorExample = EnumSelector.of(EnumExample.class).blockAll()
+		enumSelectorExample1 = EnumSelector.of(EnumExample.class).blockAll()
+				.apart(EnumExample.EXAMPLE_24).apart(EnumExample.EXAMPLE_42).lock();
+
+		enumSelectorExample2 = EnumSelector.of(EnumExample.class).allowAll()
 				.apart(EnumExample.EXAMPLE_24).apart(EnumExample.EXAMPLE_42).lock();
     }
 
 	@Test
-	public void testLocked() {
-		boolean result = enumSelectorExample.locked();
+	public void test1Locked() {
+		boolean result = enumSelectorExample1.locked();
 		assertThat(result).isEqualTo(true);
 	}
 
 	@Test
-	public void testDisallows_EXAMPLE_8() {
-		boolean result = enumSelectorExample.allows(EnumExample.EXAMPLE_8);
+	public void test1Disallows_EXAMPLE_8() {
+		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_8);
 		assertThat(result).isEqualTo(false);
 	}
 
 	@Test
-	public void testDisallows_EXAMPLE_16() {
-		boolean result = enumSelectorExample.allows(EnumExample.EXAMPLE_16);
+	public void test1Disallows_EXAMPLE_16() {
+		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_16);
 		assertThat(result).isEqualTo(false);
 	}
 
 	@Test
-	public void testAllows_EXAMPLE_24() {
-		boolean result = enumSelectorExample.allows(EnumExample.EXAMPLE_24);
+	public void test1Allows_EXAMPLE_24() {
+		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_24);
 		assertThat(result).isEqualTo(true);
 	}
 
 	@Test
-	public void testDisallows_EXAMPLE_32() {
-		boolean result = enumSelectorExample.allows(EnumExample.EXAMPLE_16);
+	public void test1Disallows_EXAMPLE_32() {
+		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_16);
 		assertThat(result).isEqualTo(false);
 	}
 
 	@Test
-	public void testAllows_EXAMPLE_42() {
-		boolean result = enumSelectorExample.allows(EnumExample.EXAMPLE_42);
+	public void test1Allows_EXAMPLE_42() {
+		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_42);
 		assertThat(result).isEqualTo(true);
 	}
 
 	@Test
-	public void testDisallows_EXAMPLE_48() {
-		boolean result = enumSelectorExample.allows(EnumExample.EXAMPLE_48);
+	public void test1Disallows_EXAMPLE_48() {
+		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_48);
 		assertThat(result).isEqualTo(false);
 	}
 
 	@Test
-	public void testDisallows_EXAMPLE_64() {
-		boolean result = enumSelectorExample.allows(EnumExample.EXAMPLE_64);
+	public void test1Disallows_EXAMPLE_64() {
+		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_64);
 		assertThat(result).isEqualTo(false);
+	}
+
+	@Test
+	public void test2Locked() {
+		boolean result = enumSelectorExample2.locked();
+		assertThat(result).isEqualTo(true);
+	}
+
+	@Test
+	public void test2Allows_EXAMPLE_8() {
+		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_8);
+		assertThat(result).isEqualTo(true);
+	}
+
+	@Test
+	public void test2Allows_EXAMPLE_16() {
+		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_16);
+		assertThat(result).isEqualTo(true);
+	}
+
+	@Test
+	public void test2Disallows_EXAMPLE_24() {
+		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_24);
+		assertThat(result).isEqualTo(false);
+	}
+
+	@Test
+	public void test2Allows_EXAMPLE_32() {
+		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_16);
+		assertThat(result).isEqualTo(true);
+	}
+
+	@Test
+	public void test2Disallows_EXAMPLE_42() {
+		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_42);
+		assertThat(result).isEqualTo(false);
+	}
+
+	@Test
+	public void test2Allows_EXAMPLE_48() {
+		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_48);
+		assertThat(result).isEqualTo(true);
+	}
+
+	@Test
+	public void test2Allows_EXAMPLE_64() {
+		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_64);
+		assertThat(result).isEqualTo(true);
 	}
 
 	public static enum EnumExample {
