@@ -117,7 +117,7 @@ public class BWWorld extends World {
 	public Entity addEntity(EntityFactory factory) {
 		FWEntity bwEntity = new FWEntity(world(), factory);
 		bwEntity.forceSpawn = true;
-		world().spawnEntityInWorld(bwEntity);
+		world().spawnEntity(bwEntity);
 		return bwEntity.getWrapped();
 	}
 
@@ -150,7 +150,7 @@ public class BWWorld extends World {
 	@Override
 	public Entity addEntity(Vector3D position, Item item) {
 		EntityItem entityItem = new EntityItem(world(), position.getX(), position.getY(), position.getZ(), Game.natives().toNative(item));
-		world().spawnEntityInWorld(entityItem);
+		world().spawnEntity(entityItem);
 		return Game.natives().toNova(entityItem);
 	}
 

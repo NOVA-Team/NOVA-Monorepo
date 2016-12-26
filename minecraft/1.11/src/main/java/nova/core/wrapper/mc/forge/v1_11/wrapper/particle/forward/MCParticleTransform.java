@@ -28,7 +28,7 @@ public class MCParticleTransform extends EntityTransform {
 
 	@Override
 	public World world() {
-		return Game.natives().toNova(wrapper.worldObj);
+		return Game.natives().toNova(wrapper.world);
 	}
 
 	@Override

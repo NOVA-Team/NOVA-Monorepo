@@ -81,7 +81,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 	@Override
 	public Item toNova(ItemStack itemStack) {
-		return getNovaItem(itemStack).setCount(itemStack.func_190916_E());
+		return getNovaItem(itemStack).setCount(itemStack.getCount());
 	}
 
 	//TODO: Why is this method separate?
@@ -159,9 +159,9 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	 * Saves NOVA item into a Minecraft ItemStack.
 	 */
 	public ItemStack updateMCItemStack(ItemStack itemStack, Item item) {
-		itemStack.func_190920_e(item.count());
-		if (itemStack.func_190916_E() <= 0) {
-			return null;
+		itemStack.setCount(item.count());
+		if (itemStack.getCount() <= 0) {
+			return ItemStack.EMPTY;
 		}
 
 		itemStack.setTagCompound(Game.natives().toNative(item.getFactory().save(item)));

@@ -78,7 +78,7 @@ public class BWRigidBody extends RigidBody {
 	void updateTranslation(double deltaTime) {
 		//Integrate velocity to displacement
 		Vector3D displacement = velocity().scalarMultiply(deltaTime);
-		mcEntity().moveEntity(MoverType.SELF, displacement.getX(), displacement.getY(), displacement.getZ());
+		mcEntity().move(MoverType.SELF, displacement.getX(), displacement.getY(), displacement.getZ());
 
 		//Integrate netForce to velocity
 		setVelocity(velocity().add(netForce.scalarMultiply(1 / mass()).scalarMultiply(deltaTime)));

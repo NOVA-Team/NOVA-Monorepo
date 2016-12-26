@@ -25,6 +25,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import nova.core.component.inventory.Inventory;
+import nova.core.item.Item;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.item.ItemConverter;
 
 public class FWInventory implements IInventory {
@@ -41,8 +42,12 @@ public class FWInventory implements IInventory {
 	}
 
 	@Override
-    public boolean func_191420_l() {
-		return false; // TODO: What does this do?
+    public boolean isEmpty() {
+		int i = 0;
+		for (Item item : wrapped) {
+			i++;
+		}
+		return i == 0;
 	}
 
 	@Override
@@ -54,11 +59,11 @@ public class FWInventory implements IInventory {
 	public ItemStack decrStackSize(int slot, int amount) {
 		ItemStack stack = getStackInSlot(slot);
 		ItemStack ret = stack.copy();
-		ret.func_190920_e(Math.min(ret.func_190916_E(), amount));
-		stack.func_190920_e(stack.func_190916_E() - ret.func_190916_E());
-		if (stack.func_190916_E() <= 0) {
+		ret.setCount(Math.min(ret.getCount(), amount));
+		stack.setCount(stack.getCount() - ret.getCount());
+		if (stack.getCount() <= 0) {
 			setInventorySlotContents(slot, null);
-			return null;
+			return ItemStack.EMPTY;
 		}
 		markDirty();
 		return ret;
@@ -71,7 +76,7 @@ public class FWInventory implements IInventory {
 	@Override
 	public ItemStack removeStackFromSlot(int slot) {
 		ItemStack stack = getStackInSlot(slot);
-		decrStackSize(slot, stack.func_190916_E());
+		decrStackSize(slot, stack.getCount());
 		return stack;
 	}
 
@@ -107,7 +112,7 @@ public class FWInventory implements IInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		// TODO Auto-generated method stub
 		return true;
 	}

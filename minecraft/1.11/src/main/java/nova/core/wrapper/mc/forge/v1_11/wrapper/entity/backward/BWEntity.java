@@ -51,7 +51,7 @@ public class BWEntity extends Entity {
 			@Override
 			public void damage(double amount, DamageType type) {
 				if (type == DamageType.generic) {
-					entity.attackEntityFrom(DamageSource.generic, (float) amount);
+					entity.attackEntityFrom(DamageSource.GENERIC, (float) amount);
 				}
 				// TODO: Apply other damage source wrappers?
 			}

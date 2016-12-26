@@ -44,7 +44,7 @@ public interface ItemWrapperMethods {
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
 		Item item = Game.natives().toNova(itemStack);
-		item.setCount(itemStack.func_190916_E()).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
+		item.setCount(itemStack.getCount()).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
 		getItemFactory().save(item);
 	}
 

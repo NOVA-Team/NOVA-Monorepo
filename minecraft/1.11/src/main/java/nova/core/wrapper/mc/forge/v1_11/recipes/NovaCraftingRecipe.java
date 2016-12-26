@@ -69,6 +69,6 @@ public class NovaCraftingRecipe implements IRecipe {
 
 	@Override
 	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-		return NonNullList.func_191196_a();
+		return NonNullList.create();
 	}
 }
