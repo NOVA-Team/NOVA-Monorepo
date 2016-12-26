@@ -90,7 +90,7 @@ public class MCNetworkManager extends NetworkManager {
 	@Override
 	public void sendChat(Player player, String message) {
 		if (player instanceof BWEntity.MCPlayer) {
-			((BWEntity.MCPlayer) player).entity.addChatMessage(new TextComponentString(message));
+			((BWEntity.MCPlayer) player).entity.sendMessage(new TextComponentString(message));
 		}
 	}
 

@@ -64,8 +64,9 @@ public class OreDictionaryIntegration {
 	}
 
 	private void onEntryAdded(Dictionary.AddEvent<Item> event) {
-		if (!OreDictionary.getOres(event.key).contains(event.value)) {
-			OreDictionary.registerOre(event.key, ItemConverter.instance().toNative(event.value));
+		ItemStack nativeValue = ItemConverter.instance().toNative(event.value);
+		if (!OreDictionary.getOres(event.key).contains(nativeValue)) {
+			OreDictionary.registerOre(event.key, nativeValue);
 		}
 	}
 
