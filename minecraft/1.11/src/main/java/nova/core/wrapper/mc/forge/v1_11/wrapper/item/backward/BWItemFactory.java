@@ -25,9 +25,10 @@ import nova.core.component.misc.FactoryProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.StringIdentifier;
 import nova.internal.core.Game;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Minecraft wrapped item factory.
@@ -35,6 +36,8 @@ import nova.internal.core.Game;
  * @since 3/02/2015.
  */
 public class BWItemFactory extends ItemFactory {
+	private static final Set<BWItemComponentHandler> componentHandlers = new HashSet<>();
+
 	private final net.minecraft.item.Item item;
 	private final int meta;
 
@@ -59,6 +62,7 @@ public class BWItemFactory extends ItemFactory {
 		NBTTagCompound nbtData = Game.natives().toNative(data);
 		BWItem bwItem = new BWItem(item, meta, nbtData);
 		bwItem.components.add(new FactoryProvider(this));
+		componentHandlers.forEach(handler -> handler.addComponents(bwItem, item));
 		return bwItem;
 	}
 
@@ -80,5 +84,9 @@ public class BWItemFactory extends ItemFactory {
 		}
 
 		return result;
+	}
+
+	static void registerComponentHandler(BWItemComponentHandler handler) {
+		componentHandlers.add(handler);
 	}
 }

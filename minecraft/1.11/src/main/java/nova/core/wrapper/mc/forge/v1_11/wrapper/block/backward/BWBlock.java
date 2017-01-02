@@ -47,10 +47,14 @@ import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BWBlock extends Block implements Storable {
+	private static final Set<BWBlockComponentHandler> componentHandlers = new HashSet<>();
+
 	public final net.minecraft.block.Block mcBlock;
 	@Store
 	public int metadata;
@@ -94,6 +98,7 @@ public class BWBlock extends Block implements Storable {
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			});
+		componentHandlers.forEach(handler -> handler.addComponents(this, mcBlock));
 		//TODO: Set selection bounds
 	}
 
@@ -102,15 +107,15 @@ public class BWBlock extends Block implements Storable {
 		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
 	}
 
-	protected IBlockAccess getMcBlockAccess() {
+	public IBlockAccess getMcBlockAccess() {
 		return ((BWWorld) world()).access;
 	}
 
-	protected IBlockState blockState() {
+	public IBlockState blockState() {
 		return getMcBlockAccess().getBlockState(new BlockPos(x(), y(), z()));
 	}
 
-	protected TileEntity getTileEntity() {
+	public TileEntity getTileEntity() {
 		if (mcTileEntity == null && mcBlock.hasTileEntity(blockState())) {
 			mcTileEntity = getMcBlockAccess().getTileEntity(new BlockPos(x(), y(), z()));
 		}
@@ -154,5 +159,9 @@ public class BWBlock extends Block implements Storable {
 		if (tileEntity != null) {
 			tileEntity.writeToNBT(Game.natives().toNative(data));
 		}
+	}
+
+	static void registerComponentHandler(BWBlockComponentHandler handler) {
+		componentHandlers.add(handler);
 	}
 }
