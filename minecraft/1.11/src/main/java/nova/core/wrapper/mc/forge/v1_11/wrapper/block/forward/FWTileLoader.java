@@ -25,6 +25,7 @@ import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.component.Updater;
 import nova.core.wrapper.mc.forge.v1_11.asm.lib.ComponentInjector;
+import nova.core.wrapper.mc.forge.v1_11.util.WrapperEvent;
 import nova.internal.core.Game;
 
 import java.util.HashSet;
@@ -40,29 +41,16 @@ public final class FWTileLoader {
 	private static ComponentInjector<FWTile> injector = new ComponentInjector<>(FWTile.class);
 	private static ComponentInjector<FWTileUpdater> updaterInjector = new ComponentInjector<>(FWTileUpdater.class);
 
-	private static Set<FWCustomTileLoader> tileLoaders = new HashSet<>();
-
 	private FWTileLoader() {
-	}
-
-	/**
-	 * Registers a {@link FWCustomTileLoader custom tile loader}.
-	 *
-	 * Custom tile loaders are evaluated first.
-	 * This class is used as a fallback.
-	 *
-	 * @param customTileLoader The custom tile loader.
-	 */
-	public static void registerTileLoader(FWCustomTileLoader customTileLoader) {
-		tileLoaders.add(customTileLoader);
 	}
 
 	public static FWTile loadTile(NBTTagCompound data) {
 		try {
 			String blockID = data.getString("novaID");
 			Block block = createBlock(blockID);
-			Optional<FWCustomTileLoader> customTileLoader = tileLoaders.stream().filter(tileLoader -> tileLoader.isBlockSupported(block)).findFirst();
-			FWTile tile = customTileLoader.isPresent() ? customTileLoader.get().loadTile(block, data) : null;
+			WrapperEvent.FWTileLoad event = new WrapperEvent.FWTileLoad(block, data);
+			Game.events().publish(event);
+			FWTile tile = event.getResult();
 			if (tile == null)
 				tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[0], new Object[0]) :
 						injector.inject(block, new Class[0], new Object[0]);
@@ -76,8 +64,9 @@ public final class FWTileLoader {
 	public static FWTile loadTile(String blockID) {
 		try {
 			Block block = createBlock(blockID);
-			Optional<FWCustomTileLoader> customTileLoader = tileLoaders.stream().filter(tileLoader -> tileLoader.isBlockSupported(block)).findFirst();
-			FWTile tile = customTileLoader.isPresent() ? customTileLoader.get().loadTile(block, blockID) : null;
+			WrapperEvent.FWTileLoad event = new WrapperEvent.FWTileLoad(block);
+			Game.events().publish(event);
+			FWTile tile = event.getResult();
 			if (tile == null)
 				tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[] { String.class }, new Object[] { blockID }) :
 						injector.inject(block, new Class[] { String.class }, new Object[] { blockID });

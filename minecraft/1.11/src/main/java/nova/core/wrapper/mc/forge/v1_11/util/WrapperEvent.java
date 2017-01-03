@@ -20,9 +20,16 @@
 
 package nova.core.wrapper.mc.forge.v1_11.util;
 
+import net.minecraft.nbt.NBTTagCompound;
+import nova.core.block.Block;
 import nova.core.event.BlockEvent;
+import nova.core.event.bus.CancelableEvent;
+import nova.core.event.bus.Event;
 import nova.core.util.Direction;
 import nova.core.world.World;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.block.backward.BWBlock;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWTile;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.backward.BWItem;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
@@ -58,6 +65,56 @@ public class WrapperEvent {
 		public WeakRedstone(World world, Vector3D position, Direction direction) {
 			super(world, position);
 			this.direction = direction;
+		}
+	}
+
+	public static class BWBlockCreate extends BlockEvent {
+		public final net.minecraft.block.Block mcBlock;
+		public final BWBlock novaBlock;
+
+		public BWBlockCreate(World world, Vector3D position, BWBlock novaBlock, net.minecraft.block.Block mcBlock) {
+			super(world, position);
+			this.novaBlock = novaBlock;
+			this.mcBlock = mcBlock;
+		}
+	}
+
+	public static class BWItemCreate extends CancelableEvent {
+		public final net.minecraft.item.Item mcItem;
+		public final BWItem novaItem;
+
+		public BWItemCreate(BWItem novaItem, net.minecraft.item.Item mcItem) {
+			this.novaItem = novaItem;
+			this.mcItem = mcItem;
+		}
+	}
+
+	public static class FWTileLoad extends Event {
+		public final Block block;
+		public final NBTTagCompound data;
+		private FWTile result = null;
+
+		public FWTileLoad(Block block) {
+			this.block = block;
+			this.data = null;
+		}
+
+		public FWTileLoad(Block block, NBTTagCompound data) {
+			this.block = block;
+			this.data = data;
+		}
+
+		public boolean hasResult() {
+			return result != null;
+		}
+
+		public FWTile getResult() {
+			return result;
+		}
+
+		public void setResult(FWTile result) {
+			if (this.result == null)
+				this.result = result;
 		}
 	}
 }

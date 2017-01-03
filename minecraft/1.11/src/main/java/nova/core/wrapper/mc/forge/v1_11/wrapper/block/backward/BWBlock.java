@@ -42,19 +42,16 @@ import nova.core.retention.Store;
 import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
+import nova.core.wrapper.mc.forge.v1_11.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.world.BWWorld;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BWBlock extends Block implements Storable {
-	private static final Set<BWBlockComponentHandler> componentHandlers = new HashSet<>();
-
 	public final net.minecraft.block.Block mcBlock;
 	@Store
 	public int metadata;
@@ -98,7 +95,8 @@ public class BWBlock extends Block implements Storable {
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			});
-		componentHandlers.forEach(handler -> handler.addComponents(this, mcBlock));
+		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
+		Game.events().publish(event);
 		//TODO: Set selection bounds
 	}
 
@@ -159,9 +157,5 @@ public class BWBlock extends Block implements Storable {
 		if (tileEntity != null) {
 			tileEntity.writeToNBT(Game.natives().toNative(data));
 		}
-	}
-
-	static void registerComponentHandler(BWBlockComponentHandler handler) {
-		componentHandlers.add(handler);
 	}
 }
