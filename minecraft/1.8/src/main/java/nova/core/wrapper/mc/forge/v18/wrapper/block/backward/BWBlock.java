@@ -42,6 +42,7 @@ import nova.core.retention.Store;
 import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
+import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.world.BWWorld;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -93,6 +94,8 @@ public class BWBlock extends Block implements Storable {
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			});
+		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
+		Game.events().publish(event);
 		//TODO: Set selection bounds
 	}
 
