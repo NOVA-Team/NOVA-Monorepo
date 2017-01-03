@@ -32,6 +32,8 @@ import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.item.backward.BWItem;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+import java.util.Optional;
+
 /**
  * Events for wrappers to hook into
  * @author Calclavia
@@ -91,17 +93,17 @@ public class WrapperEvent {
 
 	public static class FWTileLoad extends Event {
 		public final Block block;
-		public final NBTTagCompound data;
+		public final Optional<NBTTagCompound> data;
 		private FWTile result = null;
 
 		public FWTileLoad(Block block) {
 			this.block = block;
-			this.data = null;
+			this.data = Optional.empty();
 		}
 
 		public FWTileLoad(Block block, NBTTagCompound data) {
 			this.block = block;
-			this.data = data;
+			this.data = Optional.of(data);
 		}
 
 		public boolean hasResult() {
