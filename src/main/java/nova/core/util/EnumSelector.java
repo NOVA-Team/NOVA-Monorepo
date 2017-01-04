@@ -44,6 +44,11 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 		exceptions = EnumSet.noneOf(enumClass);
 	}
 
+	/**
+	 * Creates a new instance of EnumSelector for the given type.
+	 *
+	 * @return an instance of EnumSelector for the given type.
+	 */
 	public static <T extends Enum<T>> EnumSelector<T> of(Class<T> enumClass) {
 		return new EnumSelector(enumClass);
 	}
@@ -58,6 +63,15 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
 	}
 
+	/**
+	 * Make the EnumSelector allow all for the given type by default.
+	 * <p>
+	 * Use {@link #apart(java.lang.Enum)} to specify what should be blocked.
+	 *
+	 * @see #blockAll()
+	 * @see #apart(java.lang.Enum)
+	 * @return this
+	 */
 	public EnumSelector<T> allowAll() {
 		checkWritable();
 		if (!defaultBlock)
@@ -67,6 +81,15 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 		return this;
 	}
 
+	/**
+	 * Make the EnumSelector block all for the given type by default.
+	 * <p>
+	 * Use {@link #apart(java.lang.Enum)} to specify what should be allowed.
+	 *
+	 * @see #allowAll()
+	 * @see #apart(java.lang.Enum)
+	 * @return this
+	 */
 	public EnumSelector<T> blockAll() {
 		checkWritable();
 		if (!defaultAllow)
@@ -76,12 +99,26 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 		return this;
 	}
 
+	/**
+	 * Specify what {@code enum} values should have behavior opposite of the default
+	 *
+	 * @see #allowAll()
+	 * @see #blockAll()
+	 * @param value The given {@code enum} value that should have behavior opposite of the default.
+	 * @return this
+	 */
 	public EnumSelector<T> apart(T value) {
 		checkWritable();
 		exceptions.add(value);
 		return this;
 	}
 
+	/**
+	 * Lock the EnumSelector, making it immutable.
+	 * Required for using of all getter methods.
+	 *
+	 * @return this
+	 */
 	public EnumSelector<T> lock() {
 		if (defaultAllow || defaultBlock)
 			locked = true;
@@ -90,20 +127,41 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 		return this;
 	}
 
+	/**
+	 * Check if the EnumSelector instance has been locked.
+	 *
+	 * @return The locked status.
+	 */
 	public boolean locked() {
 		return locked;
 	}
 
+	/**
+	 * Check if the {@code enum} value is allowed by this EnumSelector.
+	 *
+	 * @param value The {@code enum} value to test.
+	 * @return If the {@code enum} value is allowed by this EnumSelector.
+	 */
 	public boolean allows(T value) {
 		checkReadable();
 		return defaultAllow ^ exceptions.contains(value);
 	}
 
+	/**
+	 * Check if the EnumSelector allows all values.
+	 *
+	 * @return If the EnumSelector allows all values.
+	 */
 	public boolean allowsAll() {
 		checkReadable();
 		return defaultAllow && exceptions.isEmpty();
 	}
 
+	/**
+	 * Check if the EnumSelector blocks all values.
+	 *
+	 * @return If the EnumSelector blocks all values.
+	 */
 	public boolean blocksAll() {
 		checkReadable();
 		return defaultBlock && exceptions.isEmpty();
