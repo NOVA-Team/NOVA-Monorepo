@@ -27,17 +27,25 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
+import nova.core.util.EnumSelector;
 import nova.core.wrapper.mc.forge.v1_11.network.netty.MCNetworkManager;
+import nova.core.wrapper.mc.forge.v1_11.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.capability.forward.FWCapabilityProvider;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.io.IOException;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A Minecraft TileEntity to Nova block wrapper
@@ -45,12 +53,16 @@ import java.io.IOException;
  */
 public class FWTile extends TileEntity {
 
+	private final Map<Capability<?>, Object> capabilities = new HashMap<>();
+	private final Map<EnumFacing, Map<Capability<?>, Object>> sidedCapabilities = new HashMap<>();
+
 	protected String blockID;
 	protected Block block;
 	protected Data cacheData = null;
 
 	public FWTile() {
-
+		for (EnumFacing facing : EnumFacing.VALUES)
+			sidedCapabilities.put(facing, new HashMap<>());
 	}
 
 	public FWTile(String blockID) {
@@ -116,6 +128,38 @@ public class FWTile extends TileEntity {
 
 		blockID = nbt.getString("novaID");
 		cacheData = Game.natives().toNova(nbt.getCompoundTag("nova"));
+	}
+
+	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<EnumFacing> facing) {
+		if (facing == null || facing.allowsAll()) {
+			if (capabilities.containsKey(capability))
+				throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
+
+			capabilities.put(capability, capabilityInstance);
+		} else {
+			facing.forEach(enumFacing -> {
+				Map<Capability<?>, Object> capabilities = sidedCapabilities.get(enumFacing);
+
+				if (capabilities.containsKey(capability))
+					throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
+
+				capabilities.put(capability, capabilityInstance);
+			});
+		}
+		return capabilityInstance;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		return (facing != null ? sidedCapabilities.get(facing).containsValue(capability) : capabilities.containsValue(capability))
+				|| super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (!hasCapability(capability, facing)) return null;
+		T capabilityInstance = (T) (facing != null ? sidedCapabilities.get(facing).get(capability) : capabilities.get(capability));
+		return capabilityInstance != null ? capabilityInstance : super.getCapability(capability, facing);
 	}
 
 	private static class FWPacketUpdateTileEntity<T extends INetHandler> extends SPacketUpdateTileEntity {

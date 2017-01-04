@@ -20,8 +20,9 @@
 
 package nova.core.wrapper.mc.forge.v18.util;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.ItemStack;
 import nova.core.block.Block;
+import nova.core.entity.Entity;
 import nova.core.event.BlockEvent;
 import nova.core.event.bus.CancelableEvent;
 import nova.core.event.bus.Event;
@@ -29,6 +30,8 @@ import nova.core.util.Direction;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWTile;
+import nova.core.wrapper.mc.forge.v18.wrapper.entity.backward.BWEntity;
+import nova.core.wrapper.mc.forge.v18.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.BWItem;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -84,39 +87,48 @@ public class WrapperEvent {
 	public static class BWItemCreate extends CancelableEvent {
 		public final net.minecraft.item.Item mcItem;
 		public final BWItem novaItem;
+		public final Optional<ItemStack> itemStack;
 
 		public BWItemCreate(BWItem novaItem, net.minecraft.item.Item mcItem) {
 			this.novaItem = novaItem;
 			this.mcItem = mcItem;
+			this.itemStack = Optional.empty();
+		}
+
+		public BWItemCreate(BWItem novaItem, net.minecraft.item.Item mcItem, ItemStack itemStack) {
+			this.novaItem = novaItem;
+			this.mcItem = mcItem;
+			this.itemStack = Optional.of(itemStack);
 		}
 	}
 
-	public static class FWTileLoad extends Event {
-		public final Block block;
-		public final Optional<NBTTagCompound> data;
-		private FWTile result = null;
+	public static class BWEntityCreate extends CancelableEvent {
+		public final net.minecraft.entity.Entity mcEntity;
+		public final BWEntity novaEntity;
 
-		public FWTileLoad(Block block) {
-			this.block = block;
-			this.data = Optional.empty();
+		public BWEntityCreate(net.minecraft.entity.Entity mcEntity, BWEntity novaEntity) {
+			this.mcEntity = mcEntity;
+			this.novaEntity = novaEntity;
 		}
+	}
 
-		public FWTileLoad(Block block, NBTTagCompound data) {
-			this.block = block;
-			this.data = Optional.of(data);
+	public static class FWTileCreate extends Event {
+		public final Block novaBlock;
+		public final FWTile tileEntity;
+
+		public FWTileCreate(Block novaBlock, FWTile tileEntity) {
+			this.novaBlock = novaBlock;
+			this.tileEntity = tileEntity;
 		}
+	}
 
-		public boolean hasResult() {
-			return result != null;
-		}
+	public static class FWEntityCreate extends Event {
+		public final Entity novaBlock;
+		public final FWEntity mcEntity;
 
-		public FWTile getResult() {
-			return result;
-		}
-
-		public void setResult(FWTile result) {
-			if (this.result == null)
-				this.result = result;
+		public FWEntityCreate(Entity novaBlock, FWEntity mcEntity) {
+			this.novaBlock = novaBlock;
+			this.mcEntity = mcEntity;
 		}
 	}
 }

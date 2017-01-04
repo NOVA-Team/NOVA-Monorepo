@@ -22,7 +22,9 @@ package nova.core.wrapper.mc.forge.v1_11.wrapper.entity.forward;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
@@ -32,15 +34,22 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
+import nova.core.util.EnumSelector;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.data.DataWrapper;
 import nova.internal.core.Game;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Entity wrapper
  * @author Calclavia
  */
 public class FWEntity extends net.minecraft.entity.Entity implements IEntityAdditionalSpawnData {
+
+	private final Map<Capability<?>, Object> capabilities = new HashMap<>();
+	private final Map<EnumFacing, Map<Capability<?>, Object>> sidedCapabilities = new HashMap<>();
 
 	protected final EntityTransform transform;
 	protected Entity wrapped;
@@ -214,4 +223,35 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		super.setDead();
 	}
 
+	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<EnumFacing> facing) {
+		if (facing == null || facing.allowsAll()) {
+			if (capabilities.containsKey(capability))
+				throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
+
+			capabilities.put(capability, capabilityInstance);
+		} else {
+			facing.forEach(enumFacing -> {
+				Map<Capability<?>, Object> capabilities = sidedCapabilities.get(enumFacing);
+
+				if (capabilities.containsKey(capability))
+					throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
+
+				capabilities.put(capability, capabilityInstance);
+			});
+		}
+		return capabilityInstance;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		return (facing != null ? sidedCapabilities.get(facing).containsValue(capability) : capabilities.containsValue(capability))
+				|| super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (!hasCapability(capability, facing)) return null;
+		T capabilityInstance = (T) (facing != null ? sidedCapabilities.get(facing).get(capability) : capabilities.get(capability));
+		return capabilityInstance != null ? capabilityInstance : super.getCapability(capability, facing);
+	}
 }

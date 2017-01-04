@@ -66,9 +66,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import nova.core.wrapper.mc.forge.v1_11.wrapper.entity.backward.BWEntity;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.particle.forward.MCParticleTransform;
 
 /**
- * A backward entity particle that acts as a black box, which wraps a Minecraft particle fxs.
+ * A backward entity particle that acts as a black box, which wraps a Minecraft particle.
  *
  * TODO: Minecraft particles are no longer entities.
  *
@@ -191,6 +192,10 @@ public class BWParticle extends BWEntity {
 	public Particle createParticle(net.minecraft.world.World world) {
 		//Look up for particle factory and pass it into BWParticle
 		IParticleFactory particleFactory = (IParticleFactory) FMLClientHandler.instance().getClient().effectRenderer.particleTypes.get(particleID);
-		return particleFactory.createParticle(0, world, 0, 0, 0, 0, 0, 0, 0);
+		Particle particle = particleFactory.createParticle(0, world, 0, 0, 0, 0, 0, 0, 0);
+		if (components.has(MCParticleTransform.class))
+			components.remove(MCParticleTransform.class);
+		components.add(new MCParticleTransform(particle));
+		return particle;
 	}
 }
