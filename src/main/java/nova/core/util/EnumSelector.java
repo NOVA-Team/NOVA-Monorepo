@@ -44,17 +44,37 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 		exceptions = EnumSet.noneOf(enumClass);
 	}
 
+	/**
+	 * Creates a new instance of EnumSelector for the given type.
+	 *
+	 * @return an instance of EnumSelector for the given type.
+	 */
 	public static <T extends Enum<T>> EnumSelector<T> of(Class<T> enumClass) {
 		return new EnumSelector(enumClass);
 	}
 
-	private void checkLocked() {
+	private void checkWritable() {
 		if (locked)
 			throw new IllegalStateException("No edits are allowed after EnumSelector has been locked.");
 	}
 
+	private void checkReadable() {
+		if (!locked)
+			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
+	}
+
+	/**
+	 * Make the EnumSelector allow all for the given type by default.
+	 * <p>
+	 * Use {@link #apart(java.lang.Enum)} to specify what should be blocked.
+	 *
+	 * @see #blockAll()
+	 * @see #apart(java.lang.Enum)
+	 * @return this
+	 * @throws IllegalStateException If the EnumSelector has been {@link #lock() locked}.
+	 */
 	public EnumSelector<T> allowAll() {
-		checkLocked();
+		checkWritable();
 		if (!defaultBlock)
 			defaultAllow = true;
 		else
@@ -62,8 +82,18 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 		return this;
 	}
 
+	/**
+	 * Make the EnumSelector block all for the given type by default.
+	 * <p>
+	 * Use {@link #apart(java.lang.Enum)} to specify what should be allowed.
+	 *
+	 * @see #allowAll()
+	 * @see #apart(java.lang.Enum)
+	 * @return this
+	 * @throws IllegalStateException If the EnumSelector has been {@link #lock() locked}.
+	 */
 	public EnumSelector<T> blockAll() {
-		checkLocked();
+		checkWritable();
 		if (!defaultAllow)
 			defaultBlock = true;
 		else
@@ -71,12 +101,30 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 		return this;
 	}
 
+	/**
+	 * Specify what {@code enum} values should have behavior opposite of the default
+	 *
+	 * @see #allowAll()
+	 * @see #blockAll()
+	 * @param value The given {@code enum} value that should have behavior opposite of the default.
+	 * @return this
+	 */
 	public EnumSelector<T> apart(T value) {
-		checkLocked();
+		checkWritable();
 		exceptions.add(value);
 		return this;
 	}
 
+	/**
+	 * Lock the EnumSelector, making it immutable.
+	 * Required for using of all getter methods.
+	 *
+	 * @see #allowAll()
+	 * @see #blockAll()
+	 * @see #locked()
+	 * @return this
+	 * @throws IllegalStateException If the EnumSelector does not have specified default behavior.
+	 */
 	public EnumSelector<T> lock() {
 		if (defaultAllow || defaultBlock)
 			locked = true;
@@ -85,79 +133,104 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 		return this;
 	}
 
+	/**
+	 * Check if the EnumSelector instance has been locked.
+	 *
+	 * @return The locked status.
+	 */
 	public boolean locked() {
 		return locked;
 	}
 
+	/**
+	 * Check if the {@code enum} value is allowed by this EnumSelector.
+	 *
+	 * @param value The {@code enum} value to test.
+	 * @return If the {@code enum} value is allowed by this EnumSelector.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
 	public boolean allows(T value) {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return defaultAllow ^ exceptions.contains(value);
+		checkReadable();
+		return defaultAllow ^ exceptions.contains(value);
 	}
 
+	/**
+	 * Check if the EnumSelector allows all values.
+	 *
+	 * @return If the EnumSelector allows all values.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
 	public boolean allowsAll() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return defaultAllow && exceptions.isEmpty();
+		checkReadable();
+		return defaultAllow && exceptions.isEmpty();
 	}
 
+	/**
+	 * Check if the EnumSelector blocks all values.
+	 *
+	 * @return If the EnumSelector blocks all values.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
 	public boolean blocksAll() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return defaultBlock && exceptions.isEmpty();
+		checkReadable();
+		return defaultBlock && exceptions.isEmpty();
 	}
 
 	/**
 	 * Returns an iterator of all the allowed elements in this EnumSelector.
 	 *
 	 * @return The iterator.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	@Override
 	public Iterator<T> iterator() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return defaultBlock ? exceptions.iterator() : EnumSet.complementOf(exceptions).iterator();
+		checkReadable();
+		return defaultBlock ? exceptions.iterator() : EnumSet.complementOf(exceptions).iterator();
 	}
 
 	/**
 	 * Returns a spliterator of all the allowed elements in this EnumSelector.
 	 *
 	 * @return The spliterator.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	@Override
 	public Spliterator<T> spliterator() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return Spliterators.spliterator(iterator(), defaultBlock ? exceptions.size() : EnumSet.complementOf(exceptions).size(),
-					Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.IMMUTABLE);
+		checkReadable();
+		return Spliterators.spliterator(iterator(), defaultBlock ? exceptions.size() : EnumSet.complementOf(exceptions).size(),
+				Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.IMMUTABLE);
 	}
 
 	/**
 	 * Returns a sequential stream of all the allowed elements in this EnumSelector.
 	 *
 	 * @return The stream.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	public Stream<T> stream() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return StreamSupport.stream(spliterator(), false);
+		checkReadable();
+		return StreamSupport.stream(spliterator(), false);
 	}
 
 	/**
 	 * Returns a parallel stream of all the allowed elements in this EnumSelector.
 	 *
 	 * @return The stream.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	public Stream<T> parallelStream() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return StreamSupport.stream(spliterator(), true);
+		checkReadable();
+		return StreamSupport.stream(spliterator(), true);
+	}
+
+	/**
+	 * Returns an EnumSet instance of all the allowed elements in this EnumSelector.
+	 *
+	 * @return The stream.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
+	public EnumSet<T> toEnumSet() {
+		checkReadable();
+		return defaultBlock ? EnumSet.copyOf(exceptions) : EnumSet.complementOf(exceptions);
 	}
 }
