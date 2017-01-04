@@ -49,16 +49,6 @@ public final class FWTileLoader {
 	private FWTileLoader() {
 	}
 
-	static {
-		Game.events().on(WrapperEvent.FWTileCreate.class).bind(evt -> {
-			if (evt.novaBlock instanceof SidedTankProvider) {
-				Arrays.stream(Direction.values()).filter(dir -> ((SidedTankProvider) evt.novaBlock).getTank(dir) != null)
-						.forEach(dir -> evt.tileEntity.addCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
-								new FWFluidTank(((SidedTankProvider) evt.novaBlock).getTank(dir)), facing));
-			}
-		})
-	}
-
 	public static FWTile loadTile(NBTTagCompound data) {
 		try {
 			String blockID = data.getString("novaID");
