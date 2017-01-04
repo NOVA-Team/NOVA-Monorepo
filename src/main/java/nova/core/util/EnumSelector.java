@@ -71,6 +71,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * @see #blockAll()
 	 * @see #apart(java.lang.Enum)
 	 * @return this
+	 * @throws IllegalStateException If the EnumSelector has been {@link #lock() locked}.
 	 */
 	public EnumSelector<T> allowAll() {
 		checkWritable();
@@ -89,6 +90,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * @see #allowAll()
 	 * @see #apart(java.lang.Enum)
 	 * @return this
+	 * @throws IllegalStateException If the EnumSelector has been {@link #lock() locked}.
 	 */
 	public EnumSelector<T> blockAll() {
 		checkWritable();
@@ -117,7 +119,11 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * Lock the EnumSelector, making it immutable.
 	 * Required for using of all getter methods.
 	 *
+	 * @see #allowAll()
+	 * @see #blockAll()
+	 * @see #locked()
 	 * @return this
+	 * @throws IllegalStateException If the EnumSelector does not have specified default behavior.
 	 */
 	public EnumSelector<T> lock() {
 		if (defaultAllow || defaultBlock)
@@ -141,6 +147,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 *
 	 * @param value The {@code enum} value to test.
 	 * @return If the {@code enum} value is allowed by this EnumSelector.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	public boolean allows(T value) {
 		checkReadable();
@@ -151,6 +158,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * Check if the EnumSelector allows all values.
 	 *
 	 * @return If the EnumSelector allows all values.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	public boolean allowsAll() {
 		checkReadable();
@@ -161,6 +169,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * Check if the EnumSelector blocks all values.
 	 *
 	 * @return If the EnumSelector blocks all values.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	public boolean blocksAll() {
 		checkReadable();
@@ -171,6 +180,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * Returns an iterator of all the allowed elements in this EnumSelector.
 	 *
 	 * @return The iterator.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	@Override
 	public Iterator<T> iterator() {
@@ -182,6 +192,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * Returns a spliterator of all the allowed elements in this EnumSelector.
 	 *
 	 * @return The spliterator.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	@Override
 	public Spliterator<T> spliterator() {
@@ -194,6 +205,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * Returns a sequential stream of all the allowed elements in this EnumSelector.
 	 *
 	 * @return The stream.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	public Stream<T> stream() {
 		checkReadable();
@@ -204,6 +216,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * Returns a parallel stream of all the allowed elements in this EnumSelector.
 	 *
 	 * @return The stream.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	public Stream<T> parallelStream() {
 		checkReadable();
@@ -214,6 +227,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * Returns an EnumSet instance of all the allowed elements in this EnumSelector.
 	 *
 	 * @return The stream.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	public EnumSet<T> toEnumSet() {
 		checkReadable();
