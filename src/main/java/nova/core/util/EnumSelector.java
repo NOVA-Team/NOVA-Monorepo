@@ -21,14 +21,21 @@
 package nova.core.util;
 
 import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * This class is used to mark certain values from specified enum as allowed.
- * Note that you must specify default state via #allowAll or #blockAll methods
+ * Note that you must specify default state via #allowAll or #blockAll methods.
+ *
+ * Allows iteration of all allowed elements.
  *
  * @param <T> The enum
  */
-public class EnumSelector<T extends Enum<T>> {
+public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	private EnumSet<T> exceptions;
 	private boolean defaultAllow, defaultBlock = false;
 	private boolean locked = false;
@@ -87,5 +94,70 @@ public class EnumSelector<T extends Enum<T>> {
 			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
 		else
 			return defaultAllow ^ exceptions.contains(value);
+	}
+
+	public boolean allowsAll() {
+		if (!locked)
+			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
+		else
+			return defaultAllow && exceptions.isEmpty();
+	}
+
+	public boolean blocksAll() {
+		if (!locked)
+			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
+		else
+			return defaultBlock && exceptions.isEmpty();
+	}
+
+	/**
+	 * Returns an iterator of all the allowed elements in this EnumSelector.
+	 *
+	 * @return The iterator.
+	 */
+	@Override
+	public Iterator<T> iterator() {
+		if (!locked)
+			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
+		else
+			return defaultBlock ? exceptions.iterator() : EnumSet.complementOf(exceptions).iterator();
+	}
+
+	/**
+	 * Returns a spliterator of all the allowed elements in this EnumSelector.
+	 *
+	 * @return The spliterator.
+	 */
+	@Override
+	public Spliterator<T> spliterator() {
+		if (!locked)
+			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
+		else
+			return Spliterators.spliterator(iterator(), defaultBlock ? exceptions.size() : EnumSet.complementOf(exceptions).size(),
+					Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.IMMUTABLE);
+	}
+
+	/**
+	 * Returns a sequential stream of all the allowed elements in this EnumSelector.
+	 *
+	 * @return The stream.
+	 */
+	public Stream<T> stream() {
+		if (!locked)
+			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
+		else
+			return StreamSupport.stream(spliterator(), false);
+	}
+
+	/**
+	 * Returns a parallel stream of all the allowed elements in this EnumSelector.
+	 *
+	 * @return The stream.
+	 */
+	public Stream<T> parallelStream() {
+		if (!locked)
+			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
+		else
+			return StreamSupport.stream(spliterator(), true);
 	}
 }
