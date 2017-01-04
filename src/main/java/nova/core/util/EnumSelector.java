@@ -48,13 +48,18 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 		return new EnumSelector(enumClass);
 	}
 
-	private void checkLocked() {
+	private void checkWritable() {
 		if (locked)
 			throw new IllegalStateException("No edits are allowed after EnumSelector has been locked.");
 	}
 
+	private void checkReadable() {
+		if (!locked)
+			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
+	}
+
 	public EnumSelector<T> allowAll() {
-		checkLocked();
+		checkWritable();
 		if (!defaultBlock)
 			defaultAllow = true;
 		else
@@ -63,7 +68,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	}
 
 	public EnumSelector<T> blockAll() {
-		checkLocked();
+		checkWritable();
 		if (!defaultAllow)
 			defaultBlock = true;
 		else
@@ -72,7 +77,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	}
 
 	public EnumSelector<T> apart(T value) {
-		checkLocked();
+		checkWritable();
 		exceptions.add(value);
 		return this;
 	}
@@ -90,24 +95,18 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	}
 
 	public boolean allows(T value) {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return defaultAllow ^ exceptions.contains(value);
+		checkReadable();
+		return defaultAllow ^ exceptions.contains(value);
 	}
 
 	public boolean allowsAll() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return defaultAllow && exceptions.isEmpty();
+		checkReadable();
+		return defaultAllow && exceptions.isEmpty();
 	}
 
 	public boolean blocksAll() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return defaultBlock && exceptions.isEmpty();
+		checkReadable();
+		return defaultBlock && exceptions.isEmpty();
 	}
 
 	/**
@@ -117,10 +116,8 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 */
 	@Override
 	public Iterator<T> iterator() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return defaultBlock ? exceptions.iterator() : EnumSet.complementOf(exceptions).iterator();
+		checkReadable();
+		return defaultBlock ? exceptions.iterator() : EnumSet.complementOf(exceptions).iterator();
 	}
 
 	/**
@@ -130,11 +127,9 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 */
 	@Override
 	public Spliterator<T> spliterator() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return Spliterators.spliterator(iterator(), defaultBlock ? exceptions.size() : EnumSet.complementOf(exceptions).size(),
-					Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.IMMUTABLE);
+		checkReadable();
+		return Spliterators.spliterator(iterator(), defaultBlock ? exceptions.size() : EnumSet.complementOf(exceptions).size(),
+				Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.IMMUTABLE);
 	}
 
 	/**
@@ -143,10 +138,8 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * @return The stream.
 	 */
 	public Stream<T> stream() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return StreamSupport.stream(spliterator(), false);
+		checkReadable();
+		return StreamSupport.stream(spliterator(), false);
 	}
 
 	/**
@@ -155,9 +148,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * @return The stream.
 	 */
 	public Stream<T> parallelStream() {
-		if (!locked)
-			throw new IllegalStateException("Cannot use EnumSelector that is not locked.");
-		else
-			return StreamSupport.stream(spliterator(), true);
+		checkReadable();
+		return StreamSupport.stream(spliterator(), true);
 	}
 }
