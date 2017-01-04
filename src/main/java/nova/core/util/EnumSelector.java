@@ -151,4 +151,14 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 		checkReadable();
 		return StreamSupport.stream(spliterator(), true);
 	}
+
+	/**
+	 * Returns an EnumSet instance of all the allowed elements in this EnumSelector.
+	 *
+	 * @return The stream.
+	 */
+	public EnumSet<T> toEnumSet() {
+		checkReadable();
+		return defaultBlock ? EnumSet.copyOf(exceptions) : EnumSet.complementOf(exceptions);
+	}
 }
