@@ -59,7 +59,7 @@ public class BWItem extends Item implements Storable {
 	public ItemStack makeItemStack(int stackSize) {
 		ItemStack result = new ItemStack(item, stackSize, meta);
 		if (tag != null) {
-			result.setTagCompound(tag);
+			result.deserializeNBT(tag);
 		}
 		return result;
 	}

@@ -21,13 +21,18 @@
 package nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.component.Updater;
+import nova.core.component.fluid.SidedTankProvider;
+import nova.core.util.Direction;
 import nova.core.wrapper.mc.forge.v1_11.asm.lib.ComponentInjector;
 import nova.core.wrapper.mc.forge.v1_11.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.fluid.forward.FWFluidTank;
 import nova.internal.core.Game;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -44,17 +49,25 @@ public final class FWTileLoader {
 	private FWTileLoader() {
 	}
 
+	static {
+		Game.events().on(WrapperEvent.FWTileCreate.class).bind(evt -> {
+			if (evt.novaBlock instanceof SidedTankProvider) {
+				Arrays.stream(Direction.values()).filter(dir -> ((SidedTankProvider) evt.novaBlock).getTank(dir) != null)
+						.forEach(dir -> evt.tileEntity.addCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
+								new FWFluidTank(((SidedTankProvider) evt.novaBlock).getTank(dir)), facing));
+			}
+		})
+	}
+
 	public static FWTile loadTile(NBTTagCompound data) {
 		try {
 			String blockID = data.getString("novaID");
 			Block block = createBlock(blockID);
-			WrapperEvent.FWTileLoad event = new WrapperEvent.FWTileLoad(block, data);
-			Game.events().publish(event);
-			FWTile tile = event.getResult();
-			if (tile == null)
-				tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[0], new Object[0]) :
+			FWTile tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[0], new Object[0]) :
 						injector.inject(block, new Class[0], new Object[0]);
 			tile.setBlock(block);
+			WrapperEvent.FWTileCreate event = new WrapperEvent.FWTileCreate(block, tile);
+			Game.events().publish(event);
 			return tile;
 		} catch (Exception e) {
 			throw new RuntimeException("Fatal error when trying to create a new NOVA tile.", e);
@@ -64,13 +77,11 @@ public final class FWTileLoader {
 	public static FWTile loadTile(String blockID) {
 		try {
 			Block block = createBlock(blockID);
-			WrapperEvent.FWTileLoad event = new WrapperEvent.FWTileLoad(block);
-			Game.events().publish(event);
-			FWTile tile = event.getResult();
-			if (tile == null)
-				tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[] { String.class }, new Object[] { blockID }) :
+			FWTile tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[] { String.class }, new Object[] { blockID }) :
 						injector.inject(block, new Class[] { String.class }, new Object[] { blockID });
 			tile.setBlock(block);
+			WrapperEvent.FWTileCreate event = new WrapperEvent.FWTileCreate(block, tile);
+			Game.events().publish(event);
 			return tile;
 		} catch (Exception e) {
 			throw new RuntimeException("Fatal error when trying to create a new NOVA tile.", e);
