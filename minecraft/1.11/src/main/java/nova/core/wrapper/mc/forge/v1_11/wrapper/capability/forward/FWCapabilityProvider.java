@@ -10,7 +10,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import nova.core.util.EnumSelector;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
