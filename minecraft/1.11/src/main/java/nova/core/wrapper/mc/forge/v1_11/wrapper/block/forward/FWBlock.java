@@ -72,9 +72,6 @@ public class FWBlock extends net.minecraft.block.Block {
 	 */
 	private final BlockFactory factory;
 	private final Class<? extends Block> blockClass;
-	//TODO: Hack. Bad practice.
-	public IBlockAccess lastExtendedWorld;
-	public BlockPos lastExtendedStatePos;
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
 	private static Material getMcMaterial(BlockFactory factory) {
@@ -182,19 +179,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		FWTile fwTile = FWTileLoader.loadTile(dummy.getID().asString()); // TODO?
-		if (lastExtendedStatePos != null) {
-			fwTile.block.components.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
-			lastExtendedStatePos = null;
-		}
-		return fwTile;
-	}
-
-	@Override
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
-		lastExtendedWorld = world;
-		lastExtendedStatePos = pos;
-		return super.getExtendedState(state, world, pos);
+		return FWTileLoader.loadTile(dummy.getID().asString()); // TODO?
 	}
 
 	@Override
