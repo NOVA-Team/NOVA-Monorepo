@@ -20,8 +20,10 @@
 
 package nova.core.util;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -185,7 +187,8 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		checkReadable();
-		return defaultBlock ? exceptions.iterator() : EnumSet.complementOf(exceptions).iterator();
+		return defaultBlock ? Collections.unmodifiableSet(exceptions).iterator() :
+				Collections.unmodifiableSet(EnumSet.complementOf(exceptions)).iterator();
 	}
 
 	/**
@@ -224,13 +227,13 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	}
 
 	/**
-	 * Returns an EnumSet instance of all the allowed elements in this EnumSelector.
+	 * Returns a Set instance of all the allowed elements in this EnumSelector.
 	 *
-	 * @return The stream.
+	 * @return The set.
 	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
-	public EnumSet<T> toEnumSet() {
+	public Set<T> toSet() {
 		checkReadable();
-		return defaultBlock ? EnumSet.copyOf(exceptions) : EnumSet.complementOf(exceptions);
+		return Collections.unmodifiableSet(defaultBlock ? exceptions : EnumSet.complementOf(exceptions));
 	}
 }
