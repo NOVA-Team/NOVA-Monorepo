@@ -187,8 +187,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		checkReadable();
-		return defaultBlock ? Collections.unmodifiableSet(exceptions).iterator() :
-				Collections.unmodifiableSet(EnumSet.complementOf(exceptions)).iterator();
+		return Collections.unmodifiableSet(defaultBlock ? exceptions : EnumSet.complementOf(exceptions)).iterator();
 	}
 
 	/**
