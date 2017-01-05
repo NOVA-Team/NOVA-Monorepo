@@ -214,10 +214,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
-			Optional<Mod> activeMod = ModLoader.<Mod>instance().activeMod();
-			String modId = activeMod.isPresent() ? activeMod.get().id() : Loader.instance().activeModContainer().getModId();
 			String itemId = itemFactory.getID().asString(); // TODO?
-			GameRegistry.registerItem(itemWrapper, itemId.contains(":") ? itemId : modId + ":" + itemId);
+			GameRegistry.registerItem(itemWrapper, itemId);
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab

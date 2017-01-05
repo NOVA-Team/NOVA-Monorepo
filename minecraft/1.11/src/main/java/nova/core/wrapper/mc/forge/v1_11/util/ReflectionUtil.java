@@ -93,9 +93,7 @@ public class ReflectionUtil {
 		try {
 			seedEntryConstructor = forgeSeedEntry.getConstructor(ItemStack.class, int.class);
 			seedEntryConstructor.setAccessible(true);
-		} catch (NoSuchMethodException ex) {
-			Logger.getLogger(ReflectionUtil.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (SecurityException ex) {
+		} catch (NoSuchMethodException | SecurityException ex) {
 			Logger.getLogger(ReflectionUtil.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
@@ -108,9 +106,7 @@ public class ReflectionUtil {
 	public static BiMap<Class<? extends Entity>, EntityRegistry.EntityRegistration> getEntityClassRegistrations() {
 		try {
 			return (BiMap<Class<? extends Entity>, EntityRegistry.EntityRegistration>) ENTITYREGISTRY_CLASSREGISTRATIONS.get(EntityRegistry.instance());
-		} catch (IllegalArgumentException ex) {
-			return null;
-		} catch (IllegalAccessException ex) {
+		} catch (IllegalArgumentException | IllegalAccessException ex) {
 			return null;
 		}
 	}
@@ -121,18 +117,17 @@ public class ReflectionUtil {
 		}
 		try {
 			return (List) NBTTAGLIST_TAGLIST.get(list);
-		} catch (IllegalArgumentException ex) {
-			return null;
-		} catch (IllegalAccessException ex) {
+		} catch (IllegalArgumentException | IllegalAccessException ex) {
 			return null;
 		}
 	}
 
-	public static List getSeeds() {
+	public static List<?> getSeeds() {
 		return getPrivateStaticObject(ForgeHooks.class, "seedList");
 	}
 
 	/**
+	 * @return {@link Collections#emptyMap()}
 	 * @deprecated Removed in Forge 1.9
 	 */
 	@Deprecated
@@ -140,7 +135,7 @@ public class ReflectionUtil {
 		return Collections.emptyMap();//getPrivateStaticObject(ChestGenHooks.class, "chestInfo");
 	}
 
-	public static Map getTranslations() {
+	public static Map<String, String> getTranslations() {
 		return getPrivateObject(
 			getPrivateStaticObject(I18n.class, "localizedName", "field_74839_a"),
 			"languageList",
@@ -208,7 +203,7 @@ public class ReflectionUtil {
 	public static EntityPlayer getCraftingSlotPlayer(SlotCrafting slot) {
 		try {
 			return (EntityPlayer) SLOTCRAFTING_PLAYER.get(slot);
-		} catch (IllegalAccessException ex) {
+		} catch (IllegalAccessException | NullPointerException ex) {
 			logError("could not get inventory eventhandler");
 			return null;
 		}
@@ -264,11 +259,7 @@ public class ReflectionUtil {
 				Field field = cls.getDeclaredField(name);
 				field.setAccessible(true);
 				return (T) field.get(null);
-			} catch (NoSuchFieldException ex) {
-
-			} catch (SecurityException ex) {
-
-			} catch (IllegalAccessException ex) {
+			} catch (NoSuchFieldException | SecurityException | IllegalAccessException ex) {
 
 			}
 		}
@@ -311,14 +302,13 @@ public class ReflectionUtil {
 	// ### Private Methods ###
 	// #######################
 
-	private static Field getField(Class cls, String... names) {
+	private static Field getField(Class<?> cls, String... names) {
 		for (String name : names) {
 			try {
 				Field field = cls.getDeclaredField(name);
 				field.setAccessible(true);
 				return field;
-			} catch (NoSuchFieldException ex) {
-			} catch (SecurityException ex) {
+			} catch (NoSuchFieldException | SecurityException ex) {
 			}
 		}
 

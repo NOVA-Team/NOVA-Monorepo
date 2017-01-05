@@ -21,15 +21,15 @@
 package nova.core.wrapper.mc.forge.v1_11.wrapper.entity.forward;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import nova.core.component.renderer.DynamicRenderer;
 import nova.core.wrapper.mc.forge.v1_11.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.particle.forward.FWParticle;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.render.backward.BWModel;
 import org.lwjgl.opengl.GL11;
 
@@ -45,14 +45,14 @@ import static org.lwjgl.opengl.GL11.glShadeModel;
  * Renders entities.
  * @author Calclavia
  */
-public class FWEntityRenderer extends Render {
-	public static final FWEntityRenderer instance = new FWEntityRenderer();
+public class FWEntityRenderer extends Render<FWEntity> {
+	public static final IRenderFactory<FWEntity> instance = FWEntityRenderer::new;
 
-	public FWEntityRenderer() {
-		super(FMLClientHandler.instance().getClient().getRenderManager());
+	public FWEntityRenderer(RenderManager manager) {
+		super(manager);
 	}
 
-	public static void render(Particle wrapper, nova.core.entity.Entity entity, double x, double y, double z) {
+	public static void render(FWParticle wrapper, nova.core.entity.Entity entity, double x, double y, double z) {
 		Optional<DynamicRenderer> opRenderer = entity.components.getOp(DynamicRenderer.class);
 
 		if (opRenderer.isPresent()) {
@@ -82,7 +82,7 @@ public class FWEntityRenderer extends Render {
 		}
 	}
 
-	public static void render(Entity wrapper, nova.core.entity.Entity entity, double x, double y, double z) {
+	public static void render(FWEntity wrapper, nova.core.entity.Entity entity, double x, double y, double z) {
 		Optional<DynamicRenderer> opRenderer = entity.components.getOp(DynamicRenderer.class);
 
 		if (opRenderer.isPresent()) {
@@ -113,14 +113,12 @@ public class FWEntityRenderer extends Render {
 	}
 
 	@Override
-	public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
-		if (entity instanceof FWEntity) {
-			render(entity, ((FWEntity) entity).wrapped, x, y, z);
-		}
+	public void doRender(FWEntity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
+		render(entity, ((FWEntity) entity).wrapped, x, y, z);
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
+	protected ResourceLocation getEntityTexture(FWEntity entity) {
 		return null;
 	}
 }

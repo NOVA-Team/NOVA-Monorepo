@@ -99,7 +99,7 @@ public class RecipeConverter {
 		}
 	}
 
-	private static String findOreDictEntryFor(List ingredient) {
+	private static String findOreDictEntryFor(List<ItemStack> ingredient) {
 		for (String key : net.minecraftforge.oredict.OreDictionary.getOreNames()) {
 			if (net.minecraftforge.oredict.OreDictionary.getOres(key).equals(ingredient)) {
 				return key;
@@ -189,7 +189,7 @@ public class RecipeConverter {
 
 				int counter = 0;
 				String[] parts = new String[recipe.getHeight()];
-				ArrayList rarguments = new ArrayList();
+				ArrayList<Object> rarguments = new ArrayList<>();
 				for (int i = 0; i < recipe.getHeight(); i++) {
 					char[] pattern = new char[recipe.getWidth()];
 					for (int j = 0; j < recipe.getWidth(); j++) {
