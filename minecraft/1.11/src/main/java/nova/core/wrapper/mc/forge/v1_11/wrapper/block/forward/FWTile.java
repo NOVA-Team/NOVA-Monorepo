@@ -37,13 +37,10 @@ import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.EnumSelector;
 import nova.core.wrapper.mc.forge.v1_11.network.netty.MCNetworkManager;
-import nova.core.wrapper.mc.forge.v1_11.util.WrapperEvent;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.capability.forward.FWCapabilityProvider;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -160,6 +157,12 @@ public class FWTile extends TileEntity {
 		if (!hasCapability(capability, facing)) return null;
 		T capabilityInstance = (T) (facing != null ? sidedCapabilities.get(facing).get(capability) : capabilities.get(capability));
 		return capabilityInstance != null ? capabilityInstance : super.getCapability(capability, facing);
+	}
+
+	@Override
+	public void setPos(BlockPos pos) {
+		super.setPos(pos);
+		this.block.components.getOrAdd(new MCBlockTransform(this.block, Game.natives().toNova(this.getWorld()), Game.natives().toNova(this.getPos())));
 	}
 
 	private static class FWPacketUpdateTileEntity<T extends INetHandler> extends SPacketUpdateTileEntity {
