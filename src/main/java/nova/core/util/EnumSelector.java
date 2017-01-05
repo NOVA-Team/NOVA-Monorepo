@@ -168,6 +168,18 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	}
 
 	/**
+	 * Check if the {@code enum} value is blocked by this EnumSelector.
+	 *
+	 * @param value The {@code enum} value to test.
+	 * @return If the {@code enum} value is blocked by this EnumSelector.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
+	public boolean blocks(T value) {
+		checkReadable();
+		return defaultBlock ^ exceptions.contains(value);
+	}
+
+	/**
 	 * Check if the EnumSelector blocks all values.
 	 *
 	 * @return If the EnumSelector blocks all values.

@@ -182,6 +182,30 @@ public class EnumSelectorTest {
 		assertThat(result).isEqualTo(0);
 	}
 
+	@Test
+	public void test3Allows_EXAMPLE_24() {
+		boolean result = enumSelectorExample3.blocks(EnumExample.EXAMPLE_24);
+		assertThat(result).isEqualTo(false);
+	}
+
+	@Test
+	public void test3Allows_EXAMPLE_42() {
+		boolean result = enumSelectorExample3.blocks(EnumExample.EXAMPLE_42);
+		assertThat(result).isEqualTo(false);
+	}
+
+	@Test
+	public void test4Disallows_EXAMPLE_24() {
+		boolean result = enumSelectorExample4.blocks(EnumExample.EXAMPLE_24);
+		assertThat(result).isEqualTo(true);
+	}
+
+	@Test
+	public void test4Disallows_EXAMPLE_42() {
+		boolean result = enumSelectorExample4.blocks(EnumExample.EXAMPLE_42);
+		assertThat(result).isEqualTo(true);
+	}
+
 	public static enum EnumExample {
 		EXAMPLE_8,
 		EXAMPLE_16,
