@@ -22,6 +22,7 @@ package nova.core.wrapper.mc.forge.v1_11.network.netty;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.INetHandler;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.TextComponentString;
@@ -53,7 +54,7 @@ public class MCNetworkManager extends NetworkManager {
 	public final String channel = NovaMinecraft.id;
 	public final EnumMap<Side, FMLEmbeddedChannel> channelEnumMap = NetworkRegistry.INSTANCE.newChannel(channel, new ChannelHandler(), new MCPacketHandler());
 
-	public Packet toMCPacket(PacketAbstract packet) {
+	public Packet<?> toMCPacket(PacketAbstract packet) {
 		return channelEnumMap.get(FMLCommonHandler.instance().getEffectiveSide()).generatePacketFrom(packet);
 	}
 

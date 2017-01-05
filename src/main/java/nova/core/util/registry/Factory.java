@@ -21,11 +21,7 @@
 package nova.core.util.registry;
 
 import nova.core.util.Identifiable;
-import nova.core.loader.Mod;
-import nova.internal.core.Game;
-import nova.internal.core.launch.ModLoader;
 
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -55,7 +51,7 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	 * @param processor The processor function
 	 */
 	public Factory(String id, Supplier<T> constructor, Function<T, T> processor) {
-		this.id = Identifiable.addPrefix(id, false);
+		this.id = id;
 		this.constructor = constructor;
 		this.processor = processor;
 	}
@@ -82,6 +78,7 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 		return processor.apply(constructor.get());
 	}
 
+	@Override
 	public String getID() {
 		return id;
 	}

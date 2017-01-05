@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -239,6 +240,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
+	@Deprecated
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess access, BlockPos pos) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
 		if (blockInstance.components.has(Collider.class)) {
@@ -249,6 +251,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
+	@Deprecated
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
 
@@ -260,6 +263,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
+	@Deprecated
 	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB boundingBox, List<AxisAlignedBB> list, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
 		blockInstance.components.getOp(Collider.class).ifPresent(
@@ -279,6 +283,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state) {
 		if (dummy == null) {
 			// Superconstructor fix. -10 style points.
@@ -306,6 +311,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
+	@Deprecated
 	public boolean isFullCube(IBlockState state) {
 		Optional<Collider> blockCollider = dummy.components.getOp(Collider.class);
 
@@ -342,6 +348,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
+	@Deprecated
 	public int getWeakPower(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
 		WrapperEvent.WeakRedstone event = new WrapperEvent.WeakRedstone(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
@@ -350,6 +357,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
+	@Deprecated
 	public int getStrongPower(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
 		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
 		WrapperEvent.StrongRedstone event = new WrapperEvent.StrongRedstone(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
@@ -369,6 +377,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
+	@Deprecated
 	public float getBlockHardness(IBlockState state, World world, BlockPos pos) {
 		return (float) getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).getHardness() * 2;
 	}

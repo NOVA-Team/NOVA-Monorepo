@@ -37,13 +37,13 @@ import static org.lwjgl.opengl.GL11.GL_QUADS;
 /**
  * @author Calclavia
  */
-public class FWTileRenderer extends TileEntitySpecialRenderer {
+public class FWTileRenderer extends TileEntitySpecialRenderer<FWTile> {
 
 	public static final FWTileRenderer instance = new FWTileRenderer();
 
 	@Override
-	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float p_180535_8_, int p_180535_9_) {
-		Block block = ((FWTile) te).getBlock();
+	public void renderTileEntityAt(FWTile te, double x, double y, double z, float p_180535_8_, int p_180535_9_) {
+		Block block = te.getBlock();
 		Optional<DynamicRenderer> opRenderer = block.components.getOp(DynamicRenderer.class);
 		if (opRenderer.isPresent()) {
 			BWModel model = new BWModel();

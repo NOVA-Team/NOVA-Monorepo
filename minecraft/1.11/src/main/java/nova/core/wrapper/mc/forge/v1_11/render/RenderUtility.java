@@ -205,9 +205,9 @@ public class RenderUtility {
 			Object blockObj = Game.natives().toNative(blockFactory.build());
 			if (blockObj instanceof FWBlock) {
 				FWBlock block = (FWBlock) blockObj;
-				ResourceLocation blockRL = (ResourceLocation) net.minecraft.block.Block.REGISTRY.getNameForObject(block);
+				ResourceLocation blockRL = net.minecraft.block.Block.REGISTRY.getNameForObject(block);
 				Item itemFromBlock = Item.getItemFromBlock(block);
-				ResourceLocation itemRL = (ResourceLocation) Item.REGISTRY.getNameForObject(itemFromBlock);
+				ResourceLocation itemRL = Item.REGISTRY.getNameForObject(itemFromBlock);
 				ModelResourceLocation blockLocation = new ModelResourceLocation(blockRL, "normal");
 				ModelResourceLocation itemLocation = new ModelResourceLocation(itemRL, "inventory");
 				if (block.dummy.components.has(StaticRenderer.class)) {
@@ -226,7 +226,7 @@ public class RenderUtility {
 				Item itemObj = ((ItemStack) stackObj).getItem();
 				if (itemObj instanceof FWItem) {
 					FWItem item = (FWItem) itemObj;
-					ResourceLocation objRL = (ResourceLocation) Item.REGISTRY.getNameForObject(item);
+					ResourceLocation objRL = Item.REGISTRY.getNameForObject(item);
 					ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
 
 					nova.core.item.Item dummy = item.getItemFactory().build();
@@ -245,7 +245,7 @@ public class RenderUtility {
 							SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(itemModel, ItemOverrideList.NONE).setTexture(getTexture(texture.get()));
 							for (BlockPart blockpart : (Iterable<BlockPart>) itemModel.getElements()) {
 								for (EnumFacing enumfacing : (Iterable<EnumFacing>) blockpart.mapFaces.keySet()) {
-									BlockPartFace blockpartface = (BlockPartFace) blockpart.mapFaces.get(enumfacing);
+									BlockPartFace blockpartface = blockpart.mapFaces.get(enumfacing);
 									BakedQuad bakedQuad = FACE_BAKERY.makeBakedQuad(blockpart.positionFrom, blockpart.positionTo, blockpartface, getTexture(texture.get()), enumfacing, ModelRotation.X0_Y0, blockpart.partRotation, false, blockpart.shade);
 
 									if (blockpartface.cullFace == null || !TRSRTransformation.isInteger(ModelRotation.X0_Y0.getMatrix())) {

@@ -91,7 +91,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	public static String generateSoundJSON(AbstractResourcePack pack) {
 		JsonObject fakeSoundJSON = new JsonObject();
 
-		for (String domain : (Set<String>) pack.getResourceDomains()) {
+		for (String domain : pack.getResourceDomains()) {
 
 			if (pack instanceof FileResourcePack) {
 				//For zip resource packs
@@ -99,10 +99,10 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 					ZipFile zipFile = new ZipFile(pack.resourcePackFile);
 
 					if (zipFile.getEntry("assets/" + domain + "/sounds/") != null) {
-						Enumeration zipEntries = zipFile.entries();
+						Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
 
 						while (zipEntries.hasMoreElements()) {
-							String zipPath = ((ZipEntry) zipEntries.nextElement()).getName();
+							String zipPath = zipEntries.nextElement().getName();
 
 							String prefix = "assets/" + domain + "/sounds/";
 							if (zipPath.startsWith(prefix) && !zipPath.equals(prefix)) {
@@ -116,9 +116,9 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 
 									if (entry.isDirectory()) {
 										//Sound Collection
-										Enumeration zipEntries2 = zipFile.entries();
+										Enumeration<? extends ZipEntry> zipEntries2 = zipFile.entries();
 										while (zipEntries2.hasMoreElements()) {
-											String zipPath2 = ((ZipEntry) zipEntries2.nextElement()).getName();
+											String zipPath2 = zipEntries2.nextElement().getName();
 
 											if (zipPath2.startsWith(prefix + soundName + "/") && !zipFile.getEntry(zipPath2).isDirectory()) {
 												String randomSoundName = zipPath2.replaceFirst(prefix + soundName + "/", "");
@@ -147,9 +147,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 				if (folder.exists()) {
 					File[] listOfFiles = folder.listFiles();
 
-					for (int i = 0; i < listOfFiles.length; i++) {
-						File listedFile = listOfFiles[i];
-
+					for (File listedFile : listOfFiles) {
 						JsonObject sound = new JsonObject();
 						sound.addProperty("category", "ambient");
 						JsonArray sounds = new JsonArray();

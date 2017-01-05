@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v1_11.wrapper.block.backward;
 
 import net.minecraft.block.BlockSnow;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -71,19 +72,23 @@ public class BWBlock extends Block implements Storable {
 		components.add(new BlockProperty.Opacity().setLightTransmission(!blockState().getMaterial().blocksLight()));
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
-		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.getSoundType().getPlaceSound().getSoundName().getResourcePath()));
-		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", mcBlock.getSoundType().getBreakSound().getSoundName().getResourcePath()));
-		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", mcBlock.getSoundType().getStepSound().getSoundName().getResourcePath()));
+		SoundType soundType;
+		if (getMcBlockAccess() instanceof net.minecraft.world.World)
+			soundType = mcBlock.getSoundType(blockState(), (net.minecraft.world.World)getMcBlockAccess(), new BlockPos(x(), y(), z()), null);
+		else
+			soundType = mcBlock.getSoundType();
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", soundType.getPlaceSound().getSoundName().getResourcePath()));
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundType.getBreakSound().getSoundName().getResourcePath()));
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("",soundType.getStepSound().getSoundName().getResourcePath()));
 
-		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(blockState(), getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0F);
+		components.add(new LightEmitter()).setEmittedLevel(() -> blockState().getLightValue(getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0F);
 		components.add(new Collider(this))
 			.setBoundingBox(() -> {
-				AxisAlignedBB aabb = mcBlock.getBoundingBox(blockState(), getMcBlockAccess(), new BlockPos(x(), y(), z()));
+				AxisAlignedBB aabb = blockState().getBoundingBox(getMcBlockAccess(), new BlockPos(x(), y(), z()));
 				return new Cuboid(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
 			}).setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
-				mcBlock.addCollisionBoxToList(
-					blockState(),
+				blockState().addCollisionBoxToList(
 					Game.natives().toNative(world()),
 					new BlockPos(x(), y(), z()),
 					Game.natives().toNative(entity.isPresent() ? entity.get().components.get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),

@@ -24,7 +24,6 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
-import nova.core.item.Item;
 import nova.core.recipes.RecipeAddedEvent;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.RecipeRemovedEvent;
@@ -61,7 +60,7 @@ public class MinecraftRecipeRegistry {
 
 		RecipeManager recipeManager = Game.recipes();
 
-		List<IRecipe> recipes = (List<IRecipe>) CraftingManager.getInstance().getRecipeList();
+		List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
 		for (IRecipe recipe : recipes) {
 			CraftingRecipe converted = convert(recipe);
 			if (converted != null) {

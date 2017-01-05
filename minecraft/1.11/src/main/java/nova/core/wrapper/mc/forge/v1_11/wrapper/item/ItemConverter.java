@@ -157,6 +157,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 
 	/**
 	 * Saves NOVA item into a Minecraft ItemStack.
+	 *
+	 * @param itemStack Minecraft ItemStack.
+	 * @param item NOVA Item.
+	 * @return The modified ItemStack.
 	 */
 	public ItemStack updateMCItemStack(ItemStack itemStack, Item item) {
 		itemStack.setCount(item.count());
@@ -219,10 +223,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
-			Optional<Mod> activeMod = ModLoader.<Mod>instance().activeMod();
-			String modId = activeMod.isPresent() ? activeMod.get().id() : Loader.instance().activeModContainer().getModId();
 			String itemId = itemFactory.getID().asString(); // TODO?
-			GameRegistry.register(itemWrapper, itemId.contains(":") ? new ResourceLocation(itemId) : new ResourceLocation(modId, itemId));
+			GameRegistry.register(itemWrapper, new ResourceLocation(itemId));
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab

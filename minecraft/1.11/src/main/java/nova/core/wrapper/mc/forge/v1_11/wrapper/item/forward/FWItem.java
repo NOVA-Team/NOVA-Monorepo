@@ -65,7 +65,7 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean p_77624_4_) {
 		ItemWrapperMethods.super.addInformation(itemStack, player, list, p_77624_4_);
 	}
 
