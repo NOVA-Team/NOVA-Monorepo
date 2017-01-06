@@ -231,6 +231,30 @@ public class EnumSelectorTest {
 	}
 
 	@Test
+	public void test1SetSize() {
+		int result = enumSelectorExample1.toSet().size();
+		assertThat(result).isEqualTo(2);
+	}
+
+	@Test
+	public void test2SetSize() {
+		int result = enumSelectorExample2.toSet().size();
+		assertThat(result).isEqualTo(EnumExample.values().length - 2);
+	}
+
+	@Test
+	public void test3SetSize() {
+		int result = enumSelectorExample3.toSet().size();
+		assertThat(result).isEqualTo(EnumExample.values().length);
+	}
+
+	@Test
+	public void test4SetSize() {
+		int result = enumSelectorExample4.toSet().size();
+		assertThat(result).isEqualTo(0);
+	}
+
+	@Test
 	public void test3Allows_EXAMPLE_24() {
 		boolean result = enumSelectorExample3.blocks(EnumExample.EXAMPLE_24);
 		assertThat(result).isEqualTo(false);
@@ -283,6 +307,30 @@ public class EnumSelectorTest {
 		IllegalStateException result = null;
 		try {
 			enumSelectorExample1.apart(EnumExample.EXAMPLE_64);
+		} catch (IllegalStateException ex) {
+			result = ex;
+		}
+		assertThat(result).isNotNull();
+	}
+
+	@Test
+	public void testCannotBlockAllowing() {
+		EnumSelector<EnumExample> enumSelectorExample = EnumSelector.of(EnumExample.class).allowAll();
+		IllegalStateException result = null;
+		try {
+			enumSelectorExample.blockAll();
+		} catch (IllegalStateException ex) {
+			result = ex;
+		}
+		assertThat(result).isNotNull();
+	}
+
+	@Test
+	public void testCannotAllowBlocking() {
+		EnumSelector<EnumExample> enumSelectorExample = EnumSelector.of(EnumExample.class).blockAll();
+		IllegalStateException result = null;
+		try {
+			enumSelectorExample.allowAll();
 		} catch (IllegalStateException ex) {
 			result = ex;
 		}
