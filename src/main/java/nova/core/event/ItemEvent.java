@@ -25,10 +25,18 @@ import nova.core.event.bus.Event;
 import nova.core.item.ItemFactory;
 
 /**
+ * All events related to the item.
  * @author ExE Boss
  */
 public abstract class ItemEvent extends CancelableEvent {
 
+	/**
+	 * Event is triggered when an ItemFactory is registered.
+	 *
+	 * @see ItemFactory
+	 * @see nova.core.item.ItemManager#register(nova.core.item.ItemFactory)
+	 * @see nova.core.item.ItemManager#register(java.lang.String, java.util.function.Supplier)
+	 */
 	public static class Register extends CancelableEvent {
 		public ItemFactory itemFactory;
 
@@ -38,6 +46,8 @@ public abstract class ItemEvent extends CancelableEvent {
 	}
 
 	/**
+	 * Event is triggered when an Item ID is not found.
+	 *
 	 * @author Stan
 	 */
 	public static class IDNotFound extends Event {
