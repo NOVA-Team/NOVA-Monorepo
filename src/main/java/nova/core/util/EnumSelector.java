@@ -110,6 +110,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * @see #blockAll()
 	 * @param value The given {@code enum} value that should have behavior opposite of the default.
 	 * @return this
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	public EnumSelector<T> apart(T value) {
 		checkWritable();
