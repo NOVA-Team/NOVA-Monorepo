@@ -24,7 +24,7 @@ import nova.core.entity.Entity;
 import nova.core.event.bus.CancelableEvent;
 
 /**
- * All events related to the entity
+ * All events related to the entity.
  * @author Calclavia
  */
 public class EntityEvent extends CancelableEvent {
