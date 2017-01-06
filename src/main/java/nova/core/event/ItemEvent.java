@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -16,28 +16,45 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.item.event;
+ */
 
+package nova.core.event;
+
+import nova.core.event.bus.CancelableEvent;
 import nova.core.event.bus.Event;
 import nova.core.item.ItemFactory;
 
 /**
- * @author Stan
+ * @author ExE Boss
  */
-public class ItemIDNotFoundEvent extends Event {
-	public final String id;
+public abstract class ItemEvent extends CancelableEvent {
 
-	private ItemFactory remappedFactory = null;
+	public static class Register extends CancelableEvent {
+		public ItemFactory itemFactory;
 
-	public ItemIDNotFoundEvent(String id) {
-		this.id = id;
+		public Register(ItemFactory itemFactory) {
+			this.itemFactory = itemFactory;
+		}
 	}
 
-	public ItemFactory getRemappedFactory() {
-		return remappedFactory;
-	}
+	/**
+	 * @author Stan
+	 */
+	public static class IDNotFound extends Event {
+		public final String id;
 
-	public void setRemappedFactory(ItemFactory remappedFactory) {
-		this.remappedFactory = remappedFactory;
+		private ItemFactory remappedFactory = null;
+
+		public IDNotFound(String id) {
+			this.id = id;
+		}
+
+		public ItemFactory getRemappedFactory() {
+			return remappedFactory;
+		}
+
+		public void setRemappedFactory(ItemFactory remappedFactory) {
+			this.remappedFactory = remappedFactory;
+		}
 	}
 }
