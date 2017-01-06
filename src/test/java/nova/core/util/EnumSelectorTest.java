@@ -135,6 +135,30 @@ public class EnumSelectorTest {
 	}
 
 	@Test
+	public void test1NotAllowsAll() {
+		boolean result = enumSelectorExample1.allowsAll();
+		assertThat(result).isEqualTo(false);
+	}
+
+	@Test
+	public void test1NotBlocksAll() {
+		boolean result = enumSelectorExample1.blocksAll();
+		assertThat(result).isEqualTo(false);
+	}
+
+	@Test
+	public void test2NotAllowsAll() {
+		boolean result = enumSelectorExample2.allowsAll();
+		assertThat(result).isEqualTo(false);
+	}
+
+	@Test
+	public void test2NotBlocksAll() {
+		boolean result = enumSelectorExample2.blocksAll();
+		assertThat(result).isEqualTo(false);
+	}
+
+	@Test
 	public void test3AllowsAll() {
 		boolean result = enumSelectorExample3.allowsAll();
 		assertThat(result).isEqualTo(true);
@@ -183,6 +207,30 @@ public class EnumSelectorTest {
 	}
 
 	@Test
+	public void test1ParallelStreamSize() {
+		long result = enumSelectorExample1.parallelStream().count();
+		assertThat(result).isEqualTo(2);
+	}
+
+	@Test
+	public void test2ParallelStreamSize() {
+		long result = enumSelectorExample2.parallelStream().count();
+		assertThat(result).isEqualTo(EnumExample.values().length - 2);
+	}
+
+	@Test
+	public void test3ParallelStreamSize() {
+		long result = enumSelectorExample3.parallelStream().count();
+		assertThat(result).isEqualTo(EnumExample.values().length);
+	}
+
+	@Test
+	public void test4ParallelStreamSize() {
+		long result = enumSelectorExample4.parallelStream().count();
+		assertThat(result).isEqualTo(0);
+	}
+
+	@Test
 	public void test3Allows_EXAMPLE_24() {
 		boolean result = enumSelectorExample3.blocks(EnumExample.EXAMPLE_24);
 		assertThat(result).isEqualTo(false);
@@ -204,6 +252,41 @@ public class EnumSelectorTest {
 	public void test4Disallows_EXAMPLE_42() {
 		boolean result = enumSelectorExample4.blocks(EnumExample.EXAMPLE_42);
 		assertThat(result).isEqualTo(true);
+	}
+
+	@Test
+	public void testCannotLock() {
+		EnumSelector<EnumExample> enumSelectorExample = EnumSelector.of(EnumExample.class);
+		IllegalStateException result = null;
+		try {
+			enumSelectorExample.lock();
+		} catch (IllegalStateException ex) {
+			result = ex;
+		}
+		assertThat(result).isNotNull();
+	}
+
+	@Test
+	public void testCannotRead() {
+		EnumSelector<EnumExample> enumSelectorExample = EnumSelector.of(EnumExample.class);
+		IllegalStateException result = null;
+		try {
+			enumSelectorExample.allowsAll();
+		} catch (IllegalStateException ex) {
+			result = ex;
+		}
+		assertThat(result).isNotNull();
+	}
+
+	@Test
+	public void testCannotWrite() {
+		IllegalStateException result = null;
+		try {
+			enumSelectorExample1.apart(EnumExample.EXAMPLE_64);
+		} catch (IllegalStateException ex) {
+			result = ex;
+		}
+		assertThat(result).isNotNull();
 	}
 
 	public static enum EnumExample {
