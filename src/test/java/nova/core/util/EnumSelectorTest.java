@@ -32,7 +32,7 @@ public class EnumSelectorTest {
 				.apart(EnumExample.EXAMPLE_24).apart(EnumExample.EXAMPLE_42).lock();
 
 		enumSelectorExample2 = EnumSelector.of(EnumExample.class).allowAll()
-				.apart(EnumExample.EXAMPLE_24).apart(EnumExample.EXAMPLE_42).lock();
+				.apart(EnumExample.EXAMPLE_24, EnumExample.EXAMPLE_42).lock();
 
 		enumSelectorExample3 = EnumSelector.of(EnumExample.class).allowAll().lock();
 		enumSelectorExample4 = EnumSelector.of(EnumExample.class).blockAll().lock();

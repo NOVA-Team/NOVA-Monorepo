@@ -20,6 +20,7 @@
 
 package nova.core.util;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -104,7 +105,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	}
 
 	/**
-	 * Specify what {@code enum} values should have behavior opposite of the default
+	 * Specify which {@code enum} values should have behavior opposite of the default
 	 *
 	 * @see #allowAll()
 	 * @see #blockAll()
@@ -115,6 +116,21 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	public EnumSelector<T> apart(T value) {
 		checkWritable();
 		exceptions.add(value);
+		return this;
+	}
+
+	/**
+	 * Specify which {@code enum} values should have behavior opposite of the default
+	 *
+	 * @see #allowAll()
+	 * @see #blockAll()
+	 * @param values The given {@code enum} values that should have behavior opposite of the default.
+	 * @return this
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
+	public EnumSelector<T> apart(T... values) {
+		checkWritable();
+		exceptions.addAll(Arrays.asList(values));
 		return this;
 	}
 
