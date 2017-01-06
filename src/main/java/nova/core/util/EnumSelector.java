@@ -20,8 +20,11 @@
 
 package nova.core.util;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -102,16 +105,34 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	}
 
 	/**
-	 * Specify what {@code enum} values should have behavior opposite of the default
+	 * Specify which {@code enum} values should have behavior opposite of the default
 	 *
 	 * @see #allowAll()
 	 * @see #blockAll()
 	 * @param value The given {@code enum} value that should have behavior opposite of the default.
 	 * @return this
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
 	public EnumSelector<T> apart(T value) {
 		checkWritable();
 		exceptions.add(value);
+		return this;
+	}
+
+	/**
+	 * Specify which {@code enum} values should have behavior opposite of the default
+	 *
+	 * @see #allowAll()
+	 * @see #blockAll()
+	 * @param first The given {@code enum} value that should have behavior opposite of the default.
+	 * @param rest The given {@code enum} values that should have behavior opposite of the default.
+	 * @return this
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
+	public EnumSelector<T> apart(T first, T... rest) {
+		checkWritable();
+		exceptions.add(first);
+		exceptions.addAll(Arrays.asList(rest));
 		return this;
 	}
 
@@ -166,6 +187,18 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	}
 
 	/**
+	 * Check if the {@code enum} value is blocked by this EnumSelector.
+	 *
+	 * @param value The {@code enum} value to test.
+	 * @return If the {@code enum} value is blocked by this EnumSelector.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
+	public boolean blocks(T value) {
+		checkReadable();
+		return defaultBlock ^ exceptions.contains(value);
+	}
+
+	/**
 	 * Check if the EnumSelector blocks all values.
 	 *
 	 * @return If the EnumSelector blocks all values.
@@ -185,7 +218,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		checkReadable();
-		return defaultBlock ? exceptions.iterator() : EnumSet.complementOf(exceptions).iterator();
+		return Collections.unmodifiableSet(defaultBlock ? exceptions : EnumSet.complementOf(exceptions)).iterator();
 	}
 
 	/**
@@ -224,13 +257,13 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	}
 
 	/**
-	 * Returns an EnumSet instance of all the allowed elements in this EnumSelector.
+	 * Returns a Set instance of all the allowed elements in this EnumSelector.
 	 *
-	 * @return The stream.
+	 * @return The set.
 	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
-	public EnumSet<T> toEnumSet() {
+	public Set<T> toSet() {
 		checkReadable();
-		return defaultBlock ? EnumSet.copyOf(exceptions) : EnumSet.complementOf(exceptions);
+		return Collections.unmodifiableSet(defaultBlock ? exceptions : EnumSet.complementOf(exceptions));
 	}
 }
