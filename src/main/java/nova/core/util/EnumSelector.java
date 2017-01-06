@@ -124,13 +124,15 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 *
 	 * @see #allowAll()
 	 * @see #blockAll()
-	 * @param values The given {@code enum} values that should have behavior opposite of the default.
+	 * @param first The given {@code enum} value that should have behavior opposite of the default.
+	 * @param rest The given {@code enum} values that should have behavior opposite of the default.
 	 * @return this
 	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
 	 */
-	public EnumSelector<T> apart(T... values) {
+	public EnumSelector<T> apart(T first, T... rest) {
 		checkWritable();
-		exceptions.addAll(Arrays.asList(values));
+		exceptions.add(first);
+		exceptions.addAll(Arrays.asList(rest));
 		return this;
 	}
 
