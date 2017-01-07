@@ -99,7 +99,7 @@ public class FWBlock extends net.minecraft.block.Block {
 			this.stepSound = soundTypeStone;
 		}
 		this.blockClass = dummy.getClass();
-		this.setUnlocalizedName(dummy.getID().asString()); // TODO?
+		this.setUnlocalizedName(dummy.getID());
 
 		// Recalculate super constructor things after loading the block properly
 		this.fullBlock = isOpaqueCube();
@@ -179,7 +179,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		FWTile fwTile = FWTileLoader.loadTile(dummy.getID().asString()); // TODO?
+		FWTile fwTile = FWTileLoader.loadTile(dummy.getID());
 		if (lastExtendedStatePos != null) {
 			fwTile.block.components.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
 			lastExtendedStatePos = null;

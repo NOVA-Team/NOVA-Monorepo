@@ -58,11 +58,11 @@ public class ItemManager extends FactoryManager<ItemManager, Item, ItemFactory> 
 	}
 
 	public ItemFactory getItemFromBlock(BlockFactory block) {
-		return registry.get(block.getID().asString()).get(); // TODO
+		return registry.get(block.getID()).get();
 	}
 
 	public Optional<BlockFactory> getBlockFromItem(Item item) {
-		return blockManager.get().get(item.getID().asString()); // TODO
+		return blockManager.get().get(item.getID());
 	}
 
 	@Override

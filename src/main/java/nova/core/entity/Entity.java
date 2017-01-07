@@ -24,10 +24,8 @@ import nova.core.block.Stateful;
 import nova.core.component.ComponentProvider;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.component.transform.EntityTransform;
-import nova.core.util.id.Identifiable;
-import nova.core.util.id.UniqueIdentifiable;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.UUIDIdentifier;
+import nova.core.util.Identifiable;
+import nova.core.util.UniqueIdentifiable;
 import nova.core.world.World;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -98,12 +96,12 @@ public class Entity extends ComponentProvider implements UniqueIdentifiable, Ide
 	}
 
 	@Override
-	public final Identifier getID() {
+	public final String getID() {
 		return getFactory().getID();
 	}
 
 	@Override
-	public UUIDIdentifier getUniqueID() {
+	public String getUniqueID() {
 		return components.get(UniqueIdentifiable.class).getUniqueID();
 	}
 }

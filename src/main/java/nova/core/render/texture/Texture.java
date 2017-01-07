@@ -18,9 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */package nova.core.render.texture;
 
-import nova.core.util.id.Identifiable;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.StringIdentifier;
+import nova.core.util.Identifiable;
 import nova.core.util.math.Vector2DUtil;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
@@ -62,8 +60,8 @@ public class Texture extends Icon implements Identifiable {
 	}
 
 	@Override
-	public final Identifier getID() {
-		return new StringIdentifier(getResource());
+	public final String getID() {
+		return getResource();
 	}
 
 	@Override

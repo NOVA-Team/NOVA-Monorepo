@@ -20,9 +20,7 @@
 
 package nova.core.render;
 
-import nova.core.util.id.Identifiable;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.StringIdentifier;
+import nova.core.util.Identifiable;
 
 /**
  * @author Calclavia
@@ -50,7 +48,7 @@ public abstract class Asset implements Identifiable {
 	}
 
 	@Override
-	public final Identifier getID() {
-		return new StringIdentifier(domain + ":" + name);
+	public final String getID() {
+		return domain + ":" + name;
 	}
 }

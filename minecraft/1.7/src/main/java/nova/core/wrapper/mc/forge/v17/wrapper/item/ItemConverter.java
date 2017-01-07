@@ -105,7 +105,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		if (item instanceof BWItem) {
 			return ((BWItem) item).makeItemStack(item.count());
 		} else {
-			ItemFactory itemFactory = Game.items().get(item.getID().asString()).get(); // TODO?
+			ItemFactory itemFactory = Game.items().get(item.getID()).get();
 			FWNBTTagCompound tag = new FWNBTTagCompound(item);
 
 			MinecraftItemMapping mapping = get(itemFactory);
@@ -201,7 +201,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
-			GameRegistry.registerItem(itemWrapper, itemFactory.getID().asString()); // TODO?
+			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab

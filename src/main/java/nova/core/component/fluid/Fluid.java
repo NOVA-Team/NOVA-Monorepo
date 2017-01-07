@@ -24,9 +24,7 @@ import nova.core.block.BlockFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
-import nova.core.util.id.AbstractIdentifier;
-import nova.core.util.id.Identifiable;
-import nova.core.util.id.Identifier;
+import nova.core.util.Identifiable;
 import nova.internal.core.Game;
 
 import java.util.Optional;
@@ -128,7 +126,7 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	}
 
 	@Override
-	public final Identifier getID() {
+	public final String getID() {
 		return factory.getID();
 	}
 
@@ -140,12 +138,12 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	@Override
 	public void save(Data data) {
 		Storable.super.save(data);
-		data.put("id", factory.getID().asString()); // TODO?
+		data.put("id", factory.getID());
 	}
 
 	@Override
 	public void load(Data data) {
 		Storable.super.load(data);
-		factory = Game.fluids().get(data.get("id")).get(); // FIXME
+		factory = Game.fluids().get(data.get("id")).get();
 	}
 }

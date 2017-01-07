@@ -21,9 +21,7 @@
 package nova.core.component;
 
 import nova.core.item.Item;
-import nova.core.util.id.Identifiable;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.StringIdentifier;
+import nova.core.util.Identifiable;
 
 import java.util.Optional;
 
@@ -48,7 +46,7 @@ public class Category extends Component implements Identifiable {
 	}
 
 	@Override
-	public Identifier getID() {
-		return new StringIdentifier(name);
+	public String getID() {
+		return name;
 	}
 }

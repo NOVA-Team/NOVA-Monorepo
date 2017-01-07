@@ -18,28 +18,17 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.util.id;
+package nova.core.util;
 
 /**
- * A generic interface signifying that this object is identifiable
+ * A generic interface signifying that this object is uniquely identifiable
  * by an ID
  */
-public interface Identifiable {
+public interface UniqueIdentifiable {
 	/**
-	 * Get the ID to identify this object by
+	 * Get the unique ID to identify this object.
 	 *
 	 * @return the ID
 	 */
-	Identifier getID();
-
-	/**
-	 * Compares the ID of the Identifialbes
-	 *
-	 * @param other Identifiable to compare to
-	 * @return If the Identifiables are the same type
-	 */
-
-	default boolean sameType(Identifiable other) {
-		return getID().equals(other.getID());
-	}
+	String getUniqueID();
 }

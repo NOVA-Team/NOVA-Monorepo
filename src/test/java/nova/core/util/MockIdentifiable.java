@@ -20,10 +20,6 @@
 
 package nova.core.util;
 
-import nova.core.util.id.Identifiable;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.StringIdentifier;
-
 public class MockIdentifiable implements Identifiable {
 	String ID;
 
@@ -32,12 +28,12 @@ public class MockIdentifiable implements Identifiable {
 	}
 
 	@Override
-	public Identifier getID() {
-		return new StringIdentifier(ID);
+	public String getID() {
+		return ID;
 	}
 
 	@Override
 	public String toString() {
-		return getID().asString();
+		return getID();
 	}
 }

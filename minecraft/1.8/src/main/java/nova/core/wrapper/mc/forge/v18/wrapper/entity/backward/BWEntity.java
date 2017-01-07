@@ -28,8 +28,6 @@ import nova.core.component.misc.Damageable;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
 import nova.core.entity.component.Player;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.UUIDIdentifier;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.forward.MCEntityTransform;
 import nova.core.wrapper.mc.forge.v18.wrapper.inventory.BWInventory;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -90,8 +88,8 @@ public class BWEntity extends Entity {
 		}
 
 		@Override
-		public Identifier getID() {
-			return new UUIDIdentifier(entity.getGameProfile().getId());
+		public String getID() {
+			return entity.getGameProfile().getId().toString();
 		}
 
 		@Override

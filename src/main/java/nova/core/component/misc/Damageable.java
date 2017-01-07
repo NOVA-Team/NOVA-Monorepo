@@ -21,9 +21,7 @@
 package nova.core.component.misc;
 
 import nova.core.component.Component;
-import nova.core.util.id.Identifiable;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.StringIdentifier;
+import nova.core.util.Identifiable;
 
 /**
  * Applied to objects that can take damage.
@@ -48,8 +46,8 @@ public abstract class Damageable extends Component {
 		}
 
 		@Override
-		public Identifier getID() {
-			return new StringIdentifier(name);
+		public String getID() {
+			return name;
 		}
 	}
 }

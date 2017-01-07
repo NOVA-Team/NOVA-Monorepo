@@ -20,10 +20,7 @@
 
 package nova.core.util.registry;
 
-import nova.core.component.ComponentProvider;
-import nova.core.util.id.Identifiable;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.StringIdentifier;
+import nova.core.util.Identifiable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -81,7 +78,7 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 		return processor.apply(constructor.get());
 	}
 
-	public Identifier getID() {
-		return new StringIdentifier(id);
+	public String getID() {
+		return id;
 	}
 }

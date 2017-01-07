@@ -28,8 +28,6 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
-import nova.core.util.id.Identifier;
-import nova.core.util.id.StringIdentifier;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.internal.core.Game;
@@ -133,7 +131,7 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public Identifier getID() {
-		return new StringIdentifier("fakeWorld");
+	public String getID() {
+		return "fakeWorld";
 	}
 }

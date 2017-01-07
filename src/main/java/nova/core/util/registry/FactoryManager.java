@@ -20,7 +20,7 @@
 
 package nova.core.util.registry;
 
-import nova.core.util.id.Identifiable;
+import nova.core.util.Identifiable;
 
 import java.util.Optional;
 import java.util.function.Supplier;

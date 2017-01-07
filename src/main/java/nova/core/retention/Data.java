@@ -23,7 +23,10 @@ package nova.core.retention;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The data class is capable of storing named data.
@@ -63,9 +66,7 @@ public class Data extends HashMap<String, Object> {
 		Data.class,
 		Collection.class,
 		Vector3D.class,
-		Vector2D.class,
-		Class.class,
-		UUID.class };
+		Vector2D.class };
 
 	public String className;
 
@@ -107,10 +108,6 @@ public class Data extends HashMap<String, Object> {
 				return new Vector3D(data.get("x"), data.get("y"), data.get("z"));
 			} else if (clazz == Vector2D.class) {
 				return new Vector2D(data.get("x"), (double) data.get("y"));
-			} else if (clazz == UUID.class) {
-				return UUID.fromString(data.get("uuid"));
-			} else if (clazz == Class.class) {
-				return Class.forName(data.get("name"));
 			} else {
 				return unserialize(clazz, data);
 			}
@@ -168,14 +165,6 @@ public class Data extends HashMap<String, Object> {
 			vectorData.put("x", ((Vector2D) value).getX());
 			vectorData.put("y", ((Vector2D) value).getY());
 			value = vectorData;
-		} else if (value instanceof UUID) {
-			Data uuidData = new Data(UUID.class);
-			uuidData.put("uuid", value.toString());
-			value = uuidData;
-		} else if (value instanceof Class) {
-			Data classData = new Data(Class.class);
-			classData.put("name", ((Class) value).getName());
-			value = classData;
 		} else if (value instanceof Storable) {
 			value = serialize((Storable) value);
 		}
@@ -225,19 +214,4 @@ public class Data extends HashMap<String, Object> {
 		}
 	}
 
-	public <T> Class<T> getClass(String key) {
-		Data classData = get(key);
-		try {
-			@SuppressWarnings("unchecked")
-			Class<T> classClass = (Class<T>) Class.forName(classData.className);
-			return classClass;
-		} catch (Exception e) {
-			throw new DataException(e);
-		}
-	}
-
-	public UUID getUUID(String key) {
-		Data data = get(key);
-		return UUID.fromString(data.get("uuid"));
-	}
 }
