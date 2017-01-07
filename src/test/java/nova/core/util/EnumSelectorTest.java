@@ -44,243 +44,85 @@ public class EnumSelectorTest {
     }
 
 	@Test
-	public void test1Locked() {
-		boolean result = enumSelectorExample1.locked();
-		assertThat(result).isEqualTo(true);
+	public void testAllLocked() {
+		assertThat(enumSelectorExample1.locked()).isEqualTo(true);
+		assertThat(enumSelectorExample2.locked()).isEqualTo(true);
+		assertThat(enumSelectorExample3.locked()).isEqualTo(true);
+		assertThat(enumSelectorExample4.locked()).isEqualTo(true);
 	}
 
 	@Test
-	public void test1Disallows_EXAMPLE_8() {
-		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_8);
-		assertThat(result).isEqualTo(false);
+	public void test1Allows() {
+		assertThat(enumSelectorExample1.allows(EnumExample.EXAMPLE_8)).isEqualTo(false);
+		assertThat(enumSelectorExample1.allows(EnumExample.EXAMPLE_16)).isEqualTo(false);
+		assertThat(enumSelectorExample1.allows(EnumExample.EXAMPLE_24)).isEqualTo(true);
+		assertThat(enumSelectorExample1.allows(EnumExample.EXAMPLE_32)).isEqualTo(false);
+		assertThat(enumSelectorExample1.allows(EnumExample.EXAMPLE_42)).isEqualTo(true);
+		assertThat(enumSelectorExample1.allows(EnumExample.EXAMPLE_48)).isEqualTo(false);
+		assertThat(enumSelectorExample1.allows(EnumExample.EXAMPLE_64)).isEqualTo(false);
 	}
 
 	@Test
-	public void test1Disallows_EXAMPLE_16() {
-		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_16);
-		assertThat(result).isEqualTo(false);
+	public void test2Allows() {
+		assertThat(enumSelectorExample2.allows(EnumExample.EXAMPLE_8)).isEqualTo(true);
+		assertThat(enumSelectorExample2.allows(EnumExample.EXAMPLE_16)).isEqualTo(true);
+		assertThat(enumSelectorExample2.allows(EnumExample.EXAMPLE_24)).isEqualTo(false);
+		assertThat(enumSelectorExample2.allows(EnumExample.EXAMPLE_32)).isEqualTo(true);
+		assertThat(enumSelectorExample2.allows(EnumExample.EXAMPLE_42)).isEqualTo(false);
+		assertThat(enumSelectorExample2.allows(EnumExample.EXAMPLE_48)).isEqualTo(true);
+		assertThat(enumSelectorExample2.allows(EnumExample.EXAMPLE_64)).isEqualTo(true);
 	}
 
 	@Test
-	public void test1Allows_EXAMPLE_24() {
-		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_24);
-		assertThat(result).isEqualTo(true);
+	public void test3Allows() {
+		assertThat(enumSelectorExample3.blocks(EnumExample.EXAMPLE_24)).isEqualTo(false);
+		assertThat(enumSelectorExample3.blocks(EnumExample.EXAMPLE_42)).isEqualTo(false);
 	}
 
 	@Test
-	public void test1Disallows_EXAMPLE_32() {
-		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_16);
-		assertThat(result).isEqualTo(false);
+	public void test4Allows() {
+		assertThat(enumSelectorExample4.blocks(EnumExample.EXAMPLE_24)).isEqualTo(true);
+		assertThat(enumSelectorExample4.blocks(EnumExample.EXAMPLE_42)).isEqualTo(true);
 	}
 
 	@Test
-	public void test1Allows_EXAMPLE_42() {
-		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_42);
-		assertThat(result).isEqualTo(true);
+	public void testAllowsAll() {
+		assertThat(enumSelectorExample1.allowsAll()).isEqualTo(false);
+		assertThat(enumSelectorExample2.allowsAll()).isEqualTo(false);
+		assertThat(enumSelectorExample3.allowsAll()).isEqualTo(true);
+		assertThat(enumSelectorExample4.allowsAll()).isEqualTo(false);
 	}
 
 	@Test
-	public void test1Disallows_EXAMPLE_48() {
-		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_48);
-		assertThat(result).isEqualTo(false);
+	public void testBlocksAll() {
+		assertThat(enumSelectorExample1.blocksAll()).isEqualTo(false);
+		assertThat(enumSelectorExample2.blocksAll()).isEqualTo(false);
+		assertThat(enumSelectorExample3.blocksAll()).isEqualTo(false);
+		assertThat(enumSelectorExample4.blocksAll()).isEqualTo(true);
 	}
 
 	@Test
-	public void test1Disallows_EXAMPLE_64() {
-		boolean result = enumSelectorExample1.allows(EnumExample.EXAMPLE_64);
-		assertThat(result).isEqualTo(false);
+	public void testStreamSize() {
+		assertThat(enumSelectorExample1.stream().count()).isEqualTo(2);
+		assertThat(enumSelectorExample2.stream().count()).isEqualTo(EnumExample.values().length - 2);
+		assertThat(enumSelectorExample3.stream().count()).isEqualTo(EnumExample.values().length);
+		assertThat(enumSelectorExample4.stream().count()).isEqualTo(0);
 	}
 
 	@Test
-	public void test2Locked() {
-		boolean result = enumSelectorExample2.locked();
-		assertThat(result).isEqualTo(true);
+	public void testParallelStreamSize() {
+		assertThat(enumSelectorExample1.parallelStream().count()).isEqualTo(2);
+		assertThat(enumSelectorExample2.parallelStream().count()).isEqualTo(EnumExample.values().length - 2);
+		assertThat(enumSelectorExample3.parallelStream().count()).isEqualTo(EnumExample.values().length);
+		assertThat(enumSelectorExample4.parallelStream().count()).isEqualTo(0);
 	}
 
 	@Test
-	public void test2Allows_EXAMPLE_8() {
-		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_8);
-		assertThat(result).isEqualTo(true);
-	}
-
-	@Test
-	public void test2Allows_EXAMPLE_16() {
-		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_16);
-		assertThat(result).isEqualTo(true);
-	}
-
-	@Test
-	public void test2Disallows_EXAMPLE_24() {
-		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_24);
-		assertThat(result).isEqualTo(false);
-	}
-
-	@Test
-	public void test2Allows_EXAMPLE_32() {
-		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_16);
-		assertThat(result).isEqualTo(true);
-	}
-
-	@Test
-	public void test2Disallows_EXAMPLE_42() {
-		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_42);
-		assertThat(result).isEqualTo(false);
-	}
-
-	@Test
-	public void test2Allows_EXAMPLE_48() {
-		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_48);
-		assertThat(result).isEqualTo(true);
-	}
-
-	@Test
-	public void test2Allows_EXAMPLE_64() {
-		boolean result = enumSelectorExample2.allows(EnumExample.EXAMPLE_64);
-		assertThat(result).isEqualTo(true);
-	}
-
-	@Test
-	public void test3Allows_EXAMPLE_24() {
-		boolean result = enumSelectorExample3.blocks(EnumExample.EXAMPLE_24);
-		assertThat(result).isEqualTo(false);
-	}
-
-	@Test
-	public void test3Allows_EXAMPLE_42() {
-		boolean result = enumSelectorExample3.blocks(EnumExample.EXAMPLE_42);
-		assertThat(result).isEqualTo(false);
-	}
-
-	@Test
-	public void test4Disallows_EXAMPLE_24() {
-		boolean result = enumSelectorExample4.blocks(EnumExample.EXAMPLE_24);
-		assertThat(result).isEqualTo(true);
-	}
-
-	@Test
-	public void test4Disallows_EXAMPLE_42() {
-		boolean result = enumSelectorExample4.blocks(EnumExample.EXAMPLE_42);
-		assertThat(result).isEqualTo(true);
-	}
-
-	@Test
-	public void test1NotAllowsAll() {
-		boolean result = enumSelectorExample1.allowsAll();
-		assertThat(result).isEqualTo(false);
-	}
-
-	@Test
-	public void test1NotBlocksAll() {
-		boolean result = enumSelectorExample1.blocksAll();
-		assertThat(result).isEqualTo(false);
-	}
-
-	@Test
-	public void test2NotAllowsAll() {
-		boolean result = enumSelectorExample2.allowsAll();
-		assertThat(result).isEqualTo(false);
-	}
-
-	@Test
-	public void test2NotBlocksAll() {
-		boolean result = enumSelectorExample2.blocksAll();
-		assertThat(result).isEqualTo(false);
-	}
-
-	@Test
-	public void test3AllowsAll() {
-		boolean result = enumSelectorExample3.allowsAll();
-		assertThat(result).isEqualTo(true);
-	}
-
-	@Test
-	public void test3NotBlocksAll() {
-		boolean result = enumSelectorExample3.blocksAll();
-		assertThat(result).isEqualTo(false);
-	}
-
-	@Test
-	public void test4NotAllowsAll() {
-		boolean result = enumSelectorExample4.allowsAll();
-		assertThat(result).isEqualTo(false);
-	}
-
-	@Test
-	public void test4BlocksAll() {
-		boolean result = enumSelectorExample4.blocksAll();
-		assertThat(result).isEqualTo(true);
-	}
-
-	@Test
-	public void test1StreamSize() {
-		long result = enumSelectorExample1.stream().count();
-		assertThat(result).isEqualTo(2);
-	}
-
-	@Test
-	public void test2StreamSize() {
-		long result = enumSelectorExample2.stream().count();
-		assertThat(result).isEqualTo(EnumExample.values().length - 2);
-	}
-
-	@Test
-	public void test3StreamSize() {
-		long result = enumSelectorExample3.stream().count();
-		assertThat(result).isEqualTo(EnumExample.values().length);
-	}
-
-	@Test
-	public void test4StreamSize() {
-		long result = enumSelectorExample4.stream().count();
-		assertThat(result).isEqualTo(0);
-	}
-
-	@Test
-	public void test1ParallelStreamSize() {
-		long result = enumSelectorExample1.parallelStream().count();
-		assertThat(result).isEqualTo(2);
-	}
-
-	@Test
-	public void test2ParallelStreamSize() {
-		long result = enumSelectorExample2.parallelStream().count();
-		assertThat(result).isEqualTo(EnumExample.values().length - 2);
-	}
-
-	@Test
-	public void test3ParallelStreamSize() {
-		long result = enumSelectorExample3.parallelStream().count();
-		assertThat(result).isEqualTo(EnumExample.values().length);
-	}
-
-	@Test
-	public void test4ParallelStreamSize() {
-		long result = enumSelectorExample4.parallelStream().count();
-		assertThat(result).isEqualTo(0);
-	}
-
-	@Test
-	public void test1SetSize() {
-		int result = enumSelectorExample1.toSet().size();
-		assertThat(result).isEqualTo(2);
-	}
-
-	@Test
-	public void test2SetSize() {
-		int result = enumSelectorExample2.toSet().size();
-		assertThat(result).isEqualTo(EnumExample.values().length - 2);
-	}
-
-	@Test
-	public void test3SetSize() {
-		int result = enumSelectorExample3.toSet().size();
-		assertThat(result).isEqualTo(EnumExample.values().length);
-	}
-
-	@Test
-	public void test4SetSize() {
-		int result = enumSelectorExample4.toSet().size();
-		assertThat(result).isEqualTo(0);
+	public void testSetSize() {
+		assertThat(enumSelectorExample1.toSet().size()).isEqualTo(2);
+		assertThat(enumSelectorExample2.toSet().size()).isEqualTo(EnumExample.values().length - 2);
+		assertThat(enumSelectorExample3.toSet().size()).isEqualTo(EnumExample.values().length);
+		assertThat(enumSelectorExample4.toSet().size()).isEqualTo(0);
 	}
 
 	@Test(expected = IllegalStateException.class)
