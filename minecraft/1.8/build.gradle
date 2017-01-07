@@ -23,7 +23,7 @@ dependencies {
 
 jar {
 	manifest {
-		attributes 'FMLCorePlugin': 'nova.core.wrapper.mc18.NovaMinecraftCore'
+		attributes 'FMLCorePlugin': 'nova.core.wrapper.mc.forge.v18.NovaMinecraftCore'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
 		attributes 'FMLAT': 'nova_at.cfg'
 	}
