@@ -8,7 +8,9 @@ package nova.core.util;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static nova.testutils.NovaAssertions.assertThat;
 
@@ -17,6 +19,9 @@ import static nova.testutils.NovaAssertions.assertThat;
  * @author ExE Boss
  */
 public class EnumSelectorTest {
+
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	EnumSelector <EnumExample> enumSelectorExample1;
 	EnumSelector <EnumExample> enumSelectorExample2;
@@ -278,63 +283,35 @@ public class EnumSelectorTest {
 		assertThat(result).isEqualTo(0);
 	}
 
-	@Test
+	@Test(expected = IllegalStateException.class)
 	public void testCannotLock() {
-		EnumSelector<EnumExample> enumSelectorExample = EnumSelector.of(EnumExample.class);
-		IllegalStateException result = null;
-		try {
-			enumSelectorExample.lock();
-		} catch (IllegalStateException ex) {
-			result = ex;
-		}
-		assertThat(result).isNotNull();
+		EnumSelector.of(EnumExample.class).lock();
 	}
 
-	@Test
+	@Test(expected = IllegalStateException.class)
 	public void testCannotRead() {
-		EnumSelector<EnumExample> enumSelectorExample = EnumSelector.of(EnumExample.class);
-		IllegalStateException result = null;
-		try {
-			enumSelectorExample.allowsAll();
-		} catch (IllegalStateException ex) {
-			result = ex;
-		}
-		assertThat(result).isNotNull();
+		EnumSelector.of(EnumExample.class).allowsAll();
 	}
 
-	@Test
+	@Test(expected = IllegalStateException.class)
 	public void testCannotWrite() {
-		IllegalStateException result = null;
-		try {
-			enumSelectorExample1.apart(EnumExample.EXAMPLE_64);
-		} catch (IllegalStateException ex) {
-			result = ex;
-		}
-		assertThat(result).isNotNull();
+		enumSelectorExample1.apart(EnumExample.EXAMPLE_64);
 	}
 
 	@Test
 	public void testCannotBlockAllowing() {
 		EnumSelector<EnumExample> enumSelectorExample = EnumSelector.of(EnumExample.class).allowAll();
-		IllegalStateException result = null;
-		try {
-			enumSelectorExample.blockAll();
-		} catch (IllegalStateException ex) {
-			result = ex;
-		}
-		assertThat(result).isNotNull();
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("You can't block all enum values when you are already allowing them.");
+		enumSelectorExample.blockAll();
 	}
 
 	@Test
 	public void testCannotAllowBlocking() {
 		EnumSelector<EnumExample> enumSelectorExample = EnumSelector.of(EnumExample.class).blockAll();
-		IllegalStateException result = null;
-		try {
-			enumSelectorExample.allowAll();
-		} catch (IllegalStateException ex) {
-			result = ex;
-		}
-		assertThat(result).isNotNull();
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("You can't allow all enum values when you are already blocking them.");
+		enumSelectorExample.allowAll();
 	}
 
 	public static enum EnumExample {
