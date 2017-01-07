@@ -9,6 +9,7 @@ package nova.core.util.id;
  * @author soniex2
  */
 public interface Identifier {
+
 	/**
 	 * Converts this Identifier into a String.
 	 * The output from this method may be different than {@link Object#toString()}.

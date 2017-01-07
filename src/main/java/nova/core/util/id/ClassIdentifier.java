@@ -1,11 +1,13 @@
 package nova.core.util.id;
 
+import java.util.Objects;
+
 /**
  * A Class Identifier.
  *
  * @author soniex2
  */
-public final class ClassIdentifier extends AbstractIdentifier<Class<?>> implements Identifier {
+public class ClassIdentifier extends AbstractIdentifier<Class<?>> implements Identifier {
 
 	/**
 	 * Constructs a new ClassIdentifier.
@@ -28,5 +30,10 @@ public final class ClassIdentifier extends AbstractIdentifier<Class<?>> implemen
 	 */
 	public Class<?> asClass() {
 		return id;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		return equalsImpl(this, other, ClassIdentifier.class, id -> id.asClass());
 	}
 }

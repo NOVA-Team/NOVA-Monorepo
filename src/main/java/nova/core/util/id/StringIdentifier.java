@@ -1,11 +1,13 @@
 package nova.core.util.id;
 
+import java.util.Objects;
+
 /**
  * A String Identifier.
  *
  * @author soniex2
  */
-public final class StringIdentifier extends AbstractIdentifier<String> implements Identifier {
+public class StringIdentifier extends AbstractIdentifier<String> implements Identifier {
 
 	/**
 	 * Constructs a new StringIdentifier.
@@ -14,5 +16,10 @@ public final class StringIdentifier extends AbstractIdentifier<String> implement
 	 */
 	public StringIdentifier(String id) {
 		super(id);
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		return equalsImpl(this, other, StringIdentifier.class, id -> id.asString());
 	}
 }

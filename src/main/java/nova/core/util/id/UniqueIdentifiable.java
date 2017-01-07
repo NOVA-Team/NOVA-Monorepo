@@ -24,13 +24,26 @@ import nova.core.util.id.UUIDIdentifier;
 
 /**
  * A generic interface signifying that this object is uniquely identifiable
- * by an ID
+ * by an ID.
  */
-public interface UniqueIdentifiable {
+public interface UniqueIdentifiable extends Identifiable {
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return the ID. The default implementation returns the same result as {@link #getUniqueID()}.
+	 * @see #getUniqueID()
+	 */
+	@Override
+	default Identifier getID() {
+		return getUniqueID();
+	}
+
 	/**
 	 * Get the unique ID to identify this object.
 	 *
 	 * @return the ID
+	 * @see #getID()
 	 */
 	UUIDIdentifier getUniqueID(); // TODO maybe this should return a simple Identifier
 }

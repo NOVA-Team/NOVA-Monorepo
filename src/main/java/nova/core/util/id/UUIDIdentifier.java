@@ -1,5 +1,6 @@
 package nova.core.util.id;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -7,7 +8,7 @@ import java.util.UUID;
  *
  * @author soniex2
  */
-public final class UUIDIdentifier extends AbstractIdentifier<UUID> implements Identifier {
+public class UUIDIdentifier extends AbstractIdentifier<UUID> implements Identifier {
 
 	/**
 	 * Constructs a new UUIDIdentifier.
@@ -25,5 +26,10 @@ public final class UUIDIdentifier extends AbstractIdentifier<UUID> implements Id
 	 */
 	public UUID asUUID() {
 		return id;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		return equalsImpl(this, other, UUIDIdentifier.class, id -> id.asUUID());
 	}
 }
