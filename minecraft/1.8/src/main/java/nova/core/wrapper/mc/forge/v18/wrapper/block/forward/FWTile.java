@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v18.wrapper.block.forward;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.network.Syncable;
@@ -98,6 +99,14 @@ public class FWTile extends TileEntity {
 				nbt.setTag("nova", Game.natives().toNative(data));
 			}
 		}
+	}
+
+	@Override
+	public void setPos(BlockPos pos) {
+		super.setPos(pos);
+		if (this.block.components.has(MCBlockTransform.class))
+			this.block.components.remove(MCBlockTransform.class);
+		this.block.components.add(new MCBlockTransform(this.block, Game.natives().toNova(this.getWorld()), Game.natives().toNova(this.getPos())));
 	}
 
 	@Override

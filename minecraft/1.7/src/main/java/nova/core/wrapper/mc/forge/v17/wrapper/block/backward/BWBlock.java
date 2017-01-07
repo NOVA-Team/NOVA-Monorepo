@@ -40,6 +40,7 @@ import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
+import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.world.BWWorld;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -85,6 +86,8 @@ public class BWBlock extends Block implements Storable {
 			});
 		components.add(new StaticRenderer())
 			.onRender(model -> model.addChild(new CustomModel(self -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z()))));
+		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
+		Game.events().publish(event);
 		//TODO: Set selection bounds
 	}
 

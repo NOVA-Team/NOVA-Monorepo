@@ -107,6 +107,10 @@ public class FWBlock extends net.minecraft.block.Block {
 		this.translucent = !isOpaqueCube();
 	}
 
+	public BlockFactory getFactory() {
+		return this.factory;
+	}
+
 	public Block getBlockInstance(IBlockAccess access, Vector3D position) {
 		/**
 		 * If this block has a TileEntity, forward the method into the Stateful

@@ -102,6 +102,10 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		}
 	}
 
+	public BlockFactory getFactory() {
+		return this.factory;
+	}
+
 	public Block getBlockInstance(net.minecraft.world.IBlockAccess access, Vector3D position) {
 		/**
 		 * If this block has a TileEntity, forward the method into the Stateful

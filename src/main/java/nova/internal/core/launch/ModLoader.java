@@ -120,6 +120,10 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	}
 
 	public void load() {
+		this.load(ProgressBar.NULL_PROGRESS_BAR);
+	}
+
+	public void load(ProgressBar progressBar) {
 		mods = new HashMap<>();
 
 		/**
@@ -130,6 +134,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				.collect(Collectors.<Map.Entry<ANNOTATION, Class<?>>, ANNOTATION, Object>toMap(Map.Entry::getKey,
 						entry -> {
 							try {
+								progressBar.step(entry.getValue());
 								return makeObjectWithDep(entry.getValue());
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -188,8 +193,13 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	@Override
 	public void preInit() {
+		this.preInit(ProgressBar.NULL_PROGRESS_BAR);
+	}
+
+	public void preInit(ProgressBar progressBar) {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
+				progressBar.step(mod.getClass());
 				mod.preInit();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during pre initialization phase", t);
@@ -200,8 +210,13 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	@Override
 	public void init() {
+		this.init(ProgressBar.NULL_PROGRESS_BAR);
+	}
+
+	public void init(ProgressBar progressBar) {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
+				progressBar.step(mod.getClass());
 				mod.init();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during initialization phase", t);
@@ -212,8 +227,13 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	@Override
 	public void postInit() {
+		this.postInit(ProgressBar.NULL_PROGRESS_BAR);
+	}
+
+	public void postInit(ProgressBar progressBar) {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
+				progressBar.step(mod.getClass());
 				mod.postInit();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during post initialization phase", t);
