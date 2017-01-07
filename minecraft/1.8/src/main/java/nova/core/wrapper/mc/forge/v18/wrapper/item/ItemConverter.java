@@ -25,6 +25,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nova.core.block.BlockFactory;
 import nova.core.component.Category;
@@ -42,6 +43,7 @@ import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -204,7 +206,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
-			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
+//			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
+			registerNovaItem((FWItem) itemWrapper, itemFactory.getID().contains(":") ? itemFactory.getID() : "nova:" + itemFactory.getID());
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
@@ -222,6 +225,23 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			}
 
 			System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
+		}
+	}
+
+	/**
+	 * Prevent forge from prefixing item IDs with "nova:".
+	 */
+	private void registerNovaItem(FWItem itemWrapper, String blockId) {
+		try {
+			Class<GameData> gameDataClass = GameData.class;
+			Method getMain = gameDataClass.getDeclaredMethod("getMain");
+			Method registerItem = gameDataClass.getDeclaredMethod("registerItem", net.minecraft.item.Item.class, String.class, Integer.TYPE);
+			getMain.setAccessible(true);
+			registerItem.setAccessible(true);
+			GameData gameData = (GameData) getMain.invoke(null);
+			registerItem.invoke(gameData, itemWrapper, blockId, -1);
+		} catch (ReflectiveOperationException e) {
+			GameRegistry.registerItem(itemWrapper, blockId);
 		}
 	}
 

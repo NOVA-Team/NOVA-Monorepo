@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v17.wrapper.block;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -39,6 +40,7 @@ import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v17.wrapper.item.FWItemBlock;
 import nova.internal.core.Game;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
@@ -136,7 +138,8 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		FWBlock blockWrapper = new FWBlock(blockFactory);
 		blockFactoryMap.put(blockFactory, blockWrapper);
 		NovaMinecraft.proxy.registerBlock(blockWrapper);
-		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
+//		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
+		registerNovaBlock(blockWrapper, blockFactory.getID().contains(":") ? blockFactory.getID() : "nova:" + blockFactory.getID());
 
 		if (blockWrapper.dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 			//Add into creative tab
@@ -154,5 +157,26 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		}
 
 		System.out.println("[NOVA]: Registered '" + blockFactory.getID() + "' block.");
+	}
+
+
+	/**
+	 * Prevent forge from prefixing block IDs with "nova:".
+	 */
+	private void registerNovaBlock(FWBlock blockWrapper, String blockId) {
+		try {
+			Class<GameData> gameDataClass = GameData.class;
+			Method getMain = gameDataClass.getDeclaredMethod("getMain");
+			Method registerBlock = gameDataClass.getDeclaredMethod("registerBlock", net.minecraft.block.Block.class, String.class, Integer.TYPE);
+			Method registerItem = gameDataClass.getDeclaredMethod("registerItem", net.minecraft.item.Item.class, String.class, Integer.TYPE);
+			getMain.setAccessible(true);
+			registerBlock.setAccessible(true);
+			registerItem.setAccessible(true);
+			GameData gameData = (GameData) getMain.invoke(null);
+			registerBlock.invoke(gameData, blockWrapper, blockId, -1);
+			registerItem.invoke(gameData, new FWItemBlock(blockWrapper), blockId, -1);
+		} catch (ReflectiveOperationException e) {
+			GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockId);
+		}
 	}
 }
