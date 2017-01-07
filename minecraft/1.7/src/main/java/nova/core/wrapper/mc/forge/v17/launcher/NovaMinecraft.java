@@ -145,7 +145,7 @@ public class NovaMinecraft {
 				e.printStackTrace();
 			}
 
-			ProgressManager.ProgressBar progressBar = ProgressManager.push("Loading NOVA mods", modClasses.size());
+			ProgressManager.ProgressBar progressBar = ProgressManager.push("Loading NOVA mods", modClasses.isEmpty() ? 1 : modClasses.size());
 			launcher.load(new FMLProgressBar(progressBar));
 			while (progressBar.getStep() < progressBar.getSteps())
 				progressBar.step("");
@@ -164,7 +164,7 @@ public class NovaMinecraft {
 			Game.language().init();
 
 			//Load preInit
-			progressBar = ProgressManager.push("Pre-initializing NOVA mods", modClasses.size());
+			progressBar = ProgressManager.push("Pre-initializing NOVA mods", modClasses.isEmpty() ? 1 : modClasses.size());
 			launcher.preInit(new FMLProgressBar(progressBar));
 			while (progressBar.getStep() < progressBar.getSteps())
 				progressBar.step("");
@@ -193,7 +193,7 @@ public class NovaMinecraft {
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent evt) {
-		ProgressManager.ProgressBar progressBar = ProgressManager.push("Initializing NOVA mods", NovaMinecraftPreloader.modClasses.size());
+		ProgressManager.ProgressBar progressBar = ProgressManager.push("Initializing NOVA mods", NovaMinecraftPreloader.modClasses.isEmpty() ? 1 : NovaMinecraftPreloader.modClasses.size());
 		try {
 			proxy.init();
 			nativeConverters.stream().forEachOrdered(Loadable::init);
@@ -211,7 +211,7 @@ public class NovaMinecraft {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent evt) {
-		ProgressManager.ProgressBar progressBar = ProgressManager.push("Post-initializing NOVA mods", NovaMinecraftPreloader.modClasses.size());
+		ProgressManager.ProgressBar progressBar = ProgressManager.push("Post-initializing NOVA mods", NovaMinecraftPreloader.modClasses.isEmpty() ? 1 : NovaMinecraftPreloader.modClasses.size());
 		try {
 			Game.recipes().init();
 			proxy.postInit();
