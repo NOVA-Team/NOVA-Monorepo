@@ -25,15 +25,15 @@ import nova.core.util.id.Identifier;
 import nova.core.util.id.StringIdentifier;
 
 public class MockIdentifiable implements Identifiable {
-	String ID;
+	Identifier ID;
 
-	public MockIdentifiable(String ID) {
+	public MockIdentifiable(Identifier ID) {
 		this.ID = ID;
 	}
 
 	@Override
 	public Identifier getID() {
-		return new StringIdentifier(ID);
+		return ID;
 	}
 
 	@Override

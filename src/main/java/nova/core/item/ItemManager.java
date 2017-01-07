@@ -24,6 +24,7 @@ import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.event.bus.CancelableEvent;
 import nova.core.item.event.ItemIDNotFoundEvent;
+import nova.core.util.id.Identifier;
 import nova.core.util.registry.FactoryManager;
 import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
@@ -46,7 +47,7 @@ public class ItemManager extends FactoryManager<ItemManager, Item, ItemFactory> 
 	 * @return Dummy item
 	 */
 	@Override
-	public ItemFactory register(String id, Supplier<Item> constructor) {
+	public ItemFactory register(Identifier id, Supplier<Item> constructor) {
 		return register(new ItemFactory(id, constructor));
 	}
 
@@ -58,17 +59,17 @@ public class ItemManager extends FactoryManager<ItemManager, Item, ItemFactory> 
 	}
 
 	public ItemFactory getItemFromBlock(BlockFactory block) {
-		return registry.get(block.getID().asString()).get(); // TODO
+		return registry.get(block.getID()).get();
 	}
 
 	public Optional<BlockFactory> getBlockFromItem(Item item) {
-		return blockManager.get().get(item.getID().asString()); // TODO
+		return blockManager.get().get(item.getID());
 	}
 
 	@Override
-	public Optional<ItemFactory> get(String name) {
+	public Optional<ItemFactory> get(Identifier name) {
 		if (!registry.contains(name)) {
-			ItemIDNotFoundEvent event = new ItemIDNotFoundEvent(name);
+			ItemIDNotFoundEvent event = new ItemIDNotFoundEvent(name.asString());
 			Game.events().publish(event);
 
 			if (event.getRemappedFactory() != null) {

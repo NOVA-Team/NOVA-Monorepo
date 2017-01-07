@@ -25,6 +25,7 @@ import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.registry.Factory;
 import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -33,11 +34,11 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public class ItemFactory extends Factory<ItemFactory, Item> implements Identifiable {
-	public ItemFactory(String id, Supplier<Item> constructor, Function<Item, Item> processor) {
+	public ItemFactory(Identifier id, Supplier<Item> constructor, Function<Item, Item> processor) {
 		super(id, constructor, processor);
 	}
 
-	public ItemFactory(String id, Supplier<Item> constructor) {
+	public ItemFactory(Identifier id, Supplier<Item> constructor) {
 		super(id, constructor);
 	}
 
@@ -74,7 +75,7 @@ public class ItemFactory extends Factory<ItemFactory, Item> implements Identifia
 	}
 
 	@Override
-	protected ItemFactory selfConstructor(String id, Supplier<Item> constructor, Function<Item, Item> processor) {
+	protected ItemFactory selfConstructor(Identifier id, Supplier<Item> constructor, Function<Item, Item> processor) {
 		return new ItemFactory(id, constructor, processor);
 	}
 }

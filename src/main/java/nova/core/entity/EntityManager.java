@@ -20,6 +20,7 @@
 
 package nova.core.entity;
 
+import nova.core.util.id.Identifier;
 import nova.core.util.registry.FactoryManager;
 import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
@@ -38,7 +39,7 @@ public class EntityManager extends FactoryManager<EntityManager, Entity, EntityF
 	 * @return The entity factory
 	 */
 	@Override
-	public EntityFactory register(String id, Supplier<Entity> constructor) {
+	public EntityFactory register(Identifier id, Supplier<Entity> constructor) {
 		return register(new EntityFactory(id, constructor));
 	}
 

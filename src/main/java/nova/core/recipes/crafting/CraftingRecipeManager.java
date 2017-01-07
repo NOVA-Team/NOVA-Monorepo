@@ -41,7 +41,7 @@ public class CraftingRecipeManager {
 	// TODO switch this to using Identifiers
 	private final RecipeManager recipeManager;
 	private final List<CraftingRecipe> dynamicRecipes;
-	private final Multimap<String, CraftingRecipe> staticRecipes;
+	private final Multimap<Identifier, CraftingRecipe> staticRecipes;
 
 	public CraftingRecipeManager(RecipeManager recipeManager) {
 		this.recipeManager = recipeManager;
@@ -88,7 +88,7 @@ public class CraftingRecipeManager {
 			return Optional.empty();
 		}
 
-		String firstItemId = firstItem.get().getID().asString(); // TODO (this is BAD)
+		Identifier firstItemId = firstItem.get().getID();
 		if (!staticRecipes.containsKey(firstItemId)) {
 			return Optional.empty();
 		}
@@ -107,9 +107,9 @@ public class CraftingRecipeManager {
 	// #######################
 
 	private <T extends CraftingRecipe> void onCraftingRecipeAdded(RecipeAddedEvent<T> e) {
-		Optional<Collection<String>> possibleFirstItemIds = e.getRecipe().getPossibleItemsInFirstSlot();
+		Optional<Collection<Identifier>> possibleFirstItemIds = e.getRecipe().getPossibleItemsInFirstSlot();
 		if (possibleFirstItemIds.isPresent()) {
-			for (String itemId : possibleFirstItemIds.get()) {
+			for (Identifier itemId : possibleFirstItemIds.get()) {
 				staticRecipes.put(itemId, e.getRecipe());
 			}
 		} else {
@@ -118,9 +118,9 @@ public class CraftingRecipeManager {
 	}
 
 	private <T extends CraftingRecipe> void onCraftingRecipeRemoved(RecipeRemovedEvent<T> e) {
-		Optional<Collection<String>> possibleFirstItemIds = e.getRecipe().getPossibleItemsInFirstSlot();
+		Optional<Collection<Identifier>> possibleFirstItemIds = e.getRecipe().getPossibleItemsInFirstSlot();
 		if (possibleFirstItemIds.isPresent()) {
-			for (String itemId : possibleFirstItemIds.get()) {
+			for (Identifier itemId : possibleFirstItemIds.get()) {
 				staticRecipes.remove(itemId, e.getRecipe());
 			}
 		} else {

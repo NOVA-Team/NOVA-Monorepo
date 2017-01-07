@@ -21,6 +21,8 @@
 package nova.core.block;
 
 import nova.core.event.BlockEvent;
+import nova.core.util.id.Identifier;
+import nova.core.util.id.StringIdentifier;
 import nova.core.util.registry.FactoryManager;
 import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
@@ -38,7 +40,7 @@ public class BlockManager extends FactoryManager<BlockManager, Block, BlockFacto
 	 * @return The air block factory
 	 */
 	public BlockFactory getAirBlock() {
-		return get("air").get();
+		return get(new StringIdentifier("air")).get();
 	}
 
 	/**
@@ -47,7 +49,7 @@ public class BlockManager extends FactoryManager<BlockManager, Block, BlockFacto
 	 * @return Dummy block
 	 */
 	@Override
-	public BlockFactory register(String id, Supplier<Block> constructor) {
+	public BlockFactory register(Identifier id, Supplier<Block> constructor) {
 		return register(new BlockFactory(id, constructor));
 	}
 
