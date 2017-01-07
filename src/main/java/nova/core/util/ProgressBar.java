@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nova.internal.core.launch;
+package nova.core.util;
 
 import nova.core.loader.Mod;
 
@@ -15,22 +15,19 @@ import nova.core.loader.Mod;
  *
  * @author ExE Boss
  */
-public abstract class ProgressBar {
+public interface ProgressBar {
 
 	/**
 	 * A progress bar implementation that does nothing.
 	 */
-	public static final ProgressBar NULL_PROGRESS_BAR = new ProgressBar() {
-		@Override
-		public void step(String s) {}
-	};
+	public static final ProgressBar NULL_PROGRESS_BAR = s -> {};
 
 	/**
 	 * Advance one step.
 	 *
 	 * @param message The message to show for the current step.
 	 */
-	public abstract void step(String message);
+	void step(String message);
 
 	/**
 	 * Advance one step.
@@ -40,7 +37,7 @@ public abstract class ProgressBar {
 	 *
 	 * @param clazz The mod class
 	 */
-	public void step(Class<?> clazz) {
+	default void step(Class<?> clazz) {
 		step(toStringMod(clazz));
 	}
 
@@ -53,7 +50,7 @@ public abstract class ProgressBar {
 	 * @param message The message to display before {@code clazz}
 	 * @param clazz The mod class
 	 */
-	public void step(String message, Class<?> clazz) {
+	default void step(String message, Class<?> clazz) {
 		step((message == null || message.isEmpty() ? "" : message + ": ") + toStringMod(clazz));
 	}
 
@@ -66,11 +63,11 @@ public abstract class ProgressBar {
 	 * @param message The message to display before {@code clazz}
 	 * @param clazz The mod class
 	 */
-	public void step(Class<?> clazz, String message) {
+	default void step(Class<?> clazz, String message) {
 		step(toStringMod(clazz) + (message == null || message.isEmpty() ? "" : ": " + message));
 	}
 
-	protected static String toStringMod(Class<?> clazz) {
+	static String toStringMod(Class<?> clazz) {
 		if (clazz == null) return null;
 		if (clazz.isAnnotationPresent(Mod.class)) return clazz.getAnnotation(Mod.class).name();
 		return clazz.getSimpleName();

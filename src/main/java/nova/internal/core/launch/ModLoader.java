@@ -20,6 +20,7 @@
 
 package nova.internal.core.launch;
 
+import nova.core.util.ProgressBar;
 import nova.core.loader.Loadable;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;

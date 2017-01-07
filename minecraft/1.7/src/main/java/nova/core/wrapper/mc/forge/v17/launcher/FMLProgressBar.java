@@ -12,7 +12,7 @@ import cpw.mods.fml.common.ProgressManager.ProgressBar;
  *
  * @author ExE Boss
  */
-public class FMLProgressBar extends nova.internal.core.launch.ProgressBar {
+public class FMLProgressBar implements nova.core.util.ProgressBar {
 
 	private final ProgressBar progressBar;
 
