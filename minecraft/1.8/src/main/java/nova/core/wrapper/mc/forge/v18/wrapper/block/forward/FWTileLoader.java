@@ -24,6 +24,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.component.Updater;
+import nova.core.retention.Data;
+import nova.core.util.id.Identifier;
 import nova.core.wrapper.mc.forge.v18.asm.lib.ComponentInjector;
 import nova.internal.core.Game;
 
@@ -42,7 +44,7 @@ public final class FWTileLoader {
 
 	public static FWTile loadTile(NBTTagCompound data) {
 		try {
-			String blockID = data.getString("novaID");
+			Identifier blockID = Data.unserialize(Game.natives().toNative(data.getTag("novaID")));
 			Block block = createBlock(blockID);
 			FWTile tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[0], new Object[0]) : injector.inject(block, new Class[0], new Object[0]);
 			tile.setBlock(block);
@@ -52,11 +54,11 @@ public final class FWTileLoader {
 		}
 	}
 
-	public static FWTile loadTile(String blockID) {
+	public static FWTile loadTile(Identifier blockID) {
 		try {
 			Block block = createBlock(blockID);
-			FWTile tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[] { String.class }, new Object[] { blockID }) : injector.inject(block, new Class[] {
-				String.class }, new Object[] { blockID });
+			FWTile tile = (block instanceof Updater) ? updaterInjector.inject(block, new Class[] { Identifier.class }, new Object[] { blockID }) :
+					injector.inject(block, new Class[] { Identifier.class }, new Object[] { blockID });
 			tile.setBlock(block);
 			return tile;
 		} catch (Exception e) {
@@ -64,7 +66,7 @@ public final class FWTileLoader {
 		}
 	}
 
-	private static Block createBlock(String blockID) {
+	private static Block createBlock(Identifier blockID) {
 		Optional<BlockFactory> blockFactory = Game.blocks().get(blockID);
 		if (blockFactory.isPresent()) {
 			return blockFactory.get().build();

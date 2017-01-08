@@ -29,9 +29,14 @@ import nova.core.component.Updater;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
+import nova.core.util.id.Identifier;
+import nova.core.util.id.IdentifierRegistry;
+import nova.core.util.id.StringIdentifier;
 import nova.core.wrapper.mc.forge.v17.network.netty.MCNetworkManager;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
+import java.util.Objects;
 
 /**
  * A Minecraft TileEntity to Nova block wrapper
@@ -39,7 +44,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public class FWTile extends TileEntity {
 
-	private String blockID;
+	private Identifier blockID;
 	private Block block;
 	private Data cacheData = null;
 
@@ -47,7 +52,7 @@ public class FWTile extends TileEntity {
 
 	}
 
-	public FWTile(String blockID) {
+	public FWTile(Identifier blockID) {
 		this.blockID = blockID;
 	}
 
@@ -57,6 +62,7 @@ public class FWTile extends TileEntity {
 
 	public void setBlock(Block block) {
 		this.block = block;
+		this.blockID = block.getID();
 	}
 
 	@Override
@@ -108,7 +114,8 @@ public class FWTile extends TileEntity {
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		nbt.setString("novaID", blockID);
+		// If we have a block, store its id instead
+		nbt.setTag("novaID", Game.natives().toNative(Data.serialize(block != null ? block.getID() : blockID)));
 
 		if (block != null) {
 			if (block instanceof Storable) {
@@ -128,7 +135,7 @@ public class FWTile extends TileEntity {
 		 * wait until the block is injected withPriority World and Position data using
 		 * Future.
 		 */
-		blockID = nbt.getString("novaID");
+		blockID = ((Data)Game.natives().toNova(nbt)).getIdentifier("novaID");
 		cacheData = Game.natives().toNova(nbt.getCompoundTag("nova"));
 	}
 }

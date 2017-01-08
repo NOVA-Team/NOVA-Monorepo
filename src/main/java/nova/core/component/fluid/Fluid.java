@@ -140,12 +140,12 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	@Override
 	public void save(Data data) {
 		Storable.super.save(data);
-		data.put("id", factory.getID().asString()); // TODO?
+		data.put("id", factory.getID());
 	}
 
 	@Override
 	public void load(Data data) {
 		Storable.super.load(data);
-		factory = Game.fluids().get(data.get("id")).get(); // FIXME
+		factory = Game.fluids().get(data.getIdentifier("id")).get();
 	}
 }

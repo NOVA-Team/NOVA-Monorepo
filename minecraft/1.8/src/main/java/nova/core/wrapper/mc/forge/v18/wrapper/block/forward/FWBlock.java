@@ -107,6 +107,10 @@ public class FWBlock extends net.minecraft.block.Block {
 		this.translucent = !isOpaqueCube();
 	}
 
+	public BlockFactory getFactory() {
+		return this.factory;
+	}
+
 	public Block getBlockInstance(IBlockAccess access, Vector3D position) {
 		/**
 		 * If this block has a TileEntity, forward the method into the Stateful
@@ -179,7 +183,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		FWTile fwTile = FWTileLoader.loadTile(dummy.getID().asString()); // TODO?
+		FWTile fwTile = FWTileLoader.loadTile(factory.getID());
 		if (lastExtendedStatePos != null) {
 			fwTile.block.components.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
 			lastExtendedStatePos = null;

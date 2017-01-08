@@ -20,8 +20,6 @@
 
 package nova.core.util.id;
 
-import nova.core.util.id.UUIDIdentifier;
-
 /**
  * A generic interface signifying that this object is uniquely identifiable
  * by an ID.
@@ -45,5 +43,5 @@ public interface UniqueIdentifiable extends Identifiable {
 	 * @return the ID
 	 * @see #getID()
 	 */
-	UUIDIdentifier getUniqueID(); // TODO maybe this should return a simple Identifier
+	UUIDIdentifier getUniqueID();
 }
