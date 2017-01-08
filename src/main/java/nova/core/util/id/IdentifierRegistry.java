@@ -8,7 +8,9 @@ package nova.core.util.id;
 import nova.core.retention.Data;
 import nova.core.util.registry.Registry;
 
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Used to handle loading and saving of identifiers.
@@ -47,7 +49,7 @@ public final class IdentifierRegistry extends Registry<IdentifierLoader<?>> {
 		assert data != null;
 		StringIdentifier id = new StringIdentifier(data.get("type"));
 		if (!contains(id))
-			throw new NoSuchIDException("No Identifier class found for type: " + id);
+			throw noIdentifierClassFound(id).get();
 		return get(id).get().load(data);
 	}
 
@@ -79,5 +81,43 @@ public final class IdentifierRegistry extends Registry<IdentifierLoader<?>> {
 	@Override
 	public IdentifierLoader<?> register(IdentifierLoader<?> loader) {
 		return super.register(loader);
+	}
+	
+	public Optional<StringIdentifier> getName(Class<? extends Identifier> ID) {
+		Optional<IdentifierLoader<?>> loader = stream().filter(l -> l.getIdentifierClass().equals(ID)).findFirst();
+		if (!loader.isPresent())
+			loader = stream().filter(l -> l.getIdentifierClass().isAssignableFrom(ID)).findFirst();
+		return loader.map(l -> l.getID());
+	}
+	
+	public Optional<StringIdentifier> getName(Identifier ID) {
+		Optional<IdentifierLoader<?>> loader = stream().filter(l -> l.getIdentifierClass().equals(ID.getClass())).findFirst();
+		if (!loader.isPresent())
+			loader = stream().filter(l -> l.getIdentifierClass().isAssignableFrom(ID.getClass())).findFirst();
+		return loader.map(l -> l.getID());
+	}
+
+	public Optional<IdentifierLoader<?>> get(String ID) {
+		return super.get(new StringIdentifier(ID));
+	}
+
+	public boolean contains(String ID) {
+		return super.contains(new StringIdentifier(ID));
+	}
+
+	public static Supplier<NoSuchIDException> noIdentifierLoaderFound(Identifier id) {
+		return noIdentifierLoaderFound(id.getClass());
+	}
+
+	public static Supplier<NoSuchIDException> noIdentifierLoaderFound(Class<? extends Identifier> clazz) {
+		return () -> new NoSuchIDException("No IdentifierLoader found for class: " + clazz.getSimpleName());
+	}
+
+	public static Supplier<NoSuchIDException> noIdentifierClassFound(Identifier type) {
+		return noIdentifierClassFound(type == null ? (String) null : type.asString());
+	}
+
+	public static Supplier<NoSuchIDException> noIdentifierClassFound(String type) {
+		return () -> new NoSuchIDException("No Identifier class found for type: " + type);
 	}
 }

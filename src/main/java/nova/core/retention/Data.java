@@ -77,7 +77,7 @@ public class Data extends HashMap<String, Object> {
 
 	}
 
-	public Data(Class clazz) {
+	public Data(Class<?> clazz) {
 		className = clazz.getName();
 		super.put("class", className);
 	}
@@ -95,6 +95,51 @@ public class Data extends HashMap<String, Object> {
 		obj.save(data);
 		return data;
 	}
+	
+	/**
+	 * Saves an object, serializing its data.
+	 * This map can be reloaded and its class with be reconstructed.
+	 * @param obj The object to store.
+	 * @return The data of the object with
+	 */
+	public static Data serialize(Object value) {
+		try {
+			if (value instanceof Enum) {
+				Data enumData = new Data(value.getClass());
+				enumData.put("value", ((Enum) value).name());
+				return enumData;
+			} else if (value instanceof Vector3D) {
+				Data vectorData = new Data(Vector3D.class);
+				vectorData.put("x", ((Vector3D) value).getX());
+				vectorData.put("y", ((Vector3D) value).getY());
+				vectorData.put("z", ((Vector3D) value).getZ());
+				return vectorData;
+			} else if (value instanceof Vector2D) {
+				Data vectorData = new Data(Vector2D.class);
+				vectorData.put("x", ((Vector2D) value).getX());
+				vectorData.put("y", ((Vector2D) value).getY());
+				return vectorData;
+			} else if (value instanceof UUID) {
+				Data uuidData = new Data(UUID.class);
+				uuidData.put("uuid", value.toString());
+				return uuidData;
+			} else if (value instanceof Class) {
+				Data classData = new Data(Class.class);
+				classData.put("name", ((Class) value).getName());
+				return classData;
+			} else if (value instanceof Identifier) {
+				Data identifierData = new Data(Identifier.class);
+				IdentifierRegistry.instance().save(identifierData, (Identifier) value);
+				return identifierData;
+			} else if (value instanceof Storable) {
+				return serialize((Storable) value);
+			} else {
+				return (Data) value;
+			}
+		} catch (Exception e) {
+			throw new DataException(e);
+		}
+	}
 
 	/**
 	 * Loads an object from its stored data, with an unknown class.
@@ -102,26 +147,28 @@ public class Data extends HashMap<String, Object> {
 	 * @param data The data
 	 * @return The object loaded with given data.
 	 */
-	public static Object unserialize(Data data) {
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public static <T> T unserialize(Data data) {
 		try {
-			Class clazz = (Class) Class.forName((String) data.get("class"));
+			Class clazz = Class.forName((String) data.get("class"));
 			if (clazz.isEnum()) {
-				return Enum.valueOf(clazz, data.get("value"));
+				return (T) Enum.valueOf(clazz, data.get("value"));
 			} else if (clazz == Vector3D.class) {
-				return new Vector3D(data.get("x"), data.get("y"), data.get("z"));
+				return (T) new Vector3D(data.get("x"), data.get("y"), data.get("z"));
 			} else if (clazz == Vector2D.class) {
-				return new Vector2D(data.get("x"), (double) data.get("y"));
+				return (T) new Vector2D(data.get("x"), (double) data.get("y"));
 			} else if (clazz == UUID.class) {
-				return UUID.fromString(data.get("uuid"));
+				return (T) UUID.fromString(data.get("uuid"));
 			} else if (clazz == Class.class) {
-				return Class.forName(data.get("name"));
+				return (T) Class.forName(data.get("name"));
+			} else if (clazz == Identifier.class) {
+				return (T) IdentifierRegistry.instance().load(data);
 			} else {
-				return unserialize(clazz, data);
+				return (T) unserialize(clazz, data);
 			}
 		} catch (Exception e) {
 			throw new DataException(e);
 		}
-
 	}
 
 	/**

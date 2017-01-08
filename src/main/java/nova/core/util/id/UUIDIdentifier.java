@@ -55,5 +55,10 @@ public class UUIDIdentifier extends AbstractIdentifier<UUID> implements Identifi
 		public UUIDIdentifier load(Data data) {
 			return new UUIDIdentifier(UUID.fromString(data.get("id")));
 		}
+
+		@Override
+		public UUIDIdentifier load(String data) {
+			return new UUIDIdentifier(UUID.fromString(data));
+		}
 	}
 }

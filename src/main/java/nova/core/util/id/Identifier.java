@@ -16,4 +16,14 @@ public interface Identifier {
 	 * @return A string representation of this Identifier.
 	 */
 	String asString();
+
+	/**
+	 * Converts this Identifier into a short String.
+	 * The default implementation returns the same result as {@link #asString()}.
+	 *
+	 * @return A string representation of this Identifier.
+	 */
+	default String asShortString() {
+		return asString();
+	}
 }

@@ -45,5 +45,10 @@ public class StringIdentifier extends AbstractIdentifier<String> implements Iden
 		public StringIdentifier load(Data data) {
 			return new StringIdentifier(data.get("id"));
 		}
+
+		@Override
+		public StringIdentifier load(String data) {
+			return new StringIdentifier(data);
+		}
 	}
 }

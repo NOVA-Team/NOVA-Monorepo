@@ -33,6 +33,18 @@ public abstract class IdentifierLoader<T extends Identifier> implements Identifi
 
 	public abstract T load(Data data);
 
+	/**
+	 * This method creates a new Identifier instance.
+	 * 
+	 * Implementations must ensure that
+	 * {@link Object#equals(java.lang.Object) identifier.equals}{@code (load(}{@link Identifier#asString() identifier.asString()}{@code ))}
+	 * is always true.
+	 * 
+	 * @param data 
+	 * @return 
+	 */
+	public abstract T load(String data);
+
 	@Override
 	public final StringIdentifier getID() {
 		return new StringIdentifier(id);

@@ -23,6 +23,11 @@ public class ClassIdentifier extends AbstractIdentifier<Class<?>> implements Ide
 
 	@Override
 	public String asString() {
+		return id.getName();
+	}
+
+	@Override
+	public String asShortString() {
 		return id.getSimpleName();
 	}
 
@@ -60,6 +65,15 @@ public class ClassIdentifier extends AbstractIdentifier<Class<?>> implements Ide
 		public ClassIdentifier load(Data data) {
 			try {
 				return new ClassIdentifier(Class.forName(data.get("id")));
+			} catch (ClassNotFoundException ex) {
+				throw new DataException(ex);
+			}
+		}
+
+		@Override
+		public ClassIdentifier load(String data) {
+			try {
+				return new ClassIdentifier(Class.forName(data));
 			} catch (ClassNotFoundException ex) {
 				throw new DataException(ex);
 			}

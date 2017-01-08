@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.UUID;
 
 import static nova.testutils.NovaAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author ExE Boss
@@ -32,7 +33,8 @@ public class IdentifierTest {
 		ClassIdentifier clazz = new ClassIdentifier(IdentifierTest.class);
 
 		assertThat(clazz.asClass()).isEqualTo(IdentifierTest.class);
-		assertThat(clazz.asString()).isEqualTo(IdentifierTest.class.getSimpleName());
+		assertThat(clazz.asString()).isEqualTo(IdentifierTest.class.getName());
+		assertThat(clazz.asShortString()).isEqualTo(IdentifierTest.class.getSimpleName());
 		assertThat(clazz).isEqualTo(new ClassIdentifier(IdentifierTest.class));
 	}
 
@@ -50,7 +52,7 @@ public class IdentifierTest {
 		EnumIdentifier<EnumExample> enumIdentifier = new EnumIdentifier<>(EnumExample.EXAMPLE_42);
 
 		assertThat(enumIdentifier.asEnum()).isEqualTo(EnumExample.EXAMPLE_42);
-		assertThat(enumIdentifier.asString()).isEqualTo(EnumExample.EXAMPLE_42.toString());
+		assertThat(enumIdentifier.asShortString()).isEqualTo(EnumExample.EXAMPLE_42.toString());
 		assertThat(enumIdentifier).isEqualTo(new EnumIdentifier<>(EnumExample.EXAMPLE_42));
 	}
 }
