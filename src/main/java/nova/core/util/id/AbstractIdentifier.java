@@ -1,8 +1,6 @@
 package nova.core.util.id;
 
-import nova.core.retention.Data;
-import nova.core.retention.Storable;
-import nova.core.retention.Store;
+import java.util.Objects;
 
 /**
  * Basic implementation of Identifier.
@@ -21,7 +19,7 @@ public abstract class AbstractIdentifier<T> implements Identifier {
 	 * @param id The ID.
 	 */
 	public AbstractIdentifier(T id) {
-		this.id = id;
+		this.id = Objects.requireNonNull(id);
 	}
 
 	@Override
@@ -35,12 +33,12 @@ public abstract class AbstractIdentifier<T> implements Identifier {
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		return id.hashCode();
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public final boolean equals(Object o) {
 		return this == o || (o != null && getClass() == o.getClass() && id.equals(((AbstractIdentifier) o).id));
 	}
 }
