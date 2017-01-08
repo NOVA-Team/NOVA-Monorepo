@@ -1,5 +1,8 @@
 package nova.core.util.id;
 
+import nova.core.retention.Data;
+import nova.core.retention.DataException;
+
 import java.util.Objects;
 
 /**
@@ -35,5 +38,31 @@ public class ClassIdentifier extends AbstractIdentifier<Class<?>> implements Ide
 	@Override
 	public boolean equals(Object other) {
 		return equalsImpl(this, other, ClassIdentifier.class, ClassIdentifier::asClass);
+	}
+
+	public static class Loader extends IdentifierLoader<ClassIdentifier> {
+
+		public Loader(String id) {
+			super(id);
+		}
+
+		@Override
+		public Class<ClassIdentifier> getIdentifierClass() {
+			return ClassIdentifier.class;
+		}
+
+		@Override
+		public void save(Data data, ClassIdentifier identifier) {
+			data.put("id", identifier.id.getName());
+		}
+
+		@Override
+		public ClassIdentifier load(Data data) {
+			try {
+				return new ClassIdentifier(Class.forName(data.get("id")));
+			} catch (ClassNotFoundException ex) {
+				throw new DataException(ex);
+			}
+		}
 	}
 }

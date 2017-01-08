@@ -5,6 +5,8 @@
  */
 package nova.core.util.id;
 
+import nova.core.retention.Data;
+
 /**
  * A Namespaced String Identifier.
  *

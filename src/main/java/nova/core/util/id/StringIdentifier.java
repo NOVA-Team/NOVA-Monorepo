@@ -1,5 +1,7 @@
 package nova.core.util.id;
 
+import nova.core.retention.Data;
+
 import java.util.Objects;
 
 /**
@@ -21,5 +23,27 @@ public class StringIdentifier extends AbstractIdentifier<String> implements Iden
 	@Override
 	public boolean equals(Object other) {
 		return equalsImpl(this, other, StringIdentifier.class, Identifier::asString);
+	}
+
+	public static class Loader extends IdentifierLoader<StringIdentifier> {
+
+		public Loader(String id) {
+			super(id);
+		}
+
+		@Override
+		public Class<StringIdentifier> getIdentifierClass() {
+			return StringIdentifier.class;
+		}
+
+		@Override
+		public void save(Data data, StringIdentifier identifier) {
+			data.put("id", identifier.asString());
+		}
+
+		@Override
+		public StringIdentifier load(Data data) {
+			return new StringIdentifier(data.get("id"));
+		}
 	}
 }

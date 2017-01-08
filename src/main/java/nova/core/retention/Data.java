@@ -20,10 +20,13 @@
 
 package nova.core.retention;
 
+import nova.core.util.id.Identifier;
+import nova.core.util.id.IdentifierRegistry;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * The data class is capable of storing named data.
@@ -58,6 +61,7 @@ public class Data extends HashMap<String, Object> {
 		Double.class,
 		String.class,
 		//Special data types that all convert into Data.
+		Identifier.class,
 		Enum.class,
 		Storable.class,
 		Data.class,
@@ -176,6 +180,10 @@ public class Data extends HashMap<String, Object> {
 			Data classData = new Data(Class.class);
 			classData.put("name", ((Class) value).getName());
 			value = classData;
+		} else if (value instanceof Identifier) {
+			Data identifierData = new Data(Identifier.class);
+			IdentifierRegistry.instance().save(identifierData, (Identifier) value);
+			value = identifierData;
 		} else if (value instanceof Storable) {
 			value = serialize((Storable) value);
 		}
@@ -210,6 +218,16 @@ public class Data extends HashMap<String, Object> {
 	public Vector2D getVector2D(String key) {
 		Data data = get(key);
 		return new Vector2D(data.get("x"), (double) data.get("y"));
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Identifier> T getIdentifier(String key) {
+		Data storableData = get(key);
+		try {
+			return (T) IdentifierRegistry.instance().load(storableData);
+		} catch (Exception e) {
+			throw new DataException(e);
+		}
 	}
 
 	public <T extends Storable> T getStorable(String key) {

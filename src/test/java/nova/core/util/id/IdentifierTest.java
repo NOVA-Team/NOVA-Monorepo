@@ -11,10 +11,8 @@ import org.junit.Test;
 import java.util.UUID;
 
 import static nova.testutils.NovaAssertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- *
  * @author ExE Boss
  */
 public class IdentifierTest {

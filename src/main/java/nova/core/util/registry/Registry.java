@@ -96,4 +96,8 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 	public Stream<T> stream() {
 		return objects.values().stream();
 	}
+
+	public Stream<T> parallelStream() {
+		return objects.values().parallelStream();
+	}
 }

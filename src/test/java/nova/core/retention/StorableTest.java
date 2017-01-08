@@ -22,6 +22,8 @@ package nova.core.retention;
 
 import org.junit.Test;
 
+import java.util.function.Consumer;
+
 import static nova.testutils.NovaAssertions.assertThat;
 
 
@@ -117,4 +119,33 @@ public class StorableTest {
         assertThat(test.integer).isEqualTo(256);
         assertThat(test.string).isEqualTo("test");
     }
+	
+	/**
+	 * Prints the contents of Data to the console.
+	 * 
+	 * @param data The data to print.
+	 * @param print The method to use. Should insert a newline after every call. (eg. {@link java.io.PrintStream#println()})
+	 */
+	public static void printData(Data data, Consumer<Object> print) {
+		System.out.println("Data:");
+		printData(data, 0, print);
+	}
+	
+	private static void printData(Data data, int index, Consumer<Object> print) {
+		data.forEach((str, obj) -> {
+			if (obj instanceof Data) {
+				print.accept(prepend("- " + str + ":", index));
+				printData((Data)obj, index + 1, print);
+			} else
+				print.accept(prepend("- " + str + ": " + obj, index));
+		});
+	}
+	
+	private static String prepend(String str, int index) {
+		StringBuilder sb = new StringBuilder(str.length() + index * 2);
+		for (int i = 0; i < index; i++)
+			sb.append("  ");
+		sb.append(str);
+		return sb.toString();
+	}
 }
