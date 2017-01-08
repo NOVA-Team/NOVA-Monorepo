@@ -34,7 +34,7 @@ public class EnumIdentifier<E extends Enum<E>> extends AbstractIdentifier<E> {
 
 	@Override
 	@SuppressWarnings("rawtypes")
-	public boolean equals(Object other) {
+	public final boolean equals(Object other) {
 		return equalsImpl(this, other, EnumIdentifier.class, EnumIdentifier::asEnum);
 	}
 

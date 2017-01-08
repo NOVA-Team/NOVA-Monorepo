@@ -41,7 +41,7 @@ public class ClassIdentifier extends AbstractIdentifier<Class<?>> implements Ide
 	}
 
 	@Override
-	public boolean equals(Object other) {
+	public final boolean equals(Object other) {
 		return equalsImpl(this, other, ClassIdentifier.class, ClassIdentifier::asClass);
 	}
 

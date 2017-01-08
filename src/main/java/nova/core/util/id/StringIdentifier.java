@@ -21,7 +21,7 @@ public class StringIdentifier extends AbstractIdentifier<String> implements Iden
 	}
 
 	@Override
-	public boolean equals(Object other) {
+	public final boolean equals(Object other) {
 		return equalsImpl(this, other, StringIdentifier.class, Identifier::asString);
 	}
 

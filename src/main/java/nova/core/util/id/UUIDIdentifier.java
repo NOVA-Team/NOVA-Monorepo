@@ -31,7 +31,7 @@ public class UUIDIdentifier extends AbstractIdentifier<UUID> implements Identifi
 	}
 
 	@Override
-	public boolean equals(Object other) {
+	public final boolean equals(Object other) {
 		return equalsImpl(this, other, UUIDIdentifier.class, UUIDIdentifier::asUUID);
 	}
 
