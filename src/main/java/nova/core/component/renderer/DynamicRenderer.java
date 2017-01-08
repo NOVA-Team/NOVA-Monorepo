@@ -20,8 +20,15 @@
 
 package nova.core.component.renderer;
 
+import nova.core.component.ComponentProvider;
+import nova.core.render.pipeline.RenderPipeline;
+
 /**
- * This interface signals that a block needs dynamic rendering.
+ * This Component specifies that a {@link ComponentProvider} requires custom dynamic rendering.
+ * This type of rendering updates its render state every frame. As such it should be reserved only for models
+ * which truly need it. See {@link RenderPipeline} to easily pipeline models to prepare it for rendering.
+ *
+ * @see StaticRenderer
  */
 public class DynamicRenderer extends Renderer {
 

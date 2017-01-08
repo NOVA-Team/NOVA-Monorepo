@@ -20,9 +20,7 @@
 
 package nova.core.render.pipeline;
 
-
-
-import nova.core.block.Block;
+import nova.core.component.ComponentProvider;
 import nova.core.component.misc.Collider;
 import nova.core.render.Color;
 import nova.core.render.RenderException;
@@ -37,14 +35,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;/**
+import java.util.function.Supplier;
+
+/**
  * A block rendering builder that generates a function that renders a block model.
  *
  * @author Calclavia
  */
 public class BlockRenderPipeline extends RenderPipeline {
 
-	public final Block block;
+	public final ComponentProvider componentProvider;
 
 	/**
 	 * Called to get the texture of this block for a certain side.
@@ -75,9 +75,9 @@ public class BlockRenderPipeline extends RenderPipeline {
 	 */
 	public Function<Direction, Color> colorMultiplier = (dir) -> Color.white;
 
-	public BlockRenderPipeline(Block block) {
-		this.block = block;
-		bounds = () -> block.components.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
+	public BlockRenderPipeline(ComponentProvider componentProvider) {
+		this.componentProvider = componentProvider;
+		bounds = () -> componentProvider.components.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
 		consumer = model -> model.addChild(draw(new MeshModel()));
 	}
 

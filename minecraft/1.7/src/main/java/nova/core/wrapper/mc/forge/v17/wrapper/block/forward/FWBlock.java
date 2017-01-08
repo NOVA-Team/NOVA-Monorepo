@@ -45,7 +45,8 @@ import nova.core.block.Stateful;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
-import nova.core.component.renderer.ItemRenderer;
+import nova.core.component.renderer.DynamicRenderer;
+import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
@@ -376,14 +377,21 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
-		Optional<ItemRenderer> opRenderer = this.dummy.components.getOp(ItemRenderer.class);
-		if (opRenderer.isPresent()) {
+		if (this.dummy.components.has(Renderer.class)) {
 			GL11.glPushAttrib(GL_TEXTURE_BIT);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			GL11.glPushMatrix();
 			Tessellator.instance.startDrawingQuads();
 			BWModel model = new BWModel();
-			opRenderer.get().onRender.accept(model);
+
+			if (this.dummy.components.has(StaticRenderer.class)) {
+				StaticRenderer staticRenderer = this.dummy.components.get(StaticRenderer.class);
+				staticRenderer.onRender.accept(model);
+			} else if (this.dummy.components.has(DynamicRenderer.class)) {
+				DynamicRenderer dynamicRenderer = this.dummy.components.get(DynamicRenderer.class);
+				dynamicRenderer.onRender.accept(model);
+			}
+
 			model.render();
 			Tessellator.instance.draw();
 			GL11.glPopMatrix();

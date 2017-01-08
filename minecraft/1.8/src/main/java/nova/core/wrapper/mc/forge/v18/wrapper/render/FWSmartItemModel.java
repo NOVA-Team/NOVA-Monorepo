@@ -23,19 +23,19 @@ package nova.core.wrapper.mc.forge.v18.wrapper.render;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartItemModel;
-import nova.core.component.renderer.ItemRenderer;
+import nova.core.component.renderer.DynamicRenderer;
+import nova.core.component.renderer.Renderer;
+import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
-import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
 import nova.internal.core.Game;
 
 import javax.vecmath.Vector3f;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -50,49 +50,41 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 		this.item = item;
 		// Change the default transforms to the default Item transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
-			new ItemTransformVec3f(new Vector3f(-90, 0, 0), new Vector3f(0, 1, -3), new Vector3f(0.55f, 0.55f, 0.55f)), // Third Person
-			new ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 4, 2), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person
-			ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
+			new ItemTransformVec3f(new Vector3f(0, -90, 130), new Vector3f(0, 1f / 24f, -2.75f / 16f), new Vector3f(0.9f, 0.9f, 0.9f)), // Third Person
+			new ItemTransformVec3f(new Vector3f(0, -135, 25/*-135/*-25*/), new Vector3f(0, 0.25f, 0.125f/*0.5f, 0.25f*/), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person
+			ItemTransformVec3f.DEFAULT, // Head
+			new ItemTransformVec3f(new Vector3f(-30, 135, 0), new Vector3f(), new Vector3f(1.6F, 1.6F, 1.6F))); // GUI
 	}
 
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
 		Item item = Game.natives().toNova(stack);
 
-		if (item.components.has(ItemRenderer.class)) {
+		if (item.components.has(Renderer.class)) {
 			return new FWSmartItemModel(item);
 		}
 
-		return this;
+		return new FWEmptyModel();
 	}
 
 	@Override
 	public List<BakedQuad> getGeneralQuads() {
-		if (item.components.has(ItemRenderer.class)) {
-			BWModel model = new BWModel();
-			ItemRenderer renderer = item.components.get(ItemRenderer.class);
-			model.matrix.translate(0.5, 0.5, 0.5);
-			renderer.onRender.accept(model);
-			return modelToQuads(model);
+		BWModel model = new BWModel();
+		model.matrix.translate(0.5, 0.5, 0.5);
+
+		if (item.components.has(StaticRenderer.class)) {
+			StaticRenderer staticRenderer = item.components.get(StaticRenderer.class);
+			staticRenderer.onRender.accept(model);
+		} else if (item.components.has(DynamicRenderer.class)) {
+			DynamicRenderer dynamicRenderer = item.components.get(DynamicRenderer.class);
+			dynamicRenderer.onRender.accept(model);
 		}
 
-		return Collections.emptyList();
-	}
-
-	@Override
-	public TextureAtlasSprite getTexture() {
-		if (item.components.has(ItemRenderer.class)) {
-			ItemRenderer itemRenderer = item.components.get(ItemRenderer.class);
-			if (itemRenderer.texture.isPresent()) {
-				return RenderUtility.instance.getTexture(itemRenderer.texture.get());
-			}
-		}
-
-		return null;
+		return modelToQuads(model);
 	}
 
 	@Override
 	public boolean isGui3d() {
-		return item.components.has(ItemRenderer.class);
+		return item.components.has(Renderer.class);
 	}
 }

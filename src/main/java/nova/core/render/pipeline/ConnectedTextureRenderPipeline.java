@@ -35,6 +35,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
+
+	public final Block block;
 	public final Texture edgeTexture;
 
 	/**
@@ -52,6 +54,7 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 
 	public ConnectedTextureRenderPipeline(Block block, Texture edgeTexture) {
 		super(block);
+		this.block = block;
 		this.edgeTexture = edgeTexture;
 
 		connectMask = () -> {

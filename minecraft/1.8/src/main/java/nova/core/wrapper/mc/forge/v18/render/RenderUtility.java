@@ -23,35 +23,28 @@ package nova.core.wrapper.mc.forge.v18.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockPart;
-import net.minecraft.client.renderer.block.model.BlockPartFace;
 import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.client.resources.model.ModelRotation;
-import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.TRSRTransformation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import nova.core.component.renderer.ItemRenderer;
+import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.render.texture.BlockTexture;
 import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItem;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItemBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWEmptyModel;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartBlockModel;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartItemModel;
@@ -60,7 +53,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Optional;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_FLAT;
@@ -214,35 +206,8 @@ public class RenderUtility {
 
 					nova.core.item.Item dummy = item.getItemFactory().build();
 
-					if (dummy.components.has(ItemRenderer.class)) {
-						Optional<Texture> texture = dummy.components.get(ItemRenderer.class).texture;
-
-						if (texture.isPresent()) {
-							MODEL_GENERATED.textures.put("layer0", texture.get().getResource());
-							MODEL_GENERATED.name = itemLocation.toString();
-
-							// This is the key part, it takes the texture and makes the "3d" one wide voxel model
-							ModelBlock itemModel = ITEM_MODEL_GENERATOR.makeItemModel(new FakeTextureMap(dummy), MODEL_GENERATED);
-
-							// This was taken from ModelBakery and simplified for the generation of our Items
-							SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(itemModel).setTexture(getTexture(texture.get()));
-							for (BlockPart blockpart : (Iterable<BlockPart>) itemModel.getElements()) {
-								for (EnumFacing enumfacing : (Iterable<EnumFacing>) blockpart.mapFaces.keySet()) {
-									BlockPartFace blockpartface = (BlockPartFace) blockpart.mapFaces.get(enumfacing);
-									BakedQuad bakedQuad = FACE_BAKERY.makeBakedQuad(blockpart.positionFrom, blockpart.positionTo, blockpartface, getTexture(texture.get()), enumfacing, ModelRotation.X0_Y0, blockpart.partRotation, false, blockpart.shade);
-
-									if (blockpartface.cullFace == null || !TRSRTransformation.isInteger(ModelRotation.X0_Y0.getMatrix())) {
-										builder.addGeneralQuad(bakedQuad);
-									} else {
-
-										builder.addFaceQuad(ModelRotation.X0_Y0.rotate(blockpartface.cullFace), bakedQuad);
-									}
-								}
-							}
-							event.modelRegistry.putObject(itemLocation, builder.makeBakedModel());
-						} else {
-							event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(dummy));
-						}
+					if (dummy.components.has(Renderer.class)) {
+						event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(dummy));
 					}
 				}
 			}
@@ -260,25 +225,5 @@ public class RenderUtility {
 				throw new RuntimeException("IO Exception reading model format", e);
 			}
 		});
-	}
-
-	private class FakeTextureMap extends TextureMap {
-		private final nova.core.item.Item item;
-
-		public FakeTextureMap(nova.core.item.Item item) {
-			super("");
-			this.item = item;
-		}
-
-		@Override
-		public TextureAtlasSprite getAtlasSprite(String iconName) {
-			if (item.components.has(ItemRenderer.class)) {
-				ItemRenderer itemRenderer = item.components.get(ItemRenderer.class);
-				if (itemRenderer.texture.isPresent()) {
-					return RenderUtility.instance.getTexture(itemRenderer.texture.get());
-				}
-			}
-			return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
-		}
 	}
 }
