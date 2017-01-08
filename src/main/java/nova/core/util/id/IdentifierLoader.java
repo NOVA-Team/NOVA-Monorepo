@@ -12,7 +12,6 @@ import nova.core.retention.Data;
  *
  * @author ExE Boss
  * @param <T> The Identifier class
- * @param <N> The Identifier type
  * @see Identifier
  * @see IdentifierRegistry
  */

@@ -38,9 +38,9 @@ import java.util.Optional;
 public interface ItemIngredient extends Identifiable {
 
 	/**
-	 * Retrieves an ingredient to represent a specific item.
+	 * Retrieves an ingredient to represent a specific block.
 	 *
-	 * @param item The item
+	 * @param block The block
 	 * @return ingredient
 	 */
 	static ItemIngredient forBlock(BlockFactory block) {

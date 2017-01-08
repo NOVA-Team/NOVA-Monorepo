@@ -102,39 +102,39 @@ public class Data extends HashMap<String, Object> {
 	 * @param obj The object to store.
 	 * @return The data of the object with
 	 */
-	public static Data serialize(Object value) {
+	public static Data serialize(Object obj) {
 		try {
-			if (value instanceof Enum) {
-				Data enumData = new Data(value.getClass());
-				enumData.put("value", ((Enum) value).name());
+			if (obj instanceof Enum) {
+				Data enumData = new Data(obj.getClass());
+				enumData.put("value", ((Enum) obj).name());
 				return enumData;
-			} else if (value instanceof Vector3D) {
+			} else if (obj instanceof Vector3D) {
 				Data vectorData = new Data(Vector3D.class);
-				vectorData.put("x", ((Vector3D) value).getX());
-				vectorData.put("y", ((Vector3D) value).getY());
-				vectorData.put("z", ((Vector3D) value).getZ());
+				vectorData.put("x", ((Vector3D) obj).getX());
+				vectorData.put("y", ((Vector3D) obj).getY());
+				vectorData.put("z", ((Vector3D) obj).getZ());
 				return vectorData;
-			} else if (value instanceof Vector2D) {
+			} else if (obj instanceof Vector2D) {
 				Data vectorData = new Data(Vector2D.class);
-				vectorData.put("x", ((Vector2D) value).getX());
-				vectorData.put("y", ((Vector2D) value).getY());
+				vectorData.put("x", ((Vector2D) obj).getX());
+				vectorData.put("y", ((Vector2D) obj).getY());
 				return vectorData;
-			} else if (value instanceof UUID) {
+			} else if (obj instanceof UUID) {
 				Data uuidData = new Data(UUID.class);
-				uuidData.put("uuid", value.toString());
+				uuidData.put("uuid", obj.toString());
 				return uuidData;
-			} else if (value instanceof Class) {
+			} else if (obj instanceof Class) {
 				Data classData = new Data(Class.class);
-				classData.put("name", ((Class) value).getName());
+				classData.put("name", ((Class) obj).getName());
 				return classData;
-			} else if (value instanceof Identifier) {
+			} else if (obj instanceof Identifier) {
 				Data identifierData = new Data(Identifier.class);
-				IdentifierRegistry.instance().save(identifierData, (Identifier) value);
+				IdentifierRegistry.instance().save(identifierData, (Identifier) obj);
 				return identifierData;
-			} else if (value instanceof Storable) {
-				return serialize((Storable) value);
+			} else if (obj instanceof Storable) {
+				return serialize((Storable) obj);
 			} else {
-				return (Data) value;
+				return (Data) obj;
 			}
 		} catch (Exception e) {
 			throw new DataException(e);
