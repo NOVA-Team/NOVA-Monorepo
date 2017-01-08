@@ -43,7 +43,7 @@ public abstract class RenderManager extends Manager<RenderManager> {
 	public final Registry<ModelProvider> modelProviders = new Registry<>();
 
 	public ItemTexture registerTexture(ItemTexture texture) {
-		Optional<ItemTexture> itemTexture = itemTextures.get(texture.getID());
+		Optional<ItemTexture> itemTexture = itemTextures.get(texture.getID().asString()); // TODO?
 		if (itemTexture.isPresent()) {
 			Game.logger().error("Attempt to register the same texture twice: " + texture);
 			return itemTexture.get();
@@ -53,7 +53,7 @@ public abstract class RenderManager extends Manager<RenderManager> {
 	}
 
 	public BlockTexture registerTexture(BlockTexture texture) {
-		Optional<BlockTexture> blockTexture = blockTextures.get(texture.getID());
+		Optional<BlockTexture> blockTexture = blockTextures.get(texture.getID().asString()); // TODO?
 		if (blockTexture.isPresent()) {
 			Game.logger().error("Attempt to register the same texture twice: " + texture);
 			return blockTexture.get();
@@ -63,7 +63,7 @@ public abstract class RenderManager extends Manager<RenderManager> {
 	}
 
 	public EntityTexture registerTexture(EntityTexture texture) {
-		Optional<EntityTexture> entityTexture = entityTextures.get(texture.getID());
+		Optional<EntityTexture> entityTexture = entityTextures.get(texture.getID().asString()); // TODO?
 		if (entityTexture.isPresent()) {
 			Game.logger().error("Attempt to register the same texture twice: " + texture);
 			return entityTexture.get();
@@ -73,7 +73,7 @@ public abstract class RenderManager extends Manager<RenderManager> {
 	}
 
 	public ModelProvider registerModel(ModelProvider modelProvider) {
-		Optional<ModelProvider> modelProviderCheck = modelProviders.get(modelProvider.getID());
+		Optional<ModelProvider> modelProviderCheck = modelProviders.get(modelProvider.getID().asString()); // TODO?
 		if (modelProviderCheck.isPresent()) {
 			Game.logger().error("Attempt to register the same model twice: " + modelProvider);
 			return modelProviderCheck.get();

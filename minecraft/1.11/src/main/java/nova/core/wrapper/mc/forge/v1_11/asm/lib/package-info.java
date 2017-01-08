@@ -18,28 +18,10 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.util;
-
 /**
- * A generic interface signifying that this object is identifiable
- * by an ID
+ * ASM classes are used to help withPriority class transformations and bytecode injection.
+ * The ASM library is based on ChickenBone's ASM library.
+ * @author Calclavia
  */
-public interface Identifiable {
-	/**
-	 * Get the ID to identify this object by
-	 *
-	 * @return the ID
-	 */
-	String getID();
 
-	/**
-	 * Compares the ID of the Identifialbes
-	 *
-	 * @param other Identifiable to compare to
-	 * @return If the Identifiables are the same type
-	 */
-
-	default boolean sameType(Identifiable other) {
-		return getID().equals(other.getID());
-	}
-}
+package nova.core.wrapper.mc.forge.v1_11.asm.lib;

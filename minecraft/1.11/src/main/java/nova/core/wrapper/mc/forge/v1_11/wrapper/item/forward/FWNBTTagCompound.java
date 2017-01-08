@@ -18,17 +18,31 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.util;
+package nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward;
+
+import net.minecraft.nbt.NBTTagCompound;
+import nova.core.item.Item;
 
 /**
- * A generic interface signifying that this object is uniquely identifiable
- * by an ID
+ * A wrapped NBTTagCompound object that references the item instance
+ * @author Stan
+ * @since 3/02/2015.
  */
-public interface UniqueIdentifiable {
-	/**
-	 * Get the unique ID to identify this object.
-	 *
-	 * @return the ID
-	 */
-	String getUniqueID();
+public class FWNBTTagCompound extends NBTTagCompound {
+	private final Item item;
+
+	public FWNBTTagCompound(Item item) {
+		this.item = item;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	@Override
+	public NBTTagCompound copy() {
+		FWNBTTagCompound result = new FWNBTTagCompound(item);
+		getKeySet().forEach(s -> result.setTag((String) s, getTag((String) s).copy()));
+		return result;
+	}
 }

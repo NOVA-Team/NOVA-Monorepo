@@ -24,6 +24,7 @@ import nova.core.item.Item;
 import nova.core.recipes.RecipeAddedEvent;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.RecipeRemovedEvent;
+import nova.core.util.id.Identifier;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,6 +38,7 @@ import java.util.Optional;
  * @author Stan Hebben
  */
 public class CraftingRecipeManager {
+	// TODO switch this to using Identifiers
 	private final RecipeManager recipeManager;
 	private final List<CraftingRecipe> dynamicRecipes;
 	private final Multimap<String, CraftingRecipe> staticRecipes;
@@ -86,7 +88,7 @@ public class CraftingRecipeManager {
 			return Optional.empty();
 		}
 
-		String firstItemId = firstItem.get().getID();
+		String firstItemId = firstItem.get().getID().asString(); // TODO (this is BAD)
 		if (!staticRecipes.containsKey(firstItemId)) {
 			return Optional.empty();
 		}

@@ -19,7 +19,8 @@
  */package nova.core.util.registry;
 
 import com.google.common.collect.HashBiMap;
-import nova.core.util.Identifiable;
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -32,6 +33,7 @@ import java.util.stream.Stream;
  * @param <T> The object type
  */
 public class Registry<T extends Identifiable> implements Iterable<T> {
+	// TODO maybe index by Identifier? Could be nice when the game uses int IDs (e.g. very old versions of minecraft).
 	private final HashBiMap<String, T> objects = HashBiMap.create();
 
 	public Registry() {
@@ -45,7 +47,7 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 	 * @return Given object
 	 */
 	public T register(T object) {
-		objects.put(object.getID(), object);
+		objects.put(object.getID().asString(), object);
 		return object;
 	}
 

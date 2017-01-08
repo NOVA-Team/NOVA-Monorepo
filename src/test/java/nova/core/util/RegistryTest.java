@@ -20,6 +20,8 @@
 
 package nova.core.util;
 
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.StringIdentifier;
 import nova.core.util.registry.Registry;
 import org.junit.Test;
 
@@ -41,8 +43,8 @@ public class RegistryTest {
 		assertThat(registry.contains("ID1")).isTrue();
 		assertThat(registry.contains("ID2")).isTrue();
 
-		assertThat(registry.get("ID1").get().getID()).isEqualTo("ID1");
-		assertThat(registry.get("ID2").get().getID()).isEqualTo("ID2");
+		assertThat(registry.get("ID1").get().getID()).isEqualTo(new StringIdentifier("ID1"));
+		assertThat(registry.get("ID2").get().getID()).isEqualTo(new StringIdentifier("ID2"));
 
 		assertThat(registry.get("ID1").get()).isEqualTo(id1);
 		assertThat(registry.get("ID2").get()).isEqualTo(id2);

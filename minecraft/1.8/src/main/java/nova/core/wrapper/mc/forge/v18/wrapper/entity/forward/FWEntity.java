@@ -75,13 +75,13 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 			((Storable) wrapped).save(data);
 			DataWrapper.instance().toNative(nbt, data);
 		}
-		nbt.setString("novaID", wrapped.getID());
+		nbt.setString("novaID", wrapped.getID().asString()); // TODO?
 	}
 
 	@Override
 	public void writeSpawnData(ByteBuf buffer) {
 		//Write the ID of the entity to client
-		String id = wrapped.getID();
+		String id = wrapped.getID().asString(); // TODO?
 		char[] chars = id.toCharArray();
 		buffer.writeInt(chars.length);
 
