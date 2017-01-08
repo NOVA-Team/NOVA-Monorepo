@@ -14,9 +14,12 @@ public class NamespacedStringIdentifier extends StringIdentifier {
 
 	protected final String domain;
 
-	public NamespacedStringIdentifier(String id) {
-		super(id.substring(id.indexOf(':') + 1));
-		this.domain = (id.contains(":") ? id.substring(0, id.indexOf(':')) : "nova");
+	public NamespacedStringIdentifier(final String id) {
+		super(id == null ? null : id.substring(id.indexOf(':') + 1));
+		if (id != null)
+			this.domain = (id.contains(":") ? id.substring(0, id.indexOf(':')) : null);
+		else
+			this.domain = null;
 	}
 
 	public NamespacedStringIdentifier(String domain, String id) {
@@ -34,6 +37,6 @@ public class NamespacedStringIdentifier extends StringIdentifier {
 
 	@Override
 	public String asString() {
-		return domain + ':' + id;
+		return (domain == null ? id : (domain + ':' + id));
 	}
 }

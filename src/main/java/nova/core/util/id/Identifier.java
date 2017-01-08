@@ -1,12 +1,11 @@
 package nova.core.util.id;
 
 /**
- * The interface for all identifiers. An Identifier must be immutable.
- * <p>
+ * The interface for all identifiers. The Identifier must be immutable.
+ * <p/>
  * Implementations should override {@link Object#equals(Object)}, {@link Object#hashCode()} and {@link Object#toString()}.
- * </p>
  *
- * @author soniex2
+ * @author SoniEx2, ExE Boss
  */
 public interface Identifier {
 

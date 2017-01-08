@@ -336,15 +336,4 @@ public class EnumSelectorTest {
 		}
 		assertThat(result).isNotNull();
 	}
-
-	public static enum EnumExample {
-		EXAMPLE_8,
-		EXAMPLE_16,
-		EXAMPLE_24,
-		EXAMPLE_32,
-		EXAMPLE_48,
-		EXAMPLE_64,
-
-		EXAMPLE_42;
-	}
 }
