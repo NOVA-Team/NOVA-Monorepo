@@ -16,9 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.render.texture;
+ */
 
-import nova.core.util.Identifiable;
+package nova.core.render.texture;
+
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
+import nova.core.util.id.NamespacedStringIdentifier;
 import nova.core.util.math.Vector2DUtil;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
@@ -60,8 +64,8 @@ public class Texture extends Icon implements Identifiable {
 	}
 
 	@Override
-	public final String getID() {
-		return getResource();
+	public final Identifier getID() {
+		return new NamespacedStringIdentifier(domain, resource);
 	}
 
 	@Override

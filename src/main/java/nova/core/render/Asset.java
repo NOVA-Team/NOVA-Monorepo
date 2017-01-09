@@ -20,7 +20,9 @@
 
 package nova.core.render;
 
-import nova.core.util.Identifiable;
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
+import nova.core.util.id.NamespacedStringIdentifier;
 
 /**
  * @author Calclavia
@@ -48,7 +50,7 @@ public abstract class Asset implements Identifiable {
 	}
 
 	@Override
-	public final String getID() {
-		return domain + ":" + name;
+	public final Identifier getID() {
+		return new NamespacedStringIdentifier(domain, name);
 	}
 }

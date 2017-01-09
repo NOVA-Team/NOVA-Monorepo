@@ -23,10 +23,7 @@ package nova.core.retention;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The data class is capable of storing named data.
@@ -45,6 +42,7 @@ import java.util.Map;
  * - Enumerator
  * - Storable (Converted into Data)
  * - Data
+ *
  * @author Calclavia
  */
 //TODO: Add collection and array support
@@ -66,7 +64,9 @@ public class Data extends HashMap<String, Object> {
 		Data.class,
 		Collection.class,
 		Vector3D.class,
-		Vector2D.class };
+		Vector2D.class,
+		Class.class,
+		UUID.class };
 
 	public String className;
 
@@ -82,6 +82,7 @@ public class Data extends HashMap<String, Object> {
 	/**
 	 * Saves an object, serializing its data.
 	 * This map can be reloaded and its class with be reconstructed.
+	 *
 	 * @param obj The object to store.
 	 * @return The data of the object with
 	 */
@@ -96,6 +97,7 @@ public class Data extends HashMap<String, Object> {
 	/**
 	 * Loads an object from its stored data, with an unknown class.
 	 * The class of the object must be stored within the data.
+	 *
 	 * @param data The data
 	 * @return The object loaded with given data.
 	 */
@@ -103,11 +105,20 @@ public class Data extends HashMap<String, Object> {
 		try {
 			Class clazz = (Class) Class.forName((String) data.get("class"));
 			if (clazz.isEnum()) {
-				return Enum.valueOf(clazz, data.get("value"));
+				return Enum.valueOf(clazz, (String) data.get("value"));
 			} else if (clazz == Vector3D.class) {
 				return new Vector3D(data.get("x"), data.get("y"), data.get("z"));
 			} else if (clazz == Vector2D.class) {
 				return new Vector2D(data.get("x"), (double) data.get("y"));
+			} else if (clazz == UUID.class) {
+				return UUID.fromString(data.get("uuid"));
+			} else if (clazz == Class.class) {
+				return Class.forName(data.get("name"));
+			} else if (clazz.isAnnotationPresent(DataConvertible.class)) {
+				DataConvertible annotation = (DataConvertible) clazz.getAnnotation(DataConvertible.class);
+				DataConverter dataConverter = annotation.value().newInstance();
+				Object o = dataConverter.fromData(data);
+				return clazz.cast(o); // throws ClassCastException if your DataConverter is bad.
 			} else {
 				return unserialize(clazz, data);
 			}
@@ -119,6 +130,7 @@ public class Data extends HashMap<String, Object> {
 
 	/**
 	 * Loads an object from its stored data, given its class.
+	 *
 	 * @param clazz - The class to load
 	 * @param data - The data
 	 * @return The object loaded with given data.
@@ -148,7 +160,7 @@ public class Data extends HashMap<String, Object> {
 		assert key != null && value != null;
 		assert !key.equals("class");
 		final Object check = value;
-		assert Arrays.stream(dataTypes).anyMatch(clazz -> clazz.isAssignableFrom(check.getClass()));
+		assert Arrays.stream(dataTypes).anyMatch(clazz -> clazz.isAssignableFrom(check.getClass())) || check.getClass().isAnnotationPresent(DataConvertible.class);
 
 		if (value instanceof Enum) {
 			Data enumData = new Data(value.getClass());
@@ -165,6 +177,24 @@ public class Data extends HashMap<String, Object> {
 			vectorData.put("x", ((Vector2D) value).getX());
 			vectorData.put("y", ((Vector2D) value).getY());
 			value = vectorData;
+		} else if (value instanceof UUID) {
+			Data uuidData = new Data(UUID.class);
+			uuidData.put("uuid", value.toString());
+			value = uuidData;
+		} else if (value instanceof Class) {
+			Data classData = new Data(Class.class);
+			classData.put("name", ((Class) value).getName());
+			value = classData;
+		} else if (value.getClass().isAnnotationPresent(DataConvertible.class)) {
+			try {
+				DataConvertible annotation = value.getClass().getAnnotation(DataConvertible.class);
+				DataConverter dataConverter = annotation.value().newInstance();
+				Data d = new Data(value.getClass());
+				dataConverter.toData(value, d);
+				value = d;
+			} catch (Exception e) {
+				throw new DataException(e);
+			}
 		} else if (value instanceof Storable) {
 			value = serialize((Storable) value);
 		}
@@ -178,6 +208,22 @@ public class Data extends HashMap<String, Object> {
 	@SuppressWarnings("unchecked")
 	public <T> T get(String key) {
 		return (T) super.get(key);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getDataConvertible(String key) {
+		Data data = get(key);
+		try {
+			@SuppressWarnings("unchecked")
+			Class<T> clazz = (Class<T>) Class.forName(data.className);
+			DataConvertible dataConvertible = clazz.getAnnotation(DataConvertible.class);
+			if (dataConvertible == null) {
+				throw new ClassCastException();
+			}
+			return (T) dataConvertible.value().newInstance().fromData(data);
+		} catch (Exception e) {
+			throw new DataException(e);
+		}
 	}
 
 	public <T extends Enum<T>> T getEnum(String key) {
@@ -214,4 +260,19 @@ public class Data extends HashMap<String, Object> {
 		}
 	}
 
+	public <T> Class<T> getClass(String key) {
+		Data classData = get(key);
+		try {
+			@SuppressWarnings("unchecked")
+			Class<T> classClass = (Class<T>) Class.forName(classData.className);
+			return classClass;
+		} catch (Exception e) {
+			throw new DataException(e);
+		}
+	}
+
+	public UUID getUUID(String key) {
+		Data data = get(key);
+		return UUID.fromString(data.get("uuid"));
+	}
 }

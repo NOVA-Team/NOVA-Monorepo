@@ -29,6 +29,6 @@ import nova.internal.core.Game;
  */
 public class MinecraftItemIngredient extends SpecificItemIngredient {
 	public MinecraftItemIngredient(net.minecraft.item.ItemStack itemStack) {
-		super(((Item) Game.natives().toNova(itemStack)).getID());
+		super(((Item) Game.natives().toNova(itemStack)).getID()); // TODO?
 	}
 }

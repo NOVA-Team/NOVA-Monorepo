@@ -36,6 +36,7 @@ import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
+import nova.core.util.id.Identifier;
 import nova.core.wrapper.mc.forge.v18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v18.util.ModCreativeTab;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
@@ -134,7 +135,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		return result;
 	}
 
-	public ItemStack toNative(String id) {
+	public ItemStack toNative(Identifier id) {
 		return toNative(Game.items().get(id).get().build().setCount(1));
 	}
 
@@ -204,7 +205,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
-			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
+			GameRegistry.registerItem(itemWrapper, itemFactory.getID().asString());
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
@@ -241,14 +242,17 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		// if item minecraft:planks:2 is detected, this code will register minecraft:planks:2 dynamically
 		// we cannot do this up front since there is **NO** reliable way to get the sub-items of an item
 
-		int lastColon = event.id.lastIndexOf(':');
+		int lastColon = event.id.asString().lastIndexOf(':');
 		if (lastColon < 0) {
 			return;
 		}
 
 		try {
-			int meta = Integer.parseInt(event.id.substring(lastColon + 1));
-			String itemID = event.id.substring(0, lastColon);
+			int meta = Integer.parseInt(event.id.asString().substring(lastColon + 1));
+			// FML will magically convert this result into a ResourceLocation for you,
+			// which simplifies our end.
+			// Any Identifier-related fluff would only be strictness checks.
+			String itemID = event.id.asString().substring(0, lastColon);
 
 			net.minecraft.item.Item item = (net.minecraft.item.Item) net.minecraft.item.Item.itemRegistry.getObject(itemID);
 			if (item == null || !item.getHasSubtypes()) {

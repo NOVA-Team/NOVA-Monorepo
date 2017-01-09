@@ -22,6 +22,7 @@ package nova.core.recipes.crafting;
 
 import nova.core.item.Item;
 import nova.core.recipes.Recipe;
+import nova.core.util.id.Identifier;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -73,7 +74,7 @@ public interface CraftingRecipe extends Recipe {
 	 *
 	 * @return The items
 	 */
-	default Optional<Collection<String>> getPossibleItemsInFirstSlot() {
+	default Optional<Collection<Identifier>> getPossibleItemsInFirstSlot() {
 		return Optional.empty();
 	}
 }

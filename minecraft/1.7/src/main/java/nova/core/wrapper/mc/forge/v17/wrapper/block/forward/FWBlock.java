@@ -91,7 +91,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		this.factory = factory;
 		this.dummy = factory.build();
 		this.blockClass = dummy.getClass();
-		this.setBlockName(dummy.getID());
+		this.setBlockName(dummy.getID().asString());
 
 		// Recalculate super constructor things after loading the block properly
 		this.opaque = isOpaqueCube();

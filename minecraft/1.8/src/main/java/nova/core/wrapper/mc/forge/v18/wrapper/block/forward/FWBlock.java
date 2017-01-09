@@ -99,7 +99,7 @@ public class FWBlock extends net.minecraft.block.Block {
 			this.stepSound = soundTypeStone;
 		}
 		this.blockClass = dummy.getClass();
-		this.setUnlocalizedName(dummy.getID());
+		this.setUnlocalizedName(dummy.getID().asString());
 
 		// Recalculate super constructor things after loading the block properly
 		this.fullBlock = isOpaqueCube();

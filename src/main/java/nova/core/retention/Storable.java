@@ -61,11 +61,11 @@ public interface Storable {
 			if (data.containsKey(name)) {
 				try {
 					field.setAccessible(true);
-					Class<?> type = field.getType();
+					Class<?> type = field.getType(); // FIXME
 					Object fieldValue = field.get(this);
 					Object value = data.get(name);
-					if (Storable.class.isAssignableFrom(type) || value instanceof Data) {
-						if (fieldValue instanceof Storable && value instanceof Data) {
+					if (Storable.class.isAssignableFrom(type) || value instanceof Data) { // FIXME should test things based on `data`
+						if (fieldValue instanceof Storable && value instanceof Data) {    // this one is fine tho
 							//We already have an instance. Don't need to create the object.
 							((Storable) fieldValue).load((Data) value);
 						} else {

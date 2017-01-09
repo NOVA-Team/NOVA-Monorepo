@@ -21,6 +21,7 @@
 package nova.core.recipes.crafting;
 
 import nova.core.item.Item;
+import nova.core.util.id.Identifier;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public interface ItemIngredient {
 	 * @param itemId item ID
 	 * @return ingredient
 	 */
-	static ItemIngredient forItem(String itemId) {
+	static ItemIngredient forItem(Identifier itemId) {
 		return new SpecificItemIngredient(itemId);
 	}
 
@@ -58,7 +59,7 @@ public interface ItemIngredient {
 	 *
 	 * @return possible items
 	 */
-	Optional<Collection<String>> getPossibleItemIds();
+	Optional<Collection<Identifier>> getPossibleItemIds();
 
 	/**
 	 * Returns a list of example items. This list could be used to render

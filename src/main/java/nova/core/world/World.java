@@ -24,7 +24,7 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
 import nova.core.sound.Sound;
-import nova.core.util.Identifiable;
+import nova.core.util.id.Identifiable;
 import nova.core.util.shape.Cuboid;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;

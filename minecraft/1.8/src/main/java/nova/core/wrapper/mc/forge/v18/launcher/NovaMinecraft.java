@@ -50,6 +50,7 @@ import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.data.DataWrapper;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.EntityConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.identifier.IdentifierConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.inventory.InventoryConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.OreDictionaryIntegration;
@@ -122,6 +123,7 @@ public class NovaMinecraft {
 			Game.natives().registerConverter(new CuboidConverter());
 			Game.natives().registerConverter(new InventoryConverter());
 			Game.natives().registerConverter(new VectorConverter());
+			Game.natives().registerConverter(new IdentifierConverter());
 
 			/**
 			 * Initiate recipe and ore dictionary integration

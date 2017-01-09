@@ -20,6 +20,8 @@
 
 package nova.core.util;
 
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.StringIdentifier;
 import nova.core.util.registry.Registry;
 import org.junit.Test;
 
@@ -38,18 +40,18 @@ public class RegistryTest {
 		registry.register(id1);
 		registry.register(id2);
 
-		assertThat(registry.contains("ID1")).isTrue();
-		assertThat(registry.contains("ID2")).isTrue();
+		assertThat(registry.contains(new StringIdentifier("ID1"))).isTrue();
+		assertThat(registry.contains(new StringIdentifier("ID2"))).isTrue();
 
-		assertThat(registry.get("ID1").get().getID()).isEqualTo("ID1");
-		assertThat(registry.get("ID2").get().getID()).isEqualTo("ID2");
+		assertThat(registry.get(new StringIdentifier("ID1")).get().getID()).isEqualTo(new StringIdentifier("ID1"));
+		assertThat(registry.get(new StringIdentifier("ID2")).get().getID()).isEqualTo(new StringIdentifier("ID2"));
 
-		assertThat(registry.get("ID1").get()).isEqualTo(id1);
-		assertThat(registry.get("ID2").get()).isEqualTo(id2);
+		assertThat(registry.get(new StringIdentifier("ID1")).get()).isEqualTo(id1);
+		assertThat(registry.get(new StringIdentifier("ID2")).get()).isEqualTo(id2);
 
 		assertThat(registry.iterator()).containsOnly(id1, id2);
 
-		assertThat(registry.get("None").isPresent()).isFalse();
+		assertThat(registry.get(new StringIdentifier("None")).isPresent()).isFalse();
 
 	}
 }

@@ -19,7 +19,8 @@
  */package nova.core.util.registry;
 
 import com.google.common.collect.HashBiMap;
-import nova.core.util.Identifiable;
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -32,7 +33,7 @@ import java.util.stream.Stream;
  * @param <T> The object type
  */
 public class Registry<T extends Identifiable> implements Iterable<T> {
-	private final HashBiMap<String, T> objects = HashBiMap.create();
+	private final HashBiMap<Identifier, T> objects = HashBiMap.create();
 
 	public Registry() {
 
@@ -55,7 +56,7 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 	 * @param ID the id to find.
 	 * @return true if the registry contains the object with the given ID.
 	 */
-	public boolean contains(String ID) {
+	public boolean contains(Identifier ID) {
 		return objects.containsKey(ID);
 	}
 
@@ -65,7 +66,7 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 	 * @param ID the id to find.
 	 * @return the object found or empty Optional if not found.
 	 */
-	public Optional<T> get(String ID) {
+	public Optional<T> get(Identifier ID) {
 		return Optional.ofNullable(objects.get(ID));
 	}
 
@@ -75,7 +76,7 @@ public class Registry<T extends Identifiable> implements Iterable<T> {
 	 * @param object the object to find.
 	 * @return the name of the object or empty Optional if not found.
 	 */
-	public Optional<String> getName(T object) {
+	public Optional<Identifier> getName(T object) {
 		return Optional.ofNullable(objects.inverse().get(object));
 	}
 

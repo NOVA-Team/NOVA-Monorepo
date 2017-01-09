@@ -30,7 +30,8 @@ import nova.core.event.bus.Event;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
-import nova.core.util.Identifiable;
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
 import nova.core.world.World;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -59,7 +60,7 @@ public class Block extends ComponentProvider implements Identifiable {
 	}
 
 	@Override
-	public final String getID() {
+	public final Identifier getID() {
 		return getFactory().getID();
 	}
 

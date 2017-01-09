@@ -38,7 +38,7 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 
 	public FWItem(ItemFactory item) {
 		this.itemFactory = item;
-		setUnlocalizedName(item.getID());
+		setUnlocalizedName(item.getID().asString());
 		setMaxStackSize(item.build().getMaxCount());
 	}
 
