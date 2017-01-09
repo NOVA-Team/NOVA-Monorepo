@@ -28,14 +28,14 @@ import nova.core.event.bus.Event;
  */
 public abstract class ServerEvent extends Event {
 	/**
-	 * Called when the server starts running
+	 * Event is triggered when the server starts running.
 	 */
 	public static class Start extends ServerEvent {
 
 	}
 
 	/**
-	 * Called when the server stops running.
+	 * Event is triggered when the server stops running.
 	 */
 	public static class Stop extends ServerEvent {
 

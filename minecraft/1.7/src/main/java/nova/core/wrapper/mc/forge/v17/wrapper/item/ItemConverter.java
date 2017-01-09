@@ -27,11 +27,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import nova.core.block.BlockFactory;
 import nova.core.component.Category;
+import nova.core.event.ItemEvent;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
-import nova.core.item.ItemManager;
-import nova.core.item.event.ItemIDNotFoundEvent;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
@@ -169,10 +168,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	private void registerNOVAItemsToMinecraft() {
 		//There should be no items registered during Native Converter preInit()
 		//	item.registry.forEach(this::registerNOVAItem);
-		Game.events().on(ItemManager.ItemRegistrationEvent.class).bind(this::onItemRegistered);
+		Game.events().on(ItemEvent.Register.class).bind(this::onItemRegistered);
 	}
 
-	private void onItemRegistered(ItemManager.ItemRegistrationEvent event) {
+	private void onItemRegistered(ItemEvent.Register event) {
 		registerNOVAItem(event.itemFactory);
 	}
 
@@ -232,10 +231,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	private void registerSubtypeResolution() {
-		Game.events().on(ItemIDNotFoundEvent.class).bind(this::onIDNotFound);
+		Game.events().on(ItemEvent.IDNotFound.class).bind(this::onIDNotFound);
 	}
 
-	private void onIDNotFound(ItemIDNotFoundEvent event) {
+	private void onIDNotFound(ItemEvent.IDNotFound event) {
 		// if item minecraft:planks:2 is detected, this code will register minecraft:planks:2 dynamically
 		// we cannot do this up front since there is **NO** reliable way to get the sub-items of an item
 
