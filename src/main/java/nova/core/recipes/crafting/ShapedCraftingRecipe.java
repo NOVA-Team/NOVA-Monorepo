@@ -21,6 +21,7 @@
 package nova.core.recipes.crafting;
 
 import nova.core.item.Item;
+import nova.core.util.id.Identifier;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Collection;
@@ -270,19 +271,19 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public Optional<Collection<String>> getPossibleItemsInFirstSlot() {
+	public Optional<Collection<Identifier>> getPossibleItemsInFirstSlot() {
 		if (isMirrored()) {
-			Optional<Collection<String>> optionsForFirstItem = ingredients[0].getPossibleItemIds();
+			Optional<Collection<Identifier>> optionsForFirstItem = ingredients[0].getPossibleItemIds();
 			if (!optionsForFirstItem.isPresent()) {
 				return Optional.empty();
 			}
 
-			Optional<Collection<String>> optionsForSecondItem = ingredients[lastIngredientIndexOnFirstLine].getPossibleItemIds();
+			Optional<Collection<Identifier>> optionsForSecondItem = ingredients[lastIngredientIndexOnFirstLine].getPossibleItemIds();
 			if (!optionsForSecondItem.isPresent()) {
 				return Optional.empty();
 			}
 
-			Set<String> result = new HashSet<>();
+			Set<Identifier> result = new HashSet<>();
 			result.addAll(optionsForFirstItem.get());
 			result.addAll(optionsForSecondItem.get());
 			return Optional.of(result);

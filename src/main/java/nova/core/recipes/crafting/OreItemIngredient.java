@@ -46,8 +46,8 @@ public class OreItemIngredient implements ItemIngredient {
 	}
 
 	@Override
-	public Optional<Collection<String>> getPossibleItemIds() {
-		return Optional.of(Game.itemDictionary().get(name).stream().map(Item::getID).map(Identifier::asString).collect(Collectors.toList())); // TODO?
+	public Optional<Collection<Identifier>> getPossibleItemIds() {
+		return Optional.of(Game.itemDictionary().get(name).stream().map(Item::getID).collect(Collectors.toList()));
 	}
 
 	@Override

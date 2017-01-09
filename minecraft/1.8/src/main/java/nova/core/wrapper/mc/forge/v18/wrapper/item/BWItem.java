@@ -66,6 +66,6 @@ public class BWItem extends Item implements Storable {
 
 	@Override
 	public String toString() {
-		return getID().asString(); // TODO?
+		return getID().asString();
 	}
 }

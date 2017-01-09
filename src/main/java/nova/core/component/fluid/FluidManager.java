@@ -20,6 +20,8 @@
 
 package nova.core.component.fluid;
 
+import nova.core.util.id.Identifier;
+import nova.core.util.id.StringIdentifier;
 import nova.core.util.registry.FactoryManager;
 import nova.core.util.registry.Registry;
 
@@ -32,12 +34,12 @@ public class FluidManager extends FactoryManager<FluidManager, Fluid, FluidFacto
 	private FluidManager(Registry<FluidFactory> fluidRegistry) {
 		super(fluidRegistry);
 		//TODO: Too Minecraft specific. Implementation should be hidden.
-		this.water = register("water", Fluid::new);
-		this.lava = register("lava", Fluid::new);
+		this.water = register(new StringIdentifier("water"), Fluid::new);
+		this.lava = register(new StringIdentifier("lava"), Fluid::new);
 	}
 
 	@Override
-	public FluidFactory register(String id, Supplier<Fluid> constructor) {
+	public FluidFactory register(Identifier id, Supplier<Fluid> constructor) {
 		return register(new FluidFactory(id, constructor));
 	}
 

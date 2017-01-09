@@ -30,9 +30,12 @@ import nova.core.component.misc.Collider;
 import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
+import nova.core.network.Packet;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
+import nova.core.util.id.Identifier;
 import nova.core.util.shape.Cuboid;
+import nova.core.wrapper.mc.forge.v17.network.MCPacket;
 import nova.core.wrapper.mc.forge.v17.wrapper.data.DataWrapper;
 import nova.internal.core.Game;
 
@@ -64,7 +67,9 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		}
 		if (wrapped == null) {
 			//This entity was saved to disk.
-			setWrapped(Game.entities().get(nbt.getString("novaID")).get().build());
+			NBTTagCompound novaId = nbt.getCompoundTag("novaID");
+			Data d = Game.natives().toNova(novaId);
+			setWrapped(Game.entities().get((Identifier) Data.unserialize(d)).get().build());
 		}
 	}
 
@@ -75,22 +80,39 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 			((Storable) wrapped).save(data);
 			DataWrapper.instance().toNative(nbt, data);
 		}
-		nbt.setString("novaID", wrapped.getID().asString()); // TODO?
+		Data data = new Data();
+		data.put("novaID", wrapped.getID());
+		NBTTagCompound novaId = new NBTTagCompound();
+		DataWrapper.instance().toNative(novaId, data);
+		nbt.setTag("novaID", novaId);
 	}
 
 	@Override
 	public void writeSpawnData(ByteBuf buffer) {
+		Packet packet = new MCPacket(buffer);
+		Data data = new Data();
+		data.put("novaID", wrapped.getID());
+		packet.writeData(data);
+
+		/*
 		//Write the ID of the entity to client
-		String id = wrapped.getID().asString(); // TODO?
+		String id = wrapped.getID();
 		char[] chars = id.toCharArray();
 		buffer.writeInt(chars.length);
 
 		for (char c : chars)
 			buffer.writeChar(c);
+		*/
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf buffer) {
+		Packet packet = new MCPacket(buffer);
+		Data d = packet.readData();
+
+		setWrapped(Game.entities().get((Identifier) Data.unserialize(d)).get().build());
+
+		/*
 		//Load the client ID
 		String id = "";
 		int length = buffer.readInt();
@@ -98,6 +120,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 			id += buffer.readChar();
 
 		setWrapped(Game.entities().get(id).get().build());
+		*/
 	}
 
 	public Entity getWrapped() {

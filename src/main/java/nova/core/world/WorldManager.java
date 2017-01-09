@@ -22,6 +22,7 @@ package nova.core.world;
 
 import nova.core.event.WorldEvent;
 import nova.core.event.bus.GlobalEvents;
+import nova.core.util.id.Identifier;
 import nova.core.util.registry.FactoryManager;
 import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
@@ -48,7 +49,7 @@ public class WorldManager extends FactoryManager<WorldManager, World, WorldFacto
 	}
 
 	@Override
-	public WorldFactory register(String id, Supplier<World> constructor) {
+	public WorldFactory register(Identifier id, Supplier<World> constructor) {
 		return register(new WorldFactory(id, constructor));
 	}
 

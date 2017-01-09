@@ -1,5 +1,9 @@
 package nova.core.util.id;
 
+import nova.core.retention.Data;
+import nova.core.retention.DataConverter;
+import nova.core.retention.DataConvertible;
+
 import java.util.UUID;
 
 /**
@@ -7,6 +11,7 @@ import java.util.UUID;
  *
  * @author soniex2
  */
+@DataConvertible(UUIDIdentifier.Converter.class)
 public final class UUIDIdentifier extends AbstractIdentifier<UUID> implements Identifier {
 
 	/**
@@ -25,5 +30,17 @@ public final class UUIDIdentifier extends AbstractIdentifier<UUID> implements Id
 	 */
 	public UUID asUUID() {
 		return id;
+	}
+
+	public static final class Converter implements DataConverter {
+		@Override
+		public Object fromData(Data d) {
+			return new UUIDIdentifier(UUID.fromString(d.get("value")));
+		}
+
+		@Override
+		public void toData(Object o, Data data) {
+			data.put("value", ((UUIDIdentifier) o).asString());
+		}
 	}
 }

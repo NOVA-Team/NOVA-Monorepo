@@ -20,16 +20,17 @@
 
 import nova.core.event.bus.Event;
 import nova.core.item.ItemFactory;
+import nova.core.util.id.Identifier;
 
 /**
  * @author Stan
  */
 public class ItemIDNotFoundEvent extends Event {
-	public final String id;
+	public final Identifier id;
 
 	private ItemFactory remappedFactory = null;
 
-	public ItemIDNotFoundEvent(String id) {
+	public ItemIDNotFoundEvent(Identifier id) {
 		this.id = id;
 	}
 

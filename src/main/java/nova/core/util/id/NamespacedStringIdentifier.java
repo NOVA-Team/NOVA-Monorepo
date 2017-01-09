@@ -1,5 +1,9 @@
 package nova.core.util.id;
 
+import nova.core.retention.Data;
+import nova.core.retention.DataConverter;
+import nova.core.retention.DataConvertible;
+
 import java.util.Objects;
 
 /**
@@ -7,7 +11,8 @@ import java.util.Objects;
  *
  * @author soniex2
  */
-public class NamespacedStringIdentifier extends AbstractIdentifier<NamespacedStringIdentifier.NamespacedString> {
+@DataConvertible(NamespacedStringIdentifier.Converter.class)
+public final class NamespacedStringIdentifier extends AbstractIdentifier<NamespacedStringIdentifier.NamespacedString> {
 
 	/**
 	 * Constructs a new NamespacedStringIdentifier.
@@ -105,9 +110,7 @@ public class NamespacedStringIdentifier extends AbstractIdentifier<NamespacedStr
 
 			NamespacedString that = (NamespacedString) o;
 
-			if (!namespace.equals(that.namespace))
-				return false;
-			return name.equals(that.name);
+			return namespace.equals(that.namespace) && name.equals(that.name);
 		}
 
 		@Override
@@ -131,6 +134,20 @@ public class NamespacedStringIdentifier extends AbstractIdentifier<NamespacedStr
 			} else {
 				return namespacedname.substring(0, index);
 			}
+		}
+	}
+
+	public static final class Converter implements DataConverter {
+		@Override
+		public Object fromData(Data d) {
+			return new NamespacedStringIdentifier(d.get("namespace"), d.get("name"));
+		}
+
+		@Override
+		public void toData(Object o, Data data) {
+			NamespacedStringIdentifier id = (NamespacedStringIdentifier) o;
+			data.put("namespace", id.asNamespacedString().getNamespace());
+			data.put("name", id.asNamespacedString().getName());
 		}
 	}
 }

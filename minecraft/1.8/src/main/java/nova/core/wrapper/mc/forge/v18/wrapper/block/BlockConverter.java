@@ -32,6 +32,7 @@ import nova.core.component.Category;
 import nova.core.event.BlockEvent;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
+import nova.core.util.id.StringIdentifier;
 import nova.core.wrapper.mc.forge.v18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v18.util.ModCreativeTab;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.backward.BWBlock;
@@ -108,7 +109,8 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		BlockManager blockManager = Game.blocks();
 		net.minecraft.block.Block.blockRegistry.forEach(obj ->
 				blockManager.register(
-					new BlockFactory(net.minecraft.block.Block.blockRegistry.getNameForObject(obj).toString(),
+					// TODO check
+					new BlockFactory(Game.natives().toNova(net.minecraft.block.Block.blockRegistry.getNameForObject(obj)),
 						() -> new BWBlock((net.minecraft.block.Block) obj), evt -> {
 					})
 				)
@@ -119,7 +121,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		BlockManager blockManager = Game.blocks();
 
 		//Register air block
-		BlockFactory airBlock = new BlockFactory("air", () -> new BWBlock(Blocks.air) {
+		BlockFactory airBlock = new BlockFactory(new StringIdentifier("air"), () -> new BWBlock(Blocks.air) {
 			@Override
 			public boolean canReplace() {
 				return true;

@@ -26,7 +26,7 @@ public class FWBlockSound extends Block.SoundType {
 			if (sound.domain.isEmpty() && !sound.name.contains(".")) {
 				return "dig." + sound.name;
 			}
-			return sound.getID().asString(); // TODO?
+			return sound.getID().asString();
 		}
 		return super.getBreakSound();
 	}
@@ -38,7 +38,7 @@ public class FWBlockSound extends Block.SoundType {
 			if (sound.domain.isEmpty() && !sound.name.contains(".")) {
 				return "step." + sound.name;
 			}
-			return sound.getID().asString(); // TODO?
+			return sound.getID().asString();
 		}
 		return super.getStepSound();
 	}
@@ -50,7 +50,7 @@ public class FWBlockSound extends Block.SoundType {
 			if (sound.domain.isEmpty()) {
 				return sound.name;
 			}
-			return sound.getID().asString(); // TODO?
+			return sound.getID().asString();
 		}
 		// By default MC uses the block break sound for block placement
 		return this.getBreakSound();

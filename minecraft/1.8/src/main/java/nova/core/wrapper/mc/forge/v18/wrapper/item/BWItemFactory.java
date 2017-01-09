@@ -21,10 +21,13 @@
 package nova.core.wrapper.mc.forge.v18.wrapper.item;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
+import nova.core.util.id.Identifier;
+import nova.core.util.id.NamespacedStringIdentifier;
 import nova.internal.core.Game;
 
 /**
@@ -36,8 +39,19 @@ public class BWItemFactory extends ItemFactory {
 	private final net.minecraft.item.Item item;
 	private final int meta;
 
+	private static Identifier idFromItem(net.minecraft.item.Item item, int meta) {
+		// We don't use Game().natives().toNova() here because we need to add stuff to the identifier
+		ResourceLocation resloc = (ResourceLocation) net.minecraft.item.Item.itemRegistry.getNameForObject(item);
+		String namespace = resloc.getResourceDomain();
+		String name = resloc.getResourcePath();
+		if (item.getHasSubtypes()) {
+			name = name + ":" + meta;
+		}
+		return new NamespacedStringIdentifier(namespace, name);
+	}
+
 	public BWItemFactory(net.minecraft.item.Item item, int meta) {
-		super(net.minecraft.item.Item.itemRegistry.getNameForObject(item) + (item.getHasSubtypes() ? ":" + meta : ""), () -> new BWItem(item, meta, null));
+		super(idFromItem(item, meta), () -> new BWItem(item, meta, null));
 
 		this.item = item;
 		this.meta = meta;
