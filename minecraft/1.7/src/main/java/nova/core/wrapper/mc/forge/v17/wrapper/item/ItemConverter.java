@@ -44,6 +44,7 @@ import nova.internal.core.launch.InitializationException;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -194,12 +195,17 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			if (itemWrapper == null) {
 				throw new InitializationException("ItemConverter: Missing block: " + itemFactory.getID());
 			}
+			if (!itemFactory.getID().equals(Objects.toString(net.minecraft.item.Item.itemRegistry.getNameForObject(itemWrapper)))) {
+				System.err.println("[NOVA]: ItemConverter: " + net.minecraft.item.Item.itemRegistry.getNameForObject(itemWrapper) + " != " + itemFactory.getID());
+				net.minecraft.item.Item newItemWrapper = (net.minecraft.item.Item) net.minecraft.item.Item.itemRegistry.getObject(itemFactory.getID());
+				itemWrapper = newItemWrapper != null ? newItemWrapper : itemWrapper;
+			}
 		} else {
 			itemWrapper = new FWItem(itemFactory);
 		}
 
 		MinecraftItemMapping minecraftItemMapping = new MinecraftItemMapping(itemWrapper, 0);
-		map.put(itemFactory, minecraftItemMapping);
+		map.forcePut(itemFactory, minecraftItemMapping);
 
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
