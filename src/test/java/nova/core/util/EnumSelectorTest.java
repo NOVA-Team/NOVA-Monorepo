@@ -1,8 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2017 NOVA, All rights reserved.
+ * This library is free software, licensed under GNU Lesser General Public License version 3
+ *
+ * This file is part of NOVA.
+ *
+ * NOVA is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * NOVA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package nova.core.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -125,18 +140,24 @@ public class EnumSelectorTest {
 		assertThat(enumSelectorExample4.toSet().size()).isEqualTo(0);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testCannotLock() {
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("Cannot lock EnumSelector without specifying default behaviour.");
 		EnumSelector.of(EnumExample.class).lock();
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testCannotRead() {
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("Cannot use EnumSelector that is not locked.");
 		EnumSelector.of(EnumExample.class).allowsAll();
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testCannotWrite() {
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("No edits are allowed after EnumSelector has been locked.");
 		enumSelectorExample1.apart(EnumExample.EXAMPLE_64);
 	}
 
@@ -154,16 +175,5 @@ public class EnumSelectorTest {
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("You can't allow all enum values when you are already blocking them.");
 		enumSelectorExample.allowAll();
-	}
-
-	public static enum EnumExample {
-		EXAMPLE_8,
-		EXAMPLE_16,
-		EXAMPLE_24,
-		EXAMPLE_32,
-		EXAMPLE_48,
-		EXAMPLE_64,
-
-		EXAMPLE_42;
 	}
 }
