@@ -40,12 +40,14 @@ import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
+import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.world.BWWorld;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BWBlock extends Block implements Storable {
@@ -85,6 +87,8 @@ public class BWBlock extends Block implements Storable {
 			});
 		components.add(new StaticRenderer())
 			.onRender(model -> model.addChild(new CustomModel(self -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z()))));
+		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
+		Game.events().publish(event);
 		//TODO: Set selection bounds
 	}
 
@@ -93,15 +97,19 @@ public class BWBlock extends Block implements Storable {
 		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
 	}
 
-	private IBlockAccess getMcBlockAccess() {
+	public IBlockAccess getMcBlockAccess() {
 		return ((BWWorld) world()).access;
 	}
 
-	private int getMetadata() {
+	public int getMetadata() {
 		return getMcBlockAccess().getBlockMetadata(x(), y(), z());
 	}
 
-	private TileEntity getTileEntity() {
+	public Optional<TileEntity> getTileEntity() {
+		return Optional.ofNullable(getTileEntityImpl());
+	}
+
+	private TileEntity getTileEntityImpl() {
 		if (mcTileEntity == null && mcBlock.hasTileEntity(getMetadata())) {
 			mcTileEntity = getMcBlockAccess().getTileEntity(x(), y(), z());
 		}
@@ -129,7 +137,7 @@ public class BWBlock extends Block implements Storable {
 	public void save(Data data) {
 		Storable.super.save(data);
 
-		TileEntity tileEntity = getTileEntity();
+		TileEntity tileEntity = getTileEntityImpl();
 		if (tileEntity != null) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			tileEntity.writeToNBT(nbt);
@@ -141,7 +149,7 @@ public class BWBlock extends Block implements Storable {
 	public void load(Data data) {
 		Storable.super.load(data);
 
-		TileEntity tileEntity = getTileEntity();
+		TileEntity tileEntity = getTileEntityImpl();
 		if (tileEntity != null) {
 			tileEntity.writeToNBT(Game.natives().toNative(data));
 		}
