@@ -3,7 +3,7 @@ package nova.core.retention;
 import java.lang.annotation.*;
 
 /**
- * Annotation for **immutable** objects that can be converted to/from Data.
+ * Annotation for <b>immutable</b> objects that can be converted to/from Data.
  * @author soniex2
  */
 @Documented
