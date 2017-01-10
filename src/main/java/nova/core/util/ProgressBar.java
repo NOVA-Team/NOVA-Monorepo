@@ -35,14 +35,29 @@ public interface ProgressBar {
 	/**
 	 * A progress bar implementation that does nothing.
 	 */
-	public static final ProgressBar NULL_PROGRESS_BAR = s -> {};
+	public static final class NullProgressBar extends AbstractProgressBar {
+		@Override
+		protected void stepImpl(String message) {}
+	};
 
 	/**
 	 * Advance one step.
 	 *
 	 * @param message The message to show for the current step.
+	 *
+	 * @throws IllegalStateException If {@link #finish()} has been called.
 	 */
 	void step(String message);
+
+	/**
+	 * Finish the progress bar.
+	 */
+	void finish();
+
+	/**
+	 * Check if the progress bar has been finished.
+	 */
+	boolean isFinished();
 
 	/**
 	 * Advance one step.
@@ -51,6 +66,8 @@ public interface ProgressBar {
 	 * {@link #step(java.lang.String) ProgressBar.step(state + ": " + clazz)}
 	 *
 	 * @param clazz The mod class
+	 *
+	 * @throws IllegalStateException If {@link #finish()} has been called.
 	 */
 	default void step(Class<?> clazz) {
 		step(toStringMod(clazz));
@@ -64,6 +81,8 @@ public interface ProgressBar {
 	 *
 	 * @param message The message to display before {@code clazz}
 	 * @param clazz The mod class
+	 *
+	 * @throws IllegalStateException If {@link #finish()} has been called.
 	 */
 	default void step(String message, Class<?> clazz) {
 		step((message == null || message.isEmpty() ? "" : message + ": ") + toStringMod(clazz));
@@ -77,6 +96,8 @@ public interface ProgressBar {
 	 *
 	 * @param message The message to display before {@code clazz}
 	 * @param clazz The mod class
+	 *
+	 * @throws IllegalStateException If {@link #finish()} has been called.
 	 */
 	default void step(Class<?> clazz, String message) {
 		step(toStringMod(clazz) + (message == null || message.isEmpty() ? "" : ": " + message));

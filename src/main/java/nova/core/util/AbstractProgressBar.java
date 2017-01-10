@@ -17,35 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package nova.core.wrapper.mc.forge.v18.launcher;
-
-import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
-import nova.core.util.AbstractProgressBar;
+package nova.core.util;
 
 /**
- * Wrapper class for FML progress bar that is shown when Minecraft boots.
- *
  * @author ExE Boss
  */
-public class FMLProgressBar extends AbstractProgressBar {
-
-	private final ProgressBar progressBar;
-
-	public FMLProgressBar(ProgressBar progressBar) {
-		this.progressBar = progressBar;
-	}
+public abstract class AbstractProgressBar implements ProgressBar {
+	private boolean finished = false;
 
 	@Override
-	protected void stepImpl(String s) {
-		if (this.progressBar.getStep() >= this.progressBar.getSteps()) return;
-		this.progressBar.step(s);
+	public final void step(String message) {
+		if (isFinished())
+			throw new IllegalStateException("ProgressBar is finished.");
+
+		stepImpl(message);
 	}
 
+	protected abstract void stepImpl(String message);
+
 	@Override
-	protected void finishImpl() {
-		super.finish();
-		while (progressBar.getStep() < progressBar.getSteps())
-			progressBar.step("");
+	public final void finish() {
+		this.finished = true;
+
+		finishImpl();
+	}
+
+	protected void finishImpl() {}
+
+	@Override
+	public final boolean isFinished() {
+		return finished;
 	}
 }

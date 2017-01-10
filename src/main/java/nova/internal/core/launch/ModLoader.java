@@ -121,10 +121,14 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	}
 
 	public void load() {
-		this.load(ProgressBar.NULL_PROGRESS_BAR);
+		this.load(new ProgressBar.NullProgressBar(), true);
 	}
 
 	public void load(ProgressBar progressBar) {
+		this.load(progressBar, true);
+	}
+
+	public void load(ProgressBar progressBar, boolean finish) {
 		mods = new HashMap<>();
 
 		/**
@@ -191,14 +195,20 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 			.filter(mod -> mod.getClass().isAssignableFrom(Loadable.class))
 			.map(mod -> (Loadable) mod)
 			.collect(Collectors.toList());
+
+		if (finish) progressBar.finish();
 	}
 
 	@Override
 	public void preInit() {
-		this.preInit(ProgressBar.NULL_PROGRESS_BAR);
+		this.preInit(new ProgressBar.NullProgressBar());
 	}
 
 	public void preInit(ProgressBar progressBar) {
+		this.preInit(progressBar, true);
+	}
+
+	public void preInit(ProgressBar progressBar, boolean finish) {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				progressBar.step(mod.getClass());
@@ -208,14 +218,19 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				throw new InitializationException(t);
 			}
 		});
+		if (finish) progressBar.finish();
 	}
 
 	@Override
 	public void init() {
-		this.init(ProgressBar.NULL_PROGRESS_BAR);
+		this.init(new ProgressBar.NullProgressBar());
 	}
 
 	public void init(ProgressBar progressBar) {
+		this.init(progressBar, true);
+	}
+
+	public void init(ProgressBar progressBar, boolean finish) {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				progressBar.step(mod.getClass());
@@ -225,14 +240,19 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				throw new InitializationException(t);
 			}
 		});
+		if (finish) progressBar.finish();
 	}
 
 	@Override
 	public void postInit() {
-		this.postInit(ProgressBar.NULL_PROGRESS_BAR);
+		this.postInit(new ProgressBar.NullProgressBar());
 	}
 
 	public void postInit(ProgressBar progressBar) {
+		this.postInit(progressBar, true);
+	}
+
+	public void postInit(ProgressBar progressBar, boolean finish) {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
 				progressBar.step(mod.getClass());
@@ -242,6 +262,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				throw new InitializationException(t);
 			}
 		});
+		if (finish) progressBar.finish();
 	}
 
 	public Set<ANNOTATION> getLoadedMods() {
