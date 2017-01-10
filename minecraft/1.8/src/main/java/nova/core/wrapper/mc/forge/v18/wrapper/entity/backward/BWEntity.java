@@ -28,8 +28,10 @@ import nova.core.component.misc.Damageable;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
 import nova.core.entity.component.Player;
+import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.forward.MCEntityTransform;
 import nova.core.wrapper.mc.forge.v18.wrapper.inventory.BWInventory;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
@@ -63,6 +65,11 @@ public class BWEntity extends Entity {
 				Living living = components.add(new Living());
 				living.faceDisplacement = () -> Vector3D.PLUS_J.scalarMultiply(entity.getEyeHeight());
 			}
+		}
+
+		if (entity != null) {
+			WrapperEvent.BWEntityCreate event = new WrapperEvent.BWEntityCreate(this, entity);
+			Game.events().publish(event);
 		}
 	}
 

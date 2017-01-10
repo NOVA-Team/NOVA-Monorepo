@@ -63,7 +63,7 @@ public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 		if (nbt != null) {
 			data.className = nbt.getString("class");
 			Set<String> keys = nbt.func_150296_c();
-			keys.forEach(k -> data.put(k, load(nbt, k)));
+			keys.stream().filter(k -> !k.endsWith(":isBoolean")).forEach(k -> data.put(k, load(nbt, k)));
 		}
 		return data;
 	}
@@ -94,10 +94,10 @@ public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 	 */
 	public NBTTagCompound save(NBTTagCompound tag, String key, Object value) {
 		if (value instanceof Boolean) {
-			tag.setBoolean("isBoolean", true);
+			tag.setBoolean(key + ":isBoolean", true);
 			tag.setBoolean(key, (boolean) value);
 		} else if (value instanceof Byte) {
-			tag.setBoolean("isBoolean", false);
+			tag.setBoolean(key + ":isBoolean", false);
 			tag.setByte(key, (byte) value);
 		} else if (value instanceof Short) {
 			tag.setShort(key, (short) value);
@@ -142,7 +142,7 @@ public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 			} else if (saveTag instanceof NBTTagShort) {
 				return tag.getShort(key);
 			} else if (saveTag instanceof NBTTagByte) {
-				if (tag.getBoolean("isBoolean")) {
+				if (tag.getBoolean(key + ":isBoolean")) {
 					return tag.getBoolean(key);
 				} else {
 					return tag.getByte(key);
