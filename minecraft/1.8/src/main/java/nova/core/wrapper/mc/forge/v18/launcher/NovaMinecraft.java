@@ -144,13 +144,17 @@ public class NovaMinecraft {
 				e.printStackTrace();
 			}
 
-			launcher.load();
+			//TODO: If it is here - it causes the "Missing Mapping" error for new textures
+			//launcher.load();
 
 			/**
 			 * Instantiate native loaders
 			 */
 			nativeConverters = Game.natives().getNativeConverters().stream().filter(n -> n instanceof Loadable).map(n -> (Loadable) n).collect(Collectors.toSet());
 			nativeConverters.stream().forEachOrdered(Loadable::preInit);
+
+			//TODO: If it is here - there is no error that I can see with new blocks
+			launcher.load();
 
 			Game.blocks().init();
 			Game.items().init();

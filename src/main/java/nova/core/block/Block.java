@@ -220,14 +220,20 @@ public class Block extends ComponentProvider implements Identifiable {
 		public final Vector3D position;
 
 		/**
+		 * The block that was right-clicked.
+		 */
+		public final Block block;
+
+		/**
 		 * {@code true} if the right click action does something.
 		 */
 		public boolean result = false;
 
-		public RightClickEvent(Entity entity, Direction side, Vector3D position) {
+		public RightClickEvent(Entity entity, Direction side, Vector3D position, Block block) {
 			this.entity = entity;
 			this.side = side;
 			this.position = position;
+			this.block = block;
 		}
 	}
 

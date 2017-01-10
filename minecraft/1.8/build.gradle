@@ -63,18 +63,30 @@ artifacts {
 	archives fatJar
 }
 
+//The publications now uses this instead of fatJar because when it uses fatJar it does not create the correct jar file.
+//Because of this, you now have to run build publish
+def testJar = file('build/libs/NOVA-Core-Wrapper-MC1.8-0.1.0-SNAPSHOT-fat.jar')
+
 publishing {
 	publications {
 		main(MavenPublication) {
-			from components.java
+			//from components.java
 
 			artifactId archivesBaseName
+
+			artifact testJar
+
+			artifact deobfJar
+
+			/*
+			artifact fatJar
 
 			artifact sourcesJar
 			artifact javadocJar
 			artifact deobfJar
-			artifact fatJar
 
+
+			//Remove Forge as a dependency from the POM
 			pom.withXml(writePom(project.properties))
 			pom.withXml {xml ->
 				def children = xml.asNode().get("dependencies")[0]
@@ -86,8 +98,18 @@ publishing {
 					}
 				}
 			}
+			*/
 		}
 	}
+
+	repositories {
+		if (System.getenv("MAVEN_DIR") != null) {
+			maven {
+				url System.getenv("MAVEN_DIR")
+			}
+		}
+	}
+
 }
 
 artifactory {
