@@ -25,6 +25,7 @@ import nova.core.deps.Dependency;
 import nova.core.deps.MavenDependency;
 import nova.core.loader.Loadable;
 import nova.core.loader.Mod;
+import nova.core.util.ProgressBar;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.util.TopologicalSort;
@@ -73,7 +74,12 @@ public class NovaLauncher extends ModLoader<Mod> {
 
 	@Override
 	public void load() {
-		super.load();
+		this.load(ProgressBar.NULL_PROGRESS_BAR);
+	}
+
+	@Override
+	public void load(ProgressBar progressBar) {
+		super.load(progressBar);
 
 		TopologicalSort.DirectedGraph<Mod> modGraph = new TopologicalSort.DirectedGraph<>();
 
