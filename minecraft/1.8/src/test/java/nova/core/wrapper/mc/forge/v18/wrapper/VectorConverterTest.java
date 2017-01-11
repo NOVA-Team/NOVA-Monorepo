@@ -43,12 +43,18 @@ public class VectorConverterTest {
 
 	@Test
 	public void testToNova() {
-		assertThat(converter.toNova(BlockPos.ORIGIN)).isEqualTo(Vector3D.ZERO);
+		for (int x = -1; x <= 1; x++)
+			for (int y = -1; y <= 1; y++)
+				for (int z = -1; z <= 1; z++)
+					assertThat(converter.toNova(new BlockPos(x, y, z))).isEqualTo(new Vector3D(x, y, z));
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testToNative() {
-		assertThat(converter.toNative(Vector3D.ZERO)).isEqualTo(BlockPos.ORIGIN);
+		for (int x = -1; x <= 1; x++)
+			for (int y = -1; y <= 1; y++)
+				for (int z = -1; z <= 1; z++)
+					assertThat(converter.toNative(new Vector3D(x, y, z))).isEqualTo(new BlockPos(x, y, z));
 	}
-
 }

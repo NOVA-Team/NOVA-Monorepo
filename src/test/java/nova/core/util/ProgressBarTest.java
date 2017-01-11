@@ -28,6 +28,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import static nova.testutils.NovaAssertions.assertThat;
 
 /**
@@ -40,30 +46,83 @@ public class ProgressBarTest {
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
 
-	EventBus<Event> events;
-
-    @Before
-    public void setUp() {
-		this.events = new EventBus<>();
-		this.events.on(ProgressBarEvent.class).bind(evt -> System.out.println(evt.message));
-	}
-
 	@Test
 	public void testProgressBar() {
+		EventBus<Event> events = new EventBus<>();
+		List<Object[]> testContents = Arrays.asList(
+			new Object[]{"Progress bar testing generic String message"},
+			new Object[]{"Progress bar testing class message", ProgressBarTest.class},
+			new Object[]{ProgressBarTest.class, "Progress bar testing class message"},
+			new Object[]{ProgressBarTest.class},
+			new Object[]{"Progress bar testing mod message", TestMod.class},
+			new Object[]{TestMod.class, "Progress bar testing mod message"},
+			new Object[]{TestMod.class},
+			new Object[]{"Progress bar testing null message", null},
+			new Object[]{null, "Progress bar testing class message"},
+			new Object[]{(String) null},
+			new Object[]{(Class) null},
+			new Object[]{ProgressBarTest.class, null},
+			new Object[]{null, ProgressBarTest.class});
+		List<String> testResults = new LinkedList<>();
+		events.on(TestProgressBarEvent.class).bind(evt -> testResults.add(evt.message));
 		ProgressBar progressBar = new AbstractProgressBar() {
 			@Override
 			protected void stepImpl(String message) {
-				events.publish(new ProgressBarEvent(message));
+				events.publish(new TestProgressBarEvent(message));
 			}
 		};
-		progressBar.step("Progress bar testing generic String message");
-		progressBar.step("Progress bar testing class message", ProgressBarTest.class);
-		progressBar.step(ProgressBarTest.class, "Progress bar testing class message");
-		progressBar.step(ProgressBarTest.class);
-		progressBar.step("Progress bar testing mod message", TestMod.class);
-		progressBar.step(TestMod.class, "Progress bar testing mod message");
-		progressBar.step(TestMod.class);
+		for (Object[] testArg : testContents) {
+			step(progressBar, testArg);
+		}
 		progressBar.finish();
+
+		List<String> expectedResults = testContents.stream().map(ProgressBarTest::convert).collect(Collectors.toList());
+
+		assertThat(testResults.size()).isEqualTo(testContents.size());
+		assertThat(testResults.size()).isEqualTo(expectedResults.size());
+
+		for (int i = 0; i < testContents.size(); i++)
+			assertThat(testResults.get(i)).isEqualTo(expectedResults.get(i));
+	}
+
+	private static String convert(Object... args) {
+		if (args.length == 1) {
+			if (args[0] == null || args[0] instanceof String) {
+				return ((String) args[0]);
+			} else if (args[0] instanceof Class) {
+				return ProgressBar.toStringMod((Class) args[0]);
+			}
+		} else if (args.length == 2) {
+			if ((args[0] == null || args[0] instanceof String) && (args[1] == null || args[1] instanceof Class)) {
+				return ((args[0] == null || ((String) args[0]).isEmpty()) ? "" : (String) args[0] + ": ") + ProgressBar.toStringMod((Class) args[1]);
+			} else if ((args[0] == null || args[0] instanceof Class) && (args[1] == null || args[1] instanceof String)) {
+				return ProgressBar.toStringMod((Class) args[0]) + ((args[1] == null || ((String) args[1]).isEmpty()) ? "" : ": " + (String) args[1]);
+			}
+		}
+
+		throw new IllegalArgumentException("Wrong arguments");
+	}
+
+	private static void step(ProgressBar progressBar, Object... args) {
+		if (args.length == 1) {
+			if (args[0] == null || args[0] instanceof String) {
+				progressBar.step((String) args[0]);
+				return;
+			} else if (args[0] instanceof Class) {
+				progressBar.step((Class) args[0]);
+				return;
+			}
+		} else if (args.length == 2) {
+			if ((args[0] == null || args[0] instanceof String) && (args[1] == null || args[1] instanceof Class)) {
+				progressBar.step((String) args[0], (Class) args[1]);
+				return;
+			} else if ((args[0] == null || args[0] instanceof Class) && (args[1] == null || args[1] instanceof String)) {
+				progressBar.step((Class) args[0], (String) args[1]);
+				return;
+			}
+		}
+
+		throw new IllegalArgumentException("Wrong arguments");
 	}
 
 	@Test
@@ -75,10 +134,10 @@ public class ProgressBarTest {
 		progressBar.step("THROW EXCEPTION");
 	}
 
-	static final class ProgressBarEvent extends Event {
+	private static final class TestProgressBarEvent extends Event {
 		public final String message;
 
-		public ProgressBarEvent(String message) {
+		public TestProgressBarEvent(String message) {
 			this.message = message;
 		}
 	}
