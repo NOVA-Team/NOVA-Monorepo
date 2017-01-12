@@ -44,21 +44,6 @@ public class ProgressBarTest {
 
 	@Test
 	public void testProgressBar() {
-		String[] expectedResults = new String[] {
-			"Progress bar testing generic String message",
-			"Progress bar testing class message: ProgressBarTest",
-			"ProgressBarTest: Progress bar testing class message",
-			"ProgressBarTest",
-			"Progress bar testing mod message: Test Mod",
-			"Test Mod: Progress bar testing mod message",
-			"Test Mod",
-			"Progress bar testing null message: null",
-			"null: Progress bar testing null message",
-			null,
-			null,
-			"ProgressBarTest",
-			"ProgressBarTest"
-		};
 		List<String> testResults = new LinkedList<>();
 		finishedCounter = 0;
 		ProgressBar progressBar = new AbstractProgressBar() {
@@ -89,7 +74,21 @@ public class ProgressBarTest {
 		progressBar.finish();
 		progressBar.finish(); // Calling this method a second time does nothing.
 
-		assertThat(testResults).containsExactly(expectedResults);
+		assertThat(testResults).containsExactly(new String[] {
+			"Progress bar testing generic String message",
+			"Progress bar testing class message: ProgressBarTest",
+			"ProgressBarTest: Progress bar testing class message",
+			"ProgressBarTest",
+			"Progress bar testing mod message: Test Mod",
+			"Test Mod: Progress bar testing mod message",
+			"Test Mod",
+			"Progress bar testing null message: null",
+			"null: Progress bar testing null message",
+			null,
+			null,
+			"ProgressBarTest",
+			"ProgressBarTest"
+		});
 		assertThat(progressBar.isFinished()).isTrue();
 		assertThat(finishedCounter).isEqualTo(1);
 	}
