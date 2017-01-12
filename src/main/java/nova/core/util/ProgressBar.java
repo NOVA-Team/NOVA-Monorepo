@@ -51,6 +51,8 @@ public interface ProgressBar {
 
 	/**
 	 * Finish the progress bar.
+	 *
+	 * Calling this method a second time does nothing.
 	 */
 	void finish();
 

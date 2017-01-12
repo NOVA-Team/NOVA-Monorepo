@@ -33,15 +33,28 @@ public abstract class AbstractProgressBar implements ProgressBar {
 		stepImpl(message);
 	}
 
+	/**
+	 * Advance one step. This method is called by {@link AbstractProgressBar#step(java.lang.String)}.
+	 *
+	 * @param message The message to show for the current step.
+	 */
 	protected abstract void stepImpl(String message);
 
 	@Override
 	public final void finish() {
+		if (this.finished)
+			return;
+
 		this.finished = true;
 
 		finishImpl();
 	}
 
+	/**
+	 * This method is called by {@link AbstractProgressBar#finish()}.
+	 *
+	 * Here you do anything that should be done when the progress bar is finished.
+	 */
 	protected void finishImpl() {}
 
 	@Override
