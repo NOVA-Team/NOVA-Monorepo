@@ -27,6 +27,7 @@ import nova.core.entity.component.Player;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.backward.BWEntity;
 import nova.internal.core.Game;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -34,6 +35,8 @@ import java.util.Optional;
  * @author Calclavia
  */
 public class WrapUtility {
+
+	private WrapUtility() {}
 
 	public static Optional<Player> getNovaPlayer(EntityPlayer player) {
 		return ((Entity)Game.natives().toNova(player)).components.getOp(Player.class);
@@ -43,11 +46,11 @@ public class WrapUtility {
 		if (item.getHasSubtypes()) {
 			return Item.itemRegistry.getNameForObject(item) + ":" + meta;
 		} else {
-			return (String) Item.itemRegistry.getNameForObject(item);
+			return Objects.toString(Item.itemRegistry.getNameForObject(item));
 		}
 	}
 
-	public EntityPlayer getMCPlayer(Optional<Player> player) {
+	public static EntityPlayer getMCPlayer(Optional<Player> player) {
 		if (!player.isPresent())
 			return null;
 
