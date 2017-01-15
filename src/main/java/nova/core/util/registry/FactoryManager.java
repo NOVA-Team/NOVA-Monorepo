@@ -20,7 +20,9 @@
 
 package nova.core.util.registry;
 
-import nova.core.util.Identifiable;
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
+import nova.core.util.id.StringIdentifier;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -40,11 +42,22 @@ public abstract class FactoryManager<S extends FactoryManager<S, T, F>, T extend
 	/**
 	 * Register a new object construction factory.
 	 *
-	 * Note that you make use: register(BlockStone::new), passing a method reference.
+	 * Note that you can use: register(id, BlockStone::new), passing a method reference.
 	 * @param constructor Instance supplier {@link Supplier}
 	 * @return The factory
 	 */
-	public abstract F register(String id, Supplier<T> constructor);
+	public F register(String id, Supplier<T> constructor) {
+		return this.register(new StringIdentifier(id), constructor);
+	}
+
+	/**
+	 * Register a new object construction factory.
+	 *
+	 * Note that you can use: register(id, BlockStone::new), passing a method reference.
+	 * @param constructor Instance supplier {@link Supplier}
+	 * @return The factory
+	 */
+	public abstract F register(Identifier id, Supplier<T> constructor);
 
 	/**
 	 * Register a new object construction factory.
@@ -61,7 +74,7 @@ public abstract class FactoryManager<S extends FactoryManager<S, T, F>, T extend
 	 * @param name Registered name
 	 * @return The object
 	 */
-	public Optional<F> get(String name) {
+	public Optional<F> get(Identifier name) {
 		return registry.get(name);
 	}
 }

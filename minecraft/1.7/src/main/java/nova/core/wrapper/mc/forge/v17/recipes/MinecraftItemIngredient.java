@@ -20,7 +20,6 @@
 
 package nova.core.wrapper.mc.forge.v17.recipes;
 
-import nova.core.item.Item;
 import nova.core.recipes.crafting.SpecificItemIngredient;
 import nova.internal.core.Game;
 
@@ -29,6 +28,6 @@ import nova.internal.core.Game;
  */
 public class MinecraftItemIngredient extends SpecificItemIngredient {
 	public MinecraftItemIngredient(net.minecraft.item.ItemStack itemStack) {
-		super(((Item) Game.natives().toNova(itemStack)).getID());
+		super(Game.natives().toNova(itemStack));
 	}
 }

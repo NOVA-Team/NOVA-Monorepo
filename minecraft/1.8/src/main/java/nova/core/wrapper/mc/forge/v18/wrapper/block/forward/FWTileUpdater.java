@@ -22,6 +22,7 @@ package nova.core.wrapper.mc.forge.v18.wrapper.block.forward;
 
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import nova.core.component.Updater;
+import nova.core.util.id.Identifier;
 
 /**
  * @author Calclavia
@@ -31,8 +32,8 @@ public class FWTileUpdater extends FWTile implements IUpdatePlayerListBox {
 
 	}
 
-	public FWTileUpdater(String blockID) {
-		this.blockID = blockID;
+	public FWTileUpdater(Identifier blockID) {
+		super(blockID);
 	}
 
 	/**

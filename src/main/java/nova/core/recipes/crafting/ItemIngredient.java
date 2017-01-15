@@ -20,7 +20,11 @@
 
 package nova.core.recipes.crafting;
 
+import nova.core.block.BlockFactory;
 import nova.core.item.Item;
+import nova.core.item.ItemFactory;
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -31,14 +35,35 @@ import java.util.Optional;
  *
  * @author Stan Hebben
  */
-public interface ItemIngredient {
+public interface ItemIngredient extends Identifiable {
+
+	/**
+	 * Retrieves an ingredient to represent a specific block.
+	 *
+	 * @param block The block
+	 * @return ingredient
+	 */
+	static ItemIngredient forBlock(BlockFactory block) {
+		return new SpecificItemIngredient(block.getID());
+	}
+
+	/**
+	 * Retrieves an ingredient to represent a specific item.
+	 *
+	 * @param item The item
+	 * @return ingredient
+	 */
+	static ItemIngredient forItem(ItemFactory item) {
+		return new SpecificItemIngredient(item.getID());
+	}
+
 	/**
 	 * Retrieves an ingredient to represent a specific item.
 	 *
 	 * @param itemId item ID
 	 * @return ingredient
 	 */
-	static ItemIngredient forItem(String itemId) {
+	static ItemIngredient forItem(Identifier itemId) {
 		return new SpecificItemIngredient(itemId);
 	}
 
@@ -58,7 +83,7 @@ public interface ItemIngredient {
 	 *
 	 * @return possible items
 	 */
-	Optional<Collection<String>> getPossibleItemIds();
+	Optional<Collection<Identifier>> getPossibleItemIDs();
 
 	/**
 	 * Returns a list of example items. This list could be used to render

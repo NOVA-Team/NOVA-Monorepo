@@ -20,6 +20,7 @@
 
 package nova.core.world;
 
+import nova.core.util.id.Identifier;
 import nova.core.util.registry.Factory;
 
 import java.util.function.Function;
@@ -30,16 +31,16 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public class WorldFactory extends Factory<WorldFactory, World> {
-	public WorldFactory(String id, Supplier<World> constructor, Function<World, World> processor) {
+	public WorldFactory(Identifier id, Supplier<World> constructor, Function<World, World> processor) {
 		super(id, constructor, processor);
 	}
 
-	public WorldFactory(String id, Supplier<World> constructor) {
+	public WorldFactory(Identifier id, Supplier<World> constructor) {
 		super(id, constructor);
 	}
 
 	@Override
-	protected WorldFactory selfConstructor(String id, Supplier<World> constructor, Function<World, World> processor) {
+	protected WorldFactory selfConstructor(Identifier id, Supplier<World> constructor, Function<World, World> processor) {
 		return new WorldFactory(id, constructor, processor);
 	}
 }

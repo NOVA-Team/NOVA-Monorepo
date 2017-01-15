@@ -32,6 +32,8 @@ import nova.core.component.Category;
 import nova.core.event.BlockEvent;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
+import nova.core.util.id.NamespacedStringIdentifier;
+import nova.core.util.id.StringIdentifier;
 import nova.core.wrapper.mc.forge.v18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v18.util.ModCreativeTab;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.backward.BWBlock;
@@ -41,6 +43,7 @@ import nova.internal.core.Game;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -108,7 +111,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		BlockManager blockManager = Game.blocks();
 		net.minecraft.block.Block.blockRegistry.forEach(obj ->
 				blockManager.register(
-					new BlockFactory(net.minecraft.block.Block.blockRegistry.getNameForObject(obj).toString(),
+					new BlockFactory(new NamespacedStringIdentifier(Objects.toString(net.minecraft.block.Block.blockRegistry.getNameForObject(obj))),
 						() -> new BWBlock((net.minecraft.block.Block) obj), evt -> {
 					})
 				)
@@ -119,7 +122,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		BlockManager blockManager = Game.blocks();
 
 		//Register air block
-		BlockFactory airBlock = new BlockFactory("air", () -> new BWBlock(Blocks.air) {
+		BlockFactory airBlock = new BlockFactory(new StringIdentifier("air"), () -> new BWBlock(Blocks.air) {
 			@Override
 			public boolean canReplace() {
 				return true;
@@ -136,7 +139,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	private void registerNovaBlock(BlockFactory blockFactory) {
 		FWBlock blockWrapper = new FWBlock(blockFactory);
 		blockFactoryMap.put(blockFactory, blockWrapper);
-		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
+		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID().asString());
 		NovaMinecraft.proxy.postRegisterBlock(blockWrapper);
 
 		if (blockWrapper.dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {

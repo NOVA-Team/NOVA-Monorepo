@@ -20,7 +20,10 @@
 
 package nova.core.util.registry;
 
-import nova.core.util.Identifiable;
+import nova.core.component.ComponentProvider;
+import nova.core.util.id.Identifiable;
+import nova.core.util.id.Identifier;
+import nova.core.util.id.StringIdentifier;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -33,7 +36,7 @@ import java.util.function.Supplier;
  */
 public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> implements Identifiable {
 	//The ID of the factory
-	protected final String id;
+	protected final Identifier id;
 
 	//The constructor function
 	protected final Supplier<T> constructor;
@@ -50,13 +53,13 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	 * @param constructor The construction function
 	 * @param processor The processor function
 	 */
-	public Factory(String id, Supplier<T> constructor, Function<T, T> processor) {
+	public Factory(Identifier id, Supplier<T> constructor, Function<T, T> processor) {
 		this.id = id;
 		this.constructor = constructor;
 		this.processor = processor;
 	}
 
-	public Factory(String id, Supplier<T> constructor) {
+	public Factory(Identifier id, Supplier<T> constructor) {
 		this(id, constructor, obj -> obj);
 	}
 
@@ -69,7 +72,7 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 		return selfConstructor(id, constructor, this.processor.compose(processor));
 	}
 
-	protected abstract S selfConstructor(String id, Supplier<T> constructor, Function<T, T> processor);
+	protected abstract S selfConstructor(Identifier id, Supplier<T> constructor, Function<T, T> processor);
 
 	/**
 	 * @return A new instance of T based on the construction method
@@ -78,7 +81,7 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 		return processor.apply(constructor.get());
 	}
 
-	public String getID() {
+	public Identifier getID() {
 		return id;
 	}
 }

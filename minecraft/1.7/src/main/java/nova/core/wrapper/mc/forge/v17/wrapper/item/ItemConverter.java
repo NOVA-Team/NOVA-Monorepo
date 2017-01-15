@@ -34,6 +34,7 @@ import nova.core.item.ItemFactory;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
+import nova.core.util.id.Identifier;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v17.util.ModCreativeTab;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
@@ -74,11 +75,12 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		return getNovaItem(itemStack).setCount(itemStack.stackSize);
 	}
 
-	//TODO: Why is this method separate?
+	// This method is seperate because it recursively calls itself when the ItemStack's
+	// damage value is {@link net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE}.
 	public Item getNovaItem(ItemStack itemStack) {
 		if (itemStack.getItemDamage() == net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE) {
 			// TODO: Deal withPriority wildcard meta values - important for the ore dictionary
-			return getNovaItem(new ItemStack(itemStack.getItem(), 1, 0));
+			return getNovaItem(new ItemStack(itemStack.getItem(), itemStack.stackSize, 0));
 		}
 
 		if (itemStack.getTagCompound() != null && itemStack.getTagCompound() instanceof FWNBTTagCompound) {
@@ -105,7 +107,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		if (item instanceof BWItem) {
 			return ((BWItem) item).makeItemStack(item.count());
 		} else {
-			ItemFactory itemFactory = Game.items().get(item.getID()).get();
+			ItemFactory itemFactory = Game.items().get(item.getID()).get(); // TODO?
 			FWNBTTagCompound tag = new FWNBTTagCompound(item);
 
 			MinecraftItemMapping mapping = get(itemFactory);
@@ -132,7 +134,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		return result;
 	}
 
-	public ItemStack toNative(String id) {
+	public ItemStack toNative(Identifier id) {
 		return toNative(Game.items().get(id).get().build().setCount(1));
 	}
 
@@ -201,7 +203,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
-			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
+			GameRegistry.registerItem(itemWrapper, itemFactory.getID().asString()); // TODO?
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab

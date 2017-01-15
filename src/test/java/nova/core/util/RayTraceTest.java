@@ -27,6 +27,7 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.loader.Loadable;
 import nova.core.loader.Mod;
+import nova.core.util.id.StringIdentifier;
 import nova.core.util.math.RotationUtil;
 import nova.internal.core.Game;
 import nova.internal.core.launch.NovaLauncher;
@@ -145,7 +146,7 @@ public class RayTraceTest {
 		@Override
 		public void preInit() {
 			solid = Game.blocks().register(
-				"solid",
+				new StringIdentifier("solid"),
 				() -> {
 					Block solid = new Block();
 					solid.components.add(new Collider(solid));
@@ -153,7 +154,7 @@ public class RayTraceTest {
 				}
 			);
 
-			testEntity = Game.entities().register("test", Entity::new);
+			testEntity = Game.entities().register(new StringIdentifier("test"), Entity::new);
 		}
 	}
 }

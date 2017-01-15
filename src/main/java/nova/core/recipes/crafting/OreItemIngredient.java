@@ -21,6 +21,8 @@
 package nova.core.recipes.crafting;
 
 import nova.core.item.Item;
+import nova.core.util.id.Identifier;
+import nova.core.util.id.StringIdentifier;
 import nova.internal.core.Game;
 
 import java.util.ArrayList;
@@ -40,12 +42,13 @@ public class OreItemIngredient implements ItemIngredient {
 		this.name = name;
 	}
 
-	public String getName() {
-		return name;
+	@Override
+	public StringIdentifier getID() {
+		return new StringIdentifier(name);
 	}
 
 	@Override
-	public Optional<Collection<String>> getPossibleItemIds() {
+	public Optional<Collection<Identifier>> getPossibleItemIDs() {
 		return Optional.of(Game.itemDictionary().get(name).stream().map(Item::getID).collect(Collectors.toList()));
 	}
 

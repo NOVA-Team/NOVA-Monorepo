@@ -28,6 +28,7 @@ import nova.core.block.Stateful;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
+import nova.core.util.id.Identifier;
 import nova.core.wrapper.mc.forge.v18.network.netty.MCNetworkManager;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -38,7 +39,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public class FWTile extends TileEntity {
 
-	protected String blockID;
+	protected Identifier blockID;
 	protected Block block;
 	protected Data cacheData = null;
 
@@ -46,7 +47,7 @@ public class FWTile extends TileEntity {
 
 	}
 
-	public FWTile(String blockID) {
+	public FWTile(Identifier blockID) {
 		this.blockID = blockID;
 	}
 
@@ -56,6 +57,7 @@ public class FWTile extends TileEntity {
 
 	public void setBlock(Block block) {
 		this.block = block;
+		this.blockID = block.getID();
 	}
 
 	@Override
@@ -89,7 +91,8 @@ public class FWTile extends TileEntity {
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		nbt.setString("novaID", blockID);
+		// If we have a block, store its id instead
+		nbt.setTag("novaID", Game.natives().toNative(Data.serialize(block != null ? block.getID() : blockID)));
 
 		if (block != null) {
 			if (block instanceof Storable) {
@@ -104,7 +107,7 @@ public class FWTile extends TileEntity {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		blockID = nbt.getString("novaID");
+		blockID = ((Data)Game.natives().toNova(nbt)).getIdentifier("novaID");
 		cacheData = Game.natives().toNova(nbt.getCompoundTag("nova"));
 	}
 }

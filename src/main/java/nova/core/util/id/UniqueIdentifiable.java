@@ -18,17 +18,30 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.util;
+package nova.core.util.id;
 
 /**
  * A generic interface signifying that this object is uniquely identifiable
- * by an ID
+ * by an ID.
  */
-public interface UniqueIdentifiable {
+public interface UniqueIdentifiable extends Identifiable {
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return the ID. The default implementation returns the same result as {@link #getUniqueID()}.
+	 * @see #getUniqueID()
+	 */
+	@Override
+	default Identifier getID() {
+		return getUniqueID();
+	}
+
 	/**
 	 * Get the unique ID to identify this object.
 	 *
 	 * @return the ID
+	 * @see #getID()
 	 */
-	String getUniqueID();
+	UUIDIdentifier getUniqueID();
 }

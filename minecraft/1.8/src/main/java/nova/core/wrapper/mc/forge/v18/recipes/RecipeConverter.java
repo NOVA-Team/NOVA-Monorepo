@@ -74,7 +74,7 @@ public class RecipeConverter {
 		if (ingredient instanceof SpecificItemIngredient) {
 			return wrapSpecific((SpecificItemIngredient) ingredient);
 		} else if (ingredient instanceof OreItemIngredient) {
-			return ((OreItemIngredient) ingredient).getName();
+			return ((OreItemIngredient) ingredient).getID().asString();
 		}
 
 		return null;
@@ -99,7 +99,7 @@ public class RecipeConverter {
 		}
 	}
 
-	private static String findOreDictEntryFor(List ingredient) {
+	private static String findOreDictEntryFor(List<?> ingredient) {
 		for (String key : net.minecraftforge.oredict.OreDictionary.getOreNames()) {
 			if (net.minecraftforge.oredict.OreDictionary.getOres(key).equals(ingredient)) {
 				return key;

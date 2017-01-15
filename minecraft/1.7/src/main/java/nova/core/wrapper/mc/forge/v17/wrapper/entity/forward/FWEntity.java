@@ -32,6 +32,8 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
+import nova.core.util.id.IdentifierRegistry;
+import nova.core.util.id.StringIdentifier;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v17.wrapper.data.DataWrapper;
 import nova.internal.core.Game;
@@ -64,7 +66,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		}
 		if (wrapped == null) {
 			//This entity was saved to disk.
-			setWrapped(Game.entities().get(nbt.getString("novaID")).get().build());
+			setWrapped(Game.entities().get(((Data)Game.natives().toNova(nbt)).getIdentifier("novaID")).get().build());
 		}
 	}
 
@@ -75,16 +77,24 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 			((Storable) wrapped).save(data);
 			DataWrapper.instance().toNative(nbt, data);
 		}
-		nbt.setString("novaID", wrapped.getID());
+		Data identifierData = new Data();
+		IdentifierRegistry.instance().save(identifierData, wrapped.getID());
+		nbt.setTag("novaID", Game.natives().toNative(identifierData));
 	}
 
 	@Override
 	public void writeSpawnData(ByteBuf buffer) {
 		//Write the ID of the entity to client
-		String id = wrapped.getID();
-		char[] chars = id.toCharArray();
+		String type = IdentifierRegistry.instance().getName(wrapped.getID()).get().asString();
+		String id = wrapped.getID().asString();
+		
+		char[] chars = type.toCharArray();
 		buffer.writeInt(chars.length);
-
+		for (char c : chars)
+			buffer.writeChar(c);
+		
+		chars = id.toCharArray();
+		buffer.writeInt(chars.length);
 		for (char c : chars)
 			buffer.writeChar(c);
 	}
@@ -92,12 +102,18 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	@Override
 	public void readSpawnData(ByteBuf buffer) {
 		//Load the client ID
-		String id = "";
+		String type = "";
 		int length = buffer.readInt();
+		for (int i = 0; i < length; i++)
+			type += buffer.readChar();
+		
+		String id = "";
+		length = buffer.readInt();
 		for (int i = 0; i < length; i++)
 			id += buffer.readChar();
 
-		setWrapped(Game.entities().get(id).get().build());
+		setWrapped(Game.entities().get(IdentifierRegistry.instance().get(type)
+				.orElseThrow(IdentifierRegistry.noIdentifierClassFound(type)).load(id)).get().build());
 	}
 
 	public Entity getWrapped() {

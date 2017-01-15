@@ -20,6 +20,7 @@
 
 package nova.core.component.fluid;
 
+import nova.core.util.id.Identifier;
 import nova.core.util.registry.Factory;
 
 import java.util.function.Function;
@@ -30,11 +31,11 @@ import java.util.function.Supplier;
  */
 public class FluidFactory extends Factory<FluidFactory, Fluid> {
 
-	public FluidFactory(String id, Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
+	public FluidFactory(Identifier id, Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
 		super(id, constructor, processor);
 	}
 
-	public FluidFactory(String id, Supplier<Fluid> constructor) {
+	public FluidFactory(Identifier id, Supplier<Fluid> constructor) {
 		super(id, constructor);
 	}
 
@@ -46,7 +47,7 @@ public class FluidFactory extends Factory<FluidFactory, Fluid> {
 	}
 
 	@Override
-	protected FluidFactory selfConstructor(String id, Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
+	protected FluidFactory selfConstructor(Identifier id, Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
 		return new FluidFactory(id, constructor, processor);
 	}
 }

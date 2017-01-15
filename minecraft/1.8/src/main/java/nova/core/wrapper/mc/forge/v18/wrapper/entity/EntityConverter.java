@@ -27,6 +27,7 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
+import nova.core.util.id.ClassIdentifier;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.backward.BWEntityFX;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.forward.FWEntity;
@@ -56,7 +57,7 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 
 		//TODO: Make this BWRegistry non-lazy
 		//Lazy registry
-		String id = mcEntity.getClass().getName();
+		ClassIdentifier id = new ClassIdentifier(mcEntity.getClass()); // Minecraft uses Class as entity ID
 		Optional<EntityFactory> entityFactory = Game.entities().get(id);
 
 		if (entityFactory.isPresent()) {

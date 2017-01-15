@@ -21,6 +21,7 @@
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.exception.RegistrationException;
+import nova.core.util.id.Identifier;
 import nova.internal.core.Game;
 
 import java.util.Collection;
@@ -32,18 +33,19 @@ import java.util.Optional;
  * @author Stan Hebben
  */
 public class SpecificItemIngredient implements ItemIngredient {
-	private final String itemId;
+	private final Identifier itemId;
 
-	public SpecificItemIngredient(String itemId) {
+	public SpecificItemIngredient(Identifier itemId) {
 		this.itemId = itemId;
 	}
 
-	public String getItemId() {
+	@Override
+	public Identifier getID() {
 		return itemId;
 	}
 
 	@Override
-	public Optional<Collection<String>> getPossibleItemIds() {
+	public Optional<Collection<Identifier>> getPossibleItemIDs() {
 		return Optional.of(Collections.singleton(itemId));
 	}
 
@@ -74,21 +76,9 @@ public class SpecificItemIngredient implements ItemIngredient {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		SpecificItemIngredient that = (SpecificItemIngredient) o;
-
-		if (!itemId.equals(that.itemId)) {
-			return false;
-		}
-
-		return true;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		return itemId.equals(((SpecificItemIngredient) o).itemId);
 	}
 
 	@Override
@@ -96,7 +86,7 @@ public class SpecificItemIngredient implements ItemIngredient {
 		return itemId.hashCode();
 	}
 
-	private Item getItem(String itemId) {
+	private Item getItem(Identifier itemId) {
 		Optional<ItemFactory> itemFactory = Game.items().get(itemId);
 
 		if (itemFactory.isPresent()) {
