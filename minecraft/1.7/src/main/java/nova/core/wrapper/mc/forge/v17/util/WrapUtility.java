@@ -22,7 +22,10 @@ package nova.core.wrapper.mc.forge.v17.util;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import nova.core.entity.Entity;
 import nova.core.entity.component.Player;
+import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntity;
+import nova.internal.core.Game;
 
 import java.util.Optional;
 
@@ -32,9 +35,10 @@ import java.util.Optional;
  */
 public class WrapUtility {
 
+	private WrapUtility() {}
+
 	public static Optional<Player> getNovaPlayer(EntityPlayer player) {
-		// TODO: implement
-		return Optional.empty();
+		return ((Entity)Game.natives().toNova(player)).components.getOp(Player.class);
 	}
 
 	public static String getItemID(net.minecraft.item.Item item, int meta) {
@@ -45,7 +49,17 @@ public class WrapUtility {
 		}
 	}
 
-	public EntityPlayer getMCPlayer(Optional<Player> player) {
+	public static EntityPlayer getMCPlayer(Optional<Player> player) {
+		if (!player.isPresent())
+			return null;
+
+		Entity entity = player.get().entity();
+		if (entity instanceof BWEntity) {
+			if (((BWEntity)entity).entity instanceof EntityPlayer)
+				return (EntityPlayer)((BWEntity)entity).entity;
+		}
+
+		// TODO: Implement FWEntityPlayer
 		return null;
 	}
 }

@@ -23,6 +23,9 @@ package nova.core.event;
 import nova.core.event.bus.Event;
 import nova.core.world.World;
 
+/**
+ * All events related to the world.
+ */
 public abstract class WorldEvent extends Event {
 	public final World world;
 
@@ -31,7 +34,7 @@ public abstract class WorldEvent extends Event {
 	}
 
 	/**
-	 * Called when a world loads.
+	 * Event is triggered when a world loads.
 	 */
 	public static class Load extends WorldEvent {
 		public Load(World world) {
@@ -40,7 +43,7 @@ public abstract class WorldEvent extends Event {
 	}
 
 	/**
-	 * Called when a world unloads.
+	 * Event is triggered when a world unloads.
 	 */
 	public static class Unload extends WorldEvent {
 		public Unload(World world) {

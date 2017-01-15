@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -16,28 +16,36 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.item.event;
+ */
 
-import nova.core.event.bus.Event;
-import nova.core.item.ItemFactory;
+package nova.core.wrapper.mc.forge.v17.launcher;
+
+import cpw.mods.fml.common.ProgressManager.ProgressBar;
+import nova.core.util.AbstractProgressBar;
 
 /**
- * @author Stan
+ * Wrapper class for FML progress bar that is shown when Minecraft boots.
+ *
+ * @author ExE Boss
  */
-public class ItemIDNotFoundEvent extends Event {
-	public final String id;
+public class FMLProgressBar extends AbstractProgressBar {
 
-	private ItemFactory remappedFactory = null;
+	private final ProgressBar progressBar;
 
-	public ItemIDNotFoundEvent(String id) {
-		this.id = id;
+	public FMLProgressBar(ProgressBar progressBar) {
+		this.progressBar = progressBar;
 	}
 
-	public ItemFactory getRemappedFactory() {
-		return remappedFactory;
+	@Override
+	protected void stepImpl(String s) {
+		if (this.progressBar.getStep() >= this.progressBar.getSteps()) return;
+		this.progressBar.step(s);
 	}
 
-	public void setRemappedFactory(ItemFactory remappedFactory) {
-		this.remappedFactory = remappedFactory;
+	@Override
+	protected void finishImpl() {
+		super.finish();
+		while (progressBar.getStep() < progressBar.getSteps())
+			progressBar.step("");
 	}
 }

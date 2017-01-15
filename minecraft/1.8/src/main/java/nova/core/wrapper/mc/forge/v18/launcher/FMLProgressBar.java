@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -18,37 +18,34 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.event;
+package nova.core.wrapper.mc.forge.v18.launcher;
 
-import nova.core.entity.Entity;
-import nova.core.event.bus.CancelableEvent;
+import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
+import nova.core.util.AbstractProgressBar;
 
 /**
- * All events related to the entity.
- * @author Calclavia
+ * Wrapper class for FML progress bar that is shown when Minecraft boots.
+ *
+ * @author ExE Boss
  */
-public class EntityEvent extends CancelableEvent {
-	public final Entity entity;
+public class FMLProgressBar extends AbstractProgressBar {
 
-	public EntityEvent(Entity entity) {
-		this.entity = entity;
+	private final ProgressBar progressBar;
+
+	public FMLProgressBar(ProgressBar progressBar) {
+		this.progressBar = progressBar;
 	}
 
-	/**
-	 * Event is triggered when an entity is added to the world.
-	 */
-	public static class Add extends EntityEvent {
-		public Add(Entity entity) {
-			super(entity);
-		}
+	@Override
+	protected void stepImpl(String s) {
+		if (this.progressBar.getStep() >= this.progressBar.getSteps()) return;
+		this.progressBar.step(s);
 	}
 
-	/**
-	 * Event is triggered when an entity is removed in the world.
-	 */
-	public static class Remove extends EntityEvent {
-		public Remove(Entity entity) {
-			super(entity);
-		}
+	@Override
+	protected void finishImpl() {
+		super.finish();
+		while (progressBar.getStep() < progressBar.getSteps())
+			progressBar.step("");
 	}
 }

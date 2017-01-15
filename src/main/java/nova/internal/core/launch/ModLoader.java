@@ -21,6 +21,7 @@
 package nova.internal.core.launch;
 
 import nova.core.loader.Loadable;
+import nova.core.util.ProgressBar;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 
@@ -120,6 +121,14 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	}
 
 	public void load() {
+		this.load(new ProgressBar.NullProgressBar(), true);
+	}
+
+	public void load(ProgressBar progressBar) {
+		this.load(progressBar, true);
+	}
+
+	public void load(ProgressBar progressBar, boolean finish) {
 		mods = new HashMap<>();
 
 		/**
@@ -130,6 +139,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				.collect(Collectors.<Map.Entry<ANNOTATION, Class<?>>, ANNOTATION, Object>toMap(Map.Entry::getKey,
 						entry -> {
 							try {
+								progressBar.step(entry.getValue());
 								return makeObjectWithDep(entry.getValue());
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -149,6 +159,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				.collect(Collectors.toMap(Map.Entry::getKey,
 						entry -> {
 							try {
+								progressBar.step(entry.getValue());
 								Field field = entry.getValue().getField("MODULE$");
 								Loadable loadable = (Loadable) field.get(null);
 
@@ -184,42 +195,74 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 			.filter(mod -> mod.getClass().isAssignableFrom(Loadable.class))
 			.map(mod -> (Loadable) mod)
 			.collect(Collectors.toList());
+
+		if (finish) progressBar.finish();
 	}
 
 	@Override
 	public void preInit() {
+		this.preInit(new ProgressBar.NullProgressBar());
+	}
+
+	public void preInit(ProgressBar progressBar) {
+		this.preInit(progressBar, true);
+	}
+
+	public void preInit(ProgressBar progressBar, boolean finish) {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
+				progressBar.step(mod.getClass());
 				mod.preInit();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during pre initialization phase", t);
 				throw new InitializationException(t);
 			}
 		});
+		if (finish) progressBar.finish();
 	}
 
 	@Override
 	public void init() {
+		this.init(new ProgressBar.NullProgressBar());
+	}
+
+	public void init(ProgressBar progressBar) {
+		this.init(progressBar, true);
+	}
+
+	public void init(ProgressBar progressBar, boolean finish) {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
+				progressBar.step(mod.getClass());
 				mod.init();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during initialization phase", t);
 				throw new InitializationException(t);
 			}
 		});
+		if (finish) progressBar.finish();
 	}
 
 	@Override
 	public void postInit() {
+		this.postInit(new ProgressBar.NullProgressBar());
+	}
+
+	public void postInit(ProgressBar progressBar) {
+		this.postInit(progressBar, true);
+	}
+
+	public void postInit(ProgressBar progressBar, boolean finish) {
 		orderedMods.stream().forEachOrdered(mod -> {
 			try {
+				progressBar.step(mod.getClass());
 				mod.postInit();
 			} catch (Throwable t) {
 				Game.logger().error("Critical error caught during post initialization phase", t);
 				throw new InitializationException(t);
 			}
 		});
+		if (finish) progressBar.finish();
 	}
 
 	public Set<ANNOTATION> getLoadedMods() {
