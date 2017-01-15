@@ -14,7 +14,10 @@ dependencies {
 	compile 'se.jbee:silk-di:0.6'
 	compile 'org.slf4j:slf4j-api:1.7.10'
 	compile 'org.apache.commons:commons-math3:3.5'
+	compile 'javax.json:javax.json-api:1.0'
+	compile 'com.google.code.gson:gson:2.8.0'
 
+	runtime 'org.glassfish:javax.json:1.0.4'
 	testRuntime 'org.slf4j:slf4j-simple:1.7.10'
 
 	//checkstyle 'com.puppycrawl.tools:checkstyle:6.2'

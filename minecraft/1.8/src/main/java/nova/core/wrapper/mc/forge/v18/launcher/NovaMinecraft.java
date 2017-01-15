@@ -50,7 +50,7 @@ import nova.core.wrapper.mc.forge.v18.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.cuboid.CuboidConverter;
-import nova.core.wrapper.mc.forge.v18.wrapper.data.DataWrapper;
+import nova.core.wrapper.mc.forge.v18.wrapper.data.DataConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.inventory.InventoryConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
@@ -116,7 +116,7 @@ public class NovaMinecraft {
 			/**
 			 * Register native converters
 			 */
-			Game.natives().registerConverter(new DataWrapper());
+			Game.natives().registerConverter(new DataConverter());
 			Game.natives().registerConverter(new EntityConverter());
 			Game.natives().registerConverter(new BlockConverter());
 			Game.natives().registerConverter(new ItemConverter());

@@ -23,6 +23,8 @@ package nova.core.retention;
 import nova.core.util.exception.NovaException;
 
 public class DataException extends NovaException {
+	private static final long serialVersionUID = 1L;
+
 	public DataException() {
 		super();
 	}
