@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -256,6 +257,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 		for (int i = 0; i < ingredients.length; i++) {
 			Item original = mapping.Items[i];
 			Item consumed = ingredients[i].consumeOnCrafting(original, craftingGrid);
+			Objects.requireNonNull(consumed, "The result of 'ItemIngredient.consumeOnCrafting' can't be null");
 
 			// -- only works if Item is immutable
 			//if (original == consumed)

@@ -24,6 +24,7 @@ import nova.core.item.Item;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -119,8 +120,9 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 
 		for (int i = 0; i < ingredients.length; i++) {
 			ItemIngredient ingredient = ingredients[i];
-			Item transformed = ingredient.consumeOnCrafting(matching.inputs[i], craftingGrid);
-			craftingGrid.setStack(matching.indices[i], Optional.ofNullable(transformed));
+			Item consumed = ingredient.consumeOnCrafting(matching.inputs[i], craftingGrid);
+			Objects.requireNonNull(consumed, "The result of 'ItemIngredient.consumeOnCrafting' can't be null");
+			craftingGrid.setStack(matching.indices[i], Optional.ofNullable(consumed));
 		}
 	}
 
