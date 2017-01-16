@@ -69,7 +69,7 @@ public class SpecificItemIngredient implements ItemIngredient {
 
 	@Override
 	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
-		return original;
+		return original.withAmount(original.count() - 1);
 	}
 
 	@Override

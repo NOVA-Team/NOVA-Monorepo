@@ -74,6 +74,6 @@ public class OreItemIngredient implements ItemIngredient {
 
 	@Override
 	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
-		return null;
+		return original.withAmount(original.count() - 1);
 	}
 }
