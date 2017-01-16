@@ -20,7 +20,9 @@
 
 package nova.core.recipes.crafting;
 
+import nova.core.block.BlockFactory;
 import nova.core.item.Item;
+import nova.core.item.ItemFactory;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -32,6 +34,27 @@ import java.util.Optional;
  * @author Stan Hebben
  */
 public interface ItemIngredient {
+
+	/**
+	 * Retrieves an ingredient to represent a specific block.
+	 *
+	 * @param block The block
+	 * @return ingredient
+	 */
+	static ItemIngredient forBlock(BlockFactory block) {
+		return forItem(block.getID());
+	}
+
+	/**
+	 * Retrieves an ingredient to represent a specific item.
+	 *
+	 * @param item The item
+	 * @return ingredient
+	 */
+	static ItemIngredient forItem(ItemFactory item) {
+		return forItem(item.getID());
+	}
+
 	/**
 	 * Retrieves an ingredient to represent a specific item.
 	 *
