@@ -20,12 +20,15 @@
 
 package nova.core.component.renderer;
 
+import nova.core.component.ComponentProvider;
 import nova.core.render.pipeline.RenderPipeline;
 
 /**
- * This interface specifies that a block requires custom static rendering.
+ * This Component specifies that a {@link ComponentProvider} requires custom static rendering.
  * This type of rendering only updates its render state every time the world changes (block change)
- * See {@link RenderPipeline} to easily pipeline models to prepare it for rendering
+ * See {@link RenderPipeline} to easily pipeline models to prepare it for rendering.
+ *
+ * @see DynamicRenderer
  */
 public class StaticRenderer extends Renderer {
 

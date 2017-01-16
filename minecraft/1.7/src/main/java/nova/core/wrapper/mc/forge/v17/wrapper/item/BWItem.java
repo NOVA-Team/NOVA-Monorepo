@@ -24,7 +24,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import nova.core.component.renderer.ItemRenderer;
+import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
 import nova.core.render.model.CustomModel;
 import nova.core.retention.Storable;
@@ -55,7 +55,7 @@ public class BWItem extends Item implements Storable {
 		this.meta = meta;
 		this.tag = tag;
 
-		components.add(new ItemRenderer())
+		components.add(new StaticRenderer())
 			.onRender(model -> {
 					model.addChild(new CustomModel(self -> {
 						Tessellator.instance.draw();
