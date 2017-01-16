@@ -35,9 +35,15 @@ import java.util.stream.Collectors;
  */
 public class OreItemIngredient implements ItemIngredient {
 	private final String name;
+	private final int size;
 
 	public OreItemIngredient(String name) {
+		this(name, 1);
+	}
+
+	public OreItemIngredient(String name, int size) {
 		this.name = name;
+		this.size = size;
 	}
 
 	public String getName() {
@@ -51,20 +57,18 @@ public class OreItemIngredient implements ItemIngredient {
 
 	@Override
 	public Optional<Collection<Item>> getExampleItems() {
-		List<Item> result = new ArrayList<Item>();
-
-
-		return Optional.of(Game.itemDictionary().get(name));
+		return Optional.of(Game.itemDictionary().get(name).stream().map(i -> i.clone().setCount(size)).collect(Collectors.toList()));
 	}
 
 	@Override
 	public boolean isSubsetOf(ItemIngredient ingredient) {
-		return false;
+		return ingredient.getPossibleItemIds().isPresent() && this.getPossibleItemIds().isPresent() &&
+			ingredient.getPossibleItemIds().get().containsAll(this.getPossibleItemIds().get());
 	}
 
 	@Override
 	public boolean matches(Item item) {
-		return Game.itemDictionary().get(name).contains(item);
+		return Game.itemDictionary().get(name).contains(item) && item.count() >= this.size;
 	}
 
 	@Override

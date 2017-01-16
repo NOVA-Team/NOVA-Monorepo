@@ -261,7 +261,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 			//if (original == consumed)
 			//    continue;
 
-			if (consumed.count() == 0) {
+			if (consumed != null && consumed.count() == 0) {
 				consumed = null;
 			}
 

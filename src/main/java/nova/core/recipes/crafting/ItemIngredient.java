@@ -76,6 +76,46 @@ public interface ItemIngredient {
 	}
 
 	/**
+	 * Retrieves an ingredient to represent a specific block.
+	 *
+	 * @param block The block
+	 * @return ingredient
+	 */
+	static ItemIngredient forBlock(BlockFactory block, int size) {
+		return forItem(block.getID(), size);
+	}
+
+	/**
+	 * Retrieves an ingredient to represent a specific item.
+	 *
+	 * @param item The item
+	 * @return ingredient
+	 */
+	static ItemIngredient forItem(ItemFactory item, int size) {
+		return forItem(item.getID(), size);
+	}
+
+	/**
+	 * Retrieves an ingredient to represent a specific item.
+	 *
+	 * @param itemId item ID
+	 * @return ingredient
+	 */
+	static ItemIngredient forItem(String itemId, int size) {
+		return new SpecificItemIngredient(itemId, size);
+	}
+
+	/**
+	 * Retrieves an ingredient to represent a dictionary entry.
+	 *
+	 * @param id dictionary entry ID
+	 * @return ingredient
+	 */
+	static ItemIngredient forDictionary(String id, int size) {
+		return new OreItemIngredient(id, size);
+	}
+
+	/**
 	 * Returns a list of all items that could possibly match this ingredient.
 	 * Should return Optional.empty() if there is no such list.
 	 *

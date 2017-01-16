@@ -33,9 +33,15 @@ import java.util.Optional;
  */
 public class SpecificItemIngredient implements ItemIngredient {
 	private final String itemId;
+	private final int size;
 
 	public SpecificItemIngredient(String itemId) {
+		this(itemId, 1);
+	}
+
+	public SpecificItemIngredient(String itemId, int size) {
 		this.itemId = itemId;
+		this.size = size;
 	}
 
 	public String getItemId() {
@@ -49,7 +55,7 @@ public class SpecificItemIngredient implements ItemIngredient {
 
 	@Override
 	public Optional<Collection<Item>> getExampleItems() {
-		return Optional.of(Collections.singleton(getItem(itemId)));
+		return Optional.of(Collections.singleton(getItem(itemId).setCount(this.size)));
 	}
 
 	@Override
@@ -59,7 +65,7 @@ public class SpecificItemIngredient implements ItemIngredient {
 
 	@Override
 	public boolean matches(Item item) {
-		return item.getID().equals(itemId);
+		return item.getID().equals(itemId) && item.count() >= this.size;
 	}
 
 	@Override
@@ -69,26 +75,14 @@ public class SpecificItemIngredient implements ItemIngredient {
 
 	@Override
 	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
-		return original;
+		return original.clone().setCount(original.count() - this.size);
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		SpecificItemIngredient that = (SpecificItemIngredient) o;
-
-		if (!itemId.equals(that.itemId)) {
-			return false;
-		}
-
-		return true;
+	public boolean equals(Object other) {
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
+		return itemId.equals(((SpecificItemIngredient) other).itemId);
 	}
 
 	@Override
