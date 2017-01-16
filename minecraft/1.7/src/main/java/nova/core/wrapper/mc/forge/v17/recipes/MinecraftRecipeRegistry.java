@@ -20,22 +20,30 @@
 
 package nova.core.wrapper.mc.forge.v17.recipes;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import nova.core.event.RecipeEvent;
+import nova.core.item.Item;
+import nova.core.recipes.crafting.ItemIngredient;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipe;
+import nova.core.recipes.smelting.SmeltingRecipe;
 import nova.core.wrapper.mc.forge.v17.util.ReflectionUtil;
+import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 
 import java.util.AbstractList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -73,6 +81,9 @@ public class MinecraftRecipeRegistry {
 
 		recipeManager.whenRecipeAdded(CraftingRecipe.class, this::onNOVARecipeAdded);
 		recipeManager.whenRecipeRemoved(CraftingRecipe.class, this::onNOVARecipeRemoved);
+
+		recipeManager.whenRecipeAdded(SmeltingRecipe.class, this::onNOVASmeltingAdded);
+		recipeManager.whenRecipeRemoved(SmeltingRecipe.class, this::onNOVASmeltingRemoved);
 	}
 
 	private CraftingRecipe convert(IRecipe recipe) {
@@ -126,6 +137,26 @@ public class MinecraftRecipeRegistry {
 		backwardWrappers.remove(recipe);
 
 		Game.recipes().removeRecipe(novaRecipe);
+	}
+
+	private void onNOVASmeltingAdded(RecipeEvent.Add<SmeltingRecipe> evt) {
+		SmeltingRecipe recipe = evt.recipe;
+
+		Collection<Item> inputs = recipe.getInput().flatMap(ItemIngredient::getExampleItems).orElse(Collections.emptyList());
+
+		final Optional<ItemStack> output = recipe.getNominalOutput().map(ItemConverter.instance()::toNative);
+		if (!output.isPresent())
+			return;
+
+		inputs.stream().map(ItemConverter.instance()::toNative).forEach(input -> FurnaceRecipes.smelting().func_151394_a(input, output.get(), 0));
+	}
+
+	private void onNOVASmeltingRemoved(RecipeEvent.Remove<SmeltingRecipe> evt) {
+		SmeltingRecipe recipe = evt.recipe;
+
+		Collection<Item> inputs = recipe.getInput().flatMap(ItemIngredient::getExampleItems).orElse(Collections.emptyList());
+		Map<ItemStack, ItemStack> smeltingList = FurnaceRecipes.smelting().getSmeltingList();
+		inputs.stream().map(ItemConverter.instance()::toNative).forEach(input -> smeltingList.remove(input));
 	}
 
 	private class RecipeListWrapper extends AbstractList<IRecipe> {
