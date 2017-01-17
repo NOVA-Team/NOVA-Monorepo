@@ -36,6 +36,7 @@ import nova.core.wrapper.mc.forge.v18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v18.util.ModCreativeTab;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
+import nova.core.wrapper.mc.forge.v18.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItemBlock;
 import nova.internal.core.Game;
 
@@ -142,16 +143,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		if (blockWrapper.dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 			//Add into creative tab
 			Category category = blockWrapper.dummy.components.get(Category.class);
-			Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
-				.filter(tab -> tab.getTabLabel().equals(category.name))
-				.findFirst();
-			if (first.isPresent()) {
-				blockWrapper.setCreativeTab(first.get());
-			} else {
-				Optional<nova.core.item.Item> item = category.item;
-				ModCreativeTab tab = new ModCreativeTab(category.name, item.isPresent() ? Game.natives().toNative(item.get()) : Item.getItemFromBlock(blockWrapper));
-				blockWrapper.setCreativeTab(tab);
-			}
+			blockWrapper.setCreativeTab(CategoryConverter.instance().toNative(category, blockWrapper));
 		}
 
 		System.out.println("[NOVA]: Registered '" + blockFactory.getID() + "' block.");

@@ -23,7 +23,6 @@ package nova.core.wrapper.mc.forge.v17.wrapper.item;
 import com.google.common.collect.HashBiMap;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import nova.core.block.BlockFactory;
 import nova.core.component.Category;
@@ -35,13 +34,11 @@ import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
-import nova.core.wrapper.mc.forge.v17.util.ModCreativeTab;
+import nova.core.wrapper.mc.forge.v17.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
 
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -206,16 +203,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
 				Category category = dummy.components.get(Category.class);
-				Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
-					.filter(tab -> tab.getTabLabel().equals(category.name))
-					.findFirst();
-				if (first.isPresent()) {
-					itemWrapper.setCreativeTab(first.get());
-				} else {
-					Optional<Item> item = category.item;
-					ModCreativeTab tab = new ModCreativeTab(category.name, item.isPresent() ? Game.natives().toNative(item.get()) : itemWrapper);
-					itemWrapper.setCreativeTab(tab);
-				}
+				itemWrapper.setCreativeTab(CategoryConverter.instance().toNative(category, itemWrapper));
 			}
 
 			System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");

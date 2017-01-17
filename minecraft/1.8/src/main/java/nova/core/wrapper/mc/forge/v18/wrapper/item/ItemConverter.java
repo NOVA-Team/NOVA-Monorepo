@@ -20,8 +20,8 @@
 
 package nova.core.wrapper.mc.forge.v18.wrapper.item;
 
+import nova.core.wrapper.mc.forge.v18.wrapper.CategoryConverter;
 import com.google.common.collect.HashBiMap;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -208,16 +208,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
 				Category category = dummy.components.get(Category.class);
-				Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
-					.filter(tab -> tab.getTabLabel().equals(category.name))
-					.findFirst();
-				if (first.isPresent()) {
-					itemWrapper.setCreativeTab(first.get());
-				} else {
-					Optional<Item> item = category.item;
-					ModCreativeTab tab = new ModCreativeTab(category.name, item.isPresent() ? Game.natives().toNative(item.get()) : itemWrapper);
-					itemWrapper.setCreativeTab(tab);
-				}
+				itemWrapper.setCreativeTab(CategoryConverter.instance().toNative(category, itemWrapper));
 			}
 
 			System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");

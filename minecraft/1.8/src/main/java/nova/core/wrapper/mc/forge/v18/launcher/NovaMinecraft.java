@@ -45,6 +45,7 @@ import nova.core.wrapper.mc.forge.v18.depmodules.RenderModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.SaveModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.TickerModule;
 import nova.core.wrapper.mc.forge.v18.recipes.MinecraftRecipeRegistry;
+import nova.core.wrapper.mc.forge.v18.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
@@ -125,6 +126,7 @@ public class NovaMinecraft {
 			Game.natives().registerConverter(new InventoryConverter());
 			Game.natives().registerConverter(new VectorConverter());
 			Game.natives().registerConverter(new DirectionConverter());
+			Game.natives().registerConverter(new CategoryConverter());
 
 			/**
 			 * Initiate recipe and ore dictionary integration
