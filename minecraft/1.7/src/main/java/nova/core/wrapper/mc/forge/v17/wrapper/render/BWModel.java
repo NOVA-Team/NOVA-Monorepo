@@ -67,8 +67,7 @@ public class BWModel extends MeshModel {
 			model -> {
 				if (model instanceof MeshModel) {
 					MeshModel meshModel = (MeshModel) model;
-					meshModel.faces.forEach(face ->
-					{
+					meshModel.faces.forEach(face -> {
 						// Brightness is defined as: skyLight << 20 | blockLight << 4
 						if (face.getBrightness() >= 0) {
 							tessellator.setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
@@ -80,15 +79,15 @@ public class BWModel extends MeshModel {
 
 							// TODO: Add Ambient Occlusion
 						/*
-						int aoBrightnessXYNN = block.getMixedBrightnessForBlock(blockAccess, translation.getX() - 1, translation.getY(), translation.zi());
-						int aoBrightnessYZNN = block.getMixedBrightnessForBlock(blockAccess, translation.getX(), translation.getY(), translation.zi() - 1);
-						int aoBrightnessYZNP = block.getMixedBrightnessForBlock(blockAccess, translation.getX(), translation.getY(), translation.zi() + 1);
-						int aoBrightnessXYPN = block.getMixedBrightnessForBlock(blockAccess, translation.getX() + 1, translation.getY(), translation.zi());
+						int aoBrightnessXYNN = block.getMixedBrightnessForBlock(access.get(), (int) nearestPos.getX() - 1, (int) nearestPos.getY(), (int) nearestPos.getZ());
+						int aoBrightnessYZNN = block.getMixedBrightnessForBlock(access.get(), (int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ() - 1);
+						int aoBrightnessYZNP = block.getMixedBrightnessForBlock(access.get(), (int) nearestPos.getX(), (int) nearestPos.getY(), (int) nearestPos.getZ() + 1);
+						int aoBrightnessXYPN = block.getMixedBrightnessForBlock(access.get(), (int) nearestPos.getX() + 1, (int) nearestPos.getY(), (int) nearestPos.getZ());
 
-						int brightnessTopLeft = getAoBrightness(aoBrightnessXYZNNP, this.aoBrightnessXYNN, this.aoBrightnessYZNP, i1);
-						int brightnessTopRight = getAoBrightness(aoBrightnessYZNP, this.aoBrightnessXYZPNP, this.aoBrightnessXYPN, i1);
-						int brightnessBottomRight = getAoBrightness(this.aoBrightnessYZNN, this.aoBrightnessXYPN, this.aoBrightnessXYZPNN, i1);
-						int brightnessBottomLeft = getAoBrightness(this.aoBrightnessXYNN, this.aoBrightnessXYZNNN, this.aoBrightnessYZNN, i1);
+						int brightnessTopLeft = getAoBrightness(aoBrightnessXYZNNP, aoBrightnessXYNN, aoBrightnessYZNP, i1);
+						int brightnessTopRight = getAoBrightness(aoBrightnessYZNP, aoBrightnessXYZPNP, aoBrightnessXYPN, i1);
+						int brightnessBottomRight = getAoBrightness(aoBrightnessYZNN, aoBrightnessXYPN, aoBrightnessXYZPNN, i1);
+						int brightnessBottomLeft = getAoBrightness(aoBrightnessXYNN, aoBrightnessXYZNNN, aoBrightnessYZNN, i1);
 						*/
 
 							tessellator.setBrightness(brightness);
@@ -98,7 +97,7 @@ public class BWModel extends MeshModel {
 							tessellator.setBrightness(15 << 20 | 11 << 4);
 						}
 
-						tessellator.setNormal((int) face.normal.getX(), (int) face.normal.getY(), (int) face.normal.getZ());
+						tessellator.setNormal((float) face.normal.getX(), (float) face.normal.getY(), (float) face.normal.getZ());
 
 						if (face.texture.isPresent()) {
 							if (entityRenderManager.isPresent() && face.texture.get() instanceof EntityTexture) {

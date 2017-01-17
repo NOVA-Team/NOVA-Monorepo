@@ -97,9 +97,9 @@ public class BWBlock extends Block implements Storable {
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			});
+		//TODO: Set selection bounds
 		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
 		Game.events().publish(event);
-		//TODO: Set selection bounds
 	}
 
 	@Override
