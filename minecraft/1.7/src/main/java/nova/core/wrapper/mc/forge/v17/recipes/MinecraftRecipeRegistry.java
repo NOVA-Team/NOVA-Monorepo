@@ -22,9 +22,8 @@ package nova.core.wrapper.mc.forge.v17.recipes;
 
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import nova.core.recipes.RecipeAddedEvent;
+import nova.core.event.RecipeEvent;
 import nova.core.recipes.RecipeManager;
-import nova.core.recipes.RecipeRemovedEvent;
 import nova.core.recipes.crafting.CraftingRecipe;
 import nova.core.wrapper.mc.forge.v17.util.ReflectionUtil;
 import nova.internal.core.Game;
@@ -58,7 +57,7 @@ public class MinecraftRecipeRegistry {
 
 		RecipeManager recipeManager = Game.recipes();
 
-		List<IRecipe> recipes = (List<IRecipe>) CraftingManager.getInstance().getRecipeList();
+		List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
 		for (IRecipe recipe : recipes) {
 			CraftingRecipe converted = convert(recipe);
 			if (converted != null) {
@@ -84,8 +83,8 @@ public class MinecraftRecipeRegistry {
 		return RecipeConverter.toMinecraft(recipe);
 	}
 
-	private void onNOVARecipeAdded(RecipeAddedEvent<CraftingRecipe> e) {
-		CraftingRecipe recipe = e.getRecipe();
+	private void onNOVARecipeAdded(RecipeEvent.Add<CraftingRecipe> evt) {
+		CraftingRecipe recipe = evt.recipe;
 		if (forwardWrappers.containsKey(recipe)) {
 			return;
 		}
@@ -98,10 +97,10 @@ public class MinecraftRecipeRegistry {
 		CraftingManager.getInstance().getRecipeList().add(minecraftRecipe);
 	}
 
-	private void onNOVARecipeRemoved(RecipeRemovedEvent<CraftingRecipe> e) {
-		IRecipe minecraftRecipe = forwardWrappers.get(e.getRecipe());
+	private void onNOVARecipeRemoved(RecipeEvent.Remove<CraftingRecipe> evt) {
+		IRecipe minecraftRecipe = forwardWrappers.get(evt.recipe);
 
-		forwardWrappers.remove(e.getRecipe());
+		forwardWrappers.remove(evt.recipe);
 		backwardWrappers.remove(minecraftRecipe);
 
 		CraftingManager.getInstance().getRecipeList().remove(minecraftRecipe);
