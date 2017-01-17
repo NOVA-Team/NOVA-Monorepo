@@ -23,7 +23,6 @@ package nova.core.wrapper.mc.forge.v18.wrapper.render;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartItemModel;
@@ -33,9 +32,8 @@ import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
 import nova.internal.core.Game;
 
-import javax.vecmath.Vector3f;
 import java.util.List;
-import java.util.Optional;
+import javax.vecmath.Vector3f;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -45,6 +43,7 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 
 	private final Item item;
 
+	@SuppressWarnings("deprecation")
 	public FWSmartItemModel(Item item) {
 		super();
 		this.item = item;
@@ -56,8 +55,9 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 			new ItemTransformVec3f(new Vector3f(-30, 135, 0), new Vector3f(), new Vector3f(1.6F, 1.6F, 1.6F))); // GUI
 	}
 
+	//Item rendering
 	@Override
-	public IBakedModel handleItemState(ItemStack stack) {
+	public ISmartItemModel handleItemState(ItemStack stack) {
 		Item item = Game.natives().toNova(stack);
 
 		if (item.components.has(Renderer.class)) {
