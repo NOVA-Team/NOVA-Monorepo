@@ -20,14 +20,17 @@
 
 package nova.core.wrapper.mc.forge.v18.wrapper.entity.backward;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import nova.core.component.inventory.InventoryPlayer;
 import nova.core.component.misc.Damageable;
+import nova.core.component.renderer.DynamicRenderer;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
 import nova.core.entity.component.Player;
+import nova.core.render.model.CustomModel;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.forward.MCEntityTransform;
 import nova.core.wrapper.mc.forge.v18.wrapper.inventory.BWInventory;
@@ -60,6 +63,12 @@ public class BWEntity extends Entity {
 				// TODO: Apply other damage source wrappers?
 			}
 		});
+
+		components.add(new DynamicRenderer()).onRender(model -> {
+				model.addChild(new CustomModel(self -> {
+					Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entity, entity.posX, entity.posY, entity.posZ, entity.rotationYaw, 1);
+				}));
+			});
 
 		if (entity instanceof EntityLivingBase) {
 			if (entity instanceof EntityPlayer) {

@@ -98,8 +98,8 @@ public class BWBlock extends Block implements Storable {
 					.collect(Collectors.toSet());
 			});
 		//TODO: Set selection bounds
-		components.add(new StaticRenderer())
-			.onRender(model -> model.addChild(new CustomModel(self -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z()))));
+		components.add(new StaticRenderer()).onRender(model ->
+			model.addChild(new CustomModel(self -> RenderBlocks.getInstance().renderBlockByRenderType(mcBlock, x(), y(), z()))));
 		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
 		Game.events().publish(event);
 	}

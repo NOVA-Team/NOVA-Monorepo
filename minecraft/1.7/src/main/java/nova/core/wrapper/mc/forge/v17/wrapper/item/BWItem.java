@@ -57,22 +57,21 @@ public class BWItem extends Item implements Storable {
 
 		components.add(new StaticRenderer())
 			.onRender(model -> {
-					model.addChild(new CustomModel(self -> {
-						Tessellator.instance.draw();
-						GL11.glPushMatrix();
-						DoubleBuffer buffer = BufferUtils.createDoubleBuffer(4 * 4);
-						double[] flatArray = Arrays.stream(self.matrix.getMatrix().getData())
-							.flatMapToDouble(Arrays::stream)
-							.toArray();
-						buffer.put(flatArray);
-						buffer.position(0);
-						GL11.glMultMatrix(buffer);
+				model.addChild(new CustomModel(self -> {
+					Tessellator.instance.draw();
+					GL11.glPushMatrix();
+					DoubleBuffer buffer = BufferUtils.createDoubleBuffer(4 * 4);
+					double[] flatArray = Arrays.stream(self.matrix.getMatrix().getData())
+						.flatMapToDouble(Arrays::stream)
+						.toArray();
+					buffer.put(flatArray);
+					buffer.position(0);
+					GL11.glMultMatrix(buffer);
 						RenderItem.getInstance().doRender(fakeEntity, 0, 0, 0, 0, 0);
-						GL11.glPopMatrix();
-						Tessellator.instance.startDrawingQuads();
-					}));
-				}
-			);
+					GL11.glPopMatrix();
+					Tessellator.instance.startDrawingQuads();
+				}));
+			});
 	}
 
 	public net.minecraft.item.Item getItem() {
