@@ -32,6 +32,7 @@ import nova.core.util.shape.Cuboid;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
@@ -86,6 +87,28 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 		return this;
 	}
 
+	/**
+	 * Set the mask used to determine if this pipeline should handle these sides.
+	 *
+	 * @param faceMask A mask of which sides the connected texture renderer should render.
+	 * @return this
+	 */
+	public ConnectedTextureRenderPipeline withFaceMask(Predicate<Direction> faceMask) {
+		int faceMaskInt = 0;
+		for (int i = 0; i < 6; i++)
+			faceMaskInt |= (faceMask.test(Direction.fromOrdinal(i)) ? 1 : 0);
+		this.faceMask = faceMaskInt;
+		return this;
+	}
+
+	/**
+	 * Set the mask used to determine if this pipeline should handle these sides.
+	 *
+	 * @param faceMask A mask of which sides the connected texture renderer should render.
+	 * Each bit corresponds to a direction.
+	 * E.g: 000011 will render top and bottom
+	 * @return this
+	 */
 	public ConnectedTextureRenderPipeline withFaceMask(int faceMask) {
 		this.faceMask = faceMask;
 		return this;

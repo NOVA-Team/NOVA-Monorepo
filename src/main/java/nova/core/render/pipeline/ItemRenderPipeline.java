@@ -70,32 +70,71 @@ public class ItemRenderPipeline extends RenderPipeline {
 		consumer = model -> model.addChild(draw(new MeshModel()));
 	}
 
+	/**
+	 * This method is called to specify a texture to use for the item.
+	 *
+	 * @param texture The {@link nova.core.render.texture.Texture} for the item.
+	 * @return this
+	 */
 	public ItemRenderPipeline withTexture(Supplier<Optional<Texture>> texture) {
 		this.texture = texture;
 		return this;
 	}
 
-	public ItemRenderPipeline withTexture(Texture t) {
-		Objects.requireNonNull(t, "Texture is null, please initiate the texture before the item");
-		this.texture = () -> Optional.of(t);
+	/**
+	 * This method is called to specify a texture to use for the item.
+	 *
+	 * @param texture The {@link nova.core.render.texture.Texture} to use for all sides.
+	 * @return this
+	 */
+	public ItemRenderPipeline withTexture(Texture texture) {
+		Objects.requireNonNull(texture, "Texture is null, please initiate the texture before the item");
+		this.texture = () -> Optional.of(texture);
 		return this;
 	}
 
+	/**
+	 * This method is called to specify the size of the item, defaults to a 1×1 square.
+	 *
+	 * @param size A supplier that returns
+	 * the {@link org.apache.commons.math3.geometry.euclidean.twod.Vector2D} which specifies the item size.
+	 * @return this
+	 */
 	public ItemRenderPipeline withSize(Supplier<Vector2D> size) {
 		this.size = size;
 		return this;
 	}
 
+	/**
+	 * This method is called to specify the size of the item, defaults to a 1×1 square.
+	 *
+	 * @param size The {@link org.apache.commons.math3.geometry.euclidean.twod.Vector2D} which specifies the item size.
+	 * @return this
+	 */
 	public ItemRenderPipeline withSize(Vector2D size) {
 		this.size = () -> size;
 		return this;
 	}
 
+	/**
+	 * This method is called to specify a color multiplier to use for the item.
+	 *
+	 *
+	 * @param colorMultiplier A supplier that returns
+	 * the {@link nova.core.render.Color} multiplier for the item.
+	 * @return this
+	 */
 	public ItemRenderPipeline withColor(Supplier<Color> colorMultiplier) {
 		this.colorMultiplier = colorMultiplier;
 		return this;
 	}
 
+	/**
+	 * This method is called to specify a color multiplier to use for the item.
+	 *
+	 * @param colorMultiplier The {@link nova.core.render.Color} multiplier for the item.
+	 * @return this
+	 */
 	public ItemRenderPipeline withColor(Color colorMultiplier) {
 		this.colorMultiplier = () -> colorMultiplier;
 		return this;
