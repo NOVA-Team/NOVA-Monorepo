@@ -61,6 +61,7 @@ public class BlockManager extends FactoryManager<BlockManager, Block, BlockFacto
 		BlockEvent.Register event = new BlockEvent.Register(factory);
 		Game.events().publish(event);
 		registry.register(event.blockFactory);
+		event.blockFactory.postRegister.accept(event.blockFactory);
 		return event.blockFactory;
 	}
 
