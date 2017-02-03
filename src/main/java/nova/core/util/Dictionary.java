@@ -20,15 +20,18 @@
 
 package nova.core.util;
 
+import nova.core.event.DictionaryEvent;
 import nova.core.event.bus.EventBus;
 import nova.core.event.bus.EventListener;
 import nova.core.event.bus.EventListenerHandle;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 /**
  * A dictionary where each identifying string represents a set of objects
@@ -37,10 +40,9 @@ import java.util.Set;
  * @param <T> The object type
  */
 public class Dictionary<T> {
-	private final Map<String, Set<T>> entries = new HashMap<>();
-	private final Map<T, Set<String>> locations = new HashMap<>();
-	private final EventBus<AddEvent<T>> addEventListeners = new EventBus<>();
-	private final EventBus<RemoveEvent<T>> removeEventListeners = new EventBus<>();
+	private final Map<String, Set<T>> entries = new ConcurrentHashMap<>();
+	private final Map<T, Set<String>> locations = new ConcurrentHashMap<>();
+	private final EventBus<DictionaryEvent<T>> events = new EventBus<>();
 
 	/**
 	 * Add an object to the dictionary.
@@ -51,23 +53,22 @@ public class Dictionary<T> {
 	public void add(String key, T object) {
 		// TODO: Enforce name to be in camelCase
 		if (!entries.containsKey(key)) {
-			entries.put(key, new HashSet<>());
+			entries.put(key, ConcurrentHashMap.newKeySet());
 		}
 
 		entries.get(key).add(object);
 
 		if (!locations.containsKey(object)) {
-			locations.put(object, new HashSet<>());
+			locations.put(object, ConcurrentHashMap.newKeySet());
 		}
 
 		locations.get(object).add(key);
 
-		addEventListeners.publish(new AddEvent<>(key, object));
+		events.publish(new DictionaryEvent.Add<>(key, object));
 	}
 
 	/**
-	 * .
-	 * Removes an object from the dictionary
+	 * Removes an object from the dictionary.
 	 *
 	 * @param key the name of the object
 	 * @param object the object to remove
@@ -79,7 +80,23 @@ public class Dictionary<T> {
 		entries.get(key).remove(object);
 		locations.get(object).remove(key);
 
-		removeEventListeners.publish(new RemoveEvent<>(key, object));
+		events.publish(new DictionaryEvent.Remove<>(key, object));
+	}
+
+	/**
+	 * Removes all objects from the dictionary registered for the key.
+	 *
+	 * @param key the name of the objects
+	 */
+	public void removeAll(String key) {
+		if (!entries.containsKey(key))
+			return;
+
+		Set<T> objects = entries.get(key);
+		objects.stream().forEach(object -> {
+			locations.get(object).remove(key);
+			events.publish(new DictionaryEvent.Remove<>(key, object));
+		});
 	}
 
 	/**
@@ -89,9 +106,8 @@ public class Dictionary<T> {
 	 * @return the list of objects.
 	 */
 	public Set<T> get(String name) {
-		if (!entries.containsKey(name)) {
-			entries.put(name, new HashSet<>());
-		}
+		if (!entries.containsKey(name))
+			entries.put(name, ConcurrentHashMap.newKeySet());
 
 		return Collections.unmodifiableSet(entries.get(name));
 	}
@@ -103,45 +119,43 @@ public class Dictionary<T> {
 	 * @return the list of names this object is identified by
 	 */
 	public Set<String> find(T object) {
-		if (!locations.containsKey(object)) {
-			locations.put(object, new HashSet<>());
-		}
+		if (!locations.containsKey(object))
+			locations.put(object, ConcurrentHashMap.newKeySet());
 
 		return Collections.unmodifiableSet(locations.get(object));
 	}
 
 	/**
-	 * @return a {@link java.util.Set Set} of the names in this dictionary.
+	 * Gets a {@link java.util.Set Set} view of the names in this dictionary.
+	 * This view is backed by the dictionary, but it cannot be used to modify the dictionary.
+	 * To do that use either {@link #remove(java.lang.String, java.lang.Object) remove(String, T)}
+	 * or {@link #removeAll(java.lang.String) removeAll(String)}.
+	 *
+	 * @return a {@link java.util.Set Set} view of the names in this dictionary.
 	 */
 	public Set<String> keys() {
-		return entries.keySet();
+		return Collections.unmodifiableSet(entries.keySet());
 	}
 
-	public EventListenerHandle<AddEvent<T>> whenEntryAdded(EventListener<AddEvent<T>> listener) {
-		return addEventListeners.on().bind(listener);
+	public void forEach(BiConsumer<? super String, ? super Set<T>> action) {
+		entries.forEach(action);
 	}
 
-	public EventListenerHandle<RemoveEvent<T>> whenEntryRemoved(EventListener<RemoveEvent<T>> listener) {
-		return removeEventListeners.on().bind(listener);
+	public Stream<Map.Entry<String, Set<T>>> stream() {
+		return entries.entrySet().stream();
 	}
 
-	public static class AddEvent<T> {
-		public final String key;
-		public final T value;
-
-		public AddEvent(String key, T value) {
-			this.key = key;
-			this.value = value;
-		}
+	public Stream<Map.Entry<String, Set<T>>> parallelStream() {
+		return entries.entrySet().parallelStream();
 	}
 
-	public static class RemoveEvent<T> {
-		public final String key;
-		public final T value;
+	@SuppressWarnings("unchecked")
+	public EventListenerHandle<DictionaryEvent.Add<T>> whenEntryAdded(EventListener<DictionaryEvent.Add<T>> listener) {
+		return events.on(DictionaryEvent.Add.class).bind(listener);
+	}
 
-		public RemoveEvent(String key, T value) {
-			this.key = key;
-			this.value = value;
-		}
+	@SuppressWarnings("unchecked")
+	public EventListenerHandle<DictionaryEvent.Remove<T>> whenEntryRemoved(EventListener<DictionaryEvent.Remove<T>> listener) {
+		return events.on(DictionaryEvent.Remove.class).bind(listener);
 	}
 }
