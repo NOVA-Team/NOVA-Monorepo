@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v17.launcher;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.EntityFX;
@@ -49,8 +50,8 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public class ClientProxy extends CommonProxy {
 	@Override
-	public void preInit() {
-		super.preInit();
+	public void preInit(FMLPreInitializationEvent evt) {
+		super.preInit(evt);
 		MinecraftForge.EVENT_BUS.register(RenderUtility.instance);
 		ClientRegistry.bindTileEntitySpecialRenderer(FWTile.class, FWTileRenderer.instance);
 		RenderingRegistry.registerEntityRenderingHandler(FWEntity.class, FWEntityRenderer.instance);

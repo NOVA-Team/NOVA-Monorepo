@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v17.wrapper.block;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.init.Blocks;
 import nova.core.block.Block;
@@ -28,8 +29,8 @@ import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.component.Category;
 import nova.core.event.BlockEvent;
-import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
+import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v17.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.backward.BWBlock;
@@ -42,7 +43,7 @@ import java.util.HashMap;
 /**
  * @author Calclavia
  */
-public class BlockConverter implements NativeConverter<Block, net.minecraft.block.Block>, Loadable {
+public class BlockConverter implements NativeConverter<Block, net.minecraft.block.Block>, ForgeLoadable {
 	/**
 	 * A map of all blockFactory to MC blocks registered
 	 */
@@ -93,7 +94,8 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	/**
 	 * Register all Nova blocks
 	 */
-	public void preInit() {
+	@Override
+	public void preInit(FMLPreInitializationEvent evt) {
 		registerMinecraftToNOVA();
 		registerNOVAToMinecraft();
 	}

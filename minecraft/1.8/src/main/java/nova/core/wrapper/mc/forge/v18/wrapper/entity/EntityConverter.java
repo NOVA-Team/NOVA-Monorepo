@@ -21,12 +21,13 @@
 package nova.core.wrapper.mc.forge.v18.wrapper.entity;
 
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
+import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.backward.BWEntityFX;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.forward.FWEntity;
@@ -35,7 +36,7 @@ import nova.internal.core.Game;
 
 import java.util.Optional;
 
-public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, Loadable {
+public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, ForgeLoadable {
 
 	@Override
 	public Class<Entity> getNovaSide() {
@@ -79,7 +80,7 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void preInit() {
+	public void preInit(FMLPreInitializationEvent evt) {
 		/**
 		 * Backward register all particle effects
 		 */

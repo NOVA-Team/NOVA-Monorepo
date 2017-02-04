@@ -20,7 +20,7 @@
 
 package nova.internal.core.launch;
 
-import nova.core.loader.Loadable;
+import nova.core.loader.Mod;
 import nova.core.util.ProgressBar;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
@@ -43,9 +43,10 @@ import java.util.stream.Stream;
 /**
  * @author Calclavia
  */
-public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
+public class ModLoader<ANNOTATION extends Annotation> {
 
 	protected final DependencyInjectionEntryPoint diep;
+	private Optional<ANNOTATION> currentMod = Optional.empty();
 
 	/**
 	 * The type of the annotation
@@ -67,7 +68,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	 */
 	protected Map<ANNOTATION, Object> mods;
 
-	protected List<Loadable> orderedMods;
+	protected List<Object> orderedMods;
 
 	public ModLoader(Class<ANNOTATION> annotationType, DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
 		this.diep = diep;
@@ -139,6 +140,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				.collect(Collectors.<Map.Entry<ANNOTATION, Class<?>>, ANNOTATION, Object>toMap(Map.Entry::getKey,
 						entry -> {
 							try {
+								currentMod = Optional.of(entry.getKey());
 								progressBar.step(entry.getValue());
 								return makeObjectWithDep(entry.getValue());
 							} catch (Exception ex) {
@@ -159,9 +161,10 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				.collect(Collectors.toMap(Map.Entry::getKey,
 						entry -> {
 							try {
+								currentMod = Optional.of(entry.getKey());
 								progressBar.step(entry.getValue());
 								Field field = entry.getValue().getField("MODULE$");
-								Loadable loadable = (Loadable) field.get(null);
+								Object loadable = field.get(null);
 
 								//Inject dependencies to Scala singleton variables
 								//TODO: Does not work recursively for all hierarchy
@@ -190,78 +193,11 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				)
 		);
 
+		currentMod = Optional.empty();
 		orderedMods = mods.values()
 			.stream()
-			.filter(mod -> mod.getClass().isAssignableFrom(Loadable.class))
-			.map(mod -> (Loadable) mod)
 			.collect(Collectors.toList());
 
-		if (finish) progressBar.finish();
-	}
-
-	@Override
-	public void preInit() {
-		this.preInit(new ProgressBar.NullProgressBar());
-	}
-
-	public void preInit(ProgressBar progressBar) {
-		this.preInit(progressBar, true);
-	}
-
-	public void preInit(ProgressBar progressBar, boolean finish) {
-		orderedMods.stream().forEachOrdered(mod -> {
-			try {
-				progressBar.step(mod.getClass());
-				mod.preInit();
-			} catch (Throwable t) {
-				Game.logger().error("Critical error caught during pre initialization phase", t);
-				throw new InitializationException(t);
-			}
-		});
-		if (finish) progressBar.finish();
-	}
-
-	@Override
-	public void init() {
-		this.init(new ProgressBar.NullProgressBar());
-	}
-
-	public void init(ProgressBar progressBar) {
-		this.init(progressBar, true);
-	}
-
-	public void init(ProgressBar progressBar, boolean finish) {
-		orderedMods.stream().forEachOrdered(mod -> {
-			try {
-				progressBar.step(mod.getClass());
-				mod.init();
-			} catch (Throwable t) {
-				Game.logger().error("Critical error caught during initialization phase", t);
-				throw new InitializationException(t);
-			}
-		});
-		if (finish) progressBar.finish();
-	}
-
-	@Override
-	public void postInit() {
-		this.postInit(new ProgressBar.NullProgressBar());
-	}
-
-	public void postInit(ProgressBar progressBar) {
-		this.postInit(progressBar, true);
-	}
-
-	public void postInit(ProgressBar progressBar, boolean finish) {
-		orderedMods.stream().forEachOrdered(mod -> {
-			try {
-				progressBar.step(mod.getClass());
-				mod.postInit();
-			} catch (Throwable t) {
-				Game.logger().error("Critical error caught during post initialization phase", t);
-				throw new InitializationException(t);
-			}
-		});
 		if (finish) progressBar.finish();
 	}
 
@@ -279,5 +215,9 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	public Map<ANNOTATION, Class<?>> getScalaClassesMap() {
 		return new HashMap<>(scalaClasses);
+	}
+
+	public Optional<ANNOTATION> getCurrentMod() {
+		return this.currentMod;
 	}
 }

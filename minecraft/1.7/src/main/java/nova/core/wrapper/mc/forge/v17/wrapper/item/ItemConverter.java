@@ -22,6 +22,7 @@ package nova.core.wrapper.mc.forge.v17.wrapper.item;
 
 import com.google.common.collect.HashBiMap;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
 import nova.core.block.BlockFactory;
@@ -30,9 +31,9 @@ import nova.core.event.ItemEvent;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
-import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
+import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v17.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
@@ -45,7 +46,7 @@ import java.util.Set;
  * The main class responsible for wrapping items.
  * @author Calclavia, Stan Hebben
  */
-public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable {
+public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoadable {
 
 	/**
 	 * A map of all items registered
@@ -156,7 +157,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	/**
 	 * Register all Nova blocks
 	 */
-	public void preInit() {
+	@Override
+	public void preInit(FMLPreInitializationEvent evt) {
 		registerNOVAItemsToMinecraft();
 		registerMinecraftItemsToNOVA();
 		registerSubtypeResolution();

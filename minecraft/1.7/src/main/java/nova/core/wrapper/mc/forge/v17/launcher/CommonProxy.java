@@ -20,12 +20,12 @@
 
 package nova.core.wrapper.mc.forge.v17.launcher;
 
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.loader.Loadable;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.forward.FWEntity;
@@ -36,9 +36,9 @@ import java.util.Set;
 /**
  * @author Calclavia
  */
-public class CommonProxy implements Loadable {
+public class CommonProxy implements ForgeLoadable {
 	@Override
-	public void preInit() {
+	public void preInit(FMLPreInitializationEvent evt) {
 		GameRegistry.registerTileEntity(FWTile.class, "novaTile");
 		int globalUniqueEntityId = EntityRegistry.findGlobalUniqueEntityId();
 		EntityRegistry.registerGlobalEntityID(FWEntity.class, "novaEntity", globalUniqueEntityId);

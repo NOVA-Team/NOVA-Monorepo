@@ -22,13 +22,14 @@ package nova.core.util;
 
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
+import nova.core.block.BlockManager;
 import nova.core.component.misc.Collider;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.loader.Loadable;
+import nova.core.entity.EntityManager;
+import nova.core.event.bus.GlobalEvents;
 import nova.core.loader.Mod;
 import nova.core.util.math.RotationUtil;
-import nova.internal.core.Game;
 import nova.internal.core.launch.NovaLauncher;
 import nova.testutils.FakeWorld;
 import nova.wrappertests.NovaLauncherTestFactory;
@@ -138,13 +139,17 @@ public class RayTraceTest {
 	//TODO: Make ray trace entity unit test
 
 	@Mod(id = "rayTrace", name = "ray", version = "1.0", novaVersion = "0.0.1")
-	public static class RayTraceMod implements Loadable {
+	public static class RayTraceMod {
 		public static BlockFactory solid;
 		public static EntityFactory testEntity;
 
-		@Override
-		public void preInit() {
-			solid = Game.blocks().register(
+		public RayTraceMod(GlobalEvents events, BlockManager blockManager, EntityManager entityManager) {
+			events.on(BlockManager.Init.class).bind(evt -> this.registerBlocks(evt.manager));
+			events.on(EntityManager.Init.class).bind(evt -> this.registerEntities(evt.manager));
+		}
+
+		public void registerBlocks(BlockManager blockManager) {
+			solid = blockManager.register(
 				"solid",
 				() -> {
 					Block solid = new Block();
@@ -152,8 +157,10 @@ public class RayTraceTest {
 					return solid;
 				}
 			);
+		}
 
-			testEntity = Game.entities().register("test", Entity::new);
+		private void registerEntities(EntityManager entityManager) {
+			testEntity = entityManager.register("test", Entity::new);
 		}
 	}
 }
