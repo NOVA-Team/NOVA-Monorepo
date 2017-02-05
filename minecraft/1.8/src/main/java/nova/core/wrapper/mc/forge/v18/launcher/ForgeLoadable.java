@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -18,8 +18,26 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.testutils.mod;
+package nova.core.wrapper.mc.forge.v18.launcher;
 
-public class NonAnnotatedTestMod {
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+/**
+ * A mod interface implemented to receive FML mod loading event calls.
+ *
+ * @author ExE Boss
+ */
+// TODO Maybe replace with wrapper events.
+public interface ForgeLoadable {
+
+	default void preInit(FMLPreInitializationEvent evt) {
+	}
+
+	default void init(FMLInitializationEvent evt) {
+	}
+
+	default void postInit(FMLPostInitializationEvent evt) {
+	}
 }

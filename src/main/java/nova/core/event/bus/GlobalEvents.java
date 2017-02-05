@@ -20,10 +20,35 @@
 
 package nova.core.event.bus;
 
+import nova.internal.core.launch.NovaLauncher;
+
+import java.util.Map;
+import java.util.Optional;
+
 /**
  * Global event manager that handles general events that are not object specific.
  * @author Calclavia
  */
 public class GlobalEvents extends EventBus<Event> {
 
+	@Override
+	public <E extends Event> EventBinder<E> on() {
+		return forMod(super.on(), Optional.empty());
+	}
+
+	@Override
+	public <E extends Event> EventBinder<E> on(Class<E> clazz) {
+		return forMod(super.on(clazz), Optional.of(clazz));
+	}
+
+	private <E extends Event> EventBinder<E> forMod(EventBinder<E> binder, Optional<Class<E>> clazz) {
+		NovaLauncher.instance().ifPresent(launcher ->
+			launcher.getCurrentMod().ifPresent(mod -> {
+				String className = clazz.map(c -> ":" + c.getName()).orElse("");
+				binder.withName("nova.launcher:" + mod.id() + className);
+				Map<String, String> deps = launcher.dependencyToMap(mod.dependencies());
+				deps.keySet().stream().forEach(mod_id -> binder.after("nova.launcher" + mod_id + className));
+			}));
+		return binder;
+	}
 }

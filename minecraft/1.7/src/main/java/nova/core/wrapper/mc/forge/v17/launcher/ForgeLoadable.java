@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -16,21 +16,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.loader;
+ */
+
+package nova.core.wrapper.mc.forge.v17.launcher;
+
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 /**
- * A mod interface implemented to receive mod load event calls.
+ * A mod interface implemented to receive FML mod loading event calls.
  *
- * @author Calclavia
+ * @author ExE Boss
  */
-@Deprecated
-public interface Loadable {
-	default void preInit() {
+// TODO Maybe replace with wrapper events.
+public interface ForgeLoadable {
+
+	default void preInit(FMLPreInitializationEvent event) {
 	}
 
-	default void init() {
+	default void init(FMLInitializationEvent event) {
 	}
 
-	default void postInit() {
+	default void postInit(FMLPostInitializationEvent event) {
 	}
 }

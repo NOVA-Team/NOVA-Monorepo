@@ -23,7 +23,6 @@ package nova.internal.core.launch;
 import nova.core.deps.Dependencies;
 import nova.core.deps.Dependency;
 import nova.core.deps.MavenDependency;
-import nova.core.loader.Loadable;
 import nova.core.loader.Mod;
 import nova.core.util.ProgressBar;
 import nova.internal.core.Game;
@@ -46,15 +45,19 @@ import java.util.stream.Stream;
  * Correct order to call the methods is this:
  * <ol>
  * <li>{@link #generateDependencies()}</li>
- * <li>{@link #preInit()}</li>
- * <li>{@link #init()}</li>
- * <li>{@link #postInit()}</li>
+ * <li>{@link #load()}</li>
  * </ol>
  * @author Calclavia, Kubuxu
  */
 public class NovaLauncher extends ModLoader<Mod> {
 
+	private static Optional<NovaLauncher> INSTANCE = Optional.empty();
+
 	private Map<Mod, List<MavenDependency>> neededDeps;
+
+	public static Optional<NovaLauncher> instance() {
+		return INSTANCE;
+	}
 
 	/**
 	 * Creates NovaLauncher.
@@ -63,6 +66,7 @@ public class NovaLauncher extends ModLoader<Mod> {
 	 */
 	public NovaLauncher(DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
 		super(Mod.class, diep, modClasses);
+		INSTANCE = Optional.of(this);
 
 		/**
 		 * Install all DI modules
@@ -121,8 +125,6 @@ public class NovaLauncher extends ModLoader<Mod> {
 		TopologicalSort.topologicalSort(modGraph)
 			.stream()
 			.map(mods::get)
-			.filter(mod -> mod instanceof Loadable)
-			.map(mod -> (Loadable) mod)
 			.forEachOrdered(orderedMods::add);
 
 		Game.logger().info("NOVA mods loaded: " + mods.size());
@@ -131,13 +133,17 @@ public class NovaLauncher extends ModLoader<Mod> {
 
 	public Map<String, String> dependencyToMap(String[] dependencies) {
 		return Arrays.stream(dependencies)
-			.map(s -> s.split("@", 1))
+			.map(s -> {
+				if (s.contains("@")) {
+					String[] ret = new String[2];
+					ret[0] = s.substring(0, s.lastIndexOf('@'));
+					ret[1] = s.substring(s.lastIndexOf('@') + 1);
+					return ret;
+				} else {
+					return new String[]{s};
+				}
+			})
 			.collect(Collectors.toMap(s -> s[0], s -> s.length > 1 ? s[1] : ""));
-	}
-
-	@Override
-	public void preInit() {
-		super.preInit();
 	}
 
 	public Map<Mod, List<MavenDependency>> getNeededDeps() {
