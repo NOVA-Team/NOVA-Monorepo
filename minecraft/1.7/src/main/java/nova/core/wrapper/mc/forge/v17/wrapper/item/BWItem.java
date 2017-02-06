@@ -96,6 +96,16 @@ public class BWItem extends Item implements Storable {
 	}
 
 	@Override
+	public String getLocalizedName() {
+		return this.item.getItemStackDisplayName(makeItemStack(count()));
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return this.item.getUnlocalizedName(makeItemStack(count()));
+	}
+
+	@Override
 	public String toString() {
 		return getID();
 	}

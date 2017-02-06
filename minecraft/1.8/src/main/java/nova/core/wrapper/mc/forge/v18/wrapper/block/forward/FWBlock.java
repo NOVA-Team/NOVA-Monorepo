@@ -99,7 +99,6 @@ public class FWBlock extends net.minecraft.block.Block {
 			this.stepSound = soundTypeStone;
 		}
 		this.blockClass = dummy.getClass();
-		this.setUnlocalizedName(dummy.getID());
 
 		// Recalculate super constructor things after loading the block properly
 		this.fullBlock = isOpaqueCube();
@@ -349,7 +348,12 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public String getUnlocalizedName() {
-		return super.getUnlocalizedName().replaceFirst("tile", "block");
+		return factory.getUnlocalizedName();
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return factory.getLocalizedName();
 	}
 
 	@Override

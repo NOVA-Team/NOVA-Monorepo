@@ -21,33 +21,56 @@
 package nova.core.wrapper.mc.forge.v17.util;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.util.StatCollector;
-import nova.core.util.registry.LanguageManager;
+import nova.core.event.LanguageEvent;
+import nova.core.event.bus.EventBus;
+import nova.core.language.LanguageManager;
+import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
+import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
 import nova.internal.core.Game;
 
 /**
  * @author Calclavia
  */
-public class MCLanguageManager extends LanguageManager {
+public class MCLanguageManager extends LanguageManager implements ForgeLoadable {
 
 	@Override
 	public void register(String language, String key, String value) {
-		LanguageRegistry.instance().addStringLocalization(key, language, value);
+		super.register(language, key, value);
+	}
+
+	public MCLanguageManager() {
+		NovaMinecraft.registerWrapper(this);
 	}
 
 	@Override
 	public String getCurrentLanguage() {
-		return FMLCommonHandler.instance().getCurrentLanguage();
+		return FMLCommonHandler.instance().getCurrentLanguage().replace('_', '-');
 	}
 
 	@Override
 	public String translate(String key) {
-		return StatCollector.translateToLocal(key);
+		String value = super.translate(key);
+		if (value.equals(key))
+			value = StatCollector.translateToLocal(key);
+		return value;
 	}
 
 	@Override
-	public void init() {
-		Game.events().publish(new Init(this));
+	@SuppressWarnings("deprecation")
+	public void preInit(FMLPreInitializationEvent evt) {
+		this.languageMap.forEach((language, map) -> {
+			String lang = language.replace('-', '_');
+			map.forEach((key, value) -> LanguageRegistry.instance().addStringLocalization(key, lang, value));
+		});
+
+		Game.events().on(LanguageEvent.RegisterTranslation.class).withPriority(EventBus.PRIORITY_LOW).bind(this::register);
+	}
+
+	@SuppressWarnings("deprecation")
+	public void register(LanguageEvent.RegisterTranslation evt) {
+		LanguageRegistry.instance().addStringLocalization(evt.key, evt.language.replace('-', '_'), evt.value);
 	}
 }

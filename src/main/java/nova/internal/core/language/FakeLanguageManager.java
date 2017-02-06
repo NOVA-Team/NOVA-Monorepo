@@ -18,17 +18,19 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v17.depmodules;
+package nova.internal.core.language;
 
 import nova.core.language.LanguageManager;
-import nova.core.wrapper.mc.forge.v17.util.MCLanguageManager;
-import se.jbee.inject.bind.BinderModule;
 
-public class LanguageModule extends BinderModule {
+/**
+ * Used by wrappers for games that don't support languages.
+ *
+ * @author Calclavia
+ */
+public class FakeLanguageManager extends LanguageManager {
 
 	@Override
-	protected void declare() {
-		bind(LanguageManager.class).to(MCLanguageManager.class);
+	public String getCurrentLanguage() {
+		return "en-US";
 	}
-
 }

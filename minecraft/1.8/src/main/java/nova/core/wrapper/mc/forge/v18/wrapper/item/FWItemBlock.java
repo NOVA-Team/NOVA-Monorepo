@@ -63,4 +63,19 @@ public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWra
 	public int getColorFromItemStack(ItemStack p_82790_1_, int p_82790_2_) {
 		return ItemWrapperMethods.super.getColorFromItemStack(p_82790_1_, p_82790_2_);
 	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return getItemFactory().getUnlocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getUnlocalizedName();
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getLocalizedName();
+	}
 }
