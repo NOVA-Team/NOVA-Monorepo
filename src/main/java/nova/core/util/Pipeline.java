@@ -8,7 +8,7 @@ import java.util.function.Consumer;
  * @author Calclavia
  */
 public class Pipeline<O> {
-	protected Optional<Pipeline> prev = Optional.empty();
+	protected Optional<Pipeline<O>> prev = Optional.empty();
 
 	protected Consumer<O> consumer = model -> {};
 
@@ -32,7 +32,7 @@ public class Pipeline<O> {
 	 * @param stream The stream to apply.
 	 * @return The new RenderStream
 	 */
-	public <T extends Pipeline<?>> T apply(T stream) {
+	public <T extends Pipeline<O>> T apply(T stream) {
 		stream.prev = Optional.of(this);
 		return stream;
 	}
