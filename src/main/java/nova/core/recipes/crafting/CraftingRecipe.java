@@ -24,6 +24,7 @@ import nova.core.item.Item;
 import nova.core.recipes.Recipe;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -73,7 +74,7 @@ public interface CraftingRecipe extends Recipe {
 	 *
 	 * @return The items
 	 */
-	default Optional<Collection<String>> getPossibleItemsInFirstSlot() {
-		return Optional.empty();
+	default Collection<String> getPossibleItemsInFirstSlot() {
+		return Collections.emptyList();
 	}
 }

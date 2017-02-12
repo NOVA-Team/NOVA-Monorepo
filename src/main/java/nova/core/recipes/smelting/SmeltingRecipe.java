@@ -21,10 +21,13 @@
 package nova.core.recipes.smelting;
 
 import nova.core.item.Item;
-import nova.core.recipes.crafting.ItemIngredient;
 import nova.core.recipes.Recipe;
+import nova.core.recipes.ingredient.ItemIngredient;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author ExE Boss
@@ -36,7 +39,7 @@ public interface SmeltingRecipe extends Recipe {
 	 * @param input smelting input to read from
 	 * @return true if a smelting operation would return a valid result
 	 */
-	boolean matches(Optional<Item> input);
+	boolean matches(Item input);
 
 	/**
 	 * Calculates the crafting result for the given crafting grid. Does not
@@ -45,21 +48,26 @@ public interface SmeltingRecipe extends Recipe {
 	 * @param input crafting grid
 	 * @return crafting result, empty if the recipe doesn't match
 	 */
-	Optional<Item> getCraftingResult(Optional<Item> input);
+	Optional<Item> getCraftingResult(Item input);
 
 	/**
-	 * Gets a nominal (example) input for this recipe. Used in recipe display.
+	 * Gets an example input for this recipe. Used in recipe display.
 	 *
 	 * @return example input
 	 */
-	Optional<Item> getNominalInput();
+	default Collection<Item> getExampleInput() {
+		return getInput().map(ItemIngredient::getExampleItems).orElseGet(() -> Collections.emptyList());
+	}
 
 	/**
-	 * Gets a nominal (example) output for this recipe. Used in recipe display.
+	 * Gets an example output for this recipe. Used in recipe display.
 	 *
 	 * @return example output
 	 */
-	Optional<Item> getNominalOutput();
+	default Optional<Item> getExampleOutput() {
+		return getInput().map(ItemIngredient::getExampleItems).orElseGet(() -> Collections.emptyList()).stream()
+			.map(item -> this.getCraftingResult(item)).filter(Optional::isPresent).map(Optional::get).findFirst();
+	}
 
 	/**
 	 * Gets the input for this recipe. Used during registration.

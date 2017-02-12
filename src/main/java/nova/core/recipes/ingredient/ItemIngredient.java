@@ -18,11 +18,12 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.recipes.crafting;
+package nova.core.recipes.ingredient;
 
 import nova.core.block.BlockFactory;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
+import nova.core.recipes.crafting.CraftingGrid;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -81,7 +82,7 @@ public interface ItemIngredient {
 	 *
 	 * @return possible items
 	 */
-	Optional<Collection<String>> getPossibleItemIds();
+	Collection<String> getPossibleItemIds();
 
 	/**
 	 * Returns a list of example items. This list could be used to render
@@ -89,7 +90,7 @@ public interface ItemIngredient {
 	 *
 	 * @return example items
 	 */
-	Optional<Collection<Item>> getExampleItems();
+	Collection<Item> getExampleItems();
 
 	/**
 	 * Checks if this ingredient is a subset of another ingredient. An

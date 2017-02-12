@@ -28,11 +28,11 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingRecipe;
-import nova.core.recipes.crafting.ItemIngredient;
-import nova.core.recipes.crafting.OreItemIngredient;
+import nova.core.recipes.ingredient.ItemIngredient;
+import nova.core.recipes.ingredient.OreItemIngredient;
 import nova.core.recipes.crafting.ShapedCraftingRecipe;
 import nova.core.recipes.crafting.ShapelessCraftingRecipe;
-import nova.core.recipes.crafting.SpecificItemIngredient;
+import nova.core.recipes.ingredient.SpecificItemIngredient;
 import nova.core.wrapper.mc.forge.v17.util.ReflectionUtil;
 import nova.internal.core.Game;
 
@@ -110,7 +110,7 @@ public class RecipeConverter {
 	}
 
 	private static ItemStack wrapSpecific(SpecificItemIngredient ingredient) {
-		for (Item item : ingredient.getExampleItems().get()) {
+		for (Item item : ingredient.getExampleItems()) {
 			return Game.natives().toNative(item.getFactory().build());
 		}
 

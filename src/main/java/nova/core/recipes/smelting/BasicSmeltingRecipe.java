@@ -21,7 +21,7 @@ package nova.core.recipes.smelting;
 
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
-import nova.core.recipes.crafting.ItemIngredient;
+import nova.core.recipes.ingredient.ItemIngredient;
 
 import java.util.Optional;
 
@@ -30,7 +30,7 @@ import java.util.Optional;
  */
 public class BasicSmeltingRecipe implements SmeltingRecipe {
 
-	private final ItemFactory nominalOutput;
+	private final ItemFactory output;
 	private final ItemIngredient ingredient;
 
 	/**
@@ -39,28 +39,18 @@ public class BasicSmeltingRecipe implements SmeltingRecipe {
 	 * @param ingredient {@link ItemIngredient}
 	 */
 	public BasicSmeltingRecipe(ItemFactory output, ItemIngredient ingredient) {
-		this.nominalOutput = output;
+		this.output = output;
 		this.ingredient = ingredient;
 	}
 
 	@Override
-	public boolean matches(Optional<Item> input) {
-		return input.isPresent() && this.ingredient.matches(input.get());
+	public boolean matches(Item input) {
+		return this.ingredient.matches(input);
 	}
 
 	@Override
-	public Optional<Item> getCraftingResult(Optional<Item> input) {
-		return matches(input) ? getNominalOutput() : Optional.empty();
-	}
-
-	@Override
-	public Optional<Item> getNominalInput() {
-		return this.ingredient.getExampleItems().flatMap(c -> c.stream().findFirst());
-	}
-
-	@Override
-	public Optional<Item> getNominalOutput() {
-		return Optional.of(this.nominalOutput.build());
+	public Optional<Item> getCraftingResult(Item input) {
+		return matches(input) ? Optional.of(output.build()) : Optional.empty();
 	}
 
 	@Override

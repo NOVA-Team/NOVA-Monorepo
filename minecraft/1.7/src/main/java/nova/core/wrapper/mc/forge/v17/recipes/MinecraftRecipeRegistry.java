@@ -26,7 +26,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import nova.core.event.RecipeEvent;
 import nova.core.item.Item;
-import nova.core.recipes.crafting.ItemIngredient;
+import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipe;
 import nova.core.recipes.smelting.SmeltingRecipe;
@@ -142,9 +142,9 @@ public class MinecraftRecipeRegistry {
 	private void onNOVASmeltingAdded(RecipeEvent.Add<SmeltingRecipe> evt) {
 		SmeltingRecipe recipe = evt.recipe;
 
-		Collection<Item> inputs = recipe.getInput().flatMap(ItemIngredient::getExampleItems).orElse(Collections.emptyList());
+		Collection<Item> inputs = recipe.getInput().map(ItemIngredient::getExampleItems).orElse(Collections.emptyList());
 
-		final Optional<ItemStack> output = recipe.getNominalOutput().map(ItemConverter.instance()::toNative);
+		final Optional<ItemStack> output = recipe.getExampleOutput().map(ItemConverter.instance()::toNative);
 		if (!output.isPresent())
 			return;
 
@@ -154,7 +154,8 @@ public class MinecraftRecipeRegistry {
 	private void onNOVASmeltingRemoved(RecipeEvent.Remove<SmeltingRecipe> evt) {
 		SmeltingRecipe recipe = evt.recipe;
 
-		Collection<Item> inputs = recipe.getInput().flatMap(ItemIngredient::getExampleItems).orElse(Collections.emptyList());
+		Collection<Item> inputs = recipe.getInput().map(ItemIngredient::getExampleItems).orElse(Collections.emptyList());
+		@SuppressWarnings("unchecked")
 		Map<ItemStack, ItemStack> smeltingList = FurnaceRecipes.smelting().getSmeltingList();
 		inputs.stream().map(ItemConverter.instance()::toNative).forEach(input -> smeltingList.remove(input));
 	}

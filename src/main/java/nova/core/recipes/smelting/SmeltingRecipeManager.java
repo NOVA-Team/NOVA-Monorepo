@@ -63,10 +63,10 @@ public class SmeltingRecipeManager {
 	// #######################
 
 	private <T extends SmeltingRecipe> void onSmeltingRecipeAdded(RecipeEvent.Add<T> e) {
-
+		recipes.add(e.recipe);
 	}
 
 	private <T extends SmeltingRecipe> void onSmeltingRecipeRemoved(RecipeEvent.Remove<T> e) {
-
+		recipes.remove(e.recipe);
 	}
 }
