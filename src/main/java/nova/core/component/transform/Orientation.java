@@ -23,7 +23,9 @@ package nova.core.component.transform;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.component.Component;
+import nova.core.component.ComponentMap;
 import nova.core.component.ComponentProvider;
+import nova.core.component.UnsidedComponent;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Living;
 import nova.core.event.bus.Event;
@@ -46,9 +48,11 @@ import java.util.Optional;
  * A component that is applied to providers with discrete orientations.
  * @author Calclavia
  */
+@UnsidedComponent
 public class Orientation extends Component implements Storable, Stateful, Syncable {
 
-	public final ComponentProvider provider;
+	@SuppressWarnings("rawtypes")
+	public final ComponentProvider<? extends ComponentMap> provider;
 
 	/**
 	 * The allowed rotation directions the block can face.
@@ -65,6 +69,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	/**
 	 * @param provider The block to apply discrete orientations to
 	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public Orientation(ComponentProvider provider) {
 		this.provider = provider;
 	}
@@ -193,7 +198,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 		if (provider instanceof Block) {
 			Vector3D position = entity.position();
 			if (FastMath.abs(position.getX() - ((Block) provider).x()) < 2.0F && FastMath.abs(position.getZ() - ((Block) provider).z()) < 2.0F) {
-				double height = position.add(entity.components.get(Living.class).faceDisplacement.get()).getY();
+				double height = position.add(entity.components.getOp(Living.class).map(l -> l.faceDisplacement.get()).orElse(Vector3D.ZERO)).getY();
 
 				if (height - ((Block) provider).y() > 2.0D) {
 					return Direction.fromOrdinal(1);

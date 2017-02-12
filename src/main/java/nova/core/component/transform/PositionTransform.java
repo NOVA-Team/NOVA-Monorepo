@@ -21,11 +21,13 @@
 package nova.core.component.transform;
 
 import nova.core.component.Component;
+import nova.core.component.UnsidedComponent;
 
 /**
  * A tansform that is associates with a position.
  * @author Calclavia
  */
+@UnsidedComponent
 public class PositionTransform<P> extends Component {
 
 	private P position;

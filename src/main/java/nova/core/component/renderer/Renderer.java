@@ -21,6 +21,7 @@
 package nova.core.component.renderer;
 
 import nova.core.component.Component;
+import nova.core.component.UnsidedComponent;
 import nova.core.render.model.Model;
 
 import java.util.function.Consumer;
@@ -28,6 +29,7 @@ import java.util.function.Consumer;
 /**
  * @author Calclavia
  */
+@UnsidedComponent
 public abstract class Renderer extends Component {
 	/**
 	 * Called to render.

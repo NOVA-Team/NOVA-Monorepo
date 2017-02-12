@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -18,16 +18,23 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.component.transform;
+package nova.core.component;
 
-import nova.core.component.UnsidedComponent;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * A 3D block transform.
- * @author Calclavia
+ * Specifies that this component type is sided.
+ *
+ * Components don't need to have this annotation to be sided.
+ * A component can't declare both this annotation and {@link UnsidedComponent}.
+ *
+ * @author ExE Boss
  */
-@UnsidedComponent
-public class BlockTransform extends WorldTransform<Vector3D> {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SidedComponent {
 
 }

@@ -21,6 +21,7 @@
 package nova.core.entity;
 
 import nova.core.block.Stateful;
+import nova.core.component.ComponentMap;
 import nova.core.component.ComponentProvider;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.component.transform.EntityTransform;
@@ -33,7 +34,8 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 /**
  * An entity is an object in the world that has a position.
  */
-public class Entity extends ComponentProvider implements UniqueIdentifiable, Identifiable, Stateful {
+@SuppressWarnings("rawtypes")
+public class Entity extends ComponentProvider<ComponentMap> implements UniqueIdentifiable, Identifiable, Stateful {
 
 	public final EntityTransform transform() {
 		return components.get(EntityTransform.class);

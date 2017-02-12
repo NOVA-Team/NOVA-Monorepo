@@ -26,6 +26,7 @@ package nova.core.component.misc;
 
 import nova.core.component.Component;
 import nova.core.component.ComponentProvider;
+import nova.core.component.UnsidedComponent;
 import nova.core.entity.Entity;
 import nova.core.event.bus.Event;
 import nova.core.util.shape.Cuboid;
@@ -37,6 +38,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@UnsidedComponent
 public class Collider extends Component {
 	public final ComponentProvider provider;
 

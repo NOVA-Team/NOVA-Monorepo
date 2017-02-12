@@ -3,6 +3,8 @@ package nova.core.block.component;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import nova.core.component.Component;
+import nova.core.component.SidedComponent;
+import nova.core.component.UnsidedComponent;
 import nova.core.sound.Sound;
 
 import java.util.Optional;
@@ -20,6 +22,7 @@ public interface BlockProperty {
 	 * The standard, regular block hardness is 1. {@code Double.POSITIVE_INFINITY} is unbreakable.
 	 * </p>
 	 */
+	@UnsidedComponent
 	public static class Hardness extends Component implements BlockProperty {
 		private double hardness = 1.0;
 
@@ -50,6 +53,7 @@ public interface BlockProperty {
 	 * The standard, regular block resistance is 1. {@link Double#POSITIVE_INFINITY} is unexplodable.
 	 * </p>
 	 */
+	@UnsidedComponent
 	public static class Resistance extends Component implements BlockProperty {
 		private double resistance = 1.0;
 
@@ -79,6 +83,7 @@ public interface BlockProperty {
 	 *
 	 * @author winsock
 	 */
+	@UnsidedComponent
 	public static class BlockSound extends Component implements BlockProperty {
 		public BiMap<BlockSoundTrigger, Sound> blockSoundSoundMap = HashBiMap.create();
 		public Optional<BiMap<String, Sound>> customDefinedSounds;
@@ -162,6 +167,7 @@ public interface BlockProperty {
 	 *
 	 * @author winsock
 	 */
+	@SidedComponent
 	public static class Opacity extends Component implements BlockProperty {
 		// TODO maybe consider a double for opacity? Where 0 is 100% transparent and 1 is 100% opaque?
 
@@ -196,6 +202,7 @@ public interface BlockProperty {
 //	/**
 //	 * Indicates whether the block is replaceable.
 //	 */
+//	@UnsidedComponent
 //	public static final class Replaceable extends Component implements BlockProperty {
 //		/**
 //		 * Singleton for Replaceable.

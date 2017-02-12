@@ -19,9 +19,11 @@
  */package nova.core.block.component;
 
 import nova.core.component.Component;
+import nova.core.component.SidedComponent;
 
 import java.util.function.Supplier;
 
+@SidedComponent
 public class LightEmitter extends Component {
 
 	/**
