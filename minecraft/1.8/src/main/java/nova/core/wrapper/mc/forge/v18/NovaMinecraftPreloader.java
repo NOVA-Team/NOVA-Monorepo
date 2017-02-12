@@ -53,6 +53,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	public static final String version = "0.0.1";
 	private static final ModMetadata md;
 	public static Set<Class<?>> modClasses;
+	public static Map<Class<?>, File> modClassToFile;
 
 	static {
 		md = new ModMetadata();
@@ -199,7 +201,8 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			//Obfuscation?
 			Field setField = LaunchClassLoader.class.getDeclaredField("classLoaderExceptions");
 			setField.setAccessible(true);
-			Set<String> classLoaderExceptions = (Set) setField.get(classLoader);
+			@SuppressWarnings("unchecked")
+			Set<String> classLoaderExceptions = (Set<String>) setField.get(classLoader);
 			classLoaderExceptions.remove("org.apache.");
 			System.out.println("Successfully hacked 'org.apache' out of launcher exclusion");
 		} catch (Exception e) {
@@ -209,6 +212,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		// Scan mod classes
 		ASMDataTable asmData = event.getASMHarvestedData();
 
+		modClassToFile = new HashMap<>();
 		modClasses = asmData
 			.getAll(Mod.class.getName())
 			.stream()
@@ -233,7 +237,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			fakeMeta.name = annotation.name();
 			fakeMeta.version = annotation.version();
 			fakeMeta.description = annotation.description();
-			newMods.add(new DummyNovaMod(fakeMeta));
+			newMods.add(new NovaModContainer(fakeMeta, mod));
 		});
 		//TODO: Use AT
 		ReflectionUtil.setPrivateObject(Loader.instance(), newMods, "mods");
@@ -255,6 +259,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			// Reflecting FML is just less work for us. (Minecraft.field_110449_ao)
 			Field resourcePackField = FMLClientHandler.class.getDeclaredField("resourcePackList");
 			resourcePackField.setAccessible(true);
+			@SuppressWarnings("unchecked")
 			List<IResourcePack> packs = (List<IResourcePack>) resourcePackField.get(FMLClientHandler.instance());
 
 			Set<String> addedPacks = new HashSet<>();
@@ -273,6 +278,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 					} catch (MalformedURLException | URISyntaxException e) {
 						file = new File(fn); //This will probably not work on Windows, but we can at least try
 					}
+					modClassToFile.put(c, file);
 
 					if (!addedPacks.contains(fn)) {
 						addedPacks.add(fn);
@@ -290,6 +296,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 						folderFile = new File(folderLocation.replaceAll("build[\\\\/]classes", "build/resources"));
 						folderFile = new File(folderFile, "assets").isDirectory() ? folderFile : new File(folderLocation);
 					}
+					modClassToFile.put(c, folderFile);
 
 					addedPacks.add(folderLocation);
 					packs.add(new NovaFolderResourcePack(folderFile, novaMod.id(), novaMod.domains()));
@@ -305,9 +312,21 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	/**
 	 * A fake NovaMod to inject into FML.
 	 */
-	private static class DummyNovaMod extends DummyModContainer {
-		public DummyNovaMod(ModMetadata meta) {
+	private static class NovaModContainer extends DummyModContainer {
+		private final Class<?> mod;
+		private File source = null;
+
+		public NovaModContainer(ModMetadata meta, Class<?> mod) {
 			super(meta);
+			this.mod = mod;
+		}
+
+		@Override
+		public File getSource() {
+			if (this.source == null) {
+				this.source = NovaMinecraftPreloader.modClassToFile.get(mod);
+			}
+			return this.source;
 		}
 	}
 }
