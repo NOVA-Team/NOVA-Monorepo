@@ -85,6 +85,7 @@ public class NovaMinecraft {
 
 	private static Set<ForgeLoadable> nativeConverters;
 	private static Set<ForgeLoadable> novaWrappers = new HashSet<>();
+	private static List<ForgeLoadable> novaModWrappers;
 
 	public static void registerWrapper(ForgeLoadable wrapper) {
 		novaWrappers.add(wrapper);
@@ -157,6 +158,8 @@ public class NovaMinecraft {
 			ProgressManager.ProgressBar progressBar = ProgressManager.push("Loading NOVA mods", modClasses.isEmpty() ? 1 : modClasses.size());
 			launcher.load(new FMLProgressBar(progressBar));
 			ProgressManager.pop(progressBar);
+			novaModWrappers = launcher.getOrdererdMods().stream().filter(mod -> mod instanceof ForgeLoadable).map(mod -> (ForgeLoadable) mod).collect(Collectors.toList());
+			novaWrappers.removeAll(novaModWrappers);
 
 			/**
 			 * Instantiate native loaders
@@ -177,7 +180,17 @@ public class NovaMinecraft {
 			Game.entities().init();
 
 			//Load preInit
-			novaWrappers.stream().forEachOrdered(wrapper -> wrapper.preInit(evt));
+			progressBar = ProgressManager.push("Pre-initializing NOVA wrappers", (novaModWrappers.isEmpty() ? 1 : novaModWrappers.size()) + novaWrappers.size());
+			FMLProgressBar fmlProgressBar = new FMLProgressBar(progressBar);
+			novaModWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.preInit(evt);
+			});
+			novaWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.preInit(evt);
+			});
+			ProgressManager.pop(progressBar);
 
 			proxy.preInit(evt);
 
@@ -199,7 +212,17 @@ public class NovaMinecraft {
 		try {
 			proxy.init(evt);
 			nativeConverters.stream().forEachOrdered(forgeLoadable -> forgeLoadable.init(evt));
-			novaWrappers.stream().forEachOrdered(wrapper -> wrapper.init(evt));
+			ProgressManager.ProgressBar progressBar = ProgressManager.push("Initializing NOVA wrappers", (novaModWrappers.isEmpty() ? 1 : novaModWrappers.size()) + novaWrappers.size());
+			FMLProgressBar fmlProgressBar = new FMLProgressBar(progressBar);
+			novaModWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.init(evt);
+			});
+			novaWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.init(evt);
+			});
+			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
 			System.out.println("Error during init");
 			e.printStackTrace();
@@ -210,10 +233,20 @@ public class NovaMinecraft {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent evt) {
 		try {
-			Game.recipes().init();
 			proxy.postInit(evt);
 			nativeConverters.stream().forEachOrdered(forgeLoadable -> forgeLoadable.postInit(evt));
-			novaWrappers.stream().forEachOrdered(wrapper -> wrapper.postInit(evt));
+			Game.recipes().init();
+			ProgressManager.ProgressBar progressBar = ProgressManager.push("Post-initializing NOVA wrappers", (novaModWrappers.isEmpty() ? 1 : novaModWrappers.size()) + novaWrappers.size());
+			FMLProgressBar fmlProgressBar = new FMLProgressBar(progressBar);
+			novaModWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.postInit(evt);
+			});
+			novaWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.postInit(evt);
+			});
+			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
 			System.out.println("Error during postInit");
 			e.printStackTrace();

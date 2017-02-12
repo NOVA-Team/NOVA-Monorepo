@@ -20,9 +20,7 @@
 
 package nova.internal.core.launch;
 
-import nova.core.loader.Mod;
 import nova.core.util.ProgressBar;
-import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 
 import java.lang.annotation.Annotation;
@@ -30,6 +28,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -219,5 +218,9 @@ public class ModLoader<ANNOTATION extends Annotation> {
 
 	public Optional<ANNOTATION> getCurrentMod() {
 		return this.currentMod;
+	}
+
+	public List<Object> getOrdererdMods() {
+		return Collections.unmodifiableList(orderedMods);
 	}
 }
