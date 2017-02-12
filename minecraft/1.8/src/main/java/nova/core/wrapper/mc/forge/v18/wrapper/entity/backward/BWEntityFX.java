@@ -56,6 +56,8 @@ import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.MobAppearance;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
+import nova.internal.core.Game;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -159,14 +161,16 @@ public class BWEntityFX extends BWEntity {
 	private final int particleID;
 
 	public BWEntityFX(int particleID) {
-		//TODO: NPE
-		super(null);
+		super();
 		this.particleID = particleID;
 	}
 
 	public EntityFX createEntityFX(net.minecraft.world.World world) {
 		//Look up for particle factory and pass it into BWEntityFX
 		IParticleFactory particleFactory = (IParticleFactory) FMLClientHandler.instance().getClient().effectRenderer.field_178932_g.get(particleID);
-		return particleFactory.getEntityFX(0, world, 0, 0, 0, 0, 0, 0, 0);
+		EntityFX entity = particleFactory.getEntityFX(0, world, 0, 0, 0, 0, 0, 0, 0);
+		WrapperEvent.BWEntityFXCreate event = new WrapperEvent.BWEntityFXCreate(this, entity);
+		Game.events().publish(event);
+		return entity;
 	}
 }

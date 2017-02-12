@@ -34,6 +34,8 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v17.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
+import nova.internal.core.Game;
 
 /**
  * A copy of BWEntity that extends EntityFX
@@ -99,6 +101,8 @@ public class FWEntityFX extends EntityFX {
 			prevRotationYaw = rotationYaw;
 			prevRotationPitch = rotationPitch;
 			setPosition(posX, posY, posZ);
+			WrapperEvent.FWEntityFXCreate event = new WrapperEvent.FWEntityFXCreate(wrapped, this);
+			Game.events().publish(event);
 		}
 	}
 

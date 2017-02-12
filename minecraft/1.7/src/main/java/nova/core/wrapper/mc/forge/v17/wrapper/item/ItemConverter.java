@@ -36,6 +36,7 @@ import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v17.wrapper.CategoryConverter;
+import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
@@ -151,6 +152,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 			return null;
 		}
 		itemStack.setTagCompound(Game.natives().toNative(item.getFactory().save(item)));
+		WrapperEvent.UpdateItemEvent event = new WrapperEvent.UpdateItemEvent(item, itemStack);
+		Game.events().publish(event);
 		return itemStack;
 	}
 

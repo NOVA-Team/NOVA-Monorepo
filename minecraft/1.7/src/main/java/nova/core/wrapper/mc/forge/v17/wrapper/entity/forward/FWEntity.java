@@ -33,6 +33,7 @@ import nova.core.entity.EntityFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.shape.Cuboid;
+import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v17.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
@@ -123,6 +124,8 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		if (wrapped != null) {
 			wrapped.events.publish(new Stateful.LoadEvent());
 			updateCollider();
+			WrapperEvent.FWEntityCreate event = new WrapperEvent.FWEntityCreate(wrapped, this);
+			Game.events().publish(event);
 		}
 	}
 
