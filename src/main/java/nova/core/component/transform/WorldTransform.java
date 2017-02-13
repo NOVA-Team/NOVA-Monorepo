@@ -20,12 +20,14 @@
 
 package nova.core.component.transform;
 
+import nova.core.component.UnsidedComponent;
 import nova.core.world.World;
 
 /**
  * A transform that is linked with a world.
  * @author Calclavia
  */
+@UnsidedComponent
 public class WorldTransform<P> extends PositionTransform<P> {
 
 	private World world;

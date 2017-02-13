@@ -20,6 +20,7 @@
 
 package nova.core.component.transform;
 
+import nova.core.component.UnsidedComponent;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -29,6 +30,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  * Note that the implemented Transform3d for entities require a constructor with type ComponentProvider.
  * @author Calclavia
  */
+@UnsidedComponent
 public class EntityTransform extends WorldTransform<Vector3D> {
 
 	//The rotation of the transform. Can never be null.

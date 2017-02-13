@@ -20,6 +20,7 @@
 
 package nova.core.item;
 
+import nova.core.component.ComponentMap;
 import nova.core.component.ComponentProvider;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.entity.Entity;
@@ -34,7 +35,8 @@ import java.util.List;
 import java.util.Optional;
 
 //TODO: This Storable implementation is flawed and not based on ID.
-public class Item extends ComponentProvider implements Identifiable, Storable {
+@SuppressWarnings("rawtypes")
+public class Item extends ComponentProvider<ComponentMap> implements Identifiable, Storable, Cloneable {
 
 	/**
 	 * The amount of this item that is present.

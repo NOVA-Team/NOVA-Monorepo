@@ -16,9 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.util;
+ */
+
+package nova.core.util;
 
 import nova.core.block.Block;
+import nova.core.component.ComponentMap;
 import nova.core.component.ComponentProvider;
 import nova.core.component.misc.Collider;
 import nova.core.component.transform.WorldTransform;
@@ -58,7 +61,7 @@ public class RayTracer {
 	 * @param entity The entity
 	 */
 	public RayTracer(Entity entity) {
-		this(new Ray(entity.position().add(entity.components.has(Living.class) ? entity.components.get(Living.class).faceDisplacement.get() : Vector3D.ZERO), entity.rotation().applyTo(Vector3DUtil.FORWARD)));
+		this(new Ray(entity.position().add(entity.components.getOp(Living.class).map(l -> l.faceDisplacement.get()).orElse(Vector3D.ZERO)), entity.rotation().applyTo(Vector3DUtil.FORWARD)));
 	}
 
 	/**
@@ -135,7 +138,8 @@ public class RayTracer {
 				.sorted();
 	}
 
-	public <R extends RayTraceResult> Stream<R> rayTraceCollider(ComponentProvider colliderProvider, BiFunction<Vector3D, Cuboid, R> resultMapper) {
+	@SuppressWarnings("rawtypes")
+	public <R extends RayTraceResult> Stream<R> rayTraceCollider(ComponentProvider<? extends ComponentMap> colliderProvider, BiFunction<Vector3D, Cuboid, R> resultMapper) {
 		return
 			colliderProvider.components.get(Collider.class)
 				.occlusionBoxes

@@ -19,6 +19,7 @@
  */package nova.core.entity.component;
 
 import nova.core.component.Component;
+import nova.core.component.UnsidedComponent;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.function.Supplier;
@@ -27,6 +28,7 @@ import java.util.function.Supplier;
  * For entities that are alive.
  * @author Calclavia
  */
+@UnsidedComponent
 public class Living extends Component {
 
 	/**

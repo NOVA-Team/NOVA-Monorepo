@@ -21,6 +21,7 @@
 package nova.core.component.renderer;
 
 import nova.core.component.ComponentProvider;
+import nova.core.component.UnsidedComponent;
 import nova.core.render.pipeline.RenderPipeline;
 
 /**
@@ -30,6 +31,7 @@ import nova.core.render.pipeline.RenderPipeline;
  *
  * @see DynamicRenderer
  */
+@UnsidedComponent
 public class StaticRenderer extends Renderer {
 
 }

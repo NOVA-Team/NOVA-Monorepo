@@ -21,7 +21,7 @@
 package nova.core.block;
 
 import nova.core.block.component.BlockProperty;
-import nova.core.component.ComponentProvider;
+import nova.core.component.SidedComponentProvider;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.component.transform.BlockTransform;
 import nova.core.entity.Entity;
@@ -43,7 +43,8 @@ import java.util.Set;
 /**
  * @author Calclavia
  */
-public class Block extends ComponentProvider implements Identifiable {
+@SuppressWarnings("rawtypes")
+public class Block extends SidedComponentProvider implements Identifiable {
 
 	public ItemFactory getItemFactory() {
 		return Game.items().getItemFromBlock(getFactory());

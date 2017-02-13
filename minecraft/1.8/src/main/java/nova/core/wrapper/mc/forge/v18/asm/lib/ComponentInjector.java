@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v18.asm.lib;
 
 import nova.core.component.Component;
+import nova.core.component.ComponentMap;
 import nova.core.component.ComponentProvider;
 import nova.core.component.Passthrough;
 import nova.core.network.NetworkTarget.Side;
@@ -60,7 +61,8 @@ public class ComponentInjector<T> implements Opcodes {
 		this.baseClazz = baseClazz;
 	}
 
-	public synchronized T inject(ComponentProvider provider, Class<?>[] typeArgs, Object[] args) {
+	@SuppressWarnings("rawtypes")
+	public synchronized T inject(ComponentProvider<? extends ComponentMap> provider, Class<?>[] typeArgs, Object[] args) {
 		try {
 			List<Component> components = provider.components().stream()
 				.filter(component -> component.getClass().getAnnotationsByType(Passthrough.class).length > 0)
@@ -89,6 +91,7 @@ public class ComponentInjector<T> implements Opcodes {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private T inject(T instance, ComponentProvider provider) throws ReflectiveOperationException {
 		Field f = instance.getClass().getDeclaredField("$$_provider");
 		f.setAccessible(true);
