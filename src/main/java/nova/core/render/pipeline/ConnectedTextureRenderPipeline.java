@@ -32,10 +32,8 @@ import nova.core.util.shape.Cuboid;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 
@@ -53,7 +51,7 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 	 * Each bit corresponds to a direction.
 	 * E.g: 000011 will render top and bottom
 	 */
-	public Predicate<Direction> faceMask = dir -> true;
+	public Predicate<Direction> faceFilter = dir -> true;
 
 	public ConnectedTextureRenderPipeline(Block block, Texture edgeTexture) {
 		super(block);
@@ -63,7 +61,10 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 		connectMask = () -> {
 			if (this.block.components.has(BlockTransform.class)) {
 				return Arrays.stream(Direction.VALID_DIRECTIONS)
-					.filter(d -> this.block.world().getBlock(this.block.position().add(d.toVector())).get().sameType(this.block))
+					.filter(d -> {
+						Optional<Block> b = this.block.world().getBlock(this.block.position().add(d.toVector()));
+						return b.isPresent() && b.get().sameType(this.block);
+					})
 					.map(d -> 1 << d.ordinal())
 					.reduce(0, (b, a) -> a | b);
 			}
@@ -78,7 +79,7 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 
 			//Render the block edge
 			for (Direction dir : Direction.VALID_DIRECTIONS)
-				if (faceMask.test(dir)) {
+				if (faceFilter.test(dir)) {
 					renderFace(dir, model);
 				}
 		};
@@ -92,35 +93,35 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 	/**
 	 * Set the mask used to determine if this pipeline should handle these sides.
 	 *
-	 * @param faceMask A mask of which sides the connected texture renderer should render.
+	 * @param faceFilter A mask of which sides the connected texture renderer should render.
 	 * @return this
 	 */
-	public ConnectedTextureRenderPipeline withFaceMask(Predicate<Direction> faceMask) {
-		this.faceMask = faceMask;
+	public ConnectedTextureRenderPipeline withFaceMask(Predicate<Direction> faceFilter) {
+		this.faceFilter = faceFilter;
 		return this;
 	}
 
 	/**
 	 * Set the mask used to determine if this pipeline should handle these sides.
 	 *
-	 * @param faceMask A mask of which sides the connected texture renderer should render.
+	 * @param faceFilter A mask of which sides the connected texture renderer should render.
 	 * @return this
 	 */
-	public ConnectedTextureRenderPipeline withFaceMask(Direction... faceMask) {
-		this.faceMask = dir -> Arrays.stream(faceMask).anyMatch(d -> d == dir);
+	public ConnectedTextureRenderPipeline withFaceMask(Direction... faceFilter) {
+		this.faceFilter = dir -> Arrays.stream(faceFilter).anyMatch(d -> d == dir);
 		return this;
 	}
 
 	/**
 	 * Set the mask used to determine if this pipeline should handle these sides.
 	 *
-	 * @param faceMask A mask of which sides the connected texture renderer should render.
+	 * @param faceFilter A mask of which sides the connected texture renderer should render.
 	 * Each bit corresponds to a direction.
 	 * E.g: 000011 will render top and bottom
 	 * @return this
 	 */
-	public ConnectedTextureRenderPipeline withFaceMask(int faceMask) {
-		this.faceMask = dir -> (faceMask & (1 << dir.ordinal())) != 0;
+	public ConnectedTextureRenderPipeline withFaceMask(int faceFilter) {
+		this.faceFilter = dir -> (faceFilter & (1 << dir.ordinal())) != 0;
 		return this;
 	}
 
