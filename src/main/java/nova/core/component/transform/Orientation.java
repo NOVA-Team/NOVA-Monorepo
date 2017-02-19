@@ -42,7 +42,9 @@ import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.util.FastMath;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * A component that is applied to providers with discrete orientations.
@@ -57,7 +59,7 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	/**
 	 * The allowed rotation directions the block can face.
 	 */
-	public int rotationMask = 0x3C;
+	public Predicate<Direction> rotationFilter = dir -> Arrays.stream(Direction.FLAT_DIRECTIONS).anyMatch(d -> d == dir);
 	public boolean isFlip = false;
 	/**
 	 * The direction the block is facing.
@@ -149,11 +151,39 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	/**
 	 * Set's the rotation mask
-	 * @param mask New rotation mask
+	 * @param rotationFilter New rotation mask
 	 * @return The Orientation instance
+	 * @see #setMask(Direction...)
+	 * @see #setMask(int)
 	 */
-	public Orientation setMask(int mask) {
-		this.rotationMask = mask;
+	public Orientation setMask(Predicate<Direction> rotationFilter) {
+		this.rotationFilter = rotationFilter;
+		return this;
+	}
+
+	/**
+	 * Set's the rotation mask
+	 * @param rotationFilter New rotation mask
+	 * @return The Orientation instance
+	 * @see #setMask(Predicate)
+	 * @see #setMask(int)
+	 */
+	public Orientation setMask(Direction... rotationFilter) {
+		this.rotationFilter = dir -> Arrays.stream(rotationFilter).anyMatch(d -> d == dir);
+		return this;
+	}
+
+	/**
+	 * Set's the rotation mask
+	 * @param rotationFilter New rotation mask
+	 * Each bit corresponds to a direction.
+	 * E.g: 000011 will allow only up and down
+	 * @return The Orientation instance
+	 * @see #setMask(Predicate)
+	 * @see #setMask(Direction...)
+	 */
+	public Orientation setMask(int rotationFilter) {
+		this.rotationFilter = dir -> (rotationFilter & (1 << dir.ordinal())) != 0;
 		return this;
 	}
 
@@ -174,18 +204,17 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	 */
 	public Direction calculateDirection(Entity entity) {
 		if (provider instanceof Block) {
-			Optional<RayTracer.RayTraceBlockResult> hit = new RayTracer(entity)
-				.setDistance(7)
+ 			return new RayTracer(entity)
+				.setDistance(7) // TODO Some games and Minecraft Forge mods have longer maximum block place distances
 				.rayTraceBlocks(entity.world())
 				.filter(res -> res.block != provider)
-				.findFirst();
-
-			if (hit.isPresent()) {
-				return (isFlip) ? hit.get().side.opposite() : hit.get().side;
-			}
+				.findFirst()
+				.map(hit -> isFlip ? hit.side.opposite() : hit.side)
+				.map(dir -> rotationFilter.test(dir) ? dir : calculateDirectionFromEntity(entity))
+				.orElse(Direction.UNKNOWN);
+		} else {
+			return Direction.UNKNOWN;
 		}
-
-		return Direction.UNKNOWN;
 	}
 
 	/**
@@ -193,24 +222,27 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	 * @param entity The entity used to determine rotation
 	 * @return The direction the block is facing
 	 */
-
 	public Direction calculateDirectionFromEntity(Entity entity) {
 		if (provider instanceof Block) {
 			Vector3D position = entity.position();
 			if (FastMath.abs(position.getX() - ((Block) provider).x()) < 2.0F && FastMath.abs(position.getZ() - ((Block) provider).z()) < 2.0F) {
 				double height = position.add(entity.components.getOp(Living.class).map(l -> l.faceDisplacement.get()).orElse(Vector3D.ZERO)).getY();
 
-				if (height - ((Block) provider).y() > 2.0D) {
-					return Direction.fromOrdinal(1);
+				if (height - ((Block) provider).y() > 2.0D && rotationFilter.test(Direction.UP)) {
+					return Direction.UP;
 				}
 
-				if (((Block) provider).y() - height > 0.0D) {
-					return Direction.fromOrdinal(0);
+				if (((Block) provider).y() - height > 0.0D && rotationFilter.test(Direction.DOWN)) {
+					return Direction.DOWN;
 				}
 			}
 
+			// TODO Improve
 			int l = (int) FastMath.floor((entity.rotation().getAngles(RotationUtil.DEFAULT_ORDER)[0] * 4 / (2 * Math.PI)) + 0.5D) & 3;
-			int dir = l == 0 ? 3 : (l == 1 ? 5 : (l == 2 ? 2 : (l == 3 ? 4 : 0)));
+			int dir = (l == 0 && rotationFilter.test(Direction.SOUTH)) ? 3
+				: ((l == 1 && rotationFilter.test(Direction.EAST)) ? 5
+				: ((l == 2 && rotationFilter.test(Direction.NORTH)) ? 2
+				: ((l == 3 && rotationFilter.test(Direction.WEST)) ? 4 : 0)));
 			return (isFlip) ? Direction.fromOrdinal(dir).opposite() : Direction.fromOrdinal(dir);
 		}
 
@@ -218,11 +250,11 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 	}
 
 	public boolean canRotate(int side) {
-		return (rotationMask & (1 << side)) != 0;
+		return rotationFilter.test(Direction.fromOrdinal(side));
 	}
 
 	public boolean canRotate(Direction side) {
-		return canRotate(side.ordinal());
+		return rotationFilter.test(side);
 	}
 
 	/**
