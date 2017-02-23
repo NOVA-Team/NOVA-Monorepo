@@ -16,17 +16,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.render.texture;
+ */
 
+package nova.core.render.texture;
+
+/**
+ * An entity texture that won't be stitched into a large Atlas Texture
+ *
+ * @author Calclavia
+ */
 public class EntityTexture extends Texture {
 
-	public EntityTexture(String domain, String resource) {
-		super(domain, resource);
+	public EntityTexture(String domain, String name) {
+		super(domain, name);
 	}
 
 	@Override
-	public String getPath() {
-		return "textures/entities/" + super.getPath();
+	public String path() {
+		return "textures/entities/" + super.path().replaceFirst("^textures/", "");
 	}
-
 }
