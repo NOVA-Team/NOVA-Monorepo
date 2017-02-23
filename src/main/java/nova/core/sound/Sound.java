@@ -69,4 +69,19 @@ public class Sound extends Asset implements Identifiable {
 		return new Sound(domain, name, pitch, speed, volume);
 	}
 
+	public Sound withPS(float pitch, float speed) {
+		return new Sound(domain, name, pitch, speed, volume);
+	}
+
+	public Sound withPV(float pitch, float volume) {
+		return new Sound(domain, name, pitch, speed, volume);
+	}
+
+	public Sound withSV(float speed, float volume) {
+		return new Sound(domain, name, pitch, speed, volume);
+	}
+
+	public Sound with(float pitch, float speed, float volume) {
+		return new Sound(domain, name, pitch, speed, volume);
+	}
 }

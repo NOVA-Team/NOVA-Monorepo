@@ -1,4 +1,4 @@
-package nova.core.wrapper.mc.forge.v18.wrapper.block.forward;
+package nova.core.wrapper.mc.forge.v17.wrapper.block.forward;
 
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -22,11 +22,6 @@ public class ProxyMaterial extends Material {
 		super(color);
 		this.opacity = opacity;
 		this.replaceable = replaceable;
-	}
-
-	@Override
-	public boolean blocksLight() {
-		return opacity.isPresent() ? opacity.get().opacity == 1 : super.blocksLight();
 	}
 
 	@Override

@@ -25,6 +25,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -42,6 +43,7 @@ import net.minecraftforge.client.IItemRenderer;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.block.Stateful;
+import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
@@ -49,7 +51,9 @@ import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.retention.Storable;
+import nova.core.sound.Sound;
 import nova.core.util.Direction;
+import nova.core.util.math.MathUtil;
 import nova.core.util.math.MatrixStack;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
@@ -86,11 +90,32 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
-	// TODO: Resolve unknown material issue
+	private static Material getMcMaterial(BlockFactory factory) {
+		Block dummy = factory.build();
+		if (dummy.components.has(BlockProperty.Opacity.class) || dummy.components.has(BlockProperty.Replaceable.class)) {
+			// TODO allow color selection
+			return new ProxyMaterial(MapColor.grayColor,
+				dummy.components.getOp(BlockProperty.Opacity.class),
+				dummy.components.getOp(BlockProperty.Replaceable.class));
+		} else {
+			return Material.piston;
+		}
+	}
+
 	public FWBlock(BlockFactory factory) {
-		super(Material.piston);
+		//TODO: Hack build() method
+		super(getMcMaterial(factory));
 		this.factory = factory;
 		this.dummy = factory.build();
+		if (dummy.components.has(BlockProperty.BlockSound.class)) {
+			this.stepSound = new FWBlockSound(dummy.components.get(BlockProperty.BlockSound.class));
+		} else {
+			BlockProperty.BlockSound properties = dummy.components.add(new BlockProperty.BlockSound());
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundTypeStone.getBreakSound()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", soundTypeStone.func_150496_b()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", soundTypeStone.getStepResourcePath()));
+			this.stepSound = soundTypeStone;
+		}
 		this.blockClass = dummy.getClass();
 		this.setBlockName(dummy.getID());
 
@@ -128,6 +153,13 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	private Block getBlockInstance(nova.core.world.World world, Vector3D position) {
 		Block block = factory.build();
 		block.components.add(new MCBlockTransform(block, world, position));
+		if (!block.components.has(BlockProperty.BlockSound.class)) {
+			BlockProperty.BlockSound properties = block.components.add(new BlockProperty.BlockSound());
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundTypeStone.getBreakSound()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", soundTypeStone.func_150496_b()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", soundTypeStone.getStepResourcePath()));
+			this.stepSound = soundTypeStone;
+		}
 		return block;
 	}
 
@@ -174,7 +206,15 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
-		return FWTileLoader.loadTile(dummy.getID());
+		FWTile fwTile = FWTileLoader.loadTile(dummy.getID());
+		if (!fwTile.block.components.has(BlockProperty.BlockSound.class)) {
+			BlockProperty.BlockSound properties = fwTile.block.components.add(new BlockProperty.BlockSound());
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundTypeStone.getBreakSound()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", soundTypeStone.func_150496_b()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", soundTypeStone.getStepResourcePath()));
+			this.stepSound = soundTypeStone;
+		}
+		return fwTile;
 	}
 
 	@Override
@@ -330,7 +370,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Optional<LightEmitter> opEmitter = blockInstance.components.getOp(LightEmitter.class);
 
 		if (opEmitter.isPresent()) {
-			return Math.round(opEmitter.get().emittedLevel.get() * 15.0F);
+			return (int) MathUtil.clamp(Math.round(opEmitter.get().emittedLevel.getAsDouble() * 15), 0, 15);
 		} else {
 			return 0;
 		}

@@ -39,9 +39,9 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public class FWTile extends TileEntity {
 
-	private String blockID;
-	private Block block;
-	private Data cacheData = null;
+	protected String blockID;
+	protected Block block;
+	protected Data cacheData = null;
 
 	public FWTile() {
 
