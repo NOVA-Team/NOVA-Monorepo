@@ -1,4 +1,4 @@
-package nova.core.wrapper.mc.forge.v18.wrapper.block.forward;
+package nova.core.wrapper.mc.forge.v17.wrapper.block.forward;
 
 import net.minecraft.block.Block;
 import nova.core.block.component.BlockProperty;
@@ -26,14 +26,14 @@ public class FWBlockSound extends Block.SoundType {
 	}
 
 	@Override
-	public String getStepSound() {
+	public String getStepResourcePath() {
 		return blockSound.getSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK)
 			.map(sound -> (sound.domain.isEmpty() && !sound.name.contains(".")) ? "step." + sound.name : sound.getID())
-			.orElseGet(super::getStepSound);
+			.orElseGet(super::getStepResourcePath);
 	}
 
 	@Override
-	public String getPlaceSound() {
+	public String func_150496_b() {
 		return blockSound.getSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE)
 			.map(sound -> sound.domain.isEmpty() ? sound.name : sound.getID())
 			.orElseGet(this::getBreakSound); // By default MC uses the block break sound for block placement

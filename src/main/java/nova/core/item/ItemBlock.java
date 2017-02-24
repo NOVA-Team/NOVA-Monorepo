@@ -67,9 +67,9 @@ public class ItemBlock extends Item {
 		if (opBlock.isPresent() && opBlock.get().sameType(blockFactory)) {
 			//TODO: What if the block is NOT placed by a player?
 			opBlock.get().events.publish(new Block.PlaceEvent(entity, side, hit, this));
-			if (opBlock.get().components.has(BlockProperty.BlockSound.class)) {
-				world.playSoundAtPosition(placePos, opBlock.get().components.get(BlockProperty.BlockSound.class).getSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE));
-			}
+			opBlock.get().components.getOp(BlockProperty.BlockSound.class)
+				.flatMap(sound -> sound.getSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE))
+				.ifPresent(sound -> world.playSoundAtPosition(placePos, sound));
 		}
 
 		addCount(-1);

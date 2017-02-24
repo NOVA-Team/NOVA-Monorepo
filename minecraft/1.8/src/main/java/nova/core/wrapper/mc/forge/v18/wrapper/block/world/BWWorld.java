@@ -159,6 +159,6 @@ public class BWWorld extends World {
 
 	@Override
 	public void playSoundAtPosition(Vector3D position, Sound sound) {
-		world().playSoundEffect(position.getX(), position.getY(), position.getZ(), sound.getID(), sound.volume, sound.pitch);
+		world().playSound(position.getX(), position.getY(), position.getZ(), sound.domain.isEmpty() ? sound.name : sound.getID(), sound.volume, sound.pitch, false);
 	}
 }

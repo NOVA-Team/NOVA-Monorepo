@@ -45,6 +45,7 @@ import nova.core.component.misc.Collider;
 import nova.core.retention.Storable;
 import nova.core.sound.Sound;
 import nova.core.util.Direction;
+import nova.core.util.math.MathUtil;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
 import nova.internal.core.Game;
@@ -76,9 +77,11 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	private static Material getMcMaterial(BlockFactory factory) {
 		Block dummy = factory.build();
-		if (dummy.components.has(BlockProperty.Opacity.class)) {
+		if (dummy.components.has(BlockProperty.Opacity.class) || dummy.components.has(BlockProperty.Replaceable.class)) {
 			// TODO allow color selection
-			return new ProxyMaterial(MapColor.grayColor, dummy.components.get(BlockProperty.Opacity.class));
+			return new ProxyMaterial(MapColor.grayColor,
+				dummy.components.getOp(BlockProperty.Opacity.class),
+				dummy.components.getOp(BlockProperty.Replaceable.class));
 		} else {
 			return Material.piston;
 		}
@@ -133,6 +136,13 @@ public class FWBlock extends net.minecraft.block.Block {
 		// TODO: Implement obj args
 		Block block = factory.build();
 		block.components.add(new MCBlockTransform(block, world, position));
+		if (!block.components.has(BlockProperty.BlockSound.class)) {
+			BlockProperty.BlockSound properties = block.components.add(new BlockProperty.BlockSound());
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundTypeStone.getBreakSound()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", soundTypeStone.getPlaceSound()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", soundTypeStone.getStepSound()));
+			this.stepSound = soundTypeStone;
+		}
 		return block;
 	}
 
@@ -183,6 +193,13 @@ public class FWBlock extends net.minecraft.block.Block {
 		if (lastExtendedStatePos != null) {
 			fwTile.block.components.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
 			lastExtendedStatePos = null;
+		}
+		if (!fwTile.block.components.has(BlockProperty.BlockSound.class)) {
+			BlockProperty.BlockSound properties = fwTile.block.components.add(new BlockProperty.BlockSound());
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundTypeStone.getBreakSound()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", soundTypeStone.getPlaceSound()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", soundTypeStone.getStepSound()));
+			this.stepSound = soundTypeStone;
 		}
 		return fwTile;
 	}
@@ -312,7 +329,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		Optional<LightEmitter> opEmitter = blockInstance.components.getOp(LightEmitter.class);
 
 		if (opEmitter.isPresent()) {
-			return Math.round(opEmitter.get().emittedLevel.get() * 15.0F);
+			return (int) MathUtil.clamp(Math.round(opEmitter.get().emittedLevel.getAsDouble() * 15), 0, 15);
 		} else {
 			return 0;
 		}
