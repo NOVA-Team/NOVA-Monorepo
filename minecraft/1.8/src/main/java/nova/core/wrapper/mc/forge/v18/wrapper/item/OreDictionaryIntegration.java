@@ -48,15 +48,19 @@ public class OreDictionaryIntegration {
 	public void registerOreDictionary() {
 		ItemDictionary novaItemDictionary = Game.itemDictionary();
 
-		novaItemDictionary.stream().forEach(entry -> entry.getValue().stream()
-			.map(ItemConverter.instance()::toNative)
-			.filter(item -> !OreDictionary.getOres(entry.getKey()).contains(item))
-			.forEach(item -> OreDictionary.registerOre(entry.getKey(), item)));
+		novaItemDictionary.stream().forEach(entry -> {
+			entry.getValue().stream()
+				.map(ItemConverter.instance()::toNative)
+				.filter(item -> !OreDictionary.getOres(entry.getKey()).contains(item))
+				.forEach(item -> OreDictionary.registerOre(entry.getKey(), item));
+			});
 
-		Arrays.stream(OreDictionary.getOreNames()).forEach(key -> OreDictionary.getOres(key).stream()
-			.map(ItemConverter.instance()::getNovaItem)
-			.filter(item -> !novaItemDictionary.get(key).contains(item))
-			.forEach(item -> novaItemDictionary.add(key, item)));
+		Arrays.stream(OreDictionary.getOreNames()).forEach(key -> {
+			OreDictionary.getOres(key).stream()
+				.map(ItemConverter.instance()::getNovaItem)
+				.filter(item -> !novaItemDictionary.get(key).contains(item))
+				.forEach(item -> novaItemDictionary.add(key, item));
+			});
 
 		novaItemDictionary.whenEntryAdded(this::onNovaAdded);
 		novaItemDictionary.whenEntryRemoved(this::onNovaRemoved);
