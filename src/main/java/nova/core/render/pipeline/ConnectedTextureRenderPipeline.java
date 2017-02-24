@@ -35,6 +35,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+// TODO: create a CTM pipeline builder at some point, to automate construction of CTM pipelines
+//      (there are 47 different CTM textures for a block which connects omni-directionally, writing that manually would get annoying really fast)
 public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 
 	public final Block block;
@@ -42,14 +44,12 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 
 	/**
 	 * The mask the represents which sides the block should render its connected texture.
-	 * E.g: 000000 will render all directions
+	 * E.g: 00000000 will render all directions
 	 */
 	public Supplier<Integer> connectMask;
 
 	/**
-	 * A mask of which sides the connected texture renderer should render.
-	 * Each bit corresponds to a direction.
-	 * E.g: 000011 will render top and bottom
+	 * A filter of which sides the connected texture renderer should render.
 	 */
 	public Predicate<Direction> faceFilter = dir -> true;
 
@@ -91,41 +91,46 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 	}
 
 	/**
-	 * Set the mask used to determine if this pipeline should handle these sides.
+	 * Set the filter used to determine if this pipeline should handle these sides.
 	 *
-	 * @param faceFilter A mask of which sides the connected texture renderer should render.
+	 * @param faceFilter A filter of which sides the connected texture renderer should render.
 	 * @return this
 	 */
-	public ConnectedTextureRenderPipeline withFaceMask(Predicate<Direction> faceFilter) {
+	public ConnectedTextureRenderPipeline withFaceFilter(Predicate<Direction> faceFilter) {
 		this.faceFilter = faceFilter;
 		return this;
 	}
 
 	/**
-	 * Set the mask used to determine if this pipeline should handle these sides.
+	 * Set the filter used to determine if this pipeline should handle these sides.
 	 *
-	 * @param faceFilter A mask of which sides the connected texture renderer should render.
+	 * @param faces An array of which sides the connected texture renderer should render.
 	 * @return this
 	 */
-	public ConnectedTextureRenderPipeline withFaceMask(Direction... faceFilter) {
-		this.faceFilter = dir -> Arrays.stream(faceFilter).anyMatch(d -> d == dir);
+	public ConnectedTextureRenderPipeline withFaces(Direction... faces) {
+		this.faceFilter = dir -> Arrays.stream(faces).anyMatch(d -> d == dir);
 		return this;
 	}
 
 	/**
-	 * Set the mask used to determine if this pipeline should handle these sides.
+	 * Set the filter used to determine if this pipeline should handle these sides.
 	 *
-	 * @param faceFilter A mask of which sides the connected texture renderer should render.
+	 * @param faceMask A mask of which sides the connected texture renderer should render.
 	 * Each bit corresponds to a direction.
 	 * E.g: 000011 will render top and bottom
 	 * @return this
 	 */
-	public ConnectedTextureRenderPipeline withFaceMask(int faceFilter) {
-		this.faceFilter = dir -> (faceFilter & (1 << dir.ordinal())) != 0;
+	public ConnectedTextureRenderPipeline withFaceMask(int faceMask) {
+		this.faceFilter = dir -> (faceMask & (1 << dir.ordinal())) != 0;
 		return this;
 	}
 
-	//Apply connected texture on top face
+	/**
+	 * Apply connected texture on top face.
+	 *
+	 * @param direction the direction.
+	 * @param model the model.
+	 */
 	protected void renderFace(Direction direction, Model model) {
 		for (int r = 0; r < 4; r++) {
 			Cuboid bound = bounds.get()
