@@ -18,19 +18,25 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.internal.core.language;
+package nova.wrappertests.depmodules;
 
 import nova.core.language.LanguageManager;
+import se.jbee.inject.bind.BinderModule;
 
 /**
- * Used by wrappers for games that don't support languages.
- *
  * @author Calclavia
  */
-public class FakeLanguageManager extends LanguageManager {
+public class FakeLanguageModule extends BinderModule {
 
 	@Override
-	public String getCurrentLanguage() {
-		return "en-US";
+	protected void declare() {
+		bind(LanguageManager.class).to(FakeLanguageManager.class);
+	}
+
+	public static class FakeLanguageManager extends LanguageManager {
+		@Override
+		public String getCurrentLanguage() {
+			return "en-US";
+		}
 	}
 }

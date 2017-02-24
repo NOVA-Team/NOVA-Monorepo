@@ -38,14 +38,6 @@ public interface Translatable {
 	 * @return The localized name
 	 */
 	public default String getLocalizedName() {
-		return languageManager().translate(this.getLocalizedName());
-	}
-
-	/**
-	 * Gets the instance of LanguageManager
-	 * @return The instance of LanguageManager
-	 */
-	public static LanguageManager languageManager() {
-		return LanguageManager.instance();
+		return LanguageManager.instance().translate(this.getLocalizedName());
 	}
 }

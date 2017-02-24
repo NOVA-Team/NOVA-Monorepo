@@ -19,7 +19,7 @@
  */
 package nova.core.language;
 
-import nova.internal.core.language.FakeLanguageManager;
+import nova.wrappertests.depmodules.FakeLanguageModule.FakeLanguageManager;
 import org.junit.Test;
 
 import static nova.testutils.NovaAssertions.assertThat;

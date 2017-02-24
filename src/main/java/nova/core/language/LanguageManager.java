@@ -40,6 +40,10 @@ public abstract class LanguageManager extends Manager<LanguageManager> {
 
 	protected final Map<String, Map<String, String>> languageMap = new HashMap<>();
 
+	/**
+	 * Gets the instance of LanguageManager
+	 * @return The instance of LanguageManager
+	 */
 	public static LanguageManager instance() {
 		return Game.language();
 	}
