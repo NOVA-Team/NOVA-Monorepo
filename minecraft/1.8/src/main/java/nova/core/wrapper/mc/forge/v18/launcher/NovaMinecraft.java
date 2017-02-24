@@ -190,6 +190,7 @@ public class NovaMinecraft {
 				fmlProgressBar.step(wrapper.getClass());
 				wrapper.preInit(evt);
 			});
+			fmlProgressBar.finish();
 			ProgressManager.pop(progressBar);
 
 			proxy.preInit(evt);
@@ -222,6 +223,7 @@ public class NovaMinecraft {
 				fmlProgressBar.step(wrapper.getClass());
 				wrapper.init(evt);
 			});
+			fmlProgressBar.finish();
 			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
 			System.out.println("Error during init");
@@ -246,6 +248,7 @@ public class NovaMinecraft {
 				fmlProgressBar.step(wrapper.getClass());
 				wrapper.postInit(evt);
 			});
+			fmlProgressBar.finish();
 			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
 			System.out.println("Error during postInit");
