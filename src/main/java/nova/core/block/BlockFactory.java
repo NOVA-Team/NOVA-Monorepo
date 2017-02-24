@@ -22,6 +22,9 @@ package nova.core.block;
 
 import nova.core.component.misc.FactoryProvider;
 import nova.core.item.ItemBlock;
+import nova.core.item.ItemFactory;
+import nova.core.language.LanguageManager;
+import nova.core.language.Translatable;
 import nova.core.util.registry.Factory;
 import nova.internal.core.Game;
 
@@ -33,13 +36,15 @@ import java.util.function.Supplier;
  * The factory type for blocks.
  * @author Calclavia
  */
-public class BlockFactory extends Factory<BlockFactory, Block> {
+public class BlockFactory extends Factory<BlockFactory, Block> implements Translatable {
 
 	final Consumer<BlockFactory> postRegister;
+	private String unlocalizedName;
 
 	public BlockFactory(String id, Supplier<Block> constructor, Function<Block, Block> processor, Consumer<BlockFactory> postRegister) {
 		super(id, constructor, processor);
 		this.postRegister = postRegister;
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
 	}
 
 	public BlockFactory(String id, Supplier<Block> constructor) {
@@ -55,6 +60,7 @@ public class BlockFactory extends Factory<BlockFactory, Block> {
 	public BlockFactory(String id, Supplier<Block> constructor, Consumer<BlockFactory> postRegister) {
 		super(id, constructor);
 		this.postRegister = postRegister;
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
 	}
 
 	@Override
@@ -67,5 +73,20 @@ public class BlockFactory extends Factory<BlockFactory, Block> {
 		Block build = super.build();
 		build.components.add(new FactoryProvider(this));
 		return build;
+	}
+
+	public BlockFactory setUnlocalizedName(String unlocalizedName) {
+		this.unlocalizedName = unlocalizedName;
+		return this;
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return "block." + this.unlocalizedName;
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return LanguageManager.instance().translate(getUnlocalizedName() + ".name");
 	}
 }

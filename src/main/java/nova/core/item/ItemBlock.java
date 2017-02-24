@@ -42,6 +42,16 @@ public class ItemBlock extends Item {
 		events.on(UseEvent.class).bind(this::onUse);
 	}
 
+	@Override
+	public String getUnlocalizedName() {
+		return blockFactory.getLocalizedName();
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return blockFactory.getLocalizedName();
+	}
+
 	protected void onUse(UseEvent evt) {
 		Optional<Block> opBlock = evt.entity.world().getBlock(evt.position);
 

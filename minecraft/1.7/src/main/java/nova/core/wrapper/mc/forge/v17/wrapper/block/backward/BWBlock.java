@@ -166,4 +166,14 @@ public class BWBlock extends Block implements Storable {
 			tileEntity.writeToNBT(Game.natives().toNative(data));
 		}
 	}
+
+	@Override
+	public String getLocalizedName() {
+		return mcBlock.getLocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return mcBlock.getUnlocalizedName();
+	}
 }

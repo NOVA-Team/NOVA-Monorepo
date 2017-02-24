@@ -117,7 +117,6 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 			this.stepSound = soundTypeStone;
 		}
 		this.blockClass = dummy.getClass();
-		this.setBlockName(dummy.getID());
 
 		// Recalculate super constructor things after loading the block properly
 		this.opaque = isOpaqueCube();
@@ -402,7 +401,12 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public String getUnlocalizedName() {
-		return super.getUnlocalizedName().replaceFirst("tile", "block");
+		return factory.getUnlocalizedName();
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return factory.getLocalizedName();
 	}
 
 	/**

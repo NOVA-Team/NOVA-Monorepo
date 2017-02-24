@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -18,25 +18,26 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.wrappertests.depmodules;
-
-import nova.core.language.LanguageManager;
-import se.jbee.inject.bind.BinderModule;
+package nova.core.language;
 
 /**
- * @author Calclavia
+ * Implemented by objects that can be translated.
+ *
+ * @author ExE Boss
  */
-public class FakeLanguageModule extends BinderModule {
+public interface Translatable {
 
-	@Override
-	protected void declare() {
-		bind(LanguageManager.class).to(FakeLanguageManager.class);
-	}
+	/**
+	 * Gets the unlocalized name of this object.
+	 * @return The unlocalized name
+	 */
+	public String getUnlocalizedName();
 
-	public static class FakeLanguageManager extends LanguageManager {
-		@Override
-		public String getCurrentLanguage() {
-			return "en-US";
-		}
+	/**
+	 * Gets the localized name of this object.
+	 * @return The localized name
+	 */
+	public default String getLocalizedName() {
+		return LanguageManager.instance().translate(this.getLocalizedName());
 	}
 }

@@ -53,6 +53,11 @@ public class BWItemFactory extends ItemFactory {
 	}
 
 	@Override
+	public String getUnlocalizedName() {
+		return this.item.getUnlocalizedName();
+	}
+
+	@Override
 	public Item build(Data data) {
 		int meta = (Integer) data.getOrDefault("damage", this.meta);
 		NBTTagCompound nbtData = Game.natives().toNative(data);

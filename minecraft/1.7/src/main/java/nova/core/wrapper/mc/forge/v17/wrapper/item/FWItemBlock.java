@@ -78,4 +78,19 @@ public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWra
 	public void registerIcons(IIconRegister ir) {
 
 	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return getItemFactory().getUnlocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getUnlocalizedName();
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getLocalizedName();
+	}
 }
