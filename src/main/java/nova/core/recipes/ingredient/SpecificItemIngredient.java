@@ -16,10 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.recipes.crafting;
+ */
+
+package nova.core.recipes.ingredient;
 
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
+import nova.core.recipes.crafting.CraftingGrid;
 import nova.core.util.exception.RegistrationException;
 import nova.internal.core.Game;
 
@@ -43,13 +46,13 @@ public class SpecificItemIngredient implements ItemIngredient {
 	}
 
 	@Override
-	public Optional<Collection<String>> getPossibleItemIds() {
-		return Optional.of(Collections.singleton(itemId));
+	public Collection<String> getPossibleItemIds() {
+		return Collections.singleton(itemId);
 	}
 
 	@Override
-	public Optional<Collection<Item>> getExampleItems() {
-		return Optional.of(Collections.singleton(getItem(itemId)));
+	public Collection<Item> getExampleItems() {
+		return Collections.singleton(getItem(itemId));
 	}
 
 	@Override

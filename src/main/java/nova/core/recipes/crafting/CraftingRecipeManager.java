@@ -106,9 +106,9 @@ public class CraftingRecipeManager {
 	// #######################
 
 	private <T extends CraftingRecipe> void onCraftingRecipeAdded(RecipeEvent.Add<T> evt) {
-		Optional<Collection<String>> possibleFirstItemIds = evt.recipe.getPossibleItemsInFirstSlot();
-		if (possibleFirstItemIds.isPresent()) {
-			for (String itemId : possibleFirstItemIds.get()) {
+		Collection<String> possibleFirstItemIds = evt.recipe.getPossibleItemsInFirstSlot();
+		if (!possibleFirstItemIds.isEmpty()) {
+			for (String itemId : possibleFirstItemIds) {
 				staticRecipes.put(itemId, evt.recipe);
 			}
 		} else {
@@ -117,9 +117,9 @@ public class CraftingRecipeManager {
 	}
 
 	private <T extends CraftingRecipe> void onCraftingRecipeRemoved(RecipeEvent.Remove<T> evt) {
-		Optional<Collection<String>> possibleFirstItemIds = evt.recipe.getPossibleItemsInFirstSlot();
-		if (possibleFirstItemIds.isPresent()) {
-			for (String itemId : possibleFirstItemIds.get()) {
+		Collection<String> possibleFirstItemIds = evt.recipe.getPossibleItemsInFirstSlot();
+		if (!possibleFirstItemIds.isEmpty()) {
+			for (String itemId : possibleFirstItemIds) {
 				staticRecipes.remove(itemId, evt.recipe);
 			}
 		} else {

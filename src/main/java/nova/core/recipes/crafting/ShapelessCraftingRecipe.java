@@ -20,6 +20,7 @@
 
 package nova.core.recipes.crafting;
 
+import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.item.Item;
 
 import java.util.HashMap;
@@ -35,11 +36,11 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 	private final RecipeFunction recipeFunction;
 	private final ItemIngredient[] ingredients;
 
-	public ShapelessCraftingRecipe(Item output, ItemIngredient[] ingredients) {
+	public ShapelessCraftingRecipe(Item output, ItemIngredient... ingredients) {
 		this(output, (crafting, tagged) -> Optional.of(output), ingredients);
 	}
 
-	public ShapelessCraftingRecipe(Item nominalOutput, RecipeFunction recipeFunction, ItemIngredient[] ingredients) {
+	public ShapelessCraftingRecipe(Item nominalOutput, RecipeFunction recipeFunction, ItemIngredient... ingredients) {
 		this.nominalOutput = nominalOutput;
 		this.recipeFunction = recipeFunction;
 		this.ingredients = ingredients;
