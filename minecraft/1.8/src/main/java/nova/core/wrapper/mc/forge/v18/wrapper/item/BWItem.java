@@ -20,13 +20,19 @@
 
 package nova.core.wrapper.mc.forge.v18.wrapper.item;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
 import nova.core.render.model.CustomModel;
 import nova.core.retention.Storable;
-import nova.core.wrapper.mc.forge.v18.wrapper.render.BWClientRenderManager;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+
+import java.nio.DoubleBuffer;
+import java.util.Arrays;
 
 /**
  * @author Stan
@@ -46,8 +52,23 @@ public class BWItem extends Item implements Storable {
 		this.meta = meta;
 		this.tag = tag;
 
-		components.add(new StaticRenderer()).onRender(model ->
-			model.addChild(new CustomModel(self -> BWClientRenderManager.renderItem().renderItemModel(makeItemStack(count())))));
+		components.add(new StaticRenderer())
+			.onRender(model -> {
+				model.addChild(new CustomModel(self -> {
+					Tessellator.getInstance().draw();
+					GL11.glPushMatrix();
+					DoubleBuffer buffer = BufferUtils.createDoubleBuffer(4 * 4);
+					double[] flatArray = Arrays.stream(self.matrix.getMatrix().getData())
+						.flatMapToDouble(Arrays::stream)
+						.toArray();
+					buffer.put(flatArray);
+					buffer.position(0);
+					GL11.glMultMatrix(buffer);
+					Minecraft.getMinecraft().getRenderItem().renderItemModel(makeItemStack(count()));
+					GL11.glPopMatrix();
+					Tessellator.getInstance().getWorldRenderer().startDrawingQuads();
+				}));
+			});
 	}
 
 	public net.minecraft.item.Item getItem() {

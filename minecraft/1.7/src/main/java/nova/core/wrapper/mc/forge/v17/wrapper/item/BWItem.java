@@ -67,7 +67,7 @@ public class BWItem extends Item implements Storable {
 					buffer.put(flatArray);
 					buffer.position(0);
 					GL11.glMultMatrix(buffer);
-						RenderItem.getInstance().doRender(fakeEntity, 0, 0, 0, 0, 0);
+					RenderItem.getInstance().doRender(fakeEntity, 0, 0, 0, 0, 0);
 					GL11.glPopMatrix();
 					Tessellator.instance.startDrawingQuads();
 				}));
