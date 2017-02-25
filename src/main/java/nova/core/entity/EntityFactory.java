@@ -21,8 +21,11 @@
 package nova.core.entity;
 
 import nova.core.component.misc.FactoryProvider;
+import nova.core.retention.Data;
+import nova.core.retention.Storable;
 import nova.core.util.registry.Factory;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -31,6 +34,19 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public class EntityFactory extends Factory<EntityFactory, Entity> {
+
+	public EntityFactory(String id, Class<? extends Entity> type, Function<Entity, Entity> processor, Function<Class<?>, Optional<?>> mapping) {
+		super(id, type, processor, mapping);
+	}
+
+	public EntityFactory(String id, Class<? extends Entity> type, Function<Entity, Entity> processor) {
+		super(id, type, processor);
+	}
+
+	public EntityFactory(String id, Class<? extends Entity> type) {
+		super(id, type);
+	}
+
 	public EntityFactory(String id, Supplier<Entity> constructor, Function<Entity, Entity> processor) {
 		super(id, constructor, processor);
 	}

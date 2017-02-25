@@ -27,6 +27,7 @@ import nova.core.language.Translateable;
 import nova.core.util.registry.Factory;
 import nova.internal.core.Game;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -40,12 +41,111 @@ public class BlockFactory extends Factory<BlockFactory, Block> implements Transl
 	final Consumer<BlockFactory> postRegister;
 	private String unlocalizedName;
 
+	/**
+	 * Initializes a BlockFactory. A specific implementation of item block generation
+	 * may be provided by post create.
+	 *
+	 * @param id The block ID
+	 * @param type The class of the block
+	 * @param processor The function applied to the block after construction
+	 * @param postRegister Function for registering item blocks
+	 * @param mapping The custom DI mapping
+	 */
+	public BlockFactory(String id, Class<? extends Block> type, Function<Block, Block> processor, Consumer<BlockFactory> postRegister, Function<Class<?>, Optional<?>> mapping) {
+		super(id, type, processor, mapping);
+		this.postRegister = postRegister;
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
+	}
+
+	/**
+	 * Initializes a BlockFactory. A specific implementation of item block generation
+	 * may be provided by post create.
+	 *
+	 * @param id The block ID
+	 * @param type The class of the block
+	 * @param processor The function applied to the block after construction
+	 * @param postRegister Function for registering item blocks
+	 */
+	public BlockFactory(String id, Class<? extends Block> type, Function<Block, Block> processor, Consumer<BlockFactory> postRegister) {
+		super(id, type, processor);
+		this.postRegister = postRegister;
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
+	}
+
+	/**
+	 * Initializes a BlockFactory. A specific implementation of item block generation
+	 * may be provided by post create.
+	 *
+	 * @param id The block ID
+	 * @param type The class of the block
+	 * @param mapping The custom DI mapping
+	 */
+	public BlockFactory(String id, Class<? extends Block> type, Function<Class<?>, Optional<?>> mapping) {
+		this(id, type, blockFactory -> Game.items().register(id, () -> new ItemBlock(blockFactory)), mapping);
+	}
+
+	/**
+	 * Initializes a BlockFactory. A specific implementation of item block generation
+	 * may be provided by post create.
+	 *
+	 * @param id The block ID
+	 * @param type The class of the block
+	 */
+	public BlockFactory(String id, Class<? extends Block> type) {
+		this(id, type, blockFactory -> {Game.items().register(id, () -> new ItemBlock(blockFactory));});
+	}
+
+	/**
+	 * Initializes a BlockFactory. A specific implementation of item block generation
+	 * may be provided by post create.
+	 *
+	 * @param id The block ID
+	 * @param type The class of the block
+	 * @param postRegister Function for registering item blocks
+	 * @param mapping The custom DI mapping
+	 */
+	public BlockFactory(String id, Class<? extends Block> type, Consumer<BlockFactory> postRegister, Function<Class<?>, Optional<?>> mapping) {
+		super(id, type, block -> block, mapping);
+		this.postRegister = postRegister;
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
+	}
+
+	/**
+	 * Initializes a BlockFactory. A specific implementation of item block generation
+	 * may be provided by post create.
+	 *
+	 * @param id The block ID
+	 * @param type The class of the block
+	 * @param postRegister Function for registering item blocks
+	 */
+	public BlockFactory(String id, Class<? extends Block> type, Consumer<BlockFactory> postRegister) {
+		super(id, type);
+		this.postRegister = postRegister;
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
+	}
+
+	/**
+	 * Initializes a BlockFactory. A specific implementation of item block generation
+	 * may be provided by post create.
+	 *
+	 * @param id The block ID
+	 * @param constructor The constructor function
+	 * @param processor The function applied to the block after construction
+	 * @param postRegister Function for registering item blocks
+	 */
 	public BlockFactory(String id, Supplier<Block> constructor, Function<Block, Block> processor, Consumer<BlockFactory> postRegister) {
 		super(id, constructor, processor);
 		this.postRegister = postRegister;
 		this.setUnlocalizedName(getID().replaceAll(":", "."));
 	}
 
+	/**
+	 * Initializes a BlockFactory. A specific implementation of item block generation
+	 * may be provided by post create.
+	 *
+	 * @param id The block ID
+	 * @param constructor The constructor function
+	 */
 	public BlockFactory(String id, Supplier<Block> constructor) {
 		this(id, constructor, blockFactory -> Game.items().register(id, () -> new ItemBlock(blockFactory)));
 	}
@@ -53,6 +153,8 @@ public class BlockFactory extends Factory<BlockFactory, Block> implements Transl
 	/**
 	 * Initializes a BlockFactory. A specific implementation of item block generation
 	 * may be provided by post create.
+	 *
+	 * @param id The block ID
 	 * @param constructor The constructor function
 	 * @param postRegister Function for registering item blocks
 	 */

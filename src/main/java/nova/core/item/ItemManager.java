@@ -28,6 +28,7 @@ import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ItemManager extends FactoryManager<ItemManager, Item, ItemFactory> {
@@ -41,8 +42,32 @@ public class ItemManager extends FactoryManager<ItemManager, Item, ItemFactory> 
 
 	/**
 	 * Register a new item with custom constructor arguments.
-	 * @param constructor The lambda expression to create a new constructor.
-	 * @return Dummy item
+	 * @param id The item ID
+	 * @param type The class of the item
+	 * @param mapping The custom DI mapping
+	 * @return The item factory
+	 */
+	@Override
+	public ItemFactory register(String id, Class<? extends Item> type, Function<Class<?>, Optional<?>> mapping) {
+		return register(new ItemFactory(id, type, item -> item, mapping));
+	}
+
+	/**
+	 * Register a new item with custom constructor arguments.
+	 * @param id The item ID
+	 * @param type The class of the item
+	 * @return The item factory
+	 */
+	@Override
+	public ItemFactory register(String id, Class<? extends Item> type) {
+		return register(new ItemFactory(id, type));
+	}
+
+	/**
+	 * Register a new item with custom constructor arguments.
+	 * @param id The item ID
+	 * @param constructor Item instance {@link Supplier}
+	 * @return The item factory
 	 */
 	@Override
 	public ItemFactory register(String id, Supplier<Item> constructor) {

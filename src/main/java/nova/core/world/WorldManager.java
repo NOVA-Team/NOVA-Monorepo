@@ -29,6 +29,7 @@ import nova.internal.core.Game;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class WorldManager extends FactoryManager<WorldManager, World, WorldFactory> {
@@ -45,6 +46,16 @@ public class WorldManager extends FactoryManager<WorldManager, World, WorldFacto
 		//Bind events
 		events.on(WorldEvent.Load.class).bind(evt -> sidedWorlds().add(evt.world));
 		events.on(WorldEvent.Unload.class).bind(evt -> sidedWorlds().remove(evt.world));
+	}
+
+	@Override
+	public WorldFactory register(String id, Class<? extends World> type, Function<Class<?>, Optional<?>> mapping) {
+		return register(new WorldFactory(id, type, world -> world, mapping));
+	}
+
+	@Override
+	public WorldFactory register(String id, Class<? extends World> type) {
+		return register(new WorldFactory(id, type));
 	}
 
 	@Override

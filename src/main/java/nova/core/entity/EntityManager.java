@@ -24,6 +24,8 @@ import nova.core.util.registry.FactoryManager;
 import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
 
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class EntityManager extends FactoryManager<EntityManager, Entity, EntityFactory> {
@@ -34,7 +36,31 @@ public class EntityManager extends FactoryManager<EntityManager, Entity, EntityF
 
 	/**
 	 * Register a new entity type.
-	 * @param constructor The lambda expression to create a new constructor.
+	 * @param id The entity ID
+	 * @param type The class of the entity
+	 * @param mapping The custom DI mapping
+	 * @return The entity factory
+	 */
+	@Override
+	public EntityFactory register(String id, Class<? extends Entity> type, Function<Class<?>, Optional<?>> mapping) {
+		return register(new EntityFactory(id, type, entity -> entity, mapping));
+	}
+
+	/**
+	 * Register a new entity type.
+	 * @param id The entity ID
+	 * @param type The class of the block
+	 * @return The entity factory
+	 */
+	@Override
+	public EntityFactory register(String id, Class<? extends Entity> type) {
+		return register(new EntityFactory(id, type));
+	}
+
+	/**
+	 * Register a new entity type.
+	 * @param id The entity ID
+	 * @param constructor Entity instance {@link Supplier}
 	 * @return The entity factory
 	 */
 	@Override

@@ -25,6 +25,8 @@ import nova.core.util.registry.FactoryManager;
 import nova.core.util.registry.Registry;
 import nova.internal.core.Game;
 
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class BlockManager extends FactoryManager<BlockManager, Block, BlockFactory> {
@@ -43,8 +45,32 @@ public class BlockManager extends FactoryManager<BlockManager, Block, BlockFacto
 
 	/**
 	 * Register a new block with custom constructor arguments.
+	 * @param id The block ID
+	 * @param type The class of the block
+	 * @param mapping The custom DI mapping
+	 * @return The block factory
+	 */
+	@Override
+	public BlockFactory register(String id, Class<? extends Block> type, Function<Class<?>, Optional<?>> mapping) {
+		return register(new BlockFactory(id, type, mapping));
+	}
+
+	/**
+	 * Register a new block with custom constructor arguments.
+	 * @param id The block ID
+	 * @param type The class of the block
+	 * @return The block factory
+	 */
+	@Override
+	public BlockFactory register(String id, Class<? extends Block> type) {
+		return register(new BlockFactory(id, type));
+	}
+
+	/**
+	 * Register a new block with custom constructor arguments.
+	 * @param id The block ID
 	 * @param constructor Block instance {@link Supplier}
-	 * @return Dummy block
+	 * @return The block factory
 	 */
 	@Override
 	public BlockFactory register(String id, Supplier<Block> constructor) {
