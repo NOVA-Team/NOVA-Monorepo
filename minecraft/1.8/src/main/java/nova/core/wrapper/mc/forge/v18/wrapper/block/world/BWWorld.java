@@ -27,6 +27,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
+import nova.core.component.misc.FactoryProvider;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
@@ -86,7 +87,10 @@ public class BWWorld extends World {
 		} else if (mcBlock instanceof FWBlock) {
 			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
 		} else {
-			return Optional.of(new BWBlock(mcBlock, this, position));
+			BWBlock block = new BWBlock(mcBlock, this, position);
+			Game.blocks().get(net.minecraft.block.Block.blockRegistry.getNameForObject(block).toString())
+				.ifPresent(blockFactory -> block.components.getOrAdd(new FactoryProvider(blockFactory)));
+			return Optional.of(block);
 		}
 	}
 
