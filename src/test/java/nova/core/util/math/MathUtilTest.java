@@ -26,6 +26,7 @@ import org.assertj.core.data.Offset;
 import org.junit.Test;
 
 import static nova.testutils.NovaAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -35,57 +36,77 @@ import static nova.testutils.NovaAssertions.assertThat;
 public class MathUtilTest {
     @Test
     public void testMax() {
-        assertThat(MathUtil.max(1,2)).isEqualTo(2);
-        assertThat(MathUtil.max(2,1)).isEqualTo(2);
+        assertThat(MathUtil.max(1, 2)).isEqualTo(2);
+        assertThat(MathUtil.max(2, 1)).isEqualTo(2);
 
-        assertThat(MathUtil.max(0,1,2)).isEqualTo(2);
-        assertThat(MathUtil.max(0,2,1)).isEqualTo(2);
-        assertThat(MathUtil.max(2,0,1)).isEqualTo(2);
+        assertThat(MathUtil.max(0, 1, 2)).isEqualTo(2);
+        assertThat(MathUtil.max(0, 2, 1)).isEqualTo(2);
+        assertThat(MathUtil.max(2, 0, 1)).isEqualTo(2);
 
-        assertThat(MathUtil.max(0,1,2,4)).isEqualTo(4);
-        assertThat(MathUtil.max(0,4,2,1)).isEqualTo(4);
-        assertThat(MathUtil.max(4,2,0,1)).isEqualTo(4);
+        assertThat(MathUtil.max(0, 1, 2, 4)).isEqualTo(4);
+        assertThat(MathUtil.max(0, 4, 2, 1)).isEqualTo(4);
+        assertThat(MathUtil.max(4, 2, 0, 1)).isEqualTo(4);
 
-        assertThat(MathUtil.max(1d,2d)).isEqualTo(2d);
-        assertThat(MathUtil.max(2d,1d)).isEqualTo(2d);
+        assertThat(MathUtil.max(1l, 2l)).isEqualTo(2l);
+        assertThat(MathUtil.max(2l, 1l)).isEqualTo(2l);
 
-        assertThat(MathUtil.max(0d,1d,2d)).isEqualTo(2d);
-        assertThat(MathUtil.max(0d,2d,1d)).isEqualTo(2d);
-        assertThat(MathUtil.max(2d,0d,1d)).isEqualTo(2d);
+        assertThat(MathUtil.max(0l, 1l, 2l)).isEqualTo(2l);
+        assertThat(MathUtil.max(0l, 2l, 1l)).isEqualTo(2l);
+        assertThat(MathUtil.max(2l, 0l, 1l)).isEqualTo(2l);
 
-        assertThat(MathUtil.max(0d,1d,2d,4d)).isEqualTo(4d);
-        assertThat(MathUtil.max(0d,4d,2d,1d)).isEqualTo(4d);
-        assertThat(MathUtil.max(4d,2d,0d,1d)).isEqualTo(4d);
+        assertThat(MathUtil.max(0l, 1l, 2l, 4l)).isEqualTo(4l);
+        assertThat(MathUtil.max(0l, 4l, 2l, 1l)).isEqualTo(4l);
+        assertThat(MathUtil.max(4l, 2l, 0l, 1l)).isEqualTo(4l);
 
-	    assertThat(MathUtil.max(1d,2d)).isEqualTo(2d);
-	    assertThat(MathUtil.max(2d,1d)).isEqualTo(2d);
+        assertThat(MathUtil.max(1d, 2d)).isEqualTo(2d);
+        assertThat(MathUtil.max(2d, 1d)).isEqualTo(2d);
 
-	    assertThat(MathUtil.max(0f,1f,2f)).isEqualTo(2f);
-	    assertThat(MathUtil.max(0f,2f,1f)).isEqualTo(2f);
-	    assertThat(MathUtil.max(2f,0f,1f)).isEqualTo(2f);
+        assertThat(MathUtil.max(0d, 1d, 2d)).isEqualTo(2d);
+        assertThat(MathUtil.max(0d, 2d, 1d)).isEqualTo(2d);
+        assertThat(MathUtil.max(2d, 0d, 1d)).isEqualTo(2d);
 
-	    assertThat(MathUtil.max(0f,1f,2f,4f)).isEqualTo(4f);
-	    assertThat(MathUtil.max(0f,4f,2f,1f)).isEqualTo(4f);
-	    assertThat(MathUtil.max(4f,2f,0f,1f)).isEqualTo(4f);
+        assertThat(MathUtil.max(0d, 1d, 2d, 4d)).isEqualTo(4d);
+        assertThat(MathUtil.max(0d, 4d, 2d, 1d)).isEqualTo(4d);
+        assertThat(MathUtil.max(4d, 2d, 0d, 1d)).isEqualTo(4d);
+
+	    assertThat(MathUtil.max(1d, 2d)).isEqualTo(2d);
+	    assertThat(MathUtil.max(2d, 1d)).isEqualTo(2d);
+
+	    assertThat(MathUtil.max(0f, 1f, 2f)).isEqualTo(2f);
+	    assertThat(MathUtil.max(0f, 2f, 1f)).isEqualTo(2f);
+	    assertThat(MathUtil.max(2f, 0f, 1f)).isEqualTo(2f);
+
+	    assertThat(MathUtil.max(0f, 1f, 2f, 4f)).isEqualTo(4f);
+	    assertThat(MathUtil.max(0f, 4f, 2f, 1f)).isEqualTo(4f);
+	    assertThat(MathUtil.max(4f, 2f, 0f, 1f)).isEqualTo(4f);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testMaxError() {
-        MathUtil.max();
-
+    public void testMaxErrorInt() {
+        MathUtil.max(new int[]{});
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMaxErrorLong() {
+        MathUtil.max(new long[]{});
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testMaxErrorDouble() {
         MathUtil.max(new double[]{});
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testMaxErrorFloat() {
+        MathUtil.max(new float[]{});
+    }
 
     @Test
     public void testMin() {
         assertThat(MathUtil.min(1, 2)).isEqualTo(1);
         assertThat(MathUtil.min(2, 1)).isEqualTo(1);
 
-        assertThat(MathUtil.min(0,1,2)).isEqualTo(0);
+        assertThat(MathUtil.min(0, 1, 2)).isEqualTo(0);
         assertThat(MathUtil.min(0, 2, 1)).isEqualTo(0);
         assertThat(MathUtil.min(2, 0, 1)).isEqualTo(0);
 
@@ -93,21 +114,32 @@ public class MathUtilTest {
         assertThat(MathUtil.min(0, 4, 2, 1)).isEqualTo(0);
         assertThat(MathUtil.min(4, 2, 0, 1)).isEqualTo(0);
 
+        assertThat(MathUtil.min(1l, 2l)).isEqualTo(1l);
+        assertThat(MathUtil.min(2l, 1l)).isEqualTo(1l);
+
+        assertThat(MathUtil.min(0l, 1l, 2l)).isEqualTo(0l);
+        assertThat(MathUtil.min(0l, 2l, 1l)).isEqualTo(0l);
+        assertThat(MathUtil.min(2l, 0l, 1l)).isEqualTo(0l);
+
+        assertThat(MathUtil.min(0l, 1l, 2l, 4l)).isEqualTo(0l);
+        assertThat(MathUtil.min(0l, 4l, 2l, 1l)).isEqualTo(0l);
+        assertThat(MathUtil.min(4l, 2l, 0l, 1l)).isEqualTo(0l);
+
         assertThat(MathUtil.min(1d, 2d)).isEqualTo(1d);
         assertThat(MathUtil.min(2d, 1d)).isEqualTo(1d);
 
-        assertThat(MathUtil.min(0d,1d,2d)).isEqualTo(0d);
+        assertThat(MathUtil.min(0d, 1d, 2d)).isEqualTo(0d);
         assertThat(MathUtil.min(0d, 2d, 1d)).isEqualTo(0d);
         assertThat(MathUtil.min(2d, 0d, 1d)).isEqualTo(0d);
 
         assertThat(MathUtil.min(0d, 1d, 2d, 4d)).isEqualTo(0d);
         assertThat(MathUtil.min(0d, 4d, 2d, 1d)).isEqualTo(0d);
         assertThat(MathUtil.min(4d, 2d, 0d, 1d)).isEqualTo(0d);
-	    
+
 	    assertThat(MathUtil.min(1f, 2f)).isEqualTo(1f);
 	    assertThat(MathUtil.min(2f, 1f)).isEqualTo(1f);
 
-	    assertThat(MathUtil.min(0f,1f,2f)).isEqualTo(0f);
+	    assertThat(MathUtil.min(0f, 1f, 2f)).isEqualTo(0f);
 	    assertThat(MathUtil.min(0f, 2f, 1f)).isEqualTo(0f);
 	    assertThat(MathUtil.min(2f, 0f, 1f)).isEqualTo(0f);
 
@@ -117,13 +149,23 @@ public class MathUtilTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testMinError() {
-        MathUtil.min();
+    public void testMinErrorInt() {
+        MathUtil.min(new int[]{});
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMinErrorLong() {
+        MathUtil.min(new long[]{});
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testMinErrorDouble() {
         MathUtil.min(new double[]{});
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMinErrorFloat() {
+        MathUtil.min(new float[]{});
     }
 
     @Test
@@ -133,10 +175,15 @@ public class MathUtilTest {
 	    assertThat(MathUtil.clamp(3, 2, 3)).isEqualTo(3);
 	    assertThat(MathUtil.clamp(1, 2, 3)).isEqualTo(2);
 
-	    assertThat(MathUtil.clamp(6D, 2, 3)).isEqualTo(3);
-	    assertThat(MathUtil.clamp(2D, 2, 3)).isEqualTo(2);
-	    assertThat(MathUtil.clamp(3D, 2, 3)).isEqualTo(3);
-	    assertThat(MathUtil.clamp(1D, 2, 3)).isEqualTo(2);
+	    assertThat(MathUtil.clamp(6l, 2l, 3l)).isEqualTo(3l);
+	    assertThat(MathUtil.clamp(2l, 2l, 3l)).isEqualTo(2l);
+	    assertThat(MathUtil.clamp(3l, 2l, 3l)).isEqualTo(3l);
+	    assertThat(MathUtil.clamp(1l, 2l, 3l)).isEqualTo(2l);
+
+	    assertThat(MathUtil.clamp(6d, 2d, 3d)).isEqualTo(3);
+	    assertThat(MathUtil.clamp(2d, 2d, 3d)).isEqualTo(2);
+	    assertThat(MathUtil.clamp(3d, 2d, 3d)).isEqualTo(3);
+	    assertThat(MathUtil.clamp(1d, 2d, 3d)).isEqualTo(2);
     }
 
 	@Test
@@ -156,5 +203,14 @@ public class MathUtilTest {
 		assertThat(MathUtil.lerp(Vector3D.ZERO, Vector3DUtil.ONE, 1)).isAlmostEqualTo(Vector3DUtil.ONE);
 	}
 
+	@Test
+	public void testToString() {
+		assertThat(MathUtil.toString(0, false)).isEqualTo("0.0");
+		assertThat(MathUtil.toString(0.5, false)).isEqualTo("0.5");
+		assertThat(MathUtil.toString(1, false)).isEqualTo("1.0");
+		assertThat(MathUtil.toString(0, true)).isEqualTo("0");
+		assertThat(MathUtil.toString(0.5, true)).isEqualTo("0.5");
+		assertThat(MathUtil.toString(1, true)).isEqualTo("1");
+	}
 }
 
