@@ -58,7 +58,7 @@ public class BWItem extends Item implements Storable {
 		components.add(new StaticRenderer())
 			.onRender(model -> {
 				model.addChild(new CustomModel(self -> {
-					Tessellator.instance.draw();
+//					Tessellator.instance.draw();
 					GL11.glPushMatrix();
 					DoubleBuffer buffer = BufferUtils.createDoubleBuffer(4 * 4);
 					double[] flatArray = Arrays.stream(self.matrix.getMatrix().getData())
@@ -69,7 +69,7 @@ public class BWItem extends Item implements Storable {
 					GL11.glMultMatrix(buffer);
 					RenderItem.getInstance().doRender(fakeEntity, 0, 0, 0, 0, 0);
 					GL11.glPopMatrix();
-					Tessellator.instance.startDrawingQuads();
+//					Tessellator.instance.startDrawingQuads();
 				}));
 			});
 	}

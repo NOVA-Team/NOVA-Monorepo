@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v17.wrapper.block.backward;
 
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -48,8 +49,12 @@ import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.world.BWWorld;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -103,8 +108,20 @@ public class BWBlock extends Block implements Storable {
 		components.add(new StaticRenderer())
 			.onRender(model -> {
 				model.addChild(new CustomModel(self -> {
+					GL11.glPushMatrix();
+					DoubleBuffer buffer = BufferUtils.createDoubleBuffer(4 * 4);
+					double[] flatArray = Arrays.stream(self.matrix.getMatrix().getData())
+						.flatMapToDouble(Arrays::stream)
+						.toArray();
+					buffer.put(flatArray);
+					buffer.position(0);
+					GL11.glMultMatrix(buffer);
+					IBlockAccess backup = RenderBlocks.getInstance().blockAccess;
+					RenderBlocks.getInstance().blockAccess = getMcBlockAccess();
 					RenderBlocks.getInstance()
 						.renderBlockByRenderType(mcBlock, x(), y(), z());
+					RenderBlocks.getInstance().blockAccess = backup;
+					GL11.glPopMatrix();
 				}));
 			});
 		getTileEntity().ifPresent(tileEntity -> {
