@@ -86,6 +86,6 @@ public class BlockFactory extends Factory<BlockFactory, Block> implements Transl
 
 	@Override
 	public String getLocalizedName() {
-		return LanguageManager.instance().translate(getUnlocalizedName() + ".name");
+		return LanguageManager.instance().translate(this.getUnlocalizedName() + ".name", this.getReplacements());
 	}
 }

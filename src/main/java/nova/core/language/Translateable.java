@@ -20,6 +20,13 @@
 
 package nova.core.language;
 
+import nova.core.util.ReflectionUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+
 /**
  * Implemented by objects that can be translated.
  *
@@ -38,6 +45,35 @@ public interface Translateable {
 	 * @return The localized name
 	 */
 	default String getLocalizedName() {
-		return LanguageManager.instance().translate(this.getUnlocalizedName());
+		return LanguageManager.instance().translate(this.getUnlocalizedName(), this.getReplacements());
+	}
+
+	/**
+	 * Gets the replacement map for {@link LanguageManager#translate(java.lang.String, java.util.Map)
+	 * LanguageManager.translate(String, Map&lt;String, String&gt;)}.
+	 * @return The replacement map
+	 */
+	default Map<String, String> getReplacements() {
+		Map<String, String> replacements = new HashMap<>();
+		ReflectionUtil.forEachRecursiveAnnotatedField(Translate.class, getClass(), (field, annotation) -> {
+			try {
+				field.setAccessible(true);
+				String key = annotation.value();
+				if (key.isEmpty()) {
+					key = field.getName();
+				}
+				Object value = field.get(this);
+				if (value instanceof Optional)
+					value = ((Optional<?>) value).map(o -> (Object) o).orElse("empty");
+				if (value instanceof Translateable)
+					replacements.put(key, ((Translateable) value).getLocalizedName());
+				else
+					replacements.put(key, Objects.toString(value));
+				field.setAccessible(false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		return replacements;
 	}
 }

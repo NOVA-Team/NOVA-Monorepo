@@ -25,8 +25,8 @@ import nova.core.language.LanguageManager;
 import nova.core.language.Translateable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
-import nova.core.util.registry.Factory;
 import nova.core.util.Identifiable;
+import nova.core.util.registry.Factory;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -91,7 +91,7 @@ public class ItemFactory extends Factory<ItemFactory, Item> implements Identifia
 
 	@Override
 	public String getLocalizedName() {
-		return LanguageManager.instance().translate(getUnlocalizedName() + ".name");
+		return LanguageManager.instance().translate(getUnlocalizedName() + ".name", this.getReplacements());
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import nova.core.event.bus.CancelableEvent;
 import nova.core.event.bus.Event;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
+import nova.core.language.LanguageManager;
 import nova.core.language.Translateable;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
@@ -71,7 +72,7 @@ public class Block extends SidedComponentProvider implements Identifiable, Trans
 
 	@Override
 	public String getLocalizedName() {
-		return getFactory().getLocalizedName();
+		return LanguageManager.instance().translate(this.getUnlocalizedName() + ".name", this.getReplacements());
 	}
 
 	public final BlockTransform transform() {
