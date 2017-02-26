@@ -37,13 +37,13 @@ public class TankSimpleTest {
 
 	@Before
 	public void setUp() {
-		new NovaLauncherTestFactory().createLauncher();
+		NovaLauncherTestFactory.createDummyLauncher();
 	}
 
 	@Test
 	public void testBasic() {
 		TankSimple tank = new TankSimple(150);
-		
+
 		assertThat(tank.hasFluid()).isFalse();
 		assertThat(tank.addFluid(Game.fluids().water.build().setAmount(100))).isEqualTo(100);
 		assertThat(tank.getFluidAmount()).isEqualTo(100);

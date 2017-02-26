@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nova.wrappertests;
 
 import nova.internal.core.Game;
@@ -30,15 +29,13 @@ import org.junit.Test;
 
 import static nova.testutils.NovaAssertions.assertThat;
 
-public class NovaLauncherTest extends NovaLauncherTestFactory {
+/**
+ * @author ExE Boss
+ */
+public abstract class AbstractNovaLauncherTest extends NovaLauncherTestFactory {
 
-	public NovaLauncherTest() {
+	public AbstractNovaLauncherTest() {
 		super(TestMod.class, NonAnnotatedTestMod.class, NoLoadableTestMod.class);
-	}
-
-	@Test
-	public void testLaunching() {
-		doLaunchAssert(createLauncher());
 	}
 
 	public void doLaunchAssert(NovaLauncher launcher) {
@@ -46,6 +43,11 @@ public class NovaLauncherTest extends NovaLauncherTestFactory {
 			.hasSize(2)
 			.containsValue(TestMod.class)
 			.containsValue(NoLoadableTestMod.class);
+	}
+
+	@Test
+	public void testLaunching() {
+		doLaunchAssert(createLauncher());
 	}
 
 	@Test
