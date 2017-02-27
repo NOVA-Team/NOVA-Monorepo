@@ -84,7 +84,7 @@ public class BWWorld extends World {
 			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
 		} else {
 			BWBlock block = new BWBlock(mcBlock, this, position);
-			Game.blocks().get(net.minecraft.block.Block.blockRegistry.getNameForObject(block))
+			Game.blocks().get(net.minecraft.block.Block.blockRegistry.getNameForObject(mcBlock))
 				.ifPresent(blockFactory -> block.components.getOrAdd(new FactoryProvider(blockFactory)));
 			return Optional.of(block);
 		}
