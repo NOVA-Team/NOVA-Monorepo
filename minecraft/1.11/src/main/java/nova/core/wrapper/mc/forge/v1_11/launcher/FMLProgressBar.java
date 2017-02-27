@@ -6,13 +6,14 @@
 package nova.core.wrapper.mc.forge.v1_11.launcher;
 
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
+import nova.core.util.AbstractProgressBar;
 
 /**
  * Wrapper class for FML progress bar that is shown when Minecraft boots.
  *
  * @author ExE Boss
  */
-public class FMLProgressBar extends nova.core.util.AbstractProgressBar {
+public class FMLProgressBar extends AbstractProgressBar {
 
 	private final ProgressBar progressBar;
 

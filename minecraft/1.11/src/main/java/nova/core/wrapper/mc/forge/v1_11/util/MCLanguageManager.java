@@ -22,34 +22,31 @@ package nova.core.wrapper.mc.forge.v1_11.util;
 
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import nova.core.util.registry.LanguageManager;
-import nova.internal.core.Game;
+import nova.core.language.LanguageManager;
+import nova.core.wrapper.mc.forge.v1_11.launcher.ForgeLoadable;
+import nova.core.wrapper.mc.forge.v1_11.launcher.NovaMinecraft;
 
 /**
  * @deprecated Removed in Forge 1.9
  *
  * @author Calclavia
  */
-@Deprecated
-public class MCLanguageManager extends LanguageManager {
+public class MCLanguageManager extends LanguageManager implements ForgeLoadable {
 
-	@Override
-	public void register(String language, String key, String value) {
-//		LanguageRegistry.instance().addStringLocalization(key, language, value);
+	public MCLanguageManager() {
+		NovaMinecraft.registerWrapper(this);
 	}
 
 	@Override
 	public String getCurrentLanguage() {
-		return FMLCommonHandler.instance().getCurrentLanguage();
+		return FMLCommonHandler.instance().getCurrentLanguage().replace('_', '-');
 	}
 
 	@Override
 	public String translate(String key) {
-		return I18n.translateToLocal(key);
-	}
-
-	@Override
-	public void init() {
-		Game.events().publish(new Init(this));
+		String value = super.translate(key);
+		if (value.equals(key))
+			value = I18n.translateToLocal(key);
+		return value;
 	}
 }

@@ -28,13 +28,13 @@ import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,6 +43,7 @@ import nova.core.component.renderer.StaticRenderer;
 import nova.core.render.texture.BlockTexture;
 import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
+import nova.core.wrapper.mc.forge.v1_11.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward.FWItem;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.render.forward.FWEmptyModel;
@@ -71,7 +72,7 @@ import static org.lwjgl.opengl.GL11.glShadeModel;
  * @author Calclavia
  */
 @SideOnly(Side.CLIENT)
-public class RenderUtility {
+public class RenderUtility implements ForgeLoadable {
 
 	public static final ResourceLocation particleResource = new ResourceLocation("textures/particle/particles.png");
 
@@ -231,7 +232,8 @@ public class RenderUtility {
 		});
 	}
 
-	public void preInit() {
+	@Override
+	public void preInit(FMLPreInitializationEvent event) {
 		//Load models
 		Game.render().modelProviders.forEach(m -> {
 			ResourceLocation resource = new ResourceLocation(m.domain, "models/" + m.name + "." + m.getType());

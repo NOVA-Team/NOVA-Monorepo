@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -18,17 +18,26 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11.depmodules;
+package nova.core.wrapper.mc.forge.v1_11.launcher;
 
-import nova.core.language.LanguageManager;
-import nova.core.wrapper.mc.forge.v1_11.util.MCLanguageManager;
-import se.jbee.inject.bind.BinderModule;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-public class LanguageModule extends BinderModule {
+/**
+ * A mod interface implemented to receive FML mod loading event calls.
+ *
+ * @author ExE Boss
+ */
+// TODO Maybe replace with wrapper events.
+public interface ForgeLoadable {
 
-	@Override
-	protected void declare() {
-		bind(LanguageManager.class).to(MCLanguageManager.class);
+	default void preInit(FMLPreInitializationEvent event) {
 	}
 
+	default void init(FMLInitializationEvent event) {
+	}
+
+	default void postInit(FMLPostInitializationEvent event) {
+	}
 }

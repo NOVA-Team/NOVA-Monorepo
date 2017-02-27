@@ -20,34 +20,31 @@
 
 package nova.core.wrapper.mc.forge.v1_11.wrapper.item;
 
-import nova.core.wrapper.mc.forge.v1_11.wrapper.item.backward.BWItemFactory;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.item.backward.BWItem;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward.FWNBTTagCompound;
-import nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward.FWItem;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nova.core.block.BlockFactory;
 import nova.core.component.Category;
+import nova.core.event.ItemEvent;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
-import nova.core.item.ItemManager;
-import nova.core.event.ItemEvent;
-import nova.core.loader.Loadable;
-import nova.core.loader.Mod;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
+import nova.core.wrapper.mc.forge.v1_11.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v1_11.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v1_11.util.ModCreativeTab;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.BlockConverter;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.backward.BWItem;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.backward.BWItemFactory;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward.FWItem;
+import nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward.FWNBTTagCompound;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
-import nova.internal.core.launch.ModLoader;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -58,7 +55,7 @@ import java.util.Set;
  * The main class responsible for wrapping items.
  * @author Calclavia, Stan Hebben
  */
-public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable {
+public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoadable {
 
 	/**
 	 * A map of all items registered
@@ -176,7 +173,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	 * Register all Nova blocks
 	 */
 	@Override
-	public void preInit() {
+	public void preInit(FMLPreInitializationEvent evt) {
 		registerNOVAItemsToMinecraft();
 		registerMinecraftItemsToNOVA();
 		registerSubtypeResolution();
@@ -270,7 +267,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			int meta = Integer.parseInt(event.id.substring(lastColon + 1));
 			String itemID = event.id.substring(0, lastColon);
 
-			net.minecraft.item.Item item = (net.minecraft.item.Item) net.minecraft.item.Item.REGISTRY.getObject(new ResourceLocation(itemID));
+			net.minecraft.item.Item item = net.minecraft.item.Item.REGISTRY.getObject(new ResourceLocation(itemID));
 			if (item == null || !item.getHasSubtypes()) {
 				return;
 			}
