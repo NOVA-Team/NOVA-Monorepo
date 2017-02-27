@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static nova.testutils.NovaAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Used to test {@link DirectionConverter}.
@@ -50,6 +51,7 @@ public class DirectionConverterTest {
 		assertThat(converter.toNova(EnumFacing.SOUTH)).isEqualTo(Direction.SOUTH);
 		assertThat(converter.toNova(EnumFacing.WEST)).isEqualTo(Direction.WEST);
 		assertThat(converter.toNova(EnumFacing.EAST)).isEqualTo(Direction.EAST);
+		assertThat(converter.toNova(null)).isEqualTo(Direction.UNKNOWN);
 	}
 
 	@Test
