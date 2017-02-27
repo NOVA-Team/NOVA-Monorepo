@@ -36,6 +36,8 @@ import java.util.Optional;
  */
 public class WrapUtility {
 
+	private WrapUtility() {}
+
 	public static Optional<Player> getNovaPlayer(EntityPlayer player) {
 		return ((Entity)Game.natives().toNova(player)).components.getOp(Player.class);
 	}
@@ -58,7 +60,7 @@ public class WrapUtility {
 				return (EntityPlayer)((BWEntity)entity).entity;
 		}
 
-		// TODO
+		// TODO: Implement FWEntityPlayer
 		return null;
 	}
 }

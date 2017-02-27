@@ -69,7 +69,7 @@ public class BWBlock extends Block implements Storable {
 		transform.setWorld(world);
 		transform.setPosition(pos);
 
-		components.add(new BlockProperty.Opacity().setLightTransmission(!blockState().getMaterial().blocksLight()));
+		components.add(new BlockProperty.Opacity().setOpacity(blockState().getMaterial().blocksLight() ? 1 : 0));
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		SoundType soundType;
@@ -77,7 +77,7 @@ public class BWBlock extends Block implements Storable {
 			soundType = mcBlock.getSoundType(blockState(), (net.minecraft.world.World)getMcBlockAccess(), new BlockPos(x(), y(), z()), null);
 		else
 			soundType = mcBlock.getSoundType();
-		
+
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE,
 				new Sound(soundType.getPlaceSound().getSoundName().getResourceDomain(),
 				          soundType.getPlaceSound().getSoundName().getResourcePath()));

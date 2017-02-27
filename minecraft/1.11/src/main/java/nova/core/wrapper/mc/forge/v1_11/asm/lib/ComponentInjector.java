@@ -60,7 +60,7 @@ public class ComponentInjector<T> implements Opcodes {
 		this.baseClazz = baseClazz;
 	}
 
-	public synchronized T inject(ComponentProvider provider, Class<?>[] typeArgs, Object[] args) {
+	public synchronized T inject(ComponentProvider<?> provider, Class<?>[] typeArgs, Object[] args) {
 		try {
 			List<Component> components = provider.components().stream()
 				.filter(component -> component.getClass().getAnnotationsByType(Passthrough.class).length > 0)
@@ -89,7 +89,7 @@ public class ComponentInjector<T> implements Opcodes {
 		}
 	}
 
-	private T inject(T instance, ComponentProvider provider) throws ReflectiveOperationException {
+	private T inject(T instance, ComponentProvider<?> provider) throws ReflectiveOperationException {
 		Field f = instance.getClass().getDeclaredField("$$_provider");
 		f.setAccessible(true);
 		f.set(instance, provider);

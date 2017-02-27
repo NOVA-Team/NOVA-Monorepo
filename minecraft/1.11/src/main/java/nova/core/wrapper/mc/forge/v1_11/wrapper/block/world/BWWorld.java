@@ -45,9 +45,11 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import nova.core.component.misc.FactoryProvider;
 
 /**
  * The backwards world wrapper.
@@ -91,7 +93,10 @@ public class BWWorld extends World {
 		} else if (mcBlock instanceof FWBlock) {
 			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
 		} else {
-			return Optional.of(new BWBlock(mcBlock, this, position));
+			BWBlock block = new BWBlock(mcBlock, this, position);
+			Game.blocks().get(net.minecraft.block.Block.REGISTRY.getNameForObject(mcBlock).toString())
+				.ifPresent(blockFactory -> block.components.getOrAdd(new FactoryProvider(blockFactory)));
+			return Optional.of(block);
 		}
 	}
 

@@ -48,6 +48,7 @@ import nova.core.component.misc.Collider;
 import nova.core.retention.Storable;
 import nova.core.sound.Sound;
 import nova.core.util.Direction;
+import nova.core.util.math.MathUtil;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v1_11.util.WrapperEvent;
 import nova.internal.core.Game;
@@ -76,9 +77,11 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	private static Material getMcMaterial(BlockFactory factory) {
 		Block dummy = factory.build();
-		if (dummy.components.has(BlockProperty.Opacity.class)) {
+		if (dummy.components.has(BlockProperty.Opacity.class) || dummy.components.has(BlockProperty.Replaceable.class)) {
 			// TODO allow color selection
-			return new ProxyMaterial(MapColor.GRAY, dummy.components.get(BlockProperty.Opacity.class));
+			return new ProxyMaterial(MapColor.GRAY,
+				dummy.components.getOp(BlockProperty.Opacity.class),
+				dummy.components.getOp(BlockProperty.Replaceable.class));
 		} else {
 			return Material.PISTON;
 		}
@@ -221,7 +224,6 @@ public class FWBlock extends net.minecraft.block.Block {
 		return evt.result;
 	}
 
-
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
@@ -290,7 +292,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
-		Optional<Collider> blockCollider = dummy.components.getOp(Collider.class);
+		Optional<Collider> blockCollider = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).components.getOp(Collider.class);
 
 		if (blockCollider.isPresent()) {
 			return blockCollider.get().isCube.get();
@@ -317,7 +319,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		Optional<LightEmitter> opEmitter = blockInstance.components.getOp(LightEmitter.class);
 
 		if (opEmitter.isPresent()) {
-			return Math.round(opEmitter.get().emittedLevel.get() * 15.0F);
+			return (int) MathUtil.clamp(Math.round(opEmitter.get().emittedLevel.getAsDouble() * 15), 0, 15);
 		} else {
 			return 0;
 		}

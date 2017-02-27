@@ -21,11 +21,12 @@
 package nova.core.wrapper.mc.forge.v1_11.launcher;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.loader.Loadable;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc.forge.v1_11.wrapper.block.forward.FWTileUpdater;
@@ -34,14 +35,12 @@ import nova.core.wrapper.mc.forge.v1_11.wrapper.item.forward.FWItem;
 
 import java.util.Set;
 
-import net.minecraft.util.ResourceLocation;
-
 /**
  * @author Calclavia
  */
-public class CommonProxy implements Loadable {
+public class CommonProxy implements ForgeLoadable {
 	@Override
-	public void preInit() {
+	public void preInit(FMLPreInitializationEvent evt) {
 		GameRegistry.registerTileEntity(FWTile.class, "nova:novaTile");
 		GameRegistry.registerTileEntity(FWTileUpdater.class, "nova:novaTileUpdater");
 		EntityRegistry.registerModEntity(new ResourceLocation("nova", "novaEntity"), FWEntity.class, "novaEntity", 1, NovaMinecraft.instance, 64, 20, true);
