@@ -20,9 +20,8 @@
 
 package nova.core.render.pipeline;
 
-
-
-import nova.core.block.Block;
+import nova.core.component.ComponentMap;
+import nova.core.component.ComponentProvider;
 import nova.core.component.misc.Collider;
 import nova.core.render.Color;
 import nova.core.render.RenderException;
@@ -37,14 +36,17 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;/**
+import java.util.function.Supplier;
+
+/**
  * A block rendering builder that generates a function that renders a block model.
  *
  * @author Calclavia
  */
 public class BlockRenderPipeline extends RenderPipeline {
 
-	public final Block block;
+	@SuppressWarnings("rawtypes")
+	public final ComponentProvider<? extends ComponentMap> componentProvider;
 
 	/**
 	 * Called to get the texture of this block for a certain side.
@@ -75,43 +77,92 @@ public class BlockRenderPipeline extends RenderPipeline {
 	 */
 	public Function<Direction, Color> colorMultiplier = (dir) -> Color.white;
 
-	public BlockRenderPipeline(Block block) {
-		this.block = block;
-		bounds = () -> block.components.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public BlockRenderPipeline(ComponentProvider componentProvider) {
+		this.componentProvider = componentProvider;
+		bounds = () -> this.componentProvider.components.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
 		consumer = model -> model.addChild(draw(new MeshModel()));
 	}
 
+	/**
+	 * This method is called to specify a texture to use for the block.
+	 *
+	 * @param texture A function that takes a {@link nova.core.util.Direction}
+	 * and returns the {@link nova.core.render.texture.Texture} for that side.
+	 * @return this
+	 */
 	public BlockRenderPipeline withTexture(Function<Direction, Optional<Texture>> texture) {
 		this.texture = texture;
 		return this;
 	}
 
-	public BlockRenderPipeline withTexture(Texture t) {
-		Objects.requireNonNull(t, "Texture is null, please initiate the texture before the block");
-		this.texture = (dir) -> Optional.of(t);
+	/**
+	 * This method is called to specify a texture to use for the block.
+	 *
+	 * @param texture The {@link nova.core.render.texture.Texture} for all sides.
+	 * @return this
+	 */
+	public BlockRenderPipeline withTexture(Texture texture) {
+		Objects.requireNonNull(texture, "Texture is null, please initiate the texture before the block");
+		this.texture = (dir) -> Optional.of(texture);
 		return this;
 	}
 
+	/**
+	 * This method is called to specify the size of the block, defaults to the size
+	 * of the block's {@link nova.core.util.shape.Cuboid} or a full 1×1×1 cube.
+	 *
+	 * @param bounds A supplier that returns
+	 * the {@link nova.core.util.shape.Cuboid} which specifies the block size.
+	 * @return this
+	 */
 	public BlockRenderPipeline withBounds(Supplier<Cuboid> bounds) {
 		this.bounds = bounds;
 		return this;
 	}
 
+	/**
+	 * This method is called to specify the size of the block, defaults to the size
+	 * of the block's {@link nova.core.util.shape.Cuboid} or a full 1×1×1 cube.
+	 *
+	 * @param bounds The {@link nova.core.util.shape.Cuboid} which specifies the block size.
+	 * @return this
+	 */
 	public BlockRenderPipeline withBounds(Cuboid bounds) {
 		this.bounds = () -> bounds;
 		return this;
 	}
 
+	/**
+	 * This method is called to specify which sides should and shouldn't render.
+	 *
+	 * @param renderSide A predicate that takes a {@link nova.core.util.Direction}
+	 * and returns a boolean specifying whether or not the side should render.
+	 * @return
+	 */
 	public BlockRenderPipeline filter(Predicate<Direction> renderSide) {
 		this.renderSide = renderSide;
 		return this;
 	}
 
+	/**
+	 * This method is called to specify a color multiplier to use for the block.
+	 *
+	 * @param colorMultiplier A function that takes a {@link nova.core.util.Direction}
+	 * and returns the {@link nova.core.render.Color} multiplier for that side.
+	 * @return this
+	 */
 	public BlockRenderPipeline withColor(Color colorMultiplier) {
 		this.colorMultiplier = dir -> colorMultiplier;
 		return this;
 	}
 
+	/**
+	 * This method is called to specify a color multiplier to use for the block.
+	 *
+	 * @param colorMultiplier The {@link nova.core.render.Color} multiplier for all sides.
+	 * @return this
+	 */
 	public BlockRenderPipeline withColor(Function<Direction, Color> colorMultiplier) {
 		this.colorMultiplier = colorMultiplier;
 		return this;

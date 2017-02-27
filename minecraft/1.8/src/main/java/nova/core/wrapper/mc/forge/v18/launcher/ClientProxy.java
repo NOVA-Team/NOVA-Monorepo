@@ -34,6 +34,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
@@ -53,16 +55,16 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public class ClientProxy extends CommonProxy {
 	@Override
-	public void preInit() {
-		super.preInit();
+	public void preInit(FMLPreInitializationEvent evt) {
+		super.preInit(evt);
 		MinecraftForge.EVENT_BUS.register(RenderUtility.instance);
 		ClientRegistry.bindTileEntitySpecialRenderer(FWTile.class, FWTileRenderer.instance);
 		RenderUtility.instance.preInit();
 	}
 
 	@Override
-	public void init() {
-		super.init();
+	public void init(FMLInitializationEvent evt) {
+		super.init(evt);
 		RenderingRegistry.registerEntityRenderingHandler(FWEntity.class, FWEntityRenderer.instance);
 	}
 

@@ -18,14 +18,13 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.recipes.crafting;
+package nova.core.recipes.ingredient;
 
 import nova.core.item.Item;
+import nova.core.recipes.crafting.CraftingGrid;
 import nova.internal.core.Game;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,16 +44,13 @@ public class OreItemIngredient implements ItemIngredient {
 	}
 
 	@Override
-	public Optional<Collection<String>> getPossibleItemIds() {
-		return Optional.of(Game.itemDictionary().get(name).stream().map(Item::getID).collect(Collectors.toList()));
+	public Collection<String> getPossibleItemIds() {
+		return Game.itemDictionary().get(name).stream().map(Item::getID).collect(Collectors.toList());
 	}
 
 	@Override
-	public Optional<Collection<Item>> getExampleItems() {
-		List<Item> result = new ArrayList<Item>();
-
-
-		return Optional.of(Game.itemDictionary().get(name));
+	public Collection<Item> getExampleItems() {
+		return Game.itemDictionary().get(name);
 	}
 
 	@Override
@@ -74,6 +70,6 @@ public class OreItemIngredient implements ItemIngredient {
 
 	@Override
 	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
-		return null;
+		return original.withAmount(original.count() - 1);
 	}
 }

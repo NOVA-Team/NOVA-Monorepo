@@ -16,14 +16,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.recipes.crafting;
+ */
+
+package nova.core.recipes.crafting;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import nova.core.event.RecipeEvent;
 import nova.core.item.Item;
-import nova.core.recipes.RecipeAddedEvent;
 import nova.core.recipes.RecipeManager;
-import nova.core.recipes.RecipeRemovedEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,8 +60,8 @@ public class CraftingRecipeManager {
 		recipeManager.addRecipe(recipe);
 	}
 
-	/*
-	 * Removes a recipe. Removes if from the global recipe list.
+	/**
+	 * Removes a recipe. Removes it from the global recipe list.
 	 *
 	 * @param recipe {@link CraftingRecipe}
 	 */
@@ -104,25 +105,25 @@ public class CraftingRecipeManager {
 	// ### Private Methods ###
 	// #######################
 
-	private <T extends CraftingRecipe> void onCraftingRecipeAdded(RecipeAddedEvent<T> e) {
-		Optional<Collection<String>> possibleFirstItemIds = e.getRecipe().getPossibleItemsInFirstSlot();
-		if (possibleFirstItemIds.isPresent()) {
-			for (String itemId : possibleFirstItemIds.get()) {
-				staticRecipes.put(itemId, e.getRecipe());
+	private <T extends CraftingRecipe> void onCraftingRecipeAdded(RecipeEvent.Add<T> evt) {
+		Collection<String> possibleFirstItemIds = evt.recipe.getPossibleItemsInFirstSlot();
+		if (!possibleFirstItemIds.isEmpty()) {
+			for (String itemId : possibleFirstItemIds) {
+				staticRecipes.put(itemId, evt.recipe);
 			}
 		} else {
-			dynamicRecipes.add(e.getRecipe());
+			dynamicRecipes.add(evt.recipe);
 		}
 	}
 
-	private <T extends CraftingRecipe> void onCraftingRecipeRemoved(RecipeRemovedEvent<T> e) {
-		Optional<Collection<String>> possibleFirstItemIds = e.getRecipe().getPossibleItemsInFirstSlot();
-		if (possibleFirstItemIds.isPresent()) {
-			for (String itemId : possibleFirstItemIds.get()) {
-				staticRecipes.remove(itemId, e.getRecipe());
+	private <T extends CraftingRecipe> void onCraftingRecipeRemoved(RecipeEvent.Remove<T> evt) {
+		Collection<String> possibleFirstItemIds = evt.recipe.getPossibleItemsInFirstSlot();
+		if (!possibleFirstItemIds.isEmpty()) {
+			for (String itemId : possibleFirstItemIds) {
+				staticRecipes.remove(itemId, evt.recipe);
 			}
 		} else {
-			dynamicRecipes.remove(e.getRecipe());
+			dynamicRecipes.remove(evt.recipe);
 		}
 	}
 }

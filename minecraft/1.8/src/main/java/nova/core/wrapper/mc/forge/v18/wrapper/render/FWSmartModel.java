@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v18.wrapper.render;
 
 import com.google.common.primitives.Ints;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -76,9 +77,11 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 							.stream()
 							.map(
 								face -> {
+									TextureAtlasSprite texture = face.texture.map(RenderUtility.instance::getTexture)
+										.orElse(Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite());
 									List<int[]> vertexData = face.vertices
 										.stream()
-										.map(v -> vertexToInts(v, RenderUtility.instance.getTexture(face.texture.get())))
+										.map(v -> vertexToInts(v, texture))
 										.collect(Collectors.toList());
 
 									int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
@@ -100,7 +103,7 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 	}
 
 	@Override
-	public List getFaceQuads(EnumFacing p_177551_1_) {
+	public List<BakedQuad> getFaceQuads(EnumFacing facing) {
 		return Collections.emptyList();
 	}
 
@@ -117,6 +120,11 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 	@Override
 	public boolean isBuiltInRenderer() {
 		return false;
+	}
+
+	@Override
+	public TextureAtlasSprite getTexture() {
+		return null;
 	}
 
 	@Override

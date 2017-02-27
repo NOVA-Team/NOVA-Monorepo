@@ -21,7 +21,7 @@
 package nova.core.wrapper.mc.forge.v17.recipes;
 
 import nova.core.item.Item;
-import nova.core.recipes.crafting.SpecificItemIngredient;
+import nova.core.recipes.ingredient.SpecificItemIngredient;
 import nova.internal.core.Game;
 
 /**

@@ -88,16 +88,13 @@ public class NovaLauncherTestFactory {
 		launcher.load();
 
 		//Handle all content loads
+		Game.language().init();
+		Game.render().init();
 		Game.blocks().init();
 		Game.items().init();
 		Game.entities().init();
-		Game.render().init();
-		Game.language().init();
 		Game.recipes().init();
 
-		launcher.preInit();
-		launcher.init();
-		launcher.postInit();
 		return launcher;
 	}
 

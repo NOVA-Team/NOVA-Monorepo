@@ -30,9 +30,11 @@ import nova.core.util.Identifiable;
  */
 public abstract class Component implements Identifiable {
 
-	private ComponentProvider provider;
+	@SuppressWarnings("rawtypes")
+	private ComponentProvider<? extends ComponentMap> provider;
 
-	public ComponentProvider getProvider() {
+	@SuppressWarnings("rawtypes")
+	public ComponentProvider<? extends ComponentMap> getProvider() {
 		if (provider == null) {
 			throw new ComponentException("Component not bound to any ComponentProvider.", this);
 		}
@@ -40,7 +42,11 @@ public abstract class Component implements Identifiable {
 		return provider;
 	}
 
-	Component setProvider(ComponentProvider provider) {
+	@SuppressWarnings("rawtypes")
+	Component setProvider(ComponentProvider<? extends ComponentMap> provider) {
+		if (this.provider == provider)
+			return this;
+
 		this.provider = provider;
 		onProviderChange();
 		return this;

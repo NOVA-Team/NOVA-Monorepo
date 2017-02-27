@@ -33,7 +33,8 @@ import nova.core.entity.EntityFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.shape.Cuboid;
-import nova.core.wrapper.mc.forge.v17.wrapper.data.DataWrapper;
+import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v17.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
 /**
@@ -59,8 +60,8 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		if (wrapped instanceof Storable) {
-			((Storable) wrapped).load(Game.natives().toNova(nbt));
+		if (wrapped instanceof Storable && nbt.hasKey("nova")) {
+			((Storable) wrapped).load(Game.natives().toNova(nbt.getCompoundTag("nova")));
 		}
 		if (wrapped == null) {
 			//This entity was saved to disk.
@@ -73,7 +74,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		if (wrapped instanceof Storable) {
 			Data data = new Data();
 			((Storable) wrapped).save(data);
-			DataWrapper.instance().toNative(nbt, data);
+			nbt.setTag("nova", Game.natives().toNative(data));
 		}
 		nbt.setString("novaID", wrapped.getID());
 	}
@@ -123,6 +124,8 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		if (wrapped != null) {
 			wrapped.events.publish(new Stateful.LoadEvent());
 			updateCollider();
+			WrapperEvent.FWEntityCreate event = new WrapperEvent.FWEntityCreate(wrapped, this);
+			Game.events().publish(event);
 		}
 	}
 

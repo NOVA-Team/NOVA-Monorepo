@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -16,28 +16,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.item.event;
+ */
 
-import nova.core.event.bus.Event;
-import nova.core.item.ItemFactory;
+package nova.core.component;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * @author Stan
+ * Specifies that this component type is not sided.
+ *
+ * Components must have this annotation to be unsided.
+ * A component can't declare both this annotation and {@link SidedComponent}.
+ *
+ * @author ExE Boss
  */
-public class ItemIDNotFoundEvent extends Event {
-	public final String id;
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface UnsidedComponent {
 
-	private ItemFactory remappedFactory = null;
-
-	public ItemIDNotFoundEvent(String id) {
-		this.id = id;
-	}
-
-	public ItemFactory getRemappedFactory() {
-		return remappedFactory;
-	}
-
-	public void setRemappedFactory(ItemFactory remappedFactory) {
-		this.remappedFactory = remappedFactory;
-	}
 }

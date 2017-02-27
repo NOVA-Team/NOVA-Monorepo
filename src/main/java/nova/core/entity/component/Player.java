@@ -20,12 +20,14 @@
 
 package nova.core.entity.component;
 
+import nova.core.component.UnsidedComponent;
 import nova.core.component.inventory.InventoryPlayer;
 import nova.core.entity.Entity;
 
 /**
  * Basic representation of Player
  */
+@UnsidedComponent
 public abstract class Player extends Living {
 	/**
 	 * @return Returns player name that can be used to identify this player

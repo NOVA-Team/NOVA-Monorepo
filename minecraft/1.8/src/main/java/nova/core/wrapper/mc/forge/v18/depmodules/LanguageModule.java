@@ -20,7 +20,7 @@
 
 package nova.core.wrapper.mc.forge.v18.depmodules;
 
-import nova.core.util.registry.LanguageManager;
+import nova.core.language.LanguageManager;
 import nova.core.wrapper.mc.forge.v18.util.MCLanguageManager;
 import se.jbee.inject.bind.BinderModule;
 

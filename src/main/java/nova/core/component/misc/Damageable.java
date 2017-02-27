@@ -21,12 +21,14 @@
 package nova.core.component.misc;
 
 import nova.core.component.Component;
+import nova.core.component.UnsidedComponent;
 import nova.core.util.Identifiable;
 
 /**
  * Applied to objects that can take damage.
  * @author Calclavia
  */
+@UnsidedComponent
 public abstract class Damageable extends Component {
 
 	public void damage(double amount) {

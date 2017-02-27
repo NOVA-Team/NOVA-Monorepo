@@ -20,8 +20,7 @@
 
 package nova.internal.core.launch;
 
-import nova.core.loader.Loadable;
-import nova.internal.core.Game;
+import nova.core.util.ProgressBar;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 
 import java.lang.annotation.Annotation;
@@ -29,6 +28,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -42,9 +42,10 @@ import java.util.stream.Stream;
 /**
  * @author Calclavia
  */
-public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
+public class ModLoader<ANNOTATION extends Annotation> {
 
 	protected final DependencyInjectionEntryPoint diep;
+	private Optional<ANNOTATION> currentMod = Optional.empty();
 
 	/**
 	 * The type of the annotation
@@ -66,7 +67,7 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	 */
 	protected Map<ANNOTATION, Object> mods;
 
-	protected List<Loadable> orderedMods;
+	protected List<Object> orderedMods;
 
 	public ModLoader(Class<ANNOTATION> annotationType, DependencyInjectionEntryPoint diep, Set<Class<?>> modClasses) {
 		this.diep = diep;
@@ -120,6 +121,14 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 	}
 
 	public void load() {
+		this.load(new ProgressBar.NullProgressBar(), true);
+	}
+
+	public void load(ProgressBar progressBar) {
+		this.load(progressBar, true);
+	}
+
+	public void load(ProgressBar progressBar, boolean finish) {
 		mods = new HashMap<>();
 
 		/**
@@ -130,6 +139,8 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				.collect(Collectors.<Map.Entry<ANNOTATION, Class<?>>, ANNOTATION, Object>toMap(Map.Entry::getKey,
 						entry -> {
 							try {
+								currentMod = Optional.of(entry.getKey());
+								progressBar.step(entry.getValue());
 								return makeObjectWithDep(entry.getValue());
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -149,8 +160,10 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				.collect(Collectors.toMap(Map.Entry::getKey,
 						entry -> {
 							try {
+								currentMod = Optional.of(entry.getKey());
+								progressBar.step(entry.getValue());
 								Field field = entry.getValue().getField("MODULE$");
-								Loadable loadable = (Loadable) field.get(null);
+								Object loadable = field.get(null);
 
 								//Inject dependencies to Scala singleton variables
 								//TODO: Does not work recursively for all hierarchy
@@ -179,47 +192,12 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 				)
 		);
 
+		currentMod = Optional.empty();
 		orderedMods = mods.values()
 			.stream()
-			.filter(mod -> mod.getClass().isAssignableFrom(Loadable.class))
-			.map(mod -> (Loadable) mod)
 			.collect(Collectors.toList());
-	}
 
-	@Override
-	public void preInit() {
-		orderedMods.stream().forEachOrdered(mod -> {
-			try {
-				mod.preInit();
-			} catch (Throwable t) {
-				Game.logger().error("Critical error caught during pre initialization phase", t);
-				throw new InitializationException(t);
-			}
-		});
-	}
-
-	@Override
-	public void init() {
-		orderedMods.stream().forEachOrdered(mod -> {
-			try {
-				mod.init();
-			} catch (Throwable t) {
-				Game.logger().error("Critical error caught during initialization phase", t);
-				throw new InitializationException(t);
-			}
-		});
-	}
-
-	@Override
-	public void postInit() {
-		orderedMods.stream().forEachOrdered(mod -> {
-			try {
-				mod.postInit();
-			} catch (Throwable t) {
-				Game.logger().error("Critical error caught during post initialization phase", t);
-				throw new InitializationException(t);
-			}
-		});
+		if (finish) progressBar.finish();
 	}
 
 	public Set<ANNOTATION> getLoadedMods() {
@@ -236,5 +214,13 @@ public class ModLoader<ANNOTATION extends Annotation> implements Loadable {
 
 	public Map<ANNOTATION, Class<?>> getScalaClassesMap() {
 		return new HashMap<>(scalaClasses);
+	}
+
+	public Optional<ANNOTATION> getCurrentMod() {
+		return this.currentMod;
+	}
+
+	public List<Object> getOrdererdMods() {
+		return Collections.unmodifiableList(orderedMods);
 	}
 }

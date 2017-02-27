@@ -26,6 +26,9 @@ import nova.core.event.bus.CancelableEvent;
 import nova.core.world.World;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+/**
+ * All events related to the block.
+ */
 public abstract class BlockEvent extends CancelableEvent {
 	//The world
 	public final World world;
@@ -37,6 +40,13 @@ public abstract class BlockEvent extends CancelableEvent {
 		this.position = position;
 	}
 
+	/**
+	 * Event is triggered when a BlockFactory is registered.
+	 *
+	 * @see BlockFactory
+	 * @see nova.core.block.BlockManager#register(nova.core.block.BlockFactory)
+	 * @see nova.core.block.BlockManager#register(java.lang.String, java.util.function.Supplier)
+	 */
 	public static class Register extends CancelableEvent {
 		public BlockFactory blockFactory;
 
@@ -46,7 +56,7 @@ public abstract class BlockEvent extends CancelableEvent {
 	}
 
 	/**
-	 * Called when a block in the world changes.
+	 * Event is triggered when a block in the world changes.
 	 */
 	public static class Change extends BlockEvent {
 

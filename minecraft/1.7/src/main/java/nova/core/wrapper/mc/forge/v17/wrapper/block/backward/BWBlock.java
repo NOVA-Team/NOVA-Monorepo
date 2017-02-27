@@ -29,6 +29,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
+import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
 import nova.core.component.renderer.StaticRenderer;
@@ -38,14 +39,17 @@ import nova.core.render.model.CustomModel;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
+import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
+import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.world.BWWorld;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BWBlock extends Block implements Storable {
@@ -63,7 +67,17 @@ public class BWBlock extends Block implements Storable {
 		BlockTransform transform = components.add(new BlockTransform());
 		transform.setWorld(world);
 		transform.setPosition(pos);
-		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), x(), y(), z()) / 15.0F);
+
+		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().isOpaque() ? 1 : 0));
+		if (mcBlock.isReplaceable(getMcBlockAccess(), x(), y(), z()))
+			components.add(BlockProperty.Replaceable.instance());
+
+		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.stepSound.func_150496_b()));
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", mcBlock.stepSound.getBreakSound()));
+		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", mcBlock.stepSound.getStepResourcePath()));
+
+		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), x(), y(), z()) / 15.0);
 		components.add(new Collider(this))
 			.setBoundingBox(() -> new Cuboid(mcBlock.getBlockBoundsMinX(), mcBlock.getBlockBoundsMinY(), mcBlock.getBlockBoundsMinZ(), mcBlock.getBlockBoundsMaxX(), mcBlock.getBlockBoundsMaxY(), mcBlock.getBlockBoundsMaxZ()))
 			.setOcclusionBoxes(entity -> {
@@ -85,6 +99,8 @@ public class BWBlock extends Block implements Storable {
 			});
 		components.add(new StaticRenderer())
 			.onRender(model -> model.addChild(new CustomModel(self -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z()))));
+		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
+		Game.events().publish(event);
 		//TODO: Set selection bounds
 	}
 
@@ -93,15 +109,19 @@ public class BWBlock extends Block implements Storable {
 		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
 	}
 
-	private IBlockAccess getMcBlockAccess() {
+	public IBlockAccess getMcBlockAccess() {
 		return ((BWWorld) world()).access;
 	}
 
-	private int getMetadata() {
+	public int getMetadata() {
 		return getMcBlockAccess().getBlockMetadata(x(), y(), z());
 	}
 
-	private TileEntity getTileEntity() {
+	public Optional<TileEntity> getTileEntity() {
+		return Optional.ofNullable(getTileEntityImpl());
+	}
+
+	private TileEntity getTileEntityImpl() {
 		if (mcTileEntity == null && mcBlock.hasTileEntity(getMetadata())) {
 			mcTileEntity = getMcBlockAccess().getTileEntity(x(), y(), z());
 		}
@@ -129,7 +149,7 @@ public class BWBlock extends Block implements Storable {
 	public void save(Data data) {
 		Storable.super.save(data);
 
-		TileEntity tileEntity = getTileEntity();
+		TileEntity tileEntity = getTileEntityImpl();
 		if (tileEntity != null) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			tileEntity.writeToNBT(nbt);
@@ -141,9 +161,19 @@ public class BWBlock extends Block implements Storable {
 	public void load(Data data) {
 		Storable.super.load(data);
 
-		TileEntity tileEntity = getTileEntity();
+		TileEntity tileEntity = getTileEntityImpl();
 		if (tileEntity != null) {
 			tileEntity.writeToNBT(Game.natives().toNative(data));
 		}
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return mcBlock.getLocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return mcBlock.getUnlocalizedName();
 	}
 }

@@ -35,7 +35,7 @@ import nova.core.network.NetworkManager;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipeManager;
 import nova.core.render.RenderManager;
-import nova.core.util.registry.LanguageManager;
+import nova.core.language.LanguageManager;
 import nova.core.util.registry.RetentionManager;
 import nova.core.world.WorldManager;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;

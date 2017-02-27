@@ -27,10 +27,16 @@ import java.lang.annotation.Target;
 
 /**
  * Fields annotated with this annotation declare that they
- * should be saved after object death and restored later
+ * should be saved after object death and restored later on.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Store {
+	/**
+	 * The key to save this field as.
+	 * Defaults to the field name.
+	 *
+	 * @return The key to save this field as.
+	 */
 	String key() default "";
 }

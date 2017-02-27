@@ -25,6 +25,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
+import nova.core.component.misc.FactoryProvider;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
@@ -82,7 +83,10 @@ public class BWWorld extends World {
 		} else if (mcBlock instanceof FWBlock) {
 			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
 		} else {
-			return Optional.of(new BWBlock(mcBlock, this, position));
+			BWBlock block = new BWBlock(mcBlock, this, position);
+			Game.blocks().get(net.minecraft.block.Block.blockRegistry.getNameForObject(block))
+				.ifPresent(blockFactory -> block.components.getOrAdd(new FactoryProvider(blockFactory)));
+			return Optional.of(block);
 		}
 	}
 
@@ -150,6 +154,6 @@ public class BWWorld extends World {
 
 	@Override
 	public void playSoundAtPosition(Vector3D position, Sound sound) {
-		world().playSound(position.getX(), position.getY(), position.getZ(), sound.getID(), sound.pitch, sound.volume, false);
+		world().playSound(position.getX(), position.getY(), position.getZ(), sound.domain.isEmpty() ? sound.name : sound.getID(), sound.pitch, sound.volume, false);
 	}
 }

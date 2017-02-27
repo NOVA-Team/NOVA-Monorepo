@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v18.launcher;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -32,7 +33,6 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
 import nova.core.deps.MavenDependency;
 import nova.core.event.ServerEvent;
-import nova.core.loader.Loadable;
 import nova.core.wrapper.mc.forge.v18.NovaMinecraftPreloader;
 import nova.core.wrapper.mc.forge.v18.depmodules.ClientModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.ComponentModule;
@@ -44,11 +44,13 @@ import nova.core.wrapper.mc.forge.v18.depmodules.RenderModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.SaveModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.TickerModule;
 import nova.core.wrapper.mc.forge.v18.recipes.MinecraftRecipeRegistry;
+import nova.core.wrapper.mc.forge.v18.wrapper.CategoryConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.cuboid.CuboidConverter;
-import nova.core.wrapper.mc.forge.v18.wrapper.data.DataWrapper;
+import nova.core.wrapper.mc.forge.v18.wrapper.data.DataConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.inventory.InventoryConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
@@ -59,6 +61,7 @@ import nova.internal.core.deps.DepDownloader;
 import nova.internal.core.launch.InitializationException;
 import nova.internal.core.launch.NovaLauncher;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -80,7 +83,13 @@ public class NovaMinecraft {
 	public static NovaMinecraft instance;
 	private static NovaLauncher launcher;
 
-	private static Set<Loadable> nativeConverters;
+	private static Set<ForgeLoadable> nativeConverters;
+	private static Set<ForgeLoadable> novaWrappers = new HashSet<>();
+	private static List<ForgeLoadable> novaModWrappers;
+
+	public static void registerWrapper(ForgeLoadable wrapper) {
+		novaWrappers.add(wrapper);
+	}
 
 	/**
 	 * ORDER OF LOADING.
@@ -91,7 +100,7 @@ public class NovaMinecraft {
 	public void preInit(FMLPreInitializationEvent evt) {
 		try {
 			/**
-			 * Search through all classes withPriority @NovaMod
+			 * Search through all classes withPriority @Mod
 			 */
 			DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 			diep.install(NetworkModule.class);
@@ -114,7 +123,7 @@ public class NovaMinecraft {
 			/**
 			 * Register native converters
 			 */
-			Game.natives().registerConverter(new DataWrapper());
+			Game.natives().registerConverter(new DataConverter());
 			Game.natives().registerConverter(new EntityConverter());
 			Game.natives().registerConverter(new BlockConverter());
 			Game.natives().registerConverter(new ItemConverter());
@@ -122,6 +131,8 @@ public class NovaMinecraft {
 			Game.natives().registerConverter(new CuboidConverter());
 			Game.natives().registerConverter(new InventoryConverter());
 			Game.natives().registerConverter(new VectorConverter());
+			Game.natives().registerConverter(new DirectionConverter());
+			Game.natives().registerConverter(new CategoryConverter());
 
 			/**
 			 * Initiate recipe and ore dictionary integration
@@ -144,21 +155,17 @@ public class NovaMinecraft {
 				e.printStackTrace();
 			}
 
-			launcher.load();
+			ProgressManager.ProgressBar progressBar = ProgressManager.push("Loading NOVA mods", modClasses.isEmpty() ? 1 : modClasses.size());
+			launcher.load(new FMLProgressBar(progressBar));
+			ProgressManager.pop(progressBar);
+			novaModWrappers = launcher.getOrdererdMods().stream().filter(mod -> mod instanceof ForgeLoadable).map(mod -> (ForgeLoadable) mod).collect(Collectors.toList());
+			novaWrappers.removeAll(novaModWrappers);
 
 			/**
 			 * Instantiate native loaders
 			 */
-			nativeConverters = Game.natives().getNativeConverters().stream().filter(n -> n instanceof Loadable).map(n -> (Loadable) n).collect(Collectors.toSet());
-			nativeConverters.stream().forEachOrdered(Loadable::preInit);
-
-			Game.blocks().init();
-			Game.items().init();
-			Game.entities().init();
-			Game.render().init();
-			Game.language().init();
-
-			launcher.preInit();
+			nativeConverters = Game.natives().getNativeConverters().stream().filter(n -> n instanceof ForgeLoadable).map(n -> (ForgeLoadable) n).collect(Collectors.toSet());
+			nativeConverters.stream().forEachOrdered(loadable -> loadable.preInit(evt));
 
 			// Initiate config system TODO: Storables
 			//		launcher.getLoadedModMap().forEach((mod, loader) -> {
@@ -166,7 +173,27 @@ public class NovaMinecraft {
 			//			ConfigManager.instance.sync(config, loader.getClass().getPackage().getName());
 			//		});
 
-			proxy.preInit();
+			Game.language().init();
+			Game.render().init();
+			Game.blocks().init();
+			Game.items().init();
+			Game.entities().init();
+
+			//Load preInit
+			progressBar = ProgressManager.push("Pre-initializing NOVA wrappers", (novaModWrappers.isEmpty() ? 1 : novaModWrappers.size()) + novaWrappers.size());
+			FMLProgressBar fmlProgressBar = new FMLProgressBar(progressBar);
+			novaModWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.preInit(evt);
+			});
+			novaWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.preInit(evt);
+			});
+			fmlProgressBar.finish();
+			ProgressManager.pop(progressBar);
+
+			proxy.preInit(evt);
 
 			/**
 			 * Register event handlers
@@ -184,10 +211,20 @@ public class NovaMinecraft {
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent evt) {
 		try {
-
-			proxy.init();
-			nativeConverters.stream().forEachOrdered(Loadable::init);
-			launcher.init();
+			proxy.init(evt);
+			nativeConverters.stream().forEachOrdered(forgeLoadable -> forgeLoadable.init(evt));
+			ProgressManager.ProgressBar progressBar = ProgressManager.push("Initializing NOVA wrappers", (novaModWrappers.isEmpty() ? 1 : novaModWrappers.size()) + novaWrappers.size());
+			FMLProgressBar fmlProgressBar = new FMLProgressBar(progressBar);
+			novaModWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.init(evt);
+			});
+			novaWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.init(evt);
+			});
+			fmlProgressBar.finish();
+			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
 			System.out.println("Error during init");
 			e.printStackTrace();
@@ -198,10 +235,21 @@ public class NovaMinecraft {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent evt) {
 		try {
+			proxy.postInit(evt);
+			nativeConverters.stream().forEachOrdered(forgeLoadable -> forgeLoadable.postInit(evt));
 			Game.recipes().init();
-			proxy.postInit();
-			nativeConverters.stream().forEachOrdered(Loadable::postInit);
-			launcher.postInit();
+			ProgressManager.ProgressBar progressBar = ProgressManager.push("Post-initializing NOVA wrappers", (novaModWrappers.isEmpty() ? 1 : novaModWrappers.size()) + novaWrappers.size());
+			FMLProgressBar fmlProgressBar = new FMLProgressBar(progressBar);
+			novaModWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.postInit(evt);
+			});
+			novaWrappers.stream().forEachOrdered(wrapper -> {
+				fmlProgressBar.step(wrapper.getClass());
+				wrapper.postInit(evt);
+			});
+			fmlProgressBar.finish();
+			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
 			System.out.println("Error during postInit");
 			e.printStackTrace();

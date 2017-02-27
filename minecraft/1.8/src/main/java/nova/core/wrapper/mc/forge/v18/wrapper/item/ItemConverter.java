@@ -20,37 +20,35 @@
 
 package nova.core.wrapper.mc.forge.v18.wrapper.item;
 
+import nova.core.wrapper.mc.forge.v18.wrapper.CategoryConverter;
 import com.google.common.collect.HashBiMap;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nova.core.block.BlockFactory;
 import nova.core.component.Category;
+import nova.core.event.ItemEvent;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
-import nova.core.item.ItemManager;
-import nova.core.item.event.ItemIDNotFoundEvent;
-import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
+import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v18.launcher.NovaMinecraft;
-import nova.core.wrapper.mc.forge.v18.util.ModCreativeTab;
+import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
 
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.Set;
 
 /**
  * The main class responsible for wrapping items.
  * @author Calclavia, Stan Hebben
  */
-public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable {
+public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoadable {
 
 	/**
 	 * A map of all items registered
@@ -156,13 +154,16 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 		}
 
 		itemStack.setTagCompound(Game.natives().toNative(item.getFactory().save(item)));
+		WrapperEvent.UpdateItemEvent event = new WrapperEvent.UpdateItemEvent(item, itemStack);
+		Game.events().publish(event);
 		return itemStack;
 	}
 
 	/**
 	 * Register all Nova blocks
 	 */
-	public void preInit() {
+	@Override
+	public void preInit(FMLPreInitializationEvent evt) {
 		registerNOVAItemsToMinecraft();
 		registerMinecraftItemsToNOVA();
 		registerSubtypeResolution();
@@ -171,10 +172,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	private void registerNOVAItemsToMinecraft() {
 		//There should be no items registered during Native Converter preInit()
 		//	item.registry.forEach(this::registerNOVAItem);
-		Game.events().on(ItemManager.ItemRegistrationEvent.class).bind(this::onItemRegistered);
+		Game.events().on(ItemEvent.Register.class).bind(this::onItemRegistered);
 	}
 
-	private void onItemRegistered(ItemManager.ItemRegistrationEvent event) {
+	private void onItemRegistered(ItemEvent.Register event) {
 		registerNOVAItem(event.itemFactory);
 	}
 
@@ -209,16 +210,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
 				Category category = dummy.components.get(Category.class);
-				Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.creativeTabArray)
-					.filter(tab -> tab.getTabLabel().equals(category.name))
-					.findFirst();
-				if (first.isPresent()) {
-					itemWrapper.setCreativeTab(first.get());
-				} else {
-					Optional<Item> item = category.item;
-					ModCreativeTab tab = new ModCreativeTab(category.name, item.isPresent() ? Game.natives().toNative(item.get()) : itemWrapper);
-					itemWrapper.setCreativeTab(tab);
-				}
+				itemWrapper.setCreativeTab(CategoryConverter.instance().toNative(category, itemWrapper));
 			}
 
 			System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
@@ -234,10 +226,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, Loadable
 	}
 
 	private void registerSubtypeResolution() {
-		Game.events().on(ItemIDNotFoundEvent.class).bind(this::onIDNotFound);
+		Game.events().on(ItemEvent.IDNotFound.class).bind(this::onIDNotFound);
 	}
 
-	private void onIDNotFound(ItemIDNotFoundEvent event) {
+	private void onIDNotFound(ItemEvent.IDNotFound event) {
 		// if item minecraft:planks:2 is detected, this code will register minecraft:planks:2 dynamically
 		// we cannot do this up front since there is **NO** reliable way to get the sub-items of an item
 

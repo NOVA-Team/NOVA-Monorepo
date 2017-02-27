@@ -22,25 +22,31 @@ package nova.core.wrapper.mc.forge.v18.util;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 /**
  * @author Calclavia
  */
 public class ModCreativeTab extends CreativeTabs {
-	public Item item;
+	public ItemStack item;
 
-	public ModCreativeTab(String label, Item item) {
+	public ModCreativeTab(String label, ItemStack item) {
 		super(label);
 
 		this.item = item;
 	}
 
 	public ModCreativeTab(String label) {
-		this(label, null);
+		this(label, new ItemStack((net.minecraft.item.Item) null));
+	}
+
+	@Override
+	public ItemStack getIconItemStack() {
+		return item;
 	}
 
 	@Override
 	public Item getTabIconItem() {
-		return item;
+		return item.getItem();
 	}
 }

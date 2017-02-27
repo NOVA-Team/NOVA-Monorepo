@@ -21,6 +21,8 @@
 package nova.core.item;
 
 import nova.core.component.misc.FactoryProvider;
+import nova.core.language.LanguageManager;
+import nova.core.language.Translatable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.registry.Factory;
@@ -32,13 +34,17 @@ import java.util.function.Supplier;
 /**
  * @author Calclavia
  */
-public class ItemFactory extends Factory<ItemFactory, Item> implements Identifiable {
+public class ItemFactory extends Factory<ItemFactory, Item> implements Identifiable, Translatable {
+	private String unlocalizedName;
+
 	public ItemFactory(String id, Supplier<Item> constructor, Function<Item, Item> processor) {
 		super(id, constructor, processor);
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
 	}
 
 	public ItemFactory(String id, Supplier<Item> constructor) {
 		super(id, constructor);
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
 	}
 
 	/**
@@ -71,6 +77,21 @@ public class ItemFactory extends Factory<ItemFactory, Item> implements Identifia
 		Data data = new Data();
 		item.save(data);
 		return data;
+	}
+
+	public ItemFactory setUnlocalizedName(String unlocalizedName) {
+		this.unlocalizedName = unlocalizedName;
+		return this;
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return "item." + this.unlocalizedName;
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return LanguageManager.instance().translate(getUnlocalizedName() + ".name");
 	}
 
 	@Override

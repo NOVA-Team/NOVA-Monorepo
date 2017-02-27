@@ -21,7 +21,7 @@
 package nova.core.block;
 
 import nova.core.block.component.BlockProperty;
-import nova.core.component.ComponentProvider;
+import nova.core.component.SidedComponentProvider;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.component.transform.BlockTransform;
 import nova.core.entity.Entity;
@@ -29,6 +29,7 @@ import nova.core.event.bus.CancelableEvent;
 import nova.core.event.bus.Event;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
+import nova.core.language.Translatable;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.core.world.World;
@@ -43,7 +44,7 @@ import java.util.Set;
 /**
  * @author Calclavia
  */
-public class Block extends ComponentProvider implements Identifiable {
+public class Block extends SidedComponentProvider implements Identifiable, Translatable {
 
 	public ItemFactory getItemFactory() {
 		return Game.items().getItemFromBlock(getFactory());
@@ -61,6 +62,16 @@ public class Block extends ComponentProvider implements Identifiable {
 	@Override
 	public final String getID() {
 		return getFactory().getID();
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return getFactory().getUnlocalizedName();
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return getFactory().getLocalizedName();
 	}
 
 	public final BlockTransform transform() {

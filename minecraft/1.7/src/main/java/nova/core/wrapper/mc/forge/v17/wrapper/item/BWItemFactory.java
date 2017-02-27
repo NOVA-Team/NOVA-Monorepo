@@ -25,6 +25,7 @@ import nova.core.component.misc.FactoryProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
+import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.internal.core.Game;
 
 /**
@@ -52,11 +53,18 @@ public class BWItemFactory extends ItemFactory {
 	}
 
 	@Override
+	public String getUnlocalizedName() {
+		return this.item.getUnlocalizedName();
+	}
+
+	@Override
 	public Item build(Data data) {
 		int meta = (Integer) data.getOrDefault("damage", this.meta);
 		NBTTagCompound nbtData = Game.natives().toNative(data);
 		BWItem bwItem = new BWItem(item, meta, nbtData);
 		bwItem.components.add(new FactoryProvider(this));
+		WrapperEvent.BWItemCreate event = new WrapperEvent.BWItemCreate(bwItem, item);
+		Game.events().publish(event);
 		return bwItem;
 	}
 

@@ -51,6 +51,8 @@ import net.minecraft.client.particle.EntitySnowShovelFX;
 import net.minecraft.client.particle.EntitySpellParticleFX;
 import net.minecraft.client.particle.EntitySplashFX;
 import net.minecraft.client.particle.EntitySuspendFX;
+import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
+import nova.internal.core.Game;
 
 /**
  * A backward entity particle that acts as a black box, which wraps a Minecraft particle fxs.
@@ -106,14 +108,16 @@ public class BWEntityFX extends BWEntity {
 	public final String particleID;
 
 	public BWEntityFX(String particleID) {
-		//TODO: NPE?
-		super(null);
+		super();
 		this.particleID = particleID;
 	}
 
 	public EntityFX createEntityFX() {
 		//Look up for particle factory and pass it into BWEntityFX
 		//TODO: Handle velocity?
-		return FMLClientHandler.instance().getClient().renderGlobal.doSpawnParticle(particleID, 0, 0, 0, 0, 0, 0);
+		EntityFX entity = FMLClientHandler.instance().getClient().renderGlobal.doSpawnParticle(particleID, 0, 0, 0, 0, 0, 0);
+		WrapperEvent.BWEntityFXCreate event = new WrapperEvent.BWEntityFXCreate(this, entity);
+		Game.events().publish(event);
+		return entity;
 	}
 }

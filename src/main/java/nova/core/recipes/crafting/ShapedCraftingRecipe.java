@@ -20,13 +20,16 @@
 
 package nova.core.recipes.crafting;
 
+import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.item.Item;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -256,6 +259,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 		for (int i = 0; i < ingredients.length; i++) {
 			Item original = mapping.Items[i];
 			Item consumed = ingredients[i].consumeOnCrafting(original, craftingGrid);
+			Objects.requireNonNull(consumed, "The result of 'ItemIngredient.consumeOnCrafting' can't be null");
 
 			// -- only works if Item is immutable
 			//if (original == consumed)
@@ -270,22 +274,22 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public Optional<Collection<String>> getPossibleItemsInFirstSlot() {
+	public Collection<String> getPossibleItemsInFirstSlot() {
 		if (isMirrored()) {
-			Optional<Collection<String>> optionsForFirstItem = ingredients[0].getPossibleItemIds();
-			if (!optionsForFirstItem.isPresent()) {
-				return Optional.empty();
+			Collection<String> optionsForFirstItem = ingredients[0].getPossibleItemIds();
+			if (optionsForFirstItem.isEmpty()) {
+				return Collections.emptyList();
 			}
 
-			Optional<Collection<String>> optionsForSecondItem = ingredients[lastIngredientIndexOnFirstLine].getPossibleItemIds();
-			if (!optionsForSecondItem.isPresent()) {
-				return Optional.empty();
+			Collection<String> optionsForSecondItem = ingredients[lastIngredientIndexOnFirstLine].getPossibleItemIds();
+			if (optionsForFirstItem.isEmpty()) {
+				return Collections.emptyList();
 			}
 
 			Set<String> result = new HashSet<>();
-			result.addAll(optionsForFirstItem.get());
-			result.addAll(optionsForSecondItem.get());
-			return Optional.of(result);
+			result.addAll(optionsForFirstItem);
+			result.addAll(optionsForSecondItem);
+			return result;
 		} else {
 			return ingredients[0].getPossibleItemIds();
 		}
@@ -401,12 +405,14 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 				firstItemOffset.getY() - posy[0]));
 		}
 
+		@Override
 		public Optional<Item> getStack(CraftingGrid craftingGrid, int ingredient) {
 			return craftingGrid.getStack(
 				offsetX + posx[ingredient],
 				offsetY + posy[ingredient]);
 		}
 
+		@Override
 		public void setStack(CraftingGrid craftingGrid, int ingredient, Optional<Item> value) {
 			craftingGrid.setStack(
 				offsetX + posx[ingredient],
@@ -424,12 +430,14 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 				firstItemOffset.getY() - posy[0]));
 		}
 
+		@Override
 		public Optional<Item> getStack(CraftingGrid craftingGrid, int ingredient) {
 			return craftingGrid.getStack(
 				craftingGrid.getWidth() - (offsetX + posx[ingredient]) - 1,
 				offsetY + posy[ingredient]);
 		}
 
+		@Override
 		public void setStack(CraftingGrid craftingGrid, int ingredient, Optional<Item> value) {
 			craftingGrid.setStack(
 				craftingGrid.getWidth() - (offsetX + posx[ingredient]) - 1,

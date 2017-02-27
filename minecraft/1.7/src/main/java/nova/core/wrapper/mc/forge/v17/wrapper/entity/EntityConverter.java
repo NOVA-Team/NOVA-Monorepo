@@ -20,12 +20,13 @@
 
 package nova.core.wrapper.mc.forge.v17.wrapper.entity;
 
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
-import nova.core.loader.Loadable;
 import nova.core.nativewrapper.NativeConverter;
+import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntityFX;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.forward.FWEntity;
@@ -34,7 +35,7 @@ import nova.internal.core.Game;
 
 import java.util.Optional;
 
-public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, Loadable {
+public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, ForgeLoadable {
 
 	@Override
 	public Class<Entity> getNovaSide() {
@@ -67,6 +68,9 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 
 	@Override
 	public net.minecraft.entity.Entity toNative(Entity novaObj) {
+		if (novaObj instanceof BWEntity)
+			return ((BWEntity) novaObj).entity;
+
 		MCEntityTransform transform = novaObj.components.get(MCEntityTransform.class);
 
 		if (transform.wrapper instanceof FWEntity) {
@@ -78,7 +82,7 @@ public class EntityConverter implements NativeConverter<Entity, net.minecraft.en
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void preInit() {
+	public void preInit(FMLPreInitializationEvent evt) {
 		/**
 		 * Backward register all particle effects
 		 */

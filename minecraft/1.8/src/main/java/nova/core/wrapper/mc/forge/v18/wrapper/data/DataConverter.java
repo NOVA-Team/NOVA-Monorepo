@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v17.wrapper.data;
+package nova.core.wrapper.mc.forge.v18.wrapper.data;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagByte;
@@ -35,16 +35,18 @@ import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.internal.core.Game;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Set;
 
 /**
  * Utility that manages common NBT queueSave and load methods
  * @author Calclavia
  */
-public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
+public class DataConverter implements NativeConverter<Data, NBTTagCompound> {
 
-	public static DataWrapper instance() {
-		return (DataWrapper) Game.natives().getNative(Data.class, NBTTagCompound.class);
+	public static DataConverter instance() {
+		return (DataConverter) Game.natives().getNative(Data.class, NBTTagCompound.class);
 	}
 
 	@Override
@@ -62,8 +64,9 @@ public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 		Data data = new Data();
 		if (nbt != null) {
 			data.className = nbt.getString("class");
-			Set<String> keys = nbt.func_150296_c();
-			keys.forEach(k -> data.put(k, load(nbt, k)));
+			@SuppressWarnings("unchecked")
+			Set<String> keys = nbt.getKeySet();
+			keys.stream().filter(k -> k != null && !"class".equals(k)).filter(Data.ILLEGAL_SUFFIX.asPredicate().negate()).forEach(k -> data.put(k, load(nbt, k)));
 		}
 		return data;
 	}
@@ -94,10 +97,10 @@ public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 	 */
 	public NBTTagCompound save(NBTTagCompound tag, String key, Object value) {
 		if (value instanceof Boolean) {
-			tag.setBoolean("isBoolean", true);
+			tag.setBoolean(key + "::nova.isBoolean", true);
 			tag.setBoolean(key, (boolean) value);
 		} else if (value instanceof Byte) {
-			tag.setBoolean("isBoolean", false);
+			tag.setBoolean(key + "::nova.isBoolean", false);
 			tag.setByte(key, (byte) value);
 		} else if (value instanceof Short) {
 			tag.setShort(key, (short) value);
@@ -111,6 +114,12 @@ public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 			tag.setFloat(key, (float) value);
 		} else if (value instanceof Double) {
 			tag.setDouble(key, (double) value);
+		} else if (value instanceof BigInteger) {
+			tag.setBoolean(key + "::nova.isBigInteger", true);
+			tag.setString(key, ((BigInteger) value).toString());
+		} else if (value instanceof BigDecimal) {
+			tag.setBoolean(key + "::nova.isBigDecimal", true);
+			tag.setString(key, ((BigDecimal) value).toString());
 		} else if (value instanceof String) {
 			tag.setString(key, (String) value);
 		} else if (value instanceof Data) {
@@ -138,11 +147,17 @@ public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
 			} else if (saveTag instanceof NBTTagInt) {
 				return tag.getInteger(key);
 			} else if (saveTag instanceof NBTTagString) {
-				return tag.getString(key);
+				if (tag.getBoolean(key + "::nova.isBigInteger")) {
+					return new BigInteger(tag.getString(key));
+				} else if (tag.getBoolean(key + "::nova.isBigDecimal")) {
+					return new BigDecimal(tag.getString(key));
+				} else {
+					return tag.getString(key);
+				}
 			} else if (saveTag instanceof NBTTagShort) {
 				return tag.getShort(key);
 			} else if (saveTag instanceof NBTTagByte) {
-				if (tag.getBoolean("isBoolean")) {
+				if (tag.getBoolean(key + "::nova.isBoolean")) {
 					return tag.getBoolean(key);
 				} else {
 					return tag.getByte(key);

@@ -28,98 +28,122 @@ public final class StaticCubeTextureCoordinates implements CubeTextureCoordinate
 
 	private StaticCubeTextureCoordinates() {}
 
+	@Override
 	public double getTopMinU() {
 		return 0;
 	}
 
+	@Override
 	public double getTopMinV() {
 		return 0;
 	}
 
+	@Override
 	public double getTopMaxU() {
 		return 1;
 	}
 
+	@Override
 	public double getTopMaxV() {
 		return 1;
 	}
 
+	@Override
 	public double getBottomMinU() {
 		return 0;
 	}
 
+	@Override
 	public double getBottomMinV() {
 		return 0;
 	}
 
+	@Override
 	public double getBottomMaxU() {
 		return 1;
 	}
 
+	@Override
 	public double getBottomMaxV() {
 		return 1;
 	}
 
+	@Override
 	public double getWestMinU() {
 		return 0;
 	}
 
+	@Override
 	public double getWestMinV() {
 		return 0;
 	}
 
+	@Override
 	public double getWestMaxU() {
 		return 1;
 	}
 
+	@Override
 	public double getWestMaxV() {
 		return 1;
 	}
 
+	@Override
 	public double getEastMinU() {
 		return 0;
 	}
 
+	@Override
 	public double getEastMinV() {
 		return 0;
 	}
 
+	@Override
 	public double getEastMaxU() {
 		return 1;
 	}
 
+	@Override
 	public double getEastMaxV() {
 		return 1;
 	}
 
+	@Override
 	public double getNorthMinU() {
 		return 0;
 	}
 
+	@Override
 	public double getNorthMinV() {
 		return 0;
 	}
 
+	@Override
 	public double getNorthMaxU() {
 		return 1;
 	}
 
+	@Override
 	public double getNorthMaxV() {
 		return 1;
 	}
 
+	@Override
 	public double getSouthMinU() {
 		return 0;
 	}
 
+	@Override
 	public double getSouthMinV() {
 		return 0;
 	}
 
+	@Override
 	public double getSouthMaxU() {
 		return 1;
 	}
 
+	@Override
 	public double getSouthMaxV() {
 		return 1;
 	}

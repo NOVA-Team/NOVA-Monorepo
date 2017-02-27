@@ -20,6 +20,7 @@
 
 package nova.core.recipes;
 
+import nova.core.event.RecipeEvent;
 import nova.core.event.bus.EventBus;
 import nova.core.event.bus.EventListener;
 import nova.core.event.bus.EventListenerHandle;
@@ -30,8 +31,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.stream.Stream;
 
 /**
  * The RecipeManager manages all recipes (of any type) in the game.
@@ -67,16 +71,14 @@ public class RecipeManager extends Manager<RecipeManager> {
 		return getRecipeList(type).unmodifiableRecipes;
 	}
 
-	public <T extends Recipe> EventListenerHandle<RecipeAddedEvent<T>> whenRecipeAdded(
-		Class<T> type,
-		EventListener<RecipeAddedEvent<T>> listener) {
-		return getRecipeList(type).recipeAddedListeners.on().bind(listener);
+	public <T extends Recipe> EventListenerHandle<RecipeEvent.Add<T>> whenRecipeAdded(
+		Class<T> type, EventListener<RecipeEvent.Add<T>> listener) {
+		return getRecipeList(type).events.on(RecipeEvent.Add.class).bind(listener);
 	}
 
-	public <T extends Recipe> EventListenerHandle<RecipeRemovedEvent<T>> whenRecipeRemoved(
-		Class<T> type,
-		EventListener<RecipeRemovedEvent<T>> listener) {
-		return getRecipeList(type).recipeRemovedListeners.on().bind(listener);
+	public <T extends Recipe> EventListenerHandle<RecipeEvent.Remove<T>> whenRecipeRemoved(
+		Class<T> type, EventListener<RecipeEvent.Remove<T>> listener) {
+		return getRecipeList(type).events.on(RecipeEvent.Remove.class).bind(listener);
 	}
 
 	// #######################
@@ -103,29 +105,45 @@ public class RecipeManager extends Manager<RecipeManager> {
 		return new RecipeList<>(result);
 	}
 
-	private class RecipeList<T extends Recipe> {
+	private class RecipeList<T extends Recipe> implements Iterable<T> {
 		private Set<T> recipes;
 		private Set<T> unmodifiableRecipes;
-		private EventBus<RecipeAddedEvent<T>> recipeAddedListeners;
-		private EventBus<RecipeRemovedEvent<T>> recipeRemovedListeners;
+		private EventBus<RecipeEvent<T>> events;
 
 		private RecipeList(Set<T> recipes) {
 			this.recipes = recipes;
 			this.unmodifiableRecipes = Collections.unmodifiableSet(recipes);
-			this.recipeAddedListeners = new EventBus<>();
-			this.recipeRemovedListeners = new EventBus<>();
+			this.events = new EventBus<>();
 		}
 
 		private void add(T recipe) {
 			if (recipes.add(recipe)) {
-				recipeAddedListeners.publish(new RecipeAddedEvent<>(recipe));
+				events.publish(new RecipeEvent.Add<>(recipe));
 			}
 		}
 
 		private void remove(T recipe) {
 			if (recipes.remove(recipe)) {
-				recipeRemovedListeners.publish(new RecipeRemovedEvent<>(recipe));
+				events.publish(new RecipeEvent.Remove<>(recipe));
 			}
+		}
+
+		@Override
+		public Iterator<T> iterator() {
+			return this.unmodifiableRecipes.iterator();
+		}
+
+		@Override
+		public Spliterator<T> spliterator() {
+			return this.unmodifiableRecipes.spliterator();
+		}
+
+		public Stream<T> stream() {
+			return this.unmodifiableRecipes.stream();
+		}
+
+		public Stream<T> parallelStream() {
+			return this.unmodifiableRecipes.parallelStream();
 		}
 	}
 

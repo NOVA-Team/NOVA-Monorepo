@@ -42,12 +42,14 @@ import nova.core.retention.Store;
 import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
+import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.world.BWWorld;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BWBlock extends Block implements Storable {
@@ -67,14 +69,16 @@ public class BWBlock extends Block implements Storable {
 		transform.setWorld(world);
 		transform.setPosition(pos);
 
-		components.add(new BlockProperty.Opacity().setLightTransmission(!mcBlock.getMaterial().blocksLight()));
+		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().blocksLight() ? 1 : 0));
+		if (mcBlock.isReplaceable((net.minecraft.world.World) getMcBlockAccess(), new BlockPos(x(), y(), z())))
+			components.add(BlockProperty.Replaceable.instance());
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.stepSound.getPlaceSound()));
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", mcBlock.stepSound.getBreakSound()));
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", mcBlock.stepSound.getStepSound()));
 
-		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0F);
+		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0);
 		components.add(new Collider(this))
 			.setBoundingBox(() -> new Cuboid(mcBlock.getBlockBoundsMinX(), mcBlock.getBlockBoundsMinY(), mcBlock.getBlockBoundsMinZ(), mcBlock.getBlockBoundsMaxX(), mcBlock.getBlockBoundsMaxY(), mcBlock.getBlockBoundsMaxZ()))
 			.setOcclusionBoxes(entity -> {
@@ -93,6 +97,8 @@ public class BWBlock extends Block implements Storable {
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			});
+		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
+		Game.events().publish(event);
 		//TODO: Set selection bounds
 	}
 
@@ -101,15 +107,19 @@ public class BWBlock extends Block implements Storable {
 		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
 	}
 
-	private IBlockAccess getMcBlockAccess() {
+	public IBlockAccess getMcBlockAccess() {
 		return ((BWWorld) world()).access;
 	}
 
-	private IBlockState blockState() {
+	public IBlockState blockState() {
 		return getMcBlockAccess().getBlockState(new BlockPos(x(), y(), z()));
 	}
 
-	private TileEntity getTileEntity() {
+	public Optional<TileEntity> getTileEntity() {
+		return Optional.ofNullable(getTileEntityImpl());
+	}
+
+	private TileEntity getTileEntityImpl() {
 		if (mcTileEntity == null && mcBlock.hasTileEntity(blockState())) {
 			mcTileEntity = getMcBlockAccess().getTileEntity(new BlockPos(x(), y(), z()));
 		}
@@ -137,7 +147,7 @@ public class BWBlock extends Block implements Storable {
 	public void save(Data data) {
 		Storable.super.save(data);
 
-		TileEntity tileEntity = getTileEntity();
+		TileEntity tileEntity = getTileEntityImpl();
 		if (tileEntity != null) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			tileEntity.writeToNBT(nbt);
@@ -149,9 +159,19 @@ public class BWBlock extends Block implements Storable {
 	public void load(Data data) {
 		Storable.super.load(data);
 
-		TileEntity tileEntity = getTileEntity();
+		TileEntity tileEntity = getTileEntityImpl();
 		if (tileEntity != null) {
 			tileEntity.writeToNBT(Game.natives().toNative(data));
 		}
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return mcBlock.getLocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return mcBlock.getUnlocalizedName();
 	}
 }

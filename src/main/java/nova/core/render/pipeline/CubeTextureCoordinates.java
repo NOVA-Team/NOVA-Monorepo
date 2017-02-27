@@ -16,7 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.render.pipeline;
+ */
+
+package nova.core.render.pipeline;
 
 /**
  * @author Stan

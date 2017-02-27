@@ -19,6 +19,7 @@
  */package nova.core.block.component;
 
 import nova.core.component.Component;
+import nova.core.component.SidedComponent;
 import nova.core.event.bus.Event;
 import nova.core.event.bus.EventBus;
 
@@ -31,6 +32,7 @@ import java.util.function.Supplier;
  * A component that defines a connection with another.  C is the connector type
  * @author Calclavia
  */
+@SidedComponent
 public class Connectable<C> extends Component {
 
 	public final EventBus<Event> connectEvent = new EventBus<>();
@@ -42,12 +44,12 @@ public class Connectable<C> extends Component {
 
 	public Supplier<Set<C>> connections = Collections::emptySet;
 
-	public Connectable setCanConnect(Function<C, Boolean> canConnect) {
+	public Connectable<C> setCanConnect(Function<C, Boolean> canConnect) {
 		this.canConnect = canConnect;
 		return this;
 	}
 
-	public Connectable setConnections(Supplier<Set<C>> connections) {
+	public Connectable<C> setConnections(Supplier<Set<C>> connections) {
 		this.connections = connections;
 		return this;
 	}

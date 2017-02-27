@@ -19,18 +19,20 @@
  */package nova.core.block.component;
 
 import nova.core.component.Component;
+import nova.core.component.SidedComponent;
 
-import java.util.function.Supplier;
+import java.util.function.DoubleSupplier;
 
+@SidedComponent
 public class LightEmitter extends Component {
 
 	/**
 	 * Called to get the amount of light emitted from a block.
 	 * Returns the level of light that is emitted by the block.
 	 */
-	public Supplier<Float> emittedLevel = () -> 0f;
+	public DoubleSupplier emittedLevel = () -> 0;
 
-	public LightEmitter setEmittedLevel(Supplier<Float> emittedLevel) {
+	public LightEmitter setEmittedLevel(DoubleSupplier emittedLevel) {
 		this.emittedLevel = emittedLevel;
 		return this;
 	}

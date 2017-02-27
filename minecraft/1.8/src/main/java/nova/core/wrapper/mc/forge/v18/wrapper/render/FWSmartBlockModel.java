@@ -24,21 +24,21 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 import nova.core.block.Block;
-import nova.core.component.renderer.ItemRenderer;
+import nova.core.component.renderer.DynamicRenderer;
+import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.ItemBlock;
-import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.internal.core.Game;
 
 import javax.vecmath.Vector3f;
+
 import java.util.List;
 
 /**
@@ -50,10 +50,10 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 	private final Block block;
 	private final boolean isItem;
 
-	public FWSmartBlockModel(Block block, boolean isDummy) {
+	public FWSmartBlockModel(Block block, boolean isItem) {
 		super();
 		this.block = block;
-		this.isItem = isDummy;
+		this.isItem = isItem;
 		// Change the default transforms to the default full Block transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
 			new ItemTransformVec3f(new Vector3f(10, -45, 170), new Vector3f(0, 0.09375f, -0.171875f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person
@@ -78,10 +78,8 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
 		ItemBlock item = Game.natives().toNova(stack);
-		ItemRenderer renderer =
-			item.components.has(ItemRenderer.class) ? item.components.get(ItemRenderer.class) : block.components.has(ItemRenderer.class) ? block.components.get(ItemRenderer.class) : null;
 
-		if (renderer != null) {
+		if (item.components.has(Renderer.class) || block.components.has(Renderer.class)) {
 			return new FWSmartBlockModel(block, true);
 		}
 
@@ -90,37 +88,22 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 
 	@Override
 	public List<BakedQuad> getGeneralQuads() {
-		BWModel blockModel = new BWModel();
-		blockModel.matrix.translate(0.5, 0.5, 0.5);
+		BWModel model = new BWModel();
+		model.matrix.translate(0.5, 0.5, 0.5);
 
 		if (isItem) {
-			ItemRenderer renderer = block.components.get(ItemRenderer.class);
-			renderer.onRender.accept(blockModel);
+			if (block.components.has(StaticRenderer.class)) {
+				StaticRenderer staticRenderer = block.components.get(StaticRenderer.class);
+				staticRenderer.onRender.accept(model);
+			} else if (block.components.has(DynamicRenderer.class)) {
+				DynamicRenderer dynamicRenderer = block.components.get(DynamicRenderer.class);
+				dynamicRenderer.onRender.accept(model);
+			}
 		} else {
-			StaticRenderer renderer = block.components.get(StaticRenderer.class);
-			renderer.onRender.accept(blockModel);
+			StaticRenderer staticRenderer = block.components.get(StaticRenderer.class);
+			staticRenderer.onRender.accept(model);
 		}
 
-		return modelToQuads(blockModel);
-	}
-
-	@Override
-	public TextureAtlasSprite getTexture() {
-		/*
-		if (block.components.has(StaticRenderer.class)) {
-			Optional<Texture> apply = block.components.get(StaticRenderer.class).texture.apply(Direction.UNKNOWN);
-			if (apply.isPresent()) {
-				return RenderUtility.instance.getTexture(apply.components.get());
-			}
-		}*/
-
-		if (block.components.has(ItemRenderer.class)) {
-			ItemRenderer itemRenderer = block.components.get(ItemRenderer.class);
-			if (itemRenderer.texture.isPresent()) {
-				return RenderUtility.instance.getTexture(itemRenderer.texture.get());
-			}
-		}
-
-		return null;
+		return modelToQuads(model);
 	}
 }

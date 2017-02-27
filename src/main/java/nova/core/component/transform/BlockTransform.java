@@ -20,12 +20,14 @@
 
 package nova.core.component.transform;
 
+import nova.core.component.UnsidedComponent;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * A 3D block transform.
  * @author Calclavia
  */
+@UnsidedComponent
 public class BlockTransform extends WorldTransform<Vector3D> {
 
 }

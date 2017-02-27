@@ -32,32 +32,39 @@ import nova.core.util.shape.Cuboid;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+// TODO: create a CTM pipeline builder at some point, to automate construction of CTM pipelines
+//      (there are 47 different CTM textures for a block which connects omni-directionally, writing that manually would get annoying really fast)
 public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
+
+	public final Block block;
 	public final Texture edgeTexture;
 
 	/**
 	 * The mask the represents which sides the block should render its connected texture.
-	 * E.g: 000000 will render all directions
+	 * E.g: 00000000 will render all directions
 	 */
 	public Supplier<Integer> connectMask;
 
 	/**
-	 * A mask of which sides the connected texture renderer should render.
-	 * Each bit corresponds to a direction.
-	 * E.g: 000011 will render top and bottom
+	 * A filter of which sides the connected texture renderer should render.
 	 */
-	public int faceMask = 0xff;
+	public Predicate<Direction> faceFilter = dir -> true;
 
 	public ConnectedTextureRenderPipeline(Block block, Texture edgeTexture) {
 		super(block);
+		this.block = block;
 		this.edgeTexture = edgeTexture;
 
 		connectMask = () -> {
 			if (this.block.components.has(BlockTransform.class)) {
 				return Arrays.stream(Direction.VALID_DIRECTIONS)
-					.filter(d -> this.block.world().getBlock(this.block.position().add(d.toVector())).get().sameType(this.block))
+					.filter(d -> {
+						Optional<Block> b = this.block.world().getBlock(this.block.position().add(d.toVector()));
+						return b.isPresent() && b.get().sameType(this.block);
+					})
 					.map(d -> 1 << d.ordinal())
 					.reduce(0, (b, a) -> a | b);
 			}
@@ -72,7 +79,7 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 
 			//Render the block edge
 			for (Direction dir : Direction.VALID_DIRECTIONS)
-				if ((faceMask & (1 << dir.ordinal())) != 0) {
+				if (faceFilter.test(dir)) {
 					renderFace(dir, model);
 				}
 		};
@@ -83,12 +90,47 @@ public class ConnectedTextureRenderPipeline extends BlockRenderPipeline {
 		return this;
 	}
 
-	public ConnectedTextureRenderPipeline withFaceMask(int faceMask) {
-		this.faceMask = faceMask;
+	/**
+	 * Set the filter used to determine if this pipeline should handle these sides.
+	 *
+	 * @param faceFilter A filter of which sides the connected texture renderer should render.
+	 * @return this
+	 */
+	public ConnectedTextureRenderPipeline withFaceFilter(Predicate<Direction> faceFilter) {
+		this.faceFilter = faceFilter;
 		return this;
 	}
 
-	//Apply connected texture on top face
+	/**
+	 * Set the filter used to determine if this pipeline should handle these sides.
+	 *
+	 * @param faces An array of which sides the connected texture renderer should render.
+	 * @return this
+	 */
+	public ConnectedTextureRenderPipeline withFaces(Direction... faces) {
+		this.faceFilter = dir -> Arrays.stream(faces).anyMatch(d -> d == dir);
+		return this;
+	}
+
+	/**
+	 * Set the filter used to determine if this pipeline should handle these sides.
+	 *
+	 * @param faceMask A mask of which sides the connected texture renderer should render.
+	 * Each bit corresponds to a direction.
+	 * E.g: 000011 will render top and bottom
+	 * @return this
+	 */
+	public ConnectedTextureRenderPipeline withFaceMask(int faceMask) {
+		this.faceFilter = dir -> (faceMask & (1 << dir.ordinal())) != 0;
+		return this;
+	}
+
+	/**
+	 * Apply connected texture on top face.
+	 *
+	 * @param direction the direction.
+	 * @param model the model.
+	 */
 	protected void renderFace(Direction direction, Model model) {
 		for (int r = 0; r < 4; r++) {
 			Cuboid bound = bounds.get()

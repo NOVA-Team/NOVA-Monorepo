@@ -38,7 +38,6 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 
 	public FWItem(ItemFactory item) {
 		this.itemFactory = item;
-		setUnlocalizedName(item.getID());
 		setMaxStackSize(item.build().getMaxCount());
 	}
 
@@ -67,4 +66,18 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 		return ItemWrapperMethods.super.getColorFromItemStack(p_82790_1_, p_82790_2_);
 	}
 
+	@Override
+	public String getUnlocalizedName() {
+		return getItemFactory().getUnlocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getUnlocalizedName();
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getLocalizedName();
+	}
 }

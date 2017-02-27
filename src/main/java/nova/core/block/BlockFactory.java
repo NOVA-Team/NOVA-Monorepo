@@ -21,12 +21,14 @@
 package nova.core.block;
 
 import nova.core.component.misc.FactoryProvider;
-import nova.core.event.BlockEvent;
-import nova.core.event.bus.EventListener;
 import nova.core.item.ItemBlock;
+import nova.core.item.ItemFactory;
+import nova.core.language.LanguageManager;
+import nova.core.language.Translatable;
 import nova.core.util.registry.Factory;
 import nova.internal.core.Game;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -34,35 +36,36 @@ import java.util.function.Supplier;
  * The factory type for blocks.
  * @author Calclavia
  */
-public class BlockFactory extends Factory<BlockFactory, Block> {
-	public BlockFactory(String id, Supplier<Block> constructor, Function<Block, Block> processor) {
+public class BlockFactory extends Factory<BlockFactory, Block> implements Translatable {
+
+	final Consumer<BlockFactory> postRegister;
+	private String unlocalizedName;
+
+	public BlockFactory(String id, Supplier<Block> constructor, Function<Block, Block> processor, Consumer<BlockFactory> postRegister) {
 		super(id, constructor, processor);
+		this.postRegister = postRegister;
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
 	}
 
 	public BlockFactory(String id, Supplier<Block> constructor) {
-		this(id, constructor, evt -> {
-			Game.items().register(id, () -> new ItemBlock(evt.blockFactory));
-		});
+		this(id, constructor, blockFactory -> Game.items().register(id, () -> new ItemBlock(blockFactory)));
 	}
 
 	/**
 	 * Initializes a BlockFactory. A specific implementation of item block generation
 	 * may be provided by post create.
 	 * @param constructor The constructor function
-	 * @param postCreate Function for registering item blocks
+	 * @param postRegister Function for registering item blocks
 	 */
-	public BlockFactory(String id, Supplier<Block> constructor, EventListener<BlockEvent.Register> postCreate) {
+	public BlockFactory(String id, Supplier<Block> constructor, Consumer<BlockFactory> postRegister) {
 		super(id, constructor);
-		postCreate(postCreate);
-	}
-
-	protected void postCreate(EventListener<BlockEvent.Register> postCreate) {
-		Game.events().on(BlockEvent.Register.class).bind(postCreate);
+		this.postRegister = postRegister;
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
 	}
 
 	@Override
 	protected BlockFactory selfConstructor(String id, Supplier<Block> constructor, Function<Block, Block> processor) {
-		return new BlockFactory(id, constructor, processor);
+		return new BlockFactory(id, constructor, processor, postRegister);
 	}
 
 	@Override
@@ -70,5 +73,20 @@ public class BlockFactory extends Factory<BlockFactory, Block> {
 		Block build = super.build();
 		build.components.add(new FactoryProvider(this));
 		return build;
+	}
+
+	public BlockFactory setUnlocalizedName(String unlocalizedName) {
+		this.unlocalizedName = unlocalizedName;
+		return this;
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return "block." + this.unlocalizedName;
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return LanguageManager.instance().translate(getUnlocalizedName() + ".name");
 	}
 }

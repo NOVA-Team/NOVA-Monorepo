@@ -20,10 +20,12 @@
 
 package nova.core.recipes.crafting;
 
+import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.item.Item;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -34,11 +36,11 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 	private final RecipeFunction recipeFunction;
 	private final ItemIngredient[] ingredients;
 
-	public ShapelessCraftingRecipe(Item output, ItemIngredient[] ingredients) {
+	public ShapelessCraftingRecipe(Item output, ItemIngredient... ingredients) {
 		this(output, (crafting, tagged) -> Optional.of(output), ingredients);
 	}
 
-	public ShapelessCraftingRecipe(Item nominalOutput, RecipeFunction recipeFunction, ItemIngredient[] ingredients) {
+	public ShapelessCraftingRecipe(Item nominalOutput, RecipeFunction recipeFunction, ItemIngredient... ingredients) {
 		this.nominalOutput = nominalOutput;
 		this.recipeFunction = recipeFunction;
 		this.ingredients = ingredients;
@@ -119,8 +121,9 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 
 		for (int i = 0; i < ingredients.length; i++) {
 			ItemIngredient ingredient = ingredients[i];
-			Item transformed = ingredient.consumeOnCrafting(matching.inputs[i], craftingGrid);
-			craftingGrid.setStack(matching.indices[i], Optional.ofNullable(transformed));
+			Item consumed = ingredient.consumeOnCrafting(matching.inputs[i], craftingGrid);
+			Objects.requireNonNull(consumed, "The result of 'ItemIngredient.consumeOnCrafting' can't be null");
+			craftingGrid.setStack(matching.indices[i], Optional.ofNullable(consumed));
 		}
 	}
 
