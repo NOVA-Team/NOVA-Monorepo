@@ -83,7 +83,7 @@ public class OptionalDITest {
 			bind(TestManager.class).toConstructor();
 			try {
 				starbind(Map.class).to(
-					HashMap.class.getConstructor(new Class[] {}), (Parameter[]) null);
+					HashMap.class.getConstructor(new Class<?>[] {}), (Parameter[]) null);
 			} catch (NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 			}

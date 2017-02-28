@@ -12,12 +12,12 @@ import static nova.testutils.NovaAssertions.assertThat;
  */
 public class ComponentProviderTest {
 
-	private ComponentProvider provider;
+	private ComponentProvider<?> provider;
 
 	@Before
 	public void setUp() throws Exception {
-		provider = new ComponentProvider() {
-		};
+		// TODO: When Java 9 comes out, use the diamond operator
+		provider = new ComponentProvider<ComponentMap>() {};
 	}
 
 	@Test
