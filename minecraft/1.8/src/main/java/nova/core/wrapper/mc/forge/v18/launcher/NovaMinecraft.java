@@ -20,6 +20,7 @@
 
 package nova.core.wrapper.mc.forge.v18.launcher;
 
+import com.typesafe.config.Config;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -31,8 +32,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
+import nova.core.config.ConfigHolder;
+import nova.core.config.Configuration;
 import nova.core.deps.MavenDependency;
 import nova.core.event.ServerEvent;
+import nova.core.event.bus.GlobalEvents;
 import nova.core.wrapper.mc.forge.v18.NovaMinecraftPreloader;
 import nova.core.wrapper.mc.forge.v18.depmodules.ClientModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.ComponentModule;
@@ -61,8 +65,10 @@ import nova.internal.core.deps.DepDownloader;
 import nova.internal.core.launch.InitializationException;
 import nova.internal.core.launch.NovaLauncher;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -168,10 +174,8 @@ public class NovaMinecraft {
 			nativeConverters.stream().forEachOrdered(loadable -> loadable.preInit(evt));
 
 			// Initiate config system TODO: Storables
-			//		launcher.getLoadedModMap().forEach((mod, loader) -> {
-			//			Configuration config = new Configuration(new File(evt.getModConfigurationDirectory(), mod.name()));
-			//			ConfigManager.instance.sync(config, loader.getClass().getPackage().getName());
-			//		});
+			launcher.getLoadedModMap().entrySet().stream().filter(e -> e.getValue().getClass().isAnnotationPresent(ConfigHolder.class))
+				.forEach(e -> Configuration.load(new File(evt.getModConfigurationDirectory(), e.getKey().id() + ".hocon"), e.getValue()));
 
 			Game.language().init();
 			Game.render().init();

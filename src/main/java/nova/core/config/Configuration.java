@@ -45,9 +45,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Configuration {
+
+	private Configuration() {}
 
 	private static final ConfigRenderOptions renderOpts =
 		ConfigRenderOptions.defaults()
@@ -163,14 +166,19 @@ public class Configuration {
 				ConfigValue val = ConfigValueFactory.fromAnyRef(entry.getValue()._1);
 				String comment = entry.getValue()._2;
 				if (!"".equals(comment)) {
-					//TODO: Maybe comment = Game.instance.language.translate(comment); ?
+					//TODO: Maybe `comment = Game.language().translate(comment);` ?
 					if (!val.origin().comments().contains(comment)) {
 						addComment(val, comment);
 					}
 				}
 				merged = merged.withValue(entry.getKey(), val);
 			}
-			return merged;
+			config = merged;
+		}
+		if (holder instanceof ConfigHandler) {
+			Optional<com.typesafe.config.Config> handled = ((ConfigHandler) holder).handle(config);
+			if (handled.isPresent())
+				config = handled.get();
 		}
 		return config;
 	}
