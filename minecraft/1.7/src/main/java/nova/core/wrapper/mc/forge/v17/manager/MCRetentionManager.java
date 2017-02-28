@@ -76,7 +76,7 @@ public class MCRetentionManager extends RetentionManager {
 	 */
 	public boolean saveFile(File file, NBTTagCompound data) {
 		try {
-			File tempFile = new File(file.getParent(), file.getName() + "_tmp.dat");
+			File tempFile = new File(file.getParent(), file.getName().replaceFirst("\\.nbt$", ".tmp.nbt"));
 
 			CompressedStreamTools.writeCompressed(data, new FileOutputStream(tempFile));
 
@@ -94,7 +94,7 @@ public class MCRetentionManager extends RetentionManager {
 	}
 
 	public boolean saveFile(File saveDirectory, String filename, NBTTagCompound data) {
-		return saveFile(new File(saveDirectory, filename + ".dat"), data);
+		return saveFile(new File(saveDirectory, filename + ".nbt"), data);
 	}
 
 	public boolean saveFile(String filename, NBTTagCompound data) {
@@ -122,7 +122,7 @@ public class MCRetentionManager extends RetentionManager {
 	 * @return The NBT data
 	 */
 	public NBTTagCompound loadFile(File saveDirectory, String filename) {
-		return loadFile(new File(saveDirectory, filename + ".dat"));
+		return loadFile(new File(saveDirectory, filename + ".nbt"));
 	}
 
 	public NBTTagCompound loadFile(String filename) {
