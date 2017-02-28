@@ -36,10 +36,6 @@ public class LanguageManagerTest {
 	}
 
 	@Test
-	public void testInstance() {
-	}
-
-	@Test
 	public void testGetCurrentLanguage() {
 		assertThat(langauageManager.getCurrentLanguage()).isEqualTo("en-US");
 	}
