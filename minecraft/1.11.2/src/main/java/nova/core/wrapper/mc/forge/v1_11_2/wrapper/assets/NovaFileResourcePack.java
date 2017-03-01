@@ -120,7 +120,6 @@ public class NovaFileResourcePack extends FileResourcePack implements NovaResour
 
 	@Override
 	public InputStream getInputStreamCaseInsensitive(String path) throws IOException {
-		System.out.println("Opening InputStream '" + path + '\'');
 		Optional<ZipEntry> ze = findFileCaseInsensitive(transform(path));
 		if (ze.isPresent())
 			return getResourcePackZipFile().getInputStream(ze.get());
@@ -129,7 +128,6 @@ public class NovaFileResourcePack extends FileResourcePack implements NovaResour
 
 	@Override
 	public Optional<ZipEntry> findFileCaseInsensitive(String path) {
-		System.out.println("Getting ZipEntry '" + path + '\'');
 		String p = transform(path);
 		try {
 			return getResourcePackZipFile().stream().filter(e -> e.getName().equalsIgnoreCase(p)).findFirst().map(e -> (ZipEntry) e);

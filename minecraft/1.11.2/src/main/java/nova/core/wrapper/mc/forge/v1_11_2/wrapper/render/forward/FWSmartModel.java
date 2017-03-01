@@ -22,8 +22,8 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.forward;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -71,7 +71,7 @@ public abstract class FWSmartModel implements IBakedModel {
 	}
 
 	public FWSmartModel() {
-		this.format = DefaultVertexFormats.ITEM;
+		this.format = NOVA_VERTEX_FORMAT;
 	}
 
 	public static int[] vertexToInts(Vertex vertex, TextureAtlasSprite texture, Vector3D normal) {
@@ -82,7 +82,9 @@ public abstract class FWSmartModel implements IBakedModel {
 			vertex.color.argb(),
 			Float.floatToRawIntBits(texture.getInterpolatedU(16 * vertex.uv.getX())),
 			Float.floatToRawIntBits(texture.getInterpolatedV(16 * vertex.uv.getY())),
-			0 // TODO: Normal
+			((((byte)(normal.getX() * 127)) & 0xFF) |
+			((((byte)(normal.getY() * 127)) & 0xFF) << 8) |
+			((((byte)(normal.getZ() * 127)) & 0xFF) << 16)) // TODO: Normal
 		};
 	}
 
@@ -108,7 +110,7 @@ public abstract class FWSmartModel implements IBakedModel {
 									int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
 									//TODO: The facing might be wrong
 									return new BakedQuad(Arrays.copyOf(data, MathUtil.max(data.length, 0)), -1, EnumFacing.values()[Direction.fromVector(face.normal).ordinal()],
-											getParticleTexture(), true, getFormat());
+											texture, true, getFormat());
 								}
 							);
 					}

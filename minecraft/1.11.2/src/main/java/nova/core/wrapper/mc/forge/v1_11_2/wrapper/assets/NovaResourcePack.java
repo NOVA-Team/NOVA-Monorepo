@@ -74,7 +74,6 @@ public interface NovaResourcePack<FileType> extends Identifiable {
 		if (skipCount > 0)
 			throw new IllegalArgumentException('\'' + path + "' leads outside root");
 
-		System.out.println(path + " -> " + String.join("/", stack));
 		return String.join("/", stack);
 	}
 }
