@@ -47,7 +47,8 @@ public class GlobalEvents extends EventBus<Event> {
 				String className = clazz.map(c -> ":" + c.getName()).orElse("");
 				binder.withName("nova.launcher:" + mod.id() + className);
 				Map<String, String> deps = launcher.dependencyToMap(mod.dependencies());
-				deps.keySet().stream().forEach(mod_id -> binder.after("nova.launcher" + mod_id + className));
+				deps.keySet().stream().forEach(id -> binder.after("nova.launcher:" + id + className));
+				binder.withPriority(mod.priority());
 			}));
 		return binder;
 	}
