@@ -47,6 +47,7 @@ public class TileEntityTransformer implements Transformer {
 
 			if (method == null) {
 				System.out.println("[NOVA] Lookup " + deobfMap + " failed!");
+				return;
 			}
 		}
 
@@ -58,7 +59,7 @@ public class TileEntityTransformer implements Transformer {
 		list.add(new VarInsnNode(ALOAD, 0)); // World
 		list.add(new VarInsnNode(ALOAD, 1)); // NBTTagCompound
 		list.add(new VarInsnNode(ALOAD, 4)); // Class<? extends TileEntity>
-		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc/forge/v1_11/asm/StaticForwarder", "loadTileEntityHook", "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;Ljava/lang/Class;)Lnet/minecraft/tileentity/TileEntity;", false));
+		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc/forge/v1_11_2/asm/StaticForwarder", "loadTileEntityHook", "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;Ljava/lang/Class;)Lnet/minecraft/tileentity/TileEntity;", false));
 		list.add(new VarInsnNode(ASTORE, 2)); // TileEntity
 
 		method.instructions.insert(method.instructions.get(31), list);

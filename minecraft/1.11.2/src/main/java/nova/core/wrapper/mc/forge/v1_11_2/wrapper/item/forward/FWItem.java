@@ -24,6 +24,7 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilit
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -39,6 +40,8 @@ import java.util.List;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemWrapperMethods;
 import nova.internal.core.Game;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Calclavia
  */
@@ -53,7 +56,8 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 	}
 
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+	@Nullable
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
 		Item item = Game.natives().toNova(stack);
 		WrapperEvent.FWItemInitCapabilities event = new WrapperEvent.FWItemInitCapabilities(item, new FWCapabilityProvider());
 		return event.capabilityProvider.hasCapabilities() ? event.capabilityProvider : null;
@@ -65,8 +69,8 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean p_77624_4_) {
-		ItemWrapperMethods.super.addInformation(itemStack, player, list, p_77624_4_);
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+		ItemWrapperMethods.super.addInformation(itemStack, player, tooltip, advanced);
 	}
 
 	@Override
@@ -75,7 +79,7 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		return ItemWrapperMethods.super.onItemRightClick(itemStack, world, player);
 	}
 

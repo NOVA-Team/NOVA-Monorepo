@@ -77,7 +77,7 @@ public class FWTile extends TileEntity {
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		if (block instanceof Syncable) {
-			return new FWPacketUpdateTileEntity(((MCNetworkManager) Game.network()).toMCPacket(((MCNetworkManager) Game.network()).writePacket(0, (Syncable) block)),
+			return new FWPacketUpdateTileEntity<>(((MCNetworkManager) Game.network()).toMCPacket(((MCNetworkManager) Game.network()).writePacket(0, (Syncable) block)),
 			this.getPos(), this.getBlockMetadata(), this.getTileData());
 		}
 		return null;

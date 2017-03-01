@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -61,8 +62,8 @@ public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWra
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean p_77624_4_) {
-		ItemWrapperMethods.super.addInformation(itemStack, player, list, p_77624_4_);
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+		ItemWrapperMethods.super.addInformation(itemStack, player, tooltip, advanced);
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWra
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		return ItemWrapperMethods.super.onItemRightClick(itemStack, world, player);
 	}
 

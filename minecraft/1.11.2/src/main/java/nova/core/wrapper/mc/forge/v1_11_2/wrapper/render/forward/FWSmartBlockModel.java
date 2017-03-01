@@ -20,7 +20,6 @@
 
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.forward;
 
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.backward.BWModel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -31,6 +30,7 @@ import net.minecraft.util.EnumFacing;
 import nova.core.block.Block;
 import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.StaticRenderer;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.backward.BWModel;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.List;
@@ -39,32 +39,27 @@ import java.util.List;
  * Generates a smart model based on a NOVA Model
  * @author Calclavia
  */
+@SuppressWarnings("deprecation")
 public class FWSmartBlockModel extends FWSmartModel implements IBakedModel {
 
 	private final Block block;
 	private final boolean isItem;
 
-	public FWSmartBlockModel(Block block, boolean isDummy) {
+	@SuppressWarnings("deprecation")
+	public FWSmartBlockModel(Block block, boolean isItem) {
 		super();
 		this.block = block;
-		this.isItem = isDummy;
+		this.isItem = isItem;
 		// Change the default transforms to the default full Block transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
-				new ItemTransformVec3f(new Vector3f(75, 225, 0), // Third Person (Left)
-						new Vector3f(0, 0.1875f, 0.03125f), new Vector3f(0.375f, 0.375f, 0.375f)),
-				new ItemTransformVec3f(new Vector3f(75, 45, 0), // Third Person (Right)
-						new Vector3f(0, 0.1875f, 0.03125f), new Vector3f(0.375f, 0.375f, 0.375f)),
-				new ItemTransformVec3f(new Vector3f(0, 225, 0), // First Person (Left)
-						new Vector3f(0, 0, 0), new Vector3f(0.4f, 0.4f, 0.4f)),
-				new ItemTransformVec3f(new Vector3f(0, 45, 0), // First Person (Right)
-						new Vector3f(0, 0, 0), new Vector3f(0.4f, 0.4f, 0.4f)),
-				ItemTransformVec3f.DEFAULT, // Head
-				new ItemTransformVec3f(new Vector3f(30, 225, 0), // Gui
-						new Vector3f(0, 0, 0), new Vector3f(0.625f, 0.625f, 0.625f)),
-				new ItemTransformVec3f(new Vector3f(0, 0, 0), // Ground
-						new Vector3f(0, 0, 0), new Vector3f(0, 0, 0)),
-				new ItemTransformVec3f(new Vector3f(0, 0, 0), // Fixed
-						new Vector3f(0, 0, 0), new Vector3f(0, 0, 0)));
+			new ItemTransformVec3f(new Vector3f(75, 225, 0), new Vector3f(0, 0.1875f, 0.03125f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person (Left)
+			new ItemTransformVec3f(new Vector3f(75, 45, 0), new Vector3f(0, 0.1875f, 0.03125f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person (Right)
+			new ItemTransformVec3f(new Vector3f(0, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.4f, 0.4f, 0.4f)), // First Person (Left)
+			new ItemTransformVec3f(new Vector3f(0, 45, 0), new Vector3f(0, 0, 0), new Vector3f(0.4f, 0.4f, 0.4f)), // First Person (Right)
+			ItemTransformVec3f.DEFAULT, // Head
+			new ItemTransformVec3f(new Vector3f(30, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.625f, 0.625f, 0.625f)), // GUI
+			ItemTransformVec3f.DEFAULT, // Ground
+			ItemTransformVec3f.DEFAULT);// Fixed
 	}
 
 	@Override

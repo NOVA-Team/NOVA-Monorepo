@@ -143,10 +143,10 @@ public class BWWorld extends World {
 
 	@Override
 	public Set<Entity> getEntities(Cuboid bound) {
-		return (Set) world()
+		return world()
 			.getEntitiesWithinAABB(net.minecraft.entity.Entity.class, new AxisAlignedBB(bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ()))
 			.stream()
-			.map(mcEnt -> Game.natives().getNative(Entity.class, net.minecraft.entity.Entity.class).toNova((net.minecraft.entity.Entity) mcEnt))
+			.map(mcEnt -> Game.natives().getNative(Entity.class, net.minecraft.entity.Entity.class).toNova(mcEnt))
 			.collect(Collectors.toSet());
 	}
 

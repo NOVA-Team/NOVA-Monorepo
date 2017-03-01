@@ -22,11 +22,9 @@ package nova.core.wrapper.mc.forge.v1_11_2;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.client.resources.AbstractResourcePack;
 import net.minecraft.client.resources.FileResourcePack;
+import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -42,26 +40,30 @@ import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import nova.core.loader.Mod;
 import nova.core.util.ClassLoaderUtil;
-import nova.core.wrapper.mc.forge.v1_11_2.render.NovaFolderResourcePack;
-import nova.core.wrapper.mc.forge.v1_11_2.render.NovaResourcePack;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.NovaFileResourcePack;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.NovaFolderResourcePack;
 import nova.core.wrapper.mc.forge.v1_11_2.util.ReflectionUtil;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import javax.json.Json;
+import javax.json.stream.JsonGenerator;
 
 public class NovaMinecraftPreloader extends DummyModContainer {
 	public static final String version = "0.0.1";
@@ -87,96 +89,126 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	 * A sound collection falls under the same resource name. When called to play, it will pick a random sound from the collection to play it.
 	 *
 	 * If it's just a sound file, then load the sound file
+	 *
+	 * @param pack The resource pack to generate the sound JSON for.
+	 * @return The generated sound JSON.
 	 */
 	public static String generateSoundJSON(AbstractResourcePack pack) {
-		JsonObject fakeSoundJSON = new JsonObject();
-
-		for (String domain : pack.getResourceDomains()) {
-
+		StringWriter sw = new StringWriter();
+		try (JsonGenerator json = Json.createGenerator(sw);) {
+			json.writeStartObject();
 			if (pack instanceof FileResourcePack) {
 				//For zip resource packs
 				try {
-					ZipFile zipFile = new ZipFile(pack.resourcePackFile);
-
-					if (zipFile.getEntry("assets/" + domain + "/sounds/") != null) {
-						Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
-
-						while (zipEntries.hasMoreElements()) {
-							String zipPath = zipEntries.nextElement().getName();
-
-							String prefix = "assets/" + domain + "/sounds/";
-							if (zipPath.startsWith(prefix) && !zipPath.equals(prefix)) {
-								String soundName = zipPath.replaceFirst(prefix, "").replaceFirst("[.][^.]+$", "");
-								ZipEntry entry = zipFile.getEntry(zipPath);
-
-								if (!soundName.contains("/")) {
-									JsonObject sound = new JsonObject();
-									sound.addProperty("category", "ambient");
-									JsonArray sounds = new JsonArray();
-
-									if (entry.isDirectory()) {
-										//Sound Collection
-										Enumeration<? extends ZipEntry> zipEntries2 = zipFile.entries();
-										while (zipEntries2.hasMoreElements()) {
-											String zipPath2 = zipEntries2.nextElement().getName();
-
-											if (zipPath2.startsWith(prefix + soundName + "/") && !zipFile.getEntry(zipPath2).isDirectory()) {
-												String randomSoundName = zipPath2.replaceFirst(prefix + soundName + "/", "");
-												sounds.add(new JsonPrimitive(soundName + "/" + randomSoundName.replaceFirst("[.][^.]+$", "")));
-											}
-										}
-									} else {
-										sounds.add(new JsonPrimitive(soundName));
-									}
-									sound.add("sounds", sounds);
-									fakeSoundJSON.add(soundName, sound);
-								}
-							}
-						}
-					}
-
+					generateSoundJSON((FileResourcePack) pack, json);
 				} catch (Exception e) {
-					e.printStackTrace();
-					throw new ExceptionInInitializerError("Error generating fake sound JSON file.");
+					Error error = new ExceptionInInitializerError("Error generating fake sound JSON file.");
+					error.addSuppressed(e);
+					throw error;
 				}
-			} else {
+			} else if (pack instanceof FolderResourcePack) {
 				//For folder resource packs
+				generateSoundJSON((FolderResourcePack) pack, json);
+			}
+			json.writeEnd().flush();
+			return sw.toString();
+		}
+	}
+
+	private static JsonGenerator generateSoundJSON(FileResourcePack pack, JsonGenerator json) throws IOException {
+		try (ZipFile zipFile = new ZipFile(pack.resourcePackFile)) {
+			for (String domain : pack.getResourceDomains()) {
 				//Load all sounds in the assets/domain/sounds/*
-				File folder = new File(pack.resourcePackFile, "assets/" + domain + "/sounds/");
+				if (getZipEntryForResourcePack(pack, "assets/" + domain + "/sounds/") != null) {
+					String prefix = "assets/" + domain + "/sounds/";
+					zipFile.stream()
+						.filter(e -> e.getName().toLowerCase().startsWith(prefix.toLowerCase()) && !e.getName().equalsIgnoreCase(prefix))
+						.forEach(e -> {
+							String soundName = e.getName().replaceFirst(prefix, "").replaceFirst("\\.[^\\.]+$", "");
+							if (soundName.contains("/"))
+								return;
 
-				if (folder.exists()) {
-					File[] listOfFiles = folder.listFiles();
+							json.writeStartObject(soundName);
+							json.write("category", "ambient");
+							json.writeStartArray("sounds");
 
-					for (File listedFile : listOfFiles) {
-						JsonObject sound = new JsonObject();
-						sound.addProperty("category", "ambient");
-						JsonArray sounds = new JsonArray();
-
-						String listedName = listedFile.getName().replaceFirst("[.][^.]+$", "");
-						if (listedFile.isFile()) {
-							sounds.add(new JsonPrimitive(listedName));
-						} else if (listedFile.isDirectory()) {
-							for (File soundItemFile : listedFile.listFiles())
-								sounds.add(new JsonPrimitive(listedName + "/" + soundItemFile.getName().replaceFirst("[.][^.]+$", "")));
-						}
-
-						sound.add("sounds", sounds);
-						fakeSoundJSON.add(listedName, sound);
-					}
+							if (e.isDirectory()) {
+								zipFile.stream()
+									.filter(e2 -> e2.getName().startsWith(prefix + soundName + "/") && !e2.isDirectory())
+									.map(ZipEntry::getName)
+									.map(s -> s.replaceFirst(prefix + soundName + "/", "").replaceFirst("\\.[^\\.]+$", ""))
+									.forEach(s -> json.write(soundName + "/" + s));
+							} else {
+								json.write(soundName);
+							}
+							json.writeEnd().writeEnd();
+						});
 				}
 			}
 		}
 
-		return fakeSoundJSON.toString();
+		return json;
+	}
+
+	private static JsonGenerator generateSoundJSON(FolderResourcePack pack, JsonGenerator json) {
+		for (String domain : pack.getResourceDomains()) {
+			//Load all sounds in the assets/domain/sounds/*
+			File folder = getFileForResourcePack(pack, "assets/" + domain + "/sounds/");
+			if (folder.exists()) {
+				for (File listedFile : folder.listFiles()) {
+					String soundName = listedFile.getName().replaceFirst("\\.[^\\.]+$", "");
+					json.writeStartObject(soundName);
+					json.write("category", "ambient");
+					json.writeStartArray("sounds");
+					if (listedFile.isFile()) {
+						json.write(soundName);
+					} else if (listedFile.isDirectory()) {
+						for (File soundItemFile : listedFile.listFiles())
+							json.write(soundName + "/" + soundItemFile.getName().replaceFirst("\\.[^\\.]+$", ""));
+					}
+					json.writeEnd().writeEnd();
+				}
+			}
+		}
+
+		return json;
 	}
 
 	public static String generatePackMcmeta() {
-		JsonObject jsonObject = new JsonObject();
-		jsonObject.addProperty("description", "NOVA mod resource pack");
-		jsonObject.addProperty("pack_format", "1");
-		JsonObject outerObj = new JsonObject();
-		outerObj.add("pack", jsonObject);
-		return outerObj.toString();
+		StringWriter sw = new StringWriter();
+		try (JsonGenerator json = Json.createGenerator(sw);) {
+			json.writeStartObject()                                      // {
+			        .writeStartObject("pack")                            //		"pack": {
+			            .write("description", "NOVA mod resource pack")  //			"description": "NOVA mod resource pack",
+			            .write("pack_format", 1)                         //			"pack_format": 1
+			        .writeEnd()                                          //		}
+			    .writeEnd()                                              // }
+			.flush();
+
+			return sw.toString();
+		}
+	}
+
+	public static ZipEntry getZipEntryForResourcePack(FileResourcePack pack, String path) throws IOException {
+		if (pack instanceof NovaFileResourcePack) {
+			Optional<ZipEntry> entry = ((NovaFileResourcePack) pack).findFileCaseInsensitive(path);
+			if (entry.isPresent())
+				return entry.get();
+		}
+
+		try (ZipFile zf = new ZipFile(pack.resourcePackFile)) {
+			return zf.getEntry(path);
+		}
+	}
+
+	public static File getFileForResourcePack(FolderResourcePack pack, String path) {
+		if (pack instanceof NovaFolderResourcePack) {
+			Optional<File> file = ((NovaFolderResourcePack) pack).findFileCaseInsensitive(path);
+			if (file.isPresent())
+				return file.get();
+		}
+
+		return new File(pack.resourcePackFile, path);
 	}
 
 	@Override
@@ -199,7 +231,8 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			//Obfuscation?
 			Field setField = LaunchClassLoader.class.getDeclaredField("classLoaderExceptions");
 			setField.setAccessible(true);
-			Set<String> classLoaderExceptions = (Set) setField.get(classLoader);
+			@SuppressWarnings("unchecked")
+			Set<String> classLoaderExceptions = (Set<String>) setField.get(classLoader);
 			classLoaderExceptions.remove("org.apache.");
 			System.out.println("Successfully hacked 'org.apache' out of launcher exclusion");
 		} catch (Exception e) {
@@ -256,6 +289,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			// Reflecting FML is just less work for us. (Minecraft.field_110449_ao)
 			Field resourcePackField = FMLClientHandler.class.getDeclaredField("resourcePackList");
 			resourcePackField.setAccessible(true);
+			@SuppressWarnings("unchecked")
 			List<IResourcePack> packs = (List<IResourcePack>) resourcePackField.get(FMLClientHandler.instance());
 
 			Set<String> addedPacks = new HashSet<>();
@@ -278,7 +312,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 
 					if (!addedPacks.contains(fn)) {
 						addedPacks.add(fn);
-						packs.add(new NovaResourcePack(file, novaMod.id(), novaMod.domains()));
+						packs.add(new NovaFileResourcePack(file, novaMod.id(), novaMod.domains()));
 						System.out.println("Registered NOVA jar resource pack: " + fn);
 					}
 				} else {

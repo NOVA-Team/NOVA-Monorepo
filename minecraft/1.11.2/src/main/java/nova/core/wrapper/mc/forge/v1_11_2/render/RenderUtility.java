@@ -40,19 +40,20 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
-import nova.core.render.texture.BlockTexture;
-import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.ForgeLoadable;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.AssetConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.forward.FWEmptyModel;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.forward.FWSmartBlockModel;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.forward.FWSmartItemModel;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -166,7 +167,7 @@ public class RenderUtility implements ForgeLoadable {
 		}
 
 		//Fallback to MC texture
-		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(texture.domain + ":" + texture.getPath().replaceFirst("textures/", "").replace(".png", ""));
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(AssetConverter.instance().toNativeTexture(texture).toString());
 	}
 
 	/**
@@ -184,11 +185,26 @@ public class RenderUtility implements ForgeLoadable {
 	}
 
 	public void registerIcon(Texture texture, TextureStitchEvent.Pre event) {
-		String resPath = (texture instanceof BlockTexture ? "blocks" : texture instanceof ItemTexture ? "items" : "entities") + "/" + texture.resource;
-		System.out.println(texture + " (" + texture.domain + ':' + resPath + ')');
-		TextureAtlasSprite sprite = event.getMap().registerSprite(new ResourceLocation(texture.domain, resPath));
-		textureMap.put(texture, sprite);
-		System.out.println(sprite);
+		textureMap.put(texture, event.getMap().registerSprite(AssetConverter.instance().toNativeTexture(texture)));
+	}
+
+	@SubscribeEvent
+	public void textureHook(TextureStitchEvent.Post event) {
+		Game.render().blockTextures.forEach(this::updateTexureDimensions);
+		Game.render().itemTextures.forEach(this::updateTexureDimensions);
+		Game.render().entityTextures.forEach(this::updateTexureDimensions);
+	}
+
+	private void updateTexureDimensions(Texture texture) {
+		try {
+			Field dimension = Texture.class.getDeclaredField("dimension");
+			dimension.setAccessible(true);
+			TextureAtlasSprite icon = getTexture(texture);
+			dimension.set(texture, new Vector2D(icon.getIconWidth(), icon.getIconHeight()));
+			dimension.setAccessible(false);
+		} catch (Exception ex) {
+			throw new RuntimeException("Cannot set dimension of texture " + texture, ex);
+		}
 	}
 
 	@SubscribeEvent

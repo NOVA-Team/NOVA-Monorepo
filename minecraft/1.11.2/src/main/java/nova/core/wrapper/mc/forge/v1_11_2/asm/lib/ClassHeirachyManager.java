@@ -62,7 +62,7 @@ public class ClassHeirachyManager implements IClassTransformer {
 	 * Returns true if clazz extends, either directly or indirectly, superclass.
 	 * @param name The class in question
 	 * @param superclass The class being extended
-	 * @return
+	 * @return If the class extends the superclass
 	 */
 	public static boolean classExtends(String name, String superclass) {
 		name = toKey(name);

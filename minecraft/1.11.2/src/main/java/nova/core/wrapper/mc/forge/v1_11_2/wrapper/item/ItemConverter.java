@@ -21,7 +21,6 @@
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item;
 
 import com.google.common.collect.HashBiMap;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -37,7 +36,7 @@ import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.NovaMinecraft;
-import nova.core.wrapper.mc.forge.v1_11_2.util.ModCreativeTab;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItemFactory;
@@ -46,9 +45,7 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWNBTTagCompound;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
 
-import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -106,7 +103,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	@Override
 	public ItemStack toNative(Item item) {
 		if (item == null) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		//Prevent recusive wrapping
@@ -226,16 +223,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
 				Category category = dummy.components.get(Category.class);
-				Optional<CreativeTabs> first = Arrays.stream(CreativeTabs.CREATIVE_TAB_ARRAY)
-					.filter(tab -> tab.getTabLabel().equals(category.name))
-					.findFirst();
-				if (first.isPresent()) {
-					itemWrapper.setCreativeTab(first.get());
-				} else {
-					Optional<Item> item = category.item;
-					ModCreativeTab tab = new ModCreativeTab(category.name, item.isPresent() ? Game.natives().toNative(item.get()) : itemWrapper);
-					itemWrapper.setCreativeTab(tab);
-				}
+				itemWrapper.setCreativeTab(CategoryConverter.instance().toNative(category, itemWrapper));
 			}
 
 			System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");

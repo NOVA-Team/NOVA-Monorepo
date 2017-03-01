@@ -56,6 +56,7 @@ public class FWCapabilityProvider implements ICapabilityProvider {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (!hasCapability(capability, facing)) return null;
 		return (T) (facing != null ? sidedCapabilities.get(facing).get(capability) : capabilities.get(capability));

@@ -51,10 +51,11 @@ public class StaticForwarder {
 
 	/**
 	 * Used to inject forwarded TileEntites
-	 * @param data
-	 * @param clazz
-	 * @return
-	 * @throws Exception
+	 * @param world The world to create the TileEntity in.
+	 * @param data The TileEntity NBT tag compound
+	 * @param clazz The TileEntity class
+	 * @return The new TileEntity instance
+	 * @throws Exception when an exception occurs
 	 */
 	public static TileEntity loadTileEntityHook(World world, NBTTagCompound data, Class<? extends TileEntity> clazz) throws Exception {
 		if (FWTile.class.isAssignableFrom(clazz)) {

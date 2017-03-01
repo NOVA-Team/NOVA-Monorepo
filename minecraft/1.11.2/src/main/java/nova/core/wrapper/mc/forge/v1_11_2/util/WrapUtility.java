@@ -39,6 +39,8 @@ public class WrapUtility {
 	private WrapUtility() {}
 
 	public static Optional<Player> getNovaPlayer(EntityPlayer player) {
+		if (player == null)
+			return Optional.empty();
 		return ((Entity)Game.natives().toNova(player)).components.getOp(Player.class);
 	}
 

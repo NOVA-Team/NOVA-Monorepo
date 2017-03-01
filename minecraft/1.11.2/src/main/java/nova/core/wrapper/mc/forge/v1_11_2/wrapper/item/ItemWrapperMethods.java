@@ -22,6 +22,7 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.world.World;
 import nova.core.item.Item;
@@ -42,9 +43,9 @@ public interface ItemWrapperMethods {
 
 	ItemFactory getItemFactory();
 
-	default void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean p_77624_4_) {
+	default void addInformation(ItemStack itemStack, EntityPlayer player, List<String> tooltip, boolean advanced) {
 		Item item = Game.natives().toNova(itemStack);
-		item.setCount(itemStack.getCount()).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
+		item.setCount(itemStack.getCount()).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), tooltip));
 		getItemFactory().save(item);
 	}
 
@@ -53,13 +54,13 @@ public interface ItemWrapperMethods {
 		Item.UseEvent event = new Item.UseEvent(new BWEntity(player), new Vector3D(x, y, z), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ));
 		item.events.publish(event);
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
-		return event.action ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+		return event.action ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 	}
 
-	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+	default ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		Item item = Game.natives().toNova(itemStack);
 		item.events.publish(new Item.RightClickEvent(new BWEntity(player)));
-		return ItemConverter.instance().updateMCItemStack(itemStack, item);
+		return new ActionResult<>(EnumActionResult.PASS, ItemConverter.instance().updateMCItemStack(itemStack, item));
 	}
 
 	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {

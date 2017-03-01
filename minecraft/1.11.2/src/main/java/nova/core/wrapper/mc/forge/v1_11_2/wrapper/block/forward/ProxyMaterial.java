@@ -17,6 +17,7 @@ public class ProxyMaterial extends Material {
 	 * Construct a new proxy material.
 	 * @param color The map color.
 	 * @param opacity The Opacity to use.
+	 * @param replaceable The Replaceable to use.
 	 */
 	public ProxyMaterial(MapColor color, Optional<BlockProperty.Opacity> opacity, Optional<BlockProperty.Replaceable> replaceable) {
 		super(color);

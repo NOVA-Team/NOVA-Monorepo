@@ -63,8 +63,8 @@ public class ASMHelper {
 
 	static {
 		try {
-			defineClass1 = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] { String.class, byte[].class, int.class, int.class });
-			defineClass2 = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] { String.class, byte[].class, int.class, int.class, ProtectionDomain.class });
+			defineClass1 = ClassLoader.class.getDeclaredMethod("defineClass", new Class<?>[] { String.class, byte[].class, int.class, int.class });
+			defineClass2 = ClassLoader.class.getDeclaredMethod("defineClass", new Class<?>[] { String.class, byte[].class, int.class, int.class, ProtectionDomain.class });
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

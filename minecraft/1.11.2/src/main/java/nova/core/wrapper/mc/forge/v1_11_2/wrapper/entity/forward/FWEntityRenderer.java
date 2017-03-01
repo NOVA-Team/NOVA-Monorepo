@@ -114,7 +114,7 @@ public class FWEntityRenderer extends Render<FWEntity> {
 
 	@Override
 	public void doRender(FWEntity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
-		render(entity, ((FWEntity) entity).wrapped, x, y, z);
+		render(entity, entity.wrapped, x, y, z);
 	}
 
 	@Override

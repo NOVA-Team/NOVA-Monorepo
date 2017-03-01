@@ -191,7 +191,7 @@ public class BWParticle extends BWEntity {
 
 	public Particle createParticle(net.minecraft.world.World world) {
 		//Look up for particle factory and pass it into BWParticle
-		IParticleFactory particleFactory = (IParticleFactory) FMLClientHandler.instance().getClient().effectRenderer.particleTypes.get(particleID);
+		IParticleFactory particleFactory = FMLClientHandler.instance().getClient().effectRenderer.particleTypes.get(particleID);
 		Particle particle = particleFactory.createParticle(0, world, 0, 0, 0, 0, 0, 0, 0);
 		if (components.has(MCParticleTransform.class))
 			components.remove(MCParticleTransform.class);

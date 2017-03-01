@@ -24,11 +24,12 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
+import nova.core.render.model.CustomModel;
 import nova.core.render.model.MeshModel;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v1_11_2.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.AssetConverter;
 
 import java.util.Optional;
 
@@ -52,11 +53,9 @@ public class BWModel extends MeshModel {
 		 */
 		flatten().forEach(
 			model -> {
-				System.out.println(model);
 				if (model instanceof MeshModel) {
 					MeshModel meshModel = (MeshModel) model;
 					meshModel.faces.forEach(face -> {
-						System.out.println(face);
 						// TODO: See if this works, and possibly fix it
 						// Brightness is defined as: skyLight << 20 | blockLight << 4
 						if (face.getBrightness() >= 0) {
@@ -68,14 +67,14 @@ public class BWModel extends MeshModel {
 							//worldRenderer.setBrightness(15 << 20 | 11 << 4);
 						}
 
-						worldRenderer.normal((int) face.normal.getX(), (int) face.normal.getY(), (int) face.normal.getZ());
+						worldRenderer.normal((float) face.normal.getX(), (float) face.normal.getY(), (float) face.normal.getZ());
 
 						System.out.println(face.texture);
 						if (face.texture.isPresent()) {
 							if (entityRenderManager.isPresent() && face.texture.get() instanceof EntityTexture) {
 								//We're not working on an atlas, so just do... this.
 								Texture t = face.texture.get();
-								entityRenderManager.get().renderEngine.bindTexture(new ResourceLocation(t.domain, "textures/entities/" + t.resource + ".png"));
+								entityRenderManager.get().renderEngine.bindTexture(AssetConverter.instance().toNative(t));
 								face.vertices.forEach(
 									v -> {
 										worldRenderer.color(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
@@ -108,8 +107,10 @@ public class BWModel extends MeshModel {
 							);
 						}
 					});
+				} else if (model instanceof CustomModel) {
+					CustomModel customModel = (CustomModel) model;
+					customModel.render.accept(customModel);
 				}
-				//TODO: Handle BW Rendering
 			}
 		);
 	}

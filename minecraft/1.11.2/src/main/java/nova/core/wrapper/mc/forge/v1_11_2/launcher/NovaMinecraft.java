@@ -24,7 +24,6 @@ package nova.core.wrapper.mc.forge.v1_11_2.launcher;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.Metadata;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
@@ -44,12 +43,13 @@ import nova.core.wrapper.mc.forge.v1_11_2.depmodules.GameInfoModule;
 import nova.core.wrapper.mc.forge.v1_11_2.depmodules.KeyModule;
 import nova.core.wrapper.mc.forge.v1_11_2.depmodules.LanguageModule;
 import nova.core.wrapper.mc.forge.v1_11_2.depmodules.NetworkModule;
-import nova.core.wrapper.mc.forge.v1_11_2.depmodules.RenderModule;
 import nova.core.wrapper.mc.forge.v1_11_2.depmodules.SaveModule;
 import nova.core.wrapper.mc.forge.v1_11_2.depmodules.TickerModule;
 import nova.core.wrapper.mc.forge.v1_11_2.recipes.MinecraftRecipeRegistry;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.AssetConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.cuboid.CuboidConverter;
@@ -85,7 +85,7 @@ public class NovaMinecraft {
 	@Mod.Instance(id)
 	public static NovaMinecraft instance;
 	private static NovaLauncher launcher;
-	@Metadata(id)
+	@Mod.Metadata(id)
 	private static ModMetadata modMetadata;
 
 	private static Set<ForgeLoadable> nativeConverters;
@@ -100,6 +100,8 @@ public class NovaMinecraft {
 	 * ORDER OF LOADING.
 	 *
 	 * 1. Native Loaders 2. Native Converters 3. Mods
+	 *
+	 * @param evt The Minecraft Forge Pre-Initialization event
 	 */
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
@@ -115,7 +117,6 @@ public class NovaMinecraft {
 			diep.install(KeyModule.class);
 			diep.install(ClientModule.class);
 			diep.install(GameInfoModule.class);
-			diep.install(RenderModule.class);
 			diep.install(ComponentModule.class);
 
 			Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
@@ -137,6 +138,8 @@ public class NovaMinecraft {
 			Game.natives().registerConverter(new InventoryConverter());
 			Game.natives().registerConverter(new VectorConverter());
 			Game.natives().registerConverter(new DirectionConverter());
+			Game.natives().registerConverter(new CategoryConverter());
+			Game.natives().registerConverter(new AssetConverter());
 
 			/**
 			 * Initiate recipe and ore dictionary integration

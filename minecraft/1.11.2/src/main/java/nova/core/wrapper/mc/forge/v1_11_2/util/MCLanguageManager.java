@@ -27,8 +27,6 @@ import nova.core.wrapper.mc.forge.v1_11_2.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.NovaMinecraft;
 
 /**
- * @deprecated Removed in Forge 1.9
- *
  * @author Calclavia
  */
 public class MCLanguageManager extends LanguageManager implements ForgeLoadable {
@@ -42,7 +40,12 @@ public class MCLanguageManager extends LanguageManager implements ForgeLoadable 
 		return FMLCommonHandler.instance().getCurrentLanguage().replace('_', '-');
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @deprecated Removed in Forge 1.9
+	 */
 	@Override
+	@Deprecated
 	public String translate(String key) {
 		String value = super.translate(key);
 		if (value.equals(key))

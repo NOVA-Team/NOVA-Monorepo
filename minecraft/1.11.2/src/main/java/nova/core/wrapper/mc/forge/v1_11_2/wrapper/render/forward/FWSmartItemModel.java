@@ -40,6 +40,7 @@ import java.util.List;
  * Generates a smart model based on a NOVA Model
  * @author Calclavia
  */
+@SuppressWarnings("deprecation")
 public class FWSmartItemModel extends FWSmartModel implements IBakedModel {
 
 	private final Item item;
@@ -49,12 +50,14 @@ public class FWSmartItemModel extends FWSmartModel implements IBakedModel {
 		this.item = item;
 		// Change the default transforms to the default Item transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
-			new ItemTransformVec3f(new Vector3f(-90, 0, 0), new Vector3f(0, 1, -3), new Vector3f(0.55f, 0.55f, 0.55f)), // Third Person
-			new ItemTransformVec3f(new Vector3f(-90, 0, 0), new Vector3f(0, 1, -3), new Vector3f(0.55f, 0.55f, 0.55f)), // Third Person
-			new ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 4, 2), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person
-			new ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 4, 2), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person
-			ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT,
-			ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
+			new ItemTransformVec3f(new Vector3f(-90, 0, 0), new Vector3f(0, 1, -3), new Vector3f(0.55f, 0.55f, 0.55f)), // Third Person (Left)
+			new ItemTransformVec3f(new Vector3f(-90, 0, 0), new Vector3f(0, 1, -3), new Vector3f(0.55f, 0.55f, 0.55f)), // Third Person (Right)
+			new ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 4, 2), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person (Left)
+			new ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 4, 2), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person (Rigth)
+			ItemTransformVec3f.DEFAULT, // Head
+			new ItemTransformVec3f(new Vector3f(-30, 135, 0), new Vector3f(), new Vector3f(1.6F, 1.6F, 1.6F)), // GUI
+			ItemTransformVec3f.DEFAULT, // Ground
+			ItemTransformVec3f.DEFAULT);// Fixed
 	}
 
 	@Override

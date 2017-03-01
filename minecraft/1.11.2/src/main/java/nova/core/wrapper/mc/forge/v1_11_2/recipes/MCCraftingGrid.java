@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2015 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
@@ -69,15 +70,15 @@ public class MCCraftingGrid implements CraftingGrid {
 				player = WrapUtility.getNovaPlayer(playerOrig);
 			} else {
 				playerOrig = null;
-				player = null;
+				player = Optional.empty();
 			}
 		} else {
 			playerOrig = null;
-			player = null;
+			player = Optional.empty();
 		}
 	}
 
-	public MCCraftingGrid(IInventory inventory, EntityPlayer player) {
+	private MCCraftingGrid(IInventory inventory, EntityPlayer player) {
 		this.inventory = inventory;
 		width = height = (int) Math.sqrt(inventory.getSizeInventory());
 		stacks = new nova.core.item.Item[width * height];
