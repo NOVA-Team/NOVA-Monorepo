@@ -20,7 +20,7 @@
 
 package nova.core.render.model;
 
-import nova.core.render.Asset;
+import nova.core.util.Asset;
 
 import java.io.InputStream;
 
@@ -51,4 +51,9 @@ public abstract class ModelProvider extends Asset {
 	public abstract Model getModel();
 
 	public abstract String getType();
+
+	@Override
+	public String path() {
+		return "models/" + addDefaultSuffix(super.path(), getType());
+	}
 }

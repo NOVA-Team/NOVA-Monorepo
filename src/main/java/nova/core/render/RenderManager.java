@@ -35,7 +35,7 @@ import java.util.Optional;
 /**
  * @author Calclavia
  */
-public abstract class RenderManager extends Manager<RenderManager> {
+public class RenderManager extends Manager<RenderManager> {
 
 	public final Registry<BlockTexture> blockTextures = new Registry<>();
 	public final Registry<ItemTexture> itemTextures = new Registry<>();
@@ -81,9 +81,6 @@ public abstract class RenderManager extends Manager<RenderManager> {
 		modelProviders.register(modelProvider);
 		return modelProvider;
 	}
-
-	@Deprecated
-	public abstract Vector2D getDimension(Texture texture);
 
 	@Override
 	public void init() {

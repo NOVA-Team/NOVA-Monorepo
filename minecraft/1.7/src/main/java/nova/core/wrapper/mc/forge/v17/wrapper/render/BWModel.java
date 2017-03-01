@@ -24,7 +24,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import nova.core.render.model.CustomModel;
 import nova.core.render.model.MeshModel;
@@ -32,6 +31,7 @@ import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
 import nova.core.util.math.Vector3DUtil;
 import nova.core.wrapper.mc.forge.v17.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v17.wrapper.assets.AssetConverter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Optional;
@@ -104,7 +104,7 @@ public class BWModel extends MeshModel {
 							if (entityRenderManager.isPresent() && face.texture.get() instanceof EntityTexture) {
 								//We're not working on an atlas, so just do... this.
 								Texture t = face.texture.get();
-								entityRenderManager.get().renderEngine.bindTexture(new ResourceLocation(t.domain, "textures/entities/" + t.resource + ".png"));
+								entityRenderManager.get().renderEngine.bindTexture(AssetConverter.instance().toNative(t));
 								face.vertices.forEach(
 									v -> {
 										tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());

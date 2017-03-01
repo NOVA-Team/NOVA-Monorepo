@@ -83,7 +83,7 @@ public class TechneModelProvider extends ModelProvider {
 
 			byte[] modelXml = zipContents.get("model.xml");
 			if (modelXml == null) {
-				throw new RenderException("Model " + name + " contains no model.xml file");
+				throw new RenderException("Model " + this.name + " contains no model.xml file");
 			}
 
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -92,17 +92,17 @@ public class TechneModelProvider extends ModelProvider {
 
 			NodeList nodeListTechne = document.getElementsByTagName("Techne");
 			if (nodeListTechne.getLength() < 1) {
-				throw new RenderException("Model " + name + " contains no Techne tag");
+				throw new RenderException("Model " + this.name + " contains no Techne tag");
 			}
 
 			NodeList nodeListModel = document.getElementsByTagName("Model");
 			if (nodeListModel.getLength() < 1) {
-				throw new RenderException("Model " + name + " contains no Model tag");
+				throw new RenderException("Model " + this.name + " contains no Model tag");
 			}
 
 			NamedNodeMap modelAttributes = nodeListModel.item(0).getAttributes();
 			if (modelAttributes == null) {
-				throw new RenderException("Model " + name + " contains a Model tag with no attributes");
+				throw new RenderException("Model " + this.name + " contains a Model tag with no attributes");
 			}
 
 			NodeList textureSize = document.getElementsByTagName("TextureSize");
@@ -119,7 +119,7 @@ public class TechneModelProvider extends ModelProvider {
 				Node shape = shapes.item(i);
 				NamedNodeMap shapeAttributes = shape.getAttributes();
 				if (shapeAttributes == null) {
-					throw new RenderException("Shape #" + (i + 1) + " in " + name + " has no attributes");
+					throw new RenderException("Shape #" + (i + 1) + " in " + this.name + " has no attributes");
 				}
 
 				Node name = shapeAttributes.getNamedItem("name");
@@ -241,11 +241,11 @@ public class TechneModelProvider extends ModelProvider {
 				model.children.add(modelPart);
 			}
 		} catch (ZipException e) {
-			throw new RenderException("Model " + name + " is not a valid zip file");
+			throw new RenderException("Model " + this.name + " is not a valid zip file");
 		} catch (IOException e) {
-			throw new RenderException("Model " + name + " could not be read", e);
+			throw new RenderException("Model " + this.name + " could not be read", e);
 		} catch (SAXException e) {
-			throw new RenderException("Model " + name + " contains invalid XML", e);
+			throw new RenderException("Model " + this.name + " contains invalid XML", e);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

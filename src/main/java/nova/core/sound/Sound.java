@@ -20,7 +20,7 @@
 
 package nova.core.sound;
 
-import nova.core.render.Asset;
+import nova.core.util.Asset;
 import nova.core.util.Identifiable;
 
 /**

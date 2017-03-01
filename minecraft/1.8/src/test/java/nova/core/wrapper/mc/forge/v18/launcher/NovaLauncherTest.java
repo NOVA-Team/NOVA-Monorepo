@@ -24,7 +24,6 @@ import nova.core.wrapper.mc.forge.v18.depmodules.ClientModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.GameInfoModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.KeyModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.LanguageModule;
-import nova.core.wrapper.mc.forge.v18.depmodules.RenderModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.SaveModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.TickerModule;
 import nova.internal.core.Game;
@@ -50,7 +49,6 @@ public class NovaLauncherTest extends nova.wrappertests.NovaLauncherTest {
 			KeyModule.class,
 			LanguageModule.class,
 			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.
-			RenderModule.class,
 			SaveModule.class,
 			TickerModule.class,
 			GameInfoModule.class

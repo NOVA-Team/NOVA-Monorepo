@@ -21,18 +21,18 @@
 package nova.core.render.texture;
 
 /**
- * A texture that will be stiched into a large Atlass Texture
+ * An item texture that will be stitched into a large Atlas Texture
  *
  * @author Calclavia
  */
 public class ItemTexture extends Texture {
 
-	public ItemTexture(String domain, String resource) {
-		super(domain, resource);
+	public ItemTexture(String domain, String name) {
+		super(domain, name);
 	}
 
 	@Override
-	public String getPath() {
-		return "textures/items/" + super.getPath();
+	public String path() {
+		return "textures/items/" + super.path().replaceFirst("^textures/", "");
 	}
 }
