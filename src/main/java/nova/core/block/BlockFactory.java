@@ -22,9 +22,8 @@ package nova.core.block;
 
 import nova.core.component.misc.FactoryProvider;
 import nova.core.item.ItemBlock;
-import nova.core.item.ItemFactory;
 import nova.core.language.LanguageManager;
-import nova.core.language.Translatable;
+import nova.core.language.Translateable;
 import nova.core.util.registry.Factory;
 import nova.internal.core.Game;
 
@@ -36,7 +35,7 @@ import java.util.function.Supplier;
  * The factory type for blocks.
  * @author Calclavia
  */
-public class BlockFactory extends Factory<BlockFactory, Block> implements Translatable {
+public class BlockFactory extends Factory<BlockFactory, Block> implements Translateable {
 
 	final Consumer<BlockFactory> postRegister;
 	private String unlocalizedName;
@@ -87,6 +86,6 @@ public class BlockFactory extends Factory<BlockFactory, Block> implements Transl
 
 	@Override
 	public String getLocalizedName() {
-		return LanguageManager.instance().translate(getUnlocalizedName() + ".name");
+		return LanguageManager.instance().translate(this.getUnlocalizedName() + ".name", this.getReplacements());
 	}
 }

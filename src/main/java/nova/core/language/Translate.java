@@ -20,24 +20,27 @@
 
 package nova.core.language;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
- * Implemented by objects that can be translated.
+ * Fields annotated with this annotation declare that they
+ * should be used as replacement parameters during translation
+ * of {@link Translateable} types.
  *
  * @author ExE Boss
  */
-public interface Translatable {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Translate {
 
 	/**
-	 * Gets the unlocalized name of this object.
-	 * @return The unlocalized name
+	 * The key to use as the replacement key during translation.
+	 * Defaults to the field name.
+	 *
+	 * @return The key to use as the replacement key during translation.
 	 */
-	public String getUnlocalizedName();
-
-	/**
-	 * Gets the localized name of this object.
-	 * @return The localized name
-	 */
-	public default String getLocalizedName() {
-		return LanguageManager.instance().translate(this.getLocalizedName());
-	}
+	String value() default "";
 }
