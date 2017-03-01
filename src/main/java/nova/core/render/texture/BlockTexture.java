@@ -21,18 +21,18 @@
 package nova.core.render.texture;
 
 /**
- * A texture that will be stiched into a large Atlass Texture
+ * A block texture that will be stitched into a large Atlas Texture
  *
  * @author Calclavia
  */
 public class BlockTexture extends Texture {
 
-	public BlockTexture(String domain, String resource) {
-		super(domain, resource);
+	public BlockTexture(String domain, String name) {
+		super(domain, name);
 	}
 
 	@Override
-	public String getPath() {
-		return "textures/blocks/" + super.getPath();
+	public String path() {
+		return "textures/blocks/" + super.path().replaceFirst("^textures/", "");
 	}
 }

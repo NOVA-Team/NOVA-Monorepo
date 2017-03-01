@@ -22,11 +22,11 @@ package nova.core.item;
 
 import nova.core.component.misc.FactoryProvider;
 import nova.core.language.LanguageManager;
-import nova.core.language.Translatable;
+import nova.core.language.Translateable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
-import nova.core.util.registry.Factory;
 import nova.core.util.Identifiable;
+import nova.core.util.registry.Factory;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 /**
  * @author Calclavia
  */
-public class ItemFactory extends Factory<ItemFactory, Item> implements Identifiable, Translatable {
+public class ItemFactory extends Factory<ItemFactory, Item> implements Identifiable, Translateable {
 	private String unlocalizedName;
 
 	public ItemFactory(String id, Supplier<Item> constructor, Function<Item, Item> processor) {
@@ -91,7 +91,7 @@ public class ItemFactory extends Factory<ItemFactory, Item> implements Identifia
 
 	@Override
 	public String getLocalizedName() {
-		return LanguageManager.instance().translate(getUnlocalizedName() + ".name");
+		return LanguageManager.instance().translate(getUnlocalizedName() + ".name", this.getReplacements());
 	}
 
 	@Override

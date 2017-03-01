@@ -18,22 +18,21 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.render;
+package nova.core.util;
 
-import nova.core.util.Identifiable;
+import java.util.Objects;
 
 /**
  * @author Calclavia
  */
-//TODO: Texture should extend Asset
-public abstract class Asset implements Identifiable {
+public class Asset implements Identifiable {
 	//The domain of the assets
 	public final String domain;
 	//The name of the file
 	public final String name;
 
 	public Asset(String domain, String name) {
-		this.domain = domain;
+		this.domain = domain.replace(':', '/');
 		this.name = name;
 	}
 
@@ -41,14 +40,42 @@ public abstract class Asset implements Identifiable {
 	public boolean equals(Object obj) {
 		if (obj.getClass() == getClass()) {
 			Asset other = (Asset) obj;
-			return other.getID().equals(getID());
+			return getID().equals(other.getID());
 		}
 
 		return false;
 	}
 
 	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 41 * hash + Objects.hashCode(this.domain);
+		hash = 41 * hash + Objects.hashCode(this.name);
+		return hash;
+	}
+
+	public String path() {
+		return name;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + '[' + getID() + ']';
+	}
+
+	@Override
 	public final String getID() {
-		return domain + ":" + name;
+		return (domain + ':' + name).toLowerCase();
+	}
+
+	protected static final String addDefaultSuffix(String name, String suffix) {
+		String file = name.substring(name.lastIndexOf('/') + 1);
+		if (file.indexOf('.') == -1) {
+			if (suffix.indexOf('.') == -1)
+				return name + '.' + suffix;
+			else
+				return name + suffix;
+		}
+		return name;
 	}
 }

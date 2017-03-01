@@ -108,7 +108,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 			}
 			model.children.add(currentModel);
 		} catch (IOException e) {
-			throw new RenderException("Model " + name + " could not be read", e);
+			throw new RenderException("Model " + this.name + " could not be read", e);
 		} finally {
 			this.cleanUp();
 		}
@@ -121,7 +121,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 	}
 
 	@Override
-	public Model getModel() {
+	public MeshModel getModel() {
 		return model.clone();
 	}
 
@@ -132,7 +132,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 
 	private Vector3D parseToVertex(String line, int lineNumber) {
 		if (isValid(line, vertexPattern)) {
-			line = line.substring(line.indexOf(" ") + 1);
+			line = line.substring(line.indexOf(' ') + 1);
 			String[] tokens = line.split(" ");
 			try {
 				if (tokens.length == 2) {
@@ -144,14 +144,14 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 				throw new RenderException(String.format("Number formatting error at line %d", lineNumber), e);
 			}
 		} else {
-			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + this.name + "' - Incorrect format");
 		}
 		return null;
 	}
 
 	private Vector2D parseTextureCoordinate(String line, int lineNumber) {
 		if (isValid(line, textureCoordinatePattern)) {
-			line = line.substring(line.indexOf(" ") + 1);
+			line = line.substring(line.indexOf(' ') + 1);
 			String[] tokens = line.split(" ");
 			try {
 				if (tokens.length >= 2) {
@@ -161,14 +161,14 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 				throw new RenderException(String.format("Number formatting error at line %d", lineNumber), e);
 			}
 		} else {
-			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + this.name + "' - Incorrect format");
 		}
 		return null;
 	}
 
 	private Vector3D parseToVertexNormal(String line, int lineNumber) {
 		if (isValid(line, vertexNormalPattern)) {
-			line = line.substring(line.indexOf(" ") + 1);
+			line = line.substring(line.indexOf(' ') + 1);
 			String[] tokens = line.split(" ");
 			try {
 				if (tokens.length == 3) {
@@ -178,7 +178,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 				throw new RenderException(String.format("Number formatting error at line %d", lineNumber), e);
 			}
 		} else {
-			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + this.name + "' - Incorrect format");
 		}
 		return null;
 	}
@@ -187,7 +187,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		Face face = null;
 		if (isValid(line, face_V_VT_VN_Pattern) || isValid(line, face_V_VT_Pattern) || isValid(line, face_V_VN_Pattern) || isValid(line, face_V_Pattern)) {
 			face = new Face();
-			String trimmedLine = line.substring(line.indexOf(" ") + 1);
+			String trimmedLine = line.substring(line.indexOf(' ') + 1);
 			String[] tokens = trimmedLine.split(" ");
 			String[] subTokens = null;
 
@@ -222,22 +222,22 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 				}
 				face.normal = calculateNormal(face);
 			} else {
-				throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+				throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + this.name + "' - Incorrect format");
 			}
 		} else {
-			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + this.name + "' - Incorrect format");
 		}
 		return face;
 	}
 
 	private MeshModel parseToModel(String line, int lineNumber) {
 		if (isValid(line, subModelPattern)) {
-			String trimmedLine = line.substring(line.indexOf(" ") + 1);
+			String trimmedLine = line.substring(line.indexOf(' ') + 1);
 			if (!trimmedLine.isEmpty()) {
 				return new MeshModel(trimmedLine);
 			}
 		} else {
-			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + name + "' - Incorrect format");
+			throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + this.name + "' - Incorrect format");
 		}
 		return null;
 	}

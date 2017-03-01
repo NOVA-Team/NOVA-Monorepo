@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v17.wrapper.item;
 
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,7 +29,6 @@ import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
 import nova.core.render.model.CustomModel;
 import nova.core.retention.Storable;
-import nova.core.wrapper.mc.forge.v17.wrapper.render.BWClientRenderManager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -67,7 +67,7 @@ public class BWItem extends Item implements Storable {
 						buffer.put(flatArray);
 						buffer.position(0);
 						GL11.glMultMatrix(buffer);
-						BWClientRenderManager.renderItem.doRender(fakeEntity, 0, 0, 0, 0, 0);
+						RenderItem.getInstance().doRender(fakeEntity, 0, 0, 0, 0, 0);
 						GL11.glPopMatrix();
 						Tessellator.instance.startDrawingQuads();
 					}));

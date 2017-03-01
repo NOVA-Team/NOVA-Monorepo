@@ -31,7 +31,6 @@ import nova.wrappertests.depmodules.FakeGameInfoModule;
 import nova.wrappertests.depmodules.FakeKeyModule;
 import nova.wrappertests.depmodules.FakeLanguageModule;
 import nova.wrappertests.depmodules.FakeNetworkModule;
-import nova.wrappertests.depmodules.FakeRenderModule;
 import nova.wrappertests.depmodules.FakeSaveModule;
 import nova.wrappertests.depmodules.FakeTickerModule;
 import se.jbee.inject.bootstrap.Bundle;
@@ -57,8 +56,7 @@ public class NovaLauncherTestFactory {
 			FakeClientModule.class,
 			FakeKeyModule.class,
 			FakeLanguageModule.class,
-			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.
-			FakeRenderModule.class,
+			FakeNetworkModule.class,
 			FakeSaveModule.class,
 			FakeTickerModule.class,
 			FakeComponentModule.class,

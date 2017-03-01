@@ -40,12 +40,12 @@ import nova.core.wrapper.mc.forge.v17.depmodules.GameInfoModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.KeyModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.LanguageModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.NetworkModule;
-import nova.core.wrapper.mc.forge.v17.depmodules.RenderModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.SaveModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.TickerModule;
 import nova.core.wrapper.mc.forge.v17.recipes.MinecraftRecipeRegistry;
 import nova.core.wrapper.mc.forge.v17.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.DirectionConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.assets.AssetConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.cuboid.CuboidConverter;
@@ -109,7 +109,6 @@ public class NovaMinecraft {
 			diep.install(KeyModule.class);
 			diep.install(ClientModule.class);
 			diep.install(GameInfoModule.class);
-			diep.install(RenderModule.class);
 			diep.install(ComponentModule.class);
 
 			Set<Class<?>> modClasses = NovaMinecraftPreloader.modClasses;
@@ -131,6 +130,7 @@ public class NovaMinecraft {
 			Game.natives().registerConverter(new InventoryConverter());
 			Game.natives().registerConverter(new DirectionConverter());
 			Game.natives().registerConverter(new CategoryConverter());
+			Game.natives().registerConverter(new AssetConverter());
 
 			/**
 			 * Initiate recipe and ore dictionary integration

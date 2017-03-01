@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -18,21 +18,29 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v17.wrapper.render;
+package nova.core.language;
 
-import net.minecraft.util.ResourceLocation;
-import nova.core.render.RenderManager;
-import nova.core.render.texture.Texture;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class BWRenderManager extends RenderManager {
+/**
+ * Fields annotated with this annotation declare that they
+ * should be used as replacement parameters during translation
+ * of {@link Translateable} types.
+ *
+ * @author ExE Boss
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Translate {
 
-	public static ResourceLocation toResourceLocation(Texture texture) {
-		return new ResourceLocation(texture.domain, texture.getPath());
-	}
-
-	@Override
-	public Vector2D getDimension(Texture texture) {
-		return new Vector2D(16, 16);
-	}
+	/**
+	 * The key to use as the replacement key during translation.
+	 * Defaults to the field name.
+	 *
+	 * @return The key to use as the replacement key during translation.
+	 */
+	String value() default "";
 }

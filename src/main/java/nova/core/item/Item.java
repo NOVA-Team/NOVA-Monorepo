@@ -25,7 +25,8 @@ import nova.core.component.ComponentProvider;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.entity.Entity;
 import nova.core.event.bus.Event;
-import nova.core.language.Translatable;
+import nova.core.language.LanguageManager;
+import nova.core.language.Translateable;
 import nova.core.render.Color;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.Optional;
 
 //TODO: This Storable implementation is flawed and not based on ID.
-public class Item extends ComponentProvider<ComponentMap> implements Identifiable, Storable, Cloneable, Translatable {
+public class Item extends ComponentProvider<ComponentMap> implements Identifiable, Storable, Cloneable, Translateable {
 
 	/**
 	 * The amount of this item that is present.
@@ -63,7 +64,7 @@ public class Item extends ComponentProvider<ComponentMap> implements Identifiabl
 
 	@Override
 	public String getLocalizedName() {
-		return getFactory().getLocalizedName();
+		return LanguageManager.instance().translate(getUnlocalizedName() + ".name", this.getReplacements());
 	}
 
 	public int getMaxCount() {
@@ -123,9 +124,18 @@ public class Item extends ComponentProvider<ComponentMap> implements Identifiabl
 		return sameItemType(item) && getFactory().save(this).equals(item.getFactory().save(item)) && item.count == count;
 	}
 
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 83 * hash + this.getID().hashCode();
+		hash = 83 * hash + this.count;
+		hash = 83 * hash + this.getFactory().save(this).hashCode();
+		return hash;
+	}
+
 	/**
-	 * Check if this ItemStack is of type of another ItemStack. Will compare the
-	 * {@link Item#getID()}.
+	 * Check if this Item is of type of another Item.
+	 * Will compare the {@link Item#getID() item id}.
 	 * @param item The another Item
 	 * @return Result
 	 */

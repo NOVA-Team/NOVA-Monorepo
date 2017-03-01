@@ -34,24 +34,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
-import nova.core.render.texture.BlockTexture;
-import nova.core.render.texture.ItemTexture;
 import nova.core.render.texture.Texture;
+import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
+import nova.core.wrapper.mc.forge.v18.wrapper.assets.AssetConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItem;
-import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItemBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWEmptyModel;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartBlockModel;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartItemModel;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
@@ -70,7 +72,7 @@ import static org.lwjgl.opengl.GL11.glShadeModel;
  * @author Calclavia
  */
 @SideOnly(Side.CLIENT)
-public class RenderUtility {
+public class RenderUtility implements ForgeLoadable {
 
 	public static final ResourceLocation particleResource = new ResourceLocation("textures/particle/particles.png");
 
@@ -151,7 +153,7 @@ public class RenderUtility {
 		}
 
 		//Fallback to MC texture
-		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(texture.domain + ":" + texture.getPath().replaceFirst("textures/", "").replace(".png", ""));
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(AssetConverter.instance().toNativeTexture(texture).toString());
 	}
 
 	/**
@@ -169,8 +171,38 @@ public class RenderUtility {
 	}
 
 	public void registerIcon(Texture texture, TextureStitchEvent.Pre event) {
-		String resPath = (texture instanceof BlockTexture ? "blocks" : texture instanceof ItemTexture ? "items" : "entities") + "/" + texture.resource;
-		textureMap.put(texture, event.map.registerSprite(new ResourceLocation(texture.domain, resPath)));
+		textureMap.put(texture, event.map.registerSprite(AssetConverter.instance().toNativeTexture(texture)));
+	}
+
+	/**
+	 * Handles NOVA texture update.
+	 * @param event Event
+	 */
+	@SubscribeEvent
+	public void textureHook(TextureStitchEvent.Post event) {
+		Game.render().blockTextures.forEach(this::updateTexureDimensions);
+		Game.render().itemTextures.forEach(this::updateTexureDimensions);
+		Game.render().entityTextures.forEach(this::updateTexureDimensions);
+	}
+
+	/**
+	 * Update the texture dimensions for the given texture.
+	 * @param texture The texture to update.
+	 * @throws RuntimeException If the texture update fails.
+	 * @see <a href="https://github.com/NOVA-Team/NOVA-Core/pull/265#discussion_r103739268">PR review</a>
+	 */
+	private void updateTexureDimensions(Texture texture) {
+		// NOTE: This is the only way to update the `dimension` field without breaking anything.
+		//       https://github.com/NOVA-Team/NOVA-Core/pull/265#discussion_r103739268
+		try {
+			Field dimension = Texture.class.getDeclaredField("dimension");
+			dimension.setAccessible(true);
+			TextureAtlasSprite icon = getTexture(texture);
+			dimension.set(texture, new Vector2D(icon.getIconWidth(), icon.getIconHeight()));
+			dimension.setAccessible(false);
+		} catch (Exception ex) {
+			throw new RuntimeException("Cannot set dimension of texture " + texture, ex);
+		}
 	}
 
 	@SubscribeEvent
@@ -214,7 +246,7 @@ public class RenderUtility {
 		});
 	}
 
-	public void preInit() {
+	public void preInit(FMLPreInitializationEvent event) {
 		//Load models
 		Game.render().modelProviders.forEach(m -> {
 			ResourceLocation resource = new ResourceLocation(m.domain, "models/" + m.name + "." + m.getType());

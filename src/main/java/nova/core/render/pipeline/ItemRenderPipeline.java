@@ -176,8 +176,8 @@ public class ItemRenderPipeline extends RenderPipeline {
 		Vector2D maxUV;
 
 		if (texture.isPresent()) {
-			minUV = texture.get().minUV();
-			maxUV = texture.get().maxUV();
+			minUV = texture.get().minUV;
+			maxUV = texture.get().maxUV;
 		} else {
 			minUV = Vector2D.ZERO;
 			maxUV = Vector2DUtil.ONE;
@@ -209,8 +209,8 @@ public class ItemRenderPipeline extends RenderPipeline {
 		Vector2D maxUV;
 
 		if (texture.isPresent()) {
-			minUV = texture.get().minUV();
-			maxUV = texture.get().maxUV();
+			minUV = texture.get().minUV;
+			maxUV = texture.get().maxUV;
 		} else {
 			minUV = Vector2D.ZERO;
 			maxUV = Vector2DUtil.ONE;
@@ -243,8 +243,8 @@ public class ItemRenderPipeline extends RenderPipeline {
 		Vector2D dimensions;
 
 		if (texture.isPresent()) {
-			minUV = texture.get().minUV();
-			maxUV = texture.get().maxUV();
+			minUV = texture.get().minUV;
+			maxUV = texture.get().maxUV;
 			dimensions = texture.get().dimension;
 		} else {
 			minUV = Vector2D.ZERO;
@@ -301,8 +301,8 @@ public class ItemRenderPipeline extends RenderPipeline {
 		Vector2D dimensions;
 
 		if (texture.isPresent()) {
-			minUV = texture.get().minUV();
-			maxUV = texture.get().maxUV();
+			minUV = texture.get().minUV;
+			maxUV = texture.get().maxUV;
 			dimensions = texture.get().dimension;
 		} else {
 			minUV = Vector2D.ZERO;

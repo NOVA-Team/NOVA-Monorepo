@@ -24,7 +24,6 @@ import nova.core.wrapper.mc.forge.v17.depmodules.ClientModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.GameInfoModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.KeyModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.LanguageModule;
-import nova.core.wrapper.mc.forge.v17.depmodules.RenderModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.SaveModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.TickerModule;
 import nova.internal.core.Game;
@@ -50,18 +49,19 @@ public class NovaLauncherTest extends nova.wrappertests.NovaLauncherTest {
 			KeyModule.class,
 			LanguageModule.class,
 			FakeNetworkModule.class, //NetworkManager calls into FML code in the class instantiation, so we create a fake.
-			RenderModule.class,
 			SaveModule.class,
 			TickerModule.class,
 			GameInfoModule.class
 		);
 	}
 
+	@Override
 	@Test
 	public void testLaunching() {
 		doLaunchAssert(createLauncher());
 	}
 
+	@Override
 	@Test
 	public void testResolveGame() {
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
