@@ -25,19 +25,19 @@ package nova.core.language;
  *
  * @author ExE Boss
  */
-public interface Translatable {
+public interface Translateable {
 
 	/**
 	 * Gets the unlocalized name of this object.
 	 * @return The unlocalized name
 	 */
-	public String getUnlocalizedName();
+	String getUnlocalizedName();
 
 	/**
 	 * Gets the localized name of this object.
 	 * @return The localized name
 	 */
-	public default String getLocalizedName() {
-		return LanguageManager.instance().translate(this.getLocalizedName());
+	default String getLocalizedName() {
+		return LanguageManager.instance().translate(this.getUnlocalizedName());
 	}
 }

@@ -29,7 +29,7 @@ import nova.core.event.bus.CancelableEvent;
 import nova.core.event.bus.Event;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
-import nova.core.language.Translatable;
+import nova.core.language.Translateable;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
 import nova.core.world.World;
@@ -44,7 +44,7 @@ import java.util.Set;
 /**
  * @author Calclavia
  */
-public class Block extends SidedComponentProvider implements Identifiable, Translatable {
+public class Block extends SidedComponentProvider implements Identifiable, Translateable {
 
 	public ItemFactory getItemFactory() {
 		return Game.items().getItemFromBlock(getFactory());

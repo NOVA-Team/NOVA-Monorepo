@@ -22,7 +22,7 @@ package nova.core.item;
 
 import nova.core.component.misc.FactoryProvider;
 import nova.core.language.LanguageManager;
-import nova.core.language.Translatable;
+import nova.core.language.Translateable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.registry.Factory;
@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 /**
  * @author Calclavia
  */
-public class ItemFactory extends Factory<ItemFactory, Item> implements Identifiable, Translatable {
+public class ItemFactory extends Factory<ItemFactory, Item> implements Identifiable, Translateable {
 	private String unlocalizedName;
 
 	public ItemFactory(String id, Supplier<Item> constructor, Function<Item, Item> processor) {
