@@ -34,6 +34,7 @@ import nova.core.render.model.Model;
 import nova.core.render.model.Vertex;
 import nova.core.util.Direction;
 import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWBakedModel;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Collections;
@@ -84,7 +85,9 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 			.stream()
 			.flatMap(
 				model -> {
-					if (model instanceof MeshModel) {
+					if (model instanceof BWBakedModel) {
+						return ((BWBakedModel) model).getGeneralQuads().stream();
+					} else if (model instanceof MeshModel) {
 						MeshModel meshModel = (MeshModel) model;
 						return meshModel.faces
 							.stream()
