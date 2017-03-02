@@ -67,6 +67,8 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 
 	public static int[] vertexToInts(Vertex vertex, TextureAtlasSprite texture, Vector3D normal) {
 		// TODO: Allow serialization of arbitrary vertex formats.
+		if (vertex.normal.isPresent())
+			normal = vertex.normal.get();
 		return new int[] {
 			Float.floatToRawIntBits((float) vertex.vec.getX()),
 			Float.floatToRawIntBits((float) vertex.vec.getY()),

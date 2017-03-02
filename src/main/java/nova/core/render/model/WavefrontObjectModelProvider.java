@@ -21,6 +21,8 @@
 package nova.core.render.model;
 
 import nova.core.render.RenderException;
+import nova.core.util.math.Vector3DUtil;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
@@ -43,10 +45,11 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 	private static Pattern vertexPattern = Pattern.compile("(v( (\\-)?\\d+\\.\\d+){3,4} *\\n)|(v( (\\-)?\\d+\\.\\d+){3,4} *$)");
 	private static Pattern vertexNormalPattern = Pattern.compile("(vn( (\\-)?\\d+\\.\\d+){3,4} *\\n)|(vn( (\\-)?\\d+\\.\\d+){3,4} *$)");
 	private static Pattern textureCoordinatePattern = Pattern.compile("(vt( (\\-)?\\d+\\.\\d+){2,3} *\\n)|(vt( (\\-)?\\d+\\.\\d+){2,3} *$)");
-	private static Pattern face_V_VT_VN_Pattern = Pattern.compile("(f( \\d+/\\d+/\\d+){3,4} *\\n)|(f( \\d+/\\d+/\\d+){3,4} *$)");
-	private static Pattern face_V_VT_Pattern = Pattern.compile("(f( \\d+/\\d+){3,4} *\\n)|(f( \\d+/\\d+){3,4} *$)");
-	private static Pattern face_V_VN_Pattern = Pattern.compile("(f( \\d+//\\d+){3,4} *\\n)|(f( \\d+//\\d+){3,4} *$)");
-	private static Pattern face_V_Pattern = Pattern.compile("(f( \\d+){3,4} *\\n)|(f( \\d+){3,4} *$)");
+	// According to the official Wavefront OBJ specification, a face can have an unlimited amount of vertices
+	private static Pattern face_V_VT_VN_Pattern = Pattern.compile("(f( \\d+/\\d+/\\d+){3,} *\\n)|(f( \\d+/\\d+/\\d+){3,} *$)");
+	private static Pattern face_V_VT_Pattern = Pattern.compile("(f( \\d+/\\d+){3,} *\\n)|(f( \\d+/\\d+){3,} *$)");
+	private static Pattern face_V_VN_Pattern = Pattern.compile("(f( \\d+//\\d+){3,} *\\n)|(f( \\d+//\\d+){3,} *$)");
+	private static Pattern face_V_Pattern = Pattern.compile("(f( \\d+){3,} *\\n)|(f( \\d+){3,} *$)");
 	private static Pattern subModelPattern = Pattern.compile("([go]([^\\\\ ]*+)*\\n)|([go]( [^\\\\ ]*+) *$)");
 	private static Matcher globalMatcher;
 	//A map of all models generated with their names
@@ -54,6 +57,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 	private MeshModel currentModel = null;
 	private ArrayList<Vector3D> vertices = new ArrayList<>();
 	private ArrayList<Vector2D> textureCoordinates = new ArrayList<>();
+	private ArrayList<Vector3D> vertexNormals = new ArrayList<>();
 
 	/**
 	 * Creates new ModelProvider
@@ -66,8 +70,6 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 
 	@Override
 	public void load(InputStream stream) {
-
-
 		String currentLine;
 		int lineCount = 0;
 		try(BufferedReader reader = new BufferedReader(new InputStreamReader(stream))){
@@ -87,6 +89,14 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 					if (textureCoordinate != null) {
 						textureCoordinates.add(textureCoordinate);
 					}
+				} else if (currentLine.startsWith("vn ")) {
+					Vector3D vertexNormal = parseToVertexNormal(currentLine, lineCount);
+					if (vertexNormal != null) {
+						vertexNormals.add(vertexNormal);
+					}
+				} else if (currentLine.startsWith("vp ")) {
+					// TODO: Parameter space vertices
+					Game.logger().warn("Model {} uses parameter space vertices", this.name);
 				} else if (currentLine.startsWith("f ")) {
 					if (currentModel == null) {
 						currentModel = new MeshModel("Default");
@@ -107,7 +117,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 				}
 			}
 			model.children.add(currentModel);
-		} catch (IOException e) {
+		} catch (IOException | UnsupportedOperationException e) {
 			throw new RenderException("Model " + this.name + " could not be read", e);
 		} finally {
 			this.cleanUp();
@@ -172,7 +182,8 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 			String[] tokens = line.split(" ");
 			try {
 				if (tokens.length == 3) {
-					return new Vector3D(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]));
+					// According to the official Wavefront OBJ specification, vertex normals might not be normalized.
+					return new Vector3D(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2])).normalize();
 				}
 			} catch (NumberFormatException e) {
 				throw new RenderException(String.format("Number formatting error at line %d", lineNumber), e);
@@ -195,32 +206,32 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 			if (isValid(line, face_V_VT_VN_Pattern)) {
 				for (int i = 0; i < tokens.length; ++i) {
 					subTokens = tokens[i].split("/");
-					face.drawVertex(new Vertex(vertices.get(Integer.parseInt(subTokens[0]) - 1), getTexVec(Integer.parseInt(subTokens[1]) - 1)));
+					face.drawVertex(new Vertex(getVertex(Integer.parseInt(subTokens[0])), getTexVec(Integer.parseInt(subTokens[1])), getNormal(Integer.parseInt(subTokens[2]))));
 				}
-				face.normal = calculateNormal(face);
+				face.normal = Vector3DUtil.calculateNormal(face);
 			}
 			// f v1/vt1 v2/vt2 v3/vt3 ...
 			else if (isValid(line, face_V_VT_Pattern)) {
 				for (int i = 0; i < tokens.length; ++i) {
 					subTokens = tokens[i].split("/");
-					face.drawVertex(new Vertex(vertices.get(Integer.parseInt(subTokens[0]) - 1), getTexVec(Integer.parseInt(subTokens[1]) - 1)));
+					face.drawVertex(new Vertex(getVertex(Integer.parseInt(subTokens[0])), getTexVec(Integer.parseInt(subTokens[1]))));
 				}
-				face.normal = calculateNormal(face);
+				face.normal = Vector3DUtil.calculateNormal(face);
 			}
 			// f v1//vn1 v2//vn2 v3//vn3 ...
 			else if (isValid(line, face_V_VN_Pattern)) {
 				for (int i = 0; i < tokens.length; ++i) {
 					subTokens = tokens[i].split("//");
-					face.drawVertex(new Vertex(vertices.get(Integer.parseInt(subTokens[0]) - 1), Vector2D.ZERO));
+					face.drawVertex(new Vertex(getVertex(Integer.parseInt(subTokens[0])), Vector2D.ZERO, getNormal(Integer.parseInt(subTokens[1]))));
 				}
-				face.normal = calculateNormal(face);
+				face.normal = Vector3DUtil.calculateNormal(face);
 			}
 			// f v1 v2 v3 ...
 			else if (isValid(line, face_V_Pattern)) {
 				for (int i = 0; i < tokens.length; ++i) {
-					face.drawVertex(new Vertex(vertices.get(Integer.parseInt(tokens[i]) - 1), Vector2D.ZERO));
+					face.drawVertex(new Vertex(getVertex(Integer.parseInt(tokens[i])), Vector2D.ZERO));
 				}
-				face.normal = calculateNormal(face);
+				face.normal = Vector3DUtil.calculateNormal(face);
 			} else {
 				throw new RenderException("Error parsing entry ('" + line + "'" + ", line " + lineNumber + ") in model '" + this.name + "' - Incorrect format");
 			}
@@ -242,16 +253,6 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		return null;
 	}
 
-	private Vector3D calculateNormal(Face face) {
-		Vertex firstEntry = face.vertices.get(0);
-		Vertex secondEntry = face.vertices.get(1);
-		Vertex thirdEntry = face.vertices.get(1);
-		Vector3D v1 = new Vector3D(secondEntry.vec.getX() - firstEntry.vec.getX(), secondEntry.vec.getY() - firstEntry.vec.getY(), secondEntry.vec.getZ() - firstEntry.vec.getZ());
-		Vector3D v2 = new Vector3D(thirdEntry.vec.getX() - firstEntry.vec.getX(), thirdEntry.vec.getY() - firstEntry.vec.getY(), thirdEntry.vec.getZ() - firstEntry.vec.getZ());
-
-		return v1.crossProduct(v2).normalize();
-	}
-
 	/**
 	 * Verifies that the given line from the model file is a valid for a given pattern
 	 *
@@ -268,13 +269,30 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		return globalMatcher.matches();
 	}
 
+	private Vector3D getVertex(int index) {
+		try {
+			return vertices.get(index < 0 ? index + textureCoordinates.size() : index - 1);
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println("[OBJ]: Can't get vertex " + index + "! Is this model corrupted?");
+			return Vector3D.ZERO;
+		}
+	}
+
 	private Vector2D getTexVec(int index) {
 		try {
-			return textureCoordinates.get(index);
+			return textureCoordinates.get(index < 0 ? index + textureCoordinates.size() : index - 1);
 		} catch (IndexOutOfBoundsException e) {
 			System.err.println("[OBJ]: Can't get textureCoordinate " + index + "! Is this model corrupted?");
 			return Vector2D.ZERO;
 		}
 	}
 
+	private Vector3D getNormal(int index) {
+		try {
+			return vertexNormals.get(index < 0 ? index + textureCoordinates.size() : index - 1);
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println("[OBJ]: Can't get vertexNormal " + index + "! Is this model corrupted?");
+			return Vector3D.ZERO;
+		}
+	}
 }
