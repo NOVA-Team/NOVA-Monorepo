@@ -27,6 +27,7 @@ import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Optional;
 
 /**
  * A Vertex contains a position and UV data.
@@ -37,19 +38,37 @@ public class Vertex implements Cloneable {
 	public Vector2D uv;
 
 	/**
+	 * The normal (or direction) this vertex is facing.
+	 * Normals must be unit vectors.
+	 */
+	public Optional<Vector3D> normal;
+
+	/**
 	 * A RGB color value from 0 to 1.
 	 */
 	public Color color;
 
 	/**
 	 * Constructor for vertex
-	 * @param vertex coordinates in 3D sapce.
+	 * @param vertex coordinates in 3D space.
+	 * @param uv coordinates on the texture.
+	 * @param normal the vertex normal.
+	 */
+	public Vertex(Vector3D vertex, Vector2D uv, Vector3D normal) {
+		this(vertex, uv);
+		this.normal = Optional.of(normal);
+	}
+
+	/**
+	 * Constructor for vertex
+	 * @param vertex coordinates in 3D space.
 	 * @param uv coordinates on the texture.
 	 */
 	public Vertex(Vector3D vertex, Vector2D uv) {
 		this.vec = vertex;
 		this.uv = uv;
 		this.color = Color.white;
+		this.normal = Optional.empty();
 	}
 
 	/**
@@ -64,7 +83,6 @@ public class Vertex implements Cloneable {
 		this(new Vector3D(x, y, z), new Vector2D(u, v));
 	}
 
-
 	@Override
 	public String toString() {
 		MathContext cont = new MathContext(4, RoundingMode.HALF_UP);
@@ -75,6 +93,7 @@ public class Vertex implements Cloneable {
 	@Override
 	protected Vertex clone() {
 		Vertex vertex = new Vertex(vec, uv);
+		vertex.normal = normal;
 		vertex.color = color;
 		return vertex;
 	}

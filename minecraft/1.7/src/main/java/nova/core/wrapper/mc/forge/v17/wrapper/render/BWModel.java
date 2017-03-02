@@ -106,6 +106,11 @@ public class BWModel extends MeshModel {
 								entityRenderManager.get().renderEngine.bindTexture(AssetConverter.instance().toNative(t));
 								face.vertices.forEach(
 									v -> {
+										if (v.normal.isPresent())
+											tessellator.setNormal((float) v.normal.get().getX(), (float) v.normal.get().getY(), (float) v.normal.get().getZ());
+										else
+											tessellator.setNormal((float) face.normal.getX(), (float) face.normal.getY(), (float) face.normal.getZ());
+
 										tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 										tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
 									}
@@ -115,6 +120,11 @@ public class BWModel extends MeshModel {
 								IIcon icon = RenderUtility.instance.getIcon(texture);
 								face.vertices.forEach(
 									v -> {
+										if (v.normal.isPresent())
+											tessellator.setNormal((float) v.normal.get().getX(), (float) v.normal.get().getY(), (float) v.normal.get().getZ());
+										else
+											tessellator.setNormal((float) face.normal.getX(), (float) face.normal.getY(), (float) face.normal.getZ());
+
 										tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 										if (icon != null) {
 											tessellator.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
@@ -127,6 +137,11 @@ public class BWModel extends MeshModel {
 						} else {
 							face.vertices.forEach(
 								v -> {
+									if (v.normal.isPresent())
+										tessellator.setNormal((float) v.normal.get().getX(), (float) v.normal.get().getY(), (float) v.normal.get().getZ());
+									else
+										tessellator.setNormal((float) face.normal.getX(), (float) face.normal.getY(), (float) face.normal.getZ());
+
 									tessellator.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 									tessellator.addVertex(v.vec.getX(), v.vec.getY(), v.vec.getZ());
 								}
