@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -68,10 +69,14 @@ public class BWBakedModel extends BWModel {
 		this(wrapped, DefaultVertexFormats.ITEM);
 	}
 
+	@SuppressWarnings("unchecked")
 	public BWBakedModel(@SuppressWarnings("deprecation") IBakedModel wrapped, VertexFormat format) {
 		this.wrapped = wrapped;
 		this.format = format;
 		this.matrix.translate(-0.5, -0.5, -0.5);
+
+		if (!((List<VertexFormatElement>) format.getElements()).stream().anyMatch(VertexFormatElement::isPositionElement))
+			return; // VertexFormat doesn't have a position
 
 		getGeneralQuads().stream()
 			.map(this::quadToFace)
@@ -130,31 +135,65 @@ public class BWBakedModel extends BWModel {
 		return wrapped.getGeneralQuads();
 	}
 
+	@SuppressWarnings("unchecked")
 	public Face quadToFace(BakedQuad quad) {
 		// TODO: Parse according to format
 		Face face = new Face();
+		final VertexFormat format = this.format; // 1.11.2 stores VertexFormat on a per-quad basis.
+
 		int[] data = quad.getVertexData();
 		List<Vector3D> normals = new LinkedList<>();
 		Optional<TextureAtlasSprite> texture = Optional.ofNullable(wrapped.getTexture());
-		face.texture = texture.map(TextureAtlasSprite::getIconName).map(ResourceLocation::new).map(AssetConverter.instance()::toNovaTexture);
+
+		final Optional<VertexFormatElement> posElement = ((Collection<VertexFormatElement>)format.getElements()).stream()
+			.filter(VertexFormatElement::isPositionElement)
+			.findFirst();
+
+		final Optional<VertexFormatElement> uvElement = ((Collection<VertexFormatElement>)format.getElements()).stream()
+			.filter(vfe -> vfe.getUsage() == VertexFormatElement.EnumUsage.UV)
+			.findFirst();
+
+		face.texture = texture
+			.filter(t -> uvElement.isPresent())
+			.map(TextureAtlasSprite::getIconName)
+			.map(ResourceLocation::new)
+			.map(AssetConverter.instance()::toNovaTexture);
+
+		// `VertexFormat` offsets are for a `ByteBuffer`
+		// `data` is an int array, so we convert it
+
+		// TODO: support offsets which are not divisible by four
+		final int posOffset = posElement.map(VertexFormatElement::getOffset).map(i -> i / 4).orElse(-1);
+		final int uvOffset = uvElement.map(VertexFormatElement::getOffset).map(i -> i / 4).orElse(-1);
+		final int colorOffset = format.hasColor() ? (format.getColorOffset() / 4) : -1;
+		final int normalOffset = format.hasNormal() ? (format.getNormalOffset() / 4) : -1;
+
 		for (int i = 0; i < data.length; i += 7) {
-			Vector3D pos = new Vector3D(Float.intBitsToFloat(data[i]),
-				Float.intBitsToFloat(data[i + 1]), Float.intBitsToFloat(data[i + 2]));
-			Vector2D uv = new Vector2D(
-				deinterpolateU(Float.intBitsToFloat(data[i + 4]), texture),
-				deinterpolateV(Float.intBitsToFloat(data[i + 5]), texture));
-			int mergedNormal = data[i + 6];
-			Optional<Vector3D> normal = Optional.empty();
-			if (mergedNormal != 0)
-				normal = Optional.of(new Vector3D(((byte)(mergedNormal & 0xFF)) / 127D,
-					((byte)((mergedNormal >> 8) & 0xFF)) / 127D,
-					((byte)((mergedNormal >> 16) & 0xFF)) / 127D));
+			Vector3D pos = posElement.isPresent() ? new Vector3D(
+				Float.intBitsToFloat(data[i + posOffset]),
+				Float.intBitsToFloat(data[i + posOffset + 1]),
+				Float.intBitsToFloat(data[i + posOffset + 2])) : Vector3D.ZERO;
+
+			Vector2D uv = uvElement.isPresent() ? new Vector2D(
+				deinterpolateU(Float.intBitsToFloat(data[i + uvOffset]), texture),
+				deinterpolateV(Float.intBitsToFloat(data[i + uvOffset + 1]), texture)) : Vector2D.ZERO;
 
 			Vertex vertex = new Vertex(pos, uv);
-			if (DefaultVertexFormats.BLOCK.equals(format))
-				vertex.color = Color.argb(data[i + 3]);
-			else
-				vertex.color = Color.rgba(data[i + 3]);
+			if (format.hasColor()) {
+				if (DefaultVertexFormats.BLOCK.equals(format))
+					vertex.color = Color.argb(data[i + colorOffset]);
+				else
+					vertex.color = Color.rgba(data[i + colorOffset]);
+			}
+
+			Optional<Vector3D> normal = Optional.empty();
+			if (format.hasNormal()) {
+				int mergedNormal = data[i + normalOffset];
+				if (mergedNormal != 0)
+					normal = Optional.of(new Vector3D(((byte)(mergedNormal & 0xFF)) / 127D,
+						((byte)((mergedNormal >> 8) & 0xFF)) / 127D,
+						((byte)((mergedNormal >> 16) & 0xFF)) / 127D));
+			}
 
 			if (DefaultVertexFormats.ITEM.equals(format))
 				vertex.normal = normal;
