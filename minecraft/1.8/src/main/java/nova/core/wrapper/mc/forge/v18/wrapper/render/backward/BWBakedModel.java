@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v18.wrapper.render.backward;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -122,16 +123,20 @@ public class BWBakedModel extends BWModel {
 		Face face = new Face();
 		int[] data = quad.getVertexData();
 		List<Vector3D> normals = new LinkedList<>();
+		Optional<TextureAtlasSprite> texture = Optional.ofNullable(wrapped.getTexture());
+		face.texture = texture.map(TextureAtlasSprite::getIconName).map(ResourceLocation::new).map(AssetConverter.instance()::toNovaTexture);
 		for (int i = 0; i < data.length; i += 7) {
 			Vector3D pos = new Vector3D(Float.intBitsToFloat(data[i]),
 				Float.intBitsToFloat(data[i + 1]), Float.intBitsToFloat(data[i + 2]));
-			Vector2D uv = new Vector2D(Float.intBitsToFloat(data[i + 4]) / 16d, Float.intBitsToFloat(data[i + 5]) / 16d);
+			Vector2D uv = new Vector2D(
+				deinterpolateU(Float.intBitsToFloat(data[i + 4]), texture),
+				deinterpolateV(Float.intBitsToFloat(data[i + 5]), texture));
 			int mergedNormal = data[i + 6];
 			Optional<Vector3D> normal = Optional.empty();
 			if (mergedNormal != 0)
-				normal = Optional.of(new Vector3D((mergedNormal & 0xFF) / 127D,
-					((mergedNormal >> 8) & 0xFF) / 127D,
-					((mergedNormal >> 16) & 0xFF) / 127D));
+				normal = Optional.of(new Vector3D(((byte)(mergedNormal & 0xFF)) / 127D,
+					((byte)((mergedNormal >> 8) & 0xFF)) / 127D,
+					((byte)((mergedNormal >> 16) & 0xFF)) / 127D));
 
 			Vertex vertex = new Vertex(pos, uv);
 			vertex.color = Color.rgba(data[i + 3]);
@@ -139,8 +144,20 @@ public class BWBakedModel extends BWModel {
 			face.drawVertex(vertex);
 		}
 		face.normal = Vector3DUtil.calculateNormal(face);
-		if (wrapped.getTexture() != null) // Ommiting this bit causes the resulting model to render as a purple object.
-			face.texture = Optional.of(AssetConverter.instance().toNovaTexture(new ResourceLocation(wrapped.getTexture().getIconName())));
 		return face;
+	}
+
+	private double deinterpolateU(double u, Optional<TextureAtlasSprite> texture) {
+		if (!texture.isPresent())
+			return u;
+		TextureAtlasSprite tex = texture.get();
+		return (u - tex.getMinU()) / (tex.getMaxU() - tex.getMinU());
+	}
+
+	private double deinterpolateV(double v, Optional<TextureAtlasSprite> texture) {
+		if (!texture.isPresent())
+			return v;
+		TextureAtlasSprite tex = texture.get();
+		return (v - tex.getMinV()) / (tex.getMaxV() - tex.getMinV());
 	}
 }
