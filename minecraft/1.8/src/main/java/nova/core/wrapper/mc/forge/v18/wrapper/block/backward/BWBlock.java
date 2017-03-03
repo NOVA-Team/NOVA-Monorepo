@@ -25,6 +25,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -111,12 +112,11 @@ public class BWBlock extends Block implements Storable {
 		//TODO: Set selection bounds
 		components.add(new StaticRenderer())
 			.onRender(model -> {
-				if (block.getRenderType() == 3) {
-					// model rendering
-					model.addChild(new BWBakedModel(Minecraft.getMinecraft().getBlockRendererDispatcher()
-						.getModelFromBlockState(blockState(), getMcBlockAccess(), new BlockPos(x(), y(), z()))));
-				} else {
+			switch (block.getRenderType()) {
+				default:
 					// rendering of other type
+				case 1:
+					// fluid rendering
 					model.addChild(new CustomModel(self -> {
 						GL11.glPushMatrix();
 						DoubleBuffer buffer = BufferUtils.createDoubleBuffer(4 * 4);
@@ -130,7 +130,17 @@ public class BWBlock extends Block implements Storable {
 							.renderBlock(blockState(), new BlockPos(x(), y(), z()), getMcBlockAccess(), Tessellator.getInstance().getWorldRenderer());
 						GL11.glPopMatrix();
 					}));
-				}
+					break;
+				case 2:
+					// chest rendering
+					//  Handled by DynamicRenderer
+					break;
+				case 3:
+					// model rendering
+					model.addChild(new BWBakedModel(Minecraft.getMinecraft().getBlockRendererDispatcher()
+						.getModelFromBlockState(blockState(), getMcBlockAccess(), new BlockPos(x(), y(), z())), DefaultVertexFormats.BLOCK));
+					break;
+			}
 			});
 		getTileEntity().ifPresent(tileEntity -> {
 			components.add(new DynamicRenderer())

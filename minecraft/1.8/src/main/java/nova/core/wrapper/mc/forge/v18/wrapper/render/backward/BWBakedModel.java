@@ -22,6 +22,8 @@ package nova.core.wrapper.mc.forge.v18.wrapper.render.backward;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -43,6 +45,8 @@ import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,19 +62,26 @@ public class BWBakedModel extends BWModel {
 	@SuppressWarnings("deprecation")
 	public final IBakedModel wrapped;
 
+	public final VertexFormat format;
+
 	public BWBakedModel(@SuppressWarnings("deprecation") IBakedModel wrapped) {
+		this(wrapped, DefaultVertexFormats.ITEM);
+	}
+
+	public BWBakedModel(@SuppressWarnings("deprecation") IBakedModel wrapped, VertexFormat format) {
 		this.wrapped = wrapped;
-		matrix.translate(-0.5, -0.5, -0.5);
+		this.format = format;
+		this.matrix.translate(-0.5, -0.5, -0.5);
 
 		getGeneralQuads().stream()
 			.map(this::quadToFace)
 			.forEachOrdered(faces::add);
 
-//		Arrays.stream(Direction.VALID_DIRECTIONS)
-//			.map(this::getFaceQuads)
-//			.flatMap(Collection::stream)
-//			.map(this::quadToFace)
-//			.forEachOrdered(faces::add);
+		Arrays.stream(Direction.VALID_DIRECTIONS)
+			.map(this::getFaceQuads)
+			.flatMap(Collection::stream)
+			.map(this::quadToFace)
+			.forEachOrdered(faces::add);
 	}
 
 	@Override
@@ -120,6 +131,7 @@ public class BWBakedModel extends BWModel {
 	}
 
 	public Face quadToFace(BakedQuad quad) {
+		// TODO: Parse according to format
 		Face face = new Face();
 		int[] data = quad.getVertexData();
 		List<Vector3D> normals = new LinkedList<>();
@@ -139,8 +151,13 @@ public class BWBakedModel extends BWModel {
 					((byte)((mergedNormal >> 16) & 0xFF)) / 127D));
 
 			Vertex vertex = new Vertex(pos, uv);
-			vertex.color = Color.rgba(data[i + 3]);
-			vertex.normal = normal;
+			if (DefaultVertexFormats.BLOCK.equals(format))
+				vertex.color = Color.argb(data[i + 3]);
+			else
+				vertex.color = Color.rgba(data[i + 3]);
+
+			if (DefaultVertexFormats.ITEM.equals(format))
+				vertex.normal = normal;
 			face.drawVertex(vertex);
 		}
 		face.normal = Vector3DUtil.calculateNormal(face);
