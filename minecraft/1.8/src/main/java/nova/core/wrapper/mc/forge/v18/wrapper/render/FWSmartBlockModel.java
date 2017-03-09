@@ -29,14 +29,14 @@ import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 import nova.core.block.Block;
-import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
-import nova.core.item.ItemBlock;
+import nova.core.item.Item;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.internal.core.Game;
 
 import java.util.List;
+import java.util.Optional;
 import javax.vecmath.Vector3f;
 
 /**
@@ -46,13 +46,21 @@ import javax.vecmath.Vector3f;
 public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel, ISmartItemModel, IFlexibleBakedModel {
 
 	private final Block block;
-	private final boolean isItem;
+	private final Optional<Item> item;
+
+	public FWSmartBlockModel(Block block) {
+		this(block, Optional.empty());
+	}
+
+	public FWSmartBlockModel(Block block, Item item) {
+		this(block, Optional.of(item));
+	}
 
 	@SuppressWarnings("deprecation")
-	public FWSmartBlockModel(Block block, boolean isItem) {
+	public FWSmartBlockModel(Block block, Optional<Item> item) {
 		super();
 		this.block = block;
-		this.isItem = isItem;
+		this.item = item;
 		// Change the default transforms to the default full Block transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
 			new ItemTransformVec3f(new Vector3f(10, -45, 170), new Vector3f(0, 0.09375f, -0.171875f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person
@@ -67,7 +75,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 		Block blockInstance = block.getBlockInstance(block.lastExtendedWorld, Game.natives().toNova(block.lastExtendedStatePos));
 
 		if (blockInstance.components.has(StaticRenderer.class)) {
-			return new FWSmartBlockModel(blockInstance, false);
+			return new FWSmartBlockModel(blockInstance);
 		}
 
 		return new FWEmptyModel();
@@ -76,10 +84,10 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 	//Item rendering
 	@Override
 	public ISmartItemModel handleItemState(ItemStack stack) {
-		ItemBlock item = Game.natives().toNova(stack);
+		Item item = Game.natives().toNova(stack);
 
 		if (item.components.has(Renderer.class) || block.components.has(Renderer.class)) {
-			return new FWSmartBlockModel(block, true);
+			return new FWSmartBlockModel(block, item);
 		}
 
 		return new FWEmptyModel();
@@ -90,17 +98,14 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 		BWModel model = new BWModel();
 		model.matrix.translate(0.5, 0.5, 0.5);
 
-		if (isItem) {
-			if (block.components.has(StaticRenderer.class)) {
-				StaticRenderer staticRenderer = block.components.get(StaticRenderer.class);
-				staticRenderer.onRender.accept(model);
-			} else if (block.components.has(DynamicRenderer.class)) {
-				DynamicRenderer dynamicRenderer = block.components.get(DynamicRenderer.class);
-				dynamicRenderer.onRender.accept(model);
+		if (item.isPresent()) {
+			if (item.get().components.has(Renderer.class)) {
+				item.get().components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
+			} else {
+				block.components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
 			}
 		} else {
-			StaticRenderer staticRenderer = block.components.get(StaticRenderer.class);
-			staticRenderer.onRender.accept(model);
+			block.components.get(StaticRenderer.class).onRender.accept(model);
 		}
 
 		return modelToQuads(model);

@@ -103,15 +103,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 			model.matrix.rotate(Direction.UP.toVector(), 1 / 4 * Math.PI);
 			model.matrix.rotate(Direction.EAST.toVector(), 1 / 6 * Math.PI);
 			model.matrix.scale(1.6, 1.6, 1.6);
-
-			if (item.components.has(StaticRenderer.class)) {
-				StaticRenderer staticRenderer = item.components.get(StaticRenderer.class);
-				staticRenderer.onRender.accept(model);
-			} else if (item.components.has(DynamicRenderer.class)) {
-				DynamicRenderer dynamicRenderer = item.components.get(DynamicRenderer.class);
-				dynamicRenderer.onRender.accept(model);
-			}
-
+			item.components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
 			model.render();
 			Tessellator.instance.draw();
 			GL11.glPopMatrix();

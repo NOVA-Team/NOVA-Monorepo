@@ -44,7 +44,7 @@ public class BWModel extends MeshModel {
 	/**
 	 * Completes this rendering for a block.
 	 */
-	public void renderWorld(IBlockAccess blockAccess) {
+	public void render(IBlockAccess blockAccess) {
 		render(Optional.of(blockAccess), Optional.empty());
 	}
 

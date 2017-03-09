@@ -40,11 +40,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
+import nova.core.item.ItemFactory;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v18.wrapper.assets.AssetConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItem;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemWrapperMethods;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWEmptyModel;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartBlockModel;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartItemModel;
@@ -217,12 +219,14 @@ public class RenderUtility implements ForgeLoadable {
 				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(itemFromBlock);
 				ModelResourceLocation blockLocation = new ModelResourceLocation(blockRL, "normal");
 				ModelResourceLocation itemLocation = new ModelResourceLocation(itemRL, "inventory");
+				ItemFactory itemFactory = ((ItemWrapperMethods)itemFromBlock).getItemFactory();
+				nova.core.item.Item dummy = itemFactory.build();
 				if (block.dummy.components.has(StaticRenderer.class)) {
-					event.modelRegistry.putObject(blockLocation, new FWSmartBlockModel(block.dummy, true));
+					event.modelRegistry.putObject(blockLocation, new FWSmartBlockModel(block.dummy));
 				} else {
 					event.modelRegistry.putObject(blockLocation, new FWEmptyModel());
 				}
-				event.modelRegistry.putObject(itemLocation, new FWSmartBlockModel(block.dummy, true));
+				event.modelRegistry.putObject(itemLocation, new FWSmartBlockModel(block.dummy, dummy));
 			}
 		});
 
@@ -246,6 +250,7 @@ public class RenderUtility implements ForgeLoadable {
 		});
 	}
 
+	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		//Load models
 		Game.render().modelProviders.forEach(m -> {

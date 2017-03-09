@@ -26,9 +26,7 @@ import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartItemModel;
-import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.Renderer;
-import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
 import nova.internal.core.Game;
 
@@ -71,15 +69,7 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 	public List<BakedQuad> getGeneralQuads() {
 		BWModel model = new BWModel();
 		model.matrix.translate(0.5, 0.5, 0.5);
-
-		if (item.components.has(StaticRenderer.class)) {
-			StaticRenderer staticRenderer = item.components.get(StaticRenderer.class);
-			staticRenderer.onRender.accept(model);
-		} else if (item.components.has(DynamicRenderer.class)) {
-			DynamicRenderer dynamicRenderer = item.components.get(DynamicRenderer.class);
-			dynamicRenderer.onRender.accept(model);
-		}
-
+		item.components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
 		return modelToQuads(model);
 	}
 

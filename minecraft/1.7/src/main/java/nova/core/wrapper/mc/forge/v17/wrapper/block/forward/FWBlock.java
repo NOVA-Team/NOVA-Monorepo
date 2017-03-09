@@ -424,22 +424,14 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderer) {
+	public void renderInventoryBlock(net.minecraft.block.Block block, int metadata, int modelId, RenderBlocks renderBlocks) {
 		if (this.dummy.components.has(Renderer.class)) {
 			GL11.glPushAttrib(GL_TEXTURE_BIT);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			GL11.glPushMatrix();
 			Tessellator.instance.startDrawingQuads();
 			BWModel model = new BWModel();
-
-			if (this.dummy.components.has(StaticRenderer.class)) {
-				StaticRenderer staticRenderer = this.dummy.components.get(StaticRenderer.class);
-				staticRenderer.onRender.accept(model);
-			} else if (this.dummy.components.has(DynamicRenderer.class)) {
-				DynamicRenderer dynamicRenderer = this.dummy.components.get(DynamicRenderer.class);
-				dynamicRenderer.onRender.accept(model);
-			}
-
+			this.dummy.components.getSet(Renderer.class).forEach(renderer -> renderer.onRender.accept(model));
 			model.render();
 			Tessellator.instance.draw();
 			GL11.glPopMatrix();
@@ -449,14 +441,14 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderer) {
+	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, net.minecraft.block.Block block, int modelId, RenderBlocks renderBlocks) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
-		Optional<StaticRenderer> opRenderer = blockInstance.components.getOp(StaticRenderer.class);
-		if (opRenderer.isPresent()) {
+		Optional<StaticRenderer> staticRenderer = blockInstance.components.getOp(StaticRenderer.class);
+		if (staticRenderer.isPresent()) {
 			BWModel model = new BWModel();
 			model.matrix = new MatrixStack().translate(x + 0.5, y + 0.5, z + 0.5);
-			opRenderer.get().onRender.accept(model);
-			model.renderWorld(world);
+			staticRenderer.get().onRender.accept(model);
+			model.render(world);
 
 			return Tessellator.instance.rawBufferIndex != 0; // Returns true if Tesselator is not empty. Avoids crash on empty Tesselator buffer.
 		}
