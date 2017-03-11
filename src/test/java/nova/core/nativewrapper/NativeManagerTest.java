@@ -43,8 +43,16 @@ public class NativeManagerTest {
 			val = v;
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			return obj instanceof Type1 && ((Type1) obj).val == val;
+		}
+
+		@Override
+		public int hashCode() {
+			int hash = 7;
+			hash = 67 * hash + this.val;
+			return hash;
 		}
 	}
 
@@ -55,8 +63,16 @@ public class NativeManagerTest {
 			val = v;
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			return obj instanceof Type2 && ((Type2) obj).val == val;
+		}
+
+		@Override
+		public int hashCode() {
+			int hash = 7;
+			hash = 67 * hash + this.val;
+			return hash;
 		}
 	}
 
