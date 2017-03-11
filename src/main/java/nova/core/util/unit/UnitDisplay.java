@@ -146,26 +146,26 @@ public class UnitDisplay {
 		String prefix = "";
 
 		if (useSymbol)
-			unitName = unit.symbol;
+			unitName = unit.getSymbol();
 		else if (value > 1)
-			unitName = unit.getPlural();
+			unitName = unit.getPluralName();
 		else
-			unitName = unit.name;
+			unitName = unit.getLocalizedName();
 
 		if (isSimple) {
 			if (value > 1) {
 				if (decimalPlaces < 1) {
-					return MathUtil.toString(value, removeTrailingZeroes) + " " + (useSymbol ? unit.symbol : unit.getPlural());
+					return MathUtil.toString(value, removeTrailingZeroes) + " " + (useSymbol ? unit.getSymbol() : unit.getPluralName());
 				}
 
-				return MathUtil.toString(MathUtil.roundDecimals(value, decimalPlaces), removeTrailingZeroes) + " " + (useSymbol ? unit.symbol : unit.getPlural());
+				return MathUtil.toString(MathUtil.roundDecimals(value, decimalPlaces), removeTrailingZeroes) + " " + (useSymbol ? unit.getSymbol() : unit.getPluralName());
 			}
 
 			if (decimalPlaces < 1) {
-				return MathUtil.toString(value, removeTrailingZeroes) + " " + (useSymbol ? unit.symbol : unit.name);
+				return MathUtil.toString(value, removeTrailingZeroes) + " " + (useSymbol ? unit.getSymbol() : unit.getLocalizedName());
 			}
 
-			return MathUtil.toString(MathUtil.roundDecimals(value, decimalPlaces), removeTrailingZeroes) + " " + (useSymbol ? unit.symbol : unit.name);
+			return MathUtil.toString(MathUtil.roundDecimals(value, decimalPlaces), removeTrailingZeroes) + " " + (useSymbol ? unit.getSymbol() : unit.getLocalizedName());
 		}
 
 		if (value < 0) {
