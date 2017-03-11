@@ -21,7 +21,11 @@
 package nova.core.util.registry;
 
 import nova.core.util.Identifiable;
+import nova.internal.core.Game;
+import nova.internal.core.util.InjectionUtil;
+import se.jbee.inject.Dependency;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -47,6 +51,48 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	 *
 	 * A factory's processor may be modified to allow specific customization of instantiated objects before it is used.
 	 * @param id The identifier for this factory type
+	 * @param type The implementation class
+	 * @param processor The processor function
+	 * @param mapping The custom DI mapping
+	 */
+	public Factory(String id, Class<? extends T> type, Function<T, T> processor, Function<Class<?>, Optional<?>> mapping) {
+		this.id = id;
+		this.constructor = () -> InjectionUtil.newInstance(type,
+			clazz -> clazz.isAssignableFrom(getClass()) ? Optional.of(this) : mapping.apply(clazz));
+		this.processor = processor;
+	}
+
+	/**
+	 * Creates a new factory with a constructor function that instantiates the factory object,
+	 * and with a processor that is capable of mutating the instantiated object after its initialization.
+	 *
+	 * A factory's processor may be modified to allow specific customization of instantiated objects before it is used.
+	 * @param id The identifier for this factory type
+	 * @param type The implementation class
+	 * @param processor The processor function
+	 */
+	public Factory(String id, Class<? extends T> type, Function<T, T> processor) {
+		this(id, type, processor, clazz -> Optional.empty());
+	}
+
+	/**
+	 * Creates a new factory with a constructor function that instantiates the factory object,
+	 * and with a processor that is capable of mutating the instantiated object after its initialization.
+	 *
+	 * A factory's processor may be modified to allow specific customization of instantiated objects before it is used.
+	 * @param id The identifier for this factory type
+	 * @param type The implementation class
+	 */
+	public Factory(String id, Class<? extends T> type) {
+		this(id, type, obj -> obj);
+	}
+
+	/**
+	 * Creates a new factory with a constructor function that instantiates the factory object,
+	 * and with a processor that is capable of mutating the instantiated object after its initialization.
+	 *
+	 * A factory's processor may be modified to allow specific customization of instantiated objects before it is used.
+	 * @param id The identifier for this factory type
 	 * @param constructor The construction function
 	 * @param processor The processor function
 	 */
@@ -56,6 +102,14 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 		this.processor = processor;
 	}
 
+	/**
+	 * Creates a new factory with a constructor function that instantiates the factory object,
+	 * and with a processor that is capable of mutating the instantiated object after its initialization.
+	 *
+	 * A factory's processor may be modified to allow specific customization of instantiated objects before it is used.
+	 * @param id The identifier for this factory type
+	 * @param constructor The construction function
+	 */
 	public Factory(String id, Supplier<T> constructor) {
 		this(id, constructor, obj -> obj);
 	}
@@ -69,6 +123,10 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 		return selfConstructor(id, constructor, this.processor.compose(processor));
 	}
 
+	protected S selfConstructor(String id, Class<T> type, Function<T, T> processor) {
+		return selfConstructor(id, () -> InjectionUtil.newInstance(type), processor);
+	}
+
 	protected abstract S selfConstructor(String id, Supplier<T> constructor, Function<T, T> processor);
 
 	/**
@@ -78,6 +136,7 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 		return processor.apply(constructor.get());
 	}
 
+	@Override
 	public String getID() {
 		return id;
 	}

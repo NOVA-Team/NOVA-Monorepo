@@ -23,6 +23,7 @@ package nova.core.util.registry;
 import nova.core.util.Identifiable;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -40,7 +41,29 @@ public abstract class FactoryManager<S extends FactoryManager<S, T, F>, T extend
 	/**
 	 * Register a new object construction factory.
 	 *
+	 * Note that you make use: register(id, BlockStone.class), passing the class of the implementation.
+	 * @param id The ID of the factory
+	 * @param mapping The custom DI mapping
+	 * @param type The class containing the implementation
+	 * @return The factory
+	 */
+	public abstract F register(String id, Class<? extends T> type, Function<Class<?>, Optional<?>> mapping);
+
+	/**
+	 * Register a new object construction factory.
+	 *
+	 * Note that you make use: register(id, BlockStone.class), passing the class of the implementation.
+	 * @param id The ID of the factory
+	 * @param type The class containing the implementation
+	 * @return The factory
+	 */
+	public abstract F register(String id, Class<? extends T> type);
+
+	/**
+	 * Register a new object construction factory.
+	 *
 	 * Note that you make use: register(BlockStone::new), passing a method reference.
+	 * @param id The ID of the factory
 	 * @param constructor Instance supplier {@link Supplier}
 	 * @return The factory
 	 */

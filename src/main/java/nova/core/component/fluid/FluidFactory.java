@@ -22,6 +22,7 @@ package nova.core.component.fluid;
 
 import nova.core.util.registry.Factory;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -29,6 +30,18 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public class FluidFactory extends Factory<FluidFactory, Fluid> {
+
+	public FluidFactory(String id, Class<? extends Fluid> type, Function<Fluid, Fluid> processor, Function<Class<?>, Optional<?>> mapping) {
+		super(id, type, processor, mapping);
+	}
+
+	public FluidFactory(String id, Class<? extends Fluid> type, Function<Fluid, Fluid> processor) {
+		super(id, type, processor);
+	}
+
+	public FluidFactory(String id, Class<? extends Fluid> type) {
+		super(id, type);
+	}
 
 	public FluidFactory(String id, Supplier<Fluid> constructor, Function<Fluid, Fluid> processor) {
 		super(id, constructor, processor);
