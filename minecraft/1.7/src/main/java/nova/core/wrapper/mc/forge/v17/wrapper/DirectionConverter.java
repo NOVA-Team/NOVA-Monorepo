@@ -23,12 +23,17 @@ package nova.core.wrapper.mc.forge.v17.wrapper;
 import net.minecraft.util.EnumFacing;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.util.Direction;
+import nova.internal.core.Game;
 
 /**
  *
  * @author ExE Boss
  */
 public class DirectionConverter implements NativeConverter<Direction, EnumFacing> {
+
+	public static DirectionConverter instance() {
+		return Game.natives().getNative(Direction.class, EnumFacing.class);
+	}
 
 	@Override
 	public Class<Direction> getNovaSide() {

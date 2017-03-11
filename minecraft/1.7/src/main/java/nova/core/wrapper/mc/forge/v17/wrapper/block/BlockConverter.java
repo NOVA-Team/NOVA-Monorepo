@@ -50,7 +50,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	public final HashMap<BlockFactory, net.minecraft.block.Block> blockFactoryMap = new HashMap<>();
 
 	public static BlockConverter instance() {
-		return (BlockConverter) Game.natives().getNative(Block.class, net.minecraft.block.Block.class);
+		return Game.natives().getNative(Block.class, net.minecraft.block.Block.class);
 	}
 
 	@Override

@@ -23,12 +23,18 @@ package nova.core.wrapper.mc.forge.v18.wrapper.cuboid;
 import net.minecraft.util.AxisAlignedBB;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.util.shape.Cuboid;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * @author Calclavia
  */
 public class CuboidConverter implements NativeConverter<Cuboid, AxisAlignedBB> {
+
+	public static CuboidConverter instance() {
+		return Game.natives().getNative(Cuboid.class, AxisAlignedBB.class);
+	}
+
 	@Override
 	public Class<Cuboid> getNovaSide() {
 		return Cuboid.class;
