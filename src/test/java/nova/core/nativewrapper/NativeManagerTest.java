@@ -61,18 +61,22 @@ public class NativeManagerTest {
 	}
 
 	public static class TestConverter implements NativeConverter<Type1, Type2> {
+		@Override
 		public Type2 toNative(Type1 o) {
 			return new Type2(o.val);
 		}
 
+		@Override
 		public Type1 toNova(Type2 o) {
 			return new Type1(o.val);
 		}
 
+		@Override
 		public Class<Type1> getNovaSide() {
 			return Type1.class;
 		}
 
+		@Override
 		public Class<Type2> getNativeSide() {
 			return Type2.class;
 		}

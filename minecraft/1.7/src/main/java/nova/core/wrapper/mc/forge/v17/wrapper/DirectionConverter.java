@@ -32,7 +32,7 @@ import nova.internal.core.Game;
 public class DirectionConverter implements NativeConverter<Direction, EnumFacing> {
 
 	public static DirectionConverter instance() {
-		return (DirectionConverter) Game.natives().getNative(Direction.class, EnumFacing.class);
+		return Game.natives().getNative(Direction.class, EnumFacing.class);
 	}
 
 	@Override

@@ -56,7 +56,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	private final HashBiMap<ItemFactory, MinecraftItemMapping> map = HashBiMap.create();
 
 	public static ItemConverter instance() {
-		return (ItemConverter) Game.natives().getNative(Item.class, ItemStack.class);
+		return Game.natives().getNative(Item.class, ItemStack.class);
 	}
 
 	@Override
