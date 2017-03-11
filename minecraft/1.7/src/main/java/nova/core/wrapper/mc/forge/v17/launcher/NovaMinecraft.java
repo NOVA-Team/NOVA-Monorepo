@@ -31,6 +31,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.common.MinecraftForge;
+import nova.core.config.ConfigHolder;
+import nova.core.config.Configuration;
 import nova.core.deps.MavenDependency;
 import nova.core.event.ServerEvent;
 import nova.core.wrapper.mc.forge.v17.NovaMinecraftPreloader;
@@ -60,6 +62,7 @@ import nova.internal.core.deps.DepDownloader;
 import nova.internal.core.launch.InitializationException;
 import nova.internal.core.launch.NovaLauncher;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -166,10 +169,8 @@ public class NovaMinecraft {
 			nativeConverters.stream().forEachOrdered(loadable -> loadable.preInit(evt));
 
 			// Initiate config system TODO: Storables
-			//		launcher.getLoadedModMap().forEach((mod, loader) -> {
-			//			Configuration config = new Configuration(new File(evt.getModConfigurationDirectory(), mod.name()));
-			//			ConfigManager.instance.sync(config, loader.getClass().getPackage().getName());
-			//		});
+			launcher.getLoadedModMap().entrySet().stream().filter(e -> e.getValue().getClass().isAnnotationPresent(ConfigHolder.class))
+				.forEach(e -> Configuration.load(new File(evt.getModConfigurationDirectory(), e.getKey().id() + ".hocon"), e.getValue()));
 
 			Game.language().init();
 			Game.render().init();
