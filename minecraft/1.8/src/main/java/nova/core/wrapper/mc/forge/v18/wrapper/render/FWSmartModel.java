@@ -33,9 +33,12 @@ import nova.core.render.model.MeshModel;
 import nova.core.render.model.Model;
 import nova.core.render.model.Vertex;
 import nova.core.util.Direction;
+import nova.core.util.math.MathUtil;
 import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,6 +89,7 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 						MeshModel meshModel = (MeshModel) model;
 						return meshModel.faces
 							.stream()
+							.filter(f -> f.vertices.size() > 2) // Only render faces with at least 3 vertices
 							.map(
 								face -> {
 									TextureAtlasSprite texture = face.texture.map(RenderUtility.instance::getTexture)
@@ -95,9 +99,14 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 										.map(v -> vertexToInts(v, texture, face.normal))
 										.collect(Collectors.toList());
 
+									if (vertexData.size() < 4)
+										// Do what Minecraft Forge does when rendering Wavefront OBJ models with triangles
+										vertexData.add(vertexData.get(vertexData.size() - 1));
+
 									int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
-									//TODO: The facing might be wrong
-									return new BakedQuad(data, -1, EnumFacing.values()[Direction.fromVector(face.normal).ordinal()]);
+									//TODO: The facing might be wrong        // format.getNextOffset() is in byte count per vertex, and we are deling with ints, so we don't need to multiply by 4
+									return new BakedQuad(Arrays.copyOf(data, MathUtil.min(data.length, format.getNextOffset())), -1,
+										Game.natives().toNative(Direction.fromVector(face.normal)));
 								}
 							);
 					}
