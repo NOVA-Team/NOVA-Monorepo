@@ -23,16 +23,22 @@ package nova.core.wrapper.mc.forge.v17.launcher;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.ProgressManager;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.Language;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
+import nova.core.language.LanguageManager;
+import nova.core.wrapper.mc.forge.v17.NovaMinecraftPreloader;
 import nova.core.wrapper.mc.forge.v17.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWTile;
@@ -45,6 +51,11 @@ import nova.core.wrapper.mc.forge.v17.wrapper.item.FWItem;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.SortedSet;
+
 /**
  * @author Calclavia
  */
@@ -56,6 +67,53 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(FWTile.class, FWTileRenderer.instance);
 		RenderingRegistry.registerEntityRenderingHandler(FWEntity.class, FWEntityRenderer.instance);
 		RenderUtility.instance.preInit(evt);
+	}
+
+	@Override
+	@SuppressWarnings({"unchecked", "deprecation"})
+	public void loadLanguage(LanguageManager languageManager) {
+		super.loadLanguage(languageManager);
+		ProgressManager.ProgressBar progressBar = ProgressManager.push("Loading NOVA language files",
+			NovaMinecraftPreloader.novaResourcePacks.size() + 1);
+		FMLProgressBar fmlProgressBar = new FMLProgressBar(progressBar);
+		fmlProgressBar.step("nova");
+		SortedSet<Language> languages = Minecraft.getMinecraft().getLanguageManager().getLanguages();
+		languages.stream()
+			.map(lang -> lang.getLanguageCode().replace('_', '-'))
+			.forEach(langName -> {
+				ResourceLocation location = new ResourceLocation(NovaMinecraft.id, langName + ".lang");
+				try {
+					Minecraft.getMinecraft().getResourceManager().getAllResources(location).forEach(resource ->
+						loadLanguage(languageManager, location, langName, ((IResource)resource).getInputStream()));
+				} catch (IOException ex) {
+					InputStream stream = ClientProxy.class.getResourceAsStream(String.format("assets/%s/%s", location.getResourceDomain(), location.getResourcePath()));
+					if (stream != null)
+						loadLanguage(languageManager, location, langName, stream);
+				}
+			});
+		NovaMinecraftPreloader.novaResourcePacks.forEach(pack -> {
+			fmlProgressBar.step(pack.getID());
+			pack.getLanguageFiles().stream().forEach(location -> {
+				String resourcePath = location.getResourcePath();
+				String langName = resourcePath.substring(5, resourcePath.length() - 5);
+				try {
+					Minecraft.getMinecraft().getResourceManager().getAllResources(location).forEach(resource ->
+						loadLanguage(languageManager, location, langName, ((IResource)resource).getInputStream()));
+				} catch (IOException ex) {
+				}
+			});
+		});
+		fmlProgressBar.finish();
+		ProgressManager.pop(progressBar);
+	}
+
+	private void loadLanguage(LanguageManager languageManager, ResourceLocation location, String langName, InputStream stream) {
+		try {
+			Properties p = new Properties();
+			p.load(stream);
+			p.entrySet().stream().forEach(e -> languageManager.register(langName, e.getKey().toString(), e.getValue().toString()));
+		} catch (IOException ex) {
+		}
 	}
 
 	@Override

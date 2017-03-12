@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class NovaFolderResourcePack extends FolderResourcePack implements NovaResourcePack<File> {
 	private final String modid;
@@ -106,6 +107,23 @@ public class NovaFolderResourcePack extends FolderResourcePack implements NovaRe
 	@Override
 	public String getID() {
 		return modid;
+	}
+
+	@Override
+	public Set<ResourceLocation> getLanguageFiles() {
+		Pattern langPattern = Pattern.compile("^[a-zA-Z0-9-]+\\.lang$", Pattern.CASE_INSENSITIVE);
+
+		Set<ResourceLocation> langFiles = new HashSet<>();
+
+		for (String domain : getResourceDomains()) {
+			findFileCaseInsensitive("assets/" + domain + "/lang/").filter(File::isDirectory).ifPresent(file -> {
+				Arrays.stream(file.listFiles((dir, name) -> langPattern.asPredicate().test(name)))
+					.map(File::getName)
+					.forEach(name -> langFiles.add(new ResourceLocation(domain, name)));
+			});
+		}
+
+		return langFiles;
 	}
 
 	@Override
