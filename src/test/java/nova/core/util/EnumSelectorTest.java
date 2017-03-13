@@ -20,12 +20,14 @@
 
 package nova.core.util;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static nova.testutils.NovaAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author ExE Boss
@@ -54,6 +56,35 @@ public class EnumSelectorTest {
 		enumSelectorExample3 = EnumSelector.of(EnumExample.class).allowAll().lock();
 		enumSelectorExample4 = EnumSelector.of(EnumExample.class).blockAll().lock();
     }
+
+	@Test
+	public void testAdditionalMethods() {
+		EnumSelector<EnumExample> ex1a = EnumSelector.of(EnumExample.class).blockAll().apart(enumSelectorExample1).lock();
+		EnumSelector<EnumExample> ex1b = EnumSelector.of(EnumExample.class).allowAll().apart(enumSelectorExample1).lock();
+		EnumSelector<EnumExample> ex1c = EnumSelector.of(EnumExample.class).blockAll().apart(enumSelectorExample1.toSet()).lock();
+		EnumSelector<EnumExample> ex1d = EnumSelector.of(EnumExample.class).allowAll().apart(enumSelectorExample1.toSet()).lock();
+
+		EnumSelector<EnumExample> ex2a = EnumSelector.of(EnumExample.class).blockAll().apart(enumSelectorExample2).lock();
+		EnumSelector<EnumExample> ex2b = EnumSelector.of(EnumExample.class).allowAll().apart(enumSelectorExample2).lock();
+		EnumSelector<EnumExample> ex2c = EnumSelector.of(EnumExample.class).blockAll().apart(enumSelectorExample2::iterator).lock();
+		EnumSelector<EnumExample> ex2d = EnumSelector.of(EnumExample.class).allowAll().apart(enumSelectorExample2::iterator).lock();
+
+		EnumSelector<EnumExample> ex3a = EnumSelector.of(EnumExample.class).blockAll().apart(EnumExample.values()).lock();
+		EnumSelector<EnumExample> ex3b = EnumSelector.of(EnumExample.class).allowAll().apart(EnumExample.values()).lock();
+
+		assertThat(ex1a.allows(EnumExample.EXAMPLE_42)).isTrue();
+		assertThat(ex1b.allows(EnumExample.EXAMPLE_42)).isFalse();
+		assertThat(ex1c.allows(EnumExample.EXAMPLE_42)).isTrue();
+		assertThat(ex1d.allows(EnumExample.EXAMPLE_42)).isFalse();
+
+		assertThat(ex2a.allows(EnumExample.EXAMPLE_42)).isFalse();
+		assertThat(ex2b.allows(EnumExample.EXAMPLE_42)).isTrue();
+		assertThat(ex2c.allows(EnumExample.EXAMPLE_42)).isFalse();
+		assertThat(ex2d.allows(EnumExample.EXAMPLE_42)).isTrue();
+
+		assertThat(ex3a.allowsAll()).isTrue();
+		assertThat(ex3b.blocksAll()).isTrue();
+	}
 
 	@Test
 	public void testAllLocked() {
@@ -172,5 +203,40 @@ public class EnumSelectorTest {
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("You can't allow all enum values when you are already blocking them.");
 		enumSelectorExample.allowAll();
+	}
+
+	@Test
+	public void testApartIteratorException() {
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("Cannot call EnumSelector.apart(EnumSelector) without specifying default behaviour.");
+		EnumSelector<EnumExample> enumSelectorExample = EnumSelector.of(EnumExample.class).apart(enumSelectorExample1);
+	}
+
+	@Test
+	public void testApartEnumExampleException() {
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectCause(CoreMatchers.instanceOf(IllegalStateException.class));
+		EnumSelector<EnumExample> enumSelectorExample = EnumSelector.of(EnumExample.class).allowAll().apart(EnumSelector.of(EnumExample.class));
+	}
+
+	@Test
+	public void testToString() {
+		assertThat(enumSelectorExample1.toString()).isEqualTo('[' + String.join(", ", EnumExample.EXAMPLE_24.toString(), EnumExample.EXAMPLE_42.toString()) + ']');
+		assertThat(enumSelectorExample4.toString()).isEqualTo("[]");
+	}
+
+	@Test
+	public void testHashCode() {
+		assertThat(enumSelectorExample3.hashCode()).isEqualTo(EnumSelector.of(EnumExample.class).allowAll().lock().hashCode());
+		assertThat(enumSelectorExample4.hashCode()).isEqualTo(EnumSelector.of(EnumExample.class).blockAll().lock().hashCode());
+	}
+
+	@Test
+	public void testEquals() {
+		assertThat(enumSelectorExample1).isEqualTo(enumSelectorExample1);
+		assertThat(enumSelectorExample2).isNotEqualTo(null);
+		assertThat(enumSelectorExample2).isNotEqualTo(this);
+		assertThat(enumSelectorExample2).isNotEqualTo(enumSelectorExample3);
+		assertThat(enumSelectorExample4).isEqualTo(EnumSelector.of(EnumExample.class).blockAll().lock());
 	}
 }
