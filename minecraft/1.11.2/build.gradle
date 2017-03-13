@@ -56,6 +56,10 @@ task fatJar(type: Jar) {
 		attributes 'FMLAT': 'nova_at.cfg'
 	}
 	classifier = 'fat'
+	
+	doLast {
+		reobfFatJar.execute()
+	}
 }
 
 artifacts {
