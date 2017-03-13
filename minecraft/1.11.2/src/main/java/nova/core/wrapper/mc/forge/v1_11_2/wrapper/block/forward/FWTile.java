@@ -35,32 +35,36 @@ import nova.core.block.Stateful;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
+import nova.core.util.Direction;
 import nova.core.util.EnumSelector;
 import nova.core.wrapper.mc.forge.v1_11_2.network.netty.MCNetworkManager;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.NovaCapabilityProvider;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A Minecraft TileEntity to Nova block wrapper
  * @author Calclavia
  */
-public class FWTile extends TileEntity {
+public class FWTile extends TileEntity implements NovaCapabilityProvider {
 
-	private final Map<Capability<?>, Object> capabilities = new HashMap<>();
-	private final Map<EnumFacing, Map<Capability<?>, Object>> sidedCapabilities = new HashMap<>();
+	private final EnumMap<Direction, Map<Capability<?>, Object>> capabilities = new EnumMap<>(Direction.class); {
+		for (Direction facing : Direction.values())
+			capabilities.put(facing, new ConcurrentHashMap<>());
+	}
 
 	protected String blockID;
 	protected Block block;
 	protected Data cacheData = null;
 
-	public FWTile() {
-		for (EnumFacing facing : EnumFacing.VALUES)
-			sidedCapabilities.put(facing, new HashMap<>());
-	}
+	public FWTile() {}
 
 	public FWTile(String blockID) {
 		this.blockID = blockID;
@@ -127,36 +131,48 @@ public class FWTile extends TileEntity {
 		cacheData = Game.natives().toNova(nbt.getCompoundTag("nova"));
 	}
 
-	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<EnumFacing> facing) {
-		if (facing == null || facing.allowsAll()) {
-			if (capabilities.containsKey(capability))
+	@Override
+	public boolean hasCapabilities() {
+		return capabilities.values().parallelStream().map(map -> map.keySet().parallelStream()).count() > 0;
+	}
+
+	@Override
+	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<Direction> facing) {
+		if (facing.allowsAll()) {
+			if (capabilities.get(Direction.UNKNOWN).containsKey(capability))
 				throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
 
-			capabilities.put(capability, capabilityInstance);
+			capabilities.get(Direction.UNKNOWN).put(capability, capabilityInstance);
 		} else {
 			facing.forEach(enumFacing -> {
-				Map<Capability<?>, Object> capabilities = sidedCapabilities.get(enumFacing);
+				Map<Capability<?>, Object> caps = capabilities.get(enumFacing);
 
-				if (capabilities.containsKey(capability))
+				if (caps.containsKey(capability))
 					throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
 
-				capabilities.put(capability, capabilityInstance);
+				caps.put(capability, capabilityInstance);
 			});
 		}
 		return capabilityInstance;
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return (facing != null ? sidedCapabilities.get(facing).containsValue(capability) : capabilities.containsValue(capability))
-				|| super.hasCapability(capability, facing);
+	public boolean hasCapability(Capability<?> capability, Direction direction) {
+		return Optional.of(direction)
+			.filter(d -> d != Direction.UNKNOWN)
+			.map(capabilities::get)
+			.map(caps -> caps.containsValue(capability))
+			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).containsValue(capability));
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (!hasCapability(capability, facing)) return null;
-		T capabilityInstance = (T) (facing != null ? sidedCapabilities.get(facing).get(capability) : capabilities.get(capability));
-		return capabilityInstance != null ? capabilityInstance : super.getCapability(capability, facing);
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(Capability<T> capability, Direction direction) {
+		return (T) Optional.of(direction)
+			.filter(d -> d != Direction.UNKNOWN)
+			.map(capabilities::get)
+			.map(caps -> caps.get(capability))
+			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).get(capability));
 	}
 
 	@Override

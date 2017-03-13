@@ -56,7 +56,7 @@ task fatJar(type: Jar) {
 		attributes 'FMLAT': 'nova_at.cfg'
 	}
 	classifier = 'fat'
-	
+
 	doLast {
 		reobfFatJar.execute()
 	}
@@ -107,7 +107,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 minecraft {
 	version = property("minecraft.version") + "-" + property("forge.version")
-	mappings = 'snapshot_20170227'
+	mappings = 'snapshot_20170313'
 	runDir = "run"
 }
 

@@ -29,12 +29,12 @@ import nova.core.event.bus.Event;
 import nova.core.item.Item;
 import nova.core.util.Direction;
 import nova.core.world.World;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilityProvider;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItem;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItemCapabilityProvider;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Optional;
@@ -116,9 +116,9 @@ public class WrapperEvent {
 
 	public static class FWItemInitCapabilities extends Event {
 		public final Item novaItem;
-		public final FWCapabilityProvider capabilityProvider;
+		public final FWItemCapabilityProvider capabilityProvider;
 
-		public FWItemInitCapabilities(Item novaItem, FWCapabilityProvider capabilityProvider) {
+		public FWItemInitCapabilities(Item novaItem, FWItemCapabilityProvider capabilityProvider) {
 			this.novaItem = novaItem;
 			this.capabilityProvider = capabilityProvider;
 		}

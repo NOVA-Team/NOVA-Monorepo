@@ -29,12 +29,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilityProvider;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
+import nova.internal.core.Game;
 
 import java.util.List;
 import javax.annotation.Nullable;
@@ -54,9 +53,10 @@ public class FWItem extends net.minecraft.item.Item implements IFWItem {
 
 	@Override
 	@Nullable
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+	public FWItemCapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
 		Item item = ItemConverter.instance().toNova(stack);
-		WrapperEvent.FWItemInitCapabilities event = new WrapperEvent.FWItemInitCapabilities(item, new FWCapabilityProvider());
+		WrapperEvent.FWItemInitCapabilities event = new WrapperEvent.FWItemInitCapabilities(item, new FWItemCapabilityProvider(item));
+		Game.events().publish(event);
 		return event.capabilityProvider.hasCapabilities() ? event.capabilityProvider : null;
 	}
 

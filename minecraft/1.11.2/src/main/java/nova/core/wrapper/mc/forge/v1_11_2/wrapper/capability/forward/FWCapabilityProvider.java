@@ -5,60 +5,69 @@
  */
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward;
 
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import nova.core.util.Direction;
 import nova.core.util.EnumSelector;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
  * @author ExE Boss
  */
-public class FWCapabilityProvider implements ICapabilityProvider {
+public class FWCapabilityProvider implements NovaCapabilityProvider {
 
-	private final Map<Capability<?>, Object> capabilities = new HashMap<>();
-	private final Map<EnumFacing, Map<Capability<?>, Object>> sidedCapabilities = new HashMap<>();
+	private final EnumMap<Direction, Map<Capability<?>, Object>> capabilities = new EnumMap<>(Direction.class);
 
 	public FWCapabilityProvider() {
-		for (EnumFacing facing : EnumFacing.VALUES)
-			sidedCapabilities.put(facing, new HashMap<>());
+		for (Direction facing : Direction.values())
+			capabilities.put(facing, new ConcurrentHashMap<>());
 	}
 
+	@Override
 	public boolean hasCapabilities() {
-		return !capabilities.isEmpty() || sidedCapabilities.values().stream().flatMap(map -> map.keySet().stream()).count() > 0;
+		return capabilities.values().parallelStream().map(map -> map.keySet().parallelStream()).count() > 0;
 	}
 
-	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<EnumFacing> facing) {
-		if (facing == null || facing.allowsAll()) {
-			if (capabilities.containsKey(capability))
+	@Override
+	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<Direction> facing) {
+		if (facing.allowsAll()) {
+			if (capabilities.get(Direction.UNKNOWN).containsKey(capability))
 				throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
 
-			capabilities.put(capability, capabilityInstance);
+			capabilities.get(Direction.UNKNOWN).put(capability, capabilityInstance);
 		} else {
 			facing.forEach(enumFacing -> {
-				Map<Capability<?>, Object> capabilities = sidedCapabilities.get(enumFacing);
+				Map<Capability<?>, Object> caps = capabilities.get(enumFacing);
 
-				if (capabilities.containsKey(capability))
+				if (caps.containsKey(capability))
 					throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
 
-				capabilities.put(capability, capabilityInstance);
+				caps.put(capability, capabilityInstance);
 			});
 		}
 		return capabilityInstance;
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return (facing != null ? sidedCapabilities.get(facing).containsValue(capability) : capabilities.containsValue(capability));
+	public boolean hasCapability(Capability<?> capability, Direction direction) {
+		return Optional.of(direction)
+			.filter(d -> d != Direction.UNKNOWN)
+			.map(capabilities::get)
+			.map(caps -> caps.containsValue(capability))
+			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).containsValue(capability));
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (!hasCapability(capability, facing)) return null;
-		return (T) (facing != null ? sidedCapabilities.get(facing).get(capability) : capabilities.get(capability));
+	public <T> T getCapability(Capability<T> capability, Direction direction) {
+		return (T) Optional.of(direction)
+			.filter(d -> d != Direction.UNKNOWN)
+			.map(capabilities::get)
+			.map(caps -> caps.get(capability))
+			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).get(capability));
 	}
 }

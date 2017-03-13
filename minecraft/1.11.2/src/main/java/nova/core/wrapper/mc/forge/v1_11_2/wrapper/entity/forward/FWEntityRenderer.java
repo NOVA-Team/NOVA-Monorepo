@@ -72,8 +72,8 @@ public class FWEntityRenderer extends Render<FWEntity> {
 				GL11.glBlendFunc(model.blendSFactor, model.blendDFactor);
 			}
 
-			Tessellator.getInstance().getBuffer().begin(GL_QUADS, DefaultVertexFormats.BLOCK);
-			model.render(Optional.of(Minecraft.getMinecraft().getRenderManager()));
+			Tessellator.getInstance().getBuffer().begin(GL_QUADS, DefaultVertexFormats.ITEM);
+			model.render(Minecraft.getMinecraft().getRenderManager());
 			Tessellator.getInstance().draw();
 
 			if (model.blendSFactor > 0 && model.blendDFactor > 0) {
@@ -102,8 +102,8 @@ public class FWEntityRenderer extends Render<FWEntity> {
 				GL11.glBlendFunc(model.blendSFactor, model.blendDFactor);
 			}
 
-			Tessellator.getInstance().getBuffer().begin(GL_QUADS, DefaultVertexFormats.BLOCK);
-			model.render(Optional.of(Minecraft.getMinecraft().getRenderManager()));
+			Tessellator.getInstance().getBuffer().begin(GL_QUADS, DefaultVertexFormats.ITEM);
+			model.render(Minecraft.getMinecraft().getRenderManager());
 			Tessellator.getInstance().draw();
 
 			if (model.blendSFactor > 0 && model.blendDFactor > 0) {

@@ -23,6 +23,8 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.CapabilityDispatcher;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -41,10 +43,12 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItemFactory;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItem;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItemCapabilityProvider;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWNBTTagCompound;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.Set;
 
@@ -74,24 +78,27 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	}
 
 	@Override
-	public Item toNova(ItemStack itemStack) {
-		return getNovaItem(itemStack).setCount(itemStack.getCount());
+	public Item toNova(ItemStack stack) {
+		return getNovaItem(stack).setCount(stack.getCount());
 	}
 
-	public Item getNovaItem(ItemStack itemStack) {
-		if (itemStack.getItemDamage() == net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE) {
+	public Item getNovaItem(ItemStack stack) {
+		if (stack.getItemDamage() == net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE) {
 			// TODO: Deal withPriority wildcard meta values - important for the ore dictionary
-			return getNovaItem(new ItemStack(itemStack.getItem(), 1, 0));
+			return getNovaItem(new ItemStack(stack.getItem(), 1, 0));
 		}
 
-		if (itemStack.getTagCompound() != null && itemStack.getTagCompound() instanceof FWNBTTagCompound) {
-			return Objects.requireNonNull((FWNBTTagCompound) itemStack.getTagCompound()).getItem();
+		ICapabilityProvider stackCapabilities = getStackCapabilities(stack);
+		if (stack.getTagCompound() instanceof FWNBTTagCompound) {
+			return ((FWNBTTagCompound) stack.getTagCompound()).getItem();
+		} else if (stackCapabilities instanceof FWItemCapabilityProvider) {
+			return ((FWItemCapabilityProvider) stackCapabilities).item;
 		} else {
-			ItemFactory itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
+			ItemFactory itemFactory = registerMinecraftMapping(stack.getItem(), stack.getItemDamage());
 
-			Data data = itemStack.getTagCompound() != null ? Game.natives().toNova(itemStack.getTagCompound()) : new Data();
-			if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
-				data.put("damage", itemStack.getItemDamage());
+			Data data = stack.getTagCompound() != null ? Game.natives().toNova(stack.getTagCompound()) : new Data();
+			if (!stack.getHasSubtypes() && stack.getItemDamage() > 0) {
+				data.put("damage", stack.getItemDamage());
 			}
 
 			return itemFactory.build(data);
@@ -330,6 +337,31 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 			} else {
 				return Objects.toString(net.minecraft.item.Item.REGISTRY.getNameForObject(item));
 			}
+		}
+	}
+
+	private ICapabilityProvider getStackCapabilities(ItemStack stack) {
+		try {
+			Field capabilities = ItemStack.class.getDeclaredField("capabilities");
+			capabilities.setAccessible(true);
+			@SuppressWarnings("unchecked")
+			CapabilityDispatcher dispatcher = (CapabilityDispatcher) capabilities.get(stack);
+			capabilities.setAccessible(false);
+			if (dispatcher == null)
+				return null;
+
+			Field caps = CapabilityDispatcher.class.getDeclaredField("caps");
+			caps.setAccessible(true);
+			@SuppressWarnings("unchecked")
+			ICapabilityProvider[] providers = (ICapabilityProvider[]) caps.get(dispatcher);
+			caps.setAccessible(false);
+
+			ICapabilityProvider provider = null;
+			if (providers.length > 0)
+				provider = providers[0];
+			return provider;
+		} catch (ReflectiveOperationException | ClassCastException ex) {
+			return null;
 		}
 	}
 }

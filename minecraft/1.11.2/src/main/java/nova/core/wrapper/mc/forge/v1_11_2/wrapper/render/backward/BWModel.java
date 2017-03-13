@@ -20,27 +20,27 @@
 
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.backward;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import nova.core.render.model.CustomModel;
 import nova.core.render.model.MeshModel;
+import nova.core.render.model.Vertex;
 import nova.core.render.texture.EntityTexture;
-import nova.core.render.texture.Texture;
 import nova.core.util.math.Vector3DUtil;
 import nova.core.wrapper.mc.forge.v1_11_2.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.AssetConverter;
-import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
@@ -52,15 +52,15 @@ import javax.annotation.Nonnull;
 public class BWModel extends MeshModel {
 
 	public void render() {
-		render(Optional.empty());
+		render(Optional.empty(), Optional.empty());
 	}
 
 	public void render(@Nonnull IBlockAccess access) {
 		render(Optional.of(access), Optional.empty());
 	}
 
-	public void render(Optional<RenderManager> entityRenderManager) {
-		render(Optional.empty(), entityRenderManager);
+	public void render(@Nonnull RenderManager entityRenderManager) {
+		render(Optional.ofNullable(entityRenderManager.world), Optional.of(entityRenderManager));
 	}
 
 	public void render(Optional<IBlockAccess> access, Optional<RenderManager> entityRenderManager) {
@@ -81,7 +81,29 @@ public class BWModel extends MeshModel {
 							entityRenderManager.get().renderEngine.bindTexture(AssetConverter.instance().toNative(face.texture.get()));
 						}
 
-						face.vertices.forEach(v -> {
+						final List<Vertex> vertices;
+						switch (worldRenderer.getDrawMode()) {
+							case GL11.GL_TRIANGLES:
+								vertices = new ArrayList<>(3);
+								vertices.add(face.vertices.get(0));
+								vertices.add(face.vertices.get(1));
+								vertices.add(face.vertices.get(2));
+								break;
+							case GL11.GL_QUADS:
+								vertices = new ArrayList<>(4);
+								vertices.add(face.vertices.get(0));
+								vertices.add(face.vertices.get(1));
+								vertices.add(face.vertices.get(2));
+								if (face.vertices.size() >= 4)
+									vertices.add(face.vertices.get(3));
+								else
+									vertices.add(face.vertices.get(2));
+								break;
+							default:
+								vertices = new ArrayList<>(face.vertices);
+								break;
+						}
+						vertices.forEach(v -> {
 							worldRenderer.getVertexFormat().getElements().forEach(vfe -> {
 								switch (vfe.getUsage())	{
 									case POSITION: {
@@ -105,24 +127,21 @@ public class BWModel extends MeshModel {
 												worldRenderer.tex(tex.getInterpolatedU(16 * v.uv.getX()), tex.getInterpolatedV(16 * v.uv.getY()));
 											}
 										} else if (vfe.getIndex() == 1) {
-											// TODO: Lightmap
 											if (face.getBrightness() >= 0) {
 												worldRenderer.lightmap((int)(face.getBrightness() * 15), (int)(face.getBrightness() * 11));
 											} else if(access.isPresent()) {
 												// Determine nearest adjacent block.
 												Vector3D nearestPos = Vector3DUtil.floor(face.getCenter().add(face.normal.scalarMultiply(0.05)));
-												BlockPos blockPos = Game.natives().toNative(nearestPos);
+												BlockPos blockPos = VectorConverter.instance().toNative(nearestPos);
 												IBlockState state = access.get().getBlockState(blockPos);
-												Block block = state.getBlock();
-												@SuppressWarnings("deprecation")
-												int brightness = block.getPackedLightmapCoords(state, access.get(), blockPos);
+												int brightness = state.getPackedLightmapCoords(access.get(), blockPos);
 
 												// TODO: Add Ambient Occlusion
 											/*
-											int aoBrightnessXYNN = block.getPackedLightmapCoords(state, access.get(), blockPos.east());
-											int aoBrightnessYZNN = block.getPackedLightmapCoords(state, access.get(), blockPos.north());
-											int aoBrightnessYZNP = block.getPackedLightmapCoords(state, access.get(), blockPos.south());
-											int aoBrightnessXYPN = block.getPackedLightmapCoords(state, access.get(), blockPos.west());
+											int aoBrightnessXYNN = state.getPackedLightmapCoords(access.get(), blockPos.east());
+											int aoBrightnessYZNN = state.getPackedLightmapCoords(access.get(), blockPos.north());
+											int aoBrightnessYZNP = state.getPackedLightmapCoords(access.get(), blockPos.south());
+											int aoBrightnessXYPN = state.getPackedLightmapCoords(access.get(), blockPos.west());
 
 											int brightnessTopLeft = getAoBrightness(aoBrightnessXYZNNP, aoBrightnessXYNN, aoBrightnessYZNP, i1);
 											int brightnessTopRight = getAoBrightness(aoBrightnessYZNP, aoBrightnessXYZPNP, aoBrightnessXYPN, i1);
