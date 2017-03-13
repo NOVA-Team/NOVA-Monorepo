@@ -24,13 +24,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import nova.core.component.renderer.DynamicRenderer;
+import net.minecraft.world.World;
 import nova.core.component.renderer.Renderer;
-import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.backward.BWModel;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -47,7 +48,6 @@ public class FWSmartItemModel extends FWSmartModel implements IBakedModel {
 
 	@SuppressWarnings("deprecation")
 	public FWSmartItemModel(Item item) {
-		super();
 		this.item = item;
 		// Change the default transforms to the default Item transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
@@ -61,29 +61,28 @@ public class FWSmartItemModel extends FWSmartModel implements IBakedModel {
 			ItemTransformVec3f.DEFAULT);// Fixed
 	}
 
+	//Item rendering
+	@Override
+	public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+		Item item = ItemConverter.instance().toNova(stack);
+
+		if (item.components.has(Renderer.class)) {
+			return new FWSmartItemModel(item);
+		}
+
+		return new FWEmptyModel();
+	}
+
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
 		BWModel model = new BWModel();
 		model.matrix.translate(0.5, 0.5, 0.5);
-
-		if (item.components.has(StaticRenderer.class)) {
-			StaticRenderer staticRenderer = item.components.get(StaticRenderer.class);
-			staticRenderer.onRender.accept(model);
-		} else if (item.components.has(DynamicRenderer.class)) {
-			DynamicRenderer dynamicRenderer = item.components.get(DynamicRenderer.class);
-			dynamicRenderer.onRender.accept(model);
-		}
-
+		item.components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
 		return modelToQuads(model);
 	}
 
 	@Override
 	public boolean isGui3d() {
 		return item.components.has(Renderer.class);
-	}
-
-	@Override
-	public ItemOverrideList getOverrides() {
-		return ItemOverrideList.NONE;
 	}
 }

@@ -51,7 +51,7 @@ import java.util.EnumMap;
  * @since 26/05/14
  */
 public class MCNetworkManager extends NetworkManager {
-	public final String channel = NovaMinecraft.id;
+	public final String channel = NovaMinecraft.MOD_ID;
 	public final EnumMap<Side, FMLEmbeddedChannel> channelEnumMap = NetworkRegistry.INSTANCE.newChannel(channel, new ChannelHandler(), new MCPacketHandler());
 
 	public Packet<?> toMCPacket(PacketAbstract packet) {
@@ -112,7 +112,7 @@ public class MCNetworkManager extends NetworkManager {
 
 	/**
 	 * @param packet the packet to send to the players in the dimension
-	 * @param dimId the dimension id to send to.
+	 * @param dimId the dimension MOD_ID to send to.
 	 */
 	public void sendToAllInDimension(PacketAbstract packet, int dimId) {
 		this.channelEnumMap.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);

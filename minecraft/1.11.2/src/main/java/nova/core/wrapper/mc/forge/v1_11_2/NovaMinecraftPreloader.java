@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2015 NOVA, All rights reserved.
- * This library is free software, licensed under GNU Lesser General Public License version 3
+ * This library is free software, licensed under GNU Lesser General Public License VERSION 3
  *
  * This file is part of NOVA.
  *
  * NOVA is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, either VERSION 3 of the License, or
+ * (at your option) any later VERSION.
  *
  * NOVA is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -43,6 +43,7 @@ import nova.core.util.ClassLoaderUtil;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.NovaFileResourcePack;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.NovaFolderResourcePack;
 import nova.core.wrapper.mc.forge.v1_11_2.util.ReflectionUtil;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.NovaResourcePack;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,8 +53,10 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,20 +65,22 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
 
 public class NovaMinecraftPreloader extends DummyModContainer {
-	public static final String version = "0.0.1";
+	public static final String VERSION = "0.0.1";
 	private static final ModMetadata md;
 	public static Set<Class<?>> modClasses;
 	public static Map<Class<?>, File> modClassToFile;
+	public static List<NovaResourcePack<?>> novaResourcePacks = Collections.emptyList();
 
 	static {
 		md = new ModMetadata();
 		md.modId = "novapreloader";
 		md.name = "NOVA Preloader";
-		md.version = version;
+		md.version = VERSION;
 	}
 
 	public NovaMinecraftPreloader() {
@@ -293,6 +298,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			List<IResourcePack> packs = (List<IResourcePack>) resourcePackField.get(FMLClientHandler.instance());
 
 			Set<String> addedPacks = new HashSet<>();
+			List<NovaResourcePack<?>> novaPacks = new LinkedList<>();
 
 			classesMap.keySet().forEach(novaMod -> {
 				Class<?> c = classesMap.get(novaMod);
@@ -312,13 +318,15 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 
 					if (!addedPacks.contains(fn)) {
 						addedPacks.add(fn);
-						packs.add(new NovaFileResourcePack(file, novaMod.id(), novaMod.domains()));
+						NovaFileResourcePack pack = new NovaFileResourcePack(file, novaMod.id(), novaMod.domains());
+						packs.add(pack);
+						novaPacks.add(pack);
 						System.out.println("Registered NOVA jar resource pack: " + fn);
 					}
 				} else {
 					//Add folder resource pack location. The folderLocation is the root of the project, including the packages of classes, and an assets folder inside.
 					String folderLocation = c.getProtectionDomain().getCodeSource().getLocation().getPath();
-					String classPath = c.getCanonicalName().replaceAll("\\.", "/");
+					String classPath = c.getCanonicalName().replace('.', '/');
 					folderLocation = folderLocation.replaceFirst("file:", "").replace(classPath, "").replace("/.class", "").replaceAll("%20", " ");
 					File folderFile = new File(folderLocation);
 					if (!new File(folderFile, "assets").isDirectory()) {
@@ -329,11 +337,14 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 					modClassToFile.put(c, folderFile);
 
 					addedPacks.add(folderLocation);
-					packs.add(new NovaFolderResourcePack(folderFile, novaMod.id(), novaMod.domains()));
+					NovaFolderResourcePack pack = new NovaFolderResourcePack(folderFile, novaMod.id(), novaMod.domains());
+					packs.add(pack);
+					novaPacks.add(pack);
 					System.out.println("Registered NOVA folder resource pack: " + folderFile.getAbsolutePath());
 				}
 			});
 			resourcePackField.set(FMLClientHandler.instance(), packs);
+			novaResourcePacks = new ArrayList<>(novaPacks);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

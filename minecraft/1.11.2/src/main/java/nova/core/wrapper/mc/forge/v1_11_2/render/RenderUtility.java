@@ -23,9 +23,6 @@ package nova.core.wrapper.mc.forge.v1_11_2.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.FaceBakery;
-import net.minecraft.client.renderer.block.model.ItemModelGenerator;
-import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
@@ -40,11 +37,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
+import nova.core.item.ItemFactory;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.AssetConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItem;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.IFWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.forward.FWEmptyModel;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.forward.FWSmartBlockModel;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.forward.FWSmartItemModel;
@@ -55,7 +54,6 @@ import org.lwjgl.opengl.GL11;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.Optional;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_FLAT;
@@ -78,37 +76,6 @@ public class RenderUtility implements ForgeLoadable {
 	public static final ResourceLocation particleResource = new ResourceLocation("textures/particle/particles.png");
 
 	public static final RenderUtility instance = new RenderUtility();
-	// Cruft needed to generate default item models
-	protected static final ItemModelGenerator ITEM_MODEL_GENERATOR = new ItemModelGenerator();
-	protected static final FaceBakery FACE_BAKERY = new FaceBakery();
-	// Ugly D:
-	protected static final ModelBlock MODEL_GENERATED = ModelBlock.deserialize(
-			"{" +
-			"	\"elements\":[{\n" +
-			"		\"from\": [0, 0, 0],\n" +
-			"		\"to\": [16, 16, 16],\n" +
-			"		\"faces\": {\n" +
-			"			\"down\": {\"uv\": [0, 0, 16, 16], \"texture\":\"\"}\n" +
-			"		}\n" +
-			"	}],\n" +
-			"	\"display\": {\n" +
-			"		\"thirdperson_righthand\": {\n" +
-			"			\"rotation\": [ -90, 0, 0 ],\n" +
-			"			\"translation\": [ 0, 1, -3 ],\n" +
-			"			\"scale\": [ 0.55, 0.55, 0.55 ]\n" +
-			"		},\n" +
-			"		\"firstperson_righthand\": {\n" +
-			"			\"rotation\": [ 0, -90, 25 ],\n" +
-			"			\"translation\": [ 0, 3.75, 2.3125 ],\n" +
-			"			\"scale\": [ 0.6, 0.6, 0.6 ]\n" +
-			"		},\n" +
-			"		\"firstperson_lefthand\": {\n" +
-			"			\"rotation\": [ 0, 90, -25 ],\n" +
-			"			\"translation\": [ 0, 3.75, 2.3125 ],\n" +
-			"			\"scale\": [ 0.6, 0.6, 0.6 ]\n" +
-			"		}\n" +
-			"	}\n" +
-			"}");
 	//NOVA Texture to MC TextureAtlasSprite
 	private final HashMap<Texture, TextureAtlasSprite> textureMap = new HashMap<>();
 
@@ -155,12 +122,6 @@ public class RenderUtility implements ForgeLoadable {
 		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
 	}
 
-	public TextureAtlasSprite getTexture(Optional<Texture> texture) {
-		if (!texture.isPresent())
-			return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
-		return getTexture(texture.get());
-	}
-
 	public TextureAtlasSprite getTexture(Texture texture) {
 		if (textureMap.containsKey(texture)) {
 			return textureMap.get(texture);
@@ -179,7 +140,6 @@ public class RenderUtility implements ForgeLoadable {
 		if (event.getMap() == Minecraft.getMinecraft().getTextureMapBlocks()) {
 			Game.render().blockTextures.forEach(t -> registerIcon(t, event));
 			Game.render().itemTextures.forEach(t -> registerIcon(t, event));
-			//TODO: This is HACKS. We should create custom sprite sheets for entities.
 			Game.render().entityTextures.forEach(t -> registerIcon(t, event));
 		}
 	}
@@ -195,7 +155,15 @@ public class RenderUtility implements ForgeLoadable {
 		Game.render().entityTextures.forEach(this::updateTexureDimensions);
 	}
 
+	/**
+	 * Update the texture dimensions for the given texture.
+	 * @param texture The texture to update.
+	 * @throws RuntimeException If the texture update fails.
+	 * @see <a href="https://github.com/NOVA-Team/NOVA-Core/pull/265#discussion_r103739268">PR review</a>
+	 */
 	private void updateTexureDimensions(Texture texture) {
+		// NOTE: This is the only way to update the `dimension` field without breaking anything.
+		//       https://github.com/NOVA-Team/NOVA-Core/pull/265#discussion_r103739268
 		try {
 			Field dimension = Texture.class.getDeclaredField("dimension");
 			dimension.setAccessible(true);
@@ -219,12 +187,14 @@ public class RenderUtility implements ForgeLoadable {
 				ResourceLocation itemRL = Item.REGISTRY.getNameForObject(itemFromBlock);
 				ModelResourceLocation blockLocation = new ModelResourceLocation(blockRL, "normal");
 				ModelResourceLocation itemLocation = new ModelResourceLocation(itemRL, "inventory");
+				ItemFactory itemFactory = ((IFWItem)itemFromBlock).getItemFactory();
+				nova.core.item.Item dummy = itemFactory.build();
 				if (block.dummy.components.has(StaticRenderer.class)) {
-					event.getModelRegistry().putObject(blockLocation, new FWSmartBlockModel(block.dummy, true));
+					event.getModelRegistry().putObject(blockLocation, new FWSmartBlockModel(block.dummy));
 				} else {
 					event.getModelRegistry().putObject(blockLocation, new FWEmptyModel());
 				}
-				event.getModelRegistry().putObject(itemLocation, new FWSmartBlockModel(block.dummy, true));
+				event.getModelRegistry().putObject(itemLocation, new FWSmartBlockModel(block.dummy, dummy));
 			}
 		});
 

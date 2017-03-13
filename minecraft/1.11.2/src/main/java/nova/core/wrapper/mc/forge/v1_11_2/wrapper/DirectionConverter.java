@@ -8,12 +8,20 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper;
 import net.minecraft.util.EnumFacing;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.util.Direction;
+import nova.internal.core.Game;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  *
  * @author ExE Boss
  */
 public class DirectionConverter implements NativeConverter<Direction, EnumFacing> {
+
+	public static DirectionConverter instance() {
+		return Game.natives().getNative(Direction.class, EnumFacing.class);
+	}
 
 	@Override
 	public Class<Direction> getNovaSide() {
@@ -26,7 +34,7 @@ public class DirectionConverter implements NativeConverter<Direction, EnumFacing
 	}
 
 	@Override
-	public Direction toNova(EnumFacing nativeObj) {
+	public Direction toNova(@Nullable EnumFacing nativeObj) {
 		if (null == nativeObj)
 			return Direction.UNKNOWN;
 		else switch (nativeObj) {
@@ -41,6 +49,7 @@ public class DirectionConverter implements NativeConverter<Direction, EnumFacing
 	}
 
 	@Override
+	@Nullable
 	public EnumFacing toNative(Direction novaObj) {
 		switch (novaObj) {
 			case DOWN:  return EnumFacing.DOWN;
@@ -49,7 +58,7 @@ public class DirectionConverter implements NativeConverter<Direction, EnumFacing
 			case SOUTH: return EnumFacing.SOUTH;
 			case WEST:  return EnumFacing.WEST;
 			case EAST:  return EnumFacing.EAST;
-			default: return (EnumFacing) null;
+			default: return null;
 		}
 	}
 }

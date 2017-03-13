@@ -49,8 +49,10 @@ import nova.core.retention.Storable;
 import nova.core.sound.Sound;
 import nova.core.util.Direction;
 import nova.core.util.math.MathUtil;
+import nova.core.util.math.Vector3DUtil;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -73,6 +75,9 @@ public class FWBlock extends net.minecraft.block.Block {
 	 */
 	private final BlockFactory factory;
 	private final Class<? extends Block> blockClass;
+	//TODO: Hack. Bad practice.
+	public IBlockAccess lastExtendedWorld;
+	public BlockPos lastExtendedStatePos;
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
 	private static Material getMcMaterial(BlockFactory factory) {
@@ -96,9 +101,9 @@ public class FWBlock extends net.minecraft.block.Block {
 			this.blockSoundType = new FWBlockSound(dummy.components.get(BlockProperty.BlockSound.class));
 		} else {
 			BlockProperty.BlockSound properties = dummy.components.add(new BlockProperty.BlockSound());
-			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", SoundType.STONE.getBreakSound().getSoundName().getResourcePath()));
-			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", SoundType.STONE.getPlaceSound().getSoundName().getResourcePath()));
-			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", SoundType.STONE.getStepSound().getSoundName().getResourcePath()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound(SoundType.STONE.getBreakSound().getSoundName().getResourceDomain(), SoundType.STONE.getBreakSound().getSoundName().getResourcePath()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound(SoundType.STONE.getPlaceSound().getSoundName().getResourceDomain(), SoundType.STONE.getPlaceSound().getSoundName().getResourcePath()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound(SoundType.STONE.getStepSound().getSoundName().getResourceDomain(), SoundType.STONE.getStepSound().getSoundName().getResourcePath()));
 			this.blockSoundType = SoundType.STONE;
 		}
 		this.blockClass = dummy.getClass();
@@ -186,14 +191,32 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		return FWTileLoader.loadTile(dummy.getID());
+		FWTile fwTile = FWTileLoader.loadTile(dummy.getID());
+		if (lastExtendedStatePos != null) {
+			fwTile.getBlock().components.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
+			lastExtendedStatePos = null;
+		}
+		if (!fwTile.getBlock().components.has(BlockProperty.BlockSound.class)) {
+			BlockProperty.BlockSound properties = fwTile.getBlock().components.add(new BlockProperty.BlockSound());
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound(SoundType.STONE.getBreakSound().getSoundName().getResourceDomain(), SoundType.STONE.getBreakSound().getSoundName().getResourcePath()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound(SoundType.STONE.getPlaceSound().getSoundName().getResourceDomain(), SoundType.STONE.getPlaceSound().getSoundName().getResourcePath()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound(SoundType.STONE.getStepSound().getSoundName().getResourceDomain(), SoundType.STONE.getStepSound().getSoundName().getResourcePath()));
+		}
+		return fwTile;
 	}
 
 	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighborBlock) {
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		lastExtendedWorld = world;
+		lastExtendedStatePos = pos;
+		return super.getExtendedState(state, world, pos);
+	}
+
+	@Override
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		// Minecraft does not provide the neighbor :(
-		Block.NeighborChangeEvent evt = new Block.NeighborChangeEvent(Optional.empty());
+		Block.NeighborChangeEvent evt = new Block.NeighborChangeEvent(
+			Optional.of(VectorConverter.instance().toNova(neighbor)));
 		blockInstance.events.publish(evt);
 	}
 
@@ -247,7 +270,10 @@ public class FWBlock extends net.minecraft.block.Block {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
 
 		if (blockInstance.components.has(Collider.class)) {
-			Cuboid cuboid = blockInstance.components.get(Collider.class).boundingBox.get();
+			Collider collider = blockInstance.components.get(Collider.class);
+			Set<Cuboid> cuboids = collider.selectionBoxes.apply(Optional.empty());
+			Cuboid cuboid = cuboids.stream().reduce(collider.boundingBox.get(),
+				(c1, c2) -> new Cuboid(Vector3DUtil.min(c1.min, c2.min), Vector3DUtil.max(c1.max, c2.max)));
 			return Game.natives().toNative(cuboid.add(new Vector3D(pos.getX(), pos.getY(), pos.getZ())));
 		}
 		return super.getSelectedBoundingBox(state, world, pos);
@@ -358,7 +384,12 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public String getUnlocalizedName() {
-		return super.getUnlocalizedName().replaceFirst("tile", "block");
+		return factory.getUnlocalizedName();
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return factory.getLocalizedName();
 	}
 
 	@Override

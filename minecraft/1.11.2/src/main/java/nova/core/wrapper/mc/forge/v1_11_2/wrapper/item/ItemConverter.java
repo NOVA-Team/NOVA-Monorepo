@@ -60,7 +60,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	private final HashBiMap<ItemFactory, MinecraftItemMapping> map = HashBiMap.create();
 
 	public static ItemConverter instance() {
-		return (ItemConverter) Game.natives().getNative(Item.class, ItemStack.class);
+		return Game.natives().getNative(Item.class, ItemStack.class);
 	}
 
 	@Override
@@ -78,8 +78,6 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 		return getNovaItem(itemStack).setCount(itemStack.getCount());
 	}
 
-	//TODO: Why is this method separate?
-	// Maybe because toNova calls setCount on the result of this method?
 	public Item getNovaItem(ItemStack itemStack) {
 		if (itemStack.getItemDamage() == net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE) {
 			// TODO: Deal withPriority wildcard meta values - important for the ore dictionary
@@ -87,7 +85,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 		}
 
 		if (itemStack.getTagCompound() != null && itemStack.getTagCompound() instanceof FWNBTTagCompound) {
-			return ((FWNBTTagCompound) itemStack.getTagCompound()).getItem();
+			return Objects.requireNonNull((FWNBTTagCompound) itemStack.getTagCompound()).getItem();
 		} else {
 			ItemFactory itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
 

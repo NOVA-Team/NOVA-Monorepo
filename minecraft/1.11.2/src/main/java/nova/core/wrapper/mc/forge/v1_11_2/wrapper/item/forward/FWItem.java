@@ -20,7 +20,6 @@
 
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward;
 
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,18 +33,16 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilityProvider;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 
 import java.util.List;
-
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemWrapperMethods;
-import nova.internal.core.Game;
-
 import javax.annotation.Nullable;
 
 /**
  * @author Calclavia
  */
-public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethods {
+public class FWItem extends net.minecraft.item.Item implements IFWItem {
 
 	public final ItemFactory itemFactory;
 
@@ -58,7 +55,7 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 	@Override
 	@Nullable
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-		Item item = Game.natives().toNova(stack);
+		Item item = ItemConverter.instance().toNova(stack);
 		WrapperEvent.FWItemInitCapabilities event = new WrapperEvent.FWItemInitCapabilities(item, new FWCapabilityProvider());
 		return event.capabilityProvider.hasCapabilities() ? event.capabilityProvider : null;
 	}
@@ -70,22 +67,36 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		ItemWrapperMethods.super.addInformation(itemStack, player, tooltip, advanced);
+		IFWItem.super.addInformation(itemStack, player, tooltip, advanced);
 	}
 
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		return ItemWrapperMethods.super.onItemUse(player.getHeldItem(hand), player, world, pos.getX(), pos.getY(), pos.getZ(), side.ordinal(), hitX, hitY, hitZ);
+		return IFWItem.super.onItemUse(player.getHeldItem(hand), player, world, pos.getX(), pos.getY(), pos.getZ(), side.ordinal(), hitX, hitY, hitZ);
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		return ItemWrapperMethods.super.onItemRightClick(itemStack, world, player);
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		return IFWItem.super.onItemRightClick(player.getHeldItem(hand), world, player);
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
-		return ItemWrapperMethods.super.getColorFromItemStack(itemStack, p_82790_2_);
+	public int getColorFromItemStack(ItemStack itemStack, int renderPass) {
+		return IFWItem.super.getColorFromItemStack(itemStack, renderPass);
 	}
 
+	@Override
+	public String getUnlocalizedName() {
+		return getItemFactory().getUnlocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getUnlocalizedName();
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getLocalizedName();
+	}
 }

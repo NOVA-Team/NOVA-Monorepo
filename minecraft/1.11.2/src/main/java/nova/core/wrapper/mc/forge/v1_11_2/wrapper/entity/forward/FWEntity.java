@@ -37,7 +37,7 @@ import nova.core.retention.Storable;
 import nova.core.util.EnumSelector;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataWrapper;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
 import java.util.HashMap;
@@ -83,7 +83,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		if (wrapped instanceof Storable) {
 			Data data = new Data();
 			((Storable) wrapped).save(data);
-			DataWrapper.instance().toNative(nbt, data);
+			DataConverter.instance().toNative(nbt, data);
 		}
 		nbt.setString("novaID", wrapped.getID());
 	}

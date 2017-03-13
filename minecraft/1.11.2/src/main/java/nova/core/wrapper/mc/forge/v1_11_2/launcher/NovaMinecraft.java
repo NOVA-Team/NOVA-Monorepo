@@ -1,14 +1,14 @@
 
 /*
  * Copyright (c) 2015 NOVA, All rights reserved.
- * This library is free software, licensed under GNU Lesser General Public License version 3
+ * This library is free software, licensed under GNU Lesser General Public License VERSION 3
  *
  * This file is part of NOVA.
  *
  * NOVA is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, either VERSION 3 of the License, or
+ * (at your option) any later VERSION.
  *
  * NOVA is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -53,7 +53,7 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.AssetConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.cuboid.CuboidConverter;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataWrapper;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.inventory.InventoryConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
@@ -73,19 +73,19 @@ import java.util.stream.Collectors;
  * The main Nova Minecraft Wrapper loader, using Minecraft Forge.
  * @author Calclavia
  */
-@Mod(modid = NovaMinecraft.id, name = NovaMinecraft.name, version = NovaMinecraftPreloader.version, acceptableRemoteVersions = "*")
+@Mod(modid = NovaMinecraft.MOD_ID, name = NovaMinecraft.NAME, version = NovaMinecraftPreloader.VERSION, acceptableRemoteVersions = "*")
 public class NovaMinecraft {
 
-	public static final String id = "nova";
-	public static final String name = "NOVA";
-	public static final String mcId = "minecraft";
+	public static final String MOD_ID = "nova";
+	public static final String NAME = "NOVA";
+	public static final String GAME_ID = "minecraft";
 
 	@SidedProxy(clientSide = "nova.core.wrapper.mc.forge.v1_11_2.launcher.ClientProxy", serverSide = "nova.core.wrapper.mc.forge.v1_11_2.launcher.CommonProxy")
 	public static CommonProxy proxy;
-	@Mod.Instance(id)
+	@Mod.Instance(MOD_ID)
 	public static NovaMinecraft instance;
 	private static NovaLauncher launcher;
-	@Mod.Metadata(id)
+	@Mod.Metadata(MOD_ID)
 	private static ModMetadata modMetadata;
 
 	private static Set<ForgeLoadable> nativeConverters;
@@ -129,7 +129,7 @@ public class NovaMinecraft {
 			/**
 			 * Register native converters
 			 */
-			Game.natives().registerConverter(new DataWrapper());
+			Game.natives().registerConverter(new DataConverter());
 			Game.natives().registerConverter(new EntityConverter());
 			Game.natives().registerConverter(new BlockConverter());
 			Game.natives().registerConverter(new ItemConverter());
@@ -176,10 +176,11 @@ public class NovaMinecraft {
 
 			// Initiate config system TODO: Storables
 			//		launcher.getLoadedModMap().forEach((mod, loader) -> {
-			//			Configuration config = new Configuration(new File(evt.getModConfigurationDirectory(), mod.name()));
+			//			Configuration config = new Configuration(new File(evt.getModConfigurationDirectory(), mod.NAME()));
 			//			ConfigManager.instance.sync(config, loader.getClass().getPackage().getName());
 			//		});
 
+			proxy.loadLanguage(Game.language());
 			Game.language().init();
 			Game.render().init();
 			Game.blocks().init();
@@ -209,7 +210,7 @@ public class NovaMinecraft {
 			 * Register event handlers
 			 */
 			MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
-			FMLCommonHandler.instance().bus().register(new FMLEventHandler());
+			MinecraftForge.EVENT_BUS.register(new FMLEventHandler());
 			MinecraftForge.EVENT_BUS.register(Game.retention());
 		} catch (Exception e) {
 			System.out.println("Error during preInit");

@@ -25,7 +25,10 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,18 +39,14 @@ import java.util.List;
  */
 public class FWEmptyModel extends FWSmartModel implements IBakedModel {
 
+	//Item rendering
+	@Override
+	public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+		return this;
+	}
+
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
 		return Collections.emptyList();
-	}
-
-	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		return null;
-	}
-
-	@Override
-	public ItemOverrideList getOverrides() {
-		return ItemOverrideList.NONE;
 	}
 }

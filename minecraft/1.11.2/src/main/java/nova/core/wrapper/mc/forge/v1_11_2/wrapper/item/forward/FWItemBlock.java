@@ -35,7 +35,7 @@ import nova.core.item.ItemFactory;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilityProvider;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemWrapperMethods;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 
 import java.util.List;
@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * @author Calclavia
  */
-public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWrapperMethods {
+public class FWItemBlock extends net.minecraft.item.ItemBlock implements IFWItem {
 
 	public FWItemBlock(FWBlock block) {
 		super(block);
@@ -63,21 +63,36 @@ public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWra
 
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		ItemWrapperMethods.super.addInformation(itemStack, player, tooltip, advanced);
+		IFWItem.super.addInformation(itemStack, player, tooltip, advanced);
 	}
 
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		return ItemWrapperMethods.super.onItemUse(player.getHeldItem(hand), player, world, pos.getX(), pos.getY(), pos.getZ(), side.ordinal(), hitX, hitY, hitZ);
+		return IFWItem.super.onItemUse(player.getHeldItem(hand), player, world, pos.getX(), pos.getY(), pos.getZ(), side.ordinal(), hitX, hitY, hitZ);
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		return ItemWrapperMethods.super.onItemRightClick(itemStack, world, player);
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		return IFWItem.super.onItemRightClick(player.getHeldItem(hand), world, player);
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
-		return ItemWrapperMethods.super.getColorFromItemStack(itemStack, p_82790_2_);
+	public int getColorFromItemStack(ItemStack itemStack, int renderPass) {
+		return IFWItem.super.getColorFromItemStack(itemStack, renderPass);
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return getItemFactory().getUnlocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getUnlocalizedName();
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getLocalizedName();
 	}
 }

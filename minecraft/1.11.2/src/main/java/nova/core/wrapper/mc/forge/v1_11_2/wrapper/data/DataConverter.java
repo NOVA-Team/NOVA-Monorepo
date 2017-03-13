@@ -41,10 +41,10 @@ import java.util.Set;
  * Utility that manages common NBT queueSave and load methods
  * @author Calclavia
  */
-public class DataWrapper implements NativeConverter<Data, NBTTagCompound> {
+public class DataConverter implements NativeConverter<Data, NBTTagCompound> {
 
-	public static DataWrapper instance() {
-		return (DataWrapper) Game.natives().getNative(Data.class, NBTTagCompound.class);
+	public static DataConverter instance() {
+		return Game.natives().getNative(Data.class, NBTTagCompound.class);
 	}
 
 	@Override

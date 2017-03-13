@@ -45,18 +45,17 @@ public class BWEntity extends Entity {
 
 	public BWEntity(net.minecraft.entity.Entity entity) {
 		this.entity = entity;
-		if (entity != null) {
-			components.add(new MCEntityTransform(entity));
-			components.add(new Damageable() {
-				@Override
-				public void damage(double amount, DamageType type) {
-					if (type == DamageType.generic) {
-						entity.attackEntityFrom(DamageSource.GENERIC, (float) amount);
-					}
-					// TODO: Apply other damage source wrappers?
+
+		components.add(new MCEntityTransform(entity));
+		components.add(new Damageable() {
+			@Override
+			public void damage(double amount, DamageType type) {
+				if (type == DamageType.generic) {
+					entity.attackEntityFrom(DamageSource.GENERIC, (float) amount);
 				}
-			});
-		}
+				// TODO: Apply other damage source wrappers?
+			}
+		});
 
 		if (entity instanceof EntityLivingBase) {
 			if (entity instanceof EntityPlayer) {

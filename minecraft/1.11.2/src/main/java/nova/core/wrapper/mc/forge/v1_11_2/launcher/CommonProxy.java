@@ -27,6 +27,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
+import nova.core.language.LanguageManager;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWTileUpdater;
@@ -45,6 +46,8 @@ public class CommonProxy implements ForgeLoadable {
 		GameRegistry.registerTileEntity(FWTileUpdater.class, "nova:novaTileUpdater");
 		EntityRegistry.registerModEntity(new ResourceLocation("nova", "novaEntity"), FWEntity.class, "novaEntity", 1, NovaMinecraft.instance, 64, 20, true);
 	}
+
+	public void loadLanguage(LanguageManager languageManager) {}
 
 	public void registerResourcePacks(Set<Class<?>> modClasses) {
 

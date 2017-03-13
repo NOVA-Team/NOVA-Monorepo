@@ -38,6 +38,10 @@ import java.util.Optional;
 
 public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, ForgeLoadable {
 
+	public static EntityConverter instance() {
+		return Game.natives().getNative(Entity.class, net.minecraft.entity.Entity.class);
+	}
+
 	@Override
 	public Class<Entity> getNovaSide() {
 		return Entity.class;

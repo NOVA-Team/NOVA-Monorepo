@@ -21,7 +21,10 @@
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
+import nova.core.event.DictionaryEvent;
 import nova.core.item.Item;
 import nova.core.item.ItemDictionary;
 import nova.core.util.Dictionary;
@@ -29,7 +32,9 @@ import nova.core.wrapper.mc.forge.v1_11_2.util.ReflectionUtil;
 import nova.internal.core.Game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Stan on 8/02/2015.
@@ -44,44 +49,48 @@ public class OreDictionaryIntegration {
 	public void registerOreDictionary() {
 		ItemDictionary novaItemDictionary = Game.itemDictionary();
 
-		for (String oredictEntry : novaItemDictionary.keys()) {
-			for (Item oreValue : novaItemDictionary.get(oredictEntry)) {
-				OreDictionary.registerOre(oredictEntry, ItemConverter.instance().toNative(oreValue));
-			}
-		}
+		novaItemDictionary.stream().forEach(entry -> {
+			entry.getValue().stream()
+				.map(ItemConverter.instance()::toNative)
+				.filter(item -> !OreDictionary.getOres(entry.getKey()).contains(item))
+				.forEach(item -> OreDictionary.registerOre(entry.getKey(), item));
+			});
 
-		for (String oredictEntry : OreDictionary.getOreNames()) {
-			for (ItemStack oreValue : OreDictionary.getOres(oredictEntry)) {
-				Item novaItem = ItemConverter.instance().getNovaItem(oreValue);
-				if (!novaItemDictionary.get(oredictEntry).contains(novaItem)) {
-					novaItemDictionary.add(oredictEntry, novaItem);
-				}
-			}
-		}
+		Arrays.stream(OreDictionary.getOreNames()).forEach(key -> {
+			OreDictionary.getOres(key).stream()
+				.map(ItemConverter.instance()::getNovaItem)
+				.filter(item -> !novaItemDictionary.get(key).contains(item))
+				.forEach(item -> novaItemDictionary.add(key, item));
+			});
 
-		novaItemDictionary.whenEntryAdded(this::onEntryAdded);
-		novaItemDictionary.whenEntryRemoved(this::onEntryRemoved);
+		novaItemDictionary.whenEntryAdded(this::onNovaAdded);
+		novaItemDictionary.whenEntryRemoved(this::onNovaRemoved);
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	private void onEntryAdded(Dictionary.AddEvent<Item> event) {
-		ItemStack nativeValue = ItemConverter.instance().toNative(event.value);
-		if (!OreDictionary.getOres(event.key).contains(nativeValue)) {
-			OreDictionary.registerOre(event.key, nativeValue);
+	private void onNovaAdded(DictionaryEvent.Add<Item> event) {
+		ItemStack nativeStack = ItemConverter.instance().toNative(event.value);
+		if (!OreDictionary.getOres(event.key).stream().anyMatch(stack -> stack.isItemEqual(nativeStack))) {
+			OreDictionary.registerOre(event.key, nativeStack);
 		}
 	}
 
-	private void onEntryRemoved(Dictionary.RemoveEvent<Item> event) {
+	private void onNovaRemoved(DictionaryEvent.Remove<Item> event) {
 		int id = OreDictionary.getOreID(event.key);
-		ItemStack itemStack = ItemConverter.instance().toNative(event.value);
-		ItemStack toRemove = null;
-		for (ItemStack oreDictItemStack : OreDictionary.getOres(event.key)) {
-			if (oreDictItemStack.getItem() == itemStack.getItem() && toRemove.getItemDamage() == oreDictItemStack.getItemDamage()) {
-				toRemove = oreDictItemStack;
-			}
-		}
+		ItemStack nativeStack = ItemConverter.instance().toNative(event.value);
+		Optional<ItemStack> toRemove = OreDictionary.getOres(event.key).stream().filter(stack -> stack.isItemEqual(nativeStack)).findFirst();
 
-		if (toRemove != null) {
-			OREDICT_CONTENTS.get(id).remove(toRemove);
+		if (toRemove.isPresent()) {
+			OREDICT_CONTENTS.get(id).remove(toRemove.get());
+		}
+	}
+
+	@SubscribeEvent
+	public void onForgeAdded(OreDictionary.OreRegisterEvent event) {
+		Item novaItem = ItemConverter.instance().getNovaItem(event.getOre());
+		ItemDictionary novaItemDictionary = Game.itemDictionary();
+		if (!novaItemDictionary.get(event.getName()).contains(novaItem)) {
+			novaItemDictionary.add(event.getName(), novaItem);
 		}
 	}
 }

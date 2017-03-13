@@ -23,6 +23,8 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.backward;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,11 +32,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
 import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
+import nova.core.component.renderer.StaticRenderer;
 import nova.core.component.transform.BlockTransform;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
@@ -44,26 +48,28 @@ import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.BWWorld;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.backward.BWBakedModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BWBlock extends Block implements Storable {
-	public final net.minecraft.block.Block mcBlock;
+	private final net.minecraft.block.Block block;
 	@Store
-	public int metadata;
 	private TileEntity mcTileEntity;
 
 	public BWBlock(net.minecraft.block.Block block) {
-		this.mcBlock = block;
+		this.block = block;
 	}
 
+	@SuppressWarnings("deprecation")
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
-		this.mcBlock = block;
+		this.block = block;
 
 		BlockTransform transform = components.add(new BlockTransform());
 		transform.setWorld(world);
@@ -73,33 +79,36 @@ public class BWBlock extends Block implements Storable {
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		SoundType soundType;
-		if (getMcBlockAccess() instanceof net.minecraft.world.World)
-			soundType = mcBlock.getSoundType(blockState(), (net.minecraft.world.World)getMcBlockAccess(), new BlockPos(x(), y(), z()), null);
+		if (blockAccess() instanceof net.minecraft.world.World)
+			soundType = block.getSoundType(blockState(), (net.minecraft.world.World)blockAccess(), blockPos(), null);
 		else
-			soundType = mcBlock.getSoundType();
+			soundType = block.getSoundType();
 
-		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE,
-			new Sound(soundType.getPlaceSound().getSoundName().getResourceDomain(),
-			          soundType.getPlaceSound().getSoundName().getResourcePath()));
+		if (soundType.getPlaceSound() != null)
+			blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE,
+				new Sound(soundType.getPlaceSound().getSoundName().getResourceDomain(),
+				          soundType.getPlaceSound().getSoundName().getResourcePath()));
 
-		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK,
-			new Sound(soundType.getBreakSound().getSoundName().getResourceDomain(),
-			          soundType.getBreakSound().getSoundName().getResourcePath()));
+		if (soundType.getBreakSound() != null)
+			blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK,
+				new Sound(soundType.getBreakSound().getSoundName().getResourceDomain(),
+				          soundType.getBreakSound().getSoundName().getResourcePath()));
 
-		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK,
-			new Sound(soundType.getStepSound().getSoundName().getResourceDomain(),
-			          soundType.getStepSound().getSoundName().getResourcePath()));
+		if (soundType.getStepSound() != null)
+			blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK,
+				new Sound(soundType.getStepSound().getSoundName().getResourceDomain(),
+				          soundType.getStepSound().getSoundName().getResourcePath()));
 
-		components.add(new LightEmitter()).setEmittedLevel(() -> blockState().getLightValue(getMcBlockAccess(), new BlockPos(x(), y(), z())) / 15.0F);
+		components.add(new LightEmitter()).setEmittedLevel(() -> blockState().getLightValue(blockAccess(), blockPos()) / 15d);
 		components.add(new Collider(this))
 			.setBoundingBox(() -> {
-				AxisAlignedBB aabb = blockState().getBoundingBox(getMcBlockAccess(), new BlockPos(x(), y(), z()));
+				AxisAlignedBB aabb = blockState().getBoundingBox(blockAccess(), blockPos());
 				return new Cuboid(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
 			}).setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
 				blockState().addCollisionBoxToList(
 					Game.natives().toNative(world()),
-					new BlockPos(x(), y(), z()),
+					blockPos(),
 					Game.natives().toNative(entity.isPresent() ? entity.get().components.get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),
 					aabbs,
 					entity.isPresent() ? Game.natives().toNative(entity.get()) : null,
@@ -109,44 +118,93 @@ public class BWBlock extends Block implements Storable {
 					.map(aabb -> (Cuboid) Game.natives().toNova(aabb))
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
+			}).setSelectionBoxes(entity -> {
+				AxisAlignedBB bb;
+				if (blockAccess() instanceof net.minecraft.world.World) {
+					@SuppressWarnings("deprecation")
+					AxisAlignedBB bb1 = block.getSelectedBoundingBox(blockState(), ((net.minecraft.world.World) blockAccess()), blockPos());
+					bb = bb1;
+				} else {
+					bb = blockState().getBoundingBox(blockAccess(), blockPos()).offset(blockPos());
+				}
+				Cuboid cuboid = Game.natives().toNova(bb);
+				return Collections.singleton(cuboid.subtract(position()));
 			});
-		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
-		Game.events().publish(event);
 		//TODO: Set selection bounds
+		components.add(new StaticRenderer())
+			.onRender(model -> {
+				switch (blockState().getRenderType()) {
+					case INVISIBLE:
+						// rendering of invisible type
+						break;
+					case LIQUID:
+						// fluid rendering
+						//  TODO
+						break;
+					case ENTITYBLOCK_ANIMATED:
+						// dynamic block rendering
+						//  Handled by DynamicRenderer
+						break;
+					case MODEL:
+						// model rendering
+						model.addChild(new BWBakedModel(Minecraft.getMinecraft().getBlockRendererDispatcher()
+							.getModelForState(blockState()), DefaultVertexFormats.BLOCK,
+							Optional.of(blockState()), MathHelper.getPositionRandom(blockPos())));
+						break;
+					default:
+						break;
+				}
+			});
+		// TODO: TileEntity rendering using DynamicRenderer
+
+		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, block);
+		Game.events().publish(event);
 	}
 
 	@Override
 	public ItemFactory getItemFactory() {
-		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
+		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(block)));
 	}
 
-	public IBlockAccess getMcBlockAccess() {
-		return ((BWWorld) world()).access;
+	public net.minecraft.block.Block block() {
+		return block;
+	}
+
+	public int meta() {
+		return block.getMetaFromState(blockState());
+	}
+
+	public BlockPos blockPos() {
+		return new BlockPos(x(), y(), z());
+	}
+
+	public IBlockAccess blockAccess() {
+		return Game.natives().toNative(world());
 	}
 
 	public IBlockState blockState() {
-		return getMcBlockAccess().getBlockState(new BlockPos(x(), y(), z()));
+		return blockAccess().getBlockState(blockPos());
 	}
 
-	public TileEntity getTileEntity() {
-		if (mcTileEntity == null && mcBlock.hasTileEntity(blockState())) {
-			mcTileEntity = getMcBlockAccess().getTileEntity(new BlockPos(x(), y(), z()));
+	public Optional<TileEntity> tile() {
+		if (mcTileEntity == null && block.hasTileEntity(blockState())) {
+			mcTileEntity = blockAccess().getTileEntity(blockPos());
 		}
-		return mcTileEntity;
+		return Optional.ofNullable(mcTileEntity);
 	}
 
 	@Override
 	public boolean canReplace() {
-		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) getMcBlockAccess(), new BlockPos(x(), y(), z()));
+		return block.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), blockPos());
 	}
 
 	@Override
 	public boolean shouldDisplacePlacement() {
-		if (mcBlock == Blocks.SNOW_LAYER && ((int) blockState().getValue(BlockSnow.LAYERS) < 1)) {
+		if (block == Blocks.SNOW_LAYER && (blockState().getValue(BlockSnow.LAYERS) < 1)) {
 			return false;
 		}
 
-		if (mcBlock == Blocks.VINE || mcBlock == Blocks.TALLGRASS || mcBlock == Blocks.DEADBUSH || mcBlock.isReplaceable(Game.natives().toNative(world()), new BlockPos(x(), y(), z()))) {
+		if (block == Blocks.VINE || block == Blocks.TALLGRASS || block == Blocks.DEADBUSH || block.isReplaceable(blockAccess(), blockPos())) {
 			return false;
 		}
 		return super.shouldDisplacePlacement();
@@ -156,21 +214,34 @@ public class BWBlock extends Block implements Storable {
 	public void save(Data data) {
 		Storable.super.save(data);
 
-		TileEntity tileEntity = getTileEntity();
-		if (tileEntity != null) {
+		tile().ifPresent(tile -> {
 			NBTTagCompound nbt = new NBTTagCompound();
-			tileEntity.writeToNBT(nbt);
+			tile.writeToNBT(nbt);
 			data.putAll(Game.natives().toNova(nbt));
-		}
+		});
 	}
 
 	@Override
 	public void load(Data data) {
 		Storable.super.load(data);
 
-		TileEntity tileEntity = getTileEntity();
-		if (tileEntity != null) {
-			tileEntity.writeToNBT(Game.natives().toNative(data));
-		}
+		tile().ifPresent(tile -> {
+			tile.readFromNBT(Game.natives().toNative(data));
+		});
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return block.getLocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return block.getUnlocalizedName();
+	}
+
+	@Override
+	public String toString() {
+		return getID() + '(' + world() + '@' + x() + ',' + y() + ',' + z() + ')';
 	}
 }

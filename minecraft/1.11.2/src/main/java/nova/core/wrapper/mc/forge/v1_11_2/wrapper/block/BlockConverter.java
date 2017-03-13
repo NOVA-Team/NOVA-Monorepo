@@ -56,7 +56,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	public final HashMap<BlockFactory, net.minecraft.block.Block> blockFactoryMap = new HashMap<>();
 
 	public static BlockConverter instance() {
-		return (BlockConverter) Game.natives().getNative(Block.class, net.minecraft.block.Block.class);
+		return Game.natives().getNative(Block.class, net.minecraft.block.Block.class);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	public net.minecraft.block.Block toNative(Block novaBlock) {
 		//Prevent recursive wrapping
 		if (novaBlock instanceof BWBlock) {
-			return ((BWBlock) novaBlock).mcBlock;
+			return ((BWBlock) novaBlock).block();
 		}
 
 		return toNative(novaBlock.getFactory());

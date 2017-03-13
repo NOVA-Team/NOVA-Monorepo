@@ -31,6 +31,11 @@ import java.util.Optional;
  * @author Calclavia
  */
 public class WorldConverter implements NativeConverter<World, IBlockAccess> {
+
+	public static WorldConverter instance() {
+		return Game.natives().getNative(World.class, IBlockAccess.class);
+	}
+
 	@Override
 	public Class<World> getNovaSide() {
 		return World.class;
@@ -56,10 +61,9 @@ public class WorldConverter implements NativeConverter<World, IBlockAccess> {
 	@Override
 	public IBlockAccess toNative(World novaObj) {
 		if (novaObj instanceof BWWorld) {
-			return ((BWWorld) novaObj).world();
+			return ((BWWorld) novaObj).access;
 		}
 
-		//TODO: Right exception?
-		throw new RuntimeException("Attempt to convert a world that is not a BWWorld!");
+		throw new UnsupportedOperationException("Attempt to convert a world that is not a BWWorld!");
 	}
 }

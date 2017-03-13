@@ -25,20 +25,24 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.EnumFacing;
-import nova.core.render.model.CustomModel;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import nova.core.render.model.MeshModel;
 import nova.core.render.model.Model;
 import nova.core.render.model.Vertex;
 import nova.core.util.Direction;
 import nova.core.util.math.MathUtil;
 import nova.core.wrapper.mc.forge.v1_11_2.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -50,43 +54,40 @@ import java.util.stream.Stream;
 @SuppressWarnings("deprecation")
 public abstract class FWSmartModel implements IBakedModel {
 
-	protected static final VertexFormat NOVA_VERTEX_FORMAT;
+	protected static final VertexFormat NOVA_VERTEX_FORMAT = DefaultVertexFormats.ITEM;
 
 	protected final VertexFormat format;
 	// Default item transforms. Can be changed in subclasses.
 	protected ItemCameraTransforms itemCameraTransforms = ItemCameraTransforms.DEFAULT;
-
-	static {
-		NOVA_VERTEX_FORMAT = DefaultVertexFormats.ITEM;
-//		NOVA_VERTEX_FORMAT = new VertexFormat();
-//		NOVA_VERTEX_FORMAT.addElement(DefaultVertexFormats.POSITION_3F);
-//		NOVA_VERTEX_FORMAT.addElement(DefaultVertexFormats.COLOR_4UB);
-//		NOVA_VERTEX_FORMAT.addElement(DefaultVertexFormats.TEX_2F);
-//		NOVA_VERTEX_FORMAT.addElement(DefaultVertexFormats.NORMAL_3B);
-//		NOVA_VERTEX_FORMAT.addElement(DefaultVertexFormats.PADDING_1B);
-	}
+	private final FWOverrideList overrides;
 
 	protected FWSmartModel(VertexFormat format) {
 		this.format = format;
+		this.overrides = new FWOverrideList();
 	}
 
 	public FWSmartModel() {
-		this.format = NOVA_VERTEX_FORMAT;
+		this(NOVA_VERTEX_FORMAT);
 	}
 
 	public static int[] vertexToInts(Vertex vertex, TextureAtlasSprite texture, Vector3D normal) {
+		// TODO: Possibly support arbitrary `VertexFormat`
+//		if (vertex.normal.isPresent())
+//			normal = vertex.normal.get();
 		return new int[] {
 			Float.floatToRawIntBits((float) vertex.vec.getX()),
 			Float.floatToRawIntBits((float) vertex.vec.getY()),
 			Float.floatToRawIntBits((float) vertex.vec.getZ()),
-			vertex.color.argb(),
+			vertex.color.rgba(),
 			Float.floatToRawIntBits(texture.getInterpolatedU(16 * vertex.uv.getX())),
 			Float.floatToRawIntBits(texture.getInterpolatedV(16 * vertex.uv.getY())),
 			((((byte)(normal.getX() * 127)) & 0xFF) |
 			((((byte)(normal.getY() * 127)) & 0xFF) << 8) |
-			((((byte)(normal.getZ() * 127)) & 0xFF) << 16)) // TODO: Normal
+			((((byte)(normal.getZ() * 127)) & 0xFF) << 16))
 		};
 	}
+
+	public abstract IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity);
 
 	protected List<BakedQuad> modelToQuads(Model modelIn) {
 		return modelIn
@@ -98,19 +99,23 @@ public abstract class FWSmartModel implements IBakedModel {
 						MeshModel meshModel = (MeshModel) model;
 						return meshModel.faces
 							.stream()
+							.filter(f -> f.vertices.size() > 2)
 							.map(
 								face -> {
 									TextureAtlasSprite texture = face.texture.map(RenderUtility.instance::getTexture)
-										.orElse(Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite());
+										.orElseGet(Minecraft.getMinecraft().getTextureMapBlocks()::getMissingSprite);
 									List<int[]> vertexData = face.vertices
 										.stream()
 										.map(v -> vertexToInts(v, texture, face.normal))
 										.collect(Collectors.toList());
 
+									if (vertexData.size() < 4)
+										vertexData.add(vertexData.get(vertexData.size() - 1));
+
 									int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
 									//TODO: The facing might be wrong
-									return new BakedQuad(Arrays.copyOf(data, MathUtil.max(data.length, 0)), -1, EnumFacing.values()[Direction.fromVector(face.normal).ordinal()],
-											texture, true, getFormat());
+									return new BakedQuad(Arrays.copyOf(data, MathUtil.min(data.length, format.getNextOffset())), -1,
+										DirectionConverter.instance().toNative(Direction.fromVector(face.normal)), texture, true, getFormat());
 								}
 							);
 					}
@@ -142,11 +147,28 @@ public abstract class FWSmartModel implements IBakedModel {
 
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
-		return null;
+		return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
 	}
 
 	@Override
+	@Deprecated
 	public ItemCameraTransforms getItemCameraTransforms() {
 		return itemCameraTransforms;
+	}
+
+	@Override
+	public final ItemOverrideList getOverrides() {
+		return overrides;
+	}
+
+	private final class FWOverrideList extends ItemOverrideList {
+		private FWOverrideList() {
+			super(Collections.emptyList());
+		}
+
+		@Override
+		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+			return FWSmartModel.this.handleItemState(originalModel, stack, world, entity);
+		}
 	}
 }

@@ -39,6 +39,7 @@ import nova.internal.core.Game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -84,7 +85,7 @@ public class RecipeConverter {
 		if (ingredient == null) {
 			return null;
 		} else if (ingredient instanceof ItemStack) {
-			return ((ItemStack) ingredient).isEmpty() ? null : ItemIngredient.forItem(net.minecraft.item.Item.REGISTRY.getNameForObject(((ItemStack) ingredient).getItem()).toString());
+			return ((ItemStack) ingredient).isEmpty() ? null : ItemIngredient.forItem(Objects.toString(net.minecraft.item.Item.REGISTRY.getNameForObject(((ItemStack) ingredient).getItem())));
 		} else if (ingredient instanceof String) {
 			return ItemIngredient.forDictionary((String) ingredient);
 		} else if (ingredient instanceof List) {
@@ -237,6 +238,7 @@ public class RecipeConverter {
 		} else if (recipe instanceof ShapedRecipes) {
 			ShapedRecipes shaped = (ShapedRecipes) recipe;
 
+			@SuppressWarnings({"unchecked", "rawtypes"})
 			Optional<ItemIngredient>[][] ingredients = new Optional[shaped.recipeHeight][shaped.recipeWidth];
 			for (int i = 0; i < shaped.recipeHeight; i++) {
 				for (int j = 0; j < shaped.recipeWidth; j++) {
@@ -251,6 +253,7 @@ public class RecipeConverter {
 			int width = ReflectionUtil.getShapedOreRecipeWidth(shaped);
 			int height = recipe.getRecipeSize() / width;
 
+			@SuppressWarnings({"unchecked", "rawtypes"})
 			Optional<ItemIngredient>[][] recipeIngredients = new Optional[height][width];
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < width; j++) {

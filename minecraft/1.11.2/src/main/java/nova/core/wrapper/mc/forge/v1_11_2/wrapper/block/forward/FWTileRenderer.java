@@ -42,7 +42,7 @@ public class FWTileRenderer extends TileEntitySpecialRenderer<FWTile> {
 	public static final FWTileRenderer instance = new FWTileRenderer();
 
 	@Override
-	public void renderTileEntityAt(FWTile te, double x, double y, double z, float p_180535_8_, int p_180535_9_) {
+	public void renderTileEntityAt(FWTile te, double x, double y, double z, float partialTicks, int destroyStage) {
 		Block block = te.getBlock();
 		Optional<DynamicRenderer> opRenderer = block.components.getOp(DynamicRenderer.class);
 		if (opRenderer.isPresent()) {
@@ -52,7 +52,7 @@ public class FWTileRenderer extends TileEntitySpecialRenderer<FWTile> {
 			bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 			RenderUtility.enableBlending();
 			Tessellator.getInstance().getBuffer().begin(GL_QUADS, DefaultVertexFormats.BLOCK);
-			model.render();
+			model.render(te.getWorld());
 			Tessellator.getInstance().draw();
 			RenderUtility.disableBlending();
 		}

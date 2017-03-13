@@ -20,7 +20,6 @@
 
 package nova.core.wrapper.mc.forge.v1_11_2.util;
 
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import nova.core.language.LanguageManager;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.ForgeLoadable;
@@ -40,16 +39,12 @@ public class MCLanguageManager extends LanguageManager implements ForgeLoadable 
 		return FMLCommonHandler.instance().getCurrentLanguage().replace('_', '-');
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @deprecated Removed in Forge 1.9
-	 */
 	@Override
-	@Deprecated
+	@SuppressWarnings("deprecation")
 	public String translate(String key) {
 		String value = super.translate(key);
 		if (value.equals(key))
-			value = I18n.translateToLocal(key);
+			value = net.minecraft.util.text.translation.I18n.translateToLocal(key);
 		return value;
 	}
 }

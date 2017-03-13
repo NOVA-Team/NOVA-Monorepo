@@ -24,32 +24,43 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import nova.core.block.Block;
-import nova.core.component.renderer.DynamicRenderer;
+import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
+import nova.core.item.Item;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.backward.BWModel;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Generates a smart model based on a NOVA Model
  * @author Calclavia
  */
-@SuppressWarnings("deprecation")
 public class FWSmartBlockModel extends FWSmartModel implements IBakedModel {
 
 	private final Block block;
-	private final boolean isItem;
+	private final Optional<Item> item;
+
+	public FWSmartBlockModel(Block block) {
+		this(block, Optional.empty());
+	}
+
+	public FWSmartBlockModel(Block block, Item item) {
+		this(block, Optional.of(item));
+	}
 
 	@SuppressWarnings("deprecation")
-	public FWSmartBlockModel(Block block, boolean isItem) {
-		super();
+	public FWSmartBlockModel(Block block, Optional<Item> item) {
 		this.block = block;
-		this.isItem = isItem;
+		this.item = item;
 		// Change the default transforms to the default full Block transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
 			new ItemTransformVec3f(new Vector3f(75, 225, 0), new Vector3f(0, 0.1875f, 0.03125f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person (Left)
@@ -62,29 +73,33 @@ public class FWSmartBlockModel extends FWSmartModel implements IBakedModel {
 			ItemTransformVec3f.DEFAULT);// Fixed
 	}
 
+	//Item rendering
+	@Override
+	public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+		Item item = ItemConverter.instance().toNova(stack);
+
+		if (item.components.has(Renderer.class) || block.components.has(Renderer.class)) {
+			return new FWSmartBlockModel(block, item);
+		}
+
+		return new FWEmptyModel();
+	}
+
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
 		BWModel model = new BWModel();
 		model.matrix.translate(0.5, 0.5, 0.5);
 
-		if (isItem) {
-			if (block.components.has(StaticRenderer.class)) {
-				StaticRenderer staticRenderer = block.components.get(StaticRenderer.class);
-				staticRenderer.onRender.accept(model);
-			} else if (block.components.has(DynamicRenderer.class)) {
-				DynamicRenderer dynamicRenderer = block.components.get(DynamicRenderer.class);
-				dynamicRenderer.onRender.accept(model);
+		if (item.isPresent()) {
+			if (item.get().components.has(Renderer.class)) {
+				item.get().components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
+			} else {
+				block.components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
 			}
 		} else {
-			StaticRenderer renderer = block.components.get(StaticRenderer.class);
-			renderer.onRender.accept(model);
+			block.components.getOp(StaticRenderer.class).ifPresent(r -> r.onRender.accept(model));
 		}
 
 		return modelToQuads(model);
-	}
-
-	@Override
-	public ItemOverrideList getOverrides() {
-		return ItemOverrideList.NONE;
 	}
 }

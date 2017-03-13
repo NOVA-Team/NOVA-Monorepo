@@ -61,12 +61,10 @@ import net.minecraft.client.particle.ParticleTotem;
 import net.minecraft.client.particle.ParticleWaterWake;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import nova.core.entity.Entity;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.backward.BWEntity;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.particle.forward.MCParticleTransform;
 
 /**
  * A backward entity particle that acts as a black box, which wraps a Minecraft particle.
@@ -75,7 +73,7 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.particle.forward.MCParticleTra
  *
  * @author Calclavia
  */
-public class BWParticle extends BWEntity {
+public class BWParticle extends Entity {
 
 	public static final HashBiMap<Integer, Class<? extends Particle>> FX_CLASS_MAP = HashBiMap.create();
 	public static final Map<Integer, IParticleFactory> FX_FACTORY_MAP = new HashMap<>();
@@ -184,8 +182,6 @@ public class BWParticle extends BWEntity {
 	private final int particleID;
 
 	public BWParticle(int particleID) {
-		//TODO: NPE
-		super(null);
 		this.particleID = particleID;
 	}
 
@@ -193,9 +189,6 @@ public class BWParticle extends BWEntity {
 		//Look up for particle factory and pass it into BWParticle
 		IParticleFactory particleFactory = FMLClientHandler.instance().getClient().effectRenderer.particleTypes.get(particleID);
 		Particle particle = particleFactory.createParticle(0, world, 0, 0, 0, 0, 0, 0, 0);
-		if (components.has(MCParticleTransform.class))
-			components.remove(MCParticleTransform.class);
-		components.add(new MCParticleTransform(particle));
 		return particle;
 	}
 }

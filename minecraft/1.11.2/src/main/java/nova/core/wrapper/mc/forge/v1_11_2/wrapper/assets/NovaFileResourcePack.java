@@ -23,16 +23,23 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets;
 import com.google.common.base.Charsets;
 import net.minecraft.client.resources.FileResourcePack;
 import net.minecraft.util.ResourceLocation;
+import nova.core.language.LanguageManager;
 import nova.core.wrapper.mc.forge.v1_11_2.NovaMinecraftPreloader;
+import nova.internal.core.Game;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -109,8 +116,22 @@ public class NovaFileResourcePack extends FileResourcePack implements NovaResour
 	}
 
 	@Override
-	public String getPackName() {
-		return NovaResourcePack.super.getPackName();
+	public Set<ResourceLocation> getLanguageFiles() {
+		Pattern langPattern = Pattern.compile("^assets/([^/]+)/(lang/[a-zA-Z0-9-]+\\.lang)$", Pattern.CASE_INSENSITIVE);
+
+		try {
+			return getResourcePackZipFile().stream()
+				.map(e -> {
+					Matcher m = langPattern.matcher(e.getName());
+					if (!m.matches())
+						return null;
+					return new ResourceLocation(m.group(1), m.group(2));
+				})
+				.filter(e -> e != null)
+				.collect(Collectors.toSet());
+		} catch (IOException ex) {
+			return Collections.emptySet();
+		}
 	}
 
 	@Override

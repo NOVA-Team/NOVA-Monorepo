@@ -28,7 +28,6 @@ import nova.core.component.Updater;
  */
 public class FWTileUpdater extends FWTile implements ITickable {
 	public FWTileUpdater() {
-
 	}
 
 	public FWTileUpdater(String blockID) {

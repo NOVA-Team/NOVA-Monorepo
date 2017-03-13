@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets;
 import com.google.common.base.Charsets;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.util.ResourceLocation;
+import nova.core.language.LanguageManager;
 import nova.core.wrapper.mc.forge.v1_11_2.NovaMinecraftPreloader;
 
 import java.io.BufferedInputStream;
@@ -34,7 +35,10 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class NovaFolderResourcePack extends FolderResourcePack implements NovaResourcePack<File> {
 	private final String modid;
@@ -100,8 +104,20 @@ public class NovaFolderResourcePack extends FolderResourcePack implements NovaRe
 	}
 
 	@Override
-	public String getPackName() {
-		return NovaResourcePack.super.getPackName();
+	public Set<ResourceLocation> getLanguageFiles() {
+		Pattern langPattern = Pattern.compile("^[a-zA-Z0-9-]+\\.lang$", Pattern.CASE_INSENSITIVE);
+
+		Set<ResourceLocation> langFiles = new HashSet<>();
+
+		for (String domain : getResourceDomains()) {
+			findFileCaseInsensitive("assets/" + domain + "/lang/").filter(File::isDirectory).ifPresent(file -> {
+				Arrays.stream(file.listFiles((dir, name) -> langPattern.asPredicate().test(name)))
+					.map(File::getName)
+					.forEach(name -> langFiles.add(new ResourceLocation(domain, name)));
+			});
+		}
+
+		return langFiles;
 	}
 
 	@Override

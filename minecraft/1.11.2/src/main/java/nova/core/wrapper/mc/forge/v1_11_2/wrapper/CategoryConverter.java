@@ -40,7 +40,7 @@ import java.util.Arrays;
 public class CategoryConverter implements NativeConverter<Category, CreativeTabs>{
 
 	public static CategoryConverter instance() {
-		return (CategoryConverter) Game.natives().getNative(Category.class, CreativeTabs.class);
+		return Game.natives().getNative(Category.class, CreativeTabs.class);
 	}
 
 	@Override

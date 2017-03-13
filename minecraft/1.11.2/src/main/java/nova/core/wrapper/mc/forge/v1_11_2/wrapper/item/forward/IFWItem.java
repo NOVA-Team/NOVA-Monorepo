@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item;
+package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,28 +29,28 @@ import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.backward.BWEntity;
-import nova.internal.core.Game;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * An interface implemented by ItemBlockWrapper and ItemWrapper classes to override Minecraft's item events.
+ * An interface implemented by {@link FWItem} and {@link FWItemBlock} classes to override Minecraft's item events.
  * @author Calclavia
  */
-public interface ItemWrapperMethods {
+public interface IFWItem {
 
 	ItemFactory getItemFactory();
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		Item item = Game.natives().toNova(itemStack);
+		Item item = ItemConverter.instance().toNova(itemStack);
 		item.setCount(itemStack.getCount()).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), tooltip));
 		getItemFactory().save(item);
 	}
 
 	default EnumActionResult onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		Item item = Game.natives().toNova(itemStack);
+		Item item = ItemConverter.instance().toNova(itemStack);
 		Item.UseEvent event = new Item.UseEvent(new BWEntity(player), new Vector3D(x, y, z), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ));
 		item.events.publish(event);
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
@@ -58,12 +58,13 @@ public interface ItemWrapperMethods {
 	}
 
 	default ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		Item item = Game.natives().toNova(itemStack);
+		Item item = ItemConverter.instance().toNova(itemStack);
 		item.events.publish(new Item.RightClickEvent(new BWEntity(player)));
 		return new ActionResult<>(EnumActionResult.PASS, ItemConverter.instance().updateMCItemStack(itemStack, item));
 	}
 
-	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
-		return ((Item) Game.natives().toNova(itemStack)).colorMultiplier().argb();
+	@SuppressWarnings("deprecation")
+	default int getColorFromItemStack(ItemStack itemStack, int renderPass) {
+		return ItemConverter.instance().toNova(itemStack).colorMultiplier().argb();
 	}
 }

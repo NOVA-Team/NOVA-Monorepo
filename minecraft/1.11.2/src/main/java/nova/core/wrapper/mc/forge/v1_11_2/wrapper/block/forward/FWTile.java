@@ -110,9 +110,9 @@ public class FWTile extends TileEntity {
 
 		if (block != null) {
 			if (block instanceof Storable) {
-				Data data = new Data();
-				((Storable) block).save(data);
-				nbt.setTag("nova", Game.natives().toNative(data));
+			Data data = new Data();
+			((Storable) block).save(data);
+			nbt.setTag("nova", Game.natives().toNative(data));
 			}
 		}
 
@@ -162,9 +162,9 @@ public class FWTile extends TileEntity {
 	@Override
 	public void setPos(BlockPos pos) {
 		super.setPos(pos);
-		if (this.block.components.has(MCBlockTransform.class))
-			this.block.components.remove(MCBlockTransform.class);
-		this.block.components.add(new MCBlockTransform(this.block, Game.natives().toNova(this.getWorld()), Game.natives().toNova(this.getPos())));
+		if (block.components.has(MCBlockTransform.class))
+			block.components.remove(MCBlockTransform.class);
+		block.components.add(new MCBlockTransform(block, Game.natives().toNova(this.getWorld()), Game.natives().toNova(this.getPos())));
 	}
 
 	private static class FWPacketUpdateTileEntity<T extends INetHandler> extends SPacketUpdateTileEntity {
