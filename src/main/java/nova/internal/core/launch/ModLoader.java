@@ -22,6 +22,7 @@ package nova.internal.core.launch;
 
 import nova.core.util.ProgressBar;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
+import nova.internal.core.util.InjectionUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -105,21 +106,6 @@ public class ModLoader<ANNOTATION extends Annotation> {
 			);
 	}
 
-	public <T> T makeObjectWithDep(Class<T> classToConstruct) throws InstantiationException, IllegalAccessException, InvocationTargetException {
-		Stream<Constructor<?>> candidates = Arrays.stream(classToConstruct.getConstructors());
-
-		//get constructor with most parameters.
-		Optional<Constructor<?>> ocons = candidates.max(Comparator.comparingInt((constructor) -> constructor.getParameterTypes().length));
-
-		Constructor<?> cons = ocons.get();
-		Object[] parameters = Arrays.stream(cons.getParameterTypes())
-			.map(clazz -> (Object) diep.getInjector().get().resolve(se.jbee.inject.Dependency.dependency(clazz)))
-			.collect(Collectors.toList()).toArray();
-
-		//noinspection unchecked
-		return (T) cons.newInstance(parameters);
-	}
-
 	public void load() {
 		this.load(new ProgressBar.NullProgressBar(), true);
 	}
@@ -141,7 +127,7 @@ public class ModLoader<ANNOTATION extends Annotation> {
 							try {
 								currentMod = Optional.of(entry.getKey());
 								progressBar.step(entry.getValue());
-								return makeObjectWithDep(entry.getValue());
+								return InjectionUtil.newInstanceOrThrow(entry.getValue());
 							} catch (Exception ex) {
 								ex.printStackTrace();
 								System.out.println("Failed to load NOVA Java mod: " + entry);

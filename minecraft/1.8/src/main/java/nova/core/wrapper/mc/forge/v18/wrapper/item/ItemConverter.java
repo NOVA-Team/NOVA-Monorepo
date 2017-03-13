@@ -20,7 +20,6 @@
 
 package nova.core.wrapper.mc.forge.v18.wrapper.item;
 
-import nova.core.wrapper.mc.forge.v18.wrapper.CategoryConverter;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +37,7 @@ import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v18.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
@@ -56,7 +56,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	private final HashBiMap<ItemFactory, MinecraftItemMapping> map = HashBiMap.create();
 
 	public static ItemConverter instance() {
-		return (ItemConverter) Game.natives().getNative(Item.class, ItemStack.class);
+		return Game.natives().getNative(Item.class, ItemStack.class);
 	}
 
 	@Override

@@ -35,8 +35,8 @@ import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
-import nova.core.wrapper.mc.forge.v17.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v17.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
@@ -55,7 +55,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	private final HashBiMap<ItemFactory, MinecraftItemMapping> map = HashBiMap.create();
 
 	public static ItemConverter instance() {
-		return (ItemConverter) Game.natives().getNative(Item.class, ItemStack.class);
+		return Game.natives().getNative(Item.class, ItemStack.class);
 	}
 
 	@Override

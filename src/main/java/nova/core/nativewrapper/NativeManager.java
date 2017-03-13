@@ -37,15 +37,15 @@ public class NativeManager {
 	 */
 	private final BiMap<Class<?>, Class<?>> novaComponentToNativeInterface = HashBiMap.create();
 
-	private final List<NativeConverter> converters = new ArrayList<>();
+	private final List<NativeConverter<?, ?>> converters = new ArrayList<>();
 	/**
 	 * A map from a Native written type to a Converter.
 	 */
-	private final Map<Class<?>, NativeConverter> nativeConverters = new HashMap<>();
+	private final Map<Class<?>, NativeConverter<?, ?>> nativeConverters = new HashMap<>();
 	/**
 	 * A map from a Nova written type to a Converter.
 	 */
-	private final Map<Class<?>, NativeConverter> novaConverters = new HashMap<>();
+	private final Map<Class<?>, NativeConverter<?, ?>> novaConverters = new HashMap<>();
 
 	/**
 	 * Registers a component to a native interface.
@@ -80,21 +80,23 @@ public class NativeManager {
 		converters.add(converter);
 	}
 
-	public <NOVA, NATIVE> NativeConverter<NOVA, NATIVE> getNative(Class<NOVA> novaClass, Class<NATIVE> nativeClass) {
-		NativeConverter nativeConverter = novaConverters.get(novaClass);
+	@SuppressWarnings("unchecked")
+	public <NOVA, NATIVE, CONVERTER extends NativeConverter<NOVA, NATIVE>> CONVERTER getNative(Class<NOVA> novaClass, Class<NATIVE> nativeClass) {
+		NativeConverter<NOVA, NATIVE> nativeConverter = (NativeConverter<NOVA, NATIVE>) novaConverters.get(novaClass);
 
 		if (nativeConverter == nativeConverters.get(nativeClass)) {
-			return nativeConverter;
+			return (CONVERTER) nativeConverter;
 		}
 
 		throw new NativeException("Cannot find native converter for: " + novaClass);
 	}
 
-	private NativeConverter findConverter(Map<Class<?>, NativeConverter> map, Object obj) {
+	@SuppressWarnings("unchecked")
+	private <NOVA, NATIVE, CONVERTER extends NativeConverter<NOVA, NATIVE>> CONVERTER findConverter(Map<Class<?>, NativeConverter<?, ?>> map, Object obj) {
 		Objects.requireNonNull(obj);
 		Class<?> clazz = obj.getClass();
 
-		return map
+		return (CONVERTER) map
 			.entrySet()
 			.stream()
 			.filter(e -> e.getKey().isAssignableFrom(clazz))
@@ -108,12 +110,12 @@ public class NativeManager {
 	 */
 	public <T> T toNova(Object nativeObject) {
 		Objects.requireNonNull(nativeObject);
-		NativeConverter converter = findConverter(nativeConverters, nativeObject);
+		NativeConverter<T, Object> converter = findConverter(nativeConverters, nativeObject);
 		if (converter == null) {
 			throw new NativeException("NativeManager.toNova: Converter for " + nativeObject + " with class " + nativeObject.getClass() + " does not exist!");
 		}
 
-		return (T) converter.toNova(nativeObject);
+		return converter.toNova(nativeObject);
 	}
 
 	/**
@@ -121,15 +123,15 @@ public class NativeManager {
 	 */
 	public <T> T toNative(Object novaObject) {
 		Objects.requireNonNull(novaObject);
-		NativeConverter converter = findConverter(novaConverters, novaObject);
+		NativeConverter<Object, T> converter = findConverter(novaConverters, novaObject);
 		if (converter == null) {
 			throw new NativeException("NativeManager.toNative: Converter for " + novaObject + " with class " + novaObject.getClass() + " does not exist!");
 		}
 
-		return (T) converter.toNative(novaObject);
+		return converter.toNative(novaObject);
 	}
 
-	public List<NativeConverter> getNativeConverters() {
+	public List<NativeConverter<?, ?>> getNativeConverters() {
 		return converters;
 	}
 

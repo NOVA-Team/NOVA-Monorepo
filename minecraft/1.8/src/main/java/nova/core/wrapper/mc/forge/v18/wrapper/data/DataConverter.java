@@ -46,7 +46,7 @@ import java.util.Set;
 public class DataConverter implements NativeConverter<Data, NBTTagCompound> {
 
 	public static DataConverter instance() {
-		return (DataConverter) Game.natives().getNative(Data.class, NBTTagCompound.class);
+		return Game.natives().getNative(Data.class, NBTTagCompound.class);
 	}
 
 	@Override

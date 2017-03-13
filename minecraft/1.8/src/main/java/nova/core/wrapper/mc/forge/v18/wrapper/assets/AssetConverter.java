@@ -32,7 +32,7 @@ import nova.internal.core.Game;
 public final class AssetConverter implements NativeConverter<Asset, ResourceLocation> {
 
 	public static AssetConverter instance() {
-		return (AssetConverter) Game.natives().getNative(Asset.class, ResourceLocation.class);
+		return Game.natives().getNative(Asset.class, ResourceLocation.class);
 	}
 
 	@Override

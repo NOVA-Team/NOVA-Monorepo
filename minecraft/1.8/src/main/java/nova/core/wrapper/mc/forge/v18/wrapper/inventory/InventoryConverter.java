@@ -23,11 +23,17 @@ package nova.core.wrapper.mc.forge.v18.wrapper.inventory;
 import net.minecraft.inventory.IInventory;
 import nova.core.component.inventory.Inventory;
 import nova.core.nativewrapper.NativeConverter;
+import nova.internal.core.Game;
 
 /**
  * @author Calclavia
  */
 public class InventoryConverter implements NativeConverter<Inventory, IInventory> {
+
+	public static InventoryConverter instance() {
+		return Game.natives().getNative(Inventory.class, IInventory.class);
+	}
+
 	@Override
 	public Class<Inventory> getNovaSide() {
 		return Inventory.class;
@@ -55,5 +61,4 @@ public class InventoryConverter implements NativeConverter<Inventory, IInventory
 		}
 		return new FWInventory(novaObj);
 	}
-
 }

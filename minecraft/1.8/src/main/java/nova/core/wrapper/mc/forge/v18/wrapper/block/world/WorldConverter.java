@@ -31,6 +31,11 @@ import java.util.Optional;
  * @author Calclavia
  */
 public class WorldConverter implements NativeConverter<World, IBlockAccess> {
+
+	public static WorldConverter instance() {
+		return Game.natives().getNative(World.class, IBlockAccess.class);
+	}
+
 	@Override
 	public Class<World> getNovaSide() {
 		return World.class;

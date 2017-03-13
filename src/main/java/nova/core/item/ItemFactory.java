@@ -28,6 +28,7 @@ import nova.core.retention.Storable;
 import nova.core.util.Identifiable;
 import nova.core.util.registry.Factory;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -36,6 +37,21 @@ import java.util.function.Supplier;
  */
 public class ItemFactory extends Factory<ItemFactory, Item> implements Identifiable, Translateable {
 	private String unlocalizedName;
+
+	public ItemFactory(String id, Class<? extends Item> type, Function<Item, Item> processor, Function<Class<?>, Optional<?>> mapping) {
+		super(id, type, processor, mapping);
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
+	}
+
+	public ItemFactory(String id, Class<? extends Item> type, Function<Item, Item> processor) {
+		super(id, type, processor);
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
+	}
+
+	public ItemFactory(String id, Class<? extends Item> type) {
+		super(id, type);
+		this.setUnlocalizedName(getID().replaceAll(":", "."));
+	}
 
 	public ItemFactory(String id, Supplier<Item> constructor, Function<Item, Item> processor) {
 		super(id, constructor, processor);

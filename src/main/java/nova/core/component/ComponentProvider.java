@@ -22,10 +22,12 @@ package nova.core.component;
 
 import nova.core.event.bus.Event;
 import nova.core.event.bus.EventBus;
+import nova.internal.core.util.InjectionUtil;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 
 /**
  * A component block provides the components associated with the object.
@@ -47,16 +49,8 @@ public abstract class ComponentProvider<CM extends ComponentMap> {
 
 	@SuppressWarnings("unchecked")
 	public <C extends ComponentMap> ComponentProvider(Class<C> componentsClass) {
-		try {
-			// TODO Figure out how to dependency injection with this without it crashing
-			Class<CM> clazz = ((Class) componentsClass);
-			Constructor<CM> constructor = clazz.getDeclaredConstructor(ComponentProvider.class);
-			constructor.setAccessible(true);
-			this.components = constructor.newInstance(this);
-			constructor.setAccessible(false);
-		} catch (ReflectiveOperationException e) {
-			throw new IllegalArgumentException(e);
-		}
+		this.components = (CM) InjectionUtil.newInstance(componentsClass,
+			clazz -> ComponentProvider.class == clazz ? Optional.of(this) : Optional.empty());
 	}
 
 	/**
