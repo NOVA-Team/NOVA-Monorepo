@@ -50,60 +50,6 @@ public final class Unit implements Identifiable, Translateable {
 	public static final Unit JOULE = getOrCreateUnit("nova:joule", "J");
 	public static final Unit NEWTON_METRE = getOrCreateUnit("nova:newton_metre", "Nm");
 
-	static {
-		// TODO: Load from `en-US.lang`
-		LanguageManager.instance().register("en-US", "unit.nova.metre.name", "Meter");
-		LanguageManager.instance().register("en-US", "unit.nova.metre.plural", "Meters");
-		LanguageManager.instance().register("en-US", "unit.nova.litre.name", "Liter");
-		LanguageManager.instance().register("en-US", "unit.nova.litre.plural", "Liters");
-		LanguageManager.instance().register("en-US", "unit.nova.gram.name", "Gram");
-		LanguageManager.instance().register("en-US", "unit.nova.gram.plural", "Grams");
-		LanguageManager.instance().register("en-US", "unit.nova.ampere.name", "Amp");
-		LanguageManager.instance().register("en-US", "unit.nova.ampere.plural", "Amps");
-		LanguageManager.instance().register("en-US", "unit.nova.amp_hour.name", "Amp Hour");
-		LanguageManager.instance().register("en-US", "unit.nova.amp_hour.plural", "Amp Hours");
-		LanguageManager.instance().register("en-US", "unit.nova.voltage.name", "Volt");
-		LanguageManager.instance().register("en-US", "unit.nova.voltage.plural", "Volts");
-		LanguageManager.instance().register("en-US", "unit.nova.watt.name", "Watt");
-		LanguageManager.instance().register("en-US", "unit.nova.watt.plural", "Watts");
-		LanguageManager.instance().register("en-US", "unit.nova.watt_hour.name", "Watt Hour");
-		LanguageManager.instance().register("en-US", "unit.nova.watt_hour.plural", "Watt Hours");
-		LanguageManager.instance().register("en-US", "unit.nova.resistivity.name", "Ohm");
-		LanguageManager.instance().register("en-US", "unit.nova.resistivity.plural", "Ohms");
-		LanguageManager.instance().register("en-US", "unit.nova.conductivity.name", "Siemen");
-		LanguageManager.instance().register("en-US", "unit.nova.conductivity.plural", "Siemens");
-		LanguageManager.instance().register("en-US", "unit.nova.joule.name", "Joule");
-		LanguageManager.instance().register("en-US", "unit.nova.joule.plural", "Joules");
-		LanguageManager.instance().register("en-US", "unit.nova.newton_meter.name", "Newton Meter");
-		LanguageManager.instance().register("en-US", "unit.nova.newton_meter.plural", "Newton Meters");
-
-		// TODO: Load from `en-GB.lang`
-		LanguageManager.instance().register("en-GB", "unit.nova.metre.name", "Metre");
-		LanguageManager.instance().register("en-GB", "unit.nova.metre.plural", "Metres");
-		LanguageManager.instance().register("en-GB", "unit.nova.litre.name", "Litre");
-		LanguageManager.instance().register("en-GB", "unit.nova.litre.plural", "Litres");
-		LanguageManager.instance().register("en-GB", "unit.nova.gram.name", "Gram");
-		LanguageManager.instance().register("en-GB", "unit.nova.gram.plural", "Grams");
-		LanguageManager.instance().register("en-GB", "unit.nova.ampere.name", "Amp");
-		LanguageManager.instance().register("en-GB", "unit.nova.ampere.plural", "Amps");
-		LanguageManager.instance().register("en-GB", "unit.nova.amp_hour.name", "Amp Hour");
-		LanguageManager.instance().register("en-GB", "unit.nova.amp_hour.plural", "Amp Hours");
-		LanguageManager.instance().register("en-GB", "unit.nova.voltage.name", "Volt");
-		LanguageManager.instance().register("en-GB", "unit.nova.voltage.plural", "Volts");
-		LanguageManager.instance().register("en-GB", "unit.nova.watt.name", "Watt");
-		LanguageManager.instance().register("en-GB", "unit.nova.watt.plural", "Watts");
-		LanguageManager.instance().register("en-GB", "unit.nova.watt_hour.name", "Watt Hour");
-		LanguageManager.instance().register("en-GB", "unit.nova.watt_hour.plural", "Watt Hours");
-		LanguageManager.instance().register("en-GB", "unit.nova.resistivity.name", "Ohm");
-		LanguageManager.instance().register("en-GB", "unit.nova.resistivity.plural", "Ohms");
-		LanguageManager.instance().register("en-GB", "unit.nova.conductivity.name", "Siemen");
-		LanguageManager.instance().register("en-GB", "unit.nova.conductivity.plural", "Siemens");
-		LanguageManager.instance().register("en-GB", "unit.nova.joule.name", "Joule");
-		LanguageManager.instance().register("en-GB", "unit.nova.joule.plural", "Joules");
-		LanguageManager.instance().register("en-GB", "unit.nova.newton_meter.name", "Newton Metre");
-		LanguageManager.instance().register("en-GB", "unit.nova.newton_meter.plural", "Newton Metres");
-	}
-
 	private final String id;
 	private final String unlocalizedName;
 	private final String symbol;
