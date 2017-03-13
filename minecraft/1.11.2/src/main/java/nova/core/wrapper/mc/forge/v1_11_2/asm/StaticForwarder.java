@@ -38,6 +38,8 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public class StaticForwarder {
 
+	private StaticForwarder() {}
+
 	public static void chunkSetBlockEvent(Chunk chunk, BlockPos pos, IBlockState oldBlockState, IBlockState newBlockState) {
 		// Publish the event
 		Game.events().publish(

@@ -28,8 +28,19 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.util.TraceClassVisitor;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class TileEntityTransformer implements Transformer {
+
+	/**
+	 * If the TileEntity byte code should be written to a debug file. (One for the unmodified version, and one for the modified version)
+	 */
+	public static boolean writeDebug = false;
 
 	@Override
 	public void transform(ClassNode cnode) {
@@ -41,9 +52,12 @@ public class TileEntityTransformer implements Transformer {
 
 		MethodNode method = ASMHelper.findMethod(obfMap, cnode);
 
+		boolean deobf = false;
+
 		if (method == null) {
 			System.out.println("[NOVA] Lookup " + obfMap + " failed. You are probably in a deobf environment.");
 			method = ASMHelper.findMethod(deobfMap, cnode);
+			deobf = true;
 
 			if (method == null) {
 				System.out.println("[NOVA] Lookup " + deobfMap + " failed!");
@@ -53,7 +67,24 @@ public class TileEntityTransformer implements Transformer {
 
 		System.out.println("[NOVA] Transforming method " + method.name);
 
-		ASMHelper.removeBlock(method.instructions, new InstructionComparator.InsnListSection(method.instructions, 31, 44));
+		if (writeDebug) {
+			try {
+				File root = new File("NOVA-Debug");
+				if (!root.exists())
+					root.mkdir();
+
+				File file = new File(root, "TileEntityOriginal.java");
+				if (file.exists()) {
+					file.delete();
+				}
+				file.createNewFile();
+				PrintWriter printWriter = new PrintWriter(new FileOutputStream(file));
+				TraceClassVisitor traceClassVisitor = new TraceClassVisitor(printWriter);
+				cnode.accept(traceClassVisitor);
+			} catch (IOException ex) {}
+		}
+
+		ASMHelper.removeBlock(method.instructions, new InstructionComparator.InsnListSection(method.instructions, 30, 33));
 
 		InsnList list = new InsnList();
 		list.add(new VarInsnNode(ALOAD, 0)); // World
@@ -62,7 +93,20 @@ public class TileEntityTransformer implements Transformer {
 		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc/forge/v1_11_2/asm/StaticForwarder", "loadTileEntityHook", "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;Ljava/lang/Class;)Lnet/minecraft/tileentity/TileEntity;", false));
 		list.add(new VarInsnNode(ASTORE, 2)); // TileEntity
 
-		method.instructions.insert(method.instructions.get(31), list);
+		method.instructions.insert(method.instructions.get(29), list);
+
+		if (writeDebug) {
+			try {
+				File file = new File("NOVA-Debug/TileEntityModified.java");
+				if (file.exists()) {
+					file.delete();
+				}
+				file.createNewFile();
+				PrintWriter printWriter = new PrintWriter(new FileOutputStream(file));
+				TraceClassVisitor traceClassVisitor = new TraceClassVisitor(printWriter);
+				cnode.accept(traceClassVisitor);
+			} catch (IOException ex) {}
+		}
 
 		System.out.println("[NOVA] Injected instruction to method: " + method.name);
 	}
