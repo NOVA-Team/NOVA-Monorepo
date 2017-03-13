@@ -34,7 +34,7 @@ public class RayTraceEfficiencyTest {
     public static void main(String[] args) {
         int maxTestSize = 10000;
 
-        NovaLauncher launcher = new NovaLauncherTestFactory(RayTraceTest.RayTraceMod.class).createLauncher();
+        NovaLauncher launcher = NovaLauncherTestFactory.createDummyLauncher(RayTraceTest.RayTraceMod.class);
         FakeWorld fakeWorld = new FakeWorld();
 
 		Game.logger().info("Generating random world with block count: " + maxTestSize);

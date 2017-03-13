@@ -28,6 +28,7 @@ import nova.core.wrapper.mc.forge.v17.depmodules.SaveModule;
 import nova.core.wrapper.mc.forge.v17.depmodules.TickerModule;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
+import nova.wrappertests.AbstractNovaLauncherTest;
 import nova.wrappertests.depmodules.FakeNetworkModule;
 import org.junit.Test;
 import se.jbee.inject.bootstrap.Bundle;
@@ -40,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author rx14
  */
-public class NovaLauncherTest extends nova.wrappertests.NovaLauncherTest {
+public class NovaLauncherTest extends AbstractNovaLauncherTest {
 
 	@Override
 	public List<Class<? extends Bundle>> getModules() {

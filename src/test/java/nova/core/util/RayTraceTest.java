@@ -54,7 +54,7 @@ public class RayTraceTest {
 
 	@BeforeClass
 	public static void init() {
-		launcher = new NovaLauncherTestFactory(RayTraceMod.class).createLauncher();
+		launcher = NovaLauncherTestFactory.createDummyLauncher(RayTraceMod.class);
 	}
 
 	@Before
