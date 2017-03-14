@@ -50,7 +50,7 @@ public interface IFWItem {
 
 	@Nullable
 	default FWCapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-		Item item = (nbt instanceof FWNBTTagCompound ? ((FWNBTTagCompound)nbt).getItem() : ItemConverter.instance().toNova(stack));
+		Item item = ItemConverter.instance().popNativeConversion().orElseGet(() -> ItemConverter.instance().toNova(stack));
 		WrapperEvent.FWItemInitCapabilities event = new WrapperEvent.FWItemInitCapabilities(item, new FWCapabilityProvider());
 		event.capabilityProvider.addCapability(NovaItem.CAPABILITY, new NovaItem(item));
 		Game.events().publish(event);

@@ -52,7 +52,9 @@ import nova.core.util.math.MathUtil;
 import nova.core.util.math.Vector3DUtil;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -137,14 +139,19 @@ public class FWBlock extends net.minecraft.block.Block {
 				e.printStackTrace();
 			}
 		}
-		return getBlockInstance((nova.core.world.World) Game.natives().toNova(access), position);
-
+		return getBlockInstance(WorldConverter.instance().toNova(access), position);
 	}
 
 	private Block getBlockInstance(nova.core.world.World world, Vector3D position) {
 		// TODO: Implement obj args
 		Block block = factory.build();
 		block.components.add(new MCBlockTransform(block, world, position));
+		if (!block.components.has(BlockProperty.BlockSound.class)) {
+			BlockProperty.BlockSound properties = block.components.add(new BlockProperty.BlockSound());
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound(SoundType.STONE.getBreakSound().getSoundName().getResourceDomain(), SoundType.STONE.getBreakSound().getSoundName().getResourcePath()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound(SoundType.STONE.getPlaceSound().getSoundName().getResourceDomain(), SoundType.STONE.getPlaceSound().getSoundName().getResourcePath()));
+			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound(SoundType.STONE.getStepSound().getSoundName().getResourceDomain(), SoundType.STONE.getStepSound().getSoundName().getResourcePath()));
+		}
 		return block;
 	}
 
@@ -213,10 +220,15 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	@Override
+	@Deprecated
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, net.minecraft.block.Block other, BlockPos neighbor) {
+		onNeighborChange(world, pos, neighbor);
+	}
+
+	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		Block.NeighborChangeEvent evt = new Block.NeighborChangeEvent(
-			Optional.of(VectorConverter.instance().toNova(neighbor)));
+		Block.NeighborChangeEvent evt = new Block.NeighborChangeEvent(Optional.of(VectorConverter.instance().toNova(neighbor)));
 		blockInstance.events.publish(evt);
 	}
 
@@ -234,15 +246,17 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		RayTraceResult mop = player.rayTrace(10, 1);
-		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(mop.sideHit.ordinal()), new Vector3D(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+		Optional<RayTraceResult> mop = Optional.ofNullable(player.rayTrace(10, 1));
+		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player),
+			DirectionConverter.instance().toNova(mop.map(m -> m.sideHit).orElse(null)),
+			mop.map(m -> m.hitVec).map(VectorConverter.instance()::toNova).orElseGet(() -> VectorConverter.instance().toNova(pos)));
 		blockInstance.events.publish(evt);
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(side.ordinal()), new Vector3D(hitX, hitY, hitZ));
+		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), DirectionConverter.instance().toNova(side), new Vector3D(hitX, hitY, hitZ));
 		blockInstance.events.publish(evt);
 		return evt.result;
 	}
@@ -345,7 +359,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		Optional<LightEmitter> opEmitter = blockInstance.components.getOp(LightEmitter.class);
 
 		if (opEmitter.isPresent()) {
-			return (int) MathUtil.clamp(Math.round(((java.util.function.DoubleSupplier)((Object)opEmitter.get().emittedLevel)).getAsDouble() * 15), 0, 15);
+			return (int) MathUtil.clamp(Math.round(opEmitter.get().emittedLevel.getAsDouble() * 15), 0, 15);
 		} else {
 			return 0;
 		}

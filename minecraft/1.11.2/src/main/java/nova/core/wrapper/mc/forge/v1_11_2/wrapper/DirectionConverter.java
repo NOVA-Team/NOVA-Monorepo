@@ -34,10 +34,10 @@ public class DirectionConverter implements NativeConverter<Direction, EnumFacing
 	}
 
 	@Override
-	public Direction toNova(@Nullable EnumFacing nativeObj) {
-		if (null == nativeObj)
+	public Direction toNova(@Nullable EnumFacing facing) {
+		if (null == facing)
 			return Direction.UNKNOWN;
-		else switch (nativeObj) {
+		else switch (facing) {
 			case DOWN:  return Direction.DOWN;
 			case UP:    return Direction.UP;
 			case NORTH: return Direction.NORTH;
@@ -50,8 +50,8 @@ public class DirectionConverter implements NativeConverter<Direction, EnumFacing
 
 	@Override
 	@Nullable
-	public EnumFacing toNative(Direction novaObj) {
-		switch (novaObj) {
+	public EnumFacing toNative(Direction direction) {
+		switch (direction) {
 			case DOWN:  return EnumFacing.DOWN;
 			case UP:    return EnumFacing.UP;
 			case NORTH: return EnumFacing.NORTH;

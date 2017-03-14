@@ -21,9 +21,7 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.energy.IEnergyStorage;
 import nova.core.item.Item;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilityProvider;
 
 /**
  * Internal NOVA capability used to make NOVA items persistent.

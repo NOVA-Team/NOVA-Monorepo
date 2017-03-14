@@ -47,11 +47,11 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItemFactory;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItem;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWNBTTagCompound;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.NovaItem;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
 
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -66,6 +66,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	 * A map of all items registered
 	 */
 	private final HashBiMap<ItemFactory, MinecraftItemMapping> map = HashBiMap.create();
+	private final LinkedList<Item> nativeConversion = new LinkedList<>();
 
 	public static ItemConverter instance() {
 		return Game.natives().getNative(Item.class, ItemStack.class);
@@ -120,7 +121,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 			if (mapping == null) {
 				throw new InitializationException("Missing mapping for " + itemFactory.getID());
 			}
-			return new ItemStack(mapping.item, item.count(), mapping.meta, new FWNBTTagCompound(item));
+			nativeConversion.push(item);
+			return new ItemStack(mapping.item, item.count(), mapping.meta);
 		}
 	}
 
@@ -134,7 +136,15 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	}
 
 	public ItemStack toNative(String id) {
-		return toNative(Game.items().get(id).get().build().setCount(1));
+		return toNative(Game.items().get(id).get());
+	}
+
+	public Optional<Item> popNativeConversion() {
+		if (nativeConversion.isEmpty()) {
+			return Optional.empty();
+		} else {
+			return Optional.of(nativeConversion.pop());
+		}
 	}
 
 	public MinecraftItemMapping get(ItemFactory item) {
