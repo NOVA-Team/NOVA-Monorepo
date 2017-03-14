@@ -29,11 +29,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import nova.core.item.Item;
 import nova.core.item.ItemFactory;
-import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilityProvider;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
-import nova.internal.core.Game;
 
 import java.util.List;
 import javax.annotation.Nullable;
@@ -52,17 +50,14 @@ public class FWItem extends net.minecraft.item.Item implements IFWItem {
 	}
 
 	@Override
-	@Nullable
-	public FWItemCapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-		Item item = ItemConverter.instance().toNova(stack);
-		WrapperEvent.FWItemInitCapabilities event = new WrapperEvent.FWItemInitCapabilities(item, new FWItemCapabilityProvider(item));
-		Game.events().publish(event);
-		return event.capabilityProvider.hasCapabilities() ? event.capabilityProvider : null;
+	public ItemFactory getItemFactory() {
+		return itemFactory;
 	}
 
 	@Override
-	public ItemFactory getItemFactory() {
-		return itemFactory;
+	@Nullable
+	public FWCapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+		return IFWItem.super.initCapabilities(stack, nbt);
 	}
 
 	@Override
@@ -78,11 +73,6 @@ public class FWItem extends net.minecraft.item.Item implements IFWItem {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		return IFWItem.super.onItemRightClick(player.getHeldItem(hand), world, player);
-	}
-
-	@Override
-	public int getColorFromItemStack(ItemStack itemStack, int renderPass) {
-		return IFWItem.super.getColorFromItemStack(itemStack, renderPass);
 	}
 
 	@Override

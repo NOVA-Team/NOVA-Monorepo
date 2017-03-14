@@ -22,18 +22,23 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.world.World;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
+import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilityProvider;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nullable;
 
 /**
  * An interface implemented by {@link FWItem} and {@link FWItemBlock} classes to override Minecraft's item events.
@@ -42,6 +47,15 @@ import java.util.Optional;
 public interface IFWItem {
 
 	ItemFactory getItemFactory();
+
+	@Nullable
+	default FWCapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+		Item item = (nbt instanceof FWNBTTagCompound ? ((FWNBTTagCompound)nbt).getItem() : ItemConverter.instance().toNova(stack));
+		WrapperEvent.FWItemInitCapabilities event = new WrapperEvent.FWItemInitCapabilities(item, new FWCapabilityProvider());
+		event.capabilityProvider.addCapability(NovaItem.CAPABILITY, new NovaItem(item));
+		Game.events().publish(event);
+		return event.capabilityProvider;
+	}
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List<String> tooltip, boolean advanced) {
 		Item item = ItemConverter.instance().toNova(itemStack);
@@ -63,7 +77,6 @@ public interface IFWItem {
 		return new ActionResult<>(EnumActionResult.PASS, ItemConverter.instance().updateMCItemStack(itemStack, item));
 	}
 
-	@SuppressWarnings("deprecation")
 	default int getColorFromItemStack(ItemStack itemStack, int renderPass) {
 		return ItemConverter.instance().toNova(itemStack).colorMultiplier().argb();
 	}

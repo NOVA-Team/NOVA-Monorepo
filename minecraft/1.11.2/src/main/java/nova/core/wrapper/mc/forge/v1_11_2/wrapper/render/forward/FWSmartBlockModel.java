@@ -33,6 +33,8 @@ import nova.core.block.Block;
 import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.backward.BWModel;
 import org.lwjgl.util.vector.Vector3f;
@@ -86,7 +88,16 @@ public class FWSmartBlockModel extends FWSmartModel implements IBakedModel {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+		final Block block;
+		if (state != null) {
+			FWBlock fwBlock = (FWBlock) state.getBlock();
+			block = fwBlock.getBlockInstance(fwBlock.lastExtendedWorld, VectorConverter.instance().toNova(fwBlock.lastExtendedStatePos));
+		} else {
+			block = this.block;
+		}
+
 		BWModel model = new BWModel();
 		model.matrix.translate(0.5, 0.5, 0.5);
 
@@ -100,6 +111,6 @@ public class FWSmartBlockModel extends FWSmartModel implements IBakedModel {
 			block.components.getOp(StaticRenderer.class).ifPresent(r -> r.onRender.accept(model));
 		}
 
-		return modelToQuads(model);
+		return modelToQuads(model, item.map(Item::colorMultiplier));
 	}
 }

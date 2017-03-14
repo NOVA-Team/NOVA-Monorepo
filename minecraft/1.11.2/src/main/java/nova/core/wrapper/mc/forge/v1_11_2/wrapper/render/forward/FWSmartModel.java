@@ -32,6 +32,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import nova.core.render.Color;
 import nova.core.render.model.MeshModel;
 import nova.core.render.model.Model;
 import nova.core.render.model.Vertex;
@@ -44,6 +45,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -90,6 +92,14 @@ public abstract class FWSmartModel implements IBakedModel {
 	public abstract IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity);
 
 	protected List<BakedQuad> modelToQuads(Model modelIn) {
+		return modelToQuads(modelIn, Optional.empty());
+	}
+
+	protected List<BakedQuad> modelToQuads(Model modelIn, Color colorMultiplier) {
+		return modelToQuads(modelIn, Optional.of(colorMultiplier));
+	}
+
+	protected List<BakedQuad> modelToQuads(Model modelIn, Optional<Color> colorMultiplier) {
 		return modelIn
 			.flatten()
 			.stream()
@@ -106,6 +116,10 @@ public abstract class FWSmartModel implements IBakedModel {
 										.orElseGet(Minecraft.getMinecraft().getTextureMapBlocks()::getMissingSprite);
 									List<int[]> vertexData = face.vertices
 										.stream()
+										.map(v -> {
+											colorMultiplier.ifPresent(c -> v.color = v.color.multiply(c));
+											return v;
+										})
 										.map(v -> vertexToInts(v, texture, face.normal))
 										.collect(Collectors.toList());
 

@@ -40,8 +40,8 @@ public class FWNBTTagCompound extends NBTTagCompound {
 	}
 
 	@Override
-	public NBTTagCompound copy() {
-		FWNBTTagCompound result = new FWNBTTagCompound(item);
+	public FWNBTTagCompound copy() {
+		FWNBTTagCompound result = new FWNBTTagCompound(item.clone());
 		getKeySet().forEach(key -> result.setTag(key, getTag(key).copy()));
 		return result;
 	}

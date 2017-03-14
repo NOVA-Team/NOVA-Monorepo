@@ -36,6 +36,10 @@ public interface NovaCapabilityProvider extends ICapabilityProvider {
 
 	boolean hasCapabilities();
 
+	default <T> T addCapability(Capability<T> capability, T instance) {
+		return addCapability(capability, instance, Direction.UNKNOWN);
+	}
+
 	default <T> T addCapability(Capability<T> capability, T instance, Direction... directions) {
 		return addCapability(capability, instance, EnumSelector.of(Direction.class).blockAll().apart(directions).lock());
 	}

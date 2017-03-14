@@ -22,9 +22,12 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item;
 
 import com.google.common.collect.HashBiMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.capabilities.CapabilityDispatcher;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.Capability.IStorage;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -40,16 +43,17 @@ import nova.core.wrapper.mc.forge.v1_11_2.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.BlockConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItemFactory;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItem;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItemCapabilityProvider;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWNBTTagCompound;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.NovaItem;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -88,21 +92,17 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 			return getNovaItem(new ItemStack(stack.getItem(), 1, 0));
 		}
 
-		ICapabilityProvider stackCapabilities = getStackCapabilities(stack);
-		if (stack.getTagCompound() instanceof FWNBTTagCompound) {
-			return ((FWNBTTagCompound) stack.getTagCompound()).getItem();
-		} else if (stackCapabilities instanceof FWItemCapabilityProvider) {
-			return ((FWItemCapabilityProvider) stackCapabilities).item;
-		} else {
-			ItemFactory itemFactory = registerMinecraftMapping(stack.getItem(), stack.getItemDamage());
-
-			Data data = stack.getTagCompound() != null ? Game.natives().toNova(stack.getTagCompound()) : new Data();
-			if (!stack.getHasSubtypes() && stack.getItemDamage() > 0) {
-				data.put("damage", stack.getItemDamage());
-			}
-
-			return itemFactory.build(data);
-		}
+		// Nova FWCapabilityProvider stores capabilities in a HashMap, so we need this to be as fast as possible.
+		return Optional.ofNullable(stack.getCapability(NovaItem.CAPABILITY, null))
+			.map(wrapped -> wrapped.item)
+			.orElseGet(() -> {
+				ItemFactory itemFactory = registerMinecraftMapping(stack.getItem(), stack.getItemDamage());
+				Data data = stack.getTagCompound() != null ? Game.natives().toNova(stack.getTagCompound()) : new Data();
+				if (!stack.getHasSubtypes() && stack.getItemDamage() > 0) {
+					data.put("damage", stack.getItemDamage());
+				}
+				return itemFactory.build(data);
+			});
 	}
 
 	@Override
@@ -116,30 +116,21 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 			return ((BWItem) item).makeItemStack(item.count());
 		} else {
 			ItemFactory itemFactory = Game.items().get(item.getID()).get();// TODO?
-			FWNBTTagCompound tag = new FWNBTTagCompound(item);
-
 			MinecraftItemMapping mapping = get(itemFactory);
 			if (mapping == null) {
 				throw new InitializationException("Missing mapping for " + itemFactory.getID());
 			}
-
-			ItemStack result = new ItemStack(mapping.item, item.count(), mapping.meta);
-			result.setTagCompound(tag);
-			return result;
+			return new ItemStack(mapping.item, item.count(), mapping.meta, new FWNBTTagCompound(item));
 		}
 	}
 
 	public ItemStack toNative(ItemFactory itemFactory) {
-		FWNBTTagCompound tag = new FWNBTTagCompound(itemFactory.build());
-
 		MinecraftItemMapping mapping = get(itemFactory);
 		if (mapping == null) {
 			throw new InitializationException("Missing mapping for " + itemFactory.getID());
 		}
 
-		ItemStack result = new ItemStack(mapping.item, 1, mapping.meta);
-		result.setTagCompound(tag);
-		return result;
+		return new ItemStack(mapping.item, 1, mapping.meta);
 	}
 
 	public ItemStack toNative(String id) {
@@ -167,7 +158,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 			return ItemStack.EMPTY;
 		}
 
-		itemStack.setTagCompound(Game.natives().toNative(item.getFactory().save(item)));
+		itemStack.setTagCompound(DataConverter.instance().toNative(item.getFactory().save(item)));
 		return itemStack;
 	}
 
@@ -176,9 +167,26 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	 */
 	@Override
 	public void preInit(FMLPreInitializationEvent evt) {
+		registerCapabilities();
 		registerNOVAItemsToMinecraft();
 		registerMinecraftItemsToNOVA();
 		registerSubtypeResolution();
+	}
+
+	private void registerCapabilities() {
+		CapabilityManager.INSTANCE.register(NovaItem.class, new IStorage<NovaItem>() {
+			@Override
+			public NBTBase writeNBT(Capability<NovaItem> capability, NovaItem instance, EnumFacing side) {
+				throw new UnsupportedOperationException("The `NovaItem` Capability is an internal NOVA API");
+			}
+
+			@Override
+			public void readNBT(Capability<NovaItem> capability, NovaItem instance, EnumFacing side, NBTBase nbt) {
+				throw new UnsupportedOperationException("The `NovaItem` Capability is an internal NOVA API");
+			}
+		}, () -> {
+			throw new UnsupportedOperationException("The `NovaItem` Capability is an internal NOVA API");
+		});
 	}
 
 	private void registerNOVAItemsToMinecraft() {
@@ -337,31 +345,6 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 			} else {
 				return Objects.toString(net.minecraft.item.Item.REGISTRY.getNameForObject(item));
 			}
-		}
-	}
-
-	private ICapabilityProvider getStackCapabilities(ItemStack stack) {
-		try {
-			Field capabilities = ItemStack.class.getDeclaredField("capabilities");
-			capabilities.setAccessible(true);
-			@SuppressWarnings("unchecked")
-			CapabilityDispatcher dispatcher = (CapabilityDispatcher) capabilities.get(stack);
-			capabilities.setAccessible(false);
-			if (dispatcher == null)
-				return null;
-
-			Field caps = CapabilityDispatcher.class.getDeclaredField("caps");
-			caps.setAccessible(true);
-			@SuppressWarnings("unchecked")
-			ICapabilityProvider[] providers = (ICapabilityProvider[]) caps.get(dispatcher);
-			caps.setAccessible(false);
-
-			ICapabilityProvider provider = null;
-			if (providers.length > 0)
-				provider = providers[0];
-			return provider;
-		} catch (ReflectiveOperationException | ClassCastException ex) {
-			return null;
 		}
 	}
 }

@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2015 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
@@ -74,11 +75,12 @@ public class FWSmartItemModel extends FWSmartModel implements IBakedModel {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
 		BWModel model = new BWModel();
 		model.matrix.translate(0.5, 0.5, 0.5);
 		item.components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
-		return modelToQuads(model);
+		return modelToQuads(model, item.colorMultiplier());
 	}
 
 	@Override
