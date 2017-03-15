@@ -71,4 +71,8 @@ public class NovaCraftingRecipe implements IRecipe {
 	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
 		return NonNullList.create();
 	}
+
+	public CraftingRecipe getRecipe() {
+		return recipe;
+	}
 }
