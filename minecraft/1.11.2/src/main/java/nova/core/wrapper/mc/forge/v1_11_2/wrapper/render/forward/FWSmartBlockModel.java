@@ -84,7 +84,7 @@ public class FWSmartBlockModel extends FWSmartModel implements IBakedModel {
 			return new FWSmartBlockModel(block, item);
 		}
 
-		return new FWEmptyModel();
+		return FWEmptyModel.INSTANCE;
 	}
 
 	@Override

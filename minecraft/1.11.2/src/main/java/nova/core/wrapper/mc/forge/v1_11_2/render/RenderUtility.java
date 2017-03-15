@@ -42,6 +42,7 @@ import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.AssetConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlock;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.IFWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.forward.FWEmptyModel;
@@ -192,7 +193,7 @@ public class RenderUtility implements ForgeLoadable {
 				if (block.dummy.components.has(StaticRenderer.class)) {
 					event.getModelRegistry().putObject(blockLocation, new FWSmartBlockModel(block.dummy));
 				} else {
-					event.getModelRegistry().putObject(blockLocation, new FWEmptyModel());
+					event.getModelRegistry().putObject(blockLocation, FWEmptyModel.INSTANCE);
 				}
 				event.getModelRegistry().putObject(itemLocation, new FWSmartBlockModel(block.dummy, dummy));
 			}
@@ -200,20 +201,13 @@ public class RenderUtility implements ForgeLoadable {
 
 		//Register all items
 		Game.items().registry.forEach(itemFactory -> {
-			Object stackObj = Game.natives().toNative(itemFactory.build());
-			if (stackObj instanceof ItemStack) {
-				Item itemObj = ((ItemStack) stackObj).getItem();
-				if (itemObj instanceof FWItem) {
-					FWItem item = (FWItem) itemObj;
-					ResourceLocation objRL = Item.REGISTRY.getNameForObject(item);
-					ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
-
-					nova.core.item.Item dummy = item.getItemFactory().build();
-
-					if (dummy.components.has(Renderer.class)) {
-						event.getModelRegistry().putObject(itemLocation, new FWSmartItemModel(dummy));
-					}
-				}
+			ItemStack stack = ItemConverter.instance().toNative(itemFactory);
+			Item itemObj = stack.getItem();
+			if (itemObj instanceof FWItem) {
+				FWItem item = (FWItem) itemObj;
+				ResourceLocation objRL = Item.REGISTRY.getNameForObject(item);
+				ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
+				event.getModelRegistry().putObject(itemLocation, new FWSmartItemModel(item.getItemFactory().build()));
 			}
 		});
 	}

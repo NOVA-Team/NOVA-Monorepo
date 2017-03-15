@@ -39,6 +39,11 @@ import java.util.List;
  */
 public class FWEmptyModel extends FWSmartModel implements IBakedModel {
 
+	/** The singleton instance of an empty model. */
+	public static final FWEmptyModel INSTANCE = new FWEmptyModel();
+
+	private FWEmptyModel() {}
+
 	//Item rendering
 	@Override
 	public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
