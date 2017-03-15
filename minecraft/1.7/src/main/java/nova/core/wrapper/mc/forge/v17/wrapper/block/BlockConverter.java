@@ -29,6 +29,7 @@ import nova.core.block.BlockFactory;
 import nova.core.block.BlockManager;
 import nova.core.component.Category;
 import nova.core.event.BlockEvent;
+import nova.core.loader.Mod;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
@@ -37,6 +38,7 @@ import nova.core.wrapper.mc.forge.v17.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v17.wrapper.item.FWItemBlock;
 import nova.internal.core.Game;
+import nova.internal.core.launch.NovaLauncher;
 
 import java.util.HashMap;
 
@@ -134,7 +136,10 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		FWBlock blockWrapper = new FWBlock(blockFactory);
 		blockFactoryMap.put(blockFactory, blockWrapper);
 		NovaMinecraft.proxy.registerBlock(blockWrapper);
-		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockFactory.getID());
+		String blockId = blockFactory.getID();
+		if (!blockId.contains(":"))
+			blockId = NovaLauncher.instance().flatMap(NovaLauncher::getCurrentMod).map(Mod::id).orElse("nova") + ':' + blockId;
+		GameRegistry.registerBlock(blockWrapper, FWItemBlock.class, blockId);
 
 		if (blockWrapper.dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 			//Add into creative tab

@@ -26,6 +26,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import nova.core.event.BlockEvent;
+import nova.core.wrapper.mc.forge.v18.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWTileLoader;
 import nova.internal.core.Game;
@@ -36,6 +37,8 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  * @author Calclavia
  */
 public class StaticForwarder {
+
+	private StaticForwarder() {}
 
 	public static void chunkSetBlockEvent(Chunk chunk, BlockPos pos, IBlockState oldBlockState, IBlockState newBlockState) {
 		// Publish the event
@@ -61,5 +64,15 @@ public class StaticForwarder {
 		} else {
 			return clazz.newInstance();
 		}
+	}
+
+	/**
+	 * Checks if the prefix is equal to the NOVA mod ID ("nova").
+	 *
+	 * @param prefix The prefix to check
+	 * @return If the prefix is equal to the NOVA mod ID ("nova").
+	 */
+	public static boolean addPrefix$isNovaPrefix(String prefix) {
+		return NovaMinecraft.id.equals(prefix);
 	}
 }
