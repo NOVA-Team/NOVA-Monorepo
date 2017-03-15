@@ -37,6 +37,7 @@ import nova.core.event.ItemEvent;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
+import nova.core.loader.Mod;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.ForgeLoadable;
@@ -50,6 +51,7 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.NovaItem;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
+import nova.internal.core.launch.NovaLauncher;
 
 import java.util.LinkedList;
 import java.util.Objects;
@@ -240,7 +242,9 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
-			String itemId = itemFactory.getID(); // TODO?
+			String itemId = itemFactory.getID();
+			if (!itemId.contains(":"))
+				itemId = NovaLauncher.instance().flatMap(NovaLauncher::getCurrentMod).map(Mod::id).orElse("nova") + ':' + itemId;
 			GameRegistry.register(itemWrapper, new ResourceLocation(itemId));
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
