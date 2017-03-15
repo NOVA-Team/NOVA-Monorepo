@@ -84,11 +84,11 @@ public class ClientProxy extends CommonProxy {
 				ResourceLocation location = new ResourceLocation(NovaMinecraft.id, langName + ".lang");
 				try {
 					Minecraft.getMinecraft().getResourceManager().getAllResources(location).forEach(resource ->
-						loadLanguage(languageManager, location, langName, ((IResource)resource).getInputStream()));
+						loadLanguage(languageManager, langName, ((IResource)resource).getInputStream()));
 				} catch (IOException ex) {
 					InputStream stream = ClientProxy.class.getResourceAsStream(String.format("assets/%s/%s", location.getResourceDomain(), location.getResourcePath()));
 					if (stream != null)
-						loadLanguage(languageManager, location, langName, stream);
+						loadLanguage(languageManager, langName, stream);
 				}
 			});
 		NovaMinecraftPreloader.novaResourcePacks.forEach(pack -> {
@@ -98,8 +98,11 @@ public class ClientProxy extends CommonProxy {
 				String langName = resourcePath.substring(5, resourcePath.length() - 5);
 				try {
 					Minecraft.getMinecraft().getResourceManager().getAllResources(location).forEach(resource ->
-						loadLanguage(languageManager, location, langName, ((IResource)resource).getInputStream()));
+						loadLanguage(languageManager, langName, ((IResource)resource).getInputStream()));
 				} catch (IOException ex) {
+					InputStream stream = ClientProxy.class.getResourceAsStream(String.format("assets/%s/%s", location.getResourceDomain(), location.getResourcePath()));
+					if (stream != null)
+						loadLanguage(languageManager, langName, stream);
 				}
 			});
 		});
@@ -107,7 +110,7 @@ public class ClientProxy extends CommonProxy {
 		ProgressManager.pop(progressBar);
 	}
 
-	private void loadLanguage(LanguageManager languageManager, ResourceLocation location, String langName, InputStream stream) {
+	private void loadLanguage(LanguageManager languageManager, String langName, InputStream stream) {
 		try {
 			Properties p = new Properties();
 			p.load(stream);
