@@ -27,8 +27,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -48,6 +46,11 @@ import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.cuboid.CuboidConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.EntityConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.backward.BWBakedModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -59,30 +62,30 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BWBlock extends Block implements Storable {
-	private final net.minecraft.block.Block block;
+	private final IBlockState blockState;
 	@Store
 	private TileEntity mcTileEntity;
 
 	public BWBlock(net.minecraft.block.Block block) {
-		this.block = block;
+		this.blockState = block.getDefaultState();
 	}
 
 	@SuppressWarnings("deprecation")
-	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
-		this.block = block;
-
+	public BWBlock(IBlockState incompleteBlockState, World world, Vector3D pos) {
 		BlockTransform transform = components.add(new BlockTransform());
 		transform.setWorld(world);
 		transform.setPosition(pos);
+		incompleteBlockState = incompleteBlockState.getActualState(blockAccess(), blockPos());
+		this.blockState = incompleteBlockState.getBlock().getExtendedState(incompleteBlockState, blockAccess(), blockPos());
 
 		components.add(new BlockProperty.Opacity().setOpacity(blockState().getMaterial().blocksLight() ? 1 : 0));
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		SoundType soundType;
 		if (blockAccess() instanceof net.minecraft.world.World)
-			soundType = block.getSoundType(blockState(), (net.minecraft.world.World)blockAccess(), blockPos(), null);
+			soundType = block().getSoundType(blockState(), (net.minecraft.world.World) blockAccess(), blockPos(), null);
 		else
-			soundType = block.getSoundType();
+			soundType = block().getSoundType();
 
 		if (soundType.getPlaceSound() != null)
 			blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE,
@@ -106,31 +109,32 @@ public class BWBlock extends Block implements Storable {
 				return new Cuboid(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
 			}).setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
-				blockState().addCollisionBoxToList(
-					Game.natives().toNative(world()),
-					blockPos(),
-					Game.natives().toNative(entity.isPresent() ? entity.get().components.get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),
-					aabbs,
-					entity.isPresent() ? Game.natives().toNative(entity.get()) : null,
-					true
-				);
+				if (blockAccess() instanceof net.minecraft.world.World)
+					blockState().addCollisionBoxToList(
+						(net.minecraft.world.World) blockAccess(),
+						blockPos(),
+						CuboidConverter.instance().toNative(entity
+							.flatMap(e -> e.components.getOp(Collider.class))
+							.map(c -> c.boundingBox.get())
+							.orElseGet(() -> Cuboid.ONE.add(pos))),
+						aabbs,
+						entity.map(EntityConverter.instance()::toNative).orElse(null),
+						true
+					);
 				return aabbs.stream()
 					.map(aabb -> (Cuboid) Game.natives().toNova(aabb))
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			}).setSelectionBoxes(entity -> {
-				AxisAlignedBB bb;
+				final AxisAlignedBB bb;
 				if (blockAccess() instanceof net.minecraft.world.World) {
-					@SuppressWarnings("deprecation")
-					AxisAlignedBB bb1 = block.getSelectedBoundingBox(blockState(), ((net.minecraft.world.World) blockAccess()), blockPos());
-					bb = bb1;
+					bb = block().getSelectedBoundingBox(blockState(), ((net.minecraft.world.World) blockAccess()), blockPos());
 				} else {
 					bb = blockState().getBoundingBox(blockAccess(), blockPos()).offset(blockPos());
 				}
 				Cuboid cuboid = Game.natives().toNova(bb);
 				return Collections.singleton(cuboid.subtract(position()));
 			});
-		//TODO: Set selection bounds
 		components.add(new StaticRenderer())
 			.onRender(model -> {
 				switch (blockState().getRenderType()) {
@@ -157,21 +161,21 @@ public class BWBlock extends Block implements Storable {
 			});
 		// TODO: TileEntity rendering using DynamicRenderer
 
-		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, block);
+		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, block());
 		Game.events().publish(event);
 	}
 
 	@Override
 	public ItemFactory getItemFactory() {
-		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(block)));
+		return ItemConverter.instance().toNova(Item.getItemFromBlock(block()));
 	}
 
 	public net.minecraft.block.Block block() {
-		return block;
+		return blockState.getBlock();
 	}
 
 	public int meta() {
-		return block.getMetaFromState(blockState());
+		return block().getMetaFromState(blockState());
 	}
 
 	public BlockPos blockPos() {
@@ -179,15 +183,15 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	public IBlockAccess blockAccess() {
-		return Game.natives().toNative(world());
+		return WorldConverter.instance().toNative(world());
 	}
 
 	public IBlockState blockState() {
-		return blockAccess().getBlockState(blockPos());
+		return blockState;
 	}
 
 	public Optional<TileEntity> tile() {
-		if (mcTileEntity == null && block.hasTileEntity(blockState())) {
+		if (mcTileEntity == null && block().hasTileEntity(blockState())) {
 			mcTileEntity = blockAccess().getTileEntity(blockPos());
 		}
 		return Optional.ofNullable(mcTileEntity);
@@ -195,16 +199,16 @@ public class BWBlock extends Block implements Storable {
 
 	@Override
 	public boolean canReplace() {
-		return block.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), blockPos());
+		return block().canPlaceBlockAt((net.minecraft.world.World) blockAccess(), blockPos());
 	}
 
 	@Override
 	public boolean shouldDisplacePlacement() {
-		if (block == Blocks.SNOW_LAYER && (blockState().getValue(BlockSnow.LAYERS) < 1)) {
+		if (block() == Blocks.SNOW_LAYER && (blockState().getValue(BlockSnow.LAYERS) < 1)) {
 			return false;
 		}
 
-		if (block == Blocks.VINE || block == Blocks.TALLGRASS || block == Blocks.DEADBUSH || block.isReplaceable(blockAccess(), blockPos())) {
+		if (block() == Blocks.VINE || block() == Blocks.TALLGRASS || block() == Blocks.DEADBUSH || block().isReplaceable(blockAccess(), blockPos())) {
 			return false;
 		}
 		return super.shouldDisplacePlacement();
@@ -213,31 +217,23 @@ public class BWBlock extends Block implements Storable {
 	@Override
 	public void save(Data data) {
 		Storable.super.save(data);
-
-		tile().ifPresent(tile -> {
-			NBTTagCompound nbt = new NBTTagCompound();
-			tile.writeToNBT(nbt);
-			data.putAll(Game.natives().toNova(nbt));
-		});
+		tile().ifPresent(tile -> data.putAll(DataConverter.instance().toNova(tile.serializeNBT())));
 	}
 
 	@Override
 	public void load(Data data) {
 		Storable.super.load(data);
-
-		tile().ifPresent(tile -> {
-			tile.readFromNBT(Game.natives().toNative(data));
-		});
+		tile().ifPresent(tile -> tile.deserializeNBT(Game.natives().toNative(data)));
 	}
 
 	@Override
 	public String getLocalizedName() {
-		return block.getLocalizedName();
+		return block().getLocalizedName();
 	}
 
 	@Override
 	public String getUnlocalizedName() {
-		return block.getUnlocalizedName();
+		return block().getUnlocalizedName();
 	}
 
 	@Override

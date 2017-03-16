@@ -27,6 +27,8 @@ import nova.core.util.Direction;
 import nova.core.util.EnumSelector;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
 
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -36,37 +38,105 @@ public interface NovaCapabilityProvider extends ICapabilityProvider {
 
 	boolean hasCapabilities();
 
-	default <T> T addCapability(Capability<T> capability, T instance) {
+	/**
+	 * Internal NOVA method. Used by wrappers to add wrapper specific capabilities.
+	 *
+	 * Ex. NOVA-Energy adds wrappers for EnergyStorage component -> IEnergyStorage capability.
+	 *
+	 * @param capability The capability to add.
+	 * @param capabilityInstance The capability instance to add.
+	 * @throws IllegalArgumentException if the capability is already present for the direction.
+	 * @returns instance
+	 */
+	@Nonnull
+	default <T> T addCapability(@Nonnull Capability<T> capability, @Nonnull T instance) {
 		return addCapability(capability, instance, Direction.UNKNOWN);
 	}
 
-	default <T> T addCapability(Capability<T> capability, T instance, Direction... directions) {
+	/**
+	 * Internal NOVA method. Used by wrappers to add wrapper specific capabilities.
+	 *
+	 * Ex. NOVA-Energy adds wrappers for EnergyStorage component -> IEnergyStorage capability.
+	 *
+	 * @param capability The capability to add.
+	 * @param capabilityInstance The capability instance to add.
+	 * @param directions The directions to add the capability to.
+	 * @throws IllegalArgumentException if the capability is already present for the direction.
+	 * @returns instance
+	 */
+	@Nonnull
+	default <T> T addCapability(@Nonnull Capability<T> capability, @Nonnull T instance, @Nonnull Direction... directions) {
 		return addCapability(capability, instance, EnumSelector.of(Direction.class).blockAll().apart(directions).lock());
 	}
 
-
-	default <T> T addCapability(Capability<T> capability, T instance, Direction direction) {
+	/**
+	 * Internal NOVA method. Used by wrappers to add wrapper specific capabilities.
+	 *
+	 * Ex. NOVA-Energy adds wrappers for EnergyStorage component -> IEnergyStorage capability.
+	 *
+	 * @param capability The capability to add.
+	 * @param capabilityInstance The capability instance to add.
+	 * @param direction The direction to add the capability to.
+	 * @throws IllegalArgumentException if the capability is already present for the direction.
+	 * @returns instance
+	 */
+	@Nonnull
+	default <T> T addCapability(@Nonnull Capability<T> capability, @Nonnull T instance, @Nonnull Direction direction) {
 		return addCapability(capability, instance, direction == Direction.UNKNOWN ?
 			EnumSelector.of(Direction.class).allowAll().lock() :
 			EnumSelector.of(Direction.class).blockAll().apart(direction).lock());
 	}
 
+	/**
+	 * Internal NOVA method. Used by wrappers to add wrapper specific capabilities.
+	 *
+	 * Ex. NOVA-Energy adds wrappers for EnergyStorage component -> IEnergyStorage capability.
+	 *
+	 * @param capability The capability to add.
+	 * @param instance The capability instance to add.
+	 * @param directions The directions to add the capability to.
+	 * @throws IllegalArgumentException if the capability is already present for the direction.
+	 * @returns instance
+	 */
+	@Nonnull
+	<T> T addCapability(@Nonnull Capability<T> capability, @Nonnull T instance, @Nonnull EnumSelector<Direction> directions);
 
-	<T> T addCapability(Capability<T> capability, T instance, EnumSelector<Direction> directions);
-
-	boolean hasCapability(Capability<?> capability, Direction direction);
+	/**
+	 * Determines if this object has support for the capability in question on the specific side.
+	 * The return value of this might change during runtime if this object gains or looses support
+	 * for a capability.
+	 * <p>
+	 * Example:
+	 *   A Pipe getting a cover placed on one side causing it loose the {@link nova.core.component.inventory.Inventory} attachment function for that side.
+	 *
+	 * @param capability The capability to check
+	 * @param direction The Side to check from: @link nova.core.util.Direction.UNKNOWN UNKNOWN}
+	 * is defined to represent 'internal' or 'self' or used for cases where side doesn't matter.
+	 * @return True if this object supports the capability for this side.
+	 */
+	boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull Direction direction);
 
 	@Override
-	default boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+	default boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
 		return hasCapability(capability, DirectionConverter.instance().toNova(facing));
 	}
 
-	@Nullable
-	<T> T getCapability(Capability<T> capability, Direction direction);
+	/**
+	 * Retrieves the handler for the capability requested on the specific side.
+	 * The return value is {@link Optional#empty()} when the object does not support the capability for the direction.
+	 * The return value can be the same for multiple faces.
+	 * <p>
+	 * @param capability The capability to check
+	 * @param direction The Side to check from: @link nova.core.util.Direction.UNKNOWN UNKNOWN}
+	 * is defined to represent 'internal' or 'self' or used for cases where side doesn't matter.
+	 * @return The requested capability. Returns an empty optional when {@link #hasCapability(Capability, EnumFacing)} would return false.
+	 */
+	@Nonnull
+	<T> Optional<T> getCapability(@Nonnull Capability<T> capability, @Nonnull Direction direction);
 
 	@Override
 	@Nullable
-	default <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		return getCapability(capability, DirectionConverter.instance().toNova(facing));
+	default <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+		return getCapability(capability, DirectionConverter.instance().toNova(facing)).orElse(null);
 	}
 }

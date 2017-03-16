@@ -22,11 +22,7 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item;
 
 import com.google.common.collect.HashBiMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -44,10 +40,12 @@ import nova.core.wrapper.mc.forge.v1_11_2.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.BlockConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.CapabilityUtil;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItemFactory;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.FWItem;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.IFWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.NovaItem;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
@@ -57,6 +55,8 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The main class responsible for wrapping items.
@@ -84,23 +84,34 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 		return ItemStack.class;
 	}
 
+	public ItemFactory toNova(net.minecraft.item.Item item) {
+		if (item instanceof IFWItem) {
+			return ((IFWItem) item).getItemFactory();
+		} else {
+			return registerMinecraftMapping(item, 0);
+		}
+	}
+
 	@Override
-	public Item toNova(ItemStack stack) {
+	public Item toNova(@Nonnull ItemStack stack) {
 		return getNovaItem(stack).setCount(stack.getCount());
 	}
 
-	public Item getNovaItem(ItemStack stack) {
+	public Item getNovaItem(@Nonnull ItemStack stack) {
 		if (stack.getItemDamage() == net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE) {
 			// TODO: Deal withPriority wildcard meta values - important for the ore dictionary
-			return getNovaItem(new ItemStack(stack.getItem(), 1, 0));
+			ItemStack copy = stack.copy();
+			copy.setItemDamage(0);
+			return getNovaItem(copy); // Preserve capabilities
 		}
 
 		// Nova FWCapabilityProvider stores capabilities in a HashMap, so we need this to be as fast as possible.
+		// So I implemented FWItemCapabilityProvider which has a single NovaItem capability field for near-instanteneous access.
 		return Optional.ofNullable(stack.getCapability(NovaItem.CAPABILITY, null))
 			.map(wrapped -> wrapped.item)
 			.orElseGet(() -> {
 				ItemFactory itemFactory = registerMinecraftMapping(stack.getItem(), stack.getItemDamage());
-				Data data = stack.getTagCompound() != null ? Game.natives().toNova(stack.getTagCompound()) : new Data();
+				Data data = stack.getTagCompound() != null ? DataConverter.instance().toNova(stack.getTagCompound()) : new Data();
 				if (!stack.getHasSubtypes() && stack.getItemDamage() > 0) {
 					data.put("damage", stack.getItemDamage());
 				}
@@ -109,7 +120,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	}
 
 	@Override
-	public ItemStack toNative(Item item) {
+	public ItemStack toNative(@Nullable Item item) {
 		if (item == null) {
 			return ItemStack.EMPTY;
 		}
@@ -118,35 +129,32 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 		if (item instanceof BWItem) {
 			return ((BWItem) item).makeItemStack(item.count());
 		} else {
-			ItemFactory itemFactory = Game.items().get(item.getID()).get();// TODO?
-			MinecraftItemMapping mapping = get(itemFactory);
+			MinecraftItemMapping mapping = get(item.getFactory());
 			if (mapping == null) {
-				throw new InitializationException("Missing mapping for " + itemFactory.getID());
+				throw new InitializationException("Missing mapping for " + item.getID());
 			}
 			nativeConversion.push(item);
 			return new ItemStack(mapping.item, item.count(), mapping.meta);
 		}
 	}
 
-	public ItemStack toNative(ItemFactory itemFactory) {
+	public ItemStack toNative(@Nonnull ItemFactory itemFactory) {
+		Objects.requireNonNull(itemFactory);
 		MinecraftItemMapping mapping = get(itemFactory);
 		if (mapping == null) {
 			throw new InitializationException("Missing mapping for " + itemFactory.getID());
 		}
-
+		if (!(itemFactory instanceof BWItemFactory))
+			nativeConversion.push(itemFactory.build());
 		return new ItemStack(mapping.item, 1, mapping.meta);
 	}
 
 	public ItemStack toNative(String id) {
-		return toNative(Game.items().get(id).get());
+		return Game.items().get(id).map(this::toNative).get();
 	}
 
 	public Optional<Item> popNativeConversion() {
-		if (nativeConversion.isEmpty()) {
-			return Optional.empty();
-		} else {
-			return Optional.of(nativeConversion.pop());
-		}
+		return Optional.ofNullable(nativeConversion.poll());
 	}
 
 	public MinecraftItemMapping get(ItemFactory item) {
@@ -186,19 +194,9 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	}
 
 	private void registerCapabilities() {
-		CapabilityManager.INSTANCE.register(NovaItem.class, new IStorage<NovaItem>() {
-			@Override
-			public NBTBase writeNBT(Capability<NovaItem> capability, NovaItem instance, EnumFacing side) {
-				throw new UnsupportedOperationException("The `NovaItem` Capability is an internal NOVA API");
-			}
-
-			@Override
-			public void readNBT(Capability<NovaItem> capability, NovaItem instance, EnumFacing side, NBTBase nbt) {
-				throw new UnsupportedOperationException("The `NovaItem` Capability is an internal NOVA API");
-			}
-		}, () -> {
-			throw new UnsupportedOperationException("The `NovaItem` Capability is an internal NOVA API");
-		});
+		CapabilityManager.INSTANCE.register(NovaItem.class, CapabilityUtil.createStorage(
+			(capability, instance, side) -> instance.serializeNBT(),
+			(capability, instance, side, nbt) -> instance.deserializeNBT(nbt)), () -> null);
 	}
 
 	private void registerNOVAItemsToMinecraft() {
@@ -311,38 +309,25 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	 * Used to map MC items and their meta to nova item factories.
 	 */
 	public final class MinecraftItemMapping {
-		public final net.minecraft.item.Item item;
-		public final int meta;
+		@Nonnull public final net.minecraft.item.Item item;
+		@Nonnull public final int meta;
 
-		public MinecraftItemMapping(net.minecraft.item.Item item, int meta) {
+		public MinecraftItemMapping(@Nonnull net.minecraft.item.Item item, int meta) {
 			this.item = item;
 			this.meta = item.getHasSubtypes() ? meta : 0;
 		}
 
-		public MinecraftItemMapping(ItemStack itemStack) {
+		public MinecraftItemMapping(@Nonnull ItemStack itemStack) {
 			this.item = itemStack.getItem();
 			this.meta = itemStack.getHasSubtypes() ? itemStack.getItemDamage() : 0;
 		}
 
 		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null || getClass() != o.getClass()) {
-				return false;
-			}
-
-			MinecraftItemMapping that = (MinecraftItemMapping) o;
-
-			if (meta != that.meta) {
-				return false;
-			}
-			if (!item.equals(that.item)) {
-				return false;
-			}
-
-			return true;
+		public boolean equals(Object other) {
+			if (this == other) return true;
+			if (other == null || getClass() != other.getClass()) return false;
+			return (meta == ((MinecraftItemMapping) other).meta
+				&& item.equals(((MinecraftItemMapping) other).item));
 		}
 
 		@Override

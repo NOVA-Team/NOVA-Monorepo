@@ -23,10 +23,14 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
+import nova.core.component.misc.FactoryProvider;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.item.Item;
@@ -34,22 +38,23 @@ import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.NovaMinecraft;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.MCBlockTransform;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.cuboid.CuboidConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.forward.MCEntityTransform;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import nova.core.component.misc.FactoryProvider;
 
 /**
  * The backwards world wrapper.
@@ -64,6 +69,7 @@ public class BWWorld extends World {
 
 	public net.minecraft.world.World world() {
 		// Trying to access world from a IBlockAccess object!
+		// TODO: Return an optional
 		assert access instanceof World;
 		return (net.minecraft.world.World) access;
 	}
@@ -85,26 +91,27 @@ public class BWWorld extends World {
 
 	@Override
 	public Optional<Block> getBlock(Vector3D position) {
-		net.minecraft.block.Block mcBlock = access.getBlockState(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ())).getBlock();
-		if (mcBlock == null || mcBlock == Blocks.AIR) {
+		IBlockState blockState = access.getBlockState(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()));
+		net.minecraft.block.Block block = blockState == null ? null : blockState.getBlock();
+		if (blockState == null || block == null || block == Blocks.AIR) {
 			Block airBlock = Game.blocks().getAirBlock().build();
 			airBlock.components.add(new MCBlockTransform(airBlock, this, position));
 			return Optional.of(airBlock);
-		} else if (mcBlock instanceof FWBlock) {
-			return Optional.of(((FWBlock) mcBlock).getBlockInstance(access, position));
+		}
+		if (block instanceof FWBlock) {
+			return Optional.of(((FWBlock) block).getBlockInstance(access, position));
 		} else {
-			BWBlock block = new BWBlock(mcBlock, this, position);
-			Game.blocks().get(net.minecraft.block.Block.REGISTRY.getNameForObject(mcBlock).toString())
-				.ifPresent(blockFactory -> block.components.getOrAdd(new FactoryProvider(blockFactory)));
-			return Optional.of(block);
+			BWBlock wrappedBlock = new BWBlock(blockState, this, position);
+			Game.blocks().get(Objects.toString(net.minecraft.block.Block.REGISTRY.getNameForObject(block)))
+				.ifPresent(blockFactory -> wrappedBlock.components.getOrAdd(new FactoryProvider(blockFactory)));
+			return Optional.of(wrappedBlock);
 		}
 	}
 
 	@Override
 	public boolean setBlock(Vector3D position, BlockFactory blockFactory) {
-		//TODO: Do not call blockFactory.build()
-		net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.build());
-		BlockPos pos = new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ());
+		net.minecraft.block.Block mcBlock = BlockConverter.instance().toNative(blockFactory);
+		BlockPos pos = VectorConverter.instance().toNative(position);
 		net.minecraft.block.Block actualBlock = mcBlock != null ? mcBlock : Blocks.AIR;
 		IBlockState defaultState = actualBlock.getDefaultState();
 		IBlockState extendedState = actualBlock.getExtendedState(defaultState, world(), pos);
@@ -136,17 +143,21 @@ public class BWWorld extends World {
 
 	@Override
 	public void removeEntity(Entity entity) {
-		net.minecraft.entity.Entity wrapper = entity.components.get(MCEntityTransform.class).wrapper;
-		wrapper.setDead();
-		world().removeEntity(wrapper);
+		if (access instanceof net.minecraft.world.World) {
+			net.minecraft.entity.Entity wrapper = entity.components.get(MCEntityTransform.class).wrapper;
+			wrapper.setDead();
+			world().removeEntity(wrapper);
+		}
 	}
 
 	@Override
 	public Set<Entity> getEntities(Cuboid bound) {
-		return world()
-			.getEntitiesWithinAABB(net.minecraft.entity.Entity.class, new AxisAlignedBB(bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ()))
+		return Optional.of(access)
+			.filter(access -> access instanceof net.minecraft.world.World)
+			.map(access -> world().getEntitiesWithinAABB(net.minecraft.entity.Entity.class, CuboidConverter.instance().toNative(bound)))
+			.orElseGet(Collections::emptyList)
 			.stream()
-			.map(mcEnt -> Game.natives().getNative(Entity.class, net.minecraft.entity.Entity.class).toNova(mcEnt))
+			.map(EntityConverter.instance()::toNova)
 			.collect(Collectors.toSet());
 	}
 
@@ -169,6 +180,8 @@ public class BWWorld extends World {
 
 	@Override
 	public void playSoundAtPosition(Vector3D position, Sound sound) {
-		world().playSound(position.getX(), position.getY(), position.getZ(), SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.getID())), SoundCategory.BLOCKS, sound.volume, sound.pitch, true);
+		world().playSound(position.getX(), position.getY(), position.getZ(),
+			SoundEvent.REGISTRY.getObject(new ResourceLocation(sound.domain.isEmpty() ? sound.name : sound.getID())),
+			SoundCategory.BLOCKS, sound.volume, sound.pitch, true);
 	}
 }

@@ -28,7 +28,9 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.world.World;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
+import nova.core.language.Translateable;
 import nova.core.util.Direction;
+import nova.core.util.math.MathUtil;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilityProvider;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.backward.BWEntity;
@@ -38,21 +40,21 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.List;
 import java.util.Optional;
+
 import javax.annotation.Nullable;
 
 /**
  * An interface implemented by {@link FWItem} and {@link FWItemBlock} classes to override Minecraft's item events.
  * @author Calclavia
  */
-public interface IFWItem {
+public interface IFWItem extends Translateable {
 
 	ItemFactory getItemFactory();
 
 	@Nullable
 	default FWCapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-		Item item = ItemConverter.instance().popNativeConversion().orElseGet(() -> ItemConverter.instance().toNova(stack));
-		WrapperEvent.FWItemInitCapabilities event = new WrapperEvent.FWItemInitCapabilities(item, new FWCapabilityProvider());
-		event.capabilityProvider.addCapability(NovaItem.CAPABILITY, new NovaItem(item));
+		Item item = ItemConverter.instance().popNativeConversion().orElseGet(() -> ItemConverter.instance().getNovaItem(stack));
+		WrapperEvent.FWItemInitCapabilities event = new WrapperEvent.FWItemInitCapabilities(item, new FWItemCapabilityProvider(item));
 		Game.events().publish(event);
 		return event.capabilityProvider;
 	}
@@ -77,7 +79,25 @@ public interface IFWItem {
 		return new ActionResult<>(EnumActionResult.PASS, ItemConverter.instance().updateMCItemStack(itemStack, item));
 	}
 
-	default int getColorFromItemStack(ItemStack itemStack, int renderPass) {
-		return ItemConverter.instance().toNova(itemStack).colorMultiplier().argb();
+	default int getItemStackLimit(ItemStack stack) {
+		return MathUtil.max(ItemConverter.instance().toNova(stack).getMaxCount(), 64);
+	}
+
+	@Override
+	default String getUnlocalizedName() {
+		return getItemFactory().getUnlocalizedName();
+	}
+
+	@Override
+	default String getLocalizedName() {
+		return getItemFactory().getLocalizedName();
+	}
+
+	default String getUnlocalizedName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getUnlocalizedName();
+	}
+
+	default String getItemStackDisplayName(ItemStack stack) {
+		return ItemConverter.instance().toNova(stack).getLocalizedName();
 	}
 }

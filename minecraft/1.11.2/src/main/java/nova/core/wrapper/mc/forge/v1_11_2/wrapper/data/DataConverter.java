@@ -35,7 +35,10 @@ import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.internal.core.Game;
 
+import java.util.Optional;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Utility that manages common NBT queueSave and load methods
@@ -58,18 +61,23 @@ public class DataConverter implements NativeConverter<Data, NBTTagCompound> {
 	}
 
 	@Override
-	public Data toNova(NBTTagCompound nbt) {
+	@Nonnull
+	public Data toNova(@Nullable NBTTagCompound nbt) {
 		Data data = new Data();
 		if (nbt != null) {
 			data.className = nbt.getString("class");
 			Set<String> keys = nbt.getKeySet();
-			keys.forEach(k -> data.put(k, load(nbt, k)));
+			keys.stream()
+				.filter(k -> k != null && !"class".equals(k))
+				.filter(Data.ILLEGAL_SUFFIX.asPredicate().negate())
+				.forEach(k -> Optional.ofNullable(load(nbt, k)).ifPresent(v -> data.put(k, v)));
 		}
 		return data;
 	}
 
 	@Override
-	public NBTTagCompound toNative(Data data) {
+	@Nullable
+	public NBTTagCompound toNative(@Nullable Data data) {
 		if (data == null) {
 			return null;
 		}
@@ -77,7 +85,8 @@ public class DataConverter implements NativeConverter<Data, NBTTagCompound> {
 		return toNative(new NBTTagCompound(), data);
 	}
 
-	public NBTTagCompound toNative(NBTTagCompound nbt, Data data) {
+	@Nonnull
+	public NBTTagCompound toNative(@Nonnull NBTTagCompound nbt, @Nonnull Data data) {
 		if (data.className != null) {
 			nbt.setString("class", data.className);
 		}
@@ -92,7 +101,8 @@ public class DataConverter implements NativeConverter<Data, NBTTagCompound> {
 	 * @param value - the actual object
 	 * @return the tag when done saving too i
 	 */
-	public NBTTagCompound save(NBTTagCompound tag, String key, Object value) {
+	@Nonnull
+	public NBTTagCompound save(@Nonnull NBTTagCompound tag, @Nonnull String key, @Nullable Object value) {
 		if (value instanceof Boolean) {
 			tag.setBoolean("isBoolean", true);
 			tag.setBoolean(key, (boolean) value);
@@ -127,7 +137,8 @@ public class DataConverter implements NativeConverter<Data, NBTTagCompound> {
 	 * @param key - name of the value
 	 * @return object or suggestionValue if nothing is found
 	 */
-	public Object load(NBTTagCompound tag, String key) {
+	@Nullable
+	public Object load(@Nullable NBTTagCompound tag, @Nullable String key) {
 		if (tag != null && key != null) {
 			NBTBase saveTag = tag.getTag(key);
 

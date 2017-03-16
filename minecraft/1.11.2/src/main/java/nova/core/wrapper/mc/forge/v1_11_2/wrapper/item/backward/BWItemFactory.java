@@ -26,6 +26,7 @@ import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
 /**
@@ -38,7 +39,7 @@ public class BWItemFactory extends ItemFactory {
 	private final int meta;
 
 	public BWItemFactory(net.minecraft.item.Item item, int meta) {
-		super(net.minecraft.item.Item.REGISTRY.getNameForObject(item) + (item.getHasSubtypes() ? ":" + meta : ""), () -> new BWItem(item, meta, null));
+		super(net.minecraft.item.Item.REGISTRY.getNameForObject(item) + (item.getHasSubtypes() ? ":" + meta : ""), () -> new BWItem(item, meta, null, null));
 
 		this.item = item;
 		this.meta = meta;
@@ -59,9 +60,15 @@ public class BWItemFactory extends ItemFactory {
 
 	@Override
 	public Item build(Data data) {
-		int meta = (Integer) data.getOrDefault("damage", this.meta);
-		NBTTagCompound nbtData = Game.natives().toNative(data);
-		BWItem bwItem = new BWItem(item, meta, nbtData);
+		final int meta = (Integer) data.getOrDefault("damage", this.meta);
+		final NBTTagCompound capsData = DataConverter.instance().toNative(data.get("forgeCaps"));
+		final NBTTagCompound nbtData;
+		if (data.containsKey("tag"))
+			nbtData = DataConverter.instance().toNative(data.get("tag"));
+		else
+			nbtData = DataConverter.instance().toNative(data);
+
+		BWItem bwItem = new BWItem(item, meta, nbtData, capsData);
 		bwItem.components.add(new FactoryProvider(this));
 		WrapperEvent.BWItemCreate event = new WrapperEvent.BWItemCreate(bwItem, item);
 		Game.events().publish(event);
@@ -76,11 +83,9 @@ public class BWItemFactory extends ItemFactory {
 
 		BWItem mcItem = (BWItem) item;
 
-		Data result = mcItem.getTag() != null ? Game.natives().toNova(mcItem.getTag()) : new Data();
-		if (result == null) {
-			result = new Data();
-		}
-
+		Data result = new Data();
+		mcItem.getTag().map(DataConverter.instance()::toNova).ifPresent(caps -> result.put("tag", caps));
+		mcItem.getCaps().map(DataConverter.instance()::toNova).ifPresent(caps -> result.put("forgeCaps", caps));
 		if (mcItem.getMeta() != meta) {
 			result.put("damage", mcItem.getMeta());
 		}

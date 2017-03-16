@@ -10,9 +10,9 @@ import nova.core.util.Direction;
 import nova.core.util.EnumSelector;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -23,8 +23,8 @@ public class FWCapabilityProvider implements NovaCapabilityProvider {
 	private final EnumMap<Direction, Map<Capability<?>, Object>> capabilities = new EnumMap<>(Direction.class);
 
 	public FWCapabilityProvider() {
-		for (Direction facing : Direction.values())
-			capabilities.put(facing, new ConcurrentHashMap<>());
+		for (Direction direction : Direction.values())
+			capabilities.put(direction, new HashMap<>());
 	}
 
 	@Override
@@ -33,18 +33,18 @@ public class FWCapabilityProvider implements NovaCapabilityProvider {
 	}
 
 	@Override
-	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<Direction> facing) {
-		if (facing.allowsAll()) {
+	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<Direction> directions) {
+		if (directions.allowsAll()) {
 			if (capabilities.get(Direction.UNKNOWN).containsKey(capability))
-				throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
+				throw new IllegalArgumentException("Already has capability '" + capabilityInstance.getClass().getSimpleName() + '\'');
 
 			capabilities.get(Direction.UNKNOWN).put(capability, capabilityInstance);
 		} else {
-			facing.forEach(enumFacing -> {
-				Map<Capability<?>, Object> caps = capabilities.get(enumFacing);
+			directions.forEach(direction -> {
+				Map<Capability<?>, Object> caps = capabilities.get(direction);
 
 				if (caps.containsKey(capability))
-					throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
+					throw new IllegalArgumentException("Already has capability '" + capabilityInstance.getClass().getSimpleName() + '\'');
 
 				caps.put(capability, capabilityInstance);
 			});
@@ -63,11 +63,11 @@ public class FWCapabilityProvider implements NovaCapabilityProvider {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, Direction direction) {
-		return (T) Optional.of(direction)
+	public <T> Optional<T> getCapability(Capability<T> capability, Direction direction) {
+		return Optional.ofNullable((T) Optional.of(direction)
 			.filter(d -> d != Direction.UNKNOWN)
 			.map(capabilities::get)
 			.map(caps -> caps.get(capability))
-			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).get(capability));
+			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).get(capability)));
 	}
 }

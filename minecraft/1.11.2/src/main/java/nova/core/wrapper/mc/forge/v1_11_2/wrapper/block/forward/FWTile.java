@@ -38,6 +38,7 @@ import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.EnumSelector;
 import nova.core.wrapper.mc.forge.v1_11_2.network.netty.MCNetworkManager;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.NovaCapabilityProvider;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -47,7 +48,10 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A Minecraft TileEntity to Nova block wrapper
@@ -57,7 +61,7 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 
 	private final EnumMap<Direction, Map<Capability<?>, Object>> capabilities = new EnumMap<>(Direction.class); {
 		for (Direction facing : Direction.values())
-			capabilities.put(facing, new ConcurrentHashMap<>());
+			capabilities.put(facing, new HashMap<>());
 	}
 
 	protected String blockID;
@@ -133,7 +137,7 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 
 	@Override
 	public boolean hasCapabilities() {
-		return capabilities.values().parallelStream().map(map -> map.keySet().parallelStream()).count() > 0;
+		return capabilities.values().parallelStream().map(map -> map.keySet().parallelStream()).findAny().isPresent();
 	}
 
 	@Override
@@ -166,13 +170,25 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 	}
 
 	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+		return hasCapability(capability, DirectionConverter.instance().toNova(facing)) || super.hasCapability(capability, facing);
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, Direction direction) {
-		return (T) Optional.of(direction)
+	public <T> Optional<T> getCapability(Capability<T> capability, Direction direction) {
+		return Optional.ofNullable((T) Optional.of(direction)
 			.filter(d -> d != Direction.UNKNOWN)
 			.map(capabilities::get)
 			.map(caps -> caps.get(capability))
-			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).get(capability));
+			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).get(capability)));
+	}
+
+	@Override
+	@Nullable
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+		return getCapability(capability, DirectionConverter.instance().toNova(facing))
+			.orElseGet(() -> super.getCapability(capability, facing));
 	}
 
 	@Override

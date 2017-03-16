@@ -17,36 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import nova.core.item.Item;
+package nova.core.wrapper.mc.forge.v1_11_2.wrapper.data;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.INBTSerializable;
 import nova.core.retention.Data;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.NBTStorable;
+import nova.core.retention.Storable;
 
 /**
- * Internal NOVA capability used to make NOVA items persistent.
- *
  * @author ExE Boss
  */
-public class NovaItem implements NBTStorable {
-	@CapabilityInject(NovaItem.class)
-	public static Capability<NovaItem> CAPABILITY = null;
+public interface NBTStorable extends Storable, INBTSerializable<NBTTagCompound> {
 
-	public final Item item;
-
-	public NovaItem(Item item) {
-		this.item = item;
+	@Override
+	default NBTTagCompound serializeNBT() {
+		Data data = new Data();
+		save(data);
+		return DataConverter.instance().toNative(data);
 	}
 
 	@Override
-	public void save(Data data) {
-		item.save(data);
-	}
-
-	@Override
-	public void load(Data data) {
-		item.load(data);
+	default void deserializeNBT(NBTTagCompound nbt) {
+		load(DataConverter.instance().toNova(nbt));
 	}
 }

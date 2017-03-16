@@ -26,25 +26,31 @@ import net.minecraft.nbt.NBTTagCompound;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
 import nova.core.retention.Storable;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward.IFWItem;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.render.backward.BWBakedModel;
+
+import java.util.Optional;
 
 /**
  * @author Stan
  * @since 3/02/2015.
  */
+// TODO: Make this class into a wrapper around an ItemStack instance.
 public class BWItem extends Item implements Storable {
 	private final net.minecraft.item.Item item;
 	private final int meta;
 	private final NBTTagCompound tag;
+	private final NBTTagCompound caps;
 
 	public BWItem(ItemStack itemStack) {
-		this(itemStack.getItem(), itemStack.getHasSubtypes() ? itemStack.getItemDamage() : 0, itemStack.getTagCompound());
+		this(itemStack.getItem(), itemStack.getHasSubtypes() ? itemStack.getItemDamage() : 0, itemStack.getTagCompound(), itemStack.serializeNBT().getCompoundTag("ForgeCaps"));
 	}
 
-	public BWItem(net.minecraft.item.Item item, int meta, NBTTagCompound tag) {
+	public BWItem(net.minecraft.item.Item item, int meta, NBTTagCompound tag, NBTTagCompound caps) {
 		this.item = item;
 		this.meta = meta;
-		this.tag = tag;
+		this.tag  = tag;
+		this.caps = caps;
 
 		components.add(new StaticRenderer())
 			.onRender(model -> {
@@ -61,14 +67,18 @@ public class BWItem extends Item implements Storable {
 		return meta;
 	}
 
-	public NBTTagCompound getTag() {
-		return tag;
+	public Optional<NBTTagCompound> getTag() {
+		return Optional.ofNullable(tag);
+	}
+
+	public Optional<NBTTagCompound> getCaps() {
+		return Optional.ofNullable(caps);
 	}
 
 	public ItemStack makeItemStack(int stackSize) {
-		ItemStack result = new ItemStack(item, stackSize, meta);
+		ItemStack result = new ItemStack(item, stackSize, meta, caps);
 		if (tag != null) {
-			result.deserializeNBT(tag);
+			result.setTagCompound(tag);
 		}
 		return result;
 	}
@@ -81,6 +91,11 @@ public class BWItem extends Item implements Storable {
 	@Override
 	public String getUnlocalizedName() {
 		return this.item.getUnlocalizedName(makeItemStack(count()));
+	}
+
+	@Override
+	public int getMaxCount() {
+		return this.item.getItemStackLimit(makeItemStack(count()));
 	}
 
 	@Override

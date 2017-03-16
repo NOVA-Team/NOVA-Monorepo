@@ -73,17 +73,27 @@ public class FWItemBlock extends net.minecraft.item.ItemBlock implements IFWItem
 	}
 
 	@Override
+	public int getItemStackLimit(ItemStack stack) {
+		return IFWItem.super.getItemStackLimit(stack);
+	}
+
+	@Override
 	public String getUnlocalizedName() {
-		return getItemFactory().getUnlocalizedName();
+		return IFWItem.super.getUnlocalizedName();
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return IFWItem.super.getLocalizedName();
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return ItemConverter.instance().toNova(stack).getUnlocalizedName();
+		return IFWItem.super.getUnlocalizedName(stack);
 	}
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		return ItemConverter.instance().toNova(stack).getLocalizedName();
+		return IFWItem.super.getItemStackDisplayName(stack);
 	}
 }
