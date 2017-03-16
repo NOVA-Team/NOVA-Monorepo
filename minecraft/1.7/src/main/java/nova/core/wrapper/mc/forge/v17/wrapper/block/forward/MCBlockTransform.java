@@ -20,10 +20,16 @@
 
 package nova.core.wrapper.mc.forge.v17.wrapper.block.forward;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
 import nova.core.component.transform.BlockTransform;
 import nova.core.world.World;
+import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
+import java.util.Optional;
 
 /**
  * @author Calclavia
@@ -50,15 +56,31 @@ public class MCBlockTransform extends BlockTransform {
 		return world;
 	}
 
+	public IBlockAccess blockAccess() {
+		return WorldConverter.instance().toNative(world);
+	}
+
 	@Override
 	public void setWorld(World world) {
+		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ()));
 		this.world.removeBlock(position);
 		world.setBlock(position, block.getFactory());
+		tileEntity.ifPresent(te -> {
+			te.validate(); // Prevent the removal of the tile entity
+			net.minecraft.world.World newWorld = Game.natives().toNative(world);
+			newWorld.setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ(), te);
+		});
 	}
 
 	@Override
 	public void setPosition(Vector3D position) {
+		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ()));
 		world.removeBlock(position);
 		world.setBlock(position, block.getFactory());
+		tileEntity.ifPresent(te -> {
+			te.validate(); // Prevent the removal of the tile entity
+			net.minecraft.world.World newWorld = Game.natives().toNative(world);
+			newWorld.setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ(), te);
+		});
 	}
 }
