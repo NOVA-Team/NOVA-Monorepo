@@ -46,6 +46,7 @@ import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v18.wrapper.assets.AssetConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItem;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemWrapperMethods;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWEmptyModel;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartBlockModel;
@@ -79,30 +80,6 @@ public class RenderUtility implements ForgeLoadable {
 	public static final ResourceLocation particleResource = new ResourceLocation("textures/particle/particles.png");
 
 	public static final RenderUtility instance = new RenderUtility();
-	// Cruft needed to generate default item models
-	protected static final ItemModelGenerator ITEM_MODEL_GENERATOR = new ItemModelGenerator();
-	protected static final FaceBakery FACE_BAKERY = new FaceBakery();
-	// Ugly D:
-	protected static final ModelBlock MODEL_GENERATED = ModelBlock.deserialize(
-		"{\"" +
-			"elements\":[{" +
-			"  \"from\": [0, 0, 0], " +
-			"  \"to\": [16, 16, 16], " +
-			"  \"faces\": {" +
-			"      \"down\": {\"uv\": [0, 0, 16, 16], \"texture\":\"\"}" +
-			"  }}]," +
-			"  \"display\": {\n" +
-			"      \"thirdperson\": {\n" +
-			"          \"rotation\": [ -90, 0, 0 ],\n" +
-			"          \"translation\": [ 0, 1, -3 ],\n" +
-			"          \"scale\": [ 0.55, 0.55, 0.55 ]\n" +
-			"      },\n" +
-			"      \"firstperson\": {\n" +
-			"          \"rotation\": [ 0, -135, 25 ],\n" +
-			"          \"translation\": [ 0, 4, 2 ],\n" +
-			"          \"scale\": [ 1.7, 1.7, 1.7 ]\n" +
-			"      }\n" +
-			"}}");
 	//NOVA Texture to MC TextureAtlasSprite
 	private final HashMap<Texture, TextureAtlasSprite> textureMap = new HashMap<>();
 
@@ -232,20 +209,13 @@ public class RenderUtility implements ForgeLoadable {
 
 		//Register all items
 		Game.items().registry.forEach(itemFactory -> {
-			Object stackObj = Game.natives().toNative(itemFactory.build());
-			if (stackObj instanceof ItemStack) {
-				Item itemObj = ((ItemStack) stackObj).getItem();
-				if (itemObj instanceof FWItem) {
-					FWItem item = (FWItem) itemObj;
-					ResourceLocation objRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
-					ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
-
-					nova.core.item.Item dummy = item.getItemFactory().build();
-
-					if (dummy.components.has(Renderer.class)) {
-						event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(dummy));
-					}
-				}
+			ItemStack stack = ItemConverter.instance().toNative(itemFactory);
+			Item itemObj = stack.getItem();
+			if (itemObj instanceof FWItem) {
+				FWItem item = (FWItem) itemObj;
+				ResourceLocation objRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
+				ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
+				event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(item.getItemFactory().build()));
 			}
 		});
 	}
