@@ -35,15 +35,18 @@ public class GameDataTransformer implements Transformer {
 
 	@Override
 	public void transform(ClassNode cnode) {
-
 		System.out.println("[NOVA] Transforming GameData class for correct NOVA mod id mapping.");
+		transformAddPrefix(cnode);
+		transformRegisterBlock(cnode);
+		transformRegisterItem(cnode);
+	}
 
+	private void transformAddPrefix(ClassNode cnode) {
 		ObfMapping mapping = new ObfMapping("net/minecraftforge/fml/common/registry/GameData", "addPrefix", "(Ljava/lang/String;)Ljava/lang/String;");
-
 		MethodNode method = ASMHelper.findMethod(mapping, cnode);
 
 		if (method == null) {
-			throw new RuntimeException("[NOVA] Lookup " + mapping + " failed!");
+			throw new IllegalStateException("[NOVA] Lookup " + mapping + " failed!");
 		}
 
 		System.out.println("[NOVA] Transforming method " + method.name);
@@ -53,7 +56,67 @@ public class GameDataTransformer implements Transformer {
 
 		InsnList list = new InsnList();
 		list.add(new VarInsnNode(ALOAD, 4));
-		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc/forge/v18/asm/StaticForwarder", "addPrefix$isNovaPrefix", "(Ljava/lang/String;)Z", false));
+		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc/forge/v18/asm/StaticForwarder", "isNovaPrefix", "(Ljava/lang/String;)Z", false));
+		list.add(new JumpInsnNode(IFNE, prev.label));
+
+		method.instructions.insert(prev, list);
+
+		System.out.println("[NOVA] Injected instruction to method: " + method.name);
+	}
+
+	private void transformRegisterBlock(ClassNode cnode) {
+		ObfMapping obfMap = new ObfMapping("net/minecraftforge/fml/common/registry/GameData", "registerBlock", "(Latr;Ljava/lang/String;)I");
+		ObfMapping deobfMap = new ObfMapping("net/minecraftforge/fml/common/registry/GameData", "registerBlock", "(Lnet/minecraft/block/Block;Ljava/lang/String;)I");
+
+		MethodNode method = ASMHelper.findMethod(obfMap, cnode);
+
+		if (method == null) {
+			System.out.println("[NOVA] Lookup " + obfMap + " failed. You are probably in a deobf environment.");
+			method = ASMHelper.findMethod(deobfMap, cnode);
+
+			if (method == null) {
+				throw new IllegalStateException("[NOVA] Lookup " + deobfMap + " failed!");
+			}
+		}
+
+		System.out.println("[NOVA] Transforming method " + method.name);
+
+		@SuppressWarnings("unchecked")
+		JumpInsnNode prev = (JumpInsnNode) method.instructions.get(12);
+
+		InsnList list = new InsnList();
+		list.add(new VarInsnNode(ALOAD, 2));
+		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc/forge/v18/asm/StaticForwarder", "hasNovaPrefix", "(Ljava/lang/String;)Z", false));
+		list.add(new JumpInsnNode(IFNE, prev.label));
+
+		method.instructions.insert(prev, list);
+
+		System.out.println("[NOVA] Injected instruction to method: " + method.name);
+	}
+
+	private void transformRegisterItem(ClassNode cnode) {
+		ObfMapping obfMap = new ObfMapping("net/minecraftforge/fml/common/registry/GameData", "registerItem", "(Lalq;Ljava/lang/String;)I");
+		ObfMapping deobfMap = new ObfMapping("net/minecraftforge/fml/common/registry/GameData", "registerItem", "(Lnet/minecraft/item/Item;Ljava/lang/String;)I");
+
+		MethodNode method = ASMHelper.findMethod(obfMap, cnode);
+
+		if (method == null) {
+			System.out.println("[NOVA] Lookup " + obfMap + " failed. You are probably in a deobf environment.");
+			method = ASMHelper.findMethod(deobfMap, cnode);
+
+			if (method == null) {
+				throw new IllegalStateException("[NOVA] Lookup " + deobfMap + " failed!");
+			}
+		}
+
+		System.out.println("[NOVA] Transforming method " + method.name);
+
+		@SuppressWarnings("unchecked")
+		JumpInsnNode prev = (JumpInsnNode) method.instructions.get(12);
+
+		InsnList list = new InsnList();
+		list.add(new VarInsnNode(ALOAD, 2));
+		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc/forge/v18/asm/StaticForwarder", "hasNovaPrefix", "(Ljava/lang/String;)Z", false));
 		list.add(new JumpInsnNode(IFNE, prev.label));
 
 		method.instructions.insert(prev, list);

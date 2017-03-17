@@ -29,6 +29,7 @@ import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWTileLoader;
 import nova.internal.core.Game;
+import nova.internal.core.launch.NovaLauncher;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
@@ -60,12 +61,29 @@ public class StaticForwarder {
 	}
 
 	/**
+	 * Checks if the name's prefix is a nova mod ID prefix.
+	 *
+	 * @param name The prefix to check
+	 * @return If the name's prefix is a nova mod ID prefix.
+	 */
+	public static boolean hasNovaPrefix(String name) {
+		if (!name.contains(":"))
+			return false;
+		String prefix = name.substring(0, name.lastIndexOf(':'));
+		return NovaLauncher.instance()
+			.map(loader -> loader.getLoadedMods()
+				.stream()
+				.anyMatch(mod -> prefix.startsWith(mod.id())))
+			.orElse(false);
+	}
+
+	/**
 	 * Checks if the prefix is equal to the NOVA mod ID ("nova").
 	 *
 	 * @param prefix The prefix to check
 	 * @return If the prefix is equal to the NOVA mod ID ("nova").
 	 */
-	public static boolean addPrefix$isNovaPrefix(String prefix) {
+	public static boolean isNovaPrefix(String prefix) {
 		return NovaMinecraft.id.equals(prefix);
 	}
 }
