@@ -42,7 +42,7 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlock;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.MCBlockTransform;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlockTransform;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.forward.FWEntity;
@@ -95,7 +95,7 @@ public class BWWorld extends World {
 		net.minecraft.block.Block block = blockState == null ? null : blockState.getBlock();
 		if (blockState == null || block == null || block == Blocks.AIR) {
 			Block airBlock = Game.blocks().getAirBlock().build();
-			airBlock.components.add(new MCBlockTransform(airBlock, this, position));
+			airBlock.components.add(new FWBlockTransform(airBlock, this, position));
 			return Optional.of(airBlock);
 		}
 		if (block instanceof FWBlock) {

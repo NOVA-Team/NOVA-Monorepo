@@ -94,7 +94,7 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 	@Override
 	public void validate() {
 		super.validate();
-		block.components.getOrAdd(new MCBlockTransform(block, Game.natives().toNova(getWorld()), new Vector3D(pos.getX(), pos.getY(), pos.getZ())));
+		block.components.getOrAdd(new TEBlockTransform(this));
 
 		if (cacheData != null && block instanceof Storable) {
 			((Storable) block).load(cacheData);
@@ -191,18 +191,10 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 			.orElseGet(() -> super.getCapability(capability, facing));
 	}
 
-	@Override
-	public void setPos(BlockPos pos) {
-		super.setPos(pos);
-		if (block.components.has(MCBlockTransform.class))
-			block.components.remove(MCBlockTransform.class);
-		block.components.add(new MCBlockTransform(block, Game.natives().toNova(this.getWorld()), Game.natives().toNova(this.getPos())));
-	}
-
 	private static class FWPacketUpdateTileEntity<T extends INetHandler> extends SPacketUpdateTileEntity {
 		private final Packet<T> packet;
 
-		public FWPacketUpdateTileEntity(Packet<T> packet, BlockPos blockPosIn, int metadataIn, NBTTagCompound compoundIn) {
+		private FWPacketUpdateTileEntity(Packet<T> packet, BlockPos blockPosIn, int metadataIn, NBTTagCompound compoundIn) {
 			super(blockPosIn, metadataIn, compoundIn);
 			this.packet = packet;
 		}

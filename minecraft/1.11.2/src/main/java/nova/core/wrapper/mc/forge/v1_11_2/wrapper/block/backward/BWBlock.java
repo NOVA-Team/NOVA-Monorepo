@@ -71,13 +71,9 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	@SuppressWarnings("deprecation")
-	public BWBlock(IBlockState incompleteBlockState, World world, Vector3D pos) {
-		BlockTransform transform = components.add(new BlockTransform());
-		transform.setWorld(world);
-		transform.setPosition(pos);
-		incompleteBlockState = incompleteBlockState.getActualState(blockAccess(), blockPos());
-		this.blockState = incompleteBlockState.getBlock().getExtendedState(incompleteBlockState, blockAccess(), blockPos());
-
+	public BWBlock(IBlockState blockState, World world, Vector3D pos) {
+		this.blockState = blockState;
+		components.add(new BWBlockTransform(this, world, pos));
 		components.add(new BlockProperty.Opacity().setOpacity(blockState().getMaterial().blocksLight() ? 1 : 0));
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
@@ -187,7 +183,11 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	public IBlockState blockState() {
-		return blockState;
+		if (!components.has(BlockTransform.class))
+			return blockState;
+
+		IBlockState actualState = blockState.getActualState(blockAccess(), blockPos());
+		return actualState.getBlock().getExtendedState(actualState, blockAccess(), blockPos());
 	}
 
 	public Optional<TileEntity> tile() {

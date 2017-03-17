@@ -23,7 +23,6 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,10 +54,10 @@ import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +112,10 @@ public class FWBlock extends net.minecraft.block.Block {
 
 		// Recalculate super constructor things after loading the block properly
 		this.fullBlock = getDefaultState().isOpaqueCube();
-		this.lightOpacity = this.fullBlock ? 255 : 0;
+		this.lightOpacity = dummy.components
+			.getOp(BlockProperty.Opacity.class)
+			.map(o -> MathUtil.clamp((int) Math.round(o.opacity * 255), 0, 255))
+			.orElse(this.fullBlock ? 255 : 0);
 		this.translucent = !this.fullBlock;
 	}
 
@@ -145,7 +147,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	private Block getBlockInstance(nova.core.world.World world, Vector3D position) {
 		// TODO: Implement obj args
 		Block block = factory.build();
-		block.components.add(new MCBlockTransform(block, world, position));
+		block.components.add(new FWBlockTransform(block, world, position));
 		if (!block.components.has(BlockProperty.BlockSound.class)) {
 			BlockProperty.BlockSound properties = block.components.add(new BlockProperty.BlockSound());
 			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound(SoundType.STONE.getBreakSound().getSoundName().getResourceDomain(), SoundType.STONE.getBreakSound().getSoundName().getResourcePath()));
@@ -182,27 +184,24 @@ public class FWBlock extends net.minecraft.block.Block {
 		Block.DropEvent event = new Block.DropEvent(blockInstance);
 		blockInstance.events.publish(event);
 
-		return new ArrayList<>(
-			event.drops
-				.stream()
-				.map(item -> (ItemStack) Game.natives().toNative(item))
-				.collect(Collectors.toCollection(ArrayList::new))
-		);
+		return event.drops
+			.stream()
+			.map(ItemConverter.instance()::toNative)
+			.collect(Collectors.toList());
 	}
 
 	@Override
 	public boolean hasTileEntity(IBlockState state) {
 		// A block requires a TileEntity if it stores data or if it ticks.
-		return Storable.class.isAssignableFrom(blockClass) || Stateful.class.isAssignableFrom(blockClass) || Updater.class.isAssignableFrom(blockClass);
+		return Storable.class.isAssignableFrom(blockClass) ||
+		       Stateful.class.isAssignableFrom(blockClass) ||
+		       Updater.class.isAssignableFrom(blockClass);
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		FWTile fwTile = FWTileLoader.loadTile(dummy.getID());
-		if (lastExtendedStatePos != null) {
-			fwTile.getBlock().components.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
-			lastExtendedStatePos = null;
-		}
+		fwTile.getBlock().components.getOrAdd(new TEBlockTransform(fwTile));
 		if (!fwTile.getBlock().components.has(BlockProperty.BlockSound.class)) {
 			BlockProperty.BlockSound properties = fwTile.getBlock().components.add(new BlockProperty.BlockSound());
 			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound(SoundType.STONE.getBreakSound().getSoundName().getResourceDomain(), SoundType.STONE.getBreakSound().getSoundName().getResourcePath()));
