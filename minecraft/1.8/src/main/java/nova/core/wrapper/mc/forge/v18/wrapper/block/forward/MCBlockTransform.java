@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v18.wrapper.block.forward;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
 import nova.core.component.transform.BlockTransform;
@@ -61,27 +62,34 @@ public class MCBlockTransform extends BlockTransform {
 		return WorldConverter.instance().toNative(world);
 	}
 
+	public BlockPos blockPos() {
+		return VectorConverter.instance().toNative(position);
+	}
+
 	@Override
 	public void setWorld(World world) {
-		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity(VectorConverter.instance().toNative(position)));
-		this.world.removeBlock(position);
+		BlockPos pos = blockPos();
+		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity(pos));
 		world.setBlock(position, block.getFactory());
 		tileEntity.ifPresent(te -> {
-			te.validate(); // Prevent the removal of the tile entity
 			net.minecraft.world.World newWorld = Game.natives().toNative(world);
-			newWorld.setTileEntity(VectorConverter.instance().toNative(position), te);
+			newWorld.setTileEntity(pos, te);
+			te.setWorldObj(newWorld);
 		});
+		this.world.removeBlock(position);
 	}
 
 	@Override
 	public void setPosition(Vector3D position) {
-		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity(VectorConverter.instance().toNative(position)));
-		world.removeBlock(position);
+		BlockPos oldPos = blockPos();
+		BlockPos newPos = VectorConverter.instance().toNative(position);
+		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity(oldPos));
 		world.setBlock(position, block.getFactory());
 		tileEntity.ifPresent(te -> {
-			te.validate(); // Prevent the removal of the tile entity
 			net.minecraft.world.World world = Game.natives().toNative(this.world);
-			world.setTileEntity(VectorConverter.instance().toNative(position), te);
+			world.setTileEntity(newPos, te);
+			te.setPos(newPos);
 		});
+		world.removeBlock(this.position);
 	}
 }

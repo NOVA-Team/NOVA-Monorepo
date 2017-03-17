@@ -63,24 +63,26 @@ public class MCBlockTransform extends BlockTransform {
 	@Override
 	public void setWorld(World world) {
 		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ()));
-		this.world.removeBlock(position);
 		world.setBlock(position, block.getFactory());
 		tileEntity.ifPresent(te -> {
-			te.validate(); // Prevent the removal of the tile entity
 			net.minecraft.world.World newWorld = Game.natives().toNative(world);
 			newWorld.setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ(), te);
+			te.setWorldObj(newWorld);
 		});
+		this.world.removeBlock(position);
 	}
 
 	@Override
 	public void setPosition(Vector3D position) {
 		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ()));
-		world.removeBlock(position);
 		world.setBlock(position, block.getFactory());
 		tileEntity.ifPresent(te -> {
-			te.validate(); // Prevent the removal of the tile entity
 			net.minecraft.world.World newWorld = Game.natives().toNative(world);
 			newWorld.setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ(), te);
+			te.xCoord = (int) position.getX();
+			te.yCoord = (int) position.getY();
+			te.zCoord = (int) position.getZ();
 		});
+		world.removeBlock(this.position);
 	}
 }

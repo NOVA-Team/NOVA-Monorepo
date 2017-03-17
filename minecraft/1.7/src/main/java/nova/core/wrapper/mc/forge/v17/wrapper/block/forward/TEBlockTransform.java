@@ -52,22 +52,23 @@ public class TEBlockTransform extends BlockTransform {
 
 	@Override
 	public void setWorld(nova.core.world.World world) {
-		world().removeBlock(position());
+		nova.core.world.World originalWorld = world();
+		Vector3D originalPosition = position();
 		world.setBlock(position(), tileEntity.block.getFactory());
 		net.minecraft.world.World mcWorld = Game.natives().toNative(world);
-		tileEntity.validate();
-		mcWorld().setTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntity);
+		mcWorld.setTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntity);
 		tileEntity.setWorldObj(mcWorld);
+		originalWorld.removeBlock(originalPosition);
 	}
 
 	@Override
 	public void setPosition(Vector3D position) {
-		world().removeBlock(position());
+		Vector3D originalPosition = position();
 		world().setBlock(position, tileEntity.block.getFactory());
-		tileEntity.validate();
 		mcWorld().setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ(), tileEntity);
 		tileEntity.xCoord = (int) position.getX();
 		tileEntity.yCoord = (int) position.getY();
 		tileEntity.zCoord = (int) position.getZ();
+		world().removeBlock(originalPosition);
 	}
 }
