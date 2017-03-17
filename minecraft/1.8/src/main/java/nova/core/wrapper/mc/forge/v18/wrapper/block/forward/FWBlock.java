@@ -48,6 +48,7 @@ import nova.core.util.Direction;
 import nova.core.util.math.MathUtil;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v18.wrapper.VectorConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -116,13 +117,13 @@ public class FWBlock extends net.minecraft.block.Block {
 		 * methods over.
 		 */
 		if (hasTileEntity(null)) {
-			FWTile tileWrapper = (FWTile) access.getTileEntity(new BlockPos((int) position.getX(), (int) position.getY(), (int) position.getZ()));
-			if (tileWrapper != null && tileWrapper.getBlock() != null) {
-				return tileWrapper.getBlock();
-			}
-
 			try {
-				throw new RuntimeException("Error: Block in TileWrapper is null for " + dummy);
+				FWTile tileWrapper = (FWTile) access.getTileEntity(VectorConverter.instance().toNative(position));
+				if (tileWrapper != null && tileWrapper.getBlock() != null) {
+					return tileWrapper.getBlock();
+				}
+
+				throw new IllegalStateException("Error: Block in TileWrapper is null for " + blockClass.getName());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

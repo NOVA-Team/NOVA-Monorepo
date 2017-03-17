@@ -138,12 +138,16 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		 * methods over.
 		 */
 		if (hasTileEntity(0)) {
-			FWTile tileWrapper = (FWTile) access.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ());
-			if (tileWrapper != null && tileWrapper.getBlock() != null) {
-				return tileWrapper.getBlock();
-			}
+			try {
+				FWTile tileWrapper = (FWTile) access.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ());
+				if (tileWrapper != null && tileWrapper.getBlock() != null) {
+					return tileWrapper.getBlock();
+				}
 
-			Game.logger().error("Error: Block in TileWrapper is null.");
+				throw new IllegalStateException("Error: Block in TileWrapper is null for " + blockClass.getName());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return getBlockInstance((nova.core.world.World) Game.natives().toNova(access), position);
 

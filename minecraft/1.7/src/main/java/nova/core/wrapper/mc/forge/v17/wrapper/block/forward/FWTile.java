@@ -71,8 +71,7 @@ public class FWTile extends TileEntity {
 	@Override
 	public void validate() {
 		super.validate();
-
-		block.components.add(new MCBlockTransform(block, Game.natives().toNova(getWorldObj()), new Vector3D(xCoord, yCoord, zCoord)));
+		block.components.getOrAdd(new TEBlockTransform(this));
 
 		if (cacheData != null && block instanceof Storable) {
 			((Storable) block).load(cacheData);
@@ -131,13 +130,5 @@ public class FWTile extends TileEntity {
 		 */
 		blockID = nbt.getString("novaID");
 		cacheData = Game.natives().toNova(nbt.getCompoundTag("nova"));
-	}
-
-	@Override
-	public void setWorldObj(World p_145834_1_) {
-		super.setWorldObj(p_145834_1_);
-		if (block.components.has(MCBlockTransform.class))
-			block.components.remove(MCBlockTransform.class);
-		block.components.add(new MCBlockTransform(block, Game.natives().toNova(this.getWorld()), Game.natives().toNova(this.getPos())));
 	}
 }
