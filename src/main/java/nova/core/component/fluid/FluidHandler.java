@@ -22,21 +22,26 @@ package nova.core.component.fluid;
 
 import nova.core.component.Component;
 import nova.core.component.SidedComponent;
+import nova.core.retention.Data;
+import nova.core.retention.Storable;
+import nova.core.retention.Store;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * A sided component that provides a fluid container.
  * @author Calclavia
  */
 @SidedComponent
-public class FluidHandler extends Component implements FluidConsumer, FluidProvider {
+public class FluidHandler extends Component implements FluidIO, Storable {
 
 	protected Set<Tank> tanks = new HashSet<>();
+	@Store
 	protected boolean resizable;
 
 	public static FluidHandler singleTank() {
@@ -153,5 +158,50 @@ public class FluidHandler extends Component implements FluidConsumer, FluidProvi
 		}
 
 		return Optional.of(f).filter(fl -> fl.amount() > 0);
+	}
+
+	@Override
+	public void save(Data data) {
+		Storable.super.save(data);
+		data.put("tanks", tanks.stream()
+			.filter(t -> t instanceof Storable)
+			.collect(Collectors.toSet()));
+	}
+
+	@Override
+	public void load(Data data) {
+		Storable.super.load(data);
+		tanks.removeIf(t -> t instanceof Storable);
+		tanks.addAll(data.getCollection("tanks"));
+	}
+
+	@Override
+	public int getFluidAmount() {
+		return tanks.stream().mapToInt(FluidIO::getFluidAmount).sum();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return tanks.isEmpty() || tanks.stream().allMatch(FluidIO::isEmpty);
+	}
+
+	@Override
+	public boolean hasFluid() {
+		return !tanks.isEmpty() && tanks.stream().anyMatch(FluidIO::hasFluid);
+	}
+
+	@Override
+	public boolean hasFluidType(String fluidID) {
+		return !tanks.isEmpty() && tanks.stream().anyMatch(t -> t.hasFluidType(fluidID));
+	}
+
+	@Override
+	public boolean hasFluidType(Fluid sample) {
+		return !tanks.isEmpty() && tanks.stream().anyMatch(t -> t.hasFluidType(sample));
+	}
+
+	@Override
+	public boolean hasFluidType(FluidFactory sample) {
+		return !tanks.isEmpty() && tanks.stream().anyMatch(t -> t.hasFluidType(sample));
 	}
 }

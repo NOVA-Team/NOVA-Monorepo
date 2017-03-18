@@ -117,8 +117,8 @@ public class TankSimple implements Tank, Storable, Syncable {
 	}
 
 	@Override
-	public int getFluidCapacity() {
-		return capacity.orElse(Integer.MAX_VALUE);
+	public OptionalInt getFluidCapacity() {
+		return capacity;
 	}
 
 	@Override
@@ -138,7 +138,9 @@ public class TankSimple implements Tank, Storable, Syncable {
 
 	@Override
 	public void save(Data data) {
-		data.put("capacity", capacity);
+		if (capacity.isPresent()) {
+			data.put("capacity", capacity.getAsInt());
+		}
 
 		if (containedFluid.isPresent()) {
 			data.put("fluid", containedFluid.get());
@@ -147,7 +149,11 @@ public class TankSimple implements Tank, Storable, Syncable {
 
 	@Override
 	public void load(Data data) {
-		setCapacity(data.get("capacity"));
+		if (data.containsKey("capactiy")) {
+			setCapacity(data.get("capacity"));
+		} else {
+			removeCapacity();
+		}
 
 		if (data.containsKey("fluid")) {
 			containedFluid = Optional.of(data.getStorable("fluid"));
