@@ -24,7 +24,6 @@ import nova.core.event.bus.Event;
 import nova.core.event.bus.EventBus;
 import nova.internal.core.util.InjectionUtil;
 
-import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;

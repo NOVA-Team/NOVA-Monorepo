@@ -70,7 +70,7 @@ public class BWBlock extends Block implements Storable {
 
 		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().isOpaque() ? 1 : 0));
 		if (mcBlock.isReplaceable(getMcBlockAccess(), x(), y(), z()))
-			components.add(BlockProperty.Replaceable.instance());
+			components.add(new BlockProperty.Replaceable());
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.stepSound.func_150496_b()));

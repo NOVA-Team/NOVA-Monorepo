@@ -1,5 +1,6 @@
 package nova.core.block.component;
 
+import nova.core.block.BlockFactory;
 import nova.core.component.Component;
 import nova.core.component.SidedComponent;
 import nova.core.component.UnsidedComponent;
@@ -8,6 +9,7 @@ import nova.core.sound.Sound;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Block properties.
@@ -184,19 +186,30 @@ public interface BlockProperty {
 	 * Indicates whether the block is replaceable.
 	 */
 	@UnsidedComponent
-	public static final class Replaceable extends Component implements BlockProperty {
-		private static final Replaceable instance = new Replaceable();
+	public static class Replaceable extends Component implements BlockProperty {
+		/**
+		 * The replacement filter. An empty optional means that it is impossible
+		 * to determine the factory of the block to replace this block with.
+		 */
+		public Predicate<Optional<BlockFactory>> replaceFilter = block -> true;
 
 		/**
-		 * Gets the singleton for Replaceable.
+		 * Create a new Replaceable instance.
 		 *
-		 * @return The singleton for Replaceable.
+		 * @return A new Replaceable instance.
+		 * @deprecated Use the {@link #Replaceable() } constructor instead. Will be removed before 0.1.0.
 		 */
+		@Deprecated
 		public static Replaceable instance() {
-			return instance;
+			return new Replaceable();
 		}
 
-		private Replaceable() {
+		public Replaceable() {
+		}
+
+		public Replaceable setReplaceFilter(Predicate<Optional<BlockFactory>> replaceFilter) {
+			this.replaceFilter = replaceFilter;
+			return this;
 		}
 
 		@Override
