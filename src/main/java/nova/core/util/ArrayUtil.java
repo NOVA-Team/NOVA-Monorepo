@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -17,28 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
+package nova.core.util;
 
-package nova.core.component.exception;
-
-import nova.core.component.Component;
-import nova.core.util.ArrayUtil;
-import nova.core.util.exception.NovaException;
+import java.util.Arrays;
 
 /**
- * Exception thrown when an error to do with components occurs
+ * @author ExE Boss
  */
-public class ComponentException extends NovaException {
+public class ArrayUtil {
 
-	private static final long serialVersionUID = 2017_03_18L;
-
-	public Class<?> component;
-
-	public ComponentException(String message, Class<?> component, Object... parameters) {
-		super(message, ArrayUtil.join(component, parameters));
-		this.component = component;
+	public static <T> T[] join(T object, T[] array) {
+		T[] ret = Arrays.copyOf(array, array.length + 1);
+		System.arraycopy(array, 0, ret, 1, array.length);
+		ret[0] = object;
+		return ret;
 	}
 
-	public ComponentException(String message, Component component, Object... parameters) {
-		this(message, component.getClass(), parameters);
+	public static <T> T[] join(T[] array1, T[] array2) {
+		T[] ret = Arrays.copyOf(array1, array1.length + array2.length);
+		System.arraycopy(array2, 0, ret, array1.length, array2.length);
+		return ret;
+	}
+
+	public static <T> T[] join(T[] array, T object) {
+		T[] ret = Arrays.copyOf(array, array.length + 1);
+		ret[array.length] = object;
+		return ret;
 	}
 }
