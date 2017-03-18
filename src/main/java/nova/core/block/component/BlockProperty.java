@@ -4,6 +4,7 @@ import nova.core.component.Component;
 import nova.core.component.SidedComponent;
 import nova.core.component.UnsidedComponent;
 import nova.core.sound.Sound;
+import nova.core.util.math.MathUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -152,10 +153,15 @@ public interface BlockProperty {
 	 * @author winsock
 	 */
 	@SidedComponent
+	@SuppressWarnings("deprecation")
 	public static class Opacity extends Component implements BlockProperty {
 		/**
 		 * This value determines if the block should allow light through itself or not.
+		 *
+		 * @deprecated Will be made private. Use {@link #getOpacity() } instead.
 		 */
+		// TODO: Make private
+		@Deprecated
 		public double opacity = 1;
 
 		/**
@@ -169,14 +175,51 @@ public interface BlockProperty {
 		}
 
 		/**
+		 * Sets that the block should disallow light through
+		 *
+		 * @return This instance for chaining if desired.
+		 */
+		public Opacity setOpaque() {
+			opacity = 1;
+			return this;
+		}
+
+		/**
 		 * Sets if light should be transmitted through this block
 		 *
 		 * @param opacity The block's opacity
 		 * @return This instance for chaining if desired.
 		 */
 		public Opacity setOpacity(double opacity) {
-			this.opacity = opacity;
+			this.opacity = MathUtil.clamp(opacity, 0, 1);
 			return this;
+		}
+
+		/**
+		 * This value determines if the block should allow light through itself or not.
+		 *
+		 * @return The block's opacity
+		 */
+		public double getOpacity() {
+			return opacity;
+		}
+
+		/**
+		 * Checks if the block should allow light through
+		 *
+		 * @return If the block should allow light through
+		 */
+		public boolean isTransparent() {
+			return opacity < 1;
+		}
+
+		/**
+		 * Checks if the block should disallow light through
+		 *
+		 * @return If the block should disallow light through
+		 */
+		public boolean isOpaque() {
+			return opacity == 1;
 		}
 	}
 
