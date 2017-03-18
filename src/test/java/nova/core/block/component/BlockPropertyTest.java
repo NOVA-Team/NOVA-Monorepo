@@ -83,11 +83,11 @@ public class BlockPropertyTest {
 
 	@Test
 	public void testReplaceable() {
-		BlockProperty.Replaceable replaceable = new BlockProperty.Replaceable().setReplaceFilter(block -> true);
-		assertThat(replaceable.replaceFilter.test(Optional.empty())).isTrue();
+		BlockProperty.Replaceable replaceable = new BlockProperty.Replaceable();
+		assertThat(replaceable.testBlock(Optional.empty())).isTrue();
 
 		replaceable.setReplaceFilter(block -> block.isPresent());
-		assertThat(replaceable.replaceFilter.test(Optional.empty())).isFalse();
-		assertThat(replaceable.replaceFilter.test(Optional.of(new BlockFactory("test", Block::new)))).isTrue();
+		assertThat(replaceable.testBlock(Optional.empty())).isFalse();
+		assertThat(replaceable.testBlock(Optional.of(new BlockFactory("test", Block::new)))).isTrue();
 	}
 }
