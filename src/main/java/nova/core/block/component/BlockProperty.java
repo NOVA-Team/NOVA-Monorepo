@@ -193,17 +193,6 @@ public interface BlockProperty {
 		 */
 		public Predicate<Optional<BlockFactory>> replaceFilter = block -> true;
 
-		/**
-		 * Create a new Replaceable instance.
-		 *
-		 * @return A new Replaceable instance.
-		 * @deprecated Use the {@link #Replaceable() } constructor instead. Will be removed before 0.1.0.
-		 */
-		@Deprecated
-		public static Replaceable instance() {
-			return new Replaceable();
-		}
-
 		public Replaceable() {
 		}
 
