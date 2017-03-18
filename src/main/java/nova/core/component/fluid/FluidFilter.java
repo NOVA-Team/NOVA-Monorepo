@@ -34,8 +34,8 @@ public interface FluidFilter extends Predicate<Fluid> {
 	 * Returns an {@link FluidFilter} that accepts an {@link Fluid} of the same
 	 * type as the provided.
 	 *
-	 * @param item
-	 * @return ItemFilter
+	 * @param fluid
+	 * @return FluidFilter
 	 */
 	static FluidFilter of(Fluid fluid) {
 		return fluid::sameType;
@@ -46,7 +46,7 @@ public interface FluidFilter extends Predicate<Fluid> {
 	 * type as provided.
 	 *
 	 * @param id
-	 * @return ItemFilter
+	 * @return FluidFilter
 	 */
 	static FluidFilter of(String id) {
 		return (other) -> id.equals(other.getID());
@@ -56,7 +56,7 @@ public interface FluidFilter extends Predicate<Fluid> {
 	 * Accepts any {@link Fluid} that has a &gt;= amount than provided.
 	 *
 	 * @param amount
-	 * @return
+	 * @return FluidFilter
 	 */
 	static FluidFilter of(int amount) {
 		return (other) -> other.amount() >= amount;

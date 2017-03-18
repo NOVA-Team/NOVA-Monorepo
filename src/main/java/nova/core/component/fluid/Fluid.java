@@ -129,7 +129,7 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	}
 
 	void initFactory(FluidFactory factory) {
-		if (factory == null) {
+		if (this.factory == null) {
 			this.factory = factory;
 		} else {
 			throw new ComponentException("Attempt to add two components of the type %s to " + this, FactoryProvider.class);

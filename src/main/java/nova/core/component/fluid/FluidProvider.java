@@ -37,7 +37,7 @@ public interface FluidProvider {
 
 	/**
 	 * Attempt to extract fluid from this FluidProvider
-	 * @param amount Amount of fluid to extract
+	 * @param fluid The fluid type and max amount to extract
 	 * @return Extracted {@link Fluid}
 	 */
 	default Optional<Fluid> removeFluid(Fluid fluid) {

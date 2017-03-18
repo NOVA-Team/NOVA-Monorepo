@@ -183,6 +183,7 @@ public class NovaMinecraft {
 			Game.blocks().init();
 			Game.items().init();
 			Game.entities().init();
+			Game.fluids().init();
 
 			//Load preInit
 			progressBar = ProgressManager.push("Pre-initializing NOVA wrappers", (novaModWrappers.isEmpty() ? 1 : novaModWrappers.size()) + novaWrappers.size());
