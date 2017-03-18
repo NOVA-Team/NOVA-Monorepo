@@ -22,6 +22,7 @@ package nova.core.component.fluid;
 
 import nova.core.util.registry.FactoryManager;
 import nova.core.util.registry.Registry;
+import nova.internal.core.Game;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -61,6 +62,12 @@ public class FluidManager extends FactoryManager<FluidManager, Fluid, FluidFacto
 
 	@Override
 	public void init() {
-		//TODO: Implement
+		Game.events().publish(new Init(this));
+	}
+
+	public class Init extends ManagerEvent<FluidManager> {
+		public Init(FluidManager manager) {
+			super(manager);
+		}
 	}
 }

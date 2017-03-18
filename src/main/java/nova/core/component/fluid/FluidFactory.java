@@ -54,7 +54,7 @@ public class FluidFactory extends Factory<FluidFactory, Fluid> {
 	@Override
 	public Fluid build() {
 		Fluid build = super.build();
-		build.factory = this;
+		build.initFactory(this);
 		return build;
 	}
 

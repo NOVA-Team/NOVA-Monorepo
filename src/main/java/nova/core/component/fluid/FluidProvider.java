@@ -29,6 +29,23 @@ import java.util.Optional;
 public interface FluidProvider {
 	/**
 	 * Attempt to extract fluid from this FluidProvider
+	 * @param fluid The fluid type and max amount to extract
+	 * @param simulate Whether to simulate the extraction
+	 * @return Extracted {@link Fluid}
+	 */
+	Optional<Fluid> removeFluid(Fluid fluid, boolean simulate);
+
+	/**
+	 * Attempt to extract fluid from this FluidProvider
+	 * @param amount Amount of fluid to extract
+	 * @return Extracted {@link Fluid}
+	 */
+	default Optional<Fluid> removeFluid(Fluid fluid) {
+		return removeFluid(fluid, false);
+	}
+
+	/**
+	 * Attempt to extract fluid from this FluidProvider
 	 * @param amount Amount of fluid to extract
 	 * @param simulate Whether to simulate the extraction
 	 * @return Extracted {@link Fluid}

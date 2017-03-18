@@ -16,29 +16,142 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.component.fluid;
+ */
+
+package nova.core.component.fluid;
 
 import nova.core.component.Component;
-import nova.core.util.Direction;
+import nova.core.component.SidedComponent;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
+ * A sided component that provides a fluid container.
  * @author Calclavia
  */
-public class FluidHandler extends Component {
+@SidedComponent
+public class FluidHandler extends Component implements FluidConsumer, FluidProvider {
 
-	public Set<Tank> tanks = new HashSet<>();
-	public Function<Direction, Set<Tank>> sidedTanks = direction -> tanks;
+	protected Set<Tank> tanks = new HashSet<>();
+	protected boolean resizable;
+
+	public static FluidHandler singleTank() {
+		return new FluidHandler(false, new TankSimple(Fluid.BUCKET_VOLUME));
+	}
+
+	public static FluidHandler singleTank(int capacity) {
+		return new FluidHandler(false, new TankSimple(capacity));
+	}
+
+	public static FluidHandler singleTank(Predicate<Fluid> fluidFilter) {
+		return new FluidHandler(false, new TankSimple(Fluid.BUCKET_VOLUME).setFluidFilter(fluidFilter));
+	}
+
+	public static FluidHandler singleTank(int capacity, Predicate<Fluid> fluidFilter) {
+		return new FluidHandler(false, new TankSimple(capacity).setFluidFilter(fluidFilter));
+	}
 
 	public FluidHandler() {
+		this.resizable = true;
 	}
 
 	public FluidHandler(Tank... tanks) {
-		this.tanks.addAll(Arrays.asList(tanks));
+		this(true, tanks);
 	}
 
+	public FluidHandler(boolean resizable, Tank... tanks) {
+		this.tanks.addAll(Arrays.asList(tanks));
+		this.resizable = resizable;
+		if (resizable) {
+			this.tanks.removeIf(Tank::isEmpty);
+		}
+	}
+
+	@Override
+	public int addFluid(Fluid fluid, boolean simulate) {
+		if (fluid.amount() == 0)
+			return 0;
+
+		Fluid f = fluid.clone();
+		int added = 0;
+
+		for (Tank tank : tanks) {
+			int a = tank.addFluid(f, simulate);
+			added += a;
+			f.remove(a);
+			if (f.amount() == 0)
+				break;
+		}
+
+		if (f.amount() > 0 && resizable) {
+			Tank t = new TankSimple();
+			added += t.addFluid(f);
+			tanks.add(t);
+		}
+
+		return added;
+	}
+
+	@Override
+	public Optional<Fluid> removeFluid(Fluid fluid, boolean simulate) {
+		if (fluid.amount() == 0)
+			return Optional.empty();
+
+		Fluid f = fluid.withAmount(0);
+		Fluid r = fluid.clone();
+
+		for (Tank tank : tanks) {
+			if (!tank.hasFluidType(fluid))
+				continue;
+
+			int removed = tank.removeFluid(r).get().amount();
+			r.remove(removed);
+			f.add(removed);
+
+			if (r.amount() == 0)
+				break;
+		}
+
+		if (resizable) {
+			this.tanks.removeIf(Tank::isEmpty);
+		}
+
+		return Optional.of(f).filter(fl -> fl.amount() > 0);
+	}
+
+	@Override
+	public Optional<Fluid> removeFluid(int amount, boolean simulate) {
+		Optional<Fluid> fluid = tanks.stream()
+			.filter(Tank::hasFluid)
+			.findFirst()
+			.flatMap(Tank::getFluid)
+			.map(f -> f.withAmount(0));
+
+		if (amount == 0 || !fluid.isPresent())
+			return fluid;
+
+		Fluid f = fluid.get();
+
+		for (Tank tank : tanks) {
+			if (!tank.hasFluidType(f))
+				continue;
+
+			int removed = tank.removeFluid(amount).get().amount();
+			amount -= removed;
+			f.add(removed);
+
+			if (amount == 0)
+				break;
+		}
+
+		if (resizable) {
+			this.tanks.removeIf(Tank::isEmpty);
+		}
+
+		return Optional.of(f).filter(fl -> fl.amount() > 0);
+	}
 }
