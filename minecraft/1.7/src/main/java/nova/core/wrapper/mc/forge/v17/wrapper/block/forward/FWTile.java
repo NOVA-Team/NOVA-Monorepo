@@ -23,7 +23,6 @@ package nova.core.wrapper.mc.forge.v17.wrapper.block.forward;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
@@ -32,7 +31,6 @@ import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.wrapper.mc.forge.v17.network.netty.MCNetworkManager;
 import nova.internal.core.Game;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * A Minecraft TileEntity to Nova block wrapper

@@ -190,10 +190,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		FWTile fwTile = FWTileLoader.loadTile(dummy.getID());
-		if (lastExtendedStatePos != null) {
-			fwTile.block.components.getOrAdd(new MCBlockTransform(dummy, Game.natives().toNova(world), new Vector3D(lastExtendedStatePos.getX(), lastExtendedStatePos.getY(), lastExtendedStatePos.getZ())));
-			lastExtendedStatePos = null;
-		}
+		fwTile.getBlock().components.getOrAdd(new TEBlockTransform(fwTile));
 		if (!fwTile.block.components.has(BlockProperty.BlockSound.class)) {
 			BlockProperty.BlockSound properties = fwTile.block.components.add(new BlockProperty.BlockSound());
 			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundTypeStone.getBreakSound()));
