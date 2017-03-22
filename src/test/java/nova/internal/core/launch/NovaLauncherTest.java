@@ -24,6 +24,7 @@ import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.testutils.mod.TestMod;
 import nova.testutils.mod.TestModDuplicate;
+import nova.testutils.mod.TestModWithLogger;
 import nova.testutils.mod.TestModWithMismatchedDependency;
 import nova.testutils.mod.TestModWithMismatchedDependencyPattern;
 import nova.testutils.mod.TestModWithMissingDependency;
@@ -99,5 +100,10 @@ public class NovaLauncherTest extends AbstractNovaLauncherTest {
 	@Test(expected = InitializationException.class)
 	public void testDuplicateModIDs() {
 		createLauncher(TestMod.class, TestModDuplicate.class);
+	}
+
+	@Test
+	public void testModLogger() {
+		createLauncher(TestModWithLogger.class);
 	}
 }
