@@ -36,6 +36,7 @@ import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v18.launcher.NovaMinecraft;
+import nova.core.wrapper.mc.forge.v18.util.WrapUtility;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v18.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
@@ -218,7 +219,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	}
 
 	private void registerMinecraftItemsToNOVA() {
-		Set<ResourceLocation> itemIDs = (Set<ResourceLocation>) net.minecraft.item.Item.itemRegistry.getKeys();
+		@SuppressWarnings("unchecked")
+		Set<ResourceLocation> itemIDs = net.minecraft.item.Item.itemRegistry.getKeys();
 		itemIDs.forEach(itemID -> {
 			net.minecraft.item.Item item = (net.minecraft.item.Item) net.minecraft.item.Item.itemRegistry.getObject(itemID);
 			registerMinecraftMapping(item, 0);
@@ -314,11 +316,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 
 		@Override
 		public String toString() {
-			if (item.getHasSubtypes()) {
-				return net.minecraft.item.Item.itemRegistry.getNameForObject(item) + ":" + meta;
-			} else {
-				return net.minecraft.item.Item.itemRegistry.getNameForObject(item).toString();
-			}
+			return WrapUtility.getItemID(item, meta);
 		}
 	}
 }

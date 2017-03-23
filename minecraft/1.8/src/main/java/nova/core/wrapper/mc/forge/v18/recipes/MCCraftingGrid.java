@@ -64,14 +64,23 @@ public class MCCraftingGrid implements CraftingGrid {
 		if (container != null) {
 			@SuppressWarnings("unchecked")
 			List<Slot> slots = container.inventorySlots;
-			if (!slots.isEmpty() && slots.get(0) instanceof SlotCrafting) {
-				SlotCrafting slotCrafting = (SlotCrafting) slots.get(0);
-				playerOrig = ReflectionUtil.getCraftingSlotPlayer(slotCrafting);
-				player = WrapUtility.getNovaPlayer(playerOrig);
-			} else {
-				playerOrig = null;
-				player = Optional.empty();
+
+			EntityPlayer playerOrig = null;
+			Optional<Player> player = Optional.empty();
+
+			for (Slot slot : slots) {
+				if (slot instanceof SlotCrafting) {
+					playerOrig = ReflectionUtil.getCraftingSlotPlayer((SlotCrafting) slot);
+					player = WrapUtility.getNovaPlayer(playerOrig);
+
+					if (player.isPresent()) {
+						break;
+					}
+				}
 			}
+
+			this.playerOrig = playerOrig;
+			this.player = player;
 		} else {
 			playerOrig = null;
 			player = Optional.empty();
