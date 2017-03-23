@@ -59,7 +59,7 @@ public class NovaCraftingRecipe implements IRecipe {
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		Optional<Item> nominalOutput = recipe.getNominalOutput();
+		Optional<Item> nominalOutput = recipe.getExampleOutput();
 		if (nominalOutput.isPresent()) {
 			return Game.natives().toNative(nominalOutput.get());
 		}

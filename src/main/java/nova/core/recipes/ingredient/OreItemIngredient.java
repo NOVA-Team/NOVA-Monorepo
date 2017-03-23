@@ -72,4 +72,21 @@ public class OreItemIngredient implements ItemIngredient {
 	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
 		return original.withAmount(original.count() - 1);
 	}
+
+	@Override
+	public String toString() {
+		return String.format("OreIngredient[%s:%s]", getName(), getPossibleItemIds());
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
+		return name.equals(((OreItemIngredient) other).name);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
 }

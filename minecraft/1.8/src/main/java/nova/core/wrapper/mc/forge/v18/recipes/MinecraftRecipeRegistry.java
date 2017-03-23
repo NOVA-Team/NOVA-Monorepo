@@ -26,9 +26,9 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import nova.core.event.RecipeEvent;
 import nova.core.item.Item;
-import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipe;
+import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.recipes.smelting.SmeltingRecipe;
 import nova.core.wrapper.mc.forge.v18.util.ReflectionUtil;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
@@ -65,6 +65,7 @@ public class MinecraftRecipeRegistry {
 
 		RecipeManager recipeManager = Game.recipes();
 
+		@SuppressWarnings("unchecked")
 		List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
 		for (IRecipe recipe : recipes) {
 			CraftingRecipe converted = convert(recipe);
@@ -87,13 +88,14 @@ public class MinecraftRecipeRegistry {
 	}
 
 	private CraftingRecipe convert(IRecipe recipe) {
-		return RecipeConverter.toNova(recipe);
+		return RecipeConverter.instance().toNova(recipe);
 	}
 
 	private IRecipe convert(CraftingRecipe recipe) {
-		return RecipeConverter.toMinecraft(recipe);
+		return RecipeConverter.instance().toNative(recipe);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void onNOVARecipeAdded(RecipeEvent.Add<CraftingRecipe> evt) {
 		CraftingRecipe recipe = evt.recipe;
 		if (forwardWrappers.containsKey(recipe)) {

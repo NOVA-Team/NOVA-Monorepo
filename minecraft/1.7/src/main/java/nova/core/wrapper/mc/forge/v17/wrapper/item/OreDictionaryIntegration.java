@@ -34,6 +34,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by Stan on 8/02/2015.
@@ -56,7 +60,7 @@ public class OreDictionaryIntegration {
 			});
 
 		Arrays.stream(OreDictionary.getOreNames()).forEach(key -> {
-			OreDictionary.getOres(key).stream()
+			oreDictStream(key)
 				.map(ItemConverter.instance()::getNovaItem)
 				.filter(item -> !novaItemDictionary.get(key).contains(item))
 				.forEach(item -> novaItemDictionary.add(key, item));
@@ -65,6 +69,12 @@ public class OreDictionaryIntegration {
 		novaItemDictionary.whenEntryAdded(this::onNovaAdded);
 		novaItemDictionary.whenEntryRemoved(this::onNovaRemoved);
 		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	private Stream<ItemStack> oreDictStream(String oreName) {
+		// Calling `OreDictionary.getOres(key).stream()` results in an empty Stream in 1.7.10 for some strange reason.
+		return StreamSupport.stream(Spliterators.spliterator(OreDictionary.getOres(oreName).iterator(), OreDictionary.getOres(oreName).size(),
+			Spliterator.ORDERED | Spliterator.SIZED | Spliterator.SUBSIZED), false);
 	}
 
 	private void onNovaAdded(DictionaryEvent.Add<Item> event) {

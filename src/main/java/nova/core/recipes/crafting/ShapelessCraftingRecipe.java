@@ -20,8 +20,9 @@
 
 package nova.core.recipes.crafting;
 
-import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.item.Item;
+import nova.core.item.ItemFactory;
+import nova.core.recipes.ingredient.ItemIngredient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,16 +33,16 @@ import java.util.Optional;
  * @author Stan
  */
 public class ShapelessCraftingRecipe implements CraftingRecipe {
-	private final Item nominalOutput;
+	private final ItemFactory output;
 	private final RecipeFunction recipeFunction;
 	private final ItemIngredient[] ingredients;
 
-	public ShapelessCraftingRecipe(Item output, ItemIngredient... ingredients) {
-		this(output, (crafting, tagged) -> Optional.of(output), ingredients);
+	public ShapelessCraftingRecipe(ItemFactory output, ItemIngredient... ingredients) {
+		this(output, (crafting, tagged, o) -> Optional.of(o.build()), ingredients);
 	}
 
-	public ShapelessCraftingRecipe(Item nominalOutput, RecipeFunction recipeFunction, ItemIngredient... ingredients) {
-		this.nominalOutput = nominalOutput;
+	public ShapelessCraftingRecipe(ItemFactory output, RecipeFunction recipeFunction, ItemIngredient... ingredients) {
+		this.output = output;
 		this.recipeFunction = recipeFunction;
 		this.ingredients = ingredients;
 	}
@@ -112,7 +113,7 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 			}
 		}
 
-		return recipeFunction.doCrafting(craftingGrid, map);
+		return recipeFunction.doCrafting(craftingGrid, map, output);
 	}
 
 	@Override
@@ -128,8 +129,8 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public Optional<Item> getNominalOutput() {
-		return Optional.of(nominalOutput);
+	public Optional<Item> getExampleOutput() {
+		return Optional.of(output.build());
 	}
 
 	private static class RecipeMatching {

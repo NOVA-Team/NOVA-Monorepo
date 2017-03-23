@@ -19,6 +19,7 @@
  */package nova.core.recipes.crafting;
 
 import nova.core.item.Item;
+import nova.core.item.ItemFactory;
 
 import java.util.Map;
 import java.util.Optional;
@@ -28,5 +29,5 @@ import java.util.Optional;
  */
 @FunctionalInterface
 public interface RecipeFunction {
-	Optional<Item> doCrafting(CraftingGrid craftingGrid, Map<String, Item> taggedIngredients);
+	Optional<Item> doCrafting(CraftingGrid craftingGrid, Map<String, Item> taggedIngredients, ItemFactory output);
 }

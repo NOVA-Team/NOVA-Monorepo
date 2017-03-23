@@ -56,7 +56,7 @@ public interface CraftingRecipe extends Recipe {
 	 *
 	 * @return example output
 	 */
-	Optional<Item> getNominalOutput();
+	Optional<Item> getExampleOutput();
 
 	/**
 	 * Consumes items for the crafting of a single item. Removes items and

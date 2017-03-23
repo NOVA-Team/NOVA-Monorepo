@@ -43,7 +43,7 @@ public class ShapedRecipeOre extends ShapedOreRecipe {
 	private final ShapedCraftingRecipe recipe;
 
 	public ShapedRecipeOre(Object[] contents, ShapedCraftingRecipe recipe) {
-		super((ItemStack) Game.natives().toNative(recipe.getNominalOutput().get()), contents);
+		super((ItemStack) Game.natives().toNative(recipe.getExampleOutput().get()), contents);
 
 		this.recipe = recipe;
 	}

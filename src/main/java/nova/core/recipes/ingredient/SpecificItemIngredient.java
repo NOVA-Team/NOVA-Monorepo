@@ -76,22 +76,15 @@ public class SpecificItemIngredient implements ItemIngredient {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
+	public String toString() {
+		return String.format("OreIngredient[%s]", getItemId());
+	}
 
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		SpecificItemIngredient that = (SpecificItemIngredient) o;
-
-		if (!itemId.equals(that.itemId)) {
-			return false;
-		}
-
-		return true;
+	@Override
+	public boolean equals(Object other) {
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
+		return itemId.equals(((SpecificItemIngredient) other).itemId);
 	}
 
 	@Override

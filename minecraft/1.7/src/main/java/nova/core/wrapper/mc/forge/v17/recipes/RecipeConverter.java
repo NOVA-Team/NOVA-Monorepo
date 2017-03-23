@@ -27,6 +27,8 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import nova.core.item.Item;
+import nova.core.item.ItemFactory;
+import nova.core.nativewrapper.NativeConverter;
 import nova.core.recipes.crafting.CraftingRecipe;
 import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.recipes.ingredient.OreItemIngredient;
@@ -34,6 +36,7 @@ import nova.core.recipes.crafting.ShapedCraftingRecipe;
 import nova.core.recipes.crafting.ShapelessCraftingRecipe;
 import nova.core.recipes.ingredient.SpecificItemIngredient;
 import nova.core.wrapper.mc.forge.v17.util.ReflectionUtil;
+import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 
 import java.util.ArrayList;
@@ -52,15 +55,26 @@ import java.util.Optional;
  * given the proper information and be informed of their registration, if desired.
  * @author Stan Hebben
  */
-public class RecipeConverter {
+public class RecipeConverter implements NativeConverter<CraftingRecipe, IRecipe> {
 	public static final int TYPE_ADVANCED = 0;
 	public static final int TYPE_ORE = 1;
 	public static final int TYPE_BASIC = 2;
 
-	private RecipeConverter() {
+	public static RecipeConverter instance() {
+		return Game.natives().getNative(CraftingRecipe.class, IRecipe.class);
 	}
 
-	private static int getIngredientType(ItemIngredient ingredient) {
+	@Override
+	public Class<CraftingRecipe> getNovaSide() {
+		return CraftingRecipe.class;
+	}
+
+	@Override
+	public Class<IRecipe> getNativeSide() {
+		return IRecipe.class;
+	}
+
+	private int getIngredientType(ItemIngredient ingredient) {
 		if (ingredient instanceof SpecificItemIngredient) {
 			return TYPE_BASIC;
 		} else if (ingredient instanceof OreItemIngredient) {
@@ -70,7 +84,7 @@ public class RecipeConverter {
 		}
 	}
 
-	private static Object getInternal(ItemIngredient ingredient) {
+	private Object getInternal(ItemIngredient ingredient) {
 		if (ingredient instanceof SpecificItemIngredient) {
 			return wrapSpecific((SpecificItemIngredient) ingredient);
 		} else if (ingredient instanceof OreItemIngredient) {
@@ -80,7 +94,7 @@ public class RecipeConverter {
 		return null;
 	}
 
-	private static ItemIngredient getIngredient(Object ingredient) {
+	private ItemIngredient getIngredient(Object ingredient) {
 		if (ingredient == null) {
 			return null;
 		} else if (ingredient instanceof ItemStack) {
@@ -99,7 +113,7 @@ public class RecipeConverter {
 		}
 	}
 
-	private static String findOreDictEntryFor(List ingredient) {
+	private String findOreDictEntryFor(List<?> ingredient) {
 		for (String key : net.minecraftforge.oredict.OreDictionary.getOreNames()) {
 			if (net.minecraftforge.oredict.OreDictionary.getOres(key).equals(ingredient)) {
 				return key;
@@ -109,7 +123,7 @@ public class RecipeConverter {
 		return null;
 	}
 
-	private static ItemStack wrapSpecific(SpecificItemIngredient ingredient) {
+	private ItemStack wrapSpecific(SpecificItemIngredient ingredient) {
 		for (Item item : ingredient.getExampleItems()) {
 			return Game.natives().toNative(item.getFactory().build());
 		}
@@ -117,7 +131,7 @@ public class RecipeConverter {
 		throw new AssertionError("this can't be!");
 	}
 
-	private static int getRecipeType(ItemIngredient[] ingredients) {
+	private int getRecipeType(ItemIngredient[] ingredients) {
 		int type = TYPE_BASIC;
 		for (ItemIngredient ingredient : ingredients) {
 			type = Math.min(type, getIngredientType(ingredient));
@@ -125,38 +139,7 @@ public class RecipeConverter {
 		return type;
 	}
 
-	public static IRecipe toMinecraft(CraftingRecipe recipe) {
-		if (recipe instanceof ShapedCraftingRecipe) {
-			return convert((ShapedCraftingRecipe) recipe);
-		} else if (recipe instanceof ShapelessCraftingRecipe) {
-			return convert((ShapelessCraftingRecipe) recipe);
-		} else {
-			return new NovaCraftingRecipe(recipe);
-		}
-	}
-
-	public static IRecipe convert(ShapelessCraftingRecipe recipe) {
-		ItemIngredient[] ingredients = recipe.getIngredients();
-		int type = getRecipeType(ingredients);
-
-		if (type == TYPE_BASIC) {
-			net.minecraft.item.ItemStack[] items = new net.minecraft.item.ItemStack[ingredients.length];
-			for (int i = 0; i < ingredients.length; i++) {
-				items[i] = wrapSpecific((SpecificItemIngredient) ingredients[i]);
-			}
-			return new ShapelessRecipeBasic(items, recipe);
-		} else if (type == TYPE_ORE) {
-			Object[] items = new Object[ingredients.length];
-			for (int i = 0; i < ingredients.length; i++) {
-				items[i] = getInternal(ingredients[i]);
-			}
-			return new ShapelessRecipeOre(items, recipe);
-		} else {
-			return new NovaCraftingRecipe(recipe);
-		}
-	}
-
-	public static IRecipe convert(ShapedCraftingRecipe recipe) {
+	public IRecipe toNative(ShapedCraftingRecipe recipe) {
 		ItemIngredient[] ingredients = recipe.getIngredients();
 		int[] posx = recipe.getIngredientsX();
 		int[] posy = recipe.getIngredientsY();
@@ -165,58 +148,94 @@ public class RecipeConverter {
 		int type = getRecipeType(ingredients);
 
 		// construct recipe
-		if (type == TYPE_BASIC) {
-			ItemStack[] basicIngredients = new ItemStack[recipe.getHeight() * recipe.getWidth()];
-			for (int i = 0; i < ingredients.length; i++) {
-				basicIngredients[posx[i] + posy[i] * recipe.getWidth()] = wrapSpecific((SpecificItemIngredient) ingredients[i]);
-			}
-
-			return new ShapedRecipeBasic(basicIngredients, recipe);
-		} else if (type == TYPE_ORE) {
-			Object[] converted = new Object[recipe.getHeight() * recipe.getWidth()];
-			for (int i = 0; i < ingredients.length; i++) {
-				converted[posx[i] + posy[i] * recipe.getWidth()] = getInternal(ingredients[i]);
-			}
-
-			// arguments contents:
-			// 1) recipe patterns
-			// 2) characters + ingredients
-
-			int counter = 0;
-			String[] parts = new String[recipe.getHeight()];
-			ArrayList rarguments = new ArrayList();
-			for (int i = 0; i < recipe.getHeight(); i++) {
-				char[] pattern = new char[recipe.getWidth()];
-				for (int j = 0; j < recipe.getWidth(); j++) {
-					int off = i * recipe.getWidth() + j;
-					if (converted[off] == null) {
-						pattern[j] = ' ';
-					} else {
-						pattern[j] = (char) ('A' + counter);
-						rarguments.add(pattern[j]);
-						rarguments.add(converted[off]);
-						counter++;
-					}
+		switch (type) {
+			case TYPE_BASIC: {
+				ItemStack[] basicIngredients = new ItemStack[recipe.getHeight() * recipe.getWidth()];
+				for (int i = 0; i < ingredients.length; i++) {
+					basicIngredients[posx[i] + posy[i] * recipe.getWidth()] = wrapSpecific((SpecificItemIngredient) ingredients[i]);
 				}
-				parts[i] = new String(pattern);
+
+				return new ShapedRecipeBasic(basicIngredients, recipe);
+			} case TYPE_ORE: {
+				Object[] converted = new Object[recipe.getHeight() * recipe.getWidth()];
+				for (int i = 0; i < ingredients.length; i++) {
+					converted[posx[i] + posy[i] * recipe.getWidth()] = getInternal(ingredients[i]);
+				}
+
+				// arguments contents:
+				// 1) recipe patterns
+				// 2) characters + ingredients
+
+				int counter = 0;
+				String[] parts = new String[recipe.getHeight()];
+				List<Object> rarguments = new ArrayList<>();
+				for (int i = 0; i < recipe.getHeight(); i++) {
+					char[] pattern = new char[recipe.getWidth()];
+					for (int j = 0; j < recipe.getWidth(); j++) {
+						int off = i * recipe.getWidth() + j;
+						if (converted[off] == null) {
+							pattern[j] = ' ';
+						} else {
+							pattern[j] = (char) ('A' + counter);
+							rarguments.add(pattern[j]);
+							rarguments.add(converted[off]);
+							counter++;
+						}
+					}
+					parts[i] = new String(pattern);
+				}
+
+				rarguments.addAll(0, Arrays.asList(parts));
+
+				return new ShapedRecipeOre(rarguments.toArray(), recipe);
+			} default: {
+				return new NovaCraftingRecipe(recipe);
 			}
+		}
+	}
 
-			rarguments.addAll(0, Arrays.asList(parts));
+	public IRecipe toNative(ShapelessCraftingRecipe recipe) {
+		ItemIngredient[] ingredients = recipe.getIngredients();
+		int type = getRecipeType(ingredients);
 
-			return new ShapedRecipeOre(rarguments.toArray(), recipe);
+		switch (type) {
+			case TYPE_BASIC: {
+				net.minecraft.item.ItemStack[] items = new net.minecraft.item.ItemStack[ingredients.length];
+				for (int i = 0; i < ingredients.length; i++) {
+					items[i] = wrapSpecific((SpecificItemIngredient) ingredients[i]);
+				}
+				return new ShapelessRecipeBasic(items, recipe);
+			} case TYPE_ORE: {
+				Object[] items = new Object[ingredients.length];
+				for (int i = 0; i < ingredients.length; i++) {
+					items[i] = getInternal(ingredients[i]);
+				}
+				return new ShapelessRecipeOre(items, recipe);
+			} default: {
+				return new NovaCraftingRecipe(recipe);
+			}
+		}
+	}
+
+	@Override
+	public IRecipe toNative(CraftingRecipe recipe) {
+		if (recipe instanceof ShapedCraftingRecipe) {
+			return toNative((ShapedCraftingRecipe) recipe);
+		} else if (recipe instanceof ShapelessCraftingRecipe) {
+			return toNative((ShapelessCraftingRecipe) recipe);
 		} else {
 			return new NovaCraftingRecipe(recipe);
 		}
 	}
 
-	public static CraftingRecipe toNova(IRecipe recipe) {
-		net.minecraft.item.ItemStack recipeOutput = recipe.getRecipeOutput();
-		nova.core.item.Item output;
+	@Override
+	public CraftingRecipe toNova(IRecipe recipe) {
+		ItemStack recipeOutput = recipe.getRecipeOutput();
 		if (recipeOutput == null) {
-			output = null;
-		} else {
-			output = Game.natives().toNova(recipeOutput);
+			return new MCCraftingRecipe(recipe);
 		}
+		Item output = ItemConverter.instance().toNova(recipeOutput);
+		ItemFactory outputFactory = output.getFactory();
 
 		if (recipe instanceof ShapelessRecipes) {
 			ShapelessRecipes shapeless = (ShapelessRecipes) recipe;
@@ -226,10 +245,12 @@ public class RecipeConverter {
 				ingredients[i] = getIngredient(shapeless.recipeItems.get(i));
 			}
 
-			return new ShapelessCraftingRecipe(output, ingredients);
+			return new ShapelessCraftingRecipe(outputFactory, (craftingGrid, taggedIngredients, o) ->
+				Optional.ofNullable(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid))).map(ItemConverter.instance()::toNova), ingredients);
 		} else if (recipe instanceof ShapedRecipes) {
 			ShapedRecipes shaped = (ShapedRecipes) recipe;
 
+			@SuppressWarnings({"unchecked", "rawtypes"})
 			Optional<ItemIngredient>[][] ingredients = new Optional[shaped.recipeHeight][shaped.recipeWidth];
 			for (int i = 0; i < shaped.recipeHeight; i++) {
 				for (int j = 0; j < shaped.recipeWidth; j++) {
@@ -237,13 +258,15 @@ public class RecipeConverter {
 				}
 			}
 
-			return new ShapedCraftingRecipe(output, ingredients, false);
+			return new ShapedCraftingRecipe(outputFactory, (craftingGrid, taggedIngredients, o) ->
+				Optional.ofNullable(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid))).map(ItemConverter.instance()::toNova), ingredients, false);
 		} else if (recipe instanceof ShapedOreRecipe) {
 			ShapedOreRecipe shaped = (ShapedOreRecipe) recipe;
 
 			int width = ReflectionUtil.getShapedOreRecipeWidth(shaped);
 			int height = recipe.getRecipeSize() / width;
 
+			@SuppressWarnings({"unchecked", "rawtypes"})
 			Optional<ItemIngredient>[][] recipeIngredients = new Optional[height][width];
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < width; j++) {
@@ -251,7 +274,8 @@ public class RecipeConverter {
 				}
 			}
 
-			return new ShapedCraftingRecipe(output, recipeIngredients, false);
+			return new ShapedCraftingRecipe(outputFactory, (craftingGrid, taggedIngredients, o) ->
+				Optional.ofNullable(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid))).map(ItemConverter.instance()::toNova), recipeIngredients, false);
 		} else if (recipe instanceof ShapelessOreRecipe) {
 			ShapelessOreRecipe shapeless = (ShapelessOreRecipe) recipe;
 
@@ -260,7 +284,8 @@ public class RecipeConverter {
 				ingredients[i] = getIngredient(shapeless.getInput().get(i));
 			}
 
-			return new ShapelessCraftingRecipe(output, ingredients);
+			return new ShapelessCraftingRecipe(outputFactory, (craftingGrid, taggedIngredients, o) ->
+				Optional.ofNullable(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid))).map(ItemConverter.instance()::toNova), ingredients);
 		} else {
 			return new MCCraftingRecipe(recipe);
 		}

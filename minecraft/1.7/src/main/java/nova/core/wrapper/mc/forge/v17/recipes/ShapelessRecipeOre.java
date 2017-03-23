@@ -37,7 +37,7 @@ public class ShapelessRecipeOre extends ShapelessOreRecipe {
 	private final ShapelessCraftingRecipe recipe;
 
 	public ShapelessRecipeOre(Object[] ingredients, ShapelessCraftingRecipe recipe) {
-		super((ItemStack) Game.natives().toNative(recipe.getNominalOutput().get()), ingredients);
+		super((ItemStack) Game.natives().toNative(recipe.getExampleOutput().get()), ingredients);
 
 		this.recipe = recipe;
 	}

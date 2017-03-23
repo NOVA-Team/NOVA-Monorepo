@@ -20,8 +20,9 @@
 
 package nova.core.recipes.crafting;
 
-import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.item.Item;
+import nova.core.item.ItemFactory;
+import nova.core.recipes.ingredient.ItemIngredient;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.util.Collection;
@@ -67,7 +68,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	private final boolean mirrored;
 	private final int lastIngredientIndexOnFirstLine; // only actually matters for mirrored recipes
 	private final RecipeFunction recipeFunction;
-	private final Item nominalOutput;
+	private final ItemFactory output;
 
 	private final ItemIngredient[] ingredients;
 
@@ -77,8 +78,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	 * @param format Format
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
 	 */
-	//TODO: Crafting should take factories, not instances itself
-	public ShapedCraftingRecipe(Item output, String format, ItemIngredient... ingredients) {
+	public ShapedCraftingRecipe(ItemFactory output, String format, ItemIngredient... ingredients) {
 		this(output, format, false, ingredients);
 	}
 
@@ -89,20 +89,31 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	 * @param mirrored Whether this recipe is mirrored
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
 	 */
-	public ShapedCraftingRecipe(Item output, String format, boolean mirrored, ItemIngredient... ingredients) {
-		this(output, (grid, tagged) -> Optional.of(output), format, mirrored, ingredients);
+	public ShapedCraftingRecipe(ItemFactory output, String format, boolean mirrored, ItemIngredient... ingredients) {
+		this(output, (grid, tagged, o) -> Optional.of(o.build()), format, mirrored, ingredients);
 	}
 
 	/**
 	 * Defines an advanced crafting recipe, using a format string.
-	 * @param nominalOutput Nominal output of the recipe
+	 * @param output Nominal output of the recipe
+	 * @param recipeFunction {@link RecipeFunction}
+	 * @param format Format
+	 * @param ingredients {@link ItemIngredient ItemIngredients}
+	 */
+	public ShapedCraftingRecipe(ItemFactory output, RecipeFunction recipeFunction, String format, ItemIngredient... ingredients) {
+		this(output, recipeFunction, format, false, ingredients);
+	}
+
+	/**
+	 * Defines an advanced crafting recipe, using a format string.
+	 * @param output Nominal output of the recipe
 	 * @param recipeFunction {@link RecipeFunction}
 	 * @param format Format
 	 * @param mirrored Whether this recipe is mirrored
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
 	 */
-	public ShapedCraftingRecipe(Item nominalOutput, RecipeFunction recipeFunction, String format, boolean mirrored, ItemIngredient... ingredients) {
-		this.nominalOutput = nominalOutput;
+	public ShapedCraftingRecipe(ItemFactory output, RecipeFunction recipeFunction, String format, boolean mirrored, ItemIngredient... ingredients) {
+		this.output = output;
 
 		String[] formatLines = format.split("\\-");
 		int numIngredients = 0;
@@ -153,19 +164,19 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
 	 * @param mirrored Whether this recipe is mirrored
 	 */
-	public ShapedCraftingRecipe(Item output, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
-		this(output, (grid, tagged) -> Optional.of(output), ingredients, mirrored);
+	public ShapedCraftingRecipe(ItemFactory output, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
+		this(output, (grid, tagged, o) -> Optional.of(o.build()), ingredients, mirrored);
 	}
 
 	/**
 	 * Defines an advanced crafting recipe, using a 2D ingredients array.
-	 * @param nominalOutput Nominal output of the recipe
+	 * @param output Nominal output of the recipe
 	 * @param recipeFunction {@link RecipeFunction}
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
 	 * @param mirrored Whether this recipe is mirrored
 	 */
-	public ShapedCraftingRecipe(Item nominalOutput, RecipeFunction recipeFunction, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
-		this.nominalOutput = nominalOutput;
+	public ShapedCraftingRecipe(ItemFactory output, RecipeFunction recipeFunction, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
+		this.output = output;
 
 		int numIngredients = 0;
 		for (Optional<ItemIngredient>[] row : ingredients) {
@@ -296,8 +307,8 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public Optional<Item> getNominalOutput() {
-		return Optional.of(nominalOutput);
+	public Optional<Item> getExampleOutput() {
+		return Optional.of(output.build());
 	}
 
 	// #######################
@@ -372,7 +383,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 			}
 		}
 
-		return recipeFunction.doCrafting(craftingGrid, tagged);
+		return recipeFunction.doCrafting(craftingGrid, tagged, output);
 	}
 
 	private abstract class ShapedMapping {

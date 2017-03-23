@@ -20,11 +20,15 @@
 
 package nova.core.wrapper.mc.forge.v18.recipes;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import nova.core.entity.Entity;
+import nova.core.entity.component.Player;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingGrid;
 import nova.core.recipes.crafting.CraftingRecipe;
-import nova.internal.core.Game;
+import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 
 import java.util.Optional;
 
@@ -40,22 +44,29 @@ public class MCCraftingRecipe implements CraftingRecipe {
 
 	@Override
 	public boolean matches(CraftingGrid craftingGrid) {
-		// TODO: supply world somehow?
-		return recipe.matches(new NovaCraftingGrid(craftingGrid), null);
+		return recipe.matches(new NovaCraftingGrid(craftingGrid), (net.minecraft.world.World) craftingGrid.getPlayer().map(Player::entity)
+			.map(Entity::world).map(WorldConverter.instance()::toNative).filter(w -> w instanceof net.minecraft.world.World).orElse(null));
 	}
 
 	@Override
 	public Optional<Item> getCraftingResult(CraftingGrid craftingGrid) {
-		return Game.natives().toNova(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid)));
+		return Optional.ofNullable(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid))).map(ItemConverter.instance()::toNova);
 	}
 
 	@Override
 	public void consumeItems(CraftingGrid craftingGrid) {
-		// not supported
+		ItemStack[] remainder = recipe.getRemainingItems(new NovaCraftingGrid(craftingGrid));
+		for (int i = 0; i < remainder.length; i++) {
+			Optional<Item> result = Optional.ofNullable(remainder[i]).map(ItemConverter.instance()::toNova);
+			if (!result.isPresent()) {
+				result = craftingGrid.getStack(i).filter(item -> item.count() > 1).map(item -> item.withAmount(item.count() - 1));
+			}
+			craftingGrid.setStack(i, result);
+		}
 	}
 
 	@Override
-	public Optional<Item> getNominalOutput() {
-		return Game.natives().toNova(recipe.getRecipeOutput());
+	public Optional<Item> getExampleOutput() {
+		return Optional.ofNullable(recipe.getRecipeOutput()).map(ItemConverter.instance()::toNova);
 	}
 }

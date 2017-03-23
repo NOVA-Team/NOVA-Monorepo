@@ -20,8 +20,15 @@
 
 package nova.core.wrapper.mc.forge.v18.recipes;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
+import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingGrid;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
+
+import java.util.Optional;
 
 public class NovaCraftingGrid extends InventoryCrafting {
 	private final CraftingGrid craftingGrid;
@@ -29,5 +36,63 @@ public class NovaCraftingGrid extends InventoryCrafting {
 	public NovaCraftingGrid(CraftingGrid craftingGrid) {
 		super(new NovaCraftingGridContainer(craftingGrid), craftingGrid.getWidth(), craftingGrid.getHeight());
 		this.craftingGrid = craftingGrid;
+	}
+
+	@Override
+	public int getSizeInventory() {
+		return craftingGrid.size();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		return craftingGrid.getStack(slot).map(ItemConverter.instance()::toNative).orElse(null);
+	}
+
+	@Override
+	public ItemStack getStackInRowAndColumn(int x, int y) {
+		return craftingGrid.getStack(x, y).map(ItemConverter.instance()::toNative).orElse(null);
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack item) {
+		craftingGrid.setStack(slot, Optional.ofNullable(item).map(ItemConverter.instance()::toNova));
+	}
+
+	@Override
+	public ItemStack decrStackSize(int slot, int count) {
+		Optional<Item> optionalItem = craftingGrid.getStack(slot);
+		if (!optionalItem.isPresent() || count == 0) {
+			return null;
+		}
+
+		Item item = optionalItem.get();
+		int added = -item.addCount(-count);
+		if (item.count() == 0) {
+			craftingGrid.setStack(slot, Optional.empty());
+		}
+		return ItemConverter.instance().toNative(item.withAmount(added));
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		return craftingGrid.getStack(slot).map(ItemConverter.instance()::toNative).orElse(null);
+	}
+
+	@Override
+	public int getWidth() {
+		return craftingGrid.getWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		return craftingGrid.getHeight();
+	}
+
+	@Override
+	public void clear() {
+		super.clear();
+		for (int i = 0; i < craftingGrid.size(); i++) {
+			craftingGrid.setStack(i, Optional.empty());
+		}
 	}
 }

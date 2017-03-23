@@ -36,7 +36,7 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 	private final ShapedCraftingRecipe recipe;
 
 	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedCraftingRecipe recipe) {
-		super(recipe.getWidth(), recipe.getHeight(), basicInputs, recipe.getNominalOutput().isPresent() ? Game.natives().toNative(recipe.getNominalOutput().get()) : null);
+		super(recipe.getWidth(), recipe.getHeight(), basicInputs, recipe.getExampleOutput().isPresent() ? Game.natives().toNative(recipe.getExampleOutput().get()) : null);
 
 		this.recipe = recipe;
 	}

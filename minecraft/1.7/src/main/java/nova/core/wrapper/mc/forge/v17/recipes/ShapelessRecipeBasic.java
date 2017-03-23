@@ -18,12 +18,6 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nova.core.wrapper.mc.forge.v17.recipes;
 
 import net.minecraft.inventory.InventoryCrafting;
@@ -44,7 +38,7 @@ public class ShapelessRecipeBasic extends ShapelessRecipes {
 	private final ShapelessCraftingRecipe recipe;
 
 	public ShapelessRecipeBasic(ItemStack[] ingredients, ShapelessCraftingRecipe recipe) {
-		super(recipe.getNominalOutput().isPresent() ? Game.natives().toNative(recipe.getNominalOutput().get()) : null, Arrays.asList(ingredients));
+		super(recipe.getExampleOutput().isPresent() ? Game.natives().toNative(recipe.getExampleOutput().get()) : null, Arrays.asList(ingredients));
 
 		this.recipe = recipe;
 	}
