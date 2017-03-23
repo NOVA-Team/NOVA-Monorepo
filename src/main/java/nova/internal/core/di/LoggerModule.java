@@ -73,7 +73,8 @@ public class LoggerModule extends BinderModule {
 					.map(target -> target.getTarget().getInstance().getType().getRawType())
 					.filter(clazz -> clazz.isAnnotationPresent(Mod.class))
 					.findFirst()
-					.map(clazz -> LoggerFactory.getLogger(clazz.getAnnotation(Mod.class).name()))
+					.map(clazz -> clazz.getAnnotation(Mod.class))
+					.map(mod -> LoggerFactory.getLogger(String.format("%s (%s)", mod.id(), mod.name())))
 					.orElseGet(() -> LoggerFactory.getLogger(dependency.iterator().next().getTarget().getInstance().getType().getRawType()));
 			}
 		}

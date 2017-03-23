@@ -22,13 +22,20 @@ package nova.testutils.mod;
 import nova.core.loader.Mod;
 import org.slf4j.Logger;
 
+import static nova.testutils.NovaAssertions.assertThat;
+
 /**
  * @author ExE Boss
  */
-@Mod(id = "testModWithLogger", name = "Test Mod With Logger", version = "0.0.1", novaVersion = "0.1.0")
+@Mod(id = TestModWithLogger.MOD_ID, name = TestModWithLogger.NAME, version = TestModWithLogger.VERSION, novaVersion = "0.1.0")
 public class TestModWithLogger {
 
+	public static final String MOD_ID = "testModWithLogger";
+	public static final String NAME = "Test Mod With Logger";
+	public static final String VERSION = "0.1.0";
+
 	public TestModWithLogger(Logger logger) {
-		logger.info("Hello World! from Test Mod With Logger");
+		assertThat(logger.getName()).isEqualTo(MOD_ID + " (" + NAME + ')');
+		logger.info("Hello World!");
 	}
 }

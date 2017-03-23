@@ -85,6 +85,7 @@ public class NovaLauncherTest extends AbstractNovaLauncherTest {
 		createLauncher(TestModWithMissingDependency.class);
 	}
 
+	@Test
 	public void testMissingOptionalDepencency() {
 		NovaLauncher launcher = createLauncher(TestModWithMissingOptionalDependency.class);
 		assertThat(launcher.getModClasses())
