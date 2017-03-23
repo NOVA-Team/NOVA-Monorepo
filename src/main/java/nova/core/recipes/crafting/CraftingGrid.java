@@ -24,16 +24,21 @@ import nova.core.entity.component.Player;
 import nova.core.item.Item;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
+import java.util.Iterator;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Represents a crafting grid. Crafting grids contain an item stack in each slot, each of which can be read and possibly
  * modified.
  * @author Stan Hebben
  */
-public interface CraftingGrid {
-	String topologySquare = "square";
-	String typeCrafting = "crafting";
+public interface CraftingGrid extends Iterable<Item> {
+	String TOPOLOGY_SQUARE = "square";
+	String TYPE_CRAFTING = "crafting";
 
 	/**
 	 * Represents the player that is currently using this crafting grid.
@@ -63,10 +68,10 @@ public interface CraftingGrid {
 	 * largest x and then from smallest y to largest y (natural order). However, not all (x, y) positions need to have
 	 * a corresponding slot.
 	 * @param slot slot to be modified
-	 * @param Item item stack to be set
+	 * @param item item stack to be set
 	 * @return true if modification was successful, false otherwise
 	 */
-	boolean setStack(int slot, Optional<Item> Item);
+	boolean setStack(int slot, Optional<Item> item);
 
 	/**
 	 * Gets the width of the crafting grid. For a non-square grid,, this should return the highest acceptable x-value + 1.
@@ -92,17 +97,21 @@ public interface CraftingGrid {
 	 * Sets the stack at the given (x, y) position.
 	 * @param x x position
 	 * @param y y posittion
-	 * @param Item stack to be set
+	 * @param item stack to be set
 	 * @return true if the modification is successful, false otherwise
 	 */
-	boolean setStack(int x, int y, Optional<Item> Item);
+	boolean setStack(int x, int y, Optional<Item> item);
 
 	/**
-	 * Gives back a certain item. In the case of a player's crafting grid, this would typically go back to the player's
-	 * inventory. Machines may implement this method differently.
-	 * @param Item The {@link Item}
+	 * Gives back a certain item. In the case of a player's crafting grid,
+	 * this would typically go back to the player's inventory.
+	 * Machines may implement this method differently.
+	 *
+	 * @param item The {@link Item} to give back.
 	 */
-	void giveBack(Item Item);
+	default void giveBack(Item item) {
+		getPlayer().map(Player::getInventory).ifPresent(inv -> inv.add(item));
+	}
 
 	/**
 	 * Gets the topology of the crafting grid. For a square grid, this should be CraftingGrid.TOPOLOGY_SQUARE. Other
@@ -163,5 +172,23 @@ public interface CraftingGrid {
 		}
 
 		return Optional.empty();
+	}
+
+	@Override
+	default Iterator<Item> iterator() {
+		return new CraftingGridIterator(this);
+	}
+
+	@Override
+	default Spliterator<Item> spliterator() {
+		return Spliterators.spliterator(iterator(), size(), Spliterator.NONNULL | Spliterator.ORDERED | Spliterator.SORTED);
+	}
+
+	/**
+	 * Represents this crafting grid as an {@link Item} {@link Stream}
+	 * @return This crafting grid as an {@link Item} {@link Stream}
+	 */
+	default Stream<Item> stream() {
+		return StreamSupport.stream(spliterator(), false);
 	}
 }

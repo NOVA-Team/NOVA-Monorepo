@@ -77,7 +77,7 @@ public class SpecificItemIngredient implements ItemIngredient {
 
 	@Override
 	public String toString() {
-		return String.format("OreIngredient[%s]", getItemId());
+		return String.format("ItemIngredient[%s]", getItemId());
 	}
 
 	@Override

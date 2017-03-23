@@ -23,8 +23,10 @@ package nova.core.recipes.crafting;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.recipes.ingredient.ItemIngredient;
+import nova.core.util.math.MathUtil;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -117,6 +119,8 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 		String[] formatLines = format.split("\\-");
 		int numIngredients = 0;
+		int numIngredientsFirstLine = 0;
+		boolean firstLine = true;
 		int width = 0;
 		for (String formatLine : formatLines) {
 			width = Math.max(width, formatLine.length());
@@ -125,10 +129,13 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 					continue;
 				} else if (c >= 'A' && c <= 'Z') {
 					numIngredients++;
+					if (firstLine)
+						numIngredientsFirstLine++;
 				} else {
 					throw new IllegalArgumentException("Invalid character in format string " + format + ": " + c);
 				}
 			}
+			firstLine = false;
 		}
 
 		this.width = width;
@@ -268,7 +275,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 		}
 
 		for (int i = 0; i < ingredients.length; i++) {
-			Item original = mapping.Items[i];
+			Item original = mapping.items[i];
 			Item consumed = ingredients[i].consumeOnCrafting(original, craftingGrid);
 			Objects.requireNonNull(consumed, "The result of 'ItemIngredient.consumeOnCrafting' can't be null");
 
@@ -316,10 +323,14 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	// #######################
 
 	private int getLastIngredientIndexOnFirstLine() {
-		int firstLineIndex = posy[0];
+		if (ingredients.length == 0) {
+			return -1;
+		}
+
+		int firstLineIndex = Arrays.stream(posy).min().orElse(0);
 		int result = 0;
 		for (int i = 0; i < ingredients.length; i++) {
-			if (posy[0] == firstLineIndex) {
+			if (posy[i] == firstLineIndex) {
 				result = i;
 			}
 		}
@@ -328,6 +339,10 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	}
 
 	private ShapedMapping findIngredientMapping(CraftingGrid craftingGrid) {
+		if (ingredients.length == 0) {
+			return null;
+		}
+
 		if (craftingGrid.countFilledStacks() != ingredients.length) {
 			return null;
 		}
@@ -348,7 +363,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 		ShapedMapping mapping;
 		if (mirrored) {
-			mapping = new MirroredMapping(optOffset.get(), craftingGrid.getWidth());
+			mapping = new MirroredMapping(optOffset.get());
 		} else {
 			mapping = new NonMirroredMapping(optOffset.get());
 		}
@@ -367,7 +382,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 				return null;
 			}
 
-			mapping.Items[i] = item.get();
+			mapping.items[i] = item.get();
 		}
 
 		return mapping;
@@ -379,7 +394,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 		Map<String, Item> tagged = new HashMap<>();
 		for (int k = 0; k < ingredients.length; k++) {
 			if (ingredients[k].getTag().isPresent()) {
-				tagged.put(ingredients[k].getTag().get(), shapedMapping.Items[k]);
+				tagged.put(ingredients[k].getTag().get(), shapedMapping.items[k]);
 			}
 		}
 
@@ -389,12 +404,12 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	private abstract class ShapedMapping {
 		public final int offsetX;
 		public final int offsetY;
-		public final Item[] Items;
+		public final Item[] items;
 
 		private ShapedMapping(Vector2D offset) {
 			this.offsetX = (int) offset.getX();
 			this.offsetY = (int) offset.getY();
-			this.Items = new Item[ingredients.length];
+			this.items = new Item[ingredients.length];
 		}
 
 		public boolean fitsInCraftingGrid(CraftingGrid craftingGrid) {
@@ -407,6 +422,11 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 		public abstract Optional<Item> getStack(CraftingGrid craftingGrid, int ingredient);
 
 		public abstract void setStack(CraftingGrid craftingGrid, int ingredient, Optional<Item> value);
+
+		@Override
+		public String toString() {
+			return String.format("%s{offsetX=%s, offsetY=%s, items=%s}", getClass().getSimpleName(), offsetX, offsetY, Arrays.toString(items));
+		}
 	}
 
 	private class NonMirroredMapping extends ShapedMapping {
@@ -433,25 +453,23 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	}
 
 	private class MirroredMapping extends ShapedMapping {
-		private MirroredMapping(Vector2D firstItemOffset, int craftingGridWidth) {
+		private MirroredMapping(Vector2D firstItemOffset) {
 			super(new Vector2D(
-				// dark magic converting the offset of the first non-empty item slot to the mapping offset
-				// in a mirrored recipe mapping
-				(craftingGridWidth - posx[lastIngredientIndexOnFirstLine] - 1) - (firstItemOffset.getX() - posx[0]),
+				firstItemOffset.getX() + posx[lastIngredientIndexOnFirstLine] - Arrays.stream(posx).max().orElse(0),
 				firstItemOffset.getY() - posy[0]));
 		}
 
 		@Override
 		public Optional<Item> getStack(CraftingGrid craftingGrid, int ingredient) {
 			return craftingGrid.getStack(
-				craftingGrid.getWidth() - (offsetX + posx[ingredient]) - 1,
+				offsetX + getWidth() - posx[ingredient] - 1,
 				offsetY + posy[ingredient]);
 		}
 
 		@Override
 		public void setStack(CraftingGrid craftingGrid, int ingredient, Optional<Item> value) {
 			craftingGrid.setStack(
-				craftingGrid.getWidth() - (offsetX + posx[ingredient]) - 1,
+				offsetX + getWidth() - posx[ingredient] - 1,
 				offsetY + posy[ingredient],
 				value);
 		}

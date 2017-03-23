@@ -238,17 +238,18 @@ public class MCCraftingGrid implements CraftingGrid {
 
 	@Override
 	public void giveBack(nova.core.item.Item itemStack) {
-		playerOrig.inventory.addItemStackToInventory(ItemConverter.instance().toNative(itemStack));
+		if (playerOrig != null)
+			playerOrig.inventory.addItemStackToInventory(ItemConverter.instance().toNative(itemStack));
 	}
 
 	@Override
 	public String getTopology() {
-		return CraftingGrid.topologySquare;
+		return CraftingGrid.TOPOLOGY_SQUARE;
 	}
 
 	@Override
 	public String getType() {
-		return CraftingGrid.typeCrafting;
+		return CraftingGrid.TYPE_CRAFTING;
 	}
 
 	private boolean changed(int i) {

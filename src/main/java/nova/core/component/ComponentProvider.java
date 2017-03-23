@@ -22,6 +22,7 @@ package nova.core.component;
 
 import nova.core.event.bus.Event;
 import nova.core.event.bus.EventBus;
+import nova.core.util.Identifiable;
 import nova.internal.core.util.InjectionUtil;
 
 import java.lang.reflect.Constructor;
@@ -60,6 +61,11 @@ public abstract class ComponentProvider<CM extends ComponentMap> {
 	@SuppressWarnings("unchecked")
 	public final Collection<Component> components() {
 		return new HashSet<>(components.values());
+	}
+
+	@Override
+	public String toString() {
+		return (this instanceof Identifiable) ? ((Identifiable) this).getID() : super.toString();
 	}
 
 	public static class ComponentAdded extends Event {
