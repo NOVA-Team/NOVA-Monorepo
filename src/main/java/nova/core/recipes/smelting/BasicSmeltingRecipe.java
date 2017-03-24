@@ -45,7 +45,7 @@ public class BasicSmeltingRecipe implements SmeltingRecipe {
 
 	@Override
 	public boolean matches(Item input) {
-		return this.ingredient.matches(input);
+		return ingredient.matches(input);
 	}
 
 	@Override
@@ -54,7 +54,12 @@ public class BasicSmeltingRecipe implements SmeltingRecipe {
 	}
 
 	@Override
+	public Optional<Item> getExampleOutput() {
+		return Optional.of(output.build());
+	}
+
+	@Override
 	public Optional<ItemIngredient> getInput() {
-		return Optional.of(this.ingredient);
+		return Optional.of(ingredient);
 	}
 }

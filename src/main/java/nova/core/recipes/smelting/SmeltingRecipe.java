@@ -70,7 +70,7 @@ public interface SmeltingRecipe extends Recipe {
 			.map(ItemIngredient::getExampleItems)
 			.orElseGet(() -> Collections.emptyList())
 			.stream()
-			.map(item -> this.getCraftingResult(item))
+			.map(this::getCraftingResult)
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.findFirst();

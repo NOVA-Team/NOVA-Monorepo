@@ -31,7 +31,6 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static nova.testutils.NovaAssertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author ExE Boss

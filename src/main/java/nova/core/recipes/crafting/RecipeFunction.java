@@ -29,5 +29,15 @@ import java.util.Optional;
  */
 @FunctionalInterface
 public interface RecipeFunction {
+
+	/**
+	 * Do the crafting.
+	 *
+	 * @param craftingGrid The crafting grid.
+	 * @param taggedIngredients The ingredients.
+	 * @param output The factory of the output.
+	 * @return The new item, or an empty optional, if the custom implementation
+	 * of the crafting prohibits this specific crafting task.
+	 */
 	Optional<Item> doCrafting(CraftingGrid craftingGrid, Map<String, Item> taggedIngredients, ItemFactory output);
 }

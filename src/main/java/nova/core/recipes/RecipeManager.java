@@ -71,11 +71,13 @@ public class RecipeManager extends Manager<RecipeManager> {
 		return getRecipeList(type).unmodifiableRecipes;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Recipe> EventListenerHandle<RecipeEvent.Add<T>> whenRecipeAdded(
 		Class<T> type, EventListener<RecipeEvent.Add<T>> listener) {
 		return getRecipeList(type).events.on(RecipeEvent.Add.class).bind(listener);
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Recipe> EventListenerHandle<RecipeEvent.Remove<T>> whenRecipeRemoved(
 		Class<T> type, EventListener<RecipeEvent.Remove<T>> listener) {
 		return getRecipeList(type).events.on(RecipeEvent.Remove.class).bind(listener);

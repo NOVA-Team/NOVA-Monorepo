@@ -31,7 +31,6 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static nova.testutils.NovaAssertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author ExE Boss
@@ -53,7 +52,7 @@ public class ShapedCraftingRecipeTest {
     }
 
 	@Test
-	public void testGetExampleOutput() {
+	public void testExampleOutput() {
 		@SuppressWarnings({"unchecked", "rawtypes"})
 		CraftingRecipe recipe = new ShapedCraftingRecipe(item1, new Optional[][]{{Optional.of(ItemIngredient.forItem(item2))}});
 		assertThat(recipe.getExampleOutput()).isPresent().contains(item1.build());

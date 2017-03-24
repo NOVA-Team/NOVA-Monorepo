@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * @author Stan
  * @since 3/02/2015.
  */
-public class OreItemIngredient implements ItemIngredient {
+public class OreItemIngredient extends AbstractIngredient {
 	private final String name;
 
 	public OreItemIngredient(String name) {
@@ -54,18 +54,8 @@ public class OreItemIngredient implements ItemIngredient {
 	}
 
 	@Override
-	public boolean isSubsetOf(ItemIngredient ingredient) {
-		return false;
-	}
-
-	@Override
 	public boolean matches(Item item) {
 		return Game.itemDictionary().get(name).contains(item);
-	}
-
-	@Override
-	public Optional<String> getTag() {
-		return Optional.empty();
 	}
 
 	@Override
@@ -75,7 +65,7 @@ public class OreItemIngredient implements ItemIngredient {
 
 	@Override
 	public String toString() {
-		return String.format("OreIngredient[%s:%s]", getName(), getPossibleItemIds());
+		return String.format("OreItemIngredient[%s:%s]", getName(), getPossibleItemIds());
 	}
 
 	@Override
