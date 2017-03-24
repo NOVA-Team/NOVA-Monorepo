@@ -34,10 +34,12 @@ import java.util.function.Supplier;
 public class ItemManager extends FactoryManager<ItemManager, Item, ItemFactory> {
 
 	private final Supplier<BlockManager> blockManager;
+	private final Supplier<ItemDictionary> itemDictionary;
 
-	private ItemManager(Registry<ItemFactory> itemRegistry, Supplier<BlockManager> blockManager) {
+	private ItemManager(Registry<ItemFactory> itemRegistry, Supplier<BlockManager> blockManager, Supplier<ItemDictionary> itemDictionary) {
 		super(itemRegistry);
 		this.blockManager = blockManager;
+		this.itemDictionary = itemDictionary;
 	}
 
 	/**
@@ -107,6 +109,10 @@ public class ItemManager extends FactoryManager<ItemManager, Item, ItemFactory> 
 	@Override
 	public void init() {
 		Game.events().publish(new Init(this));
+	}
+
+	public ItemDictionary dictionary() {
+		return itemDictionary.get();
 	}
 
 	public class Init extends ManagerEvent<ItemManager> {

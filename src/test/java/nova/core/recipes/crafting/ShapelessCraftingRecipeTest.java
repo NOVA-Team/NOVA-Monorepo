@@ -53,6 +53,21 @@ public class ShapelessCraftingRecipeTest {
     }
 
 	@Test
+	public void testExampleOutput() {
+		CraftingRecipe recipe = new ShapelessCraftingRecipe(item1, ItemIngredient.forItem(item2));
+		assertThat(recipe.getExampleOutput()).isPresent().contains(item1.build());
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testCraftingResult() {
+		CraftingRecipe recipe = new ShapelessCraftingRecipe(item1, ItemIngredient.forItem(item2), ItemIngredient.forItem(item3));
+		assertThat(recipe.getCraftingResult(new FakeCraftingGrid(2, 1, Arrays.copyOf(new Optional<?>[]{
+			Optional.of(item2.build()), Optional.of(item3.build())
+		}, 2, Optional[].class)))).isPresent().contains(item1.build());
+	}
+
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testMatches() {
 		CraftingRecipe recipe = new ShapelessCraftingRecipe(item1, ItemIngredient.forItem(item2), ItemIngredient.forItem(item3));

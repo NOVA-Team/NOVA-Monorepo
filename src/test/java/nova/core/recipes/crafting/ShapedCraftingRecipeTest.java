@@ -53,9 +53,26 @@ public class ShapedCraftingRecipeTest {
     }
 
 	@Test
+	public void testGetExampleOutput() {
+		@SuppressWarnings({"unchecked", "rawtypes"})
+		CraftingRecipe recipe = new ShapedCraftingRecipe(item1, new Optional[][]{{Optional.of(ItemIngredient.forItem(item2))}});
+		assertThat(recipe.getExampleOutput()).isPresent().contains(item1.build());
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testCraftingResult() {
+		CraftingRecipe recipe = new ShapedCraftingRecipe(item1, "A- A", ItemIngredient.forItem(item2));
+		assertThat(recipe.getCraftingResult(new FakeCraftingGrid(2, 2, Arrays.copyOf(new Optional<?>[]{
+			Optional.of(item2.build()), Optional.empty(),
+			Optional.empty(), Optional.of(item2.build())
+		}, 4, Optional[].class)))).isPresent().contains(item1.build());
+	}
+
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testMatches() {
-		CraftingRecipe recipe = new ShapedCraftingRecipe(item1, "A- A", false, ItemIngredient.forItem(item2));
+		CraftingRecipe recipe = new ShapedCraftingRecipe(item1, "A- A", ItemIngredient.forItem(item2));
 
 		// 2x2
 		//  non-mirrored
@@ -194,6 +211,76 @@ public class ShapedCraftingRecipeTest {
 
 	@Test
 	@SuppressWarnings("unchecked")
+	public void testMatchesMultiIngredient() {
+		CraftingRecipe recipe = new ShapedCraftingRecipe(item1, "AB-BA", ItemIngredient.forItem(item2), ItemIngredient.forItem(item3));
+
+		// 2x2
+		//  non-mirrored
+		assertThat(recipe.matches(new FakeCraftingGrid(2, 2, Arrays.copyOf(new Optional<?>[]{
+			Optional.of(item2.build()), Optional.of(item3.build()),
+			Optional.of(item3.build()), Optional.of(item2.build())
+		}, 4, Optional[].class)))).isTrue();
+
+		//  mirrored
+		assertThat(recipe.matches(new FakeCraftingGrid(2, 2, Arrays.copyOf(new Optional<?>[]{
+			Optional.of(item3.build()), Optional.of(item2.build()),
+			Optional.of(item2.build()), Optional.of(item3.build())
+		}, 4, Optional[].class)))).isFalse();
+
+		// 3x3
+		//  non-mirrored
+		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
+			Optional.of(item2.build()), Optional.of(item3.build()), Optional.empty(),
+			Optional.of(item3.build()), Optional.of(item2.build()), Optional.empty(),
+			Optional.empty(), Optional.empty(), Optional.empty()
+		}, 9, Optional[].class)))).isTrue();
+
+		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
+			Optional.empty(), Optional.of(item2.build()), Optional.of(item3.build()),
+			Optional.empty(), Optional.of(item3.build()), Optional.of(item2.build()),
+			Optional.empty(), Optional.empty(), Optional.empty()
+		}, 9, Optional[].class)))).isTrue();
+
+		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
+			Optional.empty(), Optional.empty(), Optional.empty(),
+			Optional.of(item2.build()), Optional.of(item3.build()), Optional.empty(),
+			Optional.of(item3.build()), Optional.of(item2.build()), Optional.empty()
+		}, 9, Optional[].class)))).isTrue();
+
+		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
+			Optional.empty(), Optional.empty(), Optional.empty(),
+			Optional.empty(), Optional.of(item2.build()), Optional.of(item3.build()),
+			Optional.empty(), Optional.of(item3.build()), Optional.of(item2.build())
+		}, 9, Optional[].class)))).isTrue();
+
+		//  mirrored
+		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
+			Optional.of(item3.build()), Optional.of(item2.build()), Optional.empty(),
+			Optional.of(item2.build()), Optional.of(item3.build()), Optional.empty(),
+			Optional.empty(), Optional.empty(), Optional.empty()
+		}, 9, Optional[].class)))).isFalse();
+
+		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
+			Optional.empty(), Optional.of(item3.build()), Optional.of(item2.build()),
+			Optional.empty(), Optional.of(item2.build()), Optional.of(item3.build()),
+			Optional.empty(), Optional.empty(), Optional.empty()
+		}, 9, Optional[].class)))).isFalse();
+
+		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
+			Optional.empty(), Optional.empty(), Optional.empty(),
+			Optional.of(item3.build()), Optional.of(item2.build()), Optional.empty(),
+			Optional.of(item2.build()), Optional.of(item3.build()), Optional.empty()
+		}, 9, Optional[].class)))).isFalse();
+
+		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
+			Optional.empty(), Optional.empty(), Optional.empty(),
+			Optional.empty(), Optional.of(item3.build()), Optional.of(item2.build()),
+			Optional.empty(), Optional.of(item2.build()), Optional.of(item3.build()),
+		}, 9, Optional[].class)))).isFalse();
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
 	public void testMatchesMultiIngredientMirrored() {
 		CraftingRecipe recipe = new ShapedCraftingRecipe(item1, "AB-BA", true, ItemIngredient.forItem(item2), ItemIngredient.forItem(item3));
 
@@ -260,73 +347,5 @@ public class ShapedCraftingRecipeTest {
 			Optional.empty(), Optional.of(item3.build()), Optional.of(item2.build()),
 			Optional.empty(), Optional.of(item2.build()), Optional.of(item3.build()),
 		}, 9, Optional[].class)))).isTrue();
-	}
-
-	@Test
-	@SuppressWarnings("unchecked")
-	public void testMatchesMultiIngredient() {
-		CraftingRecipe recipe = new ShapedCraftingRecipe(item1, "AB-BA", false, ItemIngredient.forItem(item2), ItemIngredient.forItem(item3));
-
-		// 2x2
-		assertThat(recipe.matches(new FakeCraftingGrid(2, 2, Arrays.copyOf(new Optional<?>[]{
-			Optional.of(item2.build()), Optional.of(item3.build()),
-			Optional.of(item3.build()), Optional.of(item2.build())
-		}, 4, Optional[].class)))).isTrue();
-
-		assertThat(recipe.matches(new FakeCraftingGrid(2, 2, Arrays.copyOf(new Optional<?>[]{
-			Optional.of(item3.build()), Optional.of(item2.build()),
-			Optional.of(item2.build()), Optional.of(item3.build())
-		}, 4, Optional[].class)))).isFalse();
-
-		// 3x3
-		//  non-mirrored
-		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
-			Optional.of(item2.build()), Optional.of(item3.build()), Optional.empty(),
-			Optional.of(item3.build()), Optional.of(item2.build()), Optional.empty(),
-			Optional.empty(), Optional.empty(), Optional.empty()
-		}, 9, Optional[].class)))).isTrue();
-
-		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
-			Optional.empty(), Optional.of(item2.build()), Optional.of(item3.build()),
-			Optional.empty(), Optional.of(item3.build()), Optional.of(item2.build()),
-			Optional.empty(), Optional.empty(), Optional.empty()
-		}, 9, Optional[].class)))).isTrue();
-
-		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
-			Optional.empty(), Optional.empty(), Optional.empty(),
-			Optional.of(item2.build()), Optional.of(item3.build()), Optional.empty(),
-			Optional.of(item3.build()), Optional.of(item2.build()), Optional.empty()
-		}, 9, Optional[].class)))).isTrue();
-
-		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
-			Optional.empty(), Optional.empty(), Optional.empty(),
-			Optional.empty(), Optional.of(item2.build()), Optional.of(item3.build()),
-			Optional.empty(), Optional.of(item3.build()), Optional.of(item2.build())
-		}, 9, Optional[].class)))).isTrue();
-
-		//  mirrored
-		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
-			Optional.of(item3.build()), Optional.of(item2.build()), Optional.empty(),
-			Optional.of(item2.build()), Optional.of(item3.build()), Optional.empty(),
-			Optional.empty(), Optional.empty(), Optional.empty()
-		}, 9, Optional[].class)))).isFalse();
-
-		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
-			Optional.empty(), Optional.of(item3.build()), Optional.of(item2.build()),
-			Optional.empty(), Optional.of(item2.build()), Optional.of(item3.build()),
-			Optional.empty(), Optional.empty(), Optional.empty()
-		}, 9, Optional[].class)))).isFalse();
-
-		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
-			Optional.empty(), Optional.empty(), Optional.empty(),
-			Optional.of(item3.build()), Optional.of(item2.build()), Optional.empty(),
-			Optional.of(item2.build()), Optional.of(item3.build()), Optional.empty()
-		}, 9, Optional[].class)))).isFalse();
-
-		assertThat(recipe.matches(new FakeCraftingGrid(3, 3, Arrays.copyOf(new Optional<?>[]{
-			Optional.empty(), Optional.empty(), Optional.empty(),
-			Optional.empty(), Optional.of(item3.build()), Optional.of(item2.build()),
-			Optional.empty(), Optional.of(item2.build()), Optional.of(item3.build()),
-		}, 9, Optional[].class)))).isFalse();
 	}
 }

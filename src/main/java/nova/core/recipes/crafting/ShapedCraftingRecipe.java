@@ -119,8 +119,6 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 		String[] formatLines = format.split("\\-");
 		int numIngredients = 0;
-		int numIngredientsFirstLine = 0;
-		boolean firstLine = true;
 		int width = 0;
 		for (String formatLine : formatLines) {
 			width = Math.max(width, formatLine.length());
@@ -129,13 +127,10 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 					continue;
 				} else if (c >= 'A' && c <= 'Z') {
 					numIngredients++;
-					if (firstLine)
-						numIngredientsFirstLine++;
 				} else {
 					throw new IllegalArgumentException("Invalid character in format string " + format + ": " + c);
 				}
 			}
-			firstLine = false;
 		}
 
 		this.width = width;
@@ -169,10 +164,29 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	 * Defines a basic crafting recipe, using a 2D ingredients array.
 	 * @param output Output {@link Item} of the recipe
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
+	 */
+	public ShapedCraftingRecipe(ItemFactory output, Optional<ItemIngredient>[][] ingredients) {
+		this(output, (grid, tagged, o) -> Optional.of(o.build()), ingredients, false);
+	}
+
+	/**
+	 * Defines a basic crafting recipe, using a 2D ingredients array.
+	 * @param output Output {@link Item} of the recipe
+	 * @param ingredients {@link ItemIngredient ItemIngredients}
 	 * @param mirrored Whether this recipe is mirrored
 	 */
 	public ShapedCraftingRecipe(ItemFactory output, Optional<ItemIngredient>[][] ingredients, boolean mirrored) {
 		this(output, (grid, tagged, o) -> Optional.of(o.build()), ingredients, mirrored);
+	}
+
+	/**
+	 * Defines a basic crafting recipe, using a 2D ingredients array.
+	 * @param output Output {@link Item} of the recipe
+	 * @param recipeFunction {@link RecipeFunction}
+	 * @param ingredients {@link ItemIngredient ItemIngredients}
+	 */
+	public ShapedCraftingRecipe(ItemFactory output, RecipeFunction recipeFunction, Optional<ItemIngredient>[][] ingredients) {
+		this(output, recipeFunction, ingredients, false);
 	}
 
 	/**
