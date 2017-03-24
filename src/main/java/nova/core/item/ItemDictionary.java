@@ -31,7 +31,7 @@ public class ItemDictionary extends Dictionary<Item> {
 	 * Add an object to the dictionary.
 	 *
 	 * @param key the name of the object.
-	 * @param object the object to register.
+	 * @param factory the item to register.
 	 */
 	public void add(String key, ItemFactory factory) {
 		add(key, factory.build());
@@ -41,7 +41,7 @@ public class ItemDictionary extends Dictionary<Item> {
 	 * Add multiple objects to the dictionary.
 	 *
 	 * @param key the name of the object.
-	 * @param object the objects to register.
+	 * @param factories the items to register.
 	 */
 	@SuppressWarnings("unchecked")
 	public void add(String key, ItemFactory... factories) {
@@ -54,7 +54,7 @@ public class ItemDictionary extends Dictionary<Item> {
 	 * Removes an object from the dictionary.
 	 *
 	 * @param key the name of the object.
-	 * @param object the object to remove.
+	 * @param factory the item to remove.
 	 */
 	public void remove(String key, ItemFactory factory) {
 		remove(key, factory.build());
@@ -64,7 +64,7 @@ public class ItemDictionary extends Dictionary<Item> {
 	 * Removes multiple objects from the dictionary.
 	 *
 	 * @param key the name of the object.
-	 * @param object the objects to remove.
+	 * @param factories the items to remove.
 	 */
 	@SuppressWarnings("unchecked")
 	public void remove(String key, ItemFactory... factories) {

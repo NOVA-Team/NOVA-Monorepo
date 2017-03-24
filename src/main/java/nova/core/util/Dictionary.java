@@ -71,7 +71,7 @@ public class Dictionary<T> {
 	 * Add multiple objects to the dictionary.
 	 *
 	 * @param key the name of the object.
-	 * @param object the objects to register.
+	 * @param objects the objects to register.
 	 */
 	@SuppressWarnings("unchecked")
 	public void add(String key, T... objects) {
@@ -100,7 +100,7 @@ public class Dictionary<T> {
 	 * Removes multiple objects from the dictionary.
 	 *
 	 * @param key the name of the object.
-	 * @param object the objects to remove.
+	 * @param objects the objects to remove.
 	 */
 	@SuppressWarnings("unchecked")
 	public void remove(String key, T... objects) {
