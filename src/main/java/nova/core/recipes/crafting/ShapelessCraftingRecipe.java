@@ -66,7 +66,7 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 
 		outer:
 		for (int i = 0; i < craftingGrid.size(); i++) {
-			Optional<Item> ingredient = craftingGrid.getStack(i);
+			Optional<Item> ingredient = craftingGrid.get(i);
 			if (!ingredient.isPresent()) {
 				continue;
 			}
@@ -130,7 +130,7 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 			ItemIngredient ingredient = ingredients[i];
 			Optional<Item> consumed = ingredient.consumeOnCrafting(matching.inputs[i], craftingGrid);
 			Objects.requireNonNull(consumed, "The result of 'ItemIngredient.consumeOnCrafting' can't be null");
-			craftingGrid.setStack(matching.indices[i], consumed.filter(item -> item.count() > 0));
+			craftingGrid.set(matching.indices[i], consumed.filter(item -> item.count() > 0));
 		}
 	}
 

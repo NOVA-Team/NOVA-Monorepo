@@ -45,22 +45,22 @@ public class NovaCraftingGrid extends InventoryCrafting {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return craftingGrid.getStack(slot).map(ItemConverter.instance()::toNative).orElse(null);
+		return craftingGrid.get(slot).map(ItemConverter.instance()::toNative).orElse(null);
 	}
 
 	@Override
 	public ItemStack getStackInRowAndColumn(int x, int y) {
-		return craftingGrid.getStack(x, y).map(ItemConverter.instance()::toNative).orElse(null);
+		return craftingGrid.get(x, y).map(ItemConverter.instance()::toNative).orElse(null);
 	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack item) {
-		craftingGrid.setStack(slot, Optional.ofNullable(item).map(ItemConverter.instance()::toNova));
+		craftingGrid.set(slot, Optional.ofNullable(item).map(ItemConverter.instance()::toNova));
 	}
 
 	@Override
 	public ItemStack decrStackSize(int slot, int count) {
-		Optional<Item> optionalItem = craftingGrid.getStack(slot);
+		Optional<Item> optionalItem = craftingGrid.get(slot);
 		if (!optionalItem.isPresent() || count == 0) {
 			return null;
 		}
@@ -68,14 +68,14 @@ public class NovaCraftingGrid extends InventoryCrafting {
 		Item item = optionalItem.get();
 		int added = -item.addCount(-count);
 		if (item.count() == 0) {
-			craftingGrid.setStack(slot, Optional.empty());
+			craftingGrid.set(slot, Optional.empty());
 		}
 		return ItemConverter.instance().toNative(item.withAmount(added));
 	}
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot) {
-		return craftingGrid.getStack(slot).map(ItemConverter.instance()::toNative).orElse(null);
+		return craftingGrid.get(slot).map(ItemConverter.instance()::toNative).orElse(null);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class NovaCraftingGrid extends InventoryCrafting {
 	public void clear() {
 		super.clear();
 		for (int i = 0; i < craftingGrid.size(); i++) {
-			craftingGrid.setStack(i, Optional.empty());
+			craftingGrid.set(i, Optional.empty());
 		}
 	}
 }

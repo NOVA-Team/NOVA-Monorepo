@@ -47,12 +47,12 @@ public class CraftingGridDummy implements CraftingGrid {
 	}
 
 	@Override
-	public Optional<Item> getStack(int slot) {
+	public Optional<Item> get(int slot) {
 		return Optional.empty();
 	}
 
 	@Override
-	public boolean setStack(int slot, Optional<Item> Item) {
+	public boolean set(int slot, Optional<Item> Item) {
 		return false;
 	}
 
@@ -67,12 +67,12 @@ public class CraftingGridDummy implements CraftingGrid {
 	}
 
 	@Override
-	public Optional<Item> getStack(int x, int y) {
+	public Optional<Item> get(int x, int y) {
 		return Optional.empty();
 	}
 
 	@Override
-	public boolean setStack(int x, int y, Optional<Item> Item) {
+	public boolean set(int x, int y, Optional<Item> Item) {
 		return false;
 	}
 

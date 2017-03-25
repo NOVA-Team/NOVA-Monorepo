@@ -443,14 +443,14 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 		@Override
 		public Optional<Item> getStack(CraftingGrid craftingGrid, int ingredient) {
-			return craftingGrid.getStack(
+			return craftingGrid.get(
 				offsetX + posx[ingredient],
 				offsetY + posy[ingredient]);
 		}
 
 		@Override
 		public void setStack(CraftingGrid craftingGrid, int ingredient, Optional<Item> value) {
-			craftingGrid.setStack(
+			craftingGrid.set(
 				offsetX + posx[ingredient],
 				offsetY + posy[ingredient],
 				value);
@@ -466,14 +466,14 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 		@Override
 		public Optional<Item> getStack(CraftingGrid craftingGrid, int ingredient) {
-			return craftingGrid.getStack(
+			return craftingGrid.get(
 				offsetX + getWidth() - posx[ingredient] - 1,
 				offsetY + posy[ingredient]);
 		}
 
 		@Override
 		public void setStack(CraftingGrid craftingGrid, int ingredient, Optional<Item> value) {
-			craftingGrid.setStack(
+			craftingGrid.set(
 				offsetX + getWidth() - posx[ingredient] - 1,
 				offsetY + posy[ingredient],
 				value);
