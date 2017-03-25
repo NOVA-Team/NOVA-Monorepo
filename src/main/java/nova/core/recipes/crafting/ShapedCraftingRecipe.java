@@ -55,12 +55,12 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	 * This class contains an optimized recipe resolution algorithm.
      *
      * This algorithms works as follows:
-     * A: During construction, the 2D ingredients array is transformed to a flat list of ingredients and their positions
-     * B: During recipe resolution, the first non-empty crafting grid spot is searched
-     * C: That position marks the position of the recipe inside the crafting grid (a 2x2 recipe has 4 possible positions in a 3x3 crafting grid)
-     * D: The list of ingredients is run over and filled into an array for later processing
-     * E: If any of the ingredients doesn't match, the crafting is rejected
-     * F: For mirrored recipes B-E are repeated in the mirrored direction
+     *  A: During construction, the 2D ingredients array is transformed to a flat list of ingredients and their positions
+     *  B: During recipe resolution, the first non-empty crafting grid spot is searched
+     *  C: That position marks the position of the recipe inside the crafting grid (a 2x2 recipe has 4 possible positions in a 3x3 crafting grid)
+     *  D: The list of ingredients is run over and filled into an array for later processing
+     *  E: If any of the ingredients doesn't match, the crafting is rejected
+     *  F: For mirrored recipes B-E are repeated in the mirrored direction
      */
 
 	private final int width;
@@ -166,7 +166,7 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 	 * @param ingredients {@link ItemIngredient ItemIngredients}
 	 */
 	public ShapedCraftingRecipe(ItemFactory output, Optional<ItemIngredient>[][] ingredients) {
-		this(output, (grid, tagged, o) -> Optional.of(o.build()), ingredients, false);
+		this(output, ingredients, false);
 	}
 
 	/**
@@ -290,18 +290,9 @@ public class ShapedCraftingRecipe implements CraftingRecipe {
 
 		for (int i = 0; i < ingredients.length; i++) {
 			Item original = mapping.items[i];
-			Item consumed = ingredients[i].consumeOnCrafting(original, craftingGrid);
+			Optional<Item> consumed = ingredients[i].consumeOnCrafting(original, craftingGrid);
 			Objects.requireNonNull(consumed, "The result of 'ItemIngredient.consumeOnCrafting' can't be null");
-
-			// -- only works if Item is immutable
-			//if (original == consumed)
-			//    continue;
-
-			if (consumed.count() == 0) {
-				consumed = null;
-			}
-
-			mapping.setStack(craftingGrid, i, Optional.ofNullable(consumed));
+			mapping.setStack(craftingGrid, i, consumed.filter(item -> item.count() > 0));
 		}
 	}
 

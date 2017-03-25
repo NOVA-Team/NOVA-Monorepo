@@ -29,7 +29,7 @@ import nova.wrappertests.NovaLauncherTestFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 /**
  * @author ExE Boss
@@ -127,9 +127,12 @@ public class SpecificItemIngredientTest {
 
 	@Test
 	public void testEquals() {
-		assertThat(ItemIngredient.forItem(item1)).isEqualTo(ItemIngredient.forItem(item1));
+		ItemIngredient ingredient = ItemIngredient.forItem(item1);
+		assertThat(ingredient).isEqualTo(ingredient);
 		assertThat(ItemIngredient.forItem(item2)).isEqualTo(ItemIngredient.forItem(item2));
 		assertThat(ItemIngredient.forItem(item3)).isEqualTo(ItemIngredient.forItem(item3));
+		assertThat(ingredient).isNotEqualTo(null);
+		assertThat(ingredient).isNotEqualTo(ItemIngredient.forDictionary("ore"));
 	}
 
 	@Test

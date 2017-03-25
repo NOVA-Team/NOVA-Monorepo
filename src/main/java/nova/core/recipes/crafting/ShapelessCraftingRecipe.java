@@ -105,6 +105,9 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 	@Override
 	public Optional<Item> getCraftingResult(CraftingGrid craftingGrid) {
 		RecipeMatching matching = matchShapeless(ingredients, craftingGrid);
+		if (matching == null) {
+			return Optional.empty();
+		}
 
 		Map<String, Item> map = new HashMap<>();
 		for (int i = 0; i < ingredients.length; i++) {
@@ -119,12 +122,15 @@ public class ShapelessCraftingRecipe implements CraftingRecipe {
 	@Override
 	public void consumeItems(CraftingGrid craftingGrid) {
 		RecipeMatching matching = matchShapeless(ingredients, craftingGrid);
+		if (matching == null) {
+			return;
+		}
 
 		for (int i = 0; i < ingredients.length; i++) {
 			ItemIngredient ingredient = ingredients[i];
-			Item consumed = ingredient.consumeOnCrafting(matching.inputs[i], craftingGrid);
+			Optional<Item> consumed = ingredient.consumeOnCrafting(matching.inputs[i], craftingGrid);
 			Objects.requireNonNull(consumed, "The result of 'ItemIngredient.consumeOnCrafting' can't be null");
-			craftingGrid.setStack(matching.indices[i], Optional.ofNullable(consumed));
+			craftingGrid.setStack(matching.indices[i], consumed.filter(item -> item.count() > 0));
 		}
 	}
 

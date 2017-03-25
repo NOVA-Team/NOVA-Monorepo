@@ -130,7 +130,7 @@ public interface ItemIngredient {
 	 *
 	 * @param original ingredient
 	 * @param craftingGrid {@link CraftingGrid} used
-	 * @return Resulting {@link Item}
+	 * @return Resulting {@link Item}, or an empty optional if the item was empty.
 	 */
-	Item consumeOnCrafting(Item original, CraftingGrid craftingGrid);
+	Optional<Item> consumeOnCrafting(Item original, CraftingGrid craftingGrid);
 }

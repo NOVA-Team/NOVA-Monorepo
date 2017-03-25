@@ -26,7 +26,7 @@ import nova.core.recipes.ingredient.ItemIngredient;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 /**
  * @author ExE Boss
@@ -66,5 +66,11 @@ public class BasicSmeltingRecipeTest {
 		SmeltingRecipe recipe = new BasicSmeltingRecipe(item1, ItemIngredient.forItem(item2));
 		assertThat(recipe.matches(item2.build())).isTrue();
 		assertThat(recipe.matches(item3.build())).isFalse();
+	}
+
+	@Test
+	public void testInput() {
+		SmeltingRecipe recipe = new BasicSmeltingRecipe(item1, ItemIngredient.forItem(item2));
+		assertThat(recipe.getInput()).isPresent().contains(ItemIngredient.forItem(item2));
 	}
 }

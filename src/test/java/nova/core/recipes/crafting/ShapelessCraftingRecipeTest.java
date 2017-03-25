@@ -52,6 +52,13 @@ public class ShapelessCraftingRecipeTest {
     }
 
 	@Test
+	public void testIngredients() {
+		ShapelessCraftingRecipe recipe = new ShapelessCraftingRecipe(item1, ItemIngredient.forItem(item2));
+		assertThat(recipe.size()).isEqualTo(1);
+		assertThat(recipe.getIngredients()).hasSize(1).containsExactly(ItemIngredient.forItem(item2));
+	}
+
+	@Test
 	public void testExampleOutput() {
 		CraftingRecipe recipe = new ShapelessCraftingRecipe(item1, ItemIngredient.forItem(item2));
 		assertThat(recipe.getExampleOutput()).isPresent().contains(item1.build());
@@ -64,6 +71,19 @@ public class ShapelessCraftingRecipeTest {
 		assertThat(recipe.getCraftingResult(new FakeCraftingGrid(2, 1, Arrays.copyOf(new Optional<?>[]{
 			Optional.of(item2.build()), Optional.of(item3.build())
 		}, 2, Optional[].class)))).isPresent().contains(item1.build());
+	}
+
+	@Test
+	public void testConsumeItems() {
+		CraftingRecipe recipe = new ShapelessCraftingRecipe(item1, ItemIngredient.forItem(item2), ItemIngredient.forItem(item3));
+		@SuppressWarnings("unchecked")
+		CraftingGrid cg = new FakeCraftingGrid(2, 2, Arrays.copyOf(new Optional<?>[]{
+			Optional.empty(), Optional.of(item3.build()),
+			Optional.of(item2.build()), Optional.empty()
+		}, 4, Optional[].class));
+		assertThat(cg.iterator()).hasSize(2).containsExactly(item3.build(), item2.build());
+		recipe.consumeItems(cg);
+		assertThat(cg.stream().iterator()).isEmpty();
 	}
 
 	@Test

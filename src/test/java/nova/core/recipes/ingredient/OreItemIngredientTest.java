@@ -101,9 +101,12 @@ public class OreItemIngredientTest {
 
 	@Test
 	public void testEquals() {
-		assertThat(ItemIngredient.forDictionary("ore")) .isEqualTo(ItemIngredient.forDictionary("ore"));
+		ItemIngredient ingredient = ItemIngredient.forDictionary("ore");
+		assertThat(ingredient).isEqualTo(ingredient);
 		assertThat(ItemIngredient.forDictionary("ore1")).isEqualTo(ItemIngredient.forDictionary("ore1"));
 		assertThat(ItemIngredient.forDictionary("ore2")).isEqualTo(ItemIngredient.forDictionary("ore2"));
+		assertThat(ingredient).isNotEqualTo(null);
+		assertThat(ingredient).isNotEqualTo(ItemIngredient.forItem(item1));
 	}
 
 	@Test

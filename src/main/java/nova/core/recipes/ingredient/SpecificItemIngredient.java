@@ -66,8 +66,10 @@ public class SpecificItemIngredient extends AbstractIngredient {
 	}
 
 	@Override
-	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
-		return original.withAmount(original.count() - 1);
+	public Optional<Item> consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
+		return Optional.of(original)
+			.filter(item -> item.count() > 1)
+			.map(item -> item.withAmount(original.count() - 1));
 	}
 
 	@Override
