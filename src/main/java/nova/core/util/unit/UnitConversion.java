@@ -35,24 +35,27 @@ public class UnitConversion {
 
 	private final Unit unit1, unit2;
 	private final double ratio, reverseRatio;
+	private final double offset;
 	private final UnitConversion reverse;
 
-	private UnitConversion(Unit unit1, Unit unit2, double ratio) {
+	private UnitConversion(Unit unit1, Unit unit2, double ratio, double offset) {
 		this.unit1 = unit1;
 		this.unit2 = unit2;
 		this.ratio = ratio;
 		this.reverseRatio = 1/ratio;
-		this.reverse = new UnitConversion(unit1, unit2, this.reverseRatio, this);
+		this.offset = offset;
+		this.reverse = new UnitConversion(unit1, unit2, this.reverseRatio, -offset / ratio, this);
 	}
-	private UnitConversion(Unit unit1, Unit unit2, double ratio, UnitConversion reverse) {
+	private UnitConversion(Unit unit1, Unit unit2, double ratio, double offset, UnitConversion reverse) {
 		this.unit1 = unit1;
 		this.unit2 = unit2;
 		this.ratio = ratio;
 		this.reverse = reverse;
+		this.offset = offset;
 		this.reverseRatio = this.reverse.ratio;
 	}
 	public double convert(double value) {
-		return (this.reverseRatio == 0 && this.ratio != 0 ? value / ratio : value * this.reverseRatio);
+		return (this.reverseRatio == 0 && this.ratio != 0 ? value / ratio : value * this.reverseRatio) + offset;
 	}
 
 	public Unit unit1() {
@@ -83,6 +86,19 @@ public class UnitConversion {
 	 * @throws IllegalArgumentException If ratio is 0
 	 */
 	public static UnitConversion registerConversion(Unit unit1, Unit unit2, double ratio) throws IllegalArgumentException {
+		return registerConversion(unit1, unit2, ratio, 0);
+	}
+
+	/**
+	 *
+	 * @param unit1 The unit to convert from
+	 * @param unit2 The unit to convert to
+	 * @param ratio unit1/unit2
+	 * @param offset the amount which to add to/subtract from the result of ratio conversion
+	 * @return The UnitConversion instance.
+	 * @throws IllegalArgumentException If ratio is 0
+	 */
+	public static UnitConversion registerConversion(Unit unit1, Unit unit2, double ratio, double offset) throws IllegalArgumentException {
 		if (ratio == 0)
 			throw new IllegalArgumentException("Ratio cannot be 0");
 
@@ -99,7 +115,7 @@ public class UnitConversion {
 			CONVERSION.put(unit2, conv2);
 		}
 
-		UnitConversion uc = new UnitConversion(unit1, unit2, ratio);
+		UnitConversion uc = new UnitConversion(unit1, unit2, ratio, offset);
 
 		conv1.put(unit2, uc);
 		conv2.put(unit1, uc.reverse());
@@ -115,5 +131,11 @@ public class UnitConversion {
 	 */
 	public static void calculateConversions() {
 		// TODO
+	}
+
+	static {
+		registerConversion(Unit.CELSIUS, Unit.KELVIN, 1, 273.15);
+		registerConversion(Unit.CELSIUS, Unit.FAHRENHEIT, 9/5, 32);
+		registerConversion(Unit.KELVIN, Unit.FAHRENHEIT, 9/5, -459.67);
 	}
 }

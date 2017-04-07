@@ -40,6 +40,10 @@ public final class Unit implements Identifiable, Translateable {
 	public static final Unit GRAM = getOrCreateUnit("nova:gram", "g", UnitPrefix.KILO);
 	// TODO: Define More Units
 
+	public static final Unit CELSIUS = getOrCreateUnit("nova:celsius", "°C");
+	public static final Unit KELVIN = getOrCreateUnit("nova:kelvin", "K");
+	public static final Unit FAHRENHEIT = getOrCreateUnit("nova:fahrenheit", "°F");
+
 	public static final Unit AMPERE = getOrCreateUnit("nova:ampere", "I");
 	public static final Unit AMP_HOUR = getOrCreateUnit("nova:amp_hour", "Ah");
 	public static final Unit VOLTAGE = getOrCreateUnit("nova:voltage", "V");
