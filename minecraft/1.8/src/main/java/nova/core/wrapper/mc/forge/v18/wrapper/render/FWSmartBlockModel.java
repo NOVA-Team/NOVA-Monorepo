@@ -32,8 +32,9 @@ import nova.core.block.Block;
 import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
+import nova.core.wrapper.mc.forge.v18.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
-import nova.internal.core.Game;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +73,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 	public ISmartBlockModel handleBlockState(IBlockState state) {
 		FWBlock block = (FWBlock) state.getBlock();
 
-		Block blockInstance = block.getBlockInstance(block.lastExtendedWorld, Game.natives().toNova(block.lastExtendedStatePos));
+		Block blockInstance = block.getBlockInstance(block.lastExtendedWorld, VectorConverter.instance().toNova(block.lastExtendedStatePos));
 
 		if (blockInstance.components.has(StaticRenderer.class)) {
 			return new FWSmartBlockModel(blockInstance);
@@ -84,7 +85,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 	//Item rendering
 	@Override
 	public ISmartItemModel handleItemState(ItemStack stack) {
-		Item item = Game.natives().toNova(stack);
+		Item item = ItemConverter.instance().toNova(stack);
 
 		if (item.components.has(Renderer.class) || block.components.has(Renderer.class)) {
 			return new FWSmartBlockModel(block, item);

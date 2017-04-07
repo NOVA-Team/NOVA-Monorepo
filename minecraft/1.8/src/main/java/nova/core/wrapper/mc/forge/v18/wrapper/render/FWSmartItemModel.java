@@ -28,7 +28,7 @@ import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 import nova.core.component.renderer.Renderer;
 import nova.core.item.Item;
-import nova.internal.core.Game;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 
 import java.util.List;
 import javax.vecmath.Vector3f;
@@ -56,7 +56,7 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 	//Item rendering
 	@Override
 	public ISmartItemModel handleItemState(ItemStack stack) {
-		Item item = Game.natives().toNova(stack);
+		Item item = ItemConverter.instance().toNova(stack);
 
 		if (item.components.has(Renderer.class)) {
 			return new FWSmartItemModel(item);

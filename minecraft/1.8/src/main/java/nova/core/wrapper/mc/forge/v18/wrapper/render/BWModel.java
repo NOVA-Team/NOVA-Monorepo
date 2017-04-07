@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.IBlockAccess;
 import nova.core.render.model.CustomModel;
 import nova.core.render.model.MeshModel;
 import nova.core.render.texture.EntityTexture;
@@ -39,11 +40,22 @@ import java.util.Optional;
  */
 public class BWModel extends MeshModel {
 
+	/**
+	 * Completes this rendering for a block.
+	 */
+	public void render(IBlockAccess blockAccess) {
+		render(Optional.of(blockAccess), Optional.empty());
+	}
+
 	public void render() {
-		render(Optional.empty());
+		render(Optional.empty(), Optional.empty());
 	}
 
 	public void render(Optional<RenderManager> entityRenderManager) {
+		render(Optional.empty(), entityRenderManager);
+	}
+
+	public void render(Optional<IBlockAccess> access, Optional<RenderManager> entityRenderManager) {
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer worldRenderer = tessellator.getWorldRenderer();
 		worldRenderer.setColorRGBA_F(1, 1, 1, 1);
