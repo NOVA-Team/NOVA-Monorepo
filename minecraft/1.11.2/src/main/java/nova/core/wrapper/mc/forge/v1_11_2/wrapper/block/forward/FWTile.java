@@ -30,26 +30,21 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
-import nova.core.util.EnumSelector;
 import nova.core.wrapper.mc.forge.v1_11_2.network.netty.MCNetworkManager;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.NovaCapabilityProvider;
 import nova.internal.core.Game;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.io.IOException;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.HashMap;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -58,11 +53,6 @@ import javax.annotation.Nullable;
  * @author Calclavia
  */
 public class FWTile extends TileEntity implements NovaCapabilityProvider {
-
-	private final EnumMap<Direction, Map<Capability<?>, Object>> capabilities = new EnumMap<>(Direction.class); {
-		for (Direction facing : Direction.values())
-			capabilities.put(facing, new HashMap<>());
-	}
 
 	protected String blockID;
 	protected Block block;
@@ -136,37 +126,18 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 	}
 
 	@Override
-	public boolean hasCapabilities() {
-		return capabilities.values().parallelStream().map(map -> map.keySet().parallelStream()).findAny().isPresent();
-	}
-
-	@Override
-	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<Direction> facing) {
-		if (facing.allowsAll()) {
-			if (capabilities.get(Direction.UNKNOWN).containsKey(capability))
-				throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
-
-			capabilities.get(Direction.UNKNOWN).put(capability, capabilityInstance);
-		} else {
-			facing.forEach(enumFacing -> {
-				Map<Capability<?>, Object> caps = capabilities.get(enumFacing);
-
-				if (caps.containsKey(capability))
-					throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
-
-				caps.put(capability, capabilityInstance);
-			});
-		}
-		return capabilityInstance;
-	}
-
-	@Override
 	public boolean hasCapability(Capability<?> capability, Direction direction) {
-		return Optional.of(direction)
-			.filter(d -> d != Direction.UNKNOWN)
-			.map(capabilities::get)
-			.map(caps -> caps.containsValue(capability))
-			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).containsValue(capability));
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+//			return
+//				block.components.has(FluidProvider.class, direction) ||
+//				block.components.has(FluidConsumer.class, direction) ||
+//				block.components.has(FluidHandler.class, direction) ||
+//				block instanceof SidedTankProvider;
+		} else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return false; // TODO: implement
+		}
+
+		return false;
 	}
 
 	@Override
@@ -177,11 +148,19 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> Optional<T> getCapability(Capability<T> capability, Direction direction) {
-		return Optional.ofNullable((T) Optional.of(direction)
-			.filter(d -> d != Direction.UNKNOWN)
-			.map(capabilities::get)
-			.map(caps -> caps.get(capability))
-			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).get(capability)));
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+//			return (Optional<T>) Optional.of(new FWFluidHandler(
+//				block.components.getOp(FluidProvider.class, direction),
+//				block.components.getOp(FluidConsumer.class, direction),
+//				block.components.getOp(FluidHandler.class, direction),
+//				Optional.of(block)
+//					.filter(b -> b instanceof SidedTankProvider)
+//					.map(b -> (SidedTankProvider) b), direction)).filter(FWFluidHandler::isPresent);
+		} else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return Optional.empty(); // TODO: implement
+		}
+
+		return Optional.empty();
 	}
 
 	@Override

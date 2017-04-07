@@ -35,6 +35,10 @@ import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
 import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
+import nova.core.component.Component;
+import nova.core.component.fluid.FluidConsumer;
+import nova.core.component.fluid.FluidHandler;
+import nova.core.component.fluid.FluidProvider;
 import nova.core.component.misc.Collider;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.component.transform.BlockTransform;
@@ -43,6 +47,7 @@ import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
 import nova.core.sound.Sound;
+import nova.core.util.Direction;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
@@ -59,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BWBlock extends Block implements Storable {
@@ -159,6 +165,30 @@ public class BWBlock extends Block implements Storable {
 
 		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, block());
 		Game.events().publish(event);
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends Component> Set<T> getSidedComponent(Class<T> component, Set<T> instances, Direction direction) {
+		if (!tile().isPresent()) {
+			return Collections.emptySet();
+		}
+
+		if (FluidProvider.class.isAssignableFrom(component) ||
+			FluidConsumer.class.isAssignableFrom(component) ||
+			FluidHandler.class.isAssignableFrom(component)) {
+//			return (Set<T>) tile()
+//				.map(t -> t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, DirectionConverter.instance().toNative(direction)))
+//				.map(BWFluidHandler::new)
+//				.map(Collections::singleton)
+//				.orElse(Collections.emptySet());
+		} else { // TODO: Add Support for inventories
+			WrapperEvent.CapabilityToComponent<T> event = new WrapperEvent.CapabilityToComponent<>(tile().get(), component, instances, direction);
+			Game.events().publish(event);
+			if (!event.instances.isEmpty())
+				return event.instances;
+		}
+
+		return Collections.emptySet();
 	}
 
 	@Override

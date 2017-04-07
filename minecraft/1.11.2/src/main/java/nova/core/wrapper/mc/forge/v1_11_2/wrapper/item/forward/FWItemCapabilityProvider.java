@@ -22,7 +22,6 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.forward;
 import net.minecraftforge.common.capabilities.Capability;
 import nova.core.item.Item;
 import nova.core.util.Direction;
-import nova.core.util.EnumSelector;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.FWCapabilityProvider;
 
 import java.util.Optional;
@@ -35,19 +34,8 @@ public class FWItemCapabilityProvider extends FWCapabilityProvider {
 	private final NovaItem item;
 
 	public FWItemCapabilityProvider(Item item) {
+		super(item);
 		this.item = new NovaItem(item);
-	}
-
-	@Override
-	public boolean hasCapabilities() {
-		return true;
-	}
-
-	@Override
-	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<Direction> directions) {
-		if (capability == NovaItem.CAPABILITY)
-			throw new IllegalArgumentException("Already has capability 'NovaItem'");
-		return super.addCapability(capability, capabilityInstance, directions);
 	}
 
 	@Override

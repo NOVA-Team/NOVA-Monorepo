@@ -25,7 +25,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.items.CapabilityItemHandler;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
@@ -35,7 +37,6 @@ import nova.core.entity.EntityFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
-import nova.core.util.EnumSelector;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
@@ -43,24 +44,17 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.NovaCapabil
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 
 /**
  * Entity wrapper
  * @author Calclavia
  */
 public class FWEntity extends net.minecraft.entity.Entity implements IEntityAdditionalSpawnData, NovaCapabilityProvider {
-
-	private final EnumMap<Direction, Map<Capability<?>, Object>> capabilities = new EnumMap<>(Direction.class); {
-		for (Direction facing : Direction.values())
-			capabilities.put(facing, new HashMap<>());
-	}
 
 	protected final EntityTransform transform;
 	protected Entity wrapped;
@@ -237,37 +231,18 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	}
 
 	@Override
-	public boolean hasCapabilities() {
-		return capabilities.values().parallelStream().map(map -> map.keySet().parallelStream()).findAny().isPresent();
-	}
-
-	@Override
-	public <T> T addCapability(Capability<T> capability, T capabilityInstance, EnumSelector<Direction> facing) {
-		if (facing.allowsAll()) {
-			if (capabilities.get(Direction.UNKNOWN).containsKey(capability))
-				throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
-
-			capabilities.get(Direction.UNKNOWN).put(capability, capabilityInstance);
-		} else {
-			facing.forEach(enumFacing -> {
-				Map<Capability<?>, Object> caps = capabilities.get(enumFacing);
-
-				if (caps.containsKey(capability))
-					throw new IllegalArgumentException("Already has capability " + capabilityInstance.getClass());
-
-				caps.put(capability, capabilityInstance);
-			});
-		}
-		return capabilityInstance;
-	}
-
-	@Override
 	public boolean hasCapability(Capability<?> capability, Direction direction) {
-		return Optional.of(direction)
-			.filter(d -> d != Direction.UNKNOWN)
-			.map(capabilities::get)
-			.map(caps -> caps.containsValue(capability))
-			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).containsValue(capability));
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+//			return
+//				wrapped.components.has(FluidProvider.class) ||
+//				wrapped.components.has(FluidConsumer.class) ||
+//				wrapped.components.has(FluidHandler.class) ||
+//				wrapped instanceof SidedTankProvider;
+		} else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return false; // TODO: implement
+		}
+
+		return false;
 	}
 
 	@Override
@@ -278,11 +253,19 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> Optional<T> getCapability(Capability<T> capability, Direction direction) {
-		return Optional.ofNullable((T) Optional.of(direction)
-			.filter(d -> d != Direction.UNKNOWN)
-			.map(capabilities::get)
-			.map(caps -> caps.get(capability))
-			.orElseGet(() -> capabilities.get(Direction.UNKNOWN).get(capability)));
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+//			return (Optional<T>) Optional.of(new FWFluidHandler(
+//				wrapped.components.getOp(FluidProvider.class),
+//				wrapped.components.getOp(FluidConsumer.class),
+//				wrapped.components.getOp(FluidHandler.class),
+//				Optional.of(wrapped)
+//					.filter(e -> e instanceof SidedTankProvider)
+//					.map(e -> (SidedTankProvider) e), direction)).filter(FWFluidHandler::isPresent);
+		} else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return Optional.empty(); // TODO: implement
+		}
+
+		return Optional.empty();
 	}
 
 	@Override

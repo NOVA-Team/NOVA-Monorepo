@@ -21,7 +21,9 @@
 package nova.core.wrapper.mc.forge.v1_11_2.util;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import nova.core.block.Block;
+import nova.core.component.Component;
 import nova.core.entity.Entity;
 import nova.core.event.BlockEvent;
 import nova.core.event.bus.CancelableEvent;
@@ -37,7 +39,10 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.backward.BWItem;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Events for wrappers to hook into
@@ -141,6 +146,22 @@ public class WrapperEvent {
 		public FWEntityCreate(Entity novaEntity, FWEntity mcEntity) {
 			this.novaEntity = novaEntity;
 			this.mcEntity = mcEntity;
+		}
+	}
+
+	public static class CapabilityToComponent<NOVA extends Component> extends Event {
+		public final ICapabilityProvider capabilities;
+		public final Class<NOVA> component;
+		public final Set<NOVA> defaultInstances;
+		public final Set<NOVA> instances;
+		public final Direction direction;
+
+		public CapabilityToComponent(ICapabilityProvider capabilities, Class<NOVA> component, Set<NOVA> defaultInstances, Direction direction) {
+			this.capabilities = capabilities;
+			this.component = component;
+			this.defaultInstances = Collections.unmodifiableSet(defaultInstances);
+			this.instances = new HashSet<>();
+			this.direction = direction;
 		}
 	}
 }
