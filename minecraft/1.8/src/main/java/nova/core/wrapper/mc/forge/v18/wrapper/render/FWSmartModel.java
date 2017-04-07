@@ -35,7 +35,7 @@ import nova.core.render.model.Vertex;
 import nova.core.util.Direction;
 import nova.core.util.math.MathUtil;
 import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
-import nova.internal.core.Game;
+import nova.core.wrapper.mc.forge.v18.wrapper.DirectionConverter;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Arrays;
@@ -66,6 +66,7 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 	}
 
 	public static int[] vertexToInts(Vertex vertex, TextureAtlasSprite texture, Vector3D normal) {
+		// TODO: Allow serialization of arbitrary vertex formats.
 		return new int[] {
 			Float.floatToRawIntBits((float) vertex.vec.getX()),
 			Float.floatToRawIntBits((float) vertex.vec.getY()),
@@ -89,11 +90,11 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 						MeshModel meshModel = (MeshModel) model;
 						return meshModel.faces
 							.stream()
-							.filter(f -> f.vertices.size() > 2) // Only render faces with at least 3 vertices
+							.filter(f -> f.vertices.size() >= 3) // Only render faces with at least 3 vertices
 							.map(
 								face -> {
 									TextureAtlasSprite texture = face.texture.map(RenderUtility.instance::getTexture)
-										.orElse(Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite());
+										.orElseGet(Minecraft.getMinecraft().getTextureMapBlocks()::getMissingSprite);
 									List<int[]> vertexData = face.vertices
 										.stream()
 										.map(v -> vertexToInts(v, texture, face.normal))
@@ -105,8 +106,8 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 
 									int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
 									//TODO: The facing might be wrong        // format.getNextOffset() is in byte count per vertex, and we are deling with ints, so we don't need to multiply by 4
-									return new BakedQuad(Arrays.copyOf(data, MathUtil.min(data.length, format.getNextOffset())), -1,
-										Game.natives().toNative(Direction.fromVector(face.normal)));
+									return new BakedQuad(Arrays.copyOf(data, MathUtil.min(data.length, format.getNextOffset())),
+										-1, DirectionConverter.instance().toNative(Direction.fromVector(face.normal)));
 								}
 							);
 					}
@@ -144,7 +145,8 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 
 	@Override
 	public TextureAtlasSprite getTexture() {
-		return null;
+		// Interface doesn't have the @Nullable annotation
+		return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
 	}
 
 	@Override
