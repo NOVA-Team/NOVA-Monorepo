@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -20,25 +20,24 @@
 
 package nova.core.component.exception;
 
-import nova.core.component.Component;
-import nova.core.util.ArrayUtil;
-import nova.core.util.exception.NovaException;
+import nova.core.component.Category;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Exception thrown when an error to do with components occurs
+ * @author ExE Boss
  */
-public class ComponentException extends NovaException {
+public class ComponentExceptionTest {
 
-	private static final long serialVersionUID = 2017_03_18L;
+	@Test
+	public void testComponentException() {
+		ComponentException ex = new ComponentException("Object %s is %s", Category.class, Object.class);
+		assertThat(ex.getMessage()).isEqualTo("Object " + Category.class + " is " + Object.class);
+		assertThat(ex.component).isEqualTo(Category.class);
 
-	public Class<?> component;
-
-	public ComponentException(String message, Class<?> component, Object... parameters) {
-		super(message, ArrayUtil.join(component, parameters));
-		this.component = component;
-	}
-
-	public ComponentException(String message, Component component, Object... parameters) {
-		this(message, component.getClass(), parameters);
+		ex = new ComponentException("Component %s is %s", new Category("Test"), Object.class);
+		assertThat(ex.getMessage()).isEqualTo("Component " + Category.class + " is " + Object.class);
+		assertThat(ex.component).isEqualTo(Category.class);
 	}
 }

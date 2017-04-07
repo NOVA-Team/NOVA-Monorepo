@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -18,27 +18,27 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.component.exception;
+package nova.core.util;
 
-import nova.core.component.Component;
-import nova.core.util.ArrayUtil;
-import nova.core.util.exception.NovaException;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Exception thrown when an error to do with components occurs
+ * @author ExE Boss
  */
-public class ComponentException extends NovaException {
+public class ArrayUtilTest {
 
-	private static final long serialVersionUID = 2017_03_18L;
-
-	public Class<?> component;
-
-	public ComponentException(String message, Class<?> component, Object... parameters) {
-		super(message, ArrayUtil.join(component, parameters));
-		this.component = component;
-	}
-
-	public ComponentException(String message, Component component, Object... parameters) {
-		this(message, component.getClass(), parameters);
+	@Test
+	public void testJoin() {
+		assertThat(ArrayUtil.join("foo", new String[]{"bar", "baz"}))
+			.hasSize(3)
+			.containsExactly("foo", "bar", "baz");
+		assertThat(ArrayUtil.join(new String[]{"foo", "bar"}, "baz"))
+			.hasSize(3)
+			.containsExactly("foo", "bar", "baz");
+		assertThat(ArrayUtil.join(new String[]{"foo", "bar"}, new String[]{"baz", "str"}))
+			.hasSize(4)
+			.containsExactly("foo", "bar", "baz", "str");
 	}
 }

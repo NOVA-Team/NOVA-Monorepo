@@ -50,7 +50,7 @@ public abstract class ComponentProvider<CM extends ComponentMap> {
 	@SuppressWarnings("unchecked")
 	public <C extends ComponentMap> ComponentProvider(Class<C> componentsClass) {
 		this.components = (CM) InjectionUtil.newInstance(componentsClass,
-			clazz -> ComponentProvider.class == clazz ? Optional.of(this) : Optional.empty());
+			clazz -> clazz.isAssignableFrom(getClass()) ? Optional.of(this) : Optional.empty());
 	}
 
 	/**
