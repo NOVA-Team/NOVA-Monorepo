@@ -82,6 +82,7 @@ public class MeshModel extends Model {
 		faces.add(Face);
 	}
 
+	@Override
 	public Set<Model> flatten(MatrixStack matrixStack) {
 		Set<Model> models = new HashSet<>();
 
@@ -110,7 +111,7 @@ public class MeshModel extends Model {
 	}
 
 	@Override
-	protected Model newModel(String name) {
+	protected MeshModel newModel(String name) {
 		return new MeshModel(name);
 	}
 
