@@ -20,6 +20,7 @@
 
 package nova.core.wrapper.mc.forge.v17.wrapper.assets;
 
+import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;
 import nova.core.util.Identifiable;
 
@@ -27,11 +28,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author ExE Boss
  */
-public interface NovaResourcePack<FileType> extends Identifiable {
+public interface NovaResourcePack<FileType> extends Identifiable, IResourcePack {
 
 	default String transform(ResourceLocation rl) {
 		return transform(String.format("assets/%s/%s", rl.getResourceDomain(), toAbsolutePath(rl.getResourcePath())));
@@ -41,9 +43,12 @@ public interface NovaResourcePack<FileType> extends Identifiable {
 		return toAbsolutePath(path.toLowerCase().replace('\\', '/').replaceFirst("^assets/minecraft", "assets/" + getID()));
 	}
 
+	@Override
 	default String getPackName() {
 		return getClass().getSimpleName() + ':' + getID();
 	}
+
+	Set<ResourceLocation> getLanguageFiles();
 
 	InputStream getInputStreamCaseInsensitive(String path) throws IOException;
 

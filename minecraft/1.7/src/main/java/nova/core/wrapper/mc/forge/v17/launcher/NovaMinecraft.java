@@ -172,6 +172,7 @@ public class NovaMinecraft {
 			launcher.getLoadedModMap().entrySet().stream().filter(e -> e.getValue().getClass().isAnnotationPresent(ConfigHolder.class))
 				.forEach(e -> Configuration.load(new File(evt.getModConfigurationDirectory(), e.getKey().id() + ".hocon"), e.getValue()));
 
+			proxy.loadLanguage(Game.language());
 			Game.language().init();
 			Game.render().init();
 			Game.blocks().init();
