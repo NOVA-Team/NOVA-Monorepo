@@ -41,6 +41,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class NovaFileResourcePack extends FileResourcePack implements NovaResourcePack<ZipEntry> {
+	private static final Pattern LANG_PATTERN = Pattern.compile("^assets/([^/]+)/(lang/[a-zA-Z0-9-]+\\.lang)$", Pattern.CASE_INSENSITIVE);
 	private final String modid;
 	private final String[] domains;
 	private ZipFile resourcePackZipFile;
@@ -124,12 +125,10 @@ public class NovaFileResourcePack extends FileResourcePack implements NovaResour
 
 	@Override
 	public Set<ResourceLocation> getLanguageFiles() {
-		Pattern langPattern = Pattern.compile("^assets/([^/]+)/(lang/[a-zA-Z0-9-]+\\.lang)$", Pattern.CASE_INSENSITIVE);
-
 		try {
 			return getResourcePackZipFile().stream()
 				.map(e -> {
-					Matcher m = langPattern.matcher(e.getName());
+					Matcher m = LANG_PATTERN.matcher(e.getName());
 					if (!m.matches())
 						return null;
 					return new ResourceLocation(m.group(1), m.group(2));
