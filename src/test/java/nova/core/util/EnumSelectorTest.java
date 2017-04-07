@@ -169,6 +169,14 @@ public class EnumSelectorTest {
 	}
 
 	@Test
+	public void testSize() {
+		assertThat(enumSelectorExample1.size()).isEqualTo(2);
+		assertThat(enumSelectorExample2.size()).isEqualTo(EnumExample.values().length - 2);
+		assertThat(enumSelectorExample3.size()).isEqualTo(EnumExample.values().length);
+		assertThat(enumSelectorExample4.size()).isEqualTo(0);
+	}
+
+	@Test
  	public void testCannotLock() {
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("Cannot lock EnumSelector without specifying default behaviour.");
