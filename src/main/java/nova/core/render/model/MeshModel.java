@@ -99,7 +99,10 @@ public class MeshModel extends Model {
 
 		transformedModel.faces.stream().forEach(f -> {
 				f.normal = TransformUtil.transform(f.normal, normalMatrix);
-				f.vertices.forEach(v -> v.vec = matrixStack.apply(v.vec));
+				f.vertices.forEach(v -> {
+					v.vec = matrixStack.apply(v.vec);
+					v.normal = v.normal.map(n -> TransformUtil.transform(n, normalMatrix));
+				});
 			}
 		);
 
