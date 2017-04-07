@@ -37,6 +37,7 @@ public final class Transformers implements IClassTransformer {
 	public Transformers() {
 		registerTransformer(new ChunkTransformer(), "net.minecraft.world.chunk.Chunk");
 		registerTransformer(new TileEntityTransformer(), "net.minecraft.tileentity.TileEntity");
+		registerTransformer(new GameDataTransformer(), "cpw.mods.fml.common.registry.GameData");
 	}
 
 	public static void registerTransformer(Transformer transformer, String... classes) {
