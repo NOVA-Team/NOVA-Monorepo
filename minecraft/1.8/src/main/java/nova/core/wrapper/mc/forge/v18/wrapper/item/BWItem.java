@@ -20,10 +20,14 @@
 
 package nova.core.wrapper.mc.forge.v18.wrapper.item;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
 import nova.core.retention.Storable;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWBakedModel;
+
 
 /**
  * @author Stan
@@ -42,6 +46,12 @@ public class BWItem extends Item implements Storable {
 		this.item = item;
 		this.meta = meta;
 		this.tag = tag;
+
+		components.add(new StaticRenderer())
+			.onRender(model -> {
+				model.addChild(new BWBakedModel(Minecraft.getMinecraft().getRenderItem()
+					.getItemModelMesher().getItemModel(makeItemStack(count()))));
+			});
 	}
 
 	public net.minecraft.item.Item getItem() {

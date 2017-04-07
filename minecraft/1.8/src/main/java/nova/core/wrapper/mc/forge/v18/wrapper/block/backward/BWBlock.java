@@ -22,6 +22,10 @@ package nova.core.wrapper.mc.forge.v18.wrapper.block.backward;
 
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -34,8 +38,11 @@ import nova.core.block.Block;
 import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
+import nova.core.component.renderer.DynamicRenderer;
+import nova.core.component.renderer.StaticRenderer;
 import nova.core.component.transform.BlockTransform;
 import nova.core.item.ItemFactory;
+import nova.core.render.model.CustomModel;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
@@ -44,10 +51,15 @@ import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.world.BWWorld;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWBakedModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -97,9 +109,50 @@ public class BWBlock extends Block implements Storable {
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			});
+		//TODO: Set selection bounds
+		components.add(new StaticRenderer())
+			.onRender(model -> {
+			switch (block.getRenderType()) {
+				default:
+					// rendering of other type
+				case 1:
+					// fluid rendering
+					model.addChild(new CustomModel(self -> {
+						GL11.glPushMatrix();
+						DoubleBuffer buffer = BufferUtils.createDoubleBuffer(4 * 4);
+						double[] flatArray = Arrays.stream(self.matrix.getMatrix().getData())
+							.flatMapToDouble(Arrays::stream)
+							.toArray();
+						buffer.put(flatArray);
+						buffer.position(0);
+						GL11.glMultMatrix(buffer);
+						Minecraft.getMinecraft().getBlockRendererDispatcher()
+							.renderBlock(blockState(), new BlockPos(x(), y(), z()), getMcBlockAccess(), Tessellator.getInstance().getWorldRenderer());
+						GL11.glPopMatrix();
+					}));
+					break;
+				case 2:
+					// chest rendering
+					//  Handled by DynamicRenderer
+					break;
+				case 3:
+					// model rendering
+					model.addChild(new BWBakedModel(Minecraft.getMinecraft().getBlockRendererDispatcher()
+						.getModelFromBlockState(blockState(), getMcBlockAccess(), new BlockPos(x(), y(), z())), DefaultVertexFormats.BLOCK));
+					break;
+			}
+			});
+		getTileEntity().ifPresent(tileEntity -> {
+			components.add(new DynamicRenderer())
+				.onRender(model -> {
+					model.addChild(new CustomModel(self -> {
+						TileEntityRendererDispatcher.instance.renderTileEntityAt(tileEntity, position().getX(), position().getY(), position().getZ(), 0);
+					}));
+				});
+			});
+
 		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
 		Game.events().publish(event);
-		//TODO: Set selection bounds
 	}
 
 	@Override

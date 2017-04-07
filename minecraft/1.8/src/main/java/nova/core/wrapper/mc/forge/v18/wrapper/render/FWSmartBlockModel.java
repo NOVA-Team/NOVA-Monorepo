@@ -24,7 +24,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
@@ -37,9 +36,8 @@ import nova.core.item.ItemBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.internal.core.Game;
 
-import javax.vecmath.Vector3f;
-
 import java.util.List;
+import javax.vecmath.Vector3f;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -50,6 +48,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 	private final Block block;
 	private final boolean isItem;
 
+	@SuppressWarnings("deprecation")
 	public FWSmartBlockModel(Block block, boolean isItem) {
 		super();
 		this.block = block;
@@ -62,7 +61,7 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 
 	//Block rendering
 	@Override
-	public IBakedModel handleBlockState(IBlockState state) {
+	public ISmartBlockModel handleBlockState(IBlockState state) {
 		FWBlock block = (FWBlock) state.getBlock();
 
 		Block blockInstance = block.getBlockInstance(block.lastExtendedWorld, Game.natives().toNova(block.lastExtendedStatePos));
@@ -74,9 +73,9 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 		return new FWEmptyModel();
 	}
 
-	//Itemblock rendering
+	//Item rendering
 	@Override
-	public IBakedModel handleItemState(ItemStack stack) {
+	public ISmartItemModel handleItemState(ItemStack stack) {
 		ItemBlock item = Game.natives().toNova(stack);
 
 		if (item.components.has(Renderer.class) || block.components.has(Renderer.class)) {

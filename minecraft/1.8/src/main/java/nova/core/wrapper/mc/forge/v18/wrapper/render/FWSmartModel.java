@@ -25,6 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
@@ -33,7 +34,11 @@ import nova.core.render.model.Model;
 import nova.core.render.model.Vertex;
 import nova.core.util.Direction;
 import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWBakedModel;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,15 +50,24 @@ import java.util.stream.Stream;
  */
 public abstract class FWSmartModel implements IFlexibleBakedModel {
 
+	protected static final VertexFormat NOVA_VERTEX_FORMAT = DefaultVertexFormats.ITEM;
+
 	protected final VertexFormat format;
 	// Default item transforms. Can be changed in subclasses.
+	@SuppressWarnings("deprecation")
 	protected ItemCameraTransforms itemCameraTransforms = ItemCameraTransforms.DEFAULT;
 
-	public FWSmartModel() {
-		this.format = new VertexFormat();
+	protected FWSmartModel(VertexFormat format) {
+		this.format = format;
 	}
 
-	public static int[] vertexToInts(Vertex vertex, TextureAtlasSprite texture) {
+	public FWSmartModel() {
+		this(NOVA_VERTEX_FORMAT);
+	}
+
+	public static int[] vertexToInts(Vertex vertex, TextureAtlasSprite texture, Vector3D normal) {
+		if (vertex.normal.isPresent())
+			normal = vertex.normal.get();
 		return new int[] {
 			Float.floatToRawIntBits((float) vertex.vec.getX()),
 			Float.floatToRawIntBits((float) vertex.vec.getY()),
@@ -61,7 +75,9 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 			vertex.color.rgba(),
 			Float.floatToRawIntBits(texture.getInterpolatedU(16 * vertex.uv.getX())),
 			Float.floatToRawIntBits(texture.getInterpolatedV(16 * vertex.uv.getY())),
-			0
+			((((byte)(normal.getX() * 127)) & 0xFF) |
+			((((byte)(normal.getY() * 127)) & 0xFF) << 8) |
+			((((byte)(normal.getZ() * 127)) & 0xFF) << 16))
 		};
 	}
 
@@ -71,7 +87,12 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 			.stream()
 			.flatMap(
 				model -> {
-					if (model instanceof MeshModel) {
+					if (model instanceof BWBakedModel) {
+						return Stream.concat(((BWBakedModel) model).getGeneralQuads().stream(),
+							Arrays.stream(Direction.VALID_DIRECTIONS)
+								.map(((BWBakedModel) model)::getFaceQuads)
+								.flatMap(Collection::stream));
+					} else if (model instanceof MeshModel) {
 						MeshModel meshModel = (MeshModel) model;
 						return meshModel.faces
 							.stream()
@@ -81,7 +102,7 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 										.orElse(Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite());
 									List<int[]> vertexData = face.vertices
 										.stream()
-										.map(v -> vertexToInts(v, texture))
+										.map(v -> vertexToInts(v, texture, face.normal))
 										.collect(Collectors.toList());
 
 									int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
@@ -128,6 +149,7 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public ItemCameraTransforms getItemCameraTransforms() {
 		return itemCameraTransforms;
 	}
