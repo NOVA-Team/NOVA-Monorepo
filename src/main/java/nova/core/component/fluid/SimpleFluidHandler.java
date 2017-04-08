@@ -38,37 +38,37 @@ import java.util.stream.Collectors;
  * @author Calclavia
  */
 @SidedComponent
-public class FluidHandler extends Component implements FluidIO, Storable {
+public class SimpleFluidHandler extends Component implements FluidIO, Storable {
 
 	protected Set<Tank> tanks = new HashSet<>();
 	@Store
 	protected boolean resizable;
 
-	public static FluidHandler singleTank() {
-		return new FluidHandler(false, new TankSimple(Fluid.BUCKET_VOLUME));
+	public static SimpleFluidHandler singleTank() {
+		return new SimpleFluidHandler(false, new TankSimple(Fluid.BUCKET_VOLUME));
 	}
 
-	public static FluidHandler singleTank(int capacity) {
-		return new FluidHandler(false, new TankSimple(capacity));
+	public static SimpleFluidHandler singleTank(int capacity) {
+		return new SimpleFluidHandler(false, new TankSimple(capacity));
 	}
 
-	public static FluidHandler singleTank(Predicate<Fluid> fluidFilter) {
-		return new FluidHandler(false, new TankSimple(Fluid.BUCKET_VOLUME).setFluidFilter(fluidFilter));
+	public static SimpleFluidHandler singleTank(Predicate<Fluid> fluidFilter) {
+		return new SimpleFluidHandler(false, new TankSimple(Fluid.BUCKET_VOLUME).setFluidFilter(fluidFilter));
 	}
 
-	public static FluidHandler singleTank(int capacity, Predicate<Fluid> fluidFilter) {
-		return new FluidHandler(false, new TankSimple(capacity).setFluidFilter(fluidFilter));
+	public static SimpleFluidHandler singleTank(int capacity, Predicate<Fluid> fluidFilter) {
+		return new SimpleFluidHandler(false, new TankSimple(capacity).setFluidFilter(fluidFilter));
 	}
 
-	public FluidHandler() {
+	public SimpleFluidHandler() {
 		this.resizable = true;
 	}
 
-	public FluidHandler(Tank... tanks) {
+	public SimpleFluidHandler(Tank... tanks) {
 		this(true, tanks);
 	}
 
-	public FluidHandler(boolean resizable, Tank... tanks) {
+	public SimpleFluidHandler(boolean resizable, Tank... tanks) {
 		this.tanks.addAll(Arrays.asList(tanks));
 		this.resizable = resizable;
 		if (resizable) {
