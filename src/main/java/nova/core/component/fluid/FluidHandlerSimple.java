@@ -20,7 +20,6 @@
 
 package nova.core.component.fluid;
 
-import nova.core.component.Component;
 import nova.core.component.SidedComponent;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
@@ -79,7 +78,7 @@ public class FluidHandlerSimple extends FluidHandler implements Storable {
 
 	@Override
 	public Set<Tank> getTanks() {
-		return tanks;
+		return Collections.unmodifiableSet(tanks);
 	}
 
 	@Override

@@ -38,6 +38,7 @@ public class TankSimple implements Tank, Storable, Syncable {
 	private Optional<Fluid> containedFluid = Optional.empty();
 	private OptionalInt capacity;
 	private Predicate<Fluid> fluidFilter = f -> true;
+	private Optional<String> name = Optional.empty();
 
 	public TankSimple() {
 		this.capacity = OptionalInt.empty();
@@ -52,9 +53,19 @@ public class TankSimple implements Tank, Storable, Syncable {
 		return this;
 	}
 
+	public TankSimple removeTag() {
+		this.name = Optional.empty();
+		return this;
+	}
+
 	public TankSimple setCapacity(int capacity) {
 		this.capacity = OptionalInt.of(capacity);
 		setFluid(containedFluid);
+		return this;
+	}
+
+	public TankSimple setTag(String name) {
+		this.name = Optional.of(name);
 		return this;
 	}
 
@@ -172,5 +183,10 @@ public class TankSimple implements Tank, Storable, Syncable {
 	@Override
 	public void write(Packet packet) {
 		containedFluid = Optional.of((Fluid) packet.readStorable());
+	}
+
+	@Override
+	public Optional<String> getTag() {
+		return name;
 	}
 }

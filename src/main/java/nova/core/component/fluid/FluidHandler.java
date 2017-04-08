@@ -45,6 +45,10 @@ public abstract class FluidHandler extends Component implements FluidIO, TankPro
 		return FluidHandlerSimple.simpleSingleTank(capacity, fluidFilter);
 	}
 
+	public static FluidHandler multiTank(Tank... tanks) {
+		return new FluidHandlerSimple(false, tanks);
+	}
+
 	@Override
 	public int getFluidAmount() {
 		return getTanks().stream().mapToInt(Tank::getFluidAmount).sum();

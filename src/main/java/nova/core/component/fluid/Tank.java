@@ -82,4 +82,7 @@ public interface Tank extends FluidIO {
 		return false;
 	}
 
+	default Optional<String> getTag() {
+		return Optional.empty();
+	}
 }
