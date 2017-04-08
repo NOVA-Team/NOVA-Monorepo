@@ -27,6 +27,7 @@ import nova.core.retention.Storable;
 import nova.core.retention.Store;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -38,42 +39,47 @@ import java.util.stream.Collectors;
  * @author Calclavia
  */
 @SidedComponent
-public class SimpleFluidHandler extends Component implements FluidIO, Storable {
+public class FluidHandlerSimple extends FluidHandler implements Storable {
 
 	protected Set<Tank> tanks = new HashSet<>();
 	@Store
 	protected boolean resizable;
 
-	public static SimpleFluidHandler singleTank() {
-		return new SimpleFluidHandler(false, new TankSimple(Fluid.BUCKET_VOLUME));
+	static FluidHandlerSimple simpleSingleTank() {
+		return new FluidHandlerSimple(false, new TankSimple(Fluid.BUCKET_VOLUME));
 	}
 
-	public static SimpleFluidHandler singleTank(int capacity) {
-		return new SimpleFluidHandler(false, new TankSimple(capacity));
+	static FluidHandlerSimple simpleSingleTank(int capacity) {
+		return new FluidHandlerSimple(false, new TankSimple(capacity));
 	}
 
-	public static SimpleFluidHandler singleTank(Predicate<Fluid> fluidFilter) {
-		return new SimpleFluidHandler(false, new TankSimple(Fluid.BUCKET_VOLUME).setFluidFilter(fluidFilter));
+	static FluidHandlerSimple simpleSingleTank(Predicate<Fluid> fluidFilter) {
+		return new FluidHandlerSimple(false, new TankSimple(Fluid.BUCKET_VOLUME).setFluidFilter(fluidFilter));
 	}
 
-	public static SimpleFluidHandler singleTank(int capacity, Predicate<Fluid> fluidFilter) {
-		return new SimpleFluidHandler(false, new TankSimple(capacity).setFluidFilter(fluidFilter));
+	static FluidHandlerSimple simpleSingleTank(int capacity, Predicate<Fluid> fluidFilter) {
+		return new FluidHandlerSimple(false, new TankSimple(capacity).setFluidFilter(fluidFilter));
 	}
 
-	public SimpleFluidHandler() {
+	public FluidHandlerSimple() {
 		this.resizable = true;
 	}
 
-	public SimpleFluidHandler(Tank... tanks) {
+	public FluidHandlerSimple(Tank... tanks) {
 		this(true, tanks);
 	}
 
-	public SimpleFluidHandler(boolean resizable, Tank... tanks) {
+	public FluidHandlerSimple(boolean resizable, Tank... tanks) {
 		this.tanks.addAll(Arrays.asList(tanks));
 		this.resizable = resizable;
 		if (resizable) {
 			this.tanks.removeIf(Tank::isEmpty);
 		}
+	}
+
+	@Override
+	public Set<Tank> getTanks() {
+		return tanks;
 	}
 
 	@Override
@@ -173,35 +179,5 @@ public class SimpleFluidHandler extends Component implements FluidIO, Storable {
 		Storable.super.load(data);
 		tanks.removeIf(t -> t instanceof Storable);
 		tanks.addAll(data.getCollection("tanks"));
-	}
-
-	@Override
-	public int getFluidAmount() {
-		return tanks.stream().mapToInt(FluidIO::getFluidAmount).sum();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return tanks.isEmpty() || tanks.stream().allMatch(FluidIO::isEmpty);
-	}
-
-	@Override
-	public boolean hasFluid() {
-		return !tanks.isEmpty() && tanks.stream().anyMatch(FluidIO::hasFluid);
-	}
-
-	@Override
-	public boolean hasFluidType(String fluidID) {
-		return !tanks.isEmpty() && tanks.stream().anyMatch(t -> t.hasFluidType(fluidID));
-	}
-
-	@Override
-	public boolean hasFluidType(Fluid sample) {
-		return !tanks.isEmpty() && tanks.stream().anyMatch(t -> t.hasFluidType(sample));
-	}
-
-	@Override
-	public boolean hasFluidType(FluidFactory sample) {
-		return !tanks.isEmpty() && tanks.stream().anyMatch(t -> t.hasFluidType(sample));
 	}
 }
