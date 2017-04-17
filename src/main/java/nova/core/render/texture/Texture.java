@@ -23,6 +23,8 @@ import nova.core.util.Identifiable;
 import nova.core.util.math.Vector2DUtil;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
+import java.util.Optional;
+
 /**
  * A texture has a file location. All texture must be included in
  * /assets/domain/textures/*
@@ -49,6 +51,10 @@ public class Texture extends Asset implements Identifiable {
 		this.dimension = Vector2DUtil.ONE;
 		this.minUV = minUV;
 		this.maxUV = maxUV;
+	}
+	
+	public Optional<Texture> optional() {
+		return Optional.of(this);
 	}
 
 	@Override
