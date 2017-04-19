@@ -32,7 +32,7 @@ import java.util.Optional;
  *
  * @author ExE Boss
  */
-public interface Translateable {
+public interface Translatable {
 
 	/**
 	 * Gets the unlocalized name of this object.
@@ -65,8 +65,8 @@ public interface Translateable {
 				Object value = field.get(this);
 				if (value instanceof Optional)
 					value = ((Optional<?>) value).map(o -> (Object) o).orElse("empty");
-				if (value instanceof Translateable)
-					replacements.put(key, ((Translateable) value).getLocalizedName());
+				if (value instanceof Translatable)
+					replacements.put(key, ((Translatable) value).getLocalizedName());
 				else
 					replacements.put(key, Objects.toString(value));
 				field.setAccessible(false);
