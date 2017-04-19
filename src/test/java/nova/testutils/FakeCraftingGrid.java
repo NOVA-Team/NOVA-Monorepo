@@ -98,17 +98,17 @@ public class FakeCraftingGrid implements CraftingGrid {
 	}
 
 	@Override
-	public Optional<Item> get(int slot) {
+	public Optional<Item> getCrafting(int slot) {
 		return slot >= 0 && slot < size() ? slots[slot] : Optional.empty();
 	}
 
 	@Override
-	public boolean set(int slot, Optional<Item> item) {
+	public boolean setCrafting(int slot, Optional<Item> item) {
 		if (slot >= size() || slot < 0) {
 			return false;
 		}
 
-		Optional<Item> orig = get(slot);
+		Optional<Item> orig = getCrafting(slot);
 		if (orig.equals(item)) {
 			return false;
 		}
@@ -128,20 +128,20 @@ public class FakeCraftingGrid implements CraftingGrid {
 	}
 
 	@Override
-	public Optional<Item> get(int x, int y) {
+	public Optional<Item> getCrafting(int x, int y) {
 		OptionalInt slot = coordsToSlot(x, y);
 		if (slot.isPresent()) {
-			return get(slot.getAsInt());
+			return getCrafting(slot.getAsInt());
 		} else {
 			return Optional.empty();
 		}
 	}
 
 	@Override
-	public boolean set(int x, int y, Optional<Item> item) {
+	public boolean setCrafting(int x, int y, Optional<Item> item) {
 		OptionalInt slot = coordsToSlot(x, y);
 		if (slot.isPresent()) {
-			return set(slot.getAsInt(), item);
+			return setCrafting(slot.getAsInt(), item);
 		} else {
 			return false;
 		}
@@ -199,7 +199,7 @@ public class FakeCraftingGrid implements CraftingGrid {
 		for (int y = 0; y < getHeight(); y++) {
 			StringJoiner sj = new StringJoiner("|", "|", "|");
 			for (int x = 0; x < getWidth(); x++) {
-				sj.add(String.format(itemFormat, get(x, y).map(Identifiable::getID).orElse("<null>")));
+				sj.add(String.format(itemFormat, getCrafting(x, y).map(Identifiable::getID).orElse("<null>")));
 			}
 			sb.append(System.lineSeparator()).append(sj).append(System.lineSeparator()).append(verticalLineSeparator);
 		}

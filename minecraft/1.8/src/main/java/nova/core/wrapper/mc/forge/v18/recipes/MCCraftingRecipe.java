@@ -59,9 +59,9 @@ public class MCCraftingRecipe implements CraftingRecipe {
 		for (int i = 0; i < remainder.length; i++) {
 			Optional<Item> result = Optional.ofNullable(remainder[i]).map(ItemConverter.instance()::toNova);
 			if (!result.isPresent()) {
-				result = craftingGrid.get(i).filter(item -> item.count() > 1).map(item -> item.withAmount(item.count() - 1));
+				result = craftingGrid.getCrafting(i).filter(item -> item.count() > 1).map(item -> item.withAmount(item.count() - 1));
 			}
-			craftingGrid.set(i, result);
+			craftingGrid.setCrafting(i, result);
 		}
 	}
 

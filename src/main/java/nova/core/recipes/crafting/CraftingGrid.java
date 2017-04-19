@@ -57,9 +57,9 @@ public interface CraftingGrid extends Iterable<Item> {
 	 * Gets the item in a specified slot.
 	 * @param slot slot index
 	 * @return the item in the given slot
-	 * @see #get(int, int)
+	 * @see #getCrafting(int, int)
 	 */
-	Optional<Item> get(int slot);
+	Optional<Item> getCrafting(int slot);
 
 	/**
 	 * Gets the item at the given (x, y) position.
@@ -67,9 +67,9 @@ public interface CraftingGrid extends Iterable<Item> {
 	 * @param x x position
 	 * @param y y position
 	 * @return the item at the given position
-	 * @see #get(int)
+	 * @see #getCrafting(int)
 	 */
-	Optional<Item> get(int x, int y);
+	Optional<Item> getCrafting(int x, int y);
 
 	/**
 	 * Modifies the item in the given slot. If the modification is not possible, this method returns false. If modification
@@ -79,31 +79,31 @@ public interface CraftingGrid extends Iterable<Item> {
 	 * largest x and then from smallest y to largest y (natural order). However, not all (x, y) positions need to have
 	 * a corresponding slot.
 	 * @param slot slot to be modified
-	 * @param item the item to be set
+	 * @param item the item to be setCrafting
 	 * @return true if modification was successful, false otherwise
-	 * @see #set(int, int, Optional)
+	 * @see #setCrafting(int, int, Optional)
 	 */
-	boolean set(int slot, Optional<Item> item);
+	boolean setCrafting(int slot, Optional<Item> item);
 
 	/**
 	 * Sets the item at the given (x, y) position.
 	 * @param x x position
 	 * @param y y position
-	 * @param item the item to be set
+	 * @param item the item to be setCrafting
 	 * @return true if the modification is successful, false otherwise
-	 * @see #set(int, Optional)
+	 * @see #setCrafting(int, Optional)
 	 */
-	boolean set(int x, int y, Optional<Item> item);
+	boolean setCrafting(int x, int y, Optional<Item> item);
 
 	/**
 	 * Removes the item in a specified slot.
 	 * @param slot slot index
 	 * @return the previous item in the given slot
-	 * @see #remove(int, int)
+	 * @see #removeCrafting(int, int)
 	 */
-	default Optional<Item> remove(int slot) {
-		Optional<Item> ret = get(slot);
-		set(slot, Optional.empty());
+	default Optional<Item> removeCrafting(int slot) {
+		Optional<Item> ret = CraftingGrid.this.getCrafting(slot);
+		CraftingGrid.this.setCrafting(slot, Optional.empty());
 		return ret;
 	}
 
@@ -112,11 +112,11 @@ public interface CraftingGrid extends Iterable<Item> {
 	 * @param x x position
 	 * @param y y position
 	 * @return the previous item at the position
-	 * @see #remove(int)
+	 * @see #removeCrafting(int)
 	 */
-	default Optional<Item> remove(int x, int y) {
-		Optional<Item> ret = get(x, y);
-		set(x, y, Optional.empty());
+	default Optional<Item> removeCrafting(int x, int y) {
+		Optional<Item> ret = getCrafting(x, y);
+		setCrafting(x, y, Optional.empty());
 		return ret;
 	}
 
@@ -152,7 +152,7 @@ public interface CraftingGrid extends Iterable<Item> {
 
 	/**
 	 * Gets the type of crafting grid. For a crafting recipe, this should return {@link #TYPE_CRAFTING}. Other
-	 * machines or crafting tables (with a separate set of recipes) may return a different value.
+ machines or crafting tables (with a separate setCrafting of recipes) may return a different value.
 	 * @return crafting grid type
 	 */
 	String getType();
@@ -164,7 +164,7 @@ public interface CraftingGrid extends Iterable<Item> {
 	default int countFilledStacks() {
 		int filledStacks = 0;
 		for (int i = 0; i < size(); i++) {
-			if (CraftingGrid.this.get(i).isPresent()) {
+			if (CraftingGrid.this.getCrafting(i).isPresent()) {
 				filledStacks++;
 			}
 		}
@@ -178,7 +178,7 @@ public interface CraftingGrid extends Iterable<Item> {
 	 */
 	default Optional<Item> getFirstNonEmptyItem() {
 		for (int i = 0; i < size(); i++) {
-			Optional<Item> item = get(i);
+			Optional<Item> item = CraftingGrid.this.getCrafting(i);
 			if (item.isPresent()) {
 				return item;
 			}
@@ -195,7 +195,7 @@ public interface CraftingGrid extends Iterable<Item> {
 	default Optional<Vector2D> getFirstNonEmptyPosition() {
 		for (int y = 0; y < getHeight(); y++) {
 			for (int x = 0; x < getWidth(); x++) {
-				if (get(x, y).isPresent()) {
+				if (getCrafting(x, y).isPresent()) {
 					return Optional.of(new Vector2D(x, y));
 				}
 			}

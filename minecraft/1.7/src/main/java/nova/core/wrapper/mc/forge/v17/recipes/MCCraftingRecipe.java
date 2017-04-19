@@ -56,12 +56,12 @@ public class MCCraftingRecipe implements CraftingRecipe {
 	@Override
 	public void consumeItems(CraftingGrid craftingGrid) {
 		for (int i = 0; i < craftingGrid.size(); i++) {
-			Optional<Item> item = craftingGrid.get(i);
+			Optional<Item> item = craftingGrid.getCrafting(i);
 			if (item.isPresent()) {
 				if (item.get().count() > 1) {
 					item.get().addCount(-1);
 				} else {
-					craftingGrid.set(i, Optional.empty());
+					craftingGrid.setCrafting(i, Optional.empty());
 				}
 			}
 		}

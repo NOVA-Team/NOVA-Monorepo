@@ -178,17 +178,17 @@ public class MCCraftingGrid implements CraftingGrid {
 	}
 
 	@Override
-	public Optional<nova.core.item.Item> get(int i) {
+	public Optional<nova.core.item.Item> getCrafting(int i) {
 		return Optional.ofNullable(items[i]);
 	}
 
 	@Override
-	public Optional<nova.core.item.Item> get(int x, int y) {
+	public Optional<nova.core.item.Item> getCrafting(int x, int y) {
 		return Optional.ofNullable(items[y * width + x]);
 	}
 
 	@Override
-	public boolean set(int x, int y, Optional<nova.core.item.Item> item) {
+	public boolean setCrafting(int x, int y, Optional<nova.core.item.Item> item) {
 		//System.out.println("SetStack(" + x + ", " + y + ") " + stack);
 
 		int ix = y * width + x;
@@ -212,7 +212,7 @@ public class MCCraftingGrid implements CraftingGrid {
 	}
 
 	@Override
-	public boolean set(int i, Optional<nova.core.item.Item> item) {
+	public boolean setCrafting(int i, Optional<nova.core.item.Item> item) {
 		//System.out.println("SetStack(" + i + ") " + stack);
 
 		if (item.isPresent()) {

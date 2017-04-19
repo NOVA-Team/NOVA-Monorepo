@@ -41,7 +41,7 @@ public class CraftingGridIterator implements Iterator<Item> {
 	private void findNext() {
 		while (nextPos < grid.size()) {
 			currentPos = nextPos;
-			Optional<Item> o = grid.get(nextPos++);
+			Optional<Item> o = grid.getCrafting(nextPos++);
 			if (o.isPresent()) {
 				next = o.get();
 				return;
@@ -64,6 +64,6 @@ public class CraftingGridIterator implements Iterator<Item> {
 
 	@Override
 	public void remove() {
-		grid.set(currentPos, Optional.empty());
+		grid.setCrafting(currentPos, Optional.empty());
 	}
 }
