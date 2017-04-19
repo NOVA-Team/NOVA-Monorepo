@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 /**
  * Fields annotated with this annotation declare that they
  * should be used as replacement parameters during translation
- * of {@link Translateable} types.
+ * of {@link Translatable} types.
  *
  * @author ExE Boss
  */

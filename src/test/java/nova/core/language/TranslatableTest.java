@@ -31,15 +31,15 @@ import static nova.testutils.NovaAssertions.assertThat;
 /**
  * @author ExE Boss
  */
-public class TranslateableTest {
+public class TranslatableTest {
 
 	LanguageManager languageManager;
-	TranslateableImpl translateable;
+	TranslatableImpl translateable;
 
 	@Before
 	public void setUp() {
 		languageManager = new FakeLanguageManager();
-		translateable = new TranslateableImpl();
+		translateable = new TranslatableImpl();
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class TranslateableTest {
 			.containsEntry("emptyStr", "empty");
 	}
 
-	public class TranslateableImpl implements Translateable {
+	public class TranslatableImpl implements Translatable {
 
 		@Translate
 		public final String key1 = "42";
@@ -74,7 +74,7 @@ public class TranslateableTest {
 		public final String key2 = "24";
 
 		@Translate
-		public final TranslateableOtherImpl other = new TranslateableOtherImpl();
+		public final TranslatableOtherImpl other = new TranslatableOtherImpl();
 
 		@Override
 		public String getUnlocalizedName() {
@@ -87,7 +87,7 @@ public class TranslateableTest {
 		}
 	}
 
-	public class TranslateableOtherImpl implements Translateable {
+	public class TranslatableOtherImpl implements Translatable {
 
 		@Translate
 		public final Optional<String> filledStr = Optional.of("String");
