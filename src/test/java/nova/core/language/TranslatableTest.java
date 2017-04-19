@@ -24,6 +24,7 @@ import nova.wrappertests.depmodules.FakeLanguageModule.FakeLanguageManager;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static nova.testutils.NovaAssertions.assertThat;
@@ -34,32 +35,37 @@ import static nova.testutils.NovaAssertions.assertThat;
 public class TranslatableTest {
 
 	LanguageManager languageManager;
-	TranslatableImpl translateable;
+	TranslatableImpl translatable;
 
 	@Before
 	public void setUp() {
 		languageManager = new FakeLanguageManager();
-		translateable = new TranslatableImpl();
+		translatable = new TranslatableImpl();
 	}
 
 	@Test
 	public void testGetUnlocalizedName() {
-		assertThat(translateable.getUnlocalizedName()).isEqualTo("${replacement with spaces} some text $key1, ${key1}; $other");
+		assertThat(translatable.getUnlocalizedName()).isEqualTo("${replacement with spaces} some text $key1, ${key1}; $other");
 	}
 
 	@Test
 	public void testGetLocalizedName() {
-		assertThat(translateable.getLocalizedName()).isEqualTo("24 some text 42, 42; String empty");
+		assertThat(translatable.getLocalizedName()).isEqualTo("24 some text 42, 42; String empty");
+	}
+
+	@Test
+	public void testError() {
+		assertThat(new TranslatableError().getLocalizedName()).isEqualTo("${I AM ERROR!}");
 	}
 
 	@Test
 	public void testGetReplacements() {
-		assertThat(translateable.getReplacements())
+		assertThat(translatable.getReplacements())
 			.hasSize(3)
 			.containsEntry("key1", "42")
 			.containsEntry("replacement with spaces", "24")
 			.containsEntry("other", "String empty");
-		assertThat(translateable.other.getReplacements())
+		assertThat(translatable.other.getReplacements())
 			.hasSize(2)
 			.containsEntry("filledStr", "String")
 			.containsEntry("emptyStr", "empty");
@@ -98,6 +104,36 @@ public class TranslatableTest {
 		@Override
 		public String getUnlocalizedName() {
 			return "$filledStr $emptyStr";
+		}
+
+		@Override
+		public String getLocalizedName() {
+			return languageManager.translate(this.getUnlocalizedName(), this.getReplacements());
+		}
+	}
+
+	public class TranslatableError implements Translatable {
+
+		@Translate("I AM ERROR!")
+		public final Object brokenToString = new Object() {
+			@Override
+			public String toString() {
+				throw new RuntimeException("TranslatableError.brokenToString.toString() exception thrown") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public synchronized Throwable fillInStackTrace() {
+						Throwable self = super.fillInStackTrace();
+						self.setStackTrace(Arrays.copyOf(self.getStackTrace(), 1));
+						return self;
+					}
+				};
+			}
+		};
+
+		@Override
+		public String getUnlocalizedName() {
+			return "${I AM ERROR!}";
 		}
 
 		@Override
