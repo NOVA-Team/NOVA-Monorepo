@@ -36,6 +36,7 @@ import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
+import nova.core.wrapper.mc.forge.v17.util.WrapUtility;
 import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v17.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
@@ -318,11 +319,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 
 		@Override
 		public String toString() {
-			if (item.getHasSubtypes()) {
-				return net.minecraft.item.Item.itemRegistry.getNameForObject(item) + ":" + meta;
-			} else {
-				return net.minecraft.item.Item.itemRegistry.getNameForObject(item);
-			}
+			return WrapUtility.getItemID(item, meta);
 		}
 	}
 }

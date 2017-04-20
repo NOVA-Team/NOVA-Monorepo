@@ -27,7 +27,6 @@ import nova.core.recipes.ingredient.ItemIngredient;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author ExE Boss
@@ -56,7 +55,9 @@ public interface SmeltingRecipe extends Recipe {
 	 * @return example input
 	 */
 	default Collection<Item> getExampleInput() {
-		return getInput().map(ItemIngredient::getExampleItems).orElseGet(() -> Collections.emptyList());
+		return getInput()
+			.map(ItemIngredient::getExampleItems)
+			.orElseGet(() -> Collections.emptyList());
 	}
 
 	/**
@@ -65,8 +66,14 @@ public interface SmeltingRecipe extends Recipe {
 	 * @return example output
 	 */
 	default Optional<Item> getExampleOutput() {
-		return getInput().map(ItemIngredient::getExampleItems).orElseGet(() -> Collections.emptyList()).stream()
-			.map(item -> this.getCraftingResult(item)).filter(Optional::isPresent).map(Optional::get).findFirst();
+		return getInput()
+			.map(ItemIngredient::getExampleItems)
+			.orElseGet(() -> Collections.emptyList())
+			.stream()
+			.map(this::getCraftingResult)
+			.filter(Optional::isPresent)
+			.map(Optional::get)
+			.findFirst();
 	}
 
 	/**

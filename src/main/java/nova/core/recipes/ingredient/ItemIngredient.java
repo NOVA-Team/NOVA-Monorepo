@@ -118,12 +118,19 @@ public interface ItemIngredient {
 	Optional<String> getTag();
 
 	/**
+	 * Sets the ingredient tag. Ingredients can be tagged to make them easy to read from recipe functions.
+	 *
+	 * @return this instance
+	 */
+	public ItemIngredient withTag(String tag);
+
+	/**
 	 * Performs any necessary actions when this ingredient is consumed due to crafting a single item. May return a
 	 * stack with zero size, but cannot return null.
 	 *
-	 * @param original Ingredient
+	 * @param original ingredient
 	 * @param craftingGrid {@link CraftingGrid} used
-	 * @return Resulting {@link Item}
+	 * @return Resulting {@link Item}, or an empty optional if the item was empty.
 	 */
-	Item consumeOnCrafting(Item original, CraftingGrid craftingGrid);
+	Optional<Item> consumeOnCrafting(Item original, CraftingGrid craftingGrid);
 }

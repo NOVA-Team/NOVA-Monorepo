@@ -18,50 +18,25 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.component.inventory;
+package nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward;
 
-import nova.core.item.Item;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import nova.core.recipes.crafting.CraftingGrid;
 
-import java.util.Iterator;
-import java.util.Optional;
+/**
+ * TODO: complete this class. without it, modded recipes will not work when crafted from NOVA mods.
+ * @author Stan Hebben
+ */
+public class NovaCraftingGridContainer extends Container {
+	private final CraftingGrid craftingGrid;
 
-class InventoryIterator implements Iterator<Item> {
-	private final Inventory inv;
-	private int nextPos;
-	private int currentPos;
-	private Item next = null;
-
-	InventoryIterator(Inventory inv) {
-		this.inv = inv;
-		findNext();
-	}
-
-	private void findNext() {
-		while (nextPos < inv.size()) {
-			currentPos = nextPos;
-			Optional<Item> o = inv.get(nextPos++);
-			if (o.isPresent()) {
-				next = o.get();
-				return;
-			}
-		}
-		next = null;
+	public NovaCraftingGridContainer(CraftingGrid craftingGrid) {
+		this.craftingGrid = craftingGrid;
 	}
 
 	@Override
-	public boolean hasNext() {
-		return next != null;
-	}
-
-	@Override
-	public Item next() {
-		Item current = next;
-		findNext();
-		return current;
-	}
-
-	@Override
-	public void remove() {
-		inv.remove(currentPos);
+	public boolean canInteractWith(EntityPlayer entityPlayer) {
+		return true;
 	}
 }

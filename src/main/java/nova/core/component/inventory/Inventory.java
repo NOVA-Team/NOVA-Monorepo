@@ -89,6 +89,8 @@ public interface Inventory extends Iterable<Item> {
 		int itemsLeft = stack.count();
 		for (int i = 0; i < size(); i++) {
 			itemsLeft = add(i, stack.withAmount(itemsLeft));
+			if (itemsLeft == 0)
+				break;
 		}
 
 		if (itemsLeft != stack.count()) {
@@ -176,10 +178,12 @@ public interface Inventory extends Iterable<Item> {
 		return list;
 	}
 
+	@Override
 	default Iterator<Item> iterator() {
 		return new InventoryIterator(this);
 	}
 
+	@Override
 	default Spliterator<Item> spliterator() {
 		return Spliterators.spliterator(iterator(), size(), Spliterator.NONNULL | Spliterator.ORDERED | Spliterator.SORTED);
 	}

@@ -68,10 +68,23 @@ public class Dictionary<T> {
 	}
 
 	/**
+	 * Add multiple objects to the dictionary.
+	 *
+	 * @param key the name of the object.
+	 * @param objects the objects to register.
+	 */
+	@SuppressWarnings("unchecked")
+	public void add(String key, T... objects) {
+		for (T object : objects) {
+			add(key, object);
+		}
+	}
+
+	/**
 	 * Removes an object from the dictionary.
 	 *
-	 * @param key the name of the object
-	 * @param object the object to remove
+	 * @param key the name of the object.
+	 * @param object the object to remove.
 	 */
 	public void remove(String key, T object) {
 		if (!entries.containsKey(key))
@@ -81,6 +94,19 @@ public class Dictionary<T> {
 		locations.get(object).remove(key);
 
 		events.publish(new DictionaryEvent.Remove<>(key, object));
+	}
+
+	/**
+	 * Removes multiple objects from the dictionary.
+	 *
+	 * @param key the name of the object.
+	 * @param objects the objects to remove.
+	 */
+	@SuppressWarnings("unchecked")
+	public void remove(String key, T... objects) {
+		for (T object : objects) {
+			remove(key, object);
+		}
 	}
 
 	/**

@@ -34,7 +34,7 @@ import java.util.Optional;
  * Specifies an ingredient identifying a single kind of item.
  * @author Stan Hebben
  */
-public class SpecificItemIngredient implements ItemIngredient {
+public class SpecificItemIngredient extends AbstractIngredient {
 	private final String itemId;
 
 	public SpecificItemIngredient(String itemId) {
@@ -66,32 +66,22 @@ public class SpecificItemIngredient implements ItemIngredient {
 	}
 
 	@Override
-	public Optional<String> getTag() {
-		return Optional.empty();
+	public Optional<Item> consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
+		return Optional.of(original)
+			.filter(item -> item.count() > 1)
+			.map(item -> item.withAmount(original.count() - 1));
 	}
 
 	@Override
-	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
-		return original.withAmount(original.count() - 1);
+	public String toString() {
+		return String.format("SpecificItemIngredient[%s]", getItemId());
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		SpecificItemIngredient that = (SpecificItemIngredient) o;
-
-		if (!itemId.equals(that.itemId)) {
-			return false;
-		}
-
-		return true;
+	public boolean equals(Object other) {
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
+		return itemId.equals(((SpecificItemIngredient) other).itemId);
 	}
 
 	@Override
