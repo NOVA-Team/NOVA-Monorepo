@@ -67,7 +67,7 @@ public class LoggerModule extends BinderModule {
 		@Override
 		public Logger supply(Dependency<? super Logger> dependency, Injector injector) {
 			if (dependency.isUntargeted() || isForGame(dependency)) {
-				return LoggerFactory.getLogger("General");
+				return LoggerFactory.getLogger("NOVA");
 			} else {
 				return StreamSupport.stream(dependency.spliterator(), false)
 					.map(target -> target.getTarget().getInstance().getType().getRawType())

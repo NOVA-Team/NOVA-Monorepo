@@ -10,10 +10,14 @@ archivesBaseName = "NOVA-Core-Wrapper-MC1.8"
 configurations {
 	fatJar
 	compile.extendsFrom fatJar
+	// Exclude slf4j-log4j from tests (we use slf4j-simple)
+	testRuntime.exclude module: 'slf4j-log4j12'
+	testRuntime.exclude module: 'log4j-slf4j-impl'
 }
 
 dependencies {
 	fatJar project(":")
+	fatJar 'org.apache.logging.log4j:log4j-slf4j-impl:2.0-beta9'
 	testCompile project(path: ':', configuration: 'wrapperTests')
 
 	testCompile "junit:junit:4.12"
