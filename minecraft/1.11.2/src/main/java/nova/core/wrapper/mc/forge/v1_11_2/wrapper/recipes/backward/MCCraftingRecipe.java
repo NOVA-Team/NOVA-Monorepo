@@ -20,12 +20,17 @@
 
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.backward;
 
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.NovaCraftingGrid;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
+import nova.core.entity.Entity;
+import nova.core.entity.component.Player;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingGrid;
 import nova.core.recipes.crafting.CraftingRecipe;
-import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.NovaCraftingGrid;
-import nova.internal.core.Game;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 
 import java.util.Optional;
 
@@ -41,22 +46,29 @@ public class MCCraftingRecipe implements CraftingRecipe {
 
 	@Override
 	public boolean matches(CraftingGrid craftingGrid) {
-		// TODO: supply world somehow?
-		return recipe.matches(new NovaCraftingGrid(craftingGrid), null);
+		return recipe.matches(new NovaCraftingGrid(craftingGrid), (net.minecraft.world.World) craftingGrid.getPlayer().map(Player::entity)
+			.map(Entity::world).map(WorldConverter.instance()::toNative).filter(w -> w instanceof net.minecraft.world.World).orElse(null));
 	}
 
 	@Override
 	public Optional<Item> getCraftingResult(CraftingGrid craftingGrid) {
-		return Game.natives().toNova(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid)));
+		return Optional.of(recipe.getCraftingResult(new NovaCraftingGrid(craftingGrid))).filter(item -> !item.isEmpty()).map(ItemConverter.instance()::toNova);
 	}
 
 	@Override
 	public void consumeItems(CraftingGrid craftingGrid) {
-		// not supported
+		NonNullList<ItemStack> remainder = recipe.getRemainingItems(new NovaCraftingGrid(craftingGrid));
+		for (int i = 0; i < remainder.size(); i++) {
+			Optional<Item> result = Optional.of(remainder.get(i)).filter(item -> !item.isEmpty()).map(ItemConverter.instance()::toNova);
+			if (!result.isPresent()) {
+				result = craftingGrid.getCrafting(i).filter(item -> item.count() > 1).map(item -> item.withAmount(item.count() - 1));
+			}
+			craftingGrid.setCrafting(i, result);
+		}
 	}
 
 	@Override
-	public Optional<Item> getNominalOutput() {
-		return Game.natives().toNova(recipe.getRecipeOutput());
+	public Optional<Item> getExampleOutput() {
+		return Optional.of(recipe.getRecipeOutput()).filter(item -> !item.isEmpty()).map(ItemConverter.instance()::toNova);
 	}
 }

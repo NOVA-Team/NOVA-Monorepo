@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2015 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
@@ -33,7 +32,6 @@ import nova.core.recipes.crafting.CraftingGrid;
 import nova.core.wrapper.mc.forge.v1_11_2.util.ReflectionUtil;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapUtility;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
-import nova.internal.core.Game;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,29 +47,39 @@ public class MCCraftingGrid implements CraftingGrid {
 	private final EntityPlayer playerOrig;
 	private int width;
 	private int height;
-	private nova.core.item.Item[] stacks;
+	private nova.core.item.Item[] items;
 	private ItemStack[] original;
-	private int numberOfStacks;
+	private int itemCount;
 
 	private MCCraftingGrid(InventoryCrafting inventory) {
 		this.inventory = inventory;
 		width = height = (int) Math.sqrt(inventory.getSizeInventory());
-		stacks = new nova.core.item.Item[width * height];
-		original = new ItemStack[stacks.length];
-		numberOfStacks = 0;
+		items = new nova.core.item.Item[width * height];
+		original = new ItemStack[items.length];
+		itemCount = 0;
 		update();
 
 		Container container = ReflectionUtil.getCraftingContainer(inventory);
 		if (container != null) {
+			@SuppressWarnings("unchecked")
 			List<Slot> slots = container.inventorySlots;
-			if (!slots.isEmpty() && slots.get(0) instanceof SlotCrafting) {
-				SlotCrafting slotCrafting = (SlotCrafting) slots.get(0);
-				playerOrig = ReflectionUtil.getCraftingSlotPlayer(slotCrafting);
-				player = WrapUtility.getNovaPlayer(playerOrig);
-			} else {
-				playerOrig = null;
-				player = Optional.empty();
+
+			EntityPlayer playerOrig = null;
+			Optional<Player> player = Optional.empty();
+
+			for (Slot slot : slots) {
+				if (slot instanceof SlotCrafting) {
+					playerOrig = ReflectionUtil.getCraftingSlotPlayer((SlotCrafting) slot);
+					player = WrapUtility.getNovaPlayer(playerOrig);
+
+					if (player.isPresent()) {
+						break;
+					}
+				}
 			}
+
+			this.playerOrig = playerOrig;
+			this.player = player;
 		} else {
 			playerOrig = null;
 			player = Optional.empty();
@@ -81,9 +89,9 @@ public class MCCraftingGrid implements CraftingGrid {
 	private MCCraftingGrid(IInventory inventory, EntityPlayer player) {
 		this.inventory = inventory;
 		width = height = (int) Math.sqrt(inventory.getSizeInventory());
-		stacks = new nova.core.item.Item[width * height];
-		original = new ItemStack[stacks.length];
-		numberOfStacks = 0;
+		items = new nova.core.item.Item[width * height];
+		original = new ItemStack[items.length];
+		itemCount = 0;
 		update();
 
 		playerOrig = player;
@@ -117,9 +125,9 @@ public class MCCraftingGrid implements CraftingGrid {
 	private void update() {
 		if (inventory.getSizeInventory() != original.length) {
 			width = height = (int) Math.sqrt(inventory.getSizeInventory());
-			stacks = new nova.core.item.Item[inventory.getSizeInventory()];
-			original = new ItemStack[stacks.length];
-			numberOfStacks = 0;
+			items = new nova.core.item.Item[inventory.getSizeInventory()];
+			original = new ItemStack[items.length];
+			itemCount = 0;
 		}
 
 		for (int i = 0; i < inventory.getSizeInventory(); i++) {
@@ -127,21 +135,21 @@ public class MCCraftingGrid implements CraftingGrid {
 				//System.out.println("Slot " + i + " changed");
 				original[i] = inventory.getStackInSlot(i);
 				if (inventory.getStackInSlot(i) != null) {
-					if (stacks[i] == null) {
-						numberOfStacks++;
+					if (items[i] == null) {
+						itemCount++;
 					}
 
-					stacks[i] = Game.natives().toNova(original[i]);
+					items[i] = ItemConverter.instance().toNova(original[i]);
 				} else {
-					if (stacks[i] != null) {
-						numberOfStacks--;
+					if (items[i] != null) {
+						itemCount--;
 					}
 
-					stacks[i] = null;
+					items[i] = null;
 				}
 			}
 		}
-		//System.out.println("Num stack count: " + numberOfStacks);
+		//System.out.println("Num stack count: " + itemCount);
 	}
 
 	@Override
@@ -166,80 +174,82 @@ public class MCCraftingGrid implements CraftingGrid {
 
 	@Override
 	public int countFilledStacks() {
-		return numberOfStacks;
+		return itemCount;
 	}
 
 	@Override
-	public Optional<nova.core.item.Item> getStack(int i) {
-		return Optional.ofNullable(stacks[i]);
+	public Optional<nova.core.item.Item> getCrafting(int i) {
+		return Optional.ofNullable(items[i]);
 	}
 
 	@Override
-	public Optional<nova.core.item.Item> getStack(int x, int y) {
-		return Optional.ofNullable(stacks[y * width + x]);
+	public Optional<nova.core.item.Item> getCrafting(int x, int y) {
+		return Optional.ofNullable(items[y * width + x]);
 	}
 
 	@Override
-	public boolean setStack(int x, int y, Optional<nova.core.item.Item> stack) {
+	public boolean setCrafting(int x, int y, Optional<nova.core.item.Item> item) {
 		//System.out.println("SetStack(" + x + ", " + y + ") " + stack);
 
 		int ix = y * width + x;
-		if (stack.isPresent()) {
-			if (!stack.get().equals(stacks[ix])) {
-				inventory.setInventorySlotContents(ix, Game.natives().toNative(stack.get()));
+		if (item.isPresent()) {
+			if (!item.get().equals(items[ix])) {
+				inventory.setInventorySlotContents(ix, ItemConverter.instance().toNative(item.get()));
 
-				if (stacks[ix] == null) {
-					numberOfStacks++;
+				if (items[ix] == null) {
+					itemCount++;
 				}
 
-				stacks[ix] = stack.get();
+				items[ix] = item.get();
 			}
 		} else {
-			numberOfStacks--;
+			itemCount--;
 			inventory.setInventorySlotContents(ix, null);
-			stacks[ix] = null;
+			items[ix] = null;
 		}
 
 		return true;
 	}
 
 	@Override
-	public boolean setStack(int i, Optional<nova.core.item.Item> stack) {
+	public boolean setCrafting(int i, Optional<nova.core.item.Item> item) {
 		//System.out.println("SetStack(" + i + ") " + stack);
 
-		if (stack.isPresent()) {
-			if (stacks[i] == null) {
-				numberOfStacks++;
+		if (item.isPresent()) {
+			if (items[i] == null) {
+				itemCount++;
 			}
 
-			inventory.setInventorySlotContents(i, Game.natives().toNative(stack.get()));
-			stacks[i] = stack.get();
+			inventory.setInventorySlotContents(i, ItemConverter.instance().toNative(item.get()));
+			items[i] = item.get();
 		} else {
-			if (stacks[i] == null) {
+			if (items[i] == null) {
 				return true;
 			}
 
-			numberOfStacks--;
+			itemCount--;
 			inventory.setInventorySlotContents(i, null);
-			stacks[i] = null;
+			items[i] = null;
 		}
 
 		return true;
 	}
 
 	@Override
-	public void giveBack(nova.core.item.Item itemStack) {
-		playerOrig.inventory.addItemStackToInventory(ItemConverter.instance().toNative(itemStack));
+	public void giveBack(nova.core.item.Item item) {
+		if (playerOrig != null) {
+			playerOrig.inventory.addItemStackToInventory(ItemConverter.instance().toNative(item));
+		}
 	}
 
 	@Override
 	public String getTopology() {
-		return CraftingGrid.topologySquare;
+		return CraftingGrid.TOPOLOGY_SQUARE;
 	}
 
 	@Override
 	public String getType() {
-		return CraftingGrid.typeCrafting;
+		return CraftingGrid.TYPE_CRAFTING;
 	}
 
 	private boolean changed(int i) {
@@ -247,7 +257,7 @@ public class MCCraftingGrid implements CraftingGrid {
 			return true;
 		}
 
-		if (original[i] != null && stacks[i].count() != original[i].getCount()) {
+		if (original[i] != null && items[i].count() != original[i].getCount()) {
 			return true;
 		}
 

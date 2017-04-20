@@ -25,12 +25,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingRecipe;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.backward.MCCraftingGrid;
-import nova.internal.core.Game;
-
-import java.util.Optional;
 
 public class NovaCraftingRecipe implements IRecipe {
 	private final CraftingRecipe recipe;
@@ -40,18 +37,13 @@ public class NovaCraftingRecipe implements IRecipe {
 	}
 
 	@Override
-	public boolean matches(InventoryCrafting inventoryCrafting, World world) {
-		return recipe.matches(MCCraftingGrid.get(inventoryCrafting));
+	public boolean matches(InventoryCrafting inventory, World world) {
+		return recipe.matches(MCCraftingGrid.get(inventory));
 	}
 
 	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inventoryCrafting) {
-		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventoryCrafting));
-		if (craftingResult.isPresent()) {
-			return Game.natives().toNative(craftingResult.get());
-		} else {
-			return null;
-		}
+	public ItemStack getCraftingResult(InventoryCrafting inventory) {
+		return recipe.getCraftingResult(MCCraftingGrid.get(inventory)).map(ItemConverter.instance()::toNative).orElse(ItemStack.EMPTY);
 	}
 
 	@Override
@@ -61,19 +53,11 @@ public class NovaCraftingRecipe implements IRecipe {
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		Optional<Item> nominalOutput = recipe.getNominalOutput();
-		if (nominalOutput.isPresent()) {
-			return Game.natives().toNative(nominalOutput.get());
-		}
-		return null;
+		return recipe.getExampleOutput().map(ItemConverter.instance()::toNative).orElse(ItemStack.EMPTY);
 	}
 
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-		return NonNullList.create();
-	}
-
-	public CraftingRecipe getRecipe() {
-		return recipe;
+	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inventory) {
+		return NonNullList.withSize(0, ItemStack.EMPTY);
 	}
 }
