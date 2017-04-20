@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11_2.recipes;
+package nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes;
 
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -28,6 +28,11 @@ import nova.core.event.RecipeEvent;
 import nova.core.recipes.RecipeManager;
 import nova.core.recipes.crafting.CraftingRecipe;
 import nova.core.wrapper.mc.forge.v1_11_2.util.ReflectionUtil;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.ShapedRecipeOre;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.NovaCraftingRecipe;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.ShapelessRecipeOre;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.ShapedRecipeBasic;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.ShapelessRecipeBasic;
 import nova.internal.core.Game;
 
 import java.util.AbstractList;

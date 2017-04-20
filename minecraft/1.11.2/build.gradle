@@ -108,7 +108,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 minecraft {
 	version = property("minecraft.version") + "-" + property("forge.version")
-	mappings = 'snapshot_20170313'
+	mappings = 'snapshot_20170407'
 	runDir = "run"
 }
 

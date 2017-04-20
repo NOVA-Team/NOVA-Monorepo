@@ -18,61 +18,49 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11_2.recipes;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
+import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.world.World;
 import nova.core.item.Item;
-import nova.core.recipes.crafting.CraftingRecipe;
+import nova.core.recipes.crafting.ShapelessCraftingRecipe;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.backward.MCCraftingGrid;
 import nova.internal.core.Game;
 
+import java.util.Arrays;
 import java.util.Optional;
 
-public class NovaCraftingRecipe implements IRecipe {
-	private final CraftingRecipe recipe;
+/**
+ * @author Stan
+ */
+public class ShapelessRecipeBasic extends ShapelessRecipes {
+	private final ShapelessCraftingRecipe recipe;
 
-	public NovaCraftingRecipe(CraftingRecipe recipe) {
+	public ShapelessRecipeBasic(ItemStack[] ingredients, ShapelessCraftingRecipe recipe) {
+		super(recipe.getNominalOutput().isPresent() ? Game.natives().toNative(recipe.getNominalOutput().get()) : null, Arrays.asList(ingredients));
+
 		this.recipe = recipe;
 	}
 
 	@Override
-	public boolean matches(InventoryCrafting inventoryCrafting, World world) {
-		return recipe.matches(MCCraftingGrid.get(inventoryCrafting));
+	public boolean matches(InventoryCrafting inventory, World world) {
+		return recipe.matches(MCCraftingGrid.get(inventory));
 	}
 
 	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inventoryCrafting) {
-		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventoryCrafting));
+	public ItemStack getCraftingResult(InventoryCrafting inventory) {
+		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
 		if (craftingResult.isPresent()) {
 			return Game.natives().toNative(craftingResult.get());
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public int getRecipeSize() {
-		return 1;
-	}
-
-	@Override
-	public ItemStack getRecipeOutput() {
-		Optional<Item> nominalOutput = recipe.getNominalOutput();
-		if (nominalOutput.isPresent()) {
-			return Game.natives().toNative(nominalOutput.get());
 		}
 		return null;
-	}
-
-	@Override
-	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-		return NonNullList.create();
-	}
-
-	public CraftingRecipe getRecipe() {
-		return recipe;
 	}
 }

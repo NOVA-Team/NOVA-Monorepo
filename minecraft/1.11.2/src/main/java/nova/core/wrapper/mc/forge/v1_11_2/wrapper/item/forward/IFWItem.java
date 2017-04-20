@@ -28,7 +28,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.world.World;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
-import nova.core.language.Translateable;
+import nova.core.language.Translatable;
 import nova.core.util.Direction;
 import nova.core.util.math.MathUtil;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
@@ -40,14 +40,13 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.List;
 import java.util.Optional;
-
 import javax.annotation.Nullable;
 
 /**
  * An interface implemented by {@link FWItem} and {@link FWItemBlock} classes to override Minecraft's item events.
  * @author Calclavia
  */
-public interface IFWItem extends Translateable {
+public interface IFWItem extends Translatable {
 
 	ItemFactory getItemFactory();
 

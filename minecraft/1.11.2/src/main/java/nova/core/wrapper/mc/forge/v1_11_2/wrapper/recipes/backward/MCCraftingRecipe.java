@@ -18,12 +18,13 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11_2.recipes;
+package nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.backward;
 
 import net.minecraft.item.crafting.IRecipe;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingGrid;
 import nova.core.recipes.crafting.CraftingRecipe;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.NovaCraftingGrid;
 import nova.internal.core.Game;
 
 import java.util.Optional;

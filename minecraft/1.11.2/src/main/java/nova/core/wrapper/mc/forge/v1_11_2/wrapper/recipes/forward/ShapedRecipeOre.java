@@ -18,25 +18,33 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11_2.recipes;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import nova.core.item.Item;
 import nova.core.recipes.crafting.ShapedCraftingRecipe;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.backward.MCCraftingGrid;
 import nova.internal.core.Game;
 
 import java.util.Optional;
 
 /**
- * @author Stan Hebben
+ * @author Stan
  */
-public class ShapedRecipeBasic extends ShapedRecipes {
+public class ShapedRecipeOre extends ShapedOreRecipe {
 	private final ShapedCraftingRecipe recipe;
 
-	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedCraftingRecipe recipe) {
-		super(recipe.getWidth(), recipe.getHeight(), basicInputs, recipe.getNominalOutput().isPresent() ? Game.natives().toNative(recipe.getNominalOutput().get()) : null);
+	public ShapedRecipeOre(Object[] contents, ShapedCraftingRecipe recipe) {
+		super((ItemStack) Game.natives().toNative(recipe.getNominalOutput().get()), contents);
 
 		this.recipe = recipe;
 	}
@@ -48,9 +56,9 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		Optional<nova.core.item.Item> result = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
-		if (result.isPresent()) {
-			return Game.natives().toNative(result.get());
+		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
+		if (craftingResult.isPresent()) {
+			return ((ItemStack) Game.natives().toNative(craftingResult.get())).copy();
 		}
 		return null;
 	}

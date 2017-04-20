@@ -18,17 +18,16 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11_2.recipes;
+package nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward;
 
-import nova.core.item.Item;
-import nova.core.recipes.ingredient.SpecificItemIngredient;
-import nova.internal.core.Game;
+import net.minecraft.inventory.InventoryCrafting;
+import nova.core.recipes.crafting.CraftingGrid;
 
-/**
- * @author Stan Hebben
- */
-public class MinecraftItemIngredient extends SpecificItemIngredient {
-	public MinecraftItemIngredient(net.minecraft.item.ItemStack itemStack) {
-		super(((Item) Game.natives().toNova(itemStack)).getID());
+public class NovaCraftingGrid extends InventoryCrafting {
+	private final CraftingGrid craftingGrid;
+
+	public NovaCraftingGrid(CraftingGrid craftingGrid) {
+		super(new NovaCraftingGridContainer(craftingGrid), craftingGrid.getWidth(), craftingGrid.getHeight());
+		this.craftingGrid = craftingGrid;
 	}
 }

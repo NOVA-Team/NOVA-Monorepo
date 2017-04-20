@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v1_11_2.recipes;
+package nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

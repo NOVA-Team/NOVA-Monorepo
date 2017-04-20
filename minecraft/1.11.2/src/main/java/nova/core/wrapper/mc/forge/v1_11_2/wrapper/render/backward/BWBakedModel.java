@@ -53,7 +53,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import javax.annotation.Nullable;
 
 /**
@@ -187,13 +186,11 @@ public class BWBakedModel extends MeshModel {
 						((byte)((mergedNormal >> 16) & 0xFF)) / 127D));
 			}
 
-//			if (format.hasNormal())
-//				vertex.normal = normal;
+			if (format.hasNormal())
+				vertex.normal = normal;
 			face.drawVertex(vertex);
 		}
-		java.util.function.BinaryOperator<Vector3D> cartesianProduct = Vector3DUtil::cartesianProduct;
-//		face.normal = Vector3DUtil.calculateNormal(face);
-		face.normal = calculateNormal(face);
+		face.normal = Vector3DUtil.calculateNormal(face);
 		return face;
 	}
 
@@ -203,16 +200,5 @@ public class BWBakedModel extends MeshModel {
 
 	private double deinterpolateV(double v, Optional<TextureAtlasSprite> texture) {
 		return 1 - v; // Why do you change the format with every version, Mojang?
-	}
-
-	private static Vector3D calculateNormal(Face face) {
-		// TODO: Possibly calculate from vertex normals
-		Vertex firstEntry = face.vertices.get(0);
-		Vertex secondEntry = face.vertices.get(1);
-		Vertex thirdEntry = face.vertices.get(2);
-		Vector3D v1 = secondEntry.vec.subtract(firstEntry.vec);
-		Vector3D v2 = thirdEntry.vec.subtract(firstEntry.vec);
-
-		return v1.crossProduct(v2).normalize();
 	}
 }
