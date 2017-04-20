@@ -34,7 +34,7 @@ import static nova.testutils.NovaAssertions.assertThat;
 public class FluidTest {
 	@Before
 	public void setUp() {
-		new NovaLauncherTestFactory().createLauncher();
+		NovaLauncherTestFactory.createDummyLauncher();
 	}
 
 	@Test
@@ -54,7 +54,7 @@ public class FluidTest {
 		Fluid fluid3 = Game.fluids().water.build().setAmount(10);
 		Fluid fluid4 = Game.fluids().lava.build().setAmount(100);
 
-		assertThat(fluid1.equals(null)).isFalse();
+		assertThat(fluid1 == null).isFalse();
 		assertThat(fluid1.equals(new Object())).isFalse();
 		assertThat(fluid1.equals(fluid2)).isTrue();
 		assertThat(fluid1.equals(fluid3)).isFalse();

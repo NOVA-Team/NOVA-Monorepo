@@ -43,7 +43,7 @@ import java.util.List;
  * A factory that allows a mod to easily unit test launching with NOVA.
  * @author Calclavia
  */
-public class NovaLauncherTestFactory {
+public abstract class NovaLauncherTestFactory {
 
 	public final Class<?>[] modClasses;
 
@@ -51,24 +51,26 @@ public class NovaLauncherTestFactory {
 		this.modClasses = modClasses;
 	}
 
-	public List<Class<? extends Bundle>> getModules() {
-		return Arrays.<Class<? extends Bundle>>asList(
-			FakeClientModule.class,
-			FakeKeyModule.class,
-			FakeLanguageModule.class,
-			FakeNetworkModule.class,
-			FakeSaveModule.class,
-			FakeTickerModule.class,
-			FakeComponentModule.class,
-			FakeGameInfoModule.class
-		);
-	}
+	/**
+	 * Get the Dependency Injection modules.
+	 *
+	 * @return The list of Dependency Injection modules.
+	 */
+	public abstract List<Class<? extends Bundle>> getModules();
 
 	/**
 	 * Creates a fake launcher to allow mods to unit test.
 	 * @return
 	 */
 	public NovaLauncher createLauncher() {
+		return createLauncher(modClasses);
+	}
+
+	/**
+	 * Creates a fake launcher to allow mods to unit test.
+	 * @return
+	 */
+	public NovaLauncher createLauncher(Class<?>... modClasses) {
 		DependencyInjectionEntryPoint diep = new DependencyInjectionEntryPoint();
 
 		getModules().forEach(diep::install);
@@ -96,4 +98,25 @@ public class NovaLauncherTestFactory {
 		return launcher;
 	}
 
+	/**
+	 * Creates a fake launcher to allow mods to unit test.
+	 * @return
+	 */
+	public static NovaLauncher createDummyLauncher(Class<?>... modClasses) {
+		return new NovaLauncherTestFactory(modClasses) {
+			@Override
+			public List<Class<? extends Bundle>> getModules() {
+				return Arrays.<Class<? extends Bundle>>asList(
+					FakeClientModule.class,
+					FakeKeyModule.class,
+					FakeLanguageModule.class,
+					FakeNetworkModule.class,
+					FakeSaveModule.class,
+					FakeTickerModule.class,
+					FakeComponentModule.class,
+					FakeGameInfoModule.class
+				);
+			}
+		}.createLauncher();
+	}
 }

@@ -272,7 +272,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		checkReadable();
-		return Collections.unmodifiableSet(defaultBlock ? exceptions : EnumSet.complementOf(exceptions)).iterator();
+		return toSet().iterator();
 	}
 
 	/**
@@ -284,7 +284,8 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	@Override
 	public Spliterator<T> spliterator() {
 		checkReadable();
-		return Spliterators.spliterator(iterator(), defaultBlock ? exceptions.size() : EnumSet.complementOf(exceptions).size(),
+		Set<T> set = toSet();
+		return Spliterators.spliterator(set.iterator(), set.size(),
 				Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.IMMUTABLE);
 	}
 
@@ -322,6 +323,17 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	}
 
 	/**
+	 * Returns the count of all the allowed elements in this EnumSelector.
+	 *
+	 * @return The count.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
+	public int size() {
+		checkReadable();
+		return (defaultBlock ? exceptions : EnumSet.complementOf(exceptions)).size();
+	}
+
+	/**
 	 * {@inheritDoc}
 	 *
 	 * @see EnumSet#toString()
@@ -330,7 +342,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 */
 	@Override
 	public String toString() {
-		return toSet().toString();
+		return (defaultBlock ? exceptions : EnumSet.complementOf(exceptions)).toString();
 	}
 
 	/**
@@ -344,7 +356,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	public int hashCode() {
 		checkReadable();
 		int hash = 5;
-		hash = 79 * hash + Objects.hashCode(this.toSet());
+		hash = 79 * hash + Objects.hashCode(defaultBlock ? exceptions : EnumSet.complementOf(exceptions));
 		return hash;
 	}
 

@@ -31,15 +31,19 @@ import nova.core.event.ItemEvent;
 import nova.core.item.Item;
 import nova.core.item.ItemBlock;
 import nova.core.item.ItemFactory;
+import nova.core.loader.Mod;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
+import nova.core.wrapper.mc.forge.v17.util.WrapUtility;
 import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v17.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 import nova.internal.core.launch.InitializationException;
+import nova.internal.core.launch.NovaLauncher;
 
 import java.util.Set;
 
@@ -85,7 +89,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 		} else {
 			ItemFactory itemFactory = registerMinecraftMapping(itemStack.getItem(), itemStack.getItemDamage());
 
-			Data data = itemStack.getTagCompound() != null ? Game.natives().toNova(itemStack.getTagCompound()) : new Data();
+			Data data = itemStack.getTagCompound() != null ? DataConverter.instance().toNova(itemStack.getTagCompound()) : new Data();
 			if (!itemStack.getHasSubtypes() && itemStack.getItemDamage() > 0) {
 				data.put("damage", itemStack.getItemDamage());
 			}
@@ -151,7 +155,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 		if (itemStack.stackSize <= 0) {
 			return null;
 		}
-		itemStack.setTagCompound(Game.natives().toNative(item.getFactory().save(item)));
+		itemStack.setTagCompound(DataConverter.instance().toNative(new FWNBTTagCompound(item), item.getFactory().save(item)));
 		WrapperEvent.UpdateItemEvent event = new WrapperEvent.UpdateItemEvent(item, itemStack);
 		Game.events().publish(event);
 		return itemStack;
@@ -203,7 +207,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 		// Don't register ItemBlocks twice
 		if (!(dummy instanceof ItemBlock)) {
 			NovaMinecraft.proxy.registerItem((FWItem) itemWrapper);
-			GameRegistry.registerItem(itemWrapper, itemFactory.getID());
+			String itemId = itemFactory.getID();
+			if (!itemId.contains(":"))
+				itemId = NovaLauncher.instance().flatMap(NovaLauncher::getCurrentMod).map(Mod::id).orElse("nova") + ':' + itemId;
+			GameRegistry.registerItem(itemWrapper, itemId);
 
 			if (dummy.components.has(Category.class) && FMLCommonHandler.instance().getSide().isClient()) {
 				//Add into creative tab
@@ -312,11 +319,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 
 		@Override
 		public String toString() {
-			if (item.getHasSubtypes()) {
-				return net.minecraft.item.Item.itemRegistry.getNameForObject(item) + ":" + meta;
-			} else {
-				return net.minecraft.item.Item.itemRegistry.getNameForObject(item);
-			}
+			return WrapUtility.getItemID(item, meta);
 		}
 	}
 }

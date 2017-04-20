@@ -46,7 +46,6 @@ import nova.core.wrapper.mc.forge.v18.depmodules.LanguageModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.NetworkModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.SaveModule;
 import nova.core.wrapper.mc.forge.v18.depmodules.TickerModule;
-import nova.core.wrapper.mc.forge.v18.recipes.MinecraftRecipeRegistry;
 import nova.core.wrapper.mc.forge.v18.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.VectorConverter;
@@ -59,6 +58,8 @@ import nova.core.wrapper.mc.forge.v18.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.inventory.InventoryConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.OreDictionaryIntegration;
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.MinecraftRecipeRegistry;
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.RecipeConverter;
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
 import nova.internal.core.deps.DepDownloader;
@@ -139,6 +140,7 @@ public class NovaMinecraft {
 			Game.natives().registerConverter(new DirectionConverter());
 			Game.natives().registerConverter(new CategoryConverter());
 			Game.natives().registerConverter(new AssetConverter());
+			Game.natives().registerConverter(new RecipeConverter());
 
 			/**
 			 * Initiate recipe and ore dictionary integration
@@ -177,6 +179,7 @@ public class NovaMinecraft {
 			launcher.getLoadedModMap().entrySet().stream().filter(e -> e.getValue().getClass().isAnnotationPresent(ConfigHolder.class))
 				.forEach(e -> Configuration.load(new File(evt.getModConfigurationDirectory(), e.getKey().id() + ".hocon"), e.getValue()));
 
+			proxy.loadLanguage(Game.language());
 			Game.language().init();
 			Game.render().init();
 			Game.blocks().init();

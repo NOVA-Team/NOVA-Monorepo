@@ -16,8 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.util.math;
+ */
 
+package nova.core.util.math;
+
+import nova.core.render.model.Face;
+import nova.core.render.model.Vertex;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.util.FastMath;
 
@@ -121,5 +125,16 @@ public class Vector3DUtil {
 
 	public static Vector3D abs(Vector3D vec) {
 		return new Vector3D(FastMath.abs(vec.getX()), FastMath.abs(vec.getY()), FastMath.abs(vec.getZ()));
+	}
+
+	public static Vector3D calculateNormal(Face face) {
+		// TODO: Possibly calculate from vertex normals
+		Vertex firstEntry = face.vertices.get(0);
+		Vertex secondEntry = face.vertices.get(1);
+		Vertex thirdEntry = face.vertices.get(2);
+		Vector3D v1 = secondEntry.vec.subtract(firstEntry.vec);
+		Vector3D v2 = thirdEntry.vec.subtract(firstEntry.vec);
+
+		return v1.crossProduct(v2).normalize();
 	}
 }

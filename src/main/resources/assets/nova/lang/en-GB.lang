@@ -1,0 +1,25 @@
+unit.nova.metre.name=Metre
+unit.nova.metre.plural=Metres
+unit.nova.litre.name=Litre
+unit.nova.litre.plural=Litres
+unit.nova.gram.name=Gram
+unit.nova.gram.plural=Grams
+
+unit.nova.ampere.name=Amp
+unit.nova.ampere.plural=Amps
+unit.nova.amp_hour.name=Amp Hour
+unit.nova.amp_hour.plural=Amp Hours
+unit.nova.voltage.name=Volt
+unit.nova.voltage.plural=Volts
+unit.nova.watt.name=Watt
+unit.nova.watt.plural=Watts
+unit.nova.watt_hour.name=Watt Hour
+unit.nova.watt_hour.plural=Watt Hours
+unit.nova.resistivity.name=Ohm
+unit.nova.resistivity.plural=Ohms
+unit.nova.conductivity.name=Siemen
+unit.nova.conductivity.plural=Siemens
+unit.nova.joule.name=Joule
+unit.nova.joule.plural=Joules
+unit.nova.newton_metre.name=Newton Metre
+unit.nova.newton_metre.plural=Newton Metres
