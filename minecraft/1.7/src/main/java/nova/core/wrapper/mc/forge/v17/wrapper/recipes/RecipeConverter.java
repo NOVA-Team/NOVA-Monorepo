@@ -18,8 +18,15 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v17.recipes;
+package nova.core.wrapper.mc.forge.v17.wrapper.recipes;
 
+import nova.core.wrapper.mc.forge.v17.wrapper.recipes.backward.MCCraftingRecipe;
+import nova.core.wrapper.mc.forge.v17.wrapper.recipes.forward.ShapedRecipeOre;
+import nova.core.wrapper.mc.forge.v17.wrapper.recipes.forward.NovaCraftingRecipe;
+import nova.core.wrapper.mc.forge.v17.wrapper.recipes.forward.NovaCraftingGrid;
+import nova.core.wrapper.mc.forge.v17.wrapper.recipes.forward.ShapelessRecipeOre;
+import nova.core.wrapper.mc.forge.v17.wrapper.recipes.forward.ShapedRecipeBasic;
+import nova.core.wrapper.mc.forge.v17.wrapper.recipes.forward.ShapelessRecipeBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
@@ -98,7 +105,7 @@ public class RecipeConverter implements NativeConverter<CraftingRecipe, IRecipe>
 		if (ingredient == null) {
 			return null;
 		} else if (ingredient instanceof ItemStack) {
-			return new SpecificItemIngredient(((Item) Game.natives().toNova(ingredient)).getID());
+			return new SpecificItemIngredient(ItemConverter.instance().toNova((ItemStack) ingredient).getID());
 		} else if (ingredient instanceof String) {
 			return new OreItemIngredient((String) ingredient);
 		} else if (ingredient instanceof List) {
@@ -125,7 +132,7 @@ public class RecipeConverter implements NativeConverter<CraftingRecipe, IRecipe>
 
 	private ItemStack wrapSpecific(SpecificItemIngredient ingredient) {
 		for (Item item : ingredient.getExampleItems()) {
-			return Game.natives().toNative(item.getFactory().build());
+			return ItemConverter.instance().toNative(item.getFactory());
 		}
 
 		throw new AssertionError("this can't be!");
@@ -137,6 +144,17 @@ public class RecipeConverter implements NativeConverter<CraftingRecipe, IRecipe>
 			type = Math.min(type, getIngredientType(ingredient));
 		}
 		return type;
+	}
+
+	@Override
+	public IRecipe toNative(CraftingRecipe recipe) {
+		if (recipe instanceof ShapedCraftingRecipe) {
+			return toNative((ShapedCraftingRecipe) recipe);
+		} else if (recipe instanceof ShapelessCraftingRecipe) {
+			return toNative((ShapelessCraftingRecipe) recipe);
+		} else {
+			return new NovaCraftingRecipe(recipe);
+		}
 	}
 
 	public IRecipe toNative(ShapedCraftingRecipe recipe) {
@@ -214,17 +232,6 @@ public class RecipeConverter implements NativeConverter<CraftingRecipe, IRecipe>
 			} default: {
 				return new NovaCraftingRecipe(recipe);
 			}
-		}
-	}
-
-	@Override
-	public IRecipe toNative(CraftingRecipe recipe) {
-		if (recipe instanceof ShapedCraftingRecipe) {
-			return toNative((ShapedCraftingRecipe) recipe);
-		} else if (recipe instanceof ShapelessCraftingRecipe) {
-			return toNative((ShapelessCraftingRecipe) recipe);
-		} else {
-			return new NovaCraftingRecipe(recipe);
 		}
 	}
 

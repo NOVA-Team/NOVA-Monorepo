@@ -18,17 +18,15 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.recipes;
+package nova.core.wrapper.mc.forge.v17.wrapper.recipes.forward;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingRecipe;
-import nova.internal.core.Game;
-
-import java.util.Optional;
+import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.recipes.backward.MCCraftingGrid;
 
 public class NovaCraftingRecipe implements IRecipe {
 	private final CraftingRecipe recipe;
@@ -38,18 +36,13 @@ public class NovaCraftingRecipe implements IRecipe {
 	}
 
 	@Override
-	public boolean matches(InventoryCrafting inventoryCrafting, World world) {
-		return recipe.matches(MCCraftingGrid.get(inventoryCrafting));
+	public boolean matches(InventoryCrafting inventory, World world) {
+		return recipe.matches(MCCraftingGrid.get(inventory));
 	}
 
 	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inventoryCrafting) {
-		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventoryCrafting));
-		if (craftingResult.isPresent()) {
-			return Game.natives().toNative(craftingResult.get());
-		} else {
-			return null;
-		}
+	public ItemStack getCraftingResult(InventoryCrafting inventory) {
+		return recipe.getCraftingResult(MCCraftingGrid.get(inventory)).map(ItemConverter.instance()::toNative).orElse(null);
 	}
 
 	@Override
@@ -59,15 +52,6 @@ public class NovaCraftingRecipe implements IRecipe {
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		Optional<Item> nominalOutput = recipe.getExampleOutput();
-		if (nominalOutput.isPresent()) {
-			return Game.natives().toNative(nominalOutput.get());
-		}
-		return null;
-	}
-
-	@Override
-	public ItemStack[] getRemainingItems(InventoryCrafting inv) {
-		return new ItemStack[0];
+		return recipe.getExampleOutput().map(ItemConverter.instance()::toNative).orElse(null);
 	}
 }

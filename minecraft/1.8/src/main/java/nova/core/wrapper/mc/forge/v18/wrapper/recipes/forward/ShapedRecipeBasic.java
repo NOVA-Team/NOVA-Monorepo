@@ -18,28 +18,24 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.recipes;
+package nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.world.World;
-import nova.core.item.Item;
-import nova.core.recipes.crafting.ShapelessCraftingRecipe;
-import nova.internal.core.Game;
-
-import java.util.Arrays;
-import java.util.Optional;
+import nova.core.recipes.crafting.ShapedCraftingRecipe;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.backward.MCCraftingGrid;
 
 /**
- * @author Stan
+ * @author Stan Hebben
  */
-public class ShapelessRecipeBasic extends ShapelessRecipes {
-	private final ShapelessCraftingRecipe recipe;
+public class ShapedRecipeBasic extends ShapedRecipes {
+	private final ShapedCraftingRecipe recipe;
 
-	public ShapelessRecipeBasic(ItemStack[] ingredients, ShapelessCraftingRecipe recipe) {
-		super(recipe.getExampleOutput().isPresent() ? Game.natives().toNative(recipe.getExampleOutput().get()) : null, Arrays.asList(ingredients));
-
+	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedCraftingRecipe recipe) {
+		super(recipe.getWidth(), recipe.getHeight(), basicInputs, recipe.getExampleOutput().map(ItemConverter.instance()::toNative).orElse(null));
 		this.recipe = recipe;
 	}
 
@@ -50,10 +46,6 @@ public class ShapelessRecipeBasic extends ShapelessRecipes {
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
-		if (craftingResult.isPresent()) {
-			return Game.natives().toNative(craftingResult.get());
-		}
-		return null;
+		return recipe.getCraftingResult(MCCraftingGrid.get(inventory)).map(ItemConverter.instance()::toNative).orElse(null);
 	}
 }

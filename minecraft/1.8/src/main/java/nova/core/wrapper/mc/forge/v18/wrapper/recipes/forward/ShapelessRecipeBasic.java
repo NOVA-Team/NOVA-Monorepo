@@ -18,27 +18,26 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.recipes;
+package nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import nova.core.item.Item;
 import nova.core.recipes.crafting.ShapelessCraftingRecipe;
-import nova.internal.core.Game;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.backward.MCCraftingGrid;
 
-import java.util.Optional;
+import java.util.Arrays;
 
 /**
- * @author Stan Hebben
+ * @author Stan
  */
-public class ShapelessRecipeOre extends ShapelessOreRecipe {
+public class ShapelessRecipeBasic extends ShapelessRecipes {
 	private final ShapelessCraftingRecipe recipe;
 
-	public ShapelessRecipeOre(Object[] ingredients, ShapelessCraftingRecipe recipe) {
-		super((ItemStack) Game.natives().toNative(recipe.getExampleOutput().get()), ingredients);
-
+	public ShapelessRecipeBasic(ItemStack[] ingredients, ShapelessCraftingRecipe recipe) {
+		super(recipe.getExampleOutput().map(ItemConverter.instance()::toNative).orElse(null), Arrays.asList(ingredients));
 		this.recipe = recipe;
 	}
 
@@ -49,10 +48,6 @@ public class ShapelessRecipeOre extends ShapelessOreRecipe {
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		Optional<Item> craftingResult = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
-		if (craftingResult.isPresent()) {
-			return ((ItemStack) Game.natives().toNative(craftingResult.get())).copy();
-		}
-		return null;
+		return recipe.getCraftingResult(MCCraftingGrid.get(inventory)).map(ItemConverter.instance()::toNative).orElse(null);
 	}
 }

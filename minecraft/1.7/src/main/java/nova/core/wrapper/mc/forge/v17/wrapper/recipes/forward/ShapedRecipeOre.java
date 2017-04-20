@@ -18,26 +18,30 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v17.recipes;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package nova.core.wrapper.mc.forge.v17.wrapper.recipes.forward;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import nova.core.recipes.crafting.ShapedCraftingRecipe;
-import nova.internal.core.Game;
-
-import java.util.Optional;
+import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.recipes.backward.MCCraftingGrid;
 
 /**
- * @author Stan Hebben
+ * @author Stan
  */
-public class ShapedRecipeBasic extends ShapedRecipes {
+public class ShapedRecipeOre extends ShapedOreRecipe {
 	private final ShapedCraftingRecipe recipe;
 
-	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedCraftingRecipe recipe) {
-		super(recipe.getWidth(), recipe.getHeight(), basicInputs, recipe.getExampleOutput().isPresent() ? Game.natives().toNative(recipe.getExampleOutput().get()) : null);
-
+	public ShapedRecipeOre(Object[] contents, ShapedCraftingRecipe recipe) {
+		super(recipe.getExampleOutput().map(ItemConverter.instance()::toNative).orElse(null), contents);
 		this.recipe = recipe;
 	}
 
@@ -48,10 +52,6 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		Optional<nova.core.item.Item> result = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
-		if (result.isPresent()) {
-			return Game.natives().toNative(result.get());
-		}
-		return null;
+		return recipe.getCraftingResult(MCCraftingGrid.get(inventory)).map(ItemConverter.instance()::toNative).orElse(null);
 	}
 }

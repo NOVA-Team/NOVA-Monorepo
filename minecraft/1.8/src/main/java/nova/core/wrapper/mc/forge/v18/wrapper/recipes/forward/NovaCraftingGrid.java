@@ -18,12 +18,10 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.recipes;
+package nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IChatComponent;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingGrid;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;

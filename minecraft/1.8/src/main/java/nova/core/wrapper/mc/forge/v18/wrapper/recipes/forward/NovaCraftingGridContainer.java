@@ -18,17 +18,25 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v17.recipes;
+package nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward;
 
-import nova.core.item.Item;
-import nova.core.recipes.ingredient.SpecificItemIngredient;
-import nova.internal.core.Game;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import nova.core.recipes.crafting.CraftingGrid;
 
 /**
+ * TODO: complete this class. without it, modded recipes will not work when crafted from NOVA mods.
  * @author Stan Hebben
  */
-public class MinecraftItemIngredient extends SpecificItemIngredient {
-	public MinecraftItemIngredient(net.minecraft.item.ItemStack itemStack) {
-		super(((Item) Game.natives().toNova(itemStack)).getID());
+public class NovaCraftingGridContainer extends Container {
+	private final CraftingGrid craftingGrid;
+
+	public NovaCraftingGridContainer(CraftingGrid craftingGrid) {
+		this.craftingGrid = craftingGrid;
+	}
+
+	@Override
+	public boolean canInteractWith(EntityPlayer entityPlayer) {
+		return true;
 	}
 }

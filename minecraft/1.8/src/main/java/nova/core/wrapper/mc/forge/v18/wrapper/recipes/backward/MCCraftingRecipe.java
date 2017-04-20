@@ -18,17 +18,18 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v17.recipes;
+package nova.core.wrapper.mc.forge.v18.wrapper.recipes.backward;
 
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward.NovaCraftingGrid;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Player;
 import nova.core.item.Item;
 import nova.core.recipes.crafting.CraftingGrid;
 import nova.core.recipes.crafting.CraftingRecipe;
-import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
-import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
-import nova.internal.core.Game;
+import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 
 import java.util.Optional;
 
@@ -55,15 +56,13 @@ public class MCCraftingRecipe implements CraftingRecipe {
 
 	@Override
 	public void consumeItems(CraftingGrid craftingGrid) {
-		for (int i = 0; i < craftingGrid.size(); i++) {
-			Optional<Item> item = craftingGrid.getCrafting(i);
-			if (item.isPresent()) {
-				if (item.get().count() > 1) {
-					item.get().addCount(-1);
-				} else {
-					craftingGrid.setCrafting(i, Optional.empty());
-				}
+		ItemStack[] remainder = recipe.getRemainingItems(new NovaCraftingGrid(craftingGrid));
+		for (int i = 0; i < remainder.length; i++) {
+			Optional<Item> result = Optional.ofNullable(remainder[i]).map(ItemConverter.instance()::toNova);
+			if (!result.isPresent()) {
+				result = craftingGrid.getCrafting(i).filter(item -> item.count() > 1).map(item -> item.withAmount(item.count() - 1));
 			}
+			craftingGrid.setCrafting(i, result);
 		}
 	}
 

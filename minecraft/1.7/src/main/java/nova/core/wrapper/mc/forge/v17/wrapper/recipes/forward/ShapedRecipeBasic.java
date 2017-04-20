@@ -18,16 +18,15 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.recipes;
+package nova.core.wrapper.mc.forge.v17.wrapper.recipes.forward;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.world.World;
 import nova.core.recipes.crafting.ShapedCraftingRecipe;
-import nova.internal.core.Game;
-
-import java.util.Optional;
+import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.recipes.backward.MCCraftingGrid;
 
 /**
  * @author Stan Hebben
@@ -36,8 +35,7 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 	private final ShapedCraftingRecipe recipe;
 
 	public ShapedRecipeBasic(ItemStack[] basicInputs, ShapedCraftingRecipe recipe) {
-		super(recipe.getWidth(), recipe.getHeight(), basicInputs, recipe.getExampleOutput().isPresent() ? Game.natives().toNative(recipe.getExampleOutput().get()) : null);
-
+		super(recipe.getWidth(), recipe.getHeight(), basicInputs, recipe.getExampleOutput().map(ItemConverter.instance()::toNative).orElse(null));
 		this.recipe = recipe;
 	}
 
@@ -48,10 +46,6 @@ public class ShapedRecipeBasic extends ShapedRecipes {
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventory) {
-		Optional<nova.core.item.Item> result = recipe.getCraftingResult(MCCraftingGrid.get(inventory));
-		if (result.isPresent()) {
-			return Game.natives().toNative(result.get());
-		}
-		return null;
+		return recipe.getCraftingResult(MCCraftingGrid.get(inventory)).map(ItemConverter.instance()::toNative).orElse(null);
 	}
 }

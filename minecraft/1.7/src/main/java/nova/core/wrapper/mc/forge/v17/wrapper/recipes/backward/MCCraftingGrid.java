@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.recipes;
+package nova.core.wrapper.mc.forge.v17.wrapper.recipes.backward;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -29,9 +29,9 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import nova.core.entity.component.Player;
 import nova.core.recipes.crafting.CraftingGrid;
-import nova.core.wrapper.mc.forge.v18.util.ReflectionUtil;
-import nova.core.wrapper.mc.forge.v18.util.WrapUtility;
-import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
+import nova.core.wrapper.mc.forge.v17.util.ReflectionUtil;
+import nova.core.wrapper.mc.forge.v17.util.WrapUtility;
+import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,14 +48,14 @@ public class MCCraftingGrid implements CraftingGrid {
 	private int width;
 	private int height;
 	private nova.core.item.Item[] items;
-	private ItemStack[] original;
+	private net.minecraft.item.ItemStack[] original;
 	private int itemCount;
 
 	private MCCraftingGrid(InventoryCrafting inventory) {
 		this.inventory = inventory;
 		width = height = (int) Math.sqrt(inventory.getSizeInventory());
 		items = new nova.core.item.Item[width * height];
-		original = new ItemStack[items.length];
+		original = new net.minecraft.item.ItemStack[items.length];
 		itemCount = 0;
 		update();
 
@@ -189,7 +189,7 @@ public class MCCraftingGrid implements CraftingGrid {
 
 	@Override
 	public boolean setCrafting(int x, int y, Optional<nova.core.item.Item> item) {
-		//System.out.println("SetStack(" + x + ", " + y + ") " + stack);
+		//System.out.println("SetStack(" + x + ", " + y + ") " + item);
 
 		int ix = y * width + x;
 		if (item.isPresent()) {
@@ -213,7 +213,7 @@ public class MCCraftingGrid implements CraftingGrid {
 
 	@Override
 	public boolean setCrafting(int i, Optional<nova.core.item.Item> item) {
-		//System.out.println("SetStack(" + i + ") " + stack);
+		//System.out.println("SetStack(" + i + ") " + item);
 
 		if (item.isPresent()) {
 			if (items[i] == null) {
@@ -239,6 +239,8 @@ public class MCCraftingGrid implements CraftingGrid {
 	public void giveBack(nova.core.item.Item item) {
 		if (playerOrig != null) {
 			playerOrig.inventory.addItemStackToInventory(ItemConverter.instance().toNative(item));
+		} else {
+
 		}
 	}
 

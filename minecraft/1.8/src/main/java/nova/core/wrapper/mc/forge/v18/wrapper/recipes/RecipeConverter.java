@@ -18,8 +18,10 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.recipes;
+package nova.core.wrapper.mc.forge.v18.wrapper.recipes;
 
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.backward.MCCraftingRecipe;
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward.NovaCraftingGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
@@ -35,9 +37,13 @@ import nova.core.recipes.crafting.ShapelessCraftingRecipe;
 import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.recipes.ingredient.OreItemIngredient;
 import nova.core.recipes.ingredient.SpecificItemIngredient;
-import nova.core.util.Identifiable;
 import nova.core.wrapper.mc.forge.v18.util.ReflectionUtil;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward.NovaCraftingRecipe;
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward.ShapedRecipeBasic;
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward.ShapedRecipeOre;
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward.ShapelessRecipeBasic;
+import nova.core.wrapper.mc.forge.v18.wrapper.recipes.forward.ShapelessRecipeOre;
 import nova.internal.core.Game;
 
 import java.util.ArrayList;
@@ -99,7 +105,7 @@ public class RecipeConverter implements NativeConverter<CraftingRecipe, IRecipe>
 		if (ingredient == null) {
 			return null;
 		} else if (ingredient instanceof ItemStack) {
-			return new SpecificItemIngredient(((Identifiable) Game.natives().toNova(ingredient)).getID());
+			return new SpecificItemIngredient(ItemConverter.instance().toNova((ItemStack) ingredient).getID());
 		} else if (ingredient instanceof String) {
 			return new OreItemIngredient((String) ingredient);
 		} else if (ingredient instanceof List) {
@@ -126,7 +132,7 @@ public class RecipeConverter implements NativeConverter<CraftingRecipe, IRecipe>
 
 	private ItemStack wrapSpecific(SpecificItemIngredient ingredient) {
 		for (Item item : ingredient.getExampleItems()) {
-			return Game.natives().toNative(item.getFactory().build());
+			return ItemConverter.instance().toNative(item.getFactory());
 		}
 
 		throw new AssertionError("this can't be!");
