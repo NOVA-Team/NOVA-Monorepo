@@ -19,6 +19,7 @@
  */
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.backward;
 
+import net.minecraft.block.Block;
 import nova.core.block.BlockFactory;
 
 /**
@@ -26,7 +27,14 @@ import nova.core.block.BlockFactory;
  */
 public class BWBlockFactory extends BlockFactory {
 
-	public BWBlockFactory(net.minecraft.block.Block block) {
-		super(net.minecraft.block.Block.REGISTRY.getNameForObject(block).toString(), () -> new BWBlock(block), factory -> {});
+	private final Block block;
+
+	public BWBlockFactory(Block block) {
+		super(Block.REGISTRY.getNameForObject(block).toString(), () -> new BWBlock(block), factory -> {});
+		this.block = block;
+	}
+
+	public Block getBlock() {
+		return block;
 	}
 }

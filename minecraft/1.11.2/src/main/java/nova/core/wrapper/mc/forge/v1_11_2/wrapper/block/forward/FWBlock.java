@@ -81,8 +81,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	public BlockPos lastExtendedStatePos;
 	private Map<BlockPosition, Block> harvestedBlocks = new HashMap<>();
 
-	private static Material getMcMaterial(BlockFactory factory) {
-		Block dummy = factory.build();
+	private static Material getMcMaterial(Block dummy) {
 		if (dummy.components.has(BlockProperty.Opacity.class) || dummy.components.has(BlockProperty.Replaceable.class)) {
 			// TODO allow color selection
 			return new ProxyMaterial(MapColor.GRAY,
@@ -94,10 +93,13 @@ public class FWBlock extends net.minecraft.block.Block {
 	}
 
 	public FWBlock(BlockFactory factory) {
-		//TODO: Hack build() method
-		super(getMcMaterial(factory));
+		this(factory, factory.build());
+	}
+
+	private FWBlock(BlockFactory factory, Block dummy) {
+		super(getMcMaterial(dummy));
 		this.factory = factory;
-		this.dummy = factory.build();
+		this.dummy = dummy;
 		if (dummy.components.has(BlockProperty.BlockSound.class)) {
 			this.blockSoundType = new FWBlockSound(dummy.components.get(BlockProperty.BlockSound.class));
 		} else {

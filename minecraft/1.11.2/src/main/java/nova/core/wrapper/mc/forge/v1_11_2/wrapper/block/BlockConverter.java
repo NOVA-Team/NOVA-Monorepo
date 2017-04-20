@@ -24,7 +24,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -38,7 +37,7 @@ import nova.core.loader.Mod;
 import nova.core.nativewrapper.NativeConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v1_11_2.launcher.NovaMinecraft;
-import nova.core.wrapper.mc.forge.v1_11_2.util.ModCreativeTab;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.backward.BWBlockFactory;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlock;
@@ -158,8 +157,7 @@ public class BlockConverter implements NativeConverter<BlockFactory, net.minecra
 				blockWrapper.setCreativeTab(first.get());
 			} else {
 				Optional<nova.core.item.Item> item = category.item;
-				ModCreativeTab tab = new ModCreativeTab(category.name, item.isPresent() ? Game.natives().toNative(item.get()) : Item.getItemFromBlock(blockWrapper));
-				blockWrapper.setCreativeTab(tab);
+				blockWrapper.setCreativeTab(CategoryConverter.instance().toNative(category, blockWrapper));
 			}
 		}
 
