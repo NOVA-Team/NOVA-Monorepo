@@ -37,4 +37,14 @@ public class BWBlockFactory extends BlockFactory {
 	public Block getBlock() {
 		return block;
 	}
+
+	@Override
+	public String getLocalizedName() {
+		return getBlock().getLocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return getBlock().getUnlocalizedName();
+	}
 }

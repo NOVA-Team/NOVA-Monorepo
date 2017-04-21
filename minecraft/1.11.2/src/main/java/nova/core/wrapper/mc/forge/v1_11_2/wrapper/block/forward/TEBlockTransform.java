@@ -20,12 +20,15 @@
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import nova.core.block.Block;
 import nova.core.component.transform.BlockTransform;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
-import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
+import java.util.Objects;
 
 /**
  * @author ExE Boss
@@ -38,6 +41,10 @@ public class TEBlockTransform extends BlockTransform {
 		this.tileEntity = tileEntity;
 	}
 
+	public Block block() {
+		return tileEntity.block;
+	}
+
 	@Override
 	public Vector3D position() {
 		return VectorConverter.instance().toNova(tileEntity.getPos());
@@ -48,28 +55,25 @@ public class TEBlockTransform extends BlockTransform {
 		return WorldConverter.instance().toNova(tileEntity.getWorld());
 	}
 
-	public net.minecraft.world.World mcWorld() {
+	public BlockPos blockPos() {
+		return tileEntity.getPos();
+	}
+
+	public IBlockAccess blockAccess() {
 		return tileEntity.getWorld();
 	}
 
 	@Override
-	public void setWorld(nova.core.world.World world) {
-		nova.core.world.World originalWorld = world();
-		Vector3D originalPosition = position();
-		world.setBlock(position(), tileEntity.block.getFactory());
-		net.minecraft.world.World mcWorld = Game.natives().toNative(world);
-		mcWorld.setTileEntity(tileEntity.getPos(), tileEntity);
-		tileEntity.setWorld(mcWorld);
-		originalWorld.removeBlock(originalPosition);
+	public void setWorld(World world) {
+		world().setBlock(position(), tileEntity.block.getFactory());
+		world().removeBlock(position());
+		Objects.requireNonNull((FWTile) WorldConverter.instance().toNative(world).getTileEntity(blockPos())).setBlock(tileEntity.block);
 	}
 
 	@Override
 	public void setPosition(Vector3D position) {
-		Vector3D originalPosition = position();
 		world().setBlock(position, tileEntity.block.getFactory());
-		BlockPos newPos = VectorConverter.instance().toNative(position);
-		mcWorld().setTileEntity(newPos, tileEntity);
-		tileEntity.setPos(newPos);
-		world().removeBlock(originalPosition);
+		world().removeBlock(position());
+		Objects.requireNonNull((FWTile) blockAccess().getTileEntity(VectorConverter.instance().toNative(position))).setBlock(tileEntity.block);
 	}
 }

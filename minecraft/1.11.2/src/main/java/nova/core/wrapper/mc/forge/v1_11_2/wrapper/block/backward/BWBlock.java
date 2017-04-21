@@ -51,6 +51,7 @@ import nova.core.util.Direction;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
@@ -124,7 +125,7 @@ public class BWBlock extends Block implements Storable {
 						true
 					);
 				return aabbs.stream()
-					.map(aabb -> (Cuboid) Game.natives().toNova(aabb))
+					.map(CuboidConverter.instance()::toNova)
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			}).setSelectionBoxes(entity -> {
@@ -205,7 +206,7 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	public BlockPos blockPos() {
-		return new BlockPos(x(), y(), z());
+		return VectorConverter.instance().toNative(position());
 	}
 
 	public IBlockAccess blockAccess() {

@@ -69,6 +69,9 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 	}
 
 	public void setBlock(Block block) {
+		if (block.components.has(TEBlockTransform.class))
+			block.components.remove(TEBlockTransform.class);
+		block.components.getOrAdd(new TEBlockTransform(this));
 		this.block = block;
 	}
 
@@ -84,6 +87,8 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 	@Override
 	public void validate() {
 		super.validate();
+		if (block.components.has(TEBlockTransform.class))
+			block.components.remove(TEBlockTransform.class);
 		block.components.getOrAdd(new TEBlockTransform(this));
 
 		if (cacheData != null && block instanceof Storable) {
@@ -179,6 +184,7 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 		}
 
 		@Override
+		@SuppressWarnings("unchecked")
 		public void processPacket(INetHandlerPlayClient handler) {
 			super.processPacket(handler);
 			try {

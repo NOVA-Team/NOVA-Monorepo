@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.component.renderer.DynamicRenderer;
 import nova.core.wrapper.mc.forge.v1_11_2.render.RenderUtility;

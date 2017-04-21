@@ -19,6 +19,7 @@
  */
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.backward;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -70,14 +71,20 @@ public class BWBlockTransform extends BlockTransform {
 		net.minecraft.world.World oldWorld = Game.natives().toNative(this.world);
 		net.minecraft.world.World newWorld = Game.natives().toNative(world);
 		Optional<TileEntity> tileEntity = Optional.ofNullable(oldWorld.getTileEntity(pos));
-		newWorld.setBlockState(pos, block.blockState());
+		Optional<NBTTagCompound> nbt = Optional.empty();
 		if (tileEntity.isPresent()) {
-			newWorld.setTileEntity(pos, tileEntity.get());
-			tileEntity.get().setWorld(newWorld);
-		} else {
-			newWorld.setTileEntity(pos, null);
+			NBTTagCompound compound = new NBTTagCompound();
+			tileEntity.get().writeToNBT(compound);
+			nbt = Optional.of(compound);
 		}
+		newWorld.setBlockState(pos, block.blockState());
+		oldWorld.removeTileEntity(pos);
 		oldWorld.setBlockToAir(pos);
+		Optional<TileEntity> newTileEntity = Optional.ofNullable(newWorld.getTileEntity(pos));
+		if (newTileEntity.isPresent() && nbt.isPresent()) {
+			newTileEntity.get().readFromNBT(nbt.get());
+		}
+		this.world = world;
 	}
 
 	@Override
@@ -86,13 +93,22 @@ public class BWBlockTransform extends BlockTransform {
 		BlockPos newPos = VectorConverter.instance().toNative(position);
 		net.minecraft.world.World world = Game.natives().toNative(this.world);
 		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity(oldPos));
-		world.setBlockState(newPos, block.blockState());
+		Optional<NBTTagCompound> nbt = Optional.empty();
 		if (tileEntity.isPresent()) {
-			world.setTileEntity(newPos, tileEntity.get());
-			tileEntity.get().setPos(newPos);
-		} else {
-			world.setTileEntity(newPos, null);
+			NBTTagCompound compound = new NBTTagCompound();
+			tileEntity.get().writeToNBT(compound);
+            compound.setInteger("x", newPos.getX());
+            compound.setInteger("y", newPos.getY());
+            compound.setInteger("z", newPos.getZ());
+			nbt = Optional.of(compound);
 		}
+		world.setBlockState(newPos, block.blockState());
+		world.removeTileEntity(oldPos);
 		world.setBlockToAir(oldPos);
+		Optional<TileEntity> newTileEntity = Optional.ofNullable(blockAccess().getTileEntity(newPos));
+		if (newTileEntity.isPresent() && nbt.isPresent()) {
+			newTileEntity.get().readFromNBT(nbt.get());
+		}
+		this.position = position;
 	}
 }

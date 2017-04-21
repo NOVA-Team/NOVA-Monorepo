@@ -21,21 +21,14 @@
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
 import nova.core.component.Updater;
-import nova.core.component.fluid.SidedTankProvider;
-import nova.core.util.Direction;
 import nova.core.wrapper.mc.forge.v1_11_2.asm.lib.ComponentInjector;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
 import nova.internal.core.Game;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
 
 /**
  * @author Vic Nightfall
