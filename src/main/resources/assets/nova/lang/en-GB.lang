@@ -1,9 +1,20 @@
+##================##
+## Unit convesion ##
+##================##
+
 unit.nova.metre.name=Metre
 unit.nova.metre.plural=Metres
 unit.nova.litre.name=Litre
 unit.nova.litre.plural=Litres
 unit.nova.gram.name=Gram
 unit.nova.gram.plural=Grams
+
+unit.nova.celsius.name=degree Celsius
+unit.nova.celsius.plural=degrees Celsius
+unit.nova.kelvin.name=kelvin
+unit.nova.kelvin.plural=kelvins
+unit.nova.fahrenheit.name=degree Fahrenheit
+unit.nova.fahrenheit.plural=degrees Fahrenheit
 
 unit.nova.ampere.name=Amp
 unit.nova.ampere.plural=Amps
