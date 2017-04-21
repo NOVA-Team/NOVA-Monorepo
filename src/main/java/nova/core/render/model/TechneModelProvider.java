@@ -21,6 +21,7 @@
 import nova.core.render.RenderException;
 import nova.core.render.pipeline.BlockRenderPipeline;
 import nova.core.render.pipeline.CubeTextureCoordinates;
+import nova.core.util.ModelUtil;
 import nova.core.util.math.MatrixStack;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
@@ -32,6 +33,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +57,7 @@ public class TechneModelProvider extends ModelProvider {
 
 	//A map of all models generated with their names
 	private final MeshModel model = new MeshModel();
+	private boolean loaded = false;
 
 	/**
 	 * Creates new ModelProvider
@@ -249,11 +252,12 @@ public class TechneModelProvider extends ModelProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		this.loaded = true;
 	}
 
 	@Override
 	public MeshModel getModel() {
-		return model.clone();
+		return this.loaded ? model.clone() : ModelUtil.getMissingModel();
 	}
 
 	@Override

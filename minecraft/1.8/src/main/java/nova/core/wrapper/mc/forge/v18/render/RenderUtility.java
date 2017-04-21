@@ -23,9 +23,6 @@ package nova.core.wrapper.mc.forge.v18.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.FaceBakery;
-import net.minecraft.client.renderer.block.model.ItemModelGenerator;
-import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -38,7 +35,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.ItemFactory;
 import nova.core.render.texture.Texture;
@@ -229,7 +225,7 @@ public class RenderUtility implements ForgeLoadable {
 				IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
 				m.load(res.getInputStream());
 			} catch (IOException e) {
-				throw new RuntimeException("IO Exception reading model format", e);
+				Game.logger().warn("IO Exception reading model format", e);
 			}
 		});
 	}

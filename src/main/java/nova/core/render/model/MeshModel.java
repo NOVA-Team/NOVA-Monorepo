@@ -56,8 +56,9 @@ public class MeshModel extends Model {
 	 *
 	 * @param texture The texture
 	 */
-	public void bind(Texture texture) {
+	public MeshModel bind(Texture texture) {
 		faces.forEach(f -> f.texture = Optional.of(texture));
+		return this;
 	}
 
 	/**
@@ -65,12 +66,13 @@ public class MeshModel extends Model {
 	 *
 	 * @param texture to be used to as for this model and sub-models.
 	 */
-	public void bindAll(Texture texture) {
+	public MeshModel bindAll(Texture texture) {
 		bind(texture);
 		stream()
 			.filter(m -> m instanceof MeshModel)
 			.map(m -> (MeshModel) m)
 			.forEach(m -> m.bindAll(texture));
+		return this;
 	}
 
 	/**
@@ -78,8 +80,9 @@ public class MeshModel extends Model {
 	 *
 	 * @param Face - The finished masterpiece.
 	 */
-	public void drawFace(Face Face) {
+	public MeshModel drawFace(Face Face) {
 		faces.add(Face);
+		return this;
 	}
 
 	@Override

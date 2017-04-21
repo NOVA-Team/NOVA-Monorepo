@@ -31,7 +31,6 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelFormatException;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v17.wrapper.assets.AssetConverter;
@@ -177,7 +176,7 @@ public class RenderUtility implements ForgeLoadable {
 				IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
 				m.load(res.getInputStream());
 			} catch (IOException e) {
-				throw new ModelFormatException("IO Exception reading model format", e);
+				Game.logger().warn("IO Exception reading model format", e);
 			}
 		});
 	}

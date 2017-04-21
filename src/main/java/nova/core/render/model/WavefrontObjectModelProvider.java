@@ -21,6 +21,7 @@
 package nova.core.render.model;
 
 import nova.core.render.RenderException;
+import nova.core.util.ModelUtil;
 import nova.core.util.math.Vector3DUtil;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -58,6 +59,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 	private ArrayList<Vector3D> vertices = new ArrayList<>();
 	private ArrayList<Vector2D> textureCoordinates = new ArrayList<>();
 	private ArrayList<Vector3D> vertexNormals = new ArrayList<>();
+	private boolean loaded = false;
 
 	/**
 	 * Creates new ModelProvider
@@ -122,6 +124,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		} finally {
 			this.cleanUp();
 		}
+		this.loaded = true;
 	}
 
 	private void cleanUp() {
@@ -132,7 +135,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 
 	@Override
 	public MeshModel getModel() {
-		return model.clone();
+		return this.loaded ? model.clone() : ModelUtil.getMissingModel();
 	}
 
 	@Override
