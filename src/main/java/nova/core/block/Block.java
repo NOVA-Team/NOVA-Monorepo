@@ -91,24 +91,24 @@ public class Block extends SidedComponentProvider implements Identifiable, Trans
 	 * Get the x co-ordinate of the block.
 	 * @return The x co-ordinate of the block.
 	 */
-	public final int x() {
-		return (int) FastMath.floor(position().getX());
+	public final long x() {
+		return (long) FastMath.floor(position().getX());
 	}
 
 	/**
 	 * Get the y co-ordinate of the block.
 	 * @return The y co-ordinate of the block.
 	 */
-	public final int y() {
-		return (int) FastMath.floor(position().getY());
+	public final long y() {
+		return (long) FastMath.floor(position().getY());
 	}
 
 	/**
 	 * Get the z co-ordinate of the block.
 	 * @return The z co-ordinate of the block.
 	 */
-	public final int z() {
-		return (int) FastMath.floor(position().getZ());
+	public final long z() {
+		return (long) FastMath.floor(position().getZ());
 	}
 
 	/**

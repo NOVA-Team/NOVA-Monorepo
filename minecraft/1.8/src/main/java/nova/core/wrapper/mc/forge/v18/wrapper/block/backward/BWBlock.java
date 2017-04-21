@@ -45,12 +45,17 @@ import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v18.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.cuboid.CuboidConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.data.DataConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWBakedModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,21 +87,27 @@ public class BWBlock extends Block implements Storable {
 			.setBoundingBox(() -> new Cuboid(mcBlock.getBlockBoundsMinX(), mcBlock.getBlockBoundsMinY(), mcBlock.getBlockBoundsMinZ(), mcBlock.getBlockBoundsMaxX(), mcBlock.getBlockBoundsMaxY(), mcBlock.getBlockBoundsMaxZ()))
 			.setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
-				mcBlock.addCollisionBoxesToList(
-					Game.natives().toNative(world()),
-					new BlockPos(x(), y(), z()),
-					blockState(),
-					Game.natives().toNative(entity.isPresent() ? entity.get().components.get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),
-					aabbs,
-					entity.isPresent() ? Game.natives().toNative(entity.get()) : null
-				);
-
+				if (getMcBlockAccess() instanceof net.minecraft.world.World)
+					mcBlock.addCollisionBoxesToList(
+						(net.minecraft.world.World) getMcBlockAccess(),
+						blockPos(),
+						blockState(),
+						CuboidConverter.instance().toNative(entity
+							.flatMap(e -> e.components.getOp(Collider.class))
+							.map(c -> c.boundingBox.get())
+							.orElseGet(() -> Cuboid.ONE.add(pos))),
+						aabbs,
+						entity.map(EntityConverter.instance()::toNative).orElse(null)
+					);
 				return aabbs.stream()
-					.map(aabb -> (Cuboid) Game.natives().toNova(aabb))
+					.map(CuboidConverter.instance()::toNova)
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
+			}).setSelectionBoxes(entity -> {
+				final AxisAlignedBB bb = mcBlock.getSelectedBoundingBox(((net.minecraft.world.World) getMcBlockAccess()), blockPos());
+				Cuboid cuboid = CuboidConverter.instance().toNova(bb);
+				return Collections.singleton(cuboid.subtract(position()));
 			});
-		//TODO: Set selection bounds
 		components.add(new StaticRenderer())
 			.onRender(model -> {
 				switch (block.getRenderType()) {
@@ -114,7 +125,7 @@ public class BWBlock extends Block implements Storable {
 					case 3:
 						// model rendering
 						model.addChild(new BWBakedModel(Minecraft.getMinecraft().getBlockRendererDispatcher()
-							.getModelFromBlockState(blockState(), getMcBlockAccess(), new BlockPos(x(), y(), z())), DefaultVertexFormats.BLOCK));
+							.getModelFromBlockState(blockState(), getMcBlockAccess(), blockPos()), DefaultVertexFormats.BLOCK));
 						break;
 				}
 			});
@@ -129,6 +140,10 @@ public class BWBlock extends Block implements Storable {
 		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
 	}
 
+	public BlockPos blockPos() {
+		return VectorConverter.instance().toNative(position());
+	}
+
 	public IBlockAccess getMcBlockAccess() {
 		return WorldConverter.instance().toNative(world());
 	}
@@ -138,14 +153,10 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	public Optional<TileEntity> getTileEntity() {
-		return Optional.ofNullable(getTileEntityImpl());
-	}
-
-	private TileEntity getTileEntityImpl() {
 		if (mcTileEntity == null && mcBlock.hasTileEntity(blockState())) {
-			mcTileEntity = getMcBlockAccess().getTileEntity(new BlockPos(x(), y(), z()));
+			mcTileEntity = getMcBlockAccess().getTileEntity(blockPos());
 		}
-		return mcTileEntity;
+		return Optional.ofNullable(mcTileEntity);
 	}
 
 	@Override
@@ -168,23 +179,17 @@ public class BWBlock extends Block implements Storable {
 	@Override
 	public void save(Data data) {
 		Storable.super.save(data);
-
-		TileEntity tileEntity = getTileEntityImpl();
-		if (tileEntity != null) {
+		getTileEntity().ifPresent(tile -> {
 			NBTTagCompound nbt = new NBTTagCompound();
-			tileEntity.writeToNBT(nbt);
-			data.putAll(Game.natives().toNova(nbt));
-		}
+			tile.writeToNBT(nbt);
+			data.putAll(DataConverter.instance().toNova(nbt));
+		});
 	}
 
 	@Override
 	public void load(Data data) {
 		Storable.super.load(data);
-
-		TileEntity tileEntity = getTileEntityImpl();
-		if (tileEntity != null) {
-			tileEntity.writeToNBT(Game.natives().toNative(data));
-		}
+		getTileEntity().ifPresent(tile -> tile.readFromNBT(DataConverter.instance().toNative(data)));
 	}
 
 	@Override
