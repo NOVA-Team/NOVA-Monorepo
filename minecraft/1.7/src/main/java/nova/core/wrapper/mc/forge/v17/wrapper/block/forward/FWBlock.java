@@ -143,7 +143,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 				return tileWrapper.getBlock();
 			}
 
-			System.out.println("Error: Block in TileWrapper is null.");
+			Game.logger().error("Error: Block in TileWrapper is null.");
 		}
 		return getBlockInstance((nova.core.world.World) Game.natives().toNova(access), position);
 

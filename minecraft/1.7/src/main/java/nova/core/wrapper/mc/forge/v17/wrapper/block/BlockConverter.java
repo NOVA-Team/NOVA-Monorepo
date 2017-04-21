@@ -147,6 +147,6 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 			blockWrapper.setCreativeTab(CategoryConverter.instance().toNative(category, blockWrapper));
 		}
 
-		System.out.println("[NOVA]: Registered '" + blockFactory.getID() + "' block.");
+		Game.logger().info("Registered block: {}", blockFactory.getID());
 	}
 }
