@@ -220,7 +220,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 				itemWrapper.setCreativeTab(CategoryConverter.instance().toNative(category, itemWrapper));
 			}
 
-			System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
+			Game.logger().info("Registered item: {}", itemFactory.getID());
 		}
 	}
 
