@@ -20,19 +20,17 @@
 
 package nova.core.wrapper.mc.forge.v17.wrapper.item;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
-import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.Renderer;
-import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
-import nova.core.wrapper.mc.forge.v17.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc.forge.v17.wrapper.render.BWModel;
 import nova.internal.core.Game;
@@ -74,11 +72,11 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default IIcon getIconFromDamage(int p_77617_1_) {
-		return null;
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("missingno");
 	}
 
 	default IIcon getIcon(ItemStack itemStack, int pass) {
-		return null;
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("missingno");
 	}
 
 	@Override

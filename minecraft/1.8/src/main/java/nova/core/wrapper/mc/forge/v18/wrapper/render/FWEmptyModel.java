@@ -53,9 +53,4 @@ public class FWEmptyModel extends FWSmartModel implements ISmartBlockModel, ISma
 	public List<BakedQuad> getGeneralQuads() {
 		return Collections.emptyList();
 	}
-
-	@Override
-	public TextureAtlasSprite getTexture() {
-		return null;
-	}
 }
