@@ -497,4 +497,12 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	public float getBlockHardness(World world, int x, int y, int z) {
 		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getHardness() * 2;
 	}
+
+	@Override
+	public boolean isReplaceable(IBlockAccess access, int x, int y, int z) {
+		return getBlockInstance(access, new Vector3D(x, y, z))
+			.components.getOp(BlockProperty.Replaceable.class)
+			.filter(r -> r.replaceFilter.test(Optional.empty()))
+			.isPresent();
+	}
 }

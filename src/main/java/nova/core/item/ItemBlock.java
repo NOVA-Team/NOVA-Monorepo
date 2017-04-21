@@ -66,7 +66,8 @@ public class ItemBlock extends Item {
 
 	protected boolean onPrePlace(Entity entity, World world, Vector3D placePos, Direction side, Vector3D hit) {
 		Optional<Block> checkBlock = world.getBlock(placePos);
-		if (checkBlock.isPresent() && checkBlock.get().canReplace()) {
+		if (checkBlock.isPresent() && checkBlock.get().components.getOp(BlockProperty.Replaceable.class)
+			.filter(r -> r.replaceFilter.test(Optional.of(blockFactory))).isPresent()) {
 			return world.setBlock(placePos, blockFactory);
 		}
 		return false;

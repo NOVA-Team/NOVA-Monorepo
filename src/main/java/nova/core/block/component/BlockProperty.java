@@ -1,13 +1,16 @@
 package nova.core.block.component;
 
+import nova.core.block.BlockFactory;
 import nova.core.component.Component;
 import nova.core.component.SidedComponent;
 import nova.core.component.UnsidedComponent;
 import nova.core.sound.Sound;
+import nova.core.util.math.MathUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Block properties.
@@ -152,10 +155,15 @@ public interface BlockProperty {
 	 * @author winsock
 	 */
 	@SidedComponent
+	@SuppressWarnings("deprecation")
 	public static class Opacity extends Component implements BlockProperty {
 		/**
 		 * This value determines if the block should allow light through itself or not.
+		 *
+		 * @deprecated Will be made private. Use {@link #getOpacity() } instead.
 		 */
+		// TODO: Make private
+		@Deprecated
 		public double opacity = 1;
 
 		/**
@@ -169,44 +177,96 @@ public interface BlockProperty {
 		}
 
 		/**
+		 * Sets that the block should disallow light through
+		 *
+		 * @return This instance for chaining if desired.
+		 */
+		public Opacity setOpaque() {
+			opacity = 1;
+			return this;
+		}
+
+		/**
 		 * Sets if light should be transmitted through this block
 		 *
 		 * @param opacity The block's opacity
 		 * @return This instance for chaining if desired.
 		 */
 		public Opacity setOpacity(double opacity) {
-			this.opacity = opacity;
+			this.opacity = MathUtil.clamp(opacity, 0, 1);
 			return this;
+		}
+
+		/**
+		 * This value determines if the block should allow light through itself or not.
+		 *
+		 * @return The block's opacity
+		 */
+		public double getOpacity() {
+			return opacity;
+		}
+
+		/**
+		 * Checks if the block should allow light through
+		 *
+		 * @return If the block should allow light through
+		 */
+		public boolean isTransparent() {
+			return opacity < 1;
+		}
+
+		/**
+		 * Checks if the block should disallow light through
+		 *
+		 * @return If the block should disallow light through
+		 */
+		public boolean isOpaque() {
+			return opacity == 1;
 		}
 	}
 
 	/**
 	 * Indicates whether the block is replaceable.
+	 *
+	 * @author ExE Boss
 	 */
 	@UnsidedComponent
-	public static final class Replaceable extends Component implements BlockProperty {
-		private static final Replaceable instance = new Replaceable();
+	@SuppressWarnings("deprecation")
+	public static class Replaceable extends Component implements BlockProperty {
+		/**
+		 * The replacement filter. An empty optional means that it is impossible
+		 * to determine the factory of the block to replace this block with.
+		 *
+		 * @deprecated Will be made private. Use {@link #testBlock(Optional) Replaceable.testBlock(Optional&lt;BlockFactory&gt;)} instead.
+		 */
+		// TODO: Make private
+		@Deprecated
+		public Predicate<Optional<BlockFactory>> replaceFilter = block -> true;
+
+		public Replaceable() {
+		}
 
 		/**
-		 * Gets the singleton for Replaceable.
+		 * Set the replacement filter. An empty optional means that it is impossible
+		 * to determine the factory of the block to replace this block with.
 		 *
-		 * @return The singleton for Replaceable.
+		 * @param replaceFilter The replacement filter.
+		 * @return This instance for chaining if desired.
 		 */
-		public static Replaceable instance() {
-			return instance;
+		public Replaceable setReplaceFilter(Predicate<Optional<BlockFactory>> replaceFilter) {
+			this.replaceFilter = replaceFilter;
+			return this;
 		}
 
-		private Replaceable() {
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			return this == o || o instanceof Replaceable;
-		}
-
-		@Override
-		public int hashCode() {
-			return Replaceable.class.hashCode();
+		/**
+		 * Test if this block can be replaced by the supplied block.
+		 * An empty optional means that it was impossible to determine
+		 * the factory of the block to replace this block with.
+		 *
+		 * @param block The block to replace this block with, or en empty Optional.
+		 */
+		public boolean testBlock(Optional<BlockFactory> block) {
+			return replaceFilter.test(block);
 		}
 	}
 }

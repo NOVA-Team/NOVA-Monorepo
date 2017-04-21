@@ -31,6 +31,6 @@ public class ProxyMaterial extends Material {
 
 	@Override
 	public boolean isReplaceable() {
-		return replaceable.isPresent() || super.isReplaceable();
+		return replaceable.isPresent() ? replaceable.get().replaceFilter.test(Optional.empty()) : super.isReplaceable();
 	}
 }
