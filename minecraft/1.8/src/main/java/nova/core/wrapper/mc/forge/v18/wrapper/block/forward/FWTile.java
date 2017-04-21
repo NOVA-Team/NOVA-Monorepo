@@ -25,13 +25,10 @@ import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
-import nova.core.component.transform.BlockTransform;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.wrapper.mc.forge.v18.network.netty.MCNetworkManager;
-import nova.core.wrapper.mc.forge.v18.wrapper.VectorConverter;
-import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
@@ -58,6 +55,9 @@ public class FWTile extends TileEntity {
 	}
 
 	public void setBlock(Block block) {
+		if (block.components.has(TEBlockTransform.class))
+			block.components.remove(TEBlockTransform.class);
+		block.components.getOrAdd(new TEBlockTransform(this));
 		this.block = block;
 	}
 
@@ -72,9 +72,9 @@ public class FWTile extends TileEntity {
 	@Override
 	public void validate() {
 		super.validate();
-		if (block.components.has(BlockTransform.class))
-			block.components.remove(BlockTransform.class);
-		block.components.getOrAdd(new MCBlockTransform(block, WorldConverter.instance().toNova(getWorld()), VectorConverter.instance().toNova(pos)));
+		if (block.components.has(TEBlockTransform.class))
+			block.components.remove(TEBlockTransform.class);
+		block.components.getOrAdd(new TEBlockTransform(this));
 
 		if (cacheData != null && block instanceof Storable) {
 			((Storable) block).load(cacheData);
