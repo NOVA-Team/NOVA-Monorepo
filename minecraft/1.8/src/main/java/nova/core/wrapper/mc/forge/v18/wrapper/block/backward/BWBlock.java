@@ -37,7 +37,6 @@ import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
 import nova.core.component.renderer.StaticRenderer;
-import nova.core.component.transform.BlockTransform;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
@@ -46,7 +45,7 @@ import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
-import nova.core.wrapper.mc.forge.v18.wrapper.block.world.BWWorld;
+import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWBakedModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -68,11 +67,7 @@ public class BWBlock extends Block implements Storable {
 
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
-
-		BlockTransform transform = components.add(new BlockTransform());
-		transform.setWorld(world);
-		transform.setPosition(pos);
-
+		components.add(new BWBlockTransform(this, world, pos));
 		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().blocksLight() ? 1 : 0));
 		if (mcBlock.isReplaceable((net.minecraft.world.World) getMcBlockAccess(), new BlockPos(x(), y(), z())))
 			components.add(BlockProperty.Replaceable.instance());
@@ -135,7 +130,7 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	public IBlockAccess getMcBlockAccess() {
-		return ((BWWorld) world()).access;
+		return WorldConverter.instance().toNative(world());
 	}
 
 	public IBlockState blockState() {
@@ -200,5 +195,10 @@ public class BWBlock extends Block implements Storable {
 	@Override
 	public String getUnlocalizedName() {
 		return mcBlock.getUnlocalizedName();
+	}
+
+	@Override
+	public String toString() {
+		return "BWBlock{" + mcBlock + ", " + getTileEntity() + "}";
 	}
 }

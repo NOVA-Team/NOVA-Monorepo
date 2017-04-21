@@ -138,12 +138,16 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		 * methods over.
 		 */
 		if (hasTileEntity(0)) {
-			FWTile tileWrapper = (FWTile) access.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ());
-			if (tileWrapper != null && tileWrapper.getBlock() != null) {
-				return tileWrapper.getBlock();
-			}
+			try {
+				FWTile tileWrapper = (FWTile) access.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ());
+				if (tileWrapper != null && tileWrapper.getBlock() != null) {
+					return tileWrapper.getBlock();
+				}
 
-			Game.logger().error("Error: Block in TileWrapper is null.");
+				throw new IllegalStateException("Error: Block in TileWrapper is null for " + blockClass.getName());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return getBlockInstance((nova.core.world.World) Game.natives().toNova(access), position);
 
@@ -206,6 +210,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
 		FWTile fwTile = FWTileLoader.loadTile(dummy.getID());
+		fwTile.getBlock().components.getOrAdd(new TEBlockTransform(fwTile));
 		if (!fwTile.block.components.has(BlockProperty.BlockSound.class)) {
 			BlockProperty.BlockSound properties = fwTile.block.components.add(new BlockProperty.BlockSound());
 			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundTypeStone.getBreakSound()));
