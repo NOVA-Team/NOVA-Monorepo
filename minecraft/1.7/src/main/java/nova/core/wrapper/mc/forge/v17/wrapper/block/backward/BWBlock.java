@@ -70,7 +70,7 @@ public class BWBlock extends Block implements Storable {
 		this.mcBlock = block;
 		components.add(new BWBlockTransform(this, world, pos));
 		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().isOpaque() ? 1 : 0));
-		if (mcBlock.isReplaceable(getMcBlockAccess(), xi(), yi(), zi()))
+		if (mcBlock.isReplaceable(blockAccess(), xi(), yi(), zi()))
 			components.add(BlockProperty.Replaceable.instance());
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
@@ -78,14 +78,14 @@ public class BWBlock extends Block implements Storable {
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", mcBlock.stepSound.getBreakSound()));
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", mcBlock.stepSound.getStepResourcePath()));
 
-		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), xi(), yi(), zi()) / 15.0);
+		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(blockAccess(), xi(), yi(), zi()) / 15.0);
 		components.add(new Collider(this))
 			.setBoundingBox(() -> new Cuboid(mcBlock.getBlockBoundsMinX(), mcBlock.getBlockBoundsMinY(), mcBlock.getBlockBoundsMinZ(), mcBlock.getBlockBoundsMaxX(), mcBlock.getBlockBoundsMaxY(), mcBlock.getBlockBoundsMaxZ()))
 			.setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
-				if (getMcBlockAccess() instanceof net.minecraft.world.World)
+				if (blockAccess() instanceof net.minecraft.world.World)
 					mcBlock.addCollisionBoxesToList(
-						(net.minecraft.world.World) getMcBlockAccess(),
+						(net.minecraft.world.World) blockAccess(),
 						(int) position().getX(),
 						(int) position().getY(),
 						(int) position().getZ(),
@@ -101,7 +101,7 @@ public class BWBlock extends Block implements Storable {
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
 			}).setSelectionBoxes(entity -> {
-				final AxisAlignedBB bb = mcBlock.getSelectedBoundingBoxFromPool(((net.minecraft.world.World) getMcBlockAccess()), xi(), yi(), zi());
+				final AxisAlignedBB bb = mcBlock.getSelectedBoundingBoxFromPool(((net.minecraft.world.World) blockAccess()), xi(), yi(), zi());
 				Cuboid cuboid = CuboidConverter.instance().toNova(bb);
 				return Collections.singleton(cuboid.subtract(position()));
 			});
@@ -128,33 +128,33 @@ public class BWBlock extends Block implements Storable {
 		return (int) z();
 	}
 
-	public IBlockAccess getMcBlockAccess() {
+	public IBlockAccess blockAccess() {
 		return WorldConverter.instance().toNative(world());
 	}
 
 	public int getMetadata() {
-		return getMcBlockAccess().getBlockMetadata(xi(), yi(), zi());
+		return blockAccess().getBlockMetadata(xi(), yi(), zi());
 	}
 
 	public Optional<TileEntity> getTileEntity() {
 		if (mcTileEntity == null && mcBlock.hasTileEntity(getMetadata())) {
-			mcTileEntity = getMcBlockAccess().getTileEntity(xi(), yi(), zi());
+			mcTileEntity = blockAccess().getTileEntity(xi(), yi(), zi());
 		}
 		return  Optional.ofNullable(mcTileEntity);
 	}
 
 	@Override
 	public boolean canReplace() {
-		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) getMcBlockAccess(), xi(), yi(), zi());
+		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), xi(), yi(), zi());
 	}
 
 	@Override
 	public boolean shouldDisplacePlacement() {
-		if (mcBlock == Blocks.snow_layer && (getMcBlockAccess().getBlockMetadata(xi(), yi(), zi()) & 7) < 1) {
+		if (mcBlock == Blocks.snow_layer && (blockAccess().getBlockMetadata(xi(), yi(), zi()) & 7) < 1) {
 			return false;
 		}
 
-		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable(getMcBlockAccess(), xi(), yi(), zi())) {
+		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable(blockAccess(), xi(), yi(), zi())) {
 			return false;
 		}
 		return super.shouldDisplacePlacement();
