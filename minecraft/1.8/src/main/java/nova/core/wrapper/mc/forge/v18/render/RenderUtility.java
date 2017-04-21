@@ -23,9 +23,6 @@ package nova.core.wrapper.mc.forge.v18.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.FaceBakery;
-import net.minecraft.client.renderer.block.model.ItemModelGenerator;
-import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -38,12 +35,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.ItemFactory;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v18.wrapper.assets.AssetConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItem;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
@@ -188,7 +185,7 @@ public class RenderUtility implements ForgeLoadable {
 	public void onModelBakeEvent(ModelBakeEvent event) {
 		//Register all blocks
 		Game.blocks().registry.forEach(blockFactory -> {
-			Object blockObj = Game.natives().toNative(blockFactory.build());
+			net.minecraft.block.Block blockObj = BlockConverter.instance().toNative(blockFactory);
 			if (blockObj instanceof FWBlock) {
 				FWBlock block = (FWBlock) blockObj;
 				ResourceLocation blockRL = (ResourceLocation) net.minecraft.block.Block.blockRegistry.getNameForObject(block);
