@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v18.asm.transformers;
 import nova.core.wrapper.mc.forge.v18.asm.lib.ASMHelper;
 import nova.core.wrapper.mc.forge.v18.asm.lib.InstructionComparator;
 import nova.core.wrapper.mc.forge.v18.asm.lib.ObfMapping;
+import nova.internal.core.Game;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -34,7 +35,7 @@ public class TileEntityTransformer implements Transformer {
 	@Override
 	public void transform(ClassNode cnode) {
 
-		System.out.println("[NOVA] Transforming TileEntity class for dynamic instance injection.");
+		Game.logger().info("Transforming TileEntity class for dynamic instance injection.");
 
 		ObfMapping obfMap = new ObfMapping("bcm", "c", "(Lfn;)Lbcm;");
 		ObfMapping deobfMap = new ObfMapping("net/minecraft/tileentity/TileEntity", "createAndLoadEntity", "(Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;");
@@ -42,15 +43,15 @@ public class TileEntityTransformer implements Transformer {
 		MethodNode method = ASMHelper.findMethod(obfMap, cnode);
 
 		if (method == null) {
-			System.out.println("[NOVA] Lookup " + obfMap + " failed. You are probably in a deobf environment.");
+			Game.logger().warn("Lookup {} failed. You are probably in a deobf environment.", obfMap);
 			method = ASMHelper.findMethod(deobfMap, cnode);
 
 			if (method == null) {
-				System.out.println("[NOVA] Lookup " + deobfMap + " failed!");
+				throw new IllegalStateException("[NOVA] Lookup " + deobfMap + " failed!");
 			}
 		}
 
-		System.out.println("[NOVA] Transforming method " + method.name);
+		Game.logger().info("Transforming method {}", method.name);
 
 		ASMHelper.removeBlock(method.instructions, new InstructionComparator.InsnListSection(method.instructions, 23, 26));
 
@@ -61,5 +62,7 @@ public class TileEntityTransformer implements Transformer {
 		list.add(new VarInsnNode(ASTORE, 1));
 
 		method.instructions.insert(method.instructions.get(22), list);
+
+		Game.logger().info("Injected instruction to method: {}", method.name);
 	}
 }

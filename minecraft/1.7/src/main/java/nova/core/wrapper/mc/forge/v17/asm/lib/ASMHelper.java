@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v17.asm.lib;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import nova.internal.core.Game;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -134,7 +135,7 @@ public class ASMHelper {
 				if (method == null) {
 					throw new RuntimeException("Method not found: " + injector.method);
 				}
-				System.out.println("Injecting into " + injector.method + "\n" + printInsnList(injector.injection));
+				Game.logger().info("Injecting into {}\n", injector.method, printInsnList(injector.injection));
 
 				List<AbstractInsnNode> callNodes;
 				if (injector.before) {
@@ -149,10 +150,10 @@ public class ASMHelper {
 
 				for (AbstractInsnNode node : callNodes) {
 					if (injector.before) {
-						System.out.println("Injected before: " + printInsn(node));
+						Game.logger().info("Injected before: {}", printInsn(node));
 						method.instructions.insertBefore(node, cloneInsnList(injector.injection));
 					} else {
-						System.out.println("Injected after: " + printInsn(node));
+						Game.logger().info("Injected after: {}", printInsn(node));
 						method.instructions.insert(node, cloneInsnList(injector.injection));
 					}
 				}

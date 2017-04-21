@@ -21,6 +21,7 @@ package nova.core.wrapper.mc.forge.v17.asm.transformers;
 
 import nova.core.wrapper.mc.forge.v17.asm.lib.ASMHelper;
 import nova.core.wrapper.mc.forge.v17.asm.lib.ObfMapping;
+import nova.internal.core.Game;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -35,7 +36,7 @@ public class GameDataTransformer implements Transformer {
 
 	@Override
 	public void transform(ClassNode cnode) {
-		System.out.println("[NOVA] Transforming GameData class for correct NOVA mod id mapping.");
+		Game.logger().info("Transforming GameData class for correct NOVA mod id mapping.");
 		transformAddPrefix(cnode);
 		transformRegisterBlock(cnode);
 		transformRegisterItem(cnode);
@@ -49,7 +50,7 @@ public class GameDataTransformer implements Transformer {
 			throw new IllegalStateException("[NOVA] Lookup " + mapping + " failed!");
 		}
 
-		System.out.println("[NOVA] Transforming method " + method.name);
+		Game.logger().info("Transforming method {}", method.name);
 
 		@SuppressWarnings("unchecked")
 		JumpInsnNode prev = (JumpInsnNode) method.instructions.get(49);
@@ -61,7 +62,7 @@ public class GameDataTransformer implements Transformer {
 
 		method.instructions.insert(prev, list);
 
-		System.out.println("[NOVA] Injected instruction to method: " + method.name);
+		Game.logger().info("Injected instruction to method: {}", method.name);
 	}
 
 	private void transformRegisterBlock(ClassNode cnode) {
@@ -71,7 +72,7 @@ public class GameDataTransformer implements Transformer {
 		MethodNode method = ASMHelper.findMethod(obfMap, cnode);
 
 		if (method == null) {
-			System.out.println("[NOVA] Lookup " + obfMap + " failed. You are probably in a deobf environment.");
+			Game.logger().warn("Lookup {} failed. You are probably in a deobf environment.", obfMap);
 			method = ASMHelper.findMethod(deobfMap, cnode);
 
 			if (method == null) {
@@ -79,7 +80,7 @@ public class GameDataTransformer implements Transformer {
 			}
 		}
 
-		System.out.println("[NOVA] Transforming method " + method.name);
+		Game.logger().info("Transforming method {}", method.name);
 
 		@SuppressWarnings("unchecked")
 		JumpInsnNode prev = (JumpInsnNode) method.instructions.get(12);
@@ -91,7 +92,7 @@ public class GameDataTransformer implements Transformer {
 
 		method.instructions.insert(prev, list);
 
-		System.out.println("[NOVA] Injected instruction to method: " + method.name);
+		Game.logger().info("Injected instruction to method: {}", method.name);
 	}
 
 	private void transformRegisterItem(ClassNode cnode) {
@@ -101,7 +102,7 @@ public class GameDataTransformer implements Transformer {
 		MethodNode method = ASMHelper.findMethod(obfMap, cnode);
 
 		if (method == null) {
-			System.out.println("[NOVA] Lookup " + obfMap + " failed. You are probably in a deobf environment.");
+			Game.logger().warn("Lookup {} failed. You are probably in a deobf environment.", obfMap);
 			method = ASMHelper.findMethod(deobfMap, cnode);
 
 			if (method == null) {
@@ -109,7 +110,7 @@ public class GameDataTransformer implements Transformer {
 			}
 		}
 
-		System.out.println("[NOVA] Transforming method " + method.name);
+		Game.logger().info("Transforming method {}", method.name);
 
 		@SuppressWarnings("unchecked")
 		JumpInsnNode prev = (JumpInsnNode) method.instructions.get(12);
@@ -121,6 +122,6 @@ public class GameDataTransformer implements Transformer {
 
 		method.instructions.insert(prev, list);
 
-		System.out.println("[NOVA] Injected instruction to method: " + method.name);
+		Game.logger().info("Injected instruction to method: {}", method.name);
 	}
 }
