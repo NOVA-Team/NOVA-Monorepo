@@ -31,6 +31,7 @@ import se.jbee.inject.Supplier;
 import se.jbee.inject.bind.BinderModule;
 import se.jbee.inject.util.Scoped;
 
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 /**
@@ -38,8 +39,35 @@ import java.util.stream.StreamSupport;
  */
 public class LoggerModule extends BinderModule {
 
+	private static boolean defaultNameChangeable = true;
+	private static Optional<String> defaultName = Optional.empty();
+
+	/**
+	 * Changes the default logger name (the name of the logger injected into Game),
+	 * must be called before doing any dependency injection.
+	 * <p>
+	 * Is really only useful for engine implementations using NOVA.
+	 *
+	 * @param name The new name.
+	 */
+	public static void setDefaultName(String name) {
+		if (defaultNameChangeable) {
+			defaultName = Optional.of(name);
+		}
+	}
+
+	/**
+	 * Gets the default logger name (the name of the logger injected into Game)
+	 *
+	 * @return The default logger name (or {@code "NOVA"} if no default logger name was set)
+	 */
+	public static String getDefaultName() {
+		return defaultName.orElse("NOVA");
+	}
+
 	public LoggerModule() {
 		super(Scoped.DEPENDENCY);
+		defaultNameChangeable = false;
 	}
 
 	@Override
@@ -67,7 +95,7 @@ public class LoggerModule extends BinderModule {
 		@Override
 		public Logger supply(Dependency<? super Logger> dependency, Injector injector) {
 			if (dependency.isUntargeted() || isForGame(dependency)) {
-				return LoggerFactory.getLogger("NOVA");
+				return LoggerFactory.getLogger(getDefaultName());
 			} else {
 				return StreamSupport.stream(dependency.spliterator(), false)
 					.map(target -> target.getTarget().getInstance().getType().getRawType())

@@ -22,6 +22,7 @@ package nova.internal.core.launch;
 
 import nova.internal.core.Game;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
+import nova.internal.core.di.LoggerModule;
 import nova.testutils.mod.TestMod;
 import nova.testutils.mod.TestModDuplicate;
 import nova.testutils.mod.TestModWithLogger;
@@ -45,6 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static nova.testutils.NovaAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class NovaLauncherTest extends AbstractNovaLauncherTest {
 
