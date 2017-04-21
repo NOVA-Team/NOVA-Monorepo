@@ -24,6 +24,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import nova.core.block.Block;
 import nova.core.component.transform.BlockTransform;
+import nova.core.retention.Data;
+import nova.core.retention.Storable;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
 import nova.internal.core.Game;
@@ -36,9 +38,9 @@ import java.util.Optional;
  */
 public class MCBlockTransform extends BlockTransform {
 
-	public final Block block;
-	public final World world;
-	public final Vector3D position;
+	private Block block;
+	private World world;
+	private Vector3D position;
 
 	public MCBlockTransform(Block block, World world, Vector3D position) {
 		this.block = block;
@@ -62,27 +64,39 @@ public class MCBlockTransform extends BlockTransform {
 
 	@Override
 	public void setWorld(World world) {
-		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ()));
 		world.setBlock(position, block.getFactory());
-		tileEntity.ifPresent(te -> {
-			net.minecraft.world.World newWorld = Game.natives().toNative(world);
-			newWorld.setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ(), te);
-			te.setWorldObj(newWorld);
-		});
+		Optional<Data> data = Optional.empty();
+		if (block instanceof Storable) {
+			data = Optional.of(new Data());
+			((Storable) block).save(data.get());
+		}
 		this.world.removeBlock(position);
+		Optional<Block> newBlock = world.getBlock(position);
+		if (newBlock.isPresent()) {
+			block = newBlock.get();
+			if (newBlock.get() instanceof Storable && data.isPresent()) {
+				((Storable) newBlock.get()).load(data.get());
+			}
+		}
+		this.world = world;
 	}
 
 	@Override
 	public void setPosition(Vector3D position) {
-		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ()));
 		world.setBlock(position, block.getFactory());
-		tileEntity.ifPresent(te -> {
-			net.minecraft.world.World newWorld = Game.natives().toNative(world);
-			newWorld.setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ(), te);
-			te.xCoord = (int) position.getX();
-			te.yCoord = (int) position.getY();
-			te.zCoord = (int) position.getZ();
-		});
+		Optional<Data> data = Optional.empty();
+		if (block instanceof Storable) {
+			data = Optional.of(new Data());
+			((Storable) block).save(data.get());
+		}
 		world.removeBlock(this.position);
+		Optional<Block> newBlock = world.getBlock(position);
+		if (newBlock.isPresent()) {
+			block = newBlock.get();
+			if (newBlock.get() instanceof Storable && data.isPresent()) {
+				((Storable) newBlock.get()).load(data.get());
+			}
+		}
+		this.position = position;
 	}
 }

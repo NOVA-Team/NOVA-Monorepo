@@ -19,6 +19,7 @@
  */
 package nova.core.wrapper.mc.forge.v17.wrapper.block.backward;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import nova.core.component.transform.BlockTransform;
@@ -62,32 +63,43 @@ public class BWBlockTransform extends BlockTransform {
 	public void setWorld(World world) {
 		net.minecraft.world.World oldWorld = Game.natives().toNative(this.world);
 		net.minecraft.world.World newWorld = Game.natives().toNative(world);
-		Optional<TileEntity> tileEntity = Optional.ofNullable(oldWorld.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getX()));
-		newWorld.setBlock((int) position.getX(), (int) position.getY(), (int) position.getX(), block.mcBlock, block.getMetadata(), 3);
+		Optional<TileEntity> tileEntity = Optional.ofNullable(oldWorld.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ()));
+		Optional<NBTTagCompound> nbt = Optional.empty();
 		if (tileEntity.isPresent()) {
-			newWorld.setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getX(), tileEntity.get());
-			tileEntity.get().setWorldObj(newWorld);
-		} else {
-			newWorld.setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getX(), null);
+			NBTTagCompound compound = new NBTTagCompound();
+			tileEntity.get().writeToNBT(compound);
+			nbt = Optional.of(compound);
 		}
-		oldWorld.setBlockToAir((int) position.getX(), (int) position.getY(), (int) position.getX());
+		newWorld.setBlock((int) position.getX(), (int) position.getY(), (int) position.getZ(), block.mcBlock, block.getMetadata(), 3);
+		oldWorld.removeTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ());
+		oldWorld.setBlockToAir((int) position.getX(), (int) position.getY(), (int) position.getZ());
+		Optional<TileEntity> newTileEntity = Optional.ofNullable(newWorld.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ()));
+		if (newTileEntity.isPresent() && nbt.isPresent()) {
+			newTileEntity.get().readFromNBT(nbt.get());
+		}
 		this.world = world;
 	}
 
 	@Override
 	public void setPosition(Vector3D position) {
 		net.minecraft.world.World world = Game.natives().toNative(this.world);
-		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity((int) this.position.getX(), (int) this.position.getY(), (int) this.position.getX()));
-		world.setBlock((int) this.position.getX(), (int) this.position.getY(), (int) this.position.getX(), block.mcBlock, block.getMetadata(), 3);
+		Optional<TileEntity> tileEntity = Optional.ofNullable(world.getTileEntity((int) this.position.getX(), (int) this.position.getY(), (int) this.position.getZ()));
+		Optional<NBTTagCompound> nbt = Optional.empty();
 		if (tileEntity.isPresent()) {
-			world.setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getX(), tileEntity.get());
-			tileEntity.get().xCoord = (int) position.getX();
-			tileEntity.get().yCoord = (int) position.getY();
-			tileEntity.get().zCoord = (int) position.getZ();
-		} else {
-			world.setTileEntity((int) position.getX(), (int) position.getY(), (int) position.getX(), null);
+			NBTTagCompound compound = new NBTTagCompound();
+			tileEntity.get().writeToNBT(compound);
+            compound.setInteger("x", (int) position.getX());
+            compound.setInteger("y", (int) position.getY());
+            compound.setInteger("z", (int) position.getZ());
+			nbt = Optional.of(compound);
 		}
-		world.setBlockToAir((int) this.position.getX(), (int) this.position.getY(), (int) this.position.getX());
+		world.setBlock((int) position.getX(), (int) position.getY(), (int) position.getZ(), block.mcBlock, block.getMetadata(), 3);
+		world.removeTileEntity((int) this.position.getX(), (int) this.position.getY(), (int) this.position.getZ());
+		world.setBlockToAir((int) this.position.getX(), (int) this.position.getY(), (int) this.position.getZ());
+		Optional<TileEntity> newTileEntity = Optional.ofNullable(world.getTileEntity((int) position.getX(), (int) position.getY(), (int) position.getZ()));
+		if (newTileEntity.isPresent() && nbt.isPresent()) {
+			newTileEntity.get().readFromNBT(nbt.get());
+		}
 		this.position = position;
 	}
 }

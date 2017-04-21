@@ -44,6 +44,7 @@ import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.world.BWWorld;
+import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -107,7 +108,7 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	public IBlockAccess getMcBlockAccess() {
-		return ((BWWorld) world()).access;
+		return WorldConverter.instance().toNative(world());
 	}
 
 	public int getMetadata() {
@@ -172,5 +173,10 @@ public class BWBlock extends Block implements Storable {
 	@Override
 	public String getUnlocalizedName() {
 		return mcBlock.getUnlocalizedName();
+	}
+
+	@Override
+	public String toString() {
+		return "BWBlock{" + mcBlock + ", " + getTileEntity() + "}";
 	}
 }

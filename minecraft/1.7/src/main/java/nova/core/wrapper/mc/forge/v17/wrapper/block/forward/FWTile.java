@@ -26,11 +26,15 @@ import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.block.Stateful;
 import nova.core.component.Updater;
+import nova.core.component.transform.BlockTransform;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.wrapper.mc.forge.v17.network.netty.MCNetworkManager;
+import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.data.DataConverter;
 import nova.internal.core.Game;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * A Minecraft TileEntity to Nova block wrapper
@@ -69,7 +73,9 @@ public class FWTile extends TileEntity {
 	@Override
 	public void validate() {
 		super.validate();
-		block.components.getOrAdd(new TEBlockTransform(this));
+		if (block.components.has(BlockTransform.class))
+			block.components.remove(BlockTransform.class);
+		block.components.getOrAdd(new MCBlockTransform(block, WorldConverter.instance().toNova(getWorldObj()), new Vector3D(xCoord, yCoord, zCoord)));
 
 		if (cacheData != null && block instanceof Storable) {
 			((Storable) block).load(cacheData);
@@ -112,7 +118,7 @@ public class FWTile extends TileEntity {
 			if (block instanceof Storable) {
 				Data data = new Data();
 				((Storable) block).save(data);
-				nbt.setTag("nova", Game.natives().toNative(data));
+				nbt.setTag("nova", DataConverter.instance().toNative(data));
 			}
 		}
 	}
@@ -127,6 +133,6 @@ public class FWTile extends TileEntity {
 		 * Future.
 		 */
 		blockID = nbt.getString("novaID");
-		cacheData = Game.natives().toNova(nbt.getCompoundTag("nova"));
+		cacheData = DataConverter.instance().toNova(nbt.getCompoundTag("nova"));
 	}
 }

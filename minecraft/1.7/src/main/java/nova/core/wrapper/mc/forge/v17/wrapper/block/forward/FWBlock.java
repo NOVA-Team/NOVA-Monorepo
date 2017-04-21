@@ -210,7 +210,6 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
 		FWTile fwTile = FWTileLoader.loadTile(dummy.getID());
-		fwTile.getBlock().components.getOrAdd(new TEBlockTransform(fwTile));
 		if (!fwTile.block.components.has(BlockProperty.BlockSound.class)) {
 			BlockProperty.BlockSound properties = fwTile.block.components.add(new BlockProperty.BlockSound());
 			properties.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", soundTypeStone.getBreakSound()));
