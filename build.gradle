@@ -35,6 +35,9 @@ shadowJar {
 }
 
 task wrapperTestJar(type: Jar) {
+	from(sourceSets.main.output) {
+		include "nova/internal/core/launch/**"
+	}
 	from(sourceSets.test.output) {
 		include "nova/wrappertests/**"
 		include "nova/testutils/**"
