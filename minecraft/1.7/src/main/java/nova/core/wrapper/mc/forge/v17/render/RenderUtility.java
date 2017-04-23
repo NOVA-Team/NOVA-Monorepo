@@ -109,6 +109,12 @@ public class RenderUtility implements ForgeLoadable {
 	}
 
 	public IIcon getIcon(Texture texture) {
+		if ("nova".equals(texture.domain)) {
+			switch (texture.name) {
+				case "null": return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(null);
+			}
+		}
+
 		if (iconMap.containsKey(texture)) {
 			return iconMap.get(texture);
 		}

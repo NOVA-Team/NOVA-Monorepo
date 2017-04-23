@@ -21,7 +21,6 @@
 package nova.core.render.model;
 
 import nova.core.render.RenderException;
-import nova.core.util.ModelUtil;
 import nova.core.util.math.Vector3DUtil;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -135,7 +134,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 
 	@Override
 	public MeshModel getModel() {
-		return this.loaded ? model.clone() : ModelUtil.getMissingModel();
+		return this.loaded ? model.clone() : Game.render().getMissingModel();
 	}
 
 	@Override
@@ -276,7 +275,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		try {
 			return vertices.get(index < 0 ? index + textureCoordinates.size() : index - 1);
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("[OBJ]: Can't get vertex " + index + "! Is this model corrupted?");
+			Game.logger().error("[OBJ]: {}:{} - Can't get vertex {}! Is this model corrupted?", domain, name, index);
 			return Vector3D.ZERO;
 		}
 	}
@@ -285,7 +284,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		try {
 			return textureCoordinates.get(index < 0 ? index + textureCoordinates.size() : index - 1);
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("[OBJ]: Can't get textureCoordinate " + index + "! Is this model corrupted?");
+			Game.logger().error("[OBJ]: {}:{} - Can't get textureCoordinate {}! Is this model corrupted?", domain, name, index);
 			return Vector2D.ZERO;
 		}
 	}
@@ -294,7 +293,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		try {
 			return vertexNormals.get(index < 0 ? index + textureCoordinates.size() : index - 1);
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("[OBJ]: Can't get vertexNormal " + index + "! Is this model corrupted?");
+			Game.logger().error("[OBJ]: {}:{} - Can't get vertexNormal {}! Is this model corrupted?", domain, name, index);
 			return Vector3D.ZERO;
 		}
 	}

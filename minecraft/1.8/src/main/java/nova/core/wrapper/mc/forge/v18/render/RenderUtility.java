@@ -123,6 +123,12 @@ public class RenderUtility implements ForgeLoadable {
 	}
 
 	public TextureAtlasSprite getTexture(Texture texture) {
+		if ("nova".equals(texture.domain)) {
+			switch (texture.name) {
+				case "null": return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+			}
+		}
+
 		if (textureMap.containsKey(texture)) {
 			return textureMap.get(texture);
 		}

@@ -21,8 +21,8 @@
 import nova.core.render.RenderException;
 import nova.core.render.pipeline.BlockRenderPipeline;
 import nova.core.render.pipeline.CubeTextureCoordinates;
-import nova.core.util.ModelUtil;
 import nova.core.util.math.MatrixStack;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.w3c.dom.Document;
@@ -122,7 +122,7 @@ public class TechneModelProvider extends ModelProvider {
 				Node shape = shapes.item(i);
 				NamedNodeMap shapeAttributes = shape.getAttributes();
 				if (shapeAttributes == null) {
-					throw new RenderException("Shape #" + (i + 1) + " in " + this.name + " has no attributes");
+					throw new RenderException("Shape #" + (i + 1) + " in " + domain + this.name + " has no attributes");
 				}
 
 				Node name = shapeAttributes.getNamedItem("name");
@@ -141,7 +141,7 @@ public class TechneModelProvider extends ModelProvider {
 				}
 
 				if (shapeType != null && !cubeIDs.contains(shapeType)) {
-					System.out.println("Model shape [" + shapeName + "] in " + this.name + " is not a cube, ignoring");
+					Game.logger().warn("Model shape [{}] in {}:{} is not a cube, ignoring", shapeName, domain, this.name);
 					continue;
 				}
 
@@ -257,7 +257,7 @@ public class TechneModelProvider extends ModelProvider {
 
 	@Override
 	public MeshModel getModel() {
-		return this.loaded ? model.clone() : ModelUtil.getMissingModel();
+		return this.loaded ? model.clone() : Game.render().getMissingModel();
 	}
 
 	@Override

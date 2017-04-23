@@ -20,7 +20,9 @@
 
 package nova.core.render;
 
+import nova.core.render.model.MeshModel;
 import nova.core.render.model.ModelProvider;
+import nova.core.render.pipeline.BlockRenderPipeline;
 import nova.core.render.texture.BlockTexture;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.ItemTexture;
@@ -36,6 +38,8 @@ import java.util.Optional;
  * @author Calclavia
  */
 public class RenderManager extends Manager<RenderManager> {
+
+	private static final Texture MISSING_TEXTURE = new Texture("nova", "null");
 
 	public final Registry<BlockTexture> blockTextures = new Registry<>();
 	public final Registry<ItemTexture> itemTextures = new Registry<>();
@@ -72,6 +76,16 @@ public class RenderManager extends Manager<RenderManager> {
 		return texture;
 	}
 
+	/**
+	 * Gets the missing texture.
+	 * Will show up as a purple and black checkerboard.
+	 *
+	 * @return The missing texture ({@code nova:null}).
+	 */
+	public Texture getMissingTexture() {
+		return MISSING_TEXTURE;
+	}
+
 	public ModelProvider registerModel(ModelProvider modelProvider) {
 		Optional<ModelProvider> modelProviderCheck = modelProviders.get(modelProvider.getID());
 		if (modelProviderCheck.isPresent()) {
@@ -80,6 +94,15 @@ public class RenderManager extends Manager<RenderManager> {
 		}
 		modelProviders.register(modelProvider);
 		return modelProvider;
+	}
+
+	/**
+	 * Gets the missing model.
+	 *
+	 * @return A cube with the missing texture.
+	 */
+	public MeshModel getMissingModel() {
+		return BlockRenderPipeline.drawCube(new MeshModel()).bind(getMissingTexture());
 	}
 
 	@Override
