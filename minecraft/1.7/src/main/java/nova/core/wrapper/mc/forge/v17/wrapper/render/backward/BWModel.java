@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v17.wrapper.render;
+package nova.core.wrapper.mc.forge.v17.wrapper.render.backward;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
@@ -30,8 +30,8 @@ import nova.core.render.model.MeshModel;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
 import nova.core.util.math.Vector3DUtil;
-import nova.core.wrapper.mc.forge.v17.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v17.wrapper.assets.AssetConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.render.RenderUtility;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Optional;
@@ -54,8 +54,8 @@ public class BWModel extends MeshModel {
 		render(Optional.empty(), Optional.empty());
 	}
 
-	public void render(Optional<RenderManager> entityRenderManager) {
-		render(Optional.empty(), entityRenderManager);
+	public void render(RenderManager entityRenderManager) {
+		render(Optional.empty(), Optional.of(entityRenderManager));
 	}
 
 	public void render(Optional<IBlockAccess> access, Optional<RenderManager> entityRenderManager) {

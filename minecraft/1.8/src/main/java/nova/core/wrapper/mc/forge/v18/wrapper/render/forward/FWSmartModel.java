@@ -18,12 +18,11 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.wrapper.render;
+package nova.core.wrapper.mc.forge.v18.wrapper.render.forward;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -34,8 +33,8 @@ import nova.core.render.model.Model;
 import nova.core.render.model.Vertex;
 import nova.core.util.Direction;
 import nova.core.util.math.MathUtil;
-import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v18.wrapper.DirectionConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.RenderUtility;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Arrays;
@@ -43,6 +42,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -55,7 +55,8 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 	protected final VertexFormat format;
 	// Default item transforms. Can be changed in subclasses.
 	@SuppressWarnings("deprecation")
-	protected ItemCameraTransforms itemCameraTransforms = ItemCameraTransforms.DEFAULT;
+	protected net.minecraft.client.renderer.block.model.ItemCameraTransforms itemCameraTransforms =
+		net.minecraft.client.renderer.block.model.ItemCameraTransforms.DEFAULT;
 
 	protected FWSmartModel(VertexFormat format) {
 		this.format = format;
@@ -152,8 +153,8 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
-	public ItemCameraTransforms getItemCameraTransforms() {
+	@Deprecated
+	public net.minecraft.client.renderer.block.model.ItemCameraTransforms getItemCameraTransforms() {
 		return itemCameraTransforms;
 	}
 }

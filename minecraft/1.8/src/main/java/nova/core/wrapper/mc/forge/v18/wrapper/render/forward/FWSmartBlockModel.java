@@ -18,8 +18,9 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.wrapper.render;
+package nova.core.wrapper.mc.forge.v18.wrapper.render.forward;
 
+import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWModel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;

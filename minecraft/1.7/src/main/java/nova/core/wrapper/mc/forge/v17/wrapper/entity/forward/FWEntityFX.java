@@ -33,7 +33,7 @@ import nova.core.component.transform.EntityTransform;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.util.shape.Cuboid;
-import nova.core.wrapper.mc.forge.v17.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v17.wrapper.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
 import nova.internal.core.Game;
 

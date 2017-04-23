@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.render;
+package nova.core.wrapper.mc.forge.v18.wrapper.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -44,9 +44,9 @@ import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItem;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemWrapperMethods;
-import nova.core.wrapper.mc.forge.v18.wrapper.render.FWEmptyModel;
-import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartBlockModel;
-import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartItemModel;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.forward.FWEmptyModel;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.forward.FWSmartBlockModel;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.forward.FWSmartItemModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.opengl.GL11;
@@ -231,7 +231,7 @@ public class RenderUtility implements ForgeLoadable {
 				IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
 				m.load(res.getInputStream());
 			} catch (IOException e) {
-				Game.logger().warn("IO Exception reading model format", e);
+				Game.logger().warn("IO Exception reading model", e);
 			}
 		});
 	}

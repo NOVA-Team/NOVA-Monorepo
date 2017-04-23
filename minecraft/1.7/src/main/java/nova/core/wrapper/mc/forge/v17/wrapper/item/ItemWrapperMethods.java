@@ -32,7 +32,7 @@ import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntity;
-import nova.core.wrapper.mc.forge.v17.wrapper.render.BWModel;
+import nova.core.wrapper.mc.forge.v17.wrapper.render.backward.BWModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.lwjgl.opengl.GL11;

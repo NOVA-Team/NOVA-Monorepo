@@ -54,7 +54,8 @@ public class MeshModel extends Model {
 	/**
 	 * Binds all the faces and all child models with this texture.
 	 *
-	 * @param texture The texture
+	 * @param texture The texture to be used to as for this model.
+	 * @return This instance.
 	 */
 	public MeshModel bind(Texture texture) {
 		faces.forEach(f -> f.texture = Optional.of(texture));
@@ -64,7 +65,8 @@ public class MeshModel extends Model {
 	/**
 	 * Binds the texture to the model, and all its children.
 	 *
-	 * @param texture to be used to as for this model and sub-models.
+	 * @param texture The texture to be used to as for this model and sub-models.
+	 * @return This instance.
 	 */
 	public MeshModel bindAll(Texture texture) {
 		bind(texture);
@@ -78,7 +80,8 @@ public class MeshModel extends Model {
 	/**
 	 * Finish drawing the {@link Face} by adding it into the list of faces.
 	 *
-	 * @param Face - The finished masterpiece.
+	 * @param Face The finished masterpiece.
+	 * @return This instance.
 	 */
 	public MeshModel drawFace(Face Face) {
 		faces.add(Face);

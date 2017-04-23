@@ -18,10 +18,10 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.wrapper.render;
+package nova.core.wrapper.mc.forge.v18.wrapper.render.forward;
 
+import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
@@ -46,7 +46,7 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 		super();
 		this.item = item;
 		// Change the default transforms to the default Item transforms
-		this.itemCameraTransforms = new ItemCameraTransforms(
+		this.itemCameraTransforms = new net.minecraft.client.renderer.block.model.ItemCameraTransforms(
 			new ItemTransformVec3f(new Vector3f(0, -90, 130), new Vector3f(0, 1f / 24f, -2.75f / 16f), new Vector3f(0.9f, 0.9f, 0.9f)), // Third Person
 			new ItemTransformVec3f(new Vector3f(0, -135, 25/*-135/*-25*/), new Vector3f(0, 0.25f, 0.125f/*0.5f, 0.25f*/), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person
 			ItemTransformVec3f.DEFAULT, // Head

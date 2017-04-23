@@ -58,7 +58,7 @@ import nova.core.util.math.MathUtil;
 import nova.core.util.math.MatrixStack;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
-import nova.core.wrapper.mc.forge.v17.wrapper.render.BWModel;
+import nova.core.wrapper.mc.forge.v17.wrapper.render.backward.BWModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.lwjgl.opengl.GL11;
