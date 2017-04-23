@@ -51,6 +51,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	ItemFactory getItemFactory();
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
 		Item item = Game.natives().toNova(itemStack);
 		item.setCount(itemStack.stackSize).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
@@ -81,7 +82,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	@Override
 	default boolean handleRenderType(ItemStack item, IItemRenderer.ItemRenderType type) {
-		return item.getItem() == this && getIcon(item, 0) == null;
+		return item.getItem() == this;
 	}
 
 	@Override
@@ -98,9 +99,17 @@ public interface ItemWrapperMethods extends IItemRenderer {
 			GL11.glPushMatrix();
 			Tessellator.instance.startDrawingQuads();
 			BWModel model = new BWModel();
-			model.matrix.rotate(Direction.UP.toVector(), 1 / 4 * Math.PI);
-			model.matrix.rotate(Direction.EAST.toVector(), 1 / 6 * Math.PI);
-			model.matrix.scale(1.6, 1.6, 1.6);
+			switch (type) {
+				case EQUIPPED:
+					break;
+				case EQUIPPED_FIRST_PERSON:
+					break;
+				case INVENTORY:
+					model.matrix.rotate(Direction.DOWN.toVector(), Math.PI / 4);
+					model.matrix.rotate(Direction.EAST.toVector(), Math.PI / 6);
+					model.matrix.scale(1.6, 1.6, 1.6);
+					break;
+			}
 			item.components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
 			model.render();
 			Tessellator.instance.draw();
