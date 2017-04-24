@@ -140,6 +140,10 @@ public class BWBlock extends Block implements Storable {
 		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
 	}
 
+	public net.minecraft.block.Block block() {
+		return mcBlock;
+	}
+
 	public BlockPos blockPos() {
 		return VectorConverter.instance().toNative(position());
 	}

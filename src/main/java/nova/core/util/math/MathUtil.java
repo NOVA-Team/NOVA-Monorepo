@@ -114,6 +114,84 @@ public class MathUtil {
 	 * @param b value.
 	 * @return min
 	 */
+	public static long min(long a, long b) {
+		return a < b ? a : b;
+	}
+
+	/**
+	 * Returns the smaller number of a, b and c.
+	 * @param a value.
+	 * @param b value.
+	 * @param c value.
+	 * @return min
+	 */
+	public static long min(long a, long b, long c) {
+		return min(min(a, b), c);
+	}
+
+	/**
+	 * Returns the smallest number contained in the provided array.
+	 * @param numbers Array of numbers
+	 * @return min
+	 */
+	public static long min(long... numbers) {
+		if (numbers.length < 1) {
+			throw new IllegalArgumentException();
+		}
+		long min = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			if (numbers[i] < min) {
+				min = numbers[i];
+			}
+		}
+		return min;
+	}
+
+	/**
+	 * Returns the bigger number of a and b.
+	 * @param a value.
+	 * @param b value.
+	 * @return max
+	 */
+	public static long max(long a, long b) {
+		return a > b ? a : b;
+	}
+
+	/**
+	 * Returns the bigger number of a, b and c.
+	 * @param a value.
+	 * @param b value.
+	 * @param c value.
+	 * @return max
+	 */
+	public static long max(long a, long b, long c) {
+		return max(max(a, b), c);
+	}
+
+	/**
+	 * Returns the biggest number contained in the provided array.
+	 * @param numbers Array of numbers
+	 * @return max
+	 */
+	public static long max(long... numbers) {
+		if (numbers.length < 1) {
+			throw new IllegalArgumentException();
+		}
+		long max = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			if (numbers[i] > max) {
+				max = numbers[i];
+			}
+		}
+		return max;
+	}
+
+	/**
+	 * Returns the smaller number of a and b.
+	 * @param a value.
+	 * @param b value.
+	 * @return min
+	 */
 	public static double min(double a, double b) {
 		return a < b ? a : b;
 	}
@@ -263,7 +341,7 @@ public class MathUtil {
 		}
 		return max;
 	}
-	
+
 	/**
 	 * Clamps the given number so that {@code min <= a <= max}
 	 * @param a value.
@@ -282,7 +360,29 @@ public class MathUtil {
 	 * @param max upper limit
 	 * @return {@code min <= a <= max}
 	 */
+	public static long clamp(long a, long min, long max) {
+		return min(max(a, min), max);
+	}
+
+	/**
+	 * Clamps the given number so that {@code min <= a <= max}
+	 * @param a value
+	 * @param min lower limit
+	 * @param max upper limit
+	 * @return {@code min <= a <= max}
+	 */
 	public static double clamp(double a, double min, double max) {
+		return min(max(a, min), max);
+	}
+
+	/**
+	 * Clamps the given number so that {@code min <= a <= max}
+	 * @param a value.
+	 * @param min lower limit
+	 * @param max upper limit
+	 * @return {@code min <= a <= max}
+	 */
+	public static float clamp(float a, float min, float max) {
 		return min(max(a, min), max);
 	}
 
@@ -297,24 +397,70 @@ public class MathUtil {
 		return a + f * (b - a);
 	}
 
+	/**
+	 * Linear interpolates isBetween point a and point b
+	 * @param a value.
+	 * @param b value.
+	 * @param f A percentage value isBetween 0 to 1
+	 * @return The interpolated value
+	 */
 	public static float lerp(float a, float b, float f) {
 		return a + f * (b - a);
 	}
 
+	/**
+	 * Linear interpolates isBetween point a and point b
+	 * @param a value.
+	 * @param b value.
+	 * @param f A percentage value isBetween 0 to 1
+	 * @return The interpolated value
+	 */
 	public static Vector3D lerp(Vector3D a, Vector3D b, float f) {
 		return a.add((b.subtract(a)).scalarMultiply(f));
 	}
 
 	/**
-	 * Clamps a value isBetween -bounds to +bounds
-	 * @return A value capped isBetween two bounds.
+	 * Clamps a value between -bounds to +bounds.
+	 *
+	 * @param value The value
+	 * @param bounds The maximum distance from 0
+	 * @return A value clamped between two bounds
 	 */
-	public static double absClamp(double value, double bounds) {
-		return min(max(value, -bounds), bounds);
+	public static int absClamp(int value, int bounds) {
+		return clamp(value, -bounds, bounds);
 	}
 
-	public static float absClamp(int value, int bounds) {
-		return min(max(value, -bounds), bounds);
+	/**
+	 * Clamps a value between -bounds to +bounds.
+	 *
+	 * @param value The value
+	 * @param bounds The maximum distance from 0
+	 * @return A value clamped between two bounds
+	 */
+	public static long absClamp(long value, long bounds) {
+		return clamp(value, -bounds, bounds);
+	}
+
+	/**
+	 * Clamps a value between -bounds to +bounds.
+	 *
+	 * @param value The value
+	 * @param bounds The maximum distance from 0
+	 * @return A value clamped between two bounds
+	 */
+	public static double absClamp(double value, double bounds) {
+		return clamp(value, -bounds, bounds);
+	}
+
+	/**
+	 * Clamps a value between -bounds to +bounds.
+	 *
+	 * @param value The value
+	 * @param bounds The maximum distance from 0
+	 * @return A value clamped between two bounds
+	 */
+	public static float absClamp(float value, float bounds) {
+		return clamp(value, -bounds, bounds);
 	}
 
 	public static double truncate(double value, int truncation) {
@@ -325,8 +471,16 @@ public class MathUtil {
 		return (int) (Math.log(x) / Math.log(base));
 	}
 
+	public static long log(long x, long base) {
+		return (long) (Math.log(x) / Math.log(base));
+	}
+
 	public static double log(double x, double base) {
 		return Math.log(x) / Math.log(base);
+	}
+
+	public static float log(float x, float base) {
+		return (float) (Math.log(x) / Math.log(base));
 	}
 
 	/**
@@ -339,4 +493,22 @@ public class MathUtil {
 		return a <= x && x <= b;
 	}
 
+	/**
+	 * Rounds a number to a specific number place places
+	 *
+	 * @param d - the number
+	 * @param decimalPlaces The decimal places
+	 * @return The rounded number
+	 */
+	public static double roundDecimals(double d, int decimalPlaces) {
+		double pow = Math.pow(10, decimalPlaces);
+		long i = Math.round(d * pow);
+		return i / pow;
+	}
+
+	public static String toString(double d, boolean removeTrailingZeroes) {
+		if (removeTrailingZeroes && d % 1 == 0)
+			return Long.toString((long) d);
+		return Double.toString(d);
+	}
 }

@@ -128,6 +128,10 @@ public class BWBlock extends Block implements Storable {
 		return (int) z();
 	}
 
+	public net.minecraft.block.Block block() {
+		return mcBlock;
+	}
+
 	public IBlockAccess blockAccess() {
 		return WorldConverter.instance().toNative(world());
 	}
