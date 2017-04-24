@@ -20,7 +20,6 @@
 
 package nova.core.render.pipeline;
 
-import nova.core.component.ComponentMap;
 import nova.core.component.ComponentProvider;
 import nova.core.component.misc.Collider;
 import nova.core.render.Color;
@@ -45,8 +44,7 @@ import java.util.function.Supplier;
  */
 public class BlockRenderPipeline extends RenderPipeline {
 
-	@SuppressWarnings("rawtypes")
-	public final ComponentProvider<? extends ComponentMap> componentProvider;
+	public final ComponentProvider<?> componentProvider;
 
 	/**
 	 * Called to get the texture of this block for a certain side.
@@ -77,8 +75,7 @@ public class BlockRenderPipeline extends RenderPipeline {
 	 */
 	public Function<Direction, Color> colorMultiplier = (dir) -> Color.white;
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public BlockRenderPipeline(ComponentProvider componentProvider) {
+	public BlockRenderPipeline(ComponentProvider<?> componentProvider) {
 		this.componentProvider = componentProvider;
 		bounds = () -> this.componentProvider.components.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
 		consumer = model -> model.addChild(draw(new MeshModel()));

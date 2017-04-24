@@ -20,11 +20,9 @@
 
 package nova.core.wrapper.mc.forge.v17.wrapper.item;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 import nova.core.component.renderer.Renderer;
@@ -51,8 +49,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	ItemFactory getItemFactory();
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
+	default void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean advanced) {
 		Item item = Game.natives().toNova(itemStack);
 		item.setCount(itemStack.stackSize).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
 		getItemFactory().save(item);
@@ -70,14 +67,6 @@ public interface ItemWrapperMethods extends IItemRenderer {
 		Item item = Game.natives().toNova(itemStack);
 		item.events.publish(new Item.RightClickEvent(new BWEntity(player)));
 		return ItemConverter.instance().updateMCItemStack(itemStack, item);
-	}
-
-	default IIcon getIconFromDamage(int p_77617_1_) {
-		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("missingno");
-	}
-
-	default IIcon getIcon(ItemStack itemStack, int pass) {
-		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("missingno");
 	}
 
 	@Override
@@ -118,7 +107,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 		}
 	}
 
-	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
+	default int getColorFromItemStack(ItemStack itemStack, int layer) {
 		return ((Item) Game.natives().toNova(itemStack)).colorMultiplier().argb();
 	}
 }

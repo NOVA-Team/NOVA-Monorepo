@@ -41,7 +41,7 @@ public interface ItemWrapperMethods {
 
 	ItemFactory getItemFactory();
 
-	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
+	default void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean advanced) {
 		Item item = Game.natives().toNova(itemStack);
 		item.setCount(itemStack.stackSize).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
 		getItemFactory().save(item);
@@ -61,7 +61,7 @@ public interface ItemWrapperMethods {
 		return ItemConverter.instance().updateMCItemStack(itemStack, item);
 	}
 
-	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
+	default int getColorFromItemStack(ItemStack itemStack, int layer) {
 		return ((Item) Game.natives().toNova(itemStack)).colorMultiplier().argb();
 	}
 }
