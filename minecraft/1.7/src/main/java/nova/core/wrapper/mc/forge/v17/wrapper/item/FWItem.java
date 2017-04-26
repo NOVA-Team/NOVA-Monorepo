@@ -20,6 +20,7 @@
 
 package nova.core.wrapper.mc.forge.v17.wrapper.item;
 
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -64,6 +65,9 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 	public int getColorFromItemStack(ItemStack stack, int layer) {
 		return ItemWrapperMethods.super.getColorFromItemStack(stack, layer);
 	}
+
+	@Override
+	public void registerIcons(IIconRegister ir) {}
 
 	@Override
 	public String getUnlocalizedName() {

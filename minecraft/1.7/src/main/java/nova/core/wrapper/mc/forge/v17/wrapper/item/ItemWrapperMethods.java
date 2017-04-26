@@ -28,6 +28,9 @@ import net.minecraftforge.client.IItemRenderer;
 import nova.core.component.renderer.Renderer;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
+import nova.core.render.model.MeshModel;
+import nova.core.render.pipeline.BlockRenderPipeline;
+import nova.core.render.pipeline.StaticCubeTextureCoordinates;
 import nova.core.util.Direction;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc.forge.v17.wrapper.render.backward.BWModel;
@@ -88,17 +91,23 @@ public interface ItemWrapperMethods extends IItemRenderer {
 			GL11.glPushMatrix();
 			Tessellator.instance.startDrawingQuads();
 			BWModel model = new BWModel();
-			switch (type) {
-				case EQUIPPED:
-					break;
-				case EQUIPPED_FIRST_PERSON:
-					break;
-				case INVENTORY:
-					model.matrix.rotate(Direction.DOWN.toVector(), Math.PI / 4);
-					model.matrix.rotate(Direction.EAST.toVector(), Math.PI / 6);
-					model.matrix.scale(1.6, 1.6, 1.6);
-					break;
-			}
+			// TODO: Fix this
+			if (this instanceof FWItem)
+				switch (type) {
+					case EQUIPPED:
+						break;
+					case EQUIPPED_FIRST_PERSON:
+//						model.matrix.scale(1.7, 1.7, 1.7);
+//						model.matrix.translate(0, 1, 0.125);
+//						model.matrix.rotate(Direction.DOWN.toVector(), Math.PI * 5 / 4);
+//						model.matrix.rotate(Direction.NORTH.toVector(), Math.PI / 3);
+						break;
+					case INVENTORY:
+						model.matrix.rotate(Direction.DOWN.toVector(), Math.PI / 4);
+						model.matrix.rotate(Direction.EAST.toVector(), Math.PI / 6);
+						model.matrix.scale(1.6, 1.6, 1.6);
+						break;
+				}
 			item.components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
 			model.render();
 			Tessellator.instance.draw();

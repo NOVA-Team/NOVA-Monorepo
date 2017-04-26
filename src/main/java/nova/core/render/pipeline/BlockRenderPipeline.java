@@ -425,6 +425,20 @@ public class BlockRenderPipeline extends RenderPipeline {
 	 *
 	 * @param dir The direction of the face to make
 	 * @param model The model to use
+	 * @param cuboid The cuboid where the model applies to
+	 * @param textureCoordinates Texture coordinates to render
+	 * @return The face of the model in that dirction
+	 */
+	public static Face drawDir(Direction dir, MeshModel model,
+		Cuboid cuboid, CubeTextureCoordinates textureCoordinates) {
+		return drawDir(dir, model, cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ(), textureCoordinates);
+	}
+
+	/**
+	 * Creates a face of the model in a specified direction
+	 *
+	 * @param dir The direction of the face to make
+	 * @param model The model to use
 	 * @param minX Min X coord
 	 * @param minY Min Y coord
 	 * @param minZ Min Z coord

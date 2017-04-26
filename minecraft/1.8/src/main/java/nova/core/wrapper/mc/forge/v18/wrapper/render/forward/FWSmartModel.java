@@ -107,10 +107,19 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 										// Do what Minecraft Forge does when rendering Wavefront OBJ models with triangles
 										vertexData.add(vertexData.get(vertexData.size() - 1));
 
+									Direction dir = Direction.fromVector(face.normal);
+									if (dir == Direction.SOUTH || dir == Direction.WEST) {
+										int[] vtxd = vertexData.remove(vertexData.size() - 1);
+										vertexData.add(0, vtxd);
+									} else {
+										int[] vtxd = vertexData.remove(0);
+										vertexData.add(vtxd);
+									}
+
 									int[] data = Ints.concat(vertexData.toArray(new int[][] {}));
 									//TODO: The facing might be wrong        // format.getNextOffset() is in byte count per vertex, and we are deling with ints, so we don't need to multiply by 4
 									return new BakedQuad(Arrays.copyOf(data, MathUtil.min(data.length, format.getNextOffset())),
-										-1, DirectionConverter.instance().toNative(Direction.fromVector(face.normal)));
+										-1, DirectionConverter.instance().toNative(dir));
 								}
 							);
 					}
