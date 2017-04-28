@@ -92,18 +92,18 @@ public class BWEntity extends Entity {
 		}
 
 		@Override
-		public String getUsername() {
-			return entity.getGameProfile().getName();
-		}
-
-		@Override
-		public String getID() {
+		public String getUniqueID() {
 			return entity.getGameProfile().getId().toString();
 		}
 
 		@Override
 		public InventoryPlayer getInventory() {
 			return inventory;
+		}
+
+		@Override
+		public String getUsername() {
+			return entity.getGameProfile().getName();
 		}
 
 		@Override

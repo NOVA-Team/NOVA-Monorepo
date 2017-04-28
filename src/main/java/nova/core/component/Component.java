@@ -56,6 +56,11 @@ public abstract class Component implements Identifiable {
 
 	}
 
+	/**
+	 * Gets the ID that represents this Component type.
+	 *
+	 * @return The ID that represents this Component type.
+	 */
 	@Override
 	public String getID() {
 		return getClass().getSimpleName();
