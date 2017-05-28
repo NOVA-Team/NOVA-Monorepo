@@ -87,7 +87,7 @@ public class MCRetentionManager extends RetentionManager {
 			tempFile.renameTo(file);
 			return true;
 		} catch (Exception e) {
-			System.out.println("Failed to queueSave " + file.getName() + ".dat!");
+			Game.logger().error("Failed to queueSave {}!", file.getName(), e);
 			e.printStackTrace();
 			return false;
 		}
@@ -109,7 +109,7 @@ public class MCRetentionManager extends RetentionManager {
 				return new NBTTagCompound();
 			}
 		} catch (Exception e) {
-			System.out.println("Failed to load " + file.getName() + ".dat!");
+			Game.logger().error("Failed to load {}!", file.getName(), e);
 			e.printStackTrace();
 			return null;
 		}

@@ -24,7 +24,13 @@ package nova.core.util;
  * A generic interface signifying that this object is uniquely identifiable
  * by an ID
  */
-public interface UniqueIdentifiable {
+public interface UniqueIdentifiable extends Identifiable {
+
+	@Override
+	default String getID() {
+		return getUniqueID();
+	}
+
 	/**
 	 * Get the unique ID to identify this object.
 	 *

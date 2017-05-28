@@ -25,11 +25,14 @@ import nova.core.component.ComponentMap;
 import nova.core.component.ComponentProvider;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.component.transform.EntityTransform;
+import nova.core.entity.component.Player;
 import nova.core.util.Identifiable;
 import nova.core.util.UniqueIdentifiable;
 import nova.core.world.World;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
+import java.util.Set;
 
 /**
  * An entity is an object in the world that has a position.
@@ -104,6 +107,16 @@ public class Entity extends ComponentProvider<ComponentMap> implements UniqueIde
 
 	@Override
 	public String getUniqueID() {
-		return components.get(UniqueIdentifiable.class).getUniqueID();
+		Set<UniqueIdentifiable> ui = components.getSet(UniqueIdentifiable.class);
+		if (ui.size() == 1) {
+			return ui.iterator().next().getUniqueID(); // Just get the first instance.
+		} else if (ui.size() > 1) {
+			return ui.stream()	// Stream iterate over the whole set
+				.filter(s -> s instanceof Player).findFirst()	// If we have a player component, then prefer that over anything else,
+				.map(UniqueIdentifiable::getUniqueID)	// as the player UUID is usually preferable over anything else.
+				.orElseGet(() -> ui.iterator().next().getUniqueID());	// If we don't have a player component, just use the first UUID we can find.
+		} else {
+			return getID(); // As a fallback, if all else fails, just use the generic entity ID.
+		}
 	}
 }

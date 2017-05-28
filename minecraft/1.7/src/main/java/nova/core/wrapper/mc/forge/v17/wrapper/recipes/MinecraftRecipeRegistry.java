@@ -78,7 +78,7 @@ public class MinecraftRecipeRegistry {
 
 		ReflectionUtil.setCraftingRecipeList(new RecipeListWrapper(recipes));
 
-		System.out.println("Initialized recipes in " + (System.currentTimeMillis() - startTime) + " ms");
+		Game.logger().info("Initialized recipes in {} ms", (System.currentTimeMillis() - startTime));
 
 		recipeManager.whenRecipeAdded(CraftingRecipe.class, this::onNOVARecipeAdded);
 		recipeManager.whenRecipeRemoved(CraftingRecipe.class, this::onNOVARecipeRemoved);

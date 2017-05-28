@@ -209,7 +209,7 @@ public class NovaMinecraft {
 			FMLCommonHandler.instance().bus().register(new FMLEventHandler());
 			MinecraftForge.EVENT_BUS.register(Game.retention());
 		} catch (Exception e) {
-			System.out.println("Error during preInit");
+			Game.logger().error("Error during preInit", e);
 			e.printStackTrace();
 			throw new InitializationException(e);
 		}
@@ -233,7 +233,7 @@ public class NovaMinecraft {
 			fmlProgressBar.finish();
 			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
-			System.out.println("Error during init");
+			Game.logger().error("Error during init", e);
 			e.printStackTrace();
 			throw new InitializationException(e);
 		}
@@ -258,7 +258,7 @@ public class NovaMinecraft {
 			fmlProgressBar.finish();
 			ProgressManager.pop(progressBar);
 		} catch (Exception e) {
-			System.out.println("Error during postInit");
+			Game.logger().error("Error during postInit", e);
 			e.printStackTrace();
 			throw new InitializationException(e);
 		}

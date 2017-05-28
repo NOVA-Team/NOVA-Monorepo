@@ -23,37 +23,60 @@ package nova.core.entity.component;
 import nova.core.component.UnsidedComponent;
 import nova.core.component.inventory.InventoryPlayer;
 import nova.core.entity.Entity;
+import nova.core.util.UniqueIdentifiable;
 
 /**
- * Basic representation of Player
+ * Basic representation of a Player.
  */
 @UnsidedComponent
-public abstract class Player extends Living {
-	/**
-	 * @return Returns player name that can be used to identify this player
-	 */
-	public abstract String getUsername();
+public abstract class Player extends Living implements UniqueIdentifiable {
 
 	/**
+	 * Get the entity that represents this player.
+	 *
 	 * @return The entity of the player
 	 */
 	public abstract Entity entity();
 
 	/**
-	 * @return Returns the ID representing the player.
-	 * For many games, the username is the ID.
+	 * Get the unique ID for this player. This ID is only
+	 * unique in the context of the game in which
+	 * the current NOVA instance is run.
+	 * <p>
+	 * No guarantees are made about cross-game ID uniqueness.
+	 *
+	 * @return Returns the unique ID representing the player
 	 */
-	public String getPlayerID() {
-		return getUsername();
-	}
+	@Override
+	public abstract String getUniqueID();
 
 	/**
+	 * Get the player's inventory.
+	 *
 	 * @return Inventory of the player
 	 */
 	public abstract InventoryPlayer getInventory();
 
 	/**
-	 * @return Returns non-identifying player name
+	 * Get the player's username.
+	 * <p>
+	 * The difference between this and {@link #getDisplayName()}
+	 * is that the name returned by this method is undecorated,
+	 * while name returned by {@link #getDisplayName()}
+	 * may be decorated.
+	 *
+	 * @return Returns the undecorated non-identifying player name
+	 */
+	public abstract String getUsername();
+
+	/**
+	 * Get the player's display name.
+	 * <p>
+	 * The difference between this and {@link #getUsername()}
+	 * is that the name returned by this method may be decorated,
+	 * while {@link #getUsername()} returns the undecorated name.
+	 *
+	 * @return Returns the decorated non-identifying player name
 	 */
 	public String getDisplayName() {
 		return getUsername();

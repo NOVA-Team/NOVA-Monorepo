@@ -40,6 +40,7 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import nova.internal.core.Game;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -147,7 +148,7 @@ public class ReflectionUtil {
 		try {
 			return (List<ArrayList<ItemStack>>) OREDICTIONARY_IDTOSTACK.get(null);
 		} catch (IllegalAccessException ex) {
-			logError("ERROR - could not load ore dictionary stacks!");
+			Game.logger().error("ERROR - could not load ore dictionary stacks!");
 			return null;
 		}
 	}
@@ -156,7 +157,7 @@ public class ReflectionUtil {
 		try {
 			return (List<ArrayList<ItemStack>>) OREDICTIONARY_IDTOSTACKUN.get(null);
 		} catch (IllegalAccessException ex) {
-			logError("ERROR - could not load ore dictionary stacks!");
+			Game.logger().error("ERROR - could not load ore dictionary stacks!");
 			return null;
 		}
 	}
@@ -165,7 +166,7 @@ public class ReflectionUtil {
 		try {
 			return (File) MINECRAFTSERVER_ANVILFILE.get(server);
 		} catch (IllegalAccessException ex) {
-			logError("could not load anvil file!");
+			Game.logger().error("could not load anvil file!");
 			return null;
 		}
 	}
@@ -187,7 +188,7 @@ public class ReflectionUtil {
 		try {
 			return SHAPEDORERECIPE_WIDTH.getInt(recipe);
 		} catch (IllegalAccessException ex) {
-			logError("could not load shaped ore recipe width!");
+			Game.logger().error("could not load shaped ore recipe width!");
 			return 3;
 		}
 	}
@@ -196,7 +197,7 @@ public class ReflectionUtil {
 		try {
 			return (Container) INVENTORYCRAFTING_EVENTHANDLER.get(inventory);
 		} catch (IllegalAccessException ex) {
-			logError("could not get inventory eventhandler");
+			Game.logger().error("could not get inventory eventhandler");
 			return null;
 		}
 	}
@@ -205,7 +206,7 @@ public class ReflectionUtil {
 		try {
 			return (EntityPlayer) SLOTCRAFTING_PLAYER.get(slot);
 		} catch (IllegalAccessException ex) {
-			logError("could not get inventory eventhandler");
+			Game.logger().error("could not get inventory eventhandler");
 			return null;
 		}
 	}
@@ -215,7 +216,7 @@ public class ReflectionUtil {
 			Field field = getField(StringTranslate.class, ObfuscationConstants.STRINGTRANSLATE_INSTANCE);
 			return (StringTranslate) field.get(null);
 		} catch (IllegalAccessException ex) {
-			logError("could not get string translator");
+			Game.logger().error("could not get string translator");
 			return null;
 		}
 	}
@@ -224,7 +225,7 @@ public class ReflectionUtil {
 		try {
 			return (ItemStack) SEEDENTRY_SEED.get(entry);
 		} catch (IllegalAccessException ex) {
-			logError("could not get SeedEntry seed");
+			Game.logger().error("could not get SeedEntry seed");
 			return null;
 		}
 	}
@@ -234,7 +235,7 @@ public class ReflectionUtil {
 			CraftingManager.getInstance(),
 			craftingRecipeList,
 			ObfuscationConstants.CRAFTINGMANAGER_RECIPES)) {
-			logError("could not set crafting recipe list");
+			Game.logger().error("could not set crafting recipe list");
 		}
 	}
 
@@ -242,15 +243,15 @@ public class ReflectionUtil {
 		try {
 			return SEEDENTRY_CONSTRUCTOR.newInstance(MineTweakerMC.getItemStack(stack.getStack()), (int) stack.getChance());
 		} catch (InstantiationException ex) {
-			logError("could not construct SeedEntry");
+			Game.logger().error("could not construct SeedEntry");
 		} catch (IllegalAccessException ex) {
-			logError("could not construct SeedEntry");
+			Game.logger().error("could not construct SeedEntry");
 		} catch (IllegalArgumentException ex) {
-			logError("could not construct SeedEntry");
+			Game.logger().error("could not construct SeedEntry");
 		} catch (InvocationTargetException ex) {
-			logError("could not construct SeedEntry");
+			Game.logger().error("could not construct SeedEntry");
 		}
-		
+
 		return null;
 	}*/
 
@@ -319,9 +320,5 @@ public class ReflectionUtil {
 		}
 
 		return null;
-	}
-
-	private static void logError(String message) {
-		System.out.println("ERROR: " + message);
 	}
 }
