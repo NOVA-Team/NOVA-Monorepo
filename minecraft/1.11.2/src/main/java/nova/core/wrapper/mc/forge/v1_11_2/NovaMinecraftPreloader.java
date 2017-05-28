@@ -40,6 +40,7 @@ import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import nova.core.loader.Mod;
 import nova.core.util.ClassLoaderUtil;
+import nova.core.wrapper.mc.forge.v1_11_2.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.NovaFileResourcePack;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.NovaFolderResourcePack;
 import nova.core.wrapper.mc.forge.v1_11_2.util.ReflectionUtil;
@@ -63,6 +64,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -266,6 +269,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 		List<ModContainer> fmlMods = ReflectionUtil.getPrivateObject(Loader.instance(), "mods");
 		List<ModContainer> newMods = new ArrayList<>();
 		newMods.addAll(fmlMods);
+		newMods.stream().filter(mc -> NovaMinecraft.MOD_ID.equals(mc.getModId())).findFirst().ifPresent(nova -> md.parentMod = nova);
 		modClasses.forEach(mod -> {
 			ModMetadata fakeMeta = new ModMetadata();
 			Mod annotation = mod.getAnnotation(Mod.class);
@@ -355,11 +359,13 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	 * A fake NovaMod to inject into FML.
 	 */
 	private static class NovaModContainer extends DummyModContainer {
+		private final ModMetadata meta;
 		private final Class<?> mod;
 		private File source = null;
 
 		public NovaModContainer(ModMetadata meta, Class<?> mod) {
 			super(meta);
+			this.meta = meta;
 			this.mod = mod;
 		}
 

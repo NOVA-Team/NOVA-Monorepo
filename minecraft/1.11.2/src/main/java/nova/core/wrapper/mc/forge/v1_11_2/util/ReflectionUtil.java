@@ -226,7 +226,7 @@ public class ReflectionUtil {
 		try {
 			return (ItemStack) SEEDENTRY_SEED.get(entry);
 		} catch (IllegalAccessException ex) {
-			Game.logger().error("could not get SeedEntry seed");
+			Game.logger().error("could not get SeedEntry seed", ex);
 			return null;
 		}
 	}
