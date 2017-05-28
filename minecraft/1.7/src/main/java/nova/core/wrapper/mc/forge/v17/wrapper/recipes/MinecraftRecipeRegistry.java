@@ -61,7 +61,7 @@ public class MinecraftRecipeRegistry {
 	}
 
 	public void registerRecipes() {
-		long startTime = System.currentTimeMillis();
+		long startTime = System.nanoTime();
 
 		RecipeManager recipeManager = Game.recipes();
 
@@ -78,7 +78,7 @@ public class MinecraftRecipeRegistry {
 
 		ReflectionUtil.setCraftingRecipeList(new RecipeListWrapper(recipes));
 
-		Game.logger().info("Initialized recipes in {} ms", (System.currentTimeMillis() - startTime));
+		Game.logger().info("Initialized recipes in {} ms", (System.nanoTime() - startTime) / 1_000_000);
 
 		recipeManager.whenRecipeAdded(CraftingRecipe.class, this::onNOVARecipeAdded);
 		recipeManager.whenRecipeRemoved(CraftingRecipe.class, this::onNOVARecipeRemoved);

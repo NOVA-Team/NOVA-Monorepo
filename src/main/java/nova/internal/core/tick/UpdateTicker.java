@@ -50,7 +50,7 @@ public class UpdateTicker {
 	private double deltaTime;
 
 	public UpdateTicker() {
-		last = System.currentTimeMillis();
+		last = System.nanoTime();
 	}
 
 	public void add(Updater ticker) {
@@ -82,9 +82,9 @@ public class UpdateTicker {
 			preEvents.clear();
 		}
 
-		long current = System.currentTimeMillis();
+		long current = System.nanoTime();
 		//The time in milliseconds between the last update and this one.
-		deltaTime = (current - last) / 1000d;
+		deltaTime = (current - last) / 1_000_000_000d;
 		synchronized (updaters) {
 			//TODO: Check the threshold
 			Stream<Updater> stream = updaters.size() > 1000 ? updaters.parallelStream() : updaters.stream();
