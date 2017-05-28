@@ -45,7 +45,7 @@ public class MCRetentionManager extends RetentionManager {
 	/**
 	 * Last time that the queueSave manager tried to queueSave a file
 	 */
-	private long lastSaveMills = 0;
+	private long lastSaveTime = 0;
 
 	/**
 	 * Save all storable queued
@@ -156,8 +156,8 @@ public class MCRetentionManager extends RetentionManager {
 	@SubscribeEvent
 	public void worldSave(WorldEvent evt) {
 		//Current time milli-seconds is used to prevent the files from saving 20 times when the world loads
-		if (System.currentTimeMillis() - lastSaveMills > 2000) {
-			lastSaveMills = System.currentTimeMillis();
+		if (System.nanoTime() - lastSaveTime > 2_000_000_000) {
+			lastSaveTime = System.nanoTime();
 			saveAll();
 		}
 	}
