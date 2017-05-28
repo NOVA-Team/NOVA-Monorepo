@@ -24,6 +24,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.RecipeSorter.Category;
 import nova.core.event.RecipeEvent;
 import nova.core.item.Item;
 import nova.core.recipes.RecipeManager;
@@ -32,6 +34,11 @@ import nova.core.recipes.ingredient.ItemIngredient;
 import nova.core.recipes.smelting.SmeltingRecipe;
 import nova.core.wrapper.mc.forge.v1_11_2.util.ReflectionUtil;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.NovaCraftingRecipe;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.ShapedRecipeBasic;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.ShapedRecipeOre;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.ShapelessRecipeBasic;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.recipes.forward.ShapelessRecipeOre;
 import nova.internal.core.Game;
 
 import java.util.AbstractList;
@@ -79,6 +86,14 @@ public class MinecraftRecipeRegistry {
 		ReflectionUtil.setCraftingRecipeList(new RecipeListWrapper(recipes));
 
 		Game.logger().info("Initialized recipes in {} ms", (System.nanoTime() - startTime) / 1_000_000);
+
+		RecipeSorter.register("nova:shaped", ShapedRecipeBasic.class, Category.SHAPED, "before:forge:shapedore");
+		RecipeSorter.register("nova:shaped.oredict", ShapedRecipeOre.class, Category.SHAPED, "after:nova:shaped after:minecraft:shaped before:minecraft:shapeless");
+
+		RecipeSorter.register("nova:shapeless", ShapelessRecipeBasic.class, Category.SHAPELESS, "after:minecraft:shapeless before:forge:shapelessore");
+		RecipeSorter.register("nova:shapeless.oredict", ShapelessRecipeOre.class, Category.SHAPELESS, "after:nova:shapeless after:minecraft:shapeless");
+
+		RecipeSorter.register("nova:unknown", NovaCraftingRecipe.class, Category.UNKNOWN, "");
 
 		recipeManager.whenRecipeAdded(CraftingRecipe.class, this::onNOVARecipeAdded);
 		recipeManager.whenRecipeRemoved(CraftingRecipe.class, this::onNOVARecipeRemoved);
