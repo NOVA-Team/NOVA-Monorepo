@@ -29,6 +29,7 @@ import net.minecraft.world.chunk.Chunk;
 import nova.core.block.Block;
 import nova.core.component.misc.FactoryProvider;
 import nova.core.event.BlockEvent;
+import nova.core.wrapper.mc.forge.v1_11_2.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.forward.FWTile;
@@ -87,5 +88,15 @@ public class StaticForwarder {
 		} else {
 			return clazz.newInstance();
 		}
+	}
+
+	/**
+	 * Checks if the prefix is equal to the NOVA mod ID ("nova").
+	 *
+	 * @param prefix The prefix to check
+	 * @return If the prefix is equal to the NOVA mod ID ("nova").
+	 */
+	public static boolean isNovaPrefix(String prefix) {
+		return NovaMinecraft.MOD_ID.equals(prefix);
 	}
 }

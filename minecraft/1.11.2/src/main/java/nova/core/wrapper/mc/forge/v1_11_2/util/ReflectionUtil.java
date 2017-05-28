@@ -45,12 +45,10 @@ import nova.internal.core.Game;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Objects;
 
 /**
  * Common class for all runtime hacks (stuff requiring reflection). It is not
@@ -58,6 +56,7 @@ import java.util.logging.Logger;
  * adjustment - as such, those have been collected here.
  * @author Stan Hebben
  */
+@SuppressWarnings("unchecked")
 public class ReflectionUtil {
 	private static final Field NBTTAGLIST_TAGLIST;
 	private static final Field OREDICTIONARY_IDTOSTACK;
@@ -86,6 +85,7 @@ public class ReflectionUtil {
 		try {
 			forgeSeedEntry = (Class<? extends WeightedRandom.Item>) Class.forName("net.minecraftforge.common.ForgeHooks$SeedEntry");
 		} catch (ClassNotFoundException ex) {
+			Game.logger().error("ReflectionUtil can't find SeedEntry", ex);
 		}
 
 		SEEDENTRY_SEED = getField(forgeSeedEntry, "seed");
@@ -93,10 +93,10 @@ public class ReflectionUtil {
 		Constructor<? extends WeightedRandom.Item> seedEntryConstructor = null;
 
 		try {
-			seedEntryConstructor = forgeSeedEntry.getConstructor(ItemStack.class, int.class);
+			seedEntryConstructor = Objects.requireNonNull(forgeSeedEntry, "SeedEntry class is null").getConstructor(ItemStack.class, int.class);
 			seedEntryConstructor.setAccessible(true);
-		} catch (NoSuchMethodException | SecurityException ex) {
-			Logger.getLogger(ReflectionUtil.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (NoSuchMethodException | SecurityException | NullPointerException ex) {
+			Game.logger().error("ReflectionUtil can't find SeedEntry constructor", ex);
 		}
 
 		SEEDENTRY_CONSTRUCTOR = seedEntryConstructor;
@@ -137,6 +137,7 @@ public class ReflectionUtil {
 		return Collections.emptyMap();//getPrivateStaticObject(ChestGenHooks.class, "chestInfo");
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Map<String, String> getTranslations() {
 		return getPrivateObject(
 			getPrivateStaticObject(I18n.class, "localizedName", "field_74839_a"),

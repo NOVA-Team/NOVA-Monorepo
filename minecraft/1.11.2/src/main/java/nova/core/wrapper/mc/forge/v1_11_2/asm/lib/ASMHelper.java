@@ -177,7 +177,7 @@ public class ASMHelper {
 	}
 
 	public static Map<LabelNode, LabelNode> cloneLabels(InsnList insns) {
-		HashMap<LabelNode, LabelNode> labelMap = new HashMap<LabelNode, LabelNode>();
+		HashMap<LabelNode, LabelNode> labelMap = new HashMap<>();
 		for (AbstractInsnNode insn = insns.getFirst(); insn != null; insn = insn.getNext()) {
 			if (insn.getType() == 8) {
 				labelMap.put((LabelNode) insn, new LabelNode());
@@ -200,7 +200,7 @@ public class ASMHelper {
 	}
 
 	public static List<TryCatchBlockNode> cloneTryCatchBlocks(Map<LabelNode, LabelNode> labelMap, List<TryCatchBlockNode> tcblocks) {
-		ArrayList<TryCatchBlockNode> clone = new ArrayList<TryCatchBlockNode>();
+		ArrayList<TryCatchBlockNode> clone = new ArrayList<>(tcblocks.size());
 		for (TryCatchBlockNode node : tcblocks) {
 			clone.add(new TryCatchBlockNode(labelMap.get(node.start), labelMap.get(node.end), labelMap.get(node.handler), node.type));
 		}
@@ -209,7 +209,7 @@ public class ASMHelper {
 	}
 
 	public static List<LocalVariableNode> cloneLocals(Map<LabelNode, LabelNode> labelMap, List<LocalVariableNode> locals) {
-		ArrayList<LocalVariableNode> clone = new ArrayList<LocalVariableNode>();
+		ArrayList<LocalVariableNode> clone = new ArrayList<>(locals.size());
 		for (LocalVariableNode node : locals) {
 			clone.add(new LocalVariableNode(node.name, node.desc, node.signature, labelMap.get(node.start), labelMap.get(node.end), node.index));
 		}
@@ -314,6 +314,7 @@ public class ASMHelper {
 		try {
 			byte[] bytes = createBytes(cn, flags);
 			defineClass1.setAccessible(true);
+			@SuppressWarnings("unchecked")
 			Class<T> clazz = (Class<T>) defineClass1.invoke(Thread.currentThread().getContextClassLoader(), cn.name.replaceAll("/", "."), bytes, 0, bytes.length);
 			defineClass1.setAccessible(false);
 			return clazz;
@@ -329,6 +330,7 @@ public class ASMHelper {
 		try {
 			byte[] bytes = createBytes(cn, flags);
 			defineClass2.setAccessible(true);
+			@SuppressWarnings("unchecked")
 			Class<T> clazz = (Class<T>) defineClass2.invoke(Thread.currentThread().getContextClassLoader(), cn.name.replaceAll("/", "."), bytes, 0, bytes.length, domain);
 			defineClass2.setAccessible(false);
 			return clazz;
