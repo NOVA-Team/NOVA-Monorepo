@@ -39,7 +39,19 @@ public class ChunkTransformer implements Transformer {
 		Game.logger().info("Transforming Chunk class for chunkModified event.");
 
 		//obf name: func_177436_a
-		MethodNode method = ASMHelper.findMethod(new ObfMapping("net/minecraft/world/chunk/Chunk", "setBlockState", "(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;)Lnet/minecraft/block/state/IBlockState;"), cnode);
+		ObfMapping obfMap = new ObfMapping("auo", "a", "(Lco;Latl;)Latl;");
+		ObfMapping deobfMap = new ObfMapping("net/minecraft/world/chunk/Chunk", "setBlockState", "(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;)Lnet/minecraft/block/state/IBlockState;");
+
+		MethodNode method = ASMHelper.findMethod(obfMap, cnode);
+
+		if (method == null) {
+			Game.logger().warn("Lookup {} failed. You are probably in a deobf environment.", obfMap);
+			method = ASMHelper.findMethod(deobfMap, cnode);
+
+			if (method == null) {
+				throw new IllegalStateException("[NOVA] Lookup " + deobfMap + " failed!");
+			}
+		}
 
 		Game.logger().info("Found method {}", method.name);
 

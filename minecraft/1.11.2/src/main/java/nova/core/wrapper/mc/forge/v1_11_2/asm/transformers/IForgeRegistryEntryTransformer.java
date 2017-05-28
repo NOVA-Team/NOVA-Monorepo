@@ -55,38 +55,12 @@ public class IForgeRegistryEntryTransformer implements Transformer {
 
 		Game.logger().info("Transforming method {}", method.name);
 
-		try {
-			File root = new File("NOVA-Debug");
-			if (!root.exists())
-				root.mkdir();
-
-			File file = new File(root, "IForgeRegistryEntryOriginal.java");
-			if (file.exists()) {
-				file.delete();
-			}
-			file.createNewFile();
-			PrintWriter printWriter = new PrintWriter(new FileOutputStream(file));
-			TraceClassVisitor traceClassVisitor = new TraceClassVisitor(printWriter);
-			cnode.accept(traceClassVisitor);
-		} catch (IOException ex) {}
-
 		InsnList list = new InsnList();
 		list.add(new VarInsnNode(ALOAD, 5));
 		list.add(new MethodInsnNode(INVOKESTATIC, "nova/core/wrapper/mc/forge/v1_11_2/asm/StaticForwarder", "isNovaPrefix", "(Ljava/lang/String;)Z", false));
 		list.add(new JumpInsnNode(IFNE, (LabelNode) method.instructions.get(120)));
 
 		method.instructions.insert(method.instructions.get(101), list);
-
-		try {
-			File file = new File("NOVA-Debug/IForgeRegistryEntryModified.java");
-			if (file.exists()) {
-				file.delete();
-			}
-			file.createNewFile();
-			PrintWriter printWriter = new PrintWriter(new FileOutputStream(file));
-			TraceClassVisitor traceClassVisitor = new TraceClassVisitor(printWriter);
-			cnode.accept(traceClassVisitor);
-		} catch (IOException ex) {}
 
 		Game.logger().info("Injected instruction to method: {}", method.name);
 	}

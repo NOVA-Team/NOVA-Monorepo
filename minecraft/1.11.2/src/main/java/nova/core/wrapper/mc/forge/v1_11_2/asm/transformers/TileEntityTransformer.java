@@ -29,19 +29,8 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
-import org.objectweb.asm.util.TraceClassVisitor;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 public class TileEntityTransformer implements Transformer {
-
-	/**
-	 * If the TileEntity byte code should be written to a debug file. (One for the unmodified version, and one for the modified version)
-	 */
-	public static boolean writeDebug = false;
 
 	@Override
 	public void transform(ClassNode cnode) {
@@ -53,12 +42,9 @@ public class TileEntityTransformer implements Transformer {
 
 		MethodNode method = ASMHelper.findMethod(obfMap, cnode);
 
-		boolean deobf = false;
-
 		if (method == null) {
 			Game.logger().warn("Lookup {} failed. You are probably in a deobf environment.", obfMap);
 			method = ASMHelper.findMethod(deobfMap, cnode);
-			deobf = true;
 
 			if (method == null) {
 				throw new IllegalStateException("[NOVA] Lookup " + deobfMap + " failed!");
@@ -66,23 +52,6 @@ public class TileEntityTransformer implements Transformer {
 		}
 
 		Game.logger().info("Transforming method {}", method.name);
-
-		if (writeDebug) {
-			try {
-				File root = new File("NOVA-Debug");
-				if (!root.exists())
-					root.mkdir();
-
-				File file = new File(root, "TileEntityOriginal.java");
-				if (file.exists()) {
-					file.delete();
-				}
-				file.createNewFile();
-				PrintWriter printWriter = new PrintWriter(new FileOutputStream(file));
-				TraceClassVisitor traceClassVisitor = new TraceClassVisitor(printWriter);
-				cnode.accept(traceClassVisitor);
-			} catch (IOException ex) {}
-		}
 
 		ASMHelper.removeBlock(method.instructions, new InstructionComparator.InsnListSection(method.instructions, 30, 33));
 
@@ -94,19 +63,6 @@ public class TileEntityTransformer implements Transformer {
 		list.add(new VarInsnNode(ASTORE, 2)); // TileEntity
 
 		method.instructions.insert(method.instructions.get(29), list);
-
-		if (writeDebug) {
-			try {
-				File file = new File("NOVA-Debug/TileEntityModified.java");
-				if (file.exists()) {
-					file.delete();
-				}
-				file.createNewFile();
-				PrintWriter printWriter = new PrintWriter(new FileOutputStream(file));
-				TraceClassVisitor traceClassVisitor = new TraceClassVisitor(printWriter);
-				cnode.accept(traceClassVisitor);
-			} catch (IOException ex) {}
-		}
 
 		Game.logger().info("Injected instruction to method: {}", method.name);
 	}
