@@ -132,7 +132,7 @@ public class MCCraftingGrid implements CraftingGrid {
 
 		for (int i = 0; i < inventory.getSizeInventory(); i++) {
 			if (changed(i)) {
-				//System.out.println("Slot " + i + " changed");
+				//Game.logger().info("Slot {} changed", i);
 				original[i] = inventory.getStackInSlot(i);
 				if (inventory.getStackInSlot(i) != null) {
 					if (items[i] == null) {
@@ -149,7 +149,7 @@ public class MCCraftingGrid implements CraftingGrid {
 				}
 			}
 		}
-		//System.out.println("Num stack count: " + itemCount);
+		//Game.logger().info("Num stack count: {}", itemCount);
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class MCCraftingGrid implements CraftingGrid {
 
 	@Override
 	public boolean setCrafting(int x, int y, Optional<nova.core.item.Item> item) {
-		//System.out.println("SetStack(" + x + ", " + y + ") " + stack);
+		//Game.logger().info("setCrafting({}, {}) {}", x, y, item);
 
 		int ix = y * width + x;
 		if (item.isPresent()) {
@@ -213,7 +213,7 @@ public class MCCraftingGrid implements CraftingGrid {
 
 	@Override
 	public boolean setCrafting(int i, Optional<nova.core.item.Item> item) {
-		//System.out.println("SetStack(" + i + ") " + stack);
+		//Game.logger().info("setCrafting({}) {}", i, item);
 
 		if (item.isPresent()) {
 			if (items[i] == null) {

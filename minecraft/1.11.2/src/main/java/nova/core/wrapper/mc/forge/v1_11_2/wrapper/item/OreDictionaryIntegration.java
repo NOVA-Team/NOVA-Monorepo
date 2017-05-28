@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v1_11_2.wrapper.item;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
@@ -41,7 +42,7 @@ import java.util.Optional;
  */
 public class OreDictionaryIntegration {
 	public static final OreDictionaryIntegration instance = new OreDictionaryIntegration();
-	private static final List<ArrayList<ItemStack>> OREDICT_CONTENTS = ReflectionUtil.getOreIdStacks();
+	private static final List<NonNullList<ItemStack>> OREDICT_CONTENTS = ReflectionUtil.getOreIdStacks();
 
 	private OreDictionaryIntegration() {
 	}

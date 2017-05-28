@@ -161,6 +161,6 @@ public class BlockConverter implements NativeConverter<BlockFactory, net.minecra
 			}
 		}
 
-		System.out.println("[NOVA]: Registered '" + blockFactory.getID() + "' block.");
+		Game.logger().info("Registered block: {}", blockFactory.getID());
 	}
 }

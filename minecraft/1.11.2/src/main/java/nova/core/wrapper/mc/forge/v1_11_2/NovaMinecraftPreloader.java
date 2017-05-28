@@ -44,6 +44,7 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.NovaFileResourcePack;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.NovaFolderResourcePack;
 import nova.core.wrapper.mc.forge.v1_11_2.util.ReflectionUtil;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.assets.NovaResourcePack;
+import nova.internal.core.Game;
 
 import java.io.File;
 import java.io.IOException;
@@ -239,7 +240,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			@SuppressWarnings("unchecked")
 			Set<String> classLoaderExceptions = (Set<String>) setField.get(classLoader);
 			classLoaderExceptions.remove("org.apache.");
-			System.out.println("Successfully hacked 'org.apache' out of launcher exclusion");
+			Game.logger().info("Successfully hacked 'org.apache' out of launcher exclusion");
 		} catch (Exception e) {
 			throw new ClassLoaderUtil.ClassLoaderException(e);
 		}
@@ -321,7 +322,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 						NovaFileResourcePack pack = new NovaFileResourcePack(file, novaMod.id(), novaMod.domains());
 						packs.add(pack);
 						novaPacks.add(pack);
-						System.out.println("Registered NOVA jar resource pack: " + fn);
+						Game.logger().info("Registered NOVA jar resource pack: {}", fn);
 					}
 				} else {
 					//Add folder resource pack location. The folderLocation is the root of the project, including the packages of classes, and an assets folder inside.
@@ -340,7 +341,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 					NovaFolderResourcePack pack = new NovaFolderResourcePack(folderFile, novaMod.id(), novaMod.domains());
 					packs.add(pack);
 					novaPacks.add(pack);
-					System.out.println("Registered NOVA folder resource pack: " + folderFile.getAbsolutePath());
+					Game.logger().info("Registered NOVA folder resource pack: {}", folderFile.getAbsolutePath());
 				}
 			});
 			resourcePackField.set(FMLClientHandler.instance(), packs);

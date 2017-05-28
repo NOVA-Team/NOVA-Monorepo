@@ -105,8 +105,6 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 			return getNovaItem(copy); // Preserve capabilities
 		}
 
-		// Nova FWCapabilityProvider stores capabilities in a HashMap, so we need this to be as fast as possible.
-		// So I implemented FWItemCapabilityProvider which has a single NovaItem capability field for near-instanteneous access.
 		return Optional.ofNullable(stack.getCapability(NovaItem.CAPABILITY, null))
 			.map(wrapped -> wrapped.item)
 			.orElseGet(() -> {
@@ -225,11 +223,6 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 			if (itemWrapper == null) {
 				throw new InitializationException("ItemConverter: Missing block: " + itemFactory.getID());
 			}
-			if (!itemFactory.getID().equals(Objects.toString(net.minecraft.item.Item.REGISTRY.getNameForObject(itemWrapper)))) {
-				System.err.println("[NOVA]: ItemConverter: " + net.minecraft.item.Item.REGISTRY.getNameForObject(itemWrapper) + " != " + itemFactory.getID());
-				net.minecraft.item.Item newItemWrapper = net.minecraft.item.Item.getByNameOrId(itemFactory.getID());
-				itemWrapper = newItemWrapper != null ? newItemWrapper : itemWrapper;
-			}
 		} else {
 			itemWrapper = new FWItem(itemFactory);
 		}
@@ -251,7 +244,7 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 				itemWrapper.setCreativeTab(CategoryConverter.instance().toNative(category, itemWrapper));
 			}
 
-			System.out.println("[NOVA]: Registered '" + itemFactory.getID() + "' item.");
+			Game.logger().info("Registered item: {}", itemFactory.getID());
 		}
 	}
 

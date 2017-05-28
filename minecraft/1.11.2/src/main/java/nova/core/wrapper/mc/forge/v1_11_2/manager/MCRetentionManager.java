@@ -46,7 +46,7 @@ public class MCRetentionManager extends RetentionManager {
 	/**
 	 * Last time that the queueSave manager tried to queueSave a file
 	 */
-	private long lastSaveMills = 0;
+	private long lastSaveTime = 0;
 
 	/**
 	 * Save all storable queued
@@ -88,7 +88,7 @@ public class MCRetentionManager extends RetentionManager {
 			tempFile.renameTo(file);
 			return true;
 		} catch (Exception e) {
-			System.out.println("Failed to queueSave " + file.getName() + ".dat!");
+			Game.logger().error("Failed to queueSave {}!", file.getName());
 			e.printStackTrace();
 			return false;
 		}
@@ -110,7 +110,7 @@ public class MCRetentionManager extends RetentionManager {
 				return new NBTTagCompound();
 			}
 		} catch (Exception e) {
-			System.out.println("Failed to load " + file.getName() + ".dat!");
+			Game.logger().error("Failed to load {}!", file.getName());
 			e.printStackTrace();
 			return null;
 		}
@@ -157,8 +157,8 @@ public class MCRetentionManager extends RetentionManager {
 	@SubscribeEvent
 	public void worldSave(WorldEvent evt) {
 		//Current time milli-seconds is used to prevent the files from saving 20 times when the world loads
-		if (System.currentTimeMillis() - lastSaveMills > 2000) {
-			lastSaveMills = System.currentTimeMillis();
+		if (System.nanoTime() - lastSaveTime > 2_000_000_000) {
+			lastSaveTime = System.nanoTime();
 			saveAll();
 		}
 	}

@@ -22,6 +22,7 @@ package nova.core.wrapper.mc.forge.v1_11_2.asm.transformers;
 
 import nova.core.wrapper.mc.forge.v1_11_2.asm.lib.ASMHelper;
 import nova.core.wrapper.mc.forge.v1_11_2.asm.lib.ObfMapping;
+import nova.internal.core.Game;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
@@ -35,12 +36,12 @@ public class ChunkTransformer implements Transformer {
 
 	@Override
 	public void transform(ClassNode cnode) {
-		System.out.println("[NOVA] Transforming Chunk class for chunkModified event.");
+		Game.logger().info("Transforming Chunk class for chunkModified event.");
 
 		//obf name: func_177436_a
 		MethodNode method = ASMHelper.findMethod(new ObfMapping("net/minecraft/world/chunk/Chunk", "setBlockState", "(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;)Lnet/minecraft/block/state/IBlockState;"), cnode);
 
-		System.out.println("[NOVA] Found method " + method.name);
+		Game.logger().info("Found method {}", method.name);
 
 		InsnList list = new InsnList();
 		list.add(new VarInsnNode(ALOAD, 0)); //this
@@ -60,6 +61,6 @@ public class ChunkTransformer implements Transformer {
 			method.instructions.insert(list);
 		}
 
-		System.out.println("[NOVA] Injected instruction to method: " + method.name);
+		Game.logger().info("Injected instruction to method: {}", method.name);
 	}
 }

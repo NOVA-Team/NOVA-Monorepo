@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v1_11_2.asm.transformers;
 import nova.core.wrapper.mc.forge.v1_11_2.asm.lib.ASMHelper;
 import nova.core.wrapper.mc.forge.v1_11_2.asm.lib.InstructionComparator;
 import nova.core.wrapper.mc.forge.v1_11_2.asm.lib.ObfMapping;
+import nova.internal.core.Game;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -45,7 +46,7 @@ public class TileEntityTransformer implements Transformer {
 	@Override
 	public void transform(ClassNode cnode) {
 
-		System.out.println("[NOVA] Transforming TileEntity class for dynamic instance injection.");
+		Game.logger().info("Transforming TileEntity class for dynamic instance injection.");
 
 		ObfMapping obfMap = new ObfMapping("aqk", "a", "(Laid;Ldr;)Laqk;");
 		ObfMapping deobfMap = new ObfMapping("net/minecraft/tileentity/TileEntity", "create", "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/tileentity/TileEntity;");
@@ -55,17 +56,16 @@ public class TileEntityTransformer implements Transformer {
 		boolean deobf = false;
 
 		if (method == null) {
-			System.out.println("[NOVA] Lookup " + obfMap + " failed. You are probably in a deobf environment.");
+			Game.logger().warn("Lookup {} failed. You are probably in a deobf environment.", obfMap);
 			method = ASMHelper.findMethod(deobfMap, cnode);
 			deobf = true;
 
 			if (method == null) {
-				System.out.println("[NOVA] Lookup " + deobfMap + " failed!");
-				return;
+				throw new IllegalStateException("[NOVA] Lookup " + deobfMap + " failed!");
 			}
 		}
 
-		System.out.println("[NOVA] Transforming method " + method.name);
+		Game.logger().info("Transforming method {}", method.name);
 
 		if (writeDebug) {
 			try {
@@ -108,6 +108,6 @@ public class TileEntityTransformer implements Transformer {
 			} catch (IOException ex) {}
 		}
 
-		System.out.println("[NOVA] Injected instruction to method: " + method.name);
+		Game.logger().info("Injected instruction to method: {}", method.name);
 	}
 }
