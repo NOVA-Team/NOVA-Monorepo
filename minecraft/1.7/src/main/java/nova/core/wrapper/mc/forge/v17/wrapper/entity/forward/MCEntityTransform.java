@@ -23,6 +23,7 @@ package nova.core.wrapper.mc.forge.v17.wrapper.entity.forward;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
 import nova.core.component.transform.EntityTransform;
+import nova.core.util.UniqueIdentifiable;
 import nova.core.util.math.RotationUtil;
 import nova.core.util.math.Vector3DUtil;
 import nova.core.world.World;
@@ -36,7 +37,7 @@ import java.util.Arrays;
  * Wraps Transform3d used in entity
  * @author Calclavia
  */
-public class MCEntityTransform extends EntityTransform {
+public class MCEntityTransform extends EntityTransform implements UniqueIdentifiable {
 	public final net.minecraft.entity.Entity wrapper;
 
 	public MCEntityTransform(net.minecraft.entity.Entity wrapper) {
@@ -86,5 +87,10 @@ public class MCEntityTransform extends EntityTransform {
 		double[] euler = rotation.getAngles(RotationUtil.DEFAULT_ORDER);
 		wrapper.rotationYaw = (float) Math.toDegrees(euler[0]);
 		wrapper.rotationPitch = (float) Math.toDegrees(euler[1]);
+	}
+
+	@Override
+	public String getUniqueID() {
+		return wrapper.getUniqueID().toString();
 	}
 }

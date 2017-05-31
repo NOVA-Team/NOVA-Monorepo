@@ -43,11 +43,15 @@ import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
-import nova.core.wrapper.mc.forge.v17.wrapper.block.world.BWWorld;
+import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.cuboid.CuboidConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.data.DataConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.entity.EntityConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,12 +68,9 @@ public class BWBlock extends Block implements Storable {
 
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
-		BlockTransform transform = components.add(new BlockTransform());
-		transform.setWorld(world);
-		transform.setPosition(pos);
-
+		components.add(new BWBlockTransform(this, world, pos));
 		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().isOpaque() ? 1 : 0));
-		if (mcBlock.isReplaceable(getMcBlockAccess(), x(), y(), z()))
+		if (mcBlock.isReplaceable(blockAccess(), xi(), yi(), zi()))
 			components.add(BlockProperty.Replaceable.instance());
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
@@ -77,29 +78,35 @@ public class BWBlock extends Block implements Storable {
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.BREAK, new Sound("", mcBlock.stepSound.getBreakSound()));
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.WALK, new Sound("", mcBlock.stepSound.getStepResourcePath()));
 
-		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(getMcBlockAccess(), x(), y(), z()) / 15.0);
+		components.add(new LightEmitter()).setEmittedLevel(() -> mcBlock.getLightValue(blockAccess(), xi(), yi(), zi()) / 15.0);
 		components.add(new Collider(this))
 			.setBoundingBox(() -> new Cuboid(mcBlock.getBlockBoundsMinX(), mcBlock.getBlockBoundsMinY(), mcBlock.getBlockBoundsMinZ(), mcBlock.getBlockBoundsMaxX(), mcBlock.getBlockBoundsMaxY(), mcBlock.getBlockBoundsMaxZ()))
 			.setOcclusionBoxes(entity -> {
 				List<AxisAlignedBB> aabbs = new ArrayList<>();
-				mcBlock.addCollisionBoxesToList(
-					Game.natives().toNative(world()),
-					(int) position().getX(),
-					(int) position().getY(),
-					(int) position().getZ(),
-					Game.natives().toNative(entity.isPresent() ? entity.get().components.get(Collider.class).boundingBox.get() : Cuboid.ONE.add(pos)),
-					aabbs,
-					entity.isPresent() ? Game.natives().toNative(entity.get()) : null
-				);
-
+				if (blockAccess() instanceof net.minecraft.world.World)
+					mcBlock.addCollisionBoxesToList(
+						(net.minecraft.world.World) blockAccess(),
+						(int) position().getX(),
+						(int) position().getY(),
+						(int) position().getZ(),
+						CuboidConverter.instance().toNative(entity
+							.flatMap(e -> e.components.getOp(Collider.class))
+							.map(c -> c.boundingBox.get())
+							.orElseGet(() -> Cuboid.ONE.add(pos))),
+						aabbs,
+						entity.map(EntityConverter.instance()::toNative).orElse(null)
+					);
 				return aabbs.stream()
-					.map(aabb -> (Cuboid) Game.natives().toNova(aabb))
+					.map(CuboidConverter.instance()::toNova)
 					.map(cuboid -> cuboid.subtract(pos))
 					.collect(Collectors.toSet());
+			}).setSelectionBoxes(entity -> {
+				final AxisAlignedBB bb = mcBlock.getSelectedBoundingBoxFromPool(((net.minecraft.world.World) blockAccess()), xi(), yi(), zi());
+				Cuboid cuboid = CuboidConverter.instance().toNova(bb);
+				return Collections.singleton(cuboid.subtract(position()));
 			});
-		//TODO: Set selection bounds
 		components.add(new StaticRenderer())
-			.onRender(model -> model.addChild(new CustomModel(self -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z()))));
+			.onRender(model -> model.addChild(new CustomModel(self -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, xi(), yi(), zi()))));
 		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
 		Game.events().publish(event);
 	}
@@ -109,37 +116,49 @@ public class BWBlock extends Block implements Storable {
 		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
 	}
 
-	public IBlockAccess getMcBlockAccess() {
-		return ((BWWorld) world()).access;
+	public int xi() {
+		return (int) x();
+	}
+
+	public int yi() {
+		return (int) y();
+	}
+
+	public int zi() {
+		return (int) z();
+	}
+
+	public net.minecraft.block.Block block() {
+		return mcBlock;
+	}
+
+	public IBlockAccess blockAccess() {
+		return WorldConverter.instance().toNative(world());
 	}
 
 	public int getMetadata() {
-		return getMcBlockAccess().getBlockMetadata(x(), y(), z());
+		return blockAccess().getBlockMetadata(xi(), yi(), zi());
 	}
 
 	public Optional<TileEntity> getTileEntity() {
-		return Optional.ofNullable(getTileEntityImpl());
-	}
-
-	private TileEntity getTileEntityImpl() {
 		if (mcTileEntity == null && mcBlock.hasTileEntity(getMetadata())) {
-			mcTileEntity = getMcBlockAccess().getTileEntity(x(), y(), z());
+			mcTileEntity = blockAccess().getTileEntity(xi(), yi(), zi());
 		}
-		return mcTileEntity;
+		return  Optional.ofNullable(mcTileEntity);
 	}
 
 	@Override
 	public boolean canReplace() {
-		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) getMcBlockAccess(), x(), y(), z());
+		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), xi(), yi(), zi());
 	}
 
 	@Override
 	public boolean shouldDisplacePlacement() {
-		if (mcBlock == Blocks.snow_layer && (getMcBlockAccess().getBlockMetadata(x(), y(), z()) & 7) < 1) {
+		if (mcBlock == Blocks.snow_layer && (blockAccess().getBlockMetadata(xi(), yi(), zi()) & 7) < 1) {
 			return false;
 		}
 
-		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable(getMcBlockAccess(), x(), y(), z())) {
+		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable(blockAccess(), xi(), yi(), zi())) {
 			return false;
 		}
 		return super.shouldDisplacePlacement();
@@ -148,23 +167,17 @@ public class BWBlock extends Block implements Storable {
 	@Override
 	public void save(Data data) {
 		Storable.super.save(data);
-
-		TileEntity tileEntity = getTileEntityImpl();
-		if (tileEntity != null) {
+		getTileEntity().ifPresent(tile -> {
 			NBTTagCompound nbt = new NBTTagCompound();
-			tileEntity.writeToNBT(nbt);
-			data.putAll(Game.natives().toNova(nbt));
-		}
+			tile.writeToNBT(nbt);
+			data.putAll(DataConverter.instance().toNova(nbt));
+		});
 	}
 
 	@Override
 	public void load(Data data) {
 		Storable.super.load(data);
-
-		TileEntity tileEntity = getTileEntityImpl();
-		if (tileEntity != null) {
-			tileEntity.writeToNBT(Game.natives().toNative(data));
-		}
+		getTileEntity().ifPresent(tile -> tile.readFromNBT(DataConverter.instance().toNative(data)));
 	}
 
 	@Override
@@ -175,5 +188,10 @@ public class BWBlock extends Block implements Storable {
 	@Override
 	public String getUnlocalizedName() {
 		return mcBlock.getUnlocalizedName();
+	}
+
+	@Override
+	public String toString() {
+		return "BWBlock{" + mcBlock + ", " + getTileEntity() + "}";
 	}
 }

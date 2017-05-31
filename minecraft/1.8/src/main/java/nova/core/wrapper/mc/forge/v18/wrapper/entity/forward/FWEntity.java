@@ -61,7 +61,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		if (wrapped instanceof Storable && nbt.hasKey("nova")) {
-			((Storable) wrapped).load(Game.natives().toNova(nbt.getCompoundTag("nova")));
+			((Storable) wrapped).load(DataConverter.instance().toNova(nbt.getCompoundTag("nova")));
 		}
 		if (wrapped == null) {
 			//This entity was saved to disk.
@@ -74,7 +74,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		if (wrapped instanceof Storable) {
 			Data data = new Data();
 			((Storable) wrapped).save(data);
-			nbt.setTag("nova", Game.natives().toNative(data));
+			nbt.setTag("nova", DataConverter.instance().toNative(data));
 		}
 		nbt.setString("novaID", wrapped.getID());
 	}

@@ -1,5 +1,6 @@
+
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -17,24 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
+package nova.core.wrapper.mc.forge.v18.wrapper.block.backward;
 
-package nova.core.util;
+import net.minecraft.block.Block;
+import nova.core.block.BlockFactory;
 
 /**
- * A generic interface signifying that this object is uniquely identifiable
- * by an ID
+ * @author ExE Boss
  */
-public interface UniqueIdentifiable extends Identifiable {
+public class BWBlockFactory extends BlockFactory {
 
-	@Override
-	default String getID() {
-		return getUniqueID();
+	private final Block block;
+
+	public BWBlockFactory(Block block) {
+		super(Block.blockRegistry.getNameForObject(block).toString(), () -> new BWBlock(block), factory -> {});
+		this.block = block;
 	}
 
-	/**
-	 * Get the unique ID to identify this object.
-	 *
-	 * @return the ID
-	 */
-	String getUniqueID();
+	public Block getBlock() {
+		return block;
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return getBlock().getLocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return getBlock().getUnlocalizedName();
+	}
 }

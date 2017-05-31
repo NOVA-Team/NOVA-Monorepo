@@ -40,6 +40,7 @@ import nova.core.item.ItemFactory;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v18.wrapper.assets.AssetConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItem;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
@@ -190,7 +191,7 @@ public class RenderUtility implements ForgeLoadable {
 	public void onModelBakeEvent(ModelBakeEvent event) {
 		//Register all blocks
 		Game.blocks().registry.forEach(blockFactory -> {
-			Object blockObj = Game.natives().toNative(blockFactory.build());
+			net.minecraft.block.Block blockObj = BlockConverter.instance().toNative(blockFactory);
 			if (blockObj instanceof FWBlock) {
 				FWBlock block = (FWBlock) blockObj;
 				ResourceLocation blockRL = (ResourceLocation) net.minecraft.block.Block.blockRegistry.getNameForObject(block);
