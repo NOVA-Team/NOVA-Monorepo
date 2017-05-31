@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v17.wrapper.block.backward;
 
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,6 +33,7 @@ import nova.core.block.Block;
 import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
+import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.component.transform.BlockTransform;
 import nova.core.item.ItemFactory;
@@ -98,8 +100,15 @@ public class BWBlock extends Block implements Storable {
 					.collect(Collectors.toSet());
 			});
 		//TODO: Set selection bounds
-		components.add(new StaticRenderer())
-			.onRender(model -> model.addChild(new CustomModel(self -> RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z()))));
+		components.add(new StaticRenderer()).onRender(model -> model.addChild(new CustomModel(self -> {
+			// TODO: Test and fix backward Block rendering
+			Tessellator.instance.draw();
+			RenderBlocks.getInstance().renderStandardBlock(mcBlock, x(), y(), z());
+			Tessellator.instance.startDrawingQuads();
+		})));
+		components.add(new DynamicRenderer()).onRender(model -> model.addChild(new CustomModel(self -> {
+			// TODO: Implement backward TileEntity rendering
+		})));
 		WrapperEvent.BWBlockCreate event = new WrapperEvent.BWBlockCreate(world, pos, this, mcBlock);
 		Game.events().publish(event);
 	}
