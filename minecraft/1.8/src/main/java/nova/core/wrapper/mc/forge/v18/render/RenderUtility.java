@@ -226,7 +226,7 @@ public class RenderUtility implements ForgeLoadable {
 				IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
 				m.load(res.getInputStream());
 			} catch (IOException e) {
-				throw new RuntimeException("IO Exception reading model format", e);
+				Game.logger().warn("IO Exception reading model format", e);
 			}
 		});
 	}

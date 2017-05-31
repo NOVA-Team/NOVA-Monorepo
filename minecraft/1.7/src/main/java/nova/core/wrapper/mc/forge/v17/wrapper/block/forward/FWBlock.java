@@ -27,6 +27,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -223,31 +224,12 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 	@Override
 	public IIcon getIcon(IBlockAccess access, int x, int y, int z, int side) {
-		//TODO: Fill in something
-		/*
-		Block blockInstance = getBlockInstance(access, new Vector3D(x, y, z));
-		Optional<StaticBlockRenderer> opRenderer = blockInstance.components.getOp(StaticBlockRenderer.class);
-		if (opRenderer.isPresent()) {
-			Optional<Texture> texture = opRenderer.components.get().texture.apply(Direction.values()[side]);
-			if (texture.isPresent()) {
-				return RenderUtility.instance.getIcon(texture.components.get());
-			}
-		}*/
-		return null;
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("missingno");
 	}
 
 	@Override
 	public IIcon getIcon(int side, int meta) {
-		//TODO: Fill in something
-		/*
-		Optional<StaticBlockRenderer> opRenderer = block.components.getOp(StaticBlockRenderer.class);
-		if (opRenderer.isPresent()) {
-			Optional<Texture> texture = opRenderer.components.get().texture.apply(Direction.values()[side]);
-			if (texture.isPresent()) {
-				return RenderUtility.instance.getIcon(texture.components.get());
-			}
-		}*/
-		return null;
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("missingno");
 	}
 
 	@Override

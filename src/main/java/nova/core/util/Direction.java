@@ -65,8 +65,11 @@ public enum Direction {
 
 		if (vector.equals(Vector3D.ZERO)) {
 			this.rotation = Rotation.IDENTITY;
-		} else {
+		} else if (z == 0) {
 			this.rotation = new Rotation(Vector3DUtil.FORWARD, vector);
+		} else {
+			// For some odd reason, the rotation must be reversed when dealing with NORTH/SOUTH
+			this.rotation = new Rotation(Vector3DUtil.FORWARD, vector.scalarMultiply(-1));
 		}
 	}
 
