@@ -10,6 +10,7 @@
 !/minecraft
 
 # github
+!/.gitattributes
 !/.gitignore
 !/README.md
 
