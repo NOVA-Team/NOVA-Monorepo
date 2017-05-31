@@ -20,6 +20,8 @@
 
 package nova.core.wrapper.mc.forge.v17.wrapper.block;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -35,29 +37,28 @@ import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
 import nova.core.wrapper.mc.forge.v17.wrapper.CategoryConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.backward.BWBlock;
+import nova.core.wrapper.mc.forge.v17.wrapper.block.backward.BWBlockFactory;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v17.wrapper.item.FWItemBlock;
 import nova.internal.core.Game;
 import nova.internal.core.launch.NovaLauncher;
 
-import java.util.HashMap;
-
 /**
  * @author Calclavia
  */
-public class BlockConverter implements NativeConverter<Block, net.minecraft.block.Block>, ForgeLoadable {
+public class BlockConverter implements NativeConverter<BlockFactory, net.minecraft.block.Block>, ForgeLoadable {
 	/**
 	 * A map of all blockFactory to MC blocks registered
 	 */
-	public final HashMap<BlockFactory, net.minecraft.block.Block> blockFactoryMap = new HashMap<>();
+	public final BiMap<BlockFactory, net.minecraft.block.Block> blockFactoryMap = HashBiMap.create();
 
 	public static BlockConverter instance() {
-		return Game.natives().getNative(Block.class, net.minecraft.block.Block.class);
+		return Game.natives().getNative(BlockFactory.class, net.minecraft.block.Block.class);
 	}
 
 	@Override
-	public Class<Block> getNovaSide() {
-		return Block.class;
+	public Class<BlockFactory> getNovaSide() {
+		return BlockFactory.class;
 	}
 
 	@Override
@@ -66,20 +67,19 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 	}
 
 	@Override
-	public Block toNova(net.minecraft.block.Block nativeBlock) {
+	public BlockFactory toNova(net.minecraft.block.Block nativeBlock) {
 		//Prevent recursive wrapping
 		if (nativeBlock instanceof FWBlock) {
-			return ((FWBlock) nativeBlock).dummy;
+			return ((FWBlock) nativeBlock).getFactory();
 		}
 
 		if (nativeBlock == Blocks.air) {
-			return Game.blocks().getAirBlock().build();
+			return Game.blocks().getAirBlock();
 		}
 
-		return new BWBlock(nativeBlock);
+		return blockFactoryMap.inverse().get(nativeBlock);
 	}
 
-	@Override
 	public net.minecraft.block.Block toNative(Block novaBlock) {
 		//Prevent recursive wrapping
 		if (novaBlock instanceof BWBlock) {
@@ -89,12 +89,15 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		return toNative(novaBlock.getFactory());
 	}
 
+	@Override
 	public net.minecraft.block.Block toNative(BlockFactory blockFactory) {
 		return blockFactoryMap.get(blockFactory);
 	}
 
 	/**
 	 * Register all Nova blocks
+	 *
+	 * @param evt The Minecraft Forge pre-initialization event
 	 */
 	@Override
 	public void preInit(FMLPreInitializationEvent evt) {
@@ -102,16 +105,11 @@ public class BlockConverter implements NativeConverter<Block, net.minecraft.bloc
 		registerNOVAToMinecraft();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void registerMinecraftToNOVA() {
 		//TODO: Will this register ALL Forge mod blocks as well?
 		BlockManager blockManager = Game.blocks();
-		net.minecraft.block.Block.blockRegistry.forEach(obj ->
-				blockManager.register(
-					new BlockFactory(net.minecraft.block.Block.blockRegistry.getNameForObject(obj).toString(),
-						() -> new BWBlock((net.minecraft.block.Block) obj), evt -> {
-					})
-				)
-		);
+		net.minecraft.block.Block.blockRegistry.forEach(block -> blockManager.register(new BWBlockFactory((net.minecraft.block.Block) block)));
 	}
 
 	private void registerNOVAToMinecraft() {
