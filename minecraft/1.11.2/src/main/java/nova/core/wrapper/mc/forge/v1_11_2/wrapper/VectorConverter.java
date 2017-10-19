@@ -43,7 +43,7 @@ public class VectorConverter implements NativeConverter<Vector3D, BlockPos> {
 	}
 
 	public Vector3D toNova(Vec3d pos) {
-		return new Vector3D(pos.xCoord, pos.yCoord, pos.zCoord);
+		return new Vector3D(pos.x, pos.y, pos.z);
 	}
 
 	@Override

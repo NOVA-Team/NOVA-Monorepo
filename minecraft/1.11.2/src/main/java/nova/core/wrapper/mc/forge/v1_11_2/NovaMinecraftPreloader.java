@@ -186,12 +186,12 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	public static String generatePackMcmeta() {
 		StringWriter sw = new StringWriter();
 		try (JsonGenerator json = Json.createGenerator(sw);) {
-			json.writeStartObject()                                      // {
+			json.writeStartObject()                                      //	{
 			        .writeStartObject("pack")                            //		"pack": {
 			            .write("description", "NOVA mod resource pack")  //			"description": "NOVA mod resource pack",
-			            .write("pack_format", 1)                         //			"pack_format": 1
+			            .write("pack_format", 3)                         //			"pack_format": 3 // Required by 1.11+
 			        .writeEnd()                                          //		}
-			    .writeEnd()                                              // }
+			    .writeEnd()                                              //	}
 			.flush();
 
 			return sw.toString();

@@ -50,7 +50,7 @@ public class StaticForwarder {
 
 	public static void chunkSetBlockEvent(Chunk chunk, BlockPos pos, IBlockState oldBlockState, IBlockState newBlockState) {
 		nova.core.world.World world = WorldConverter.instance().toNova(chunk.getWorld());
-		Vector3D position = new Vector3D((chunk.xPosition << 4) + pos.getX(), pos.getY(), (chunk.zPosition << 4) + pos.getZ());
+		Vector3D position = new Vector3D((chunk.x << 4) + pos.getX(), pos.getY(), (chunk.z << 4) + pos.getZ());
 		Block oldBlockInstance;
 		Block newBlockInstance;
 
