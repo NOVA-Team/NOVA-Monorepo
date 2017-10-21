@@ -69,7 +69,7 @@ public class DirectionConverter implements NativeConverter<Direction, EnumFacing
 			case SOUTH: return EnumFacing.SOUTH;
 			case WEST:  return EnumFacing.WEST;
 			case EAST:  return EnumFacing.EAST;
-			default: return (EnumFacing) null;
+			default: return null;
 		}
 	}
 }

@@ -21,6 +21,8 @@
 package nova.core.wrapper.mc.forge.v18.wrapper;
 
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3;
+import net.minecraft.util.Vec3i;
 import nova.core.nativewrapper.NativeConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -43,6 +45,14 @@ public class VectorConverter implements NativeConverter<Vector3D, BlockPos> {
 
 	@Override
 	public Vector3D toNova(BlockPos pos) {
+		return toNova((Vec3i) pos);
+	}
+
+	public Vector3D toNova(Vec3 pos) {
+		return new Vector3D(pos.xCoord, pos.yCoord, pos.zCoord);
+	}
+
+	public Vector3D toNova(Vec3i pos) {
 		return new Vector3D(pos.getX(), pos.getY(), pos.getZ());
 	}
 

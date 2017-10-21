@@ -24,6 +24,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import nova.core.component.inventory.Inventory;
 import nova.core.item.Item;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 
 import java.util.Optional;
@@ -37,18 +38,12 @@ public class BWInventory implements Inventory {
 
 	@Override
 	public Optional<Item> get(int i) {
-		ItemStack stackInSlot = wrapped.getStackInSlot(i);
-
-		if (stackInSlot == null) {
-			return Optional.empty();
-		}
-
-		return Optional.of(Game.natives().toNova(stackInSlot));
+		return Optional.ofNullable(wrapped.getStackInSlot(i)).map(ItemConverter.instance()::toNova);
 	}
 
 	@Override
 	public boolean set(int i, Item item) {
-		wrapped.setInventorySlotContents(i, Game.natives().toNative(item));
+		wrapped.setInventorySlotContents(i, ItemConverter.instance().toNative(item));
 		return true;
 	}
 

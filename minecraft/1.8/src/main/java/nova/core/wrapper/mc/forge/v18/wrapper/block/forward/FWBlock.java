@@ -48,7 +48,12 @@ import nova.core.util.Direction;
 import nova.core.util.math.MathUtil;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v18.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.VectorConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.cuboid.CuboidConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.entity.EntityConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -132,7 +137,7 @@ public class FWBlock extends net.minecraft.block.Block {
 				e.printStackTrace();
 			}
 		}
-		return getBlockInstance((nova.core.world.World) Game.natives().toNova(access), position);
+		return getBlockInstance(WorldConverter.instance().toNova(access), position);
 
 	}
 
@@ -177,18 +182,18 @@ public class FWBlock extends net.minecraft.block.Block {
 		Block.DropEvent event = new Block.DropEvent(blockInstance);
 		blockInstance.events.publish(event);
 
-		return new ArrayList<>(
-			event.drops
-				.stream()
-				.map(item -> (ItemStack) Game.natives().toNative(item))
-				.collect(Collectors.toCollection(ArrayList::new))
-		);
+		return event.drops
+			.stream()
+			.map(ItemConverter.instance()::toNative)
+			.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	@Override
 	public boolean hasTileEntity(IBlockState state) {
 		// A block requires a TileEntity if it stores data or if it ticks.
-		return Storable.class.isAssignableFrom(blockClass) || Stateful.class.isAssignableFrom(blockClass) || Updater.class.isAssignableFrom(blockClass);
+		return Storable.class.isAssignableFrom(blockClass)
+			|| Stateful.class.isAssignableFrom(blockClass)
+			|| Updater.class.isAssignableFrom(blockClass);
 	}
 
 	@Override
@@ -214,7 +219,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, net.minecraft.block.Block neighborBlock) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(world, VectorConverter.instance().toNova(pos));
 		// Minecraft does not provide the neighbor :(
 		Block.NeighborChangeEvent evt = new Block.NeighborChangeEvent(Optional.empty());
 		blockInstance.events.publish(evt);
@@ -222,8 +227,8 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		Block.RemoveEvent evt = new Block.RemoveEvent(Optional.of(Game.natives().toNova(player)));
+		Block blockInstance = getBlockInstance(world, VectorConverter.instance().toNova(pos));
+		Block.RemoveEvent evt = new Block.RemoveEvent(Optional.of(EntityConverter.instance().toNova(player)));
 		blockInstance.events.publish(evt);
 		if (evt.result) {
 			return super.removedByPlayer(world, pos, player, willHarvest);
@@ -233,24 +238,24 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(world, VectorConverter.instance().toNova(pos));
 		MovingObjectPosition mop = player.rayTrace(10, 1);
-		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(mop.sideHit.ordinal()), new Vector3D(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+		Block.LeftClickEvent evt = new Block.LeftClickEvent(EntityConverter.instance().toNova(player), DirectionConverter.instance().toNova(mop.sideHit), VectorConverter.instance().toNova(mop.hitVec));
 		blockInstance.events.publish(evt);
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(side.ordinal()), new Vector3D(hitX, hitY, hitZ));
+		Block blockInstance = getBlockInstance(world, VectorConverter.instance().toNova(pos));
+		Block.RightClickEvent evt = new Block.RightClickEvent(EntityConverter.instance().toNova(player), DirectionConverter.instance().toNova(side), new Vector3D(hitX, hitY, hitZ));
 		blockInstance.events.publish(evt);
 		return evt.result;
 	}
 
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, Entity entity) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		blockInstance.components.getOp(Collider.class).ifPresent(collider -> blockInstance.events.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
+		Block blockInstance = getBlockInstance(world, VectorConverter.instance().toNova(pos));
+		blockInstance.components.getOp(Collider.class).ifPresent(collider -> blockInstance.events.publish(new Collider.CollideEvent(EntityConverter.instance().toNova(entity))));
 	}
 
 	@Override
@@ -268,24 +273,25 @@ public class FWBlock extends net.minecraft.block.Block {
 
 		if (blockInstance.components.has(Collider.class)) {
 			Cuboid cuboid = blockInstance.components.get(Collider.class).boundingBox.get();
-			return Game.natives().toNative(cuboid.add(new Vector3D(pos.getX(), pos.getY(), pos.getZ())));
+			return CuboidConverter.instance().toNative(cuboid.add(VectorConverter.instance().toNova(pos)));
 		}
 		return super.getSelectedBoundingBox(world, pos);
 	}
 
 	@Override
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
 		blockInstance.components.getOp(Collider.class).ifPresent(
 			collider -> {
-				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(entity != null ? Game.natives().toNova(entity) : null));
+				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(entity != null ? EntityConverter.instance().toNova(entity) : null));
 
 				list.addAll(
 					boxes
 						.stream()
-						.map(c -> c.add(new Vector3D(pos.getX(), pos.getY(), pos.getZ())))
-						.filter(c -> c.intersects((Cuboid) Game.natives().toNova(mask)))
-						.map(cuboid -> Game.natives().toNative(cuboid))
+						.map(c -> c.add(VectorConverter.instance().toNova(pos)))
+						.filter(c -> c.intersects(CuboidConverter.instance().toNova(mask)))
+						.map(CuboidConverter.instance()::toNative)
 						.collect(Collectors.toList())
 				);
 			}

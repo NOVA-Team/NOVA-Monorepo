@@ -50,6 +50,7 @@ import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.data.DataConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.EntityConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWBakedModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -137,7 +138,7 @@ public class BWBlock extends Block implements Storable {
 
 	@Override
 	public ItemFactory getItemFactory() {
-		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
+		return ItemConverter.instance().toNova(new ItemStack(Item.getItemFromBlock(mcBlock))).getFactory();
 	}
 
 	public net.minecraft.block.Block block() {
@@ -174,7 +175,7 @@ public class BWBlock extends Block implements Storable {
 			return false;
 		}
 
-		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable(Game.natives().toNative(world()), new BlockPos(x(), y(), z()))) {
+		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable((net.minecraft.world.World) WorldConverter.instance().toNative(world()), new BlockPos(x(), y(), z()))) {
 			return false;
 		}
 		return super.shouldDisplacePlacement();

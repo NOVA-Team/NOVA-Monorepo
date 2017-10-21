@@ -21,11 +21,15 @@
 package nova.core.wrapper.mc.forge.v17.wrapper.assets;
 
 import net.minecraft.util.ResourceLocation;
+import nova.core.render.texture.BlockTexture;
+import nova.core.render.texture.EntityTexture;
+import nova.core.render.texture.ItemTexture;
+import nova.core.render.texture.Texture;
 import nova.core.util.Asset;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static nova.testutils.NovaAssertions.assertThat;
 
 /**
  * Used to test {@link AssetConverter}.
@@ -42,11 +46,20 @@ public class AssetConverterTest {
 	}
 
 	@Test
+	public void testClasses() {
+		assertThat(converter.getNovaSide()).isEqualTo(Asset.class);
+		assertThat(converter.getNativeSide()).isEqualTo(ResourceLocation.class);
+	}
+
+	@Test
 	public void testToNova() {
 		assertThat(converter.toNova(new ResourceLocation("nova", "stuff"))).isEqualTo(new Asset("nova", "stuff"));
 		assertThat(converter.toNova(new ResourceLocation("nova:otherStuff"))).isEqualTo(new Asset("nova", "otherStuff"));
 		assertThat(converter.toNova(new ResourceLocation("nova:otherStuff"))).isEqualTo(new Asset("nova", "otherstuff"));
 		// NOVA's Assets are entirely case-insensitive
+		assertThat(converter.toNovaTexture(new ResourceLocation("nova", "stuff"))).isEqualTo(new Texture("nova", "stuff"));
+		assertThat(converter.toNovaTexture(new ResourceLocation("nova:otherStuff"))).isEqualTo(new Texture("nova", "otherStuff"));
+		assertThat(converter.toNovaTexture(new ResourceLocation("nova:otherStuff"))).isEqualTo(new Texture("nova", "otherstuff"));
 	}
 
 	@Test
@@ -55,5 +68,14 @@ public class AssetConverterTest {
 		assertThat(converter.toNative(new Asset("nova", "otherStuff"))).isNotEqualTo(new ResourceLocation("nova:otherstuff"));
 		assertThat(converter.toNative(new Asset("nova", "otherStuff"))).isEqualTo(new ResourceLocation("nova:otherStuff"));
 		// 1.8 ResourceLocation is partially case sensitive. 1.11 ResourceLocation is all lowercase.
+		assertThat(converter.toNativeTexture(new Asset("nova", "stuff"))).isEqualTo(new ResourceLocation("nova", "stuff"));
+		assertThat(converter.toNativeTexture(new Texture("nova", "otherStuff.png"))).isEqualTo(new ResourceLocation("nova:otherStuff"));
+		assertThat(converter.toNativeTexture(new Texture("nova", "otherStuff.png"), true)).isEqualTo(new ResourceLocation("nova:otherStuff.png"));
+		assertThat(converter.toNativeTexture(new BlockTexture("nova", "otherStuff.png"))).isEqualTo(new ResourceLocation("nova:otherStuff"));
+		assertThat(converter.toNativeTexture(new BlockTexture("nova", "otherStuff.png"), true)).isEqualTo(new ResourceLocation("nova:otherStuff.png"));
+		assertThat(converter.toNativeTexture(new ItemTexture("nova", "otherStuff.png"))).isEqualTo(new ResourceLocation("nova:otherStuff"));
+		assertThat(converter.toNativeTexture(new ItemTexture("nova", "otherStuff.png"), true)).isEqualTo(new ResourceLocation("nova:otherStuff.png"));
+		assertThat(converter.toNativeTexture(new EntityTexture("nova", "otherStuff.png"))).isEqualTo(new ResourceLocation("nova:../entities/otherStuff"));
+		assertThat(converter.toNativeTexture(new EntityTexture("nova", "otherStuff.png"), true)).isEqualTo(new ResourceLocation("nova:../entities/otherStuff.png"));
 	}
 }

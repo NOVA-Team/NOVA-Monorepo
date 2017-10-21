@@ -26,6 +26,7 @@ import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.retention.Data;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v18.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
 /**
@@ -60,7 +61,7 @@ public class BWItemFactory extends ItemFactory {
 	@Override
 	public Item build(Data data) {
 		int meta = (Integer) data.getOrDefault("damage", this.meta);
-		NBTTagCompound nbtData = Game.natives().toNative(data);
+		NBTTagCompound nbtData = DataConverter.instance().toNative(data);
 		BWItem bwItem = new BWItem(item, meta, nbtData);
 		bwItem.components.add(new FactoryProvider(this));
 		WrapperEvent.BWItemCreate event = new WrapperEvent.BWItemCreate(bwItem, item);
@@ -76,7 +77,7 @@ public class BWItemFactory extends ItemFactory {
 
 		BWItem mcItem = (BWItem) item;
 
-		Data result = mcItem.getTag() != null ? Game.natives().toNova(mcItem.getTag()) : new Data();
+		Data result = mcItem.getTag() != null ? DataConverter.instance().toNova(mcItem.getTag()) : new Data();
 		if (result == null) {
 			result = new Data();
 		}
