@@ -33,7 +33,6 @@ import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
 import nova.core.component.renderer.StaticRenderer;
-import nova.core.component.transform.BlockTransform;
 import nova.core.item.ItemFactory;
 import nova.core.render.model.CustomModel;
 import nova.core.retention.Data;
@@ -47,6 +46,7 @@ import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.data.DataConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.EntityConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -113,7 +113,7 @@ public class BWBlock extends Block implements Storable {
 
 	@Override
 	public ItemFactory getItemFactory() {
-		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
+		return ItemConverter.instance().toNova(new ItemStack(Item.getItemFromBlock(mcBlock))).getFactory();
 	}
 
 	public int xi() {

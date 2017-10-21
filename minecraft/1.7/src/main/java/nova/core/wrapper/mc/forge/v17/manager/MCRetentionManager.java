@@ -30,6 +30,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.registry.RetentionManager;
+import nova.core.wrapper.mc.forge.v17.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
 import java.io.File;
@@ -59,13 +60,13 @@ public class MCRetentionManager extends RetentionManager {
 	public void save(String filename, Storable storable) {
 		Data saveMap = new Data();
 		storable.save(saveMap);
-		saveFile(filename, Game.natives().toNative(saveMap));
+		saveFile(filename, DataConverter.instance().toNative(saveMap));
 	}
 
 	@Override
 	public void load(String filename, Storable storable) {
 		NBTTagCompound nbt = loadFile(filename);
-		storable.load(Game.natives().toNova(nbt));
+		storable.load(DataConverter.instance().toNova(nbt));
 	}
 
 	/**

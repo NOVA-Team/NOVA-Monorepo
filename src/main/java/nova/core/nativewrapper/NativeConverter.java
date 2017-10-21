@@ -26,13 +26,38 @@ package nova.core.nativewrapper;
  * Implementing a Loadable on a NativeConverter will allow it to handle loading events.
  *
  * @author TheSandromatic, Calclavia
+ * @param <NOVA> The NOVA implementation class.
+ * @param <NATIVE> The game implementation class.
  */
 public interface NativeConverter<NOVA, NATIVE> {
+
+	/**
+	 * Get the class of the NOVA implementation.
+	 *
+	 * @return The class of the NOVA implementation.
+	 */
 	Class<NOVA> getNovaSide();
 
+	/**
+	 * Get the class of the game implementation.
+	 *
+	 * @return The class of the game implementation.
+	 */
 	Class<NATIVE> getNativeSide();
 
+	/**
+	 * Convert a game implementation object to the NOVA equivalent.
+	 *
+	 * @param nativeObj A game implementation object.
+	 * @return The NOVA equivalent object.
+	 */
 	NOVA toNova(NATIVE nativeObj);
 
+	/**
+	 * Convert a NOVA implementation object to the game equivalent.
+	 *
+	 * @param novaObj A NOVA implementation object.
+	 * @return The game equivalent object.
+	 */
 	NATIVE toNative(NOVA novaObj);
 }

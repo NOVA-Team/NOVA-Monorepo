@@ -21,6 +21,7 @@
 package nova.core.wrapper.mc.forge.v18.wrapper;
 
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,11 +43,22 @@ public class VectorConverterTest {
 	}
 
 	@Test
+	public void testClasses() {
+		assertThat(converter.getNovaSide()).isEqualTo(Vector3D.class);
+		assertThat(converter.getNativeSide()).isEqualTo(BlockPos.class);
+	}
+
+	@Test
 	public void testToNova() {
 		for (int x = -1; x <= 1; x++)
 			for (int y = -1; y <= 1; y++)
 				for (int z = -1; z <= 1; z++)
 					assertThat(converter.toNova(new BlockPos(x, y, z))).isEqualTo(new Vector3D(x, y, z));
+
+		for (int x = -1; x <= 1; x++)
+			for (int y = -1; y <= 1; y++)
+				for (int z = -1; z <= 1; z++)
+					assertThat(converter.toNova(new Vec3(x, y, z))).isEqualTo(new Vector3D(x, y, z));
 	}
 
 	@Test
