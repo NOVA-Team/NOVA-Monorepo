@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2016 NOVA, All rights reserved.
+ * This library is free software, licensed under GNU Lesser General Public License version 3
+ *
+ * This file is part of NOVA.
+ *
+ * NOVA is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * NOVA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package nova.core.block.component;
 
 import nova.core.component.Component;
@@ -9,6 +29,7 @@ import nova.core.util.math.MathUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 /**
  * Block properties.
@@ -225,31 +246,44 @@ public interface BlockProperty {
 
 	/**
 	 * Indicates whether the block is replaceable.
+	 *
+	 * @author ExE Boss
 	 */
 	@UnsidedComponent
-	public static final class Replaceable extends Component implements BlockProperty {
-		private static final Replaceable instance = new Replaceable();
+	public static class Replaceable extends Component implements BlockProperty {
+		private BooleanSupplier replaceable = () -> true;
 
 		/**
-		 * Gets the singleton for Replaceable.
+		 * Create a new Replaceable instance.
 		 *
-		 * @return The singleton for Replaceable.
+		 * @return A new Replaceable instance.
+		 * @deprecated Use the {@link #Replaceable() } constructor instead. Will be removed before 0.1.0.
 		 */
+		@Deprecated
 		public static Replaceable instance() {
-			return instance;
+			return new Replaceable();
 		}
 
-		private Replaceable() {
+		public Replaceable() {}
+
+		/**
+		 * Set the boolean supplier that is used to check if this block is replaceable.
+		 *
+		 * @param replaceable The replacement boolean supplier.
+		 * @return This instance for chaining if desired.
+		 */
+		public Replaceable setReplaceable(BooleanSupplier replaceable) {
+			this.replaceable = replaceable;
+			return this;
 		}
 
-		@Override
-		public boolean equals(Object o) {
-			return this == o || o instanceof Replaceable;
-		}
-
-		@Override
-		public int hashCode() {
-			return Replaceable.class.hashCode();
+		/**
+		 * Check if this block can be replaced.
+		 *
+		 * @return if this block can be replaced.
+		 */
+		public boolean isReplaceable() {
+			return this.replaceable.getAsBoolean();
 		}
 	}
 }

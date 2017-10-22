@@ -121,8 +121,7 @@ public class BlockConverter implements NativeConverter<BlockFactory, net.minecra
 			public boolean canReplace() {
 				return true;
 			}
-		}, evt -> {
-		});
+		}, evt -> {});
 
 		blockManager.register(airBlock);
 
