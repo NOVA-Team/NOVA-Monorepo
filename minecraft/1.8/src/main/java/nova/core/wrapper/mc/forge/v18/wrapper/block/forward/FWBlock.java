@@ -384,7 +384,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
 		// TODO: Maybe do something withPriority these parameters.
-		return (float) getBlockInstance(world, VectorConverter.instance().toNova(pos)).getResistance() * 30;
+		return (float) getBlockInstance(world, VectorConverter.instance().toNova(pos)).getResistance() * 6;
 	}
 
 	@Override

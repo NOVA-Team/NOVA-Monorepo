@@ -42,7 +42,7 @@ public interface BlockProperty {
 	 * The breaking difficulty of a block, or how long it takes to break a block.
 	 * Tools and armour may make the block break faster or slower than this.
 	 * <p>
-	 * The standard, regular block hardness is 1. {@code Double.POSITIVE_INFINITY} is unbreakable.
+	 * The standard, regular block hardness is 1. {@link Double#POSITIVE_INFINITY} is unbreakable.
 	 * </p>
 	 */
 	@UnsidedComponent
@@ -81,7 +81,7 @@ public interface BlockProperty {
 	}
 
 	/**
-	 * The blast resistance of a block.
+	 * The blast resistance of a block, indicates how many cubic meters of TNT are needed to explode it.
 	 * <p>
 	 * The standard, regular block resistance is 1. {@link Double#POSITIVE_INFINITY} is unexplodable.
 	 * </p>
@@ -91,7 +91,8 @@ public interface BlockProperty {
 		private DoubleSupplier resistance = () -> 1;
 
 		/**
-		 * Sets the blast resistance
+		 * Sets the blast resistance, indicates how many cubic meters
+		 * of TNT are needed to explode it.
 		 *
 		 * @param resistance The blast resistance.
 		 * @return This instance for chaining if desired.
@@ -102,7 +103,8 @@ public interface BlockProperty {
 		}
 
 		/**
-		 * Sets the blast resistance
+		 * Sets the blast resistance, indicates how many cubic meters
+		 * of TNT are needed to explode it.
 		 *
 		 * @param resistance The blast resistance.
 		 * @return This instance for chaining if desired.
@@ -112,7 +114,8 @@ public interface BlockProperty {
 		}
 
 		/**
-		 * Gets the blast resistance.
+		 * Gets the blast resistance, indicates how many cubic meters
+		 * of TNT are needed to explode it.
 		 *
 		 * @return The blast resistance.
 		 */
