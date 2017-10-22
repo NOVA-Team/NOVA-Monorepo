@@ -47,12 +47,12 @@ public class ProxyMaterial extends Material {
 
 	@Override
 	public boolean blocksLight() {
-		return opacity.isPresent() ? opacity.get().opacity == 1 : super.blocksLight();
+		return opacity.isPresent() ? opacity.get().isOpaque() : super.blocksLight();
 	}
 
 	@Override
 	public boolean isOpaque() {
-		return opacity.isPresent() ? opacity.get().opacity == 1 : super.isOpaque();
+		return opacity.isPresent() ? opacity.get().isOpaque() : super.isOpaque();
 	}
 
 	@Override

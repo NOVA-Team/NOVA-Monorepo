@@ -178,12 +178,8 @@ public interface BlockProperty {
 	public static class Opacity extends Component implements BlockProperty {
 		/**
 		 * This value determines if the block should allow light through itself or not.
-		 *
-		 * @deprecated Will be made private. Use {@link #getOpacity() } instead.
 		 */
-		// TODO: Make private
-		@Deprecated
-		public double opacity = 1;
+		private double opacity = 1;
 
 		/**
 		 * Sets that the block should allow light through
@@ -252,17 +248,6 @@ public interface BlockProperty {
 	@UnsidedComponent
 	public static class Replaceable extends Component implements BlockProperty {
 		private BooleanSupplier replaceable = () -> true;
-
-		/**
-		 * Create a new Replaceable instance.
-		 *
-		 * @return A new Replaceable instance.
-		 * @deprecated Use the {@link #Replaceable() } constructor instead. Will be removed before 0.1.0.
-		 */
-		@Deprecated
-		public static Replaceable instance() {
-			return new Replaceable();
-		}
 
 		public Replaceable() {}
 
