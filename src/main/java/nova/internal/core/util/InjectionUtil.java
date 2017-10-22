@@ -216,7 +216,7 @@ public class InjectionUtil {
 			.max(Comparator.comparingInt((constructor) -> constructor.getParameterTypes().length)).get();
 
 		Object[] parameters = Arrays.stream(cons.getParameterTypes())
-			.map(clazz -> ((Optional<Object>) mapping.apply(clazz)).orElseGet(() -> Game.injector().resolve(Dependency.dependency(clazz))))
+			.map(clazz -> ((Optional<Object>) mapping.apply(clazz)).orElseGet(() -> Game.injector().resolve(Dependency.dependency(clazz).injectingInto(classToConstruct))))
 			.collect(Collectors.toList()).toArray();
 
 		try {

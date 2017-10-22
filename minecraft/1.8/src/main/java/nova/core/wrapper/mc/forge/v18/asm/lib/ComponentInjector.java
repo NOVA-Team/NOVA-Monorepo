@@ -26,6 +26,7 @@ import nova.core.component.ComponentProvider;
 import nova.core.component.Passthrough;
 import nova.core.network.NetworkTarget.Side;
 import nova.core.util.ClassLoaderUtil;
+import nova.internal.core.Game;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -70,7 +71,7 @@ public class ComponentInjector<T> implements Opcodes {
 
 			if (components.size() > 0) {
 				List<Class<? extends Component>> componentClazzes = components.stream().map(c -> c.getClass()).collect(Collectors.toList());
-				System.out.println(Side.get() + " " + componentClazzes);
+				Game.logger().info("{} {}", Side.get(), componentClazzes);
 				if (cache.containsKey(componentClazzes))
 				// Cached class
 				{

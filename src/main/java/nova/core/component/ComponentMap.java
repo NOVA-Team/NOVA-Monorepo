@@ -64,7 +64,7 @@ public class ComponentMap extends HashMap<Class<? extends Component>, Component>
 	@SuppressWarnings("unchecked")
 	public final <C extends Component> C add(C component) {
 		if (has(component.getClass())) {
-			throw new ComponentException("Attempt to add two components of the type %s to " + this, component);
+			throw new ComponentException("Attempt to add two components of the type %s to %s", component, this);
 		}
 
 		//Place component into component map

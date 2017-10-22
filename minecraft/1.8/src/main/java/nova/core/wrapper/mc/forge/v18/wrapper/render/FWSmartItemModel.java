@@ -23,19 +23,15 @@ package nova.core.wrapper.mc.forge.v18.wrapper.render;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartItemModel;
-import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.Renderer;
-import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
-import nova.internal.core.Game;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 
-import javax.vecmath.Vector3f;
 import java.util.List;
-import java.util.Optional;
+import javax.vecmath.Vector3f;
 
 /**
  * Generates a smart model based on a NOVA Model
@@ -45,6 +41,7 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 
 	private final Item item;
 
+	@SuppressWarnings("deprecation")
 	public FWSmartItemModel(Item item) {
 		super();
 		this.item = item;
@@ -56,9 +53,10 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 			new ItemTransformVec3f(new Vector3f(-30, 135, 0), new Vector3f(), new Vector3f(1.6F, 1.6F, 1.6F))); // GUI
 	}
 
+	//Item rendering
 	@Override
-	public IBakedModel handleItemState(ItemStack stack) {
-		Item item = Game.natives().toNova(stack);
+	public ISmartItemModel handleItemState(ItemStack stack) {
+		Item item = ItemConverter.instance().toNova(stack);
 
 		if (item.components.has(Renderer.class)) {
 			return new FWSmartItemModel(item);
@@ -71,15 +69,7 @@ public class FWSmartItemModel extends FWSmartModel implements ISmartItemModel, I
 	public List<BakedQuad> getGeneralQuads() {
 		BWModel model = new BWModel();
 		model.matrix.translate(0.5, 0.5, 0.5);
-
-		if (item.components.has(StaticRenderer.class)) {
-			StaticRenderer staticRenderer = item.components.get(StaticRenderer.class);
-			staticRenderer.onRender.accept(model);
-		} else if (item.components.has(DynamicRenderer.class)) {
-			DynamicRenderer dynamicRenderer = item.components.get(DynamicRenderer.class);
-			dynamicRenderer.onRender.accept(model);
-		}
-
+		item.components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
 		return modelToQuads(model);
 	}
 

@@ -27,7 +27,8 @@ import java.util.Optional;
 
 class InventoryIterator implements Iterator<Item> {
 	private final Inventory inv;
-	private int i;
+	private int nextPos;
+	private int currentPos;
 	private Item next = null;
 
 	InventoryIterator(Inventory inv) {
@@ -36,12 +37,15 @@ class InventoryIterator implements Iterator<Item> {
 	}
 
 	private void findNext() {
-		while (i < inv.size()) {
-			Optional<Item> o = inv.get(i++);
+		while (nextPos < inv.size()) {
+			currentPos = nextPos;
+			Optional<Item> o = inv.get(nextPos++);
 			if (o.isPresent()) {
 				next = o.get();
+				return;
 			}
 		}
+		next = null;
 	}
 
 	@Override
@@ -54,5 +58,10 @@ class InventoryIterator implements Iterator<Item> {
 		Item current = next;
 		findNext();
 		return current;
+	}
+
+	@Override
+	public void remove() {
+		inv.remove(currentPos);
 	}
 }

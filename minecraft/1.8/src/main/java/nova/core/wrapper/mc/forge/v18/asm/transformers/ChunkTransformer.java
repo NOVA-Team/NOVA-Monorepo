@@ -22,6 +22,7 @@ package nova.core.wrapper.mc.forge.v18.asm.transformers;
 
 import nova.core.wrapper.mc.forge.v18.asm.lib.ASMHelper;
 import nova.core.wrapper.mc.forge.v18.asm.lib.ObfMapping;
+import nova.internal.core.Game;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
@@ -35,12 +36,24 @@ public class ChunkTransformer implements Transformer {
 
 	@Override
 	public void transform(ClassNode cnode) {
-		System.out.println("[NOVA] Transforming Chunk class for chunkModified event.");
+		Game.logger().info("Transforming Chunk class for chunkModified event.");
 
 		//obf name: func_177436_a
-		MethodNode method = ASMHelper.findMethod(new ObfMapping("net/minecraft/world/chunk/Chunk", "setBlockState", "(Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;)Lnet/minecraft/block/state/IBlockState;"), cnode);
+		ObfMapping obfMap = new ObfMapping("bfh", "a", "(Ldt;Lbec;)Lbec;");
+		ObfMapping deobfMap = new ObfMapping("net/minecraft/world/chunk/Chunk", "setBlockState", "(Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;)Lnet/minecraft/block/state/IBlockState;");
 
-		System.out.println("[NOVA] Found method " + method.name);
+		MethodNode method = ASMHelper.findMethod(obfMap, cnode);
+
+		if (method == null) {
+			Game.logger().warn("Lookup {} failed. You are probably in a deobf environment.", obfMap);
+			method = ASMHelper.findMethod(deobfMap, cnode);
+
+			if (method == null) {
+				throw new IllegalStateException("[NOVA] Lookup " + deobfMap + " failed!");
+			}
+		}
+
+		Game.logger().info("Found method {}", method.name);
 
 		InsnList list = new InsnList();
 		list.add(new VarInsnNode(ALOAD, 0)); //this
@@ -60,6 +73,6 @@ public class ChunkTransformer implements Transformer {
 			method.instructions.insert(list);
 		}
 
-		System.out.println("[NOVA] Injected instruction to method: " + method.name);
+		Game.logger().info("Injected instruction to method: {}", method.name);
 	}
 }

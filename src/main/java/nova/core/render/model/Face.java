@@ -34,13 +34,26 @@ import java.util.stream.Collectors;
  * @author Calclavia
  */
 public class Face implements Cloneable {
-	//The vertices that make up this face.
+	/**
+	 * The vertices that make up this face.
+	 */
 	public final List<Vertex> vertices = new ArrayList<>();
-	//The normal (or direction) this face is facing. Normals must be unit vectors.
+
+	/**
+	 * The normal (or direction) this face is facing.
+	 * Normals must be unit vectors.
+	 */
 	public Vector3D normal = Vector3D.ZERO;
-	//The texture that is to be rendered on this face.
+
+	/**
+	 * The texture that is to be rendered on this face.
+	 */
 	public Optional<Texture> texture = Optional.empty();
-	//The brightness value defines how bright the face should be rendered. The default value will let NOVA decide the brightness based on the world surroundings.
+
+	/**
+	 * The brightness value defines how bright the face should be rendered.
+	 * The default value will let NOVA decide the brightness based on the world surroundings.
+	 */
 	public double brightness = -1;
 
 	/**

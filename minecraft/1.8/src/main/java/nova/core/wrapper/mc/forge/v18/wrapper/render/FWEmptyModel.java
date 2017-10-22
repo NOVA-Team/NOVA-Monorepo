@@ -23,7 +23,6 @@ package nova.core.wrapper.mc.forge.v18.wrapper.render;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
@@ -40,13 +39,13 @@ public class FWEmptyModel extends FWSmartModel implements ISmartBlockModel, ISma
 
 	//Block rendering
 	@Override
-	public IBakedModel handleBlockState(IBlockState state) {
+	public ISmartBlockModel handleBlockState(IBlockState state) {
 		return this;
 	}
 
-	//Itemblock rendering
+	//Item rendering
 	@Override
-	public IBakedModel handleItemState(ItemStack stack) {
+	public ISmartItemModel handleItemState(ItemStack stack) {
 		return this;
 	}
 

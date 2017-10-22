@@ -30,6 +30,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.registry.RetentionManager;
+import nova.core.wrapper.mc.forge.v18.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
 import java.io.File;
@@ -45,7 +46,7 @@ public class MCRetentionManager extends RetentionManager {
 	/**
 	 * Last time that the queueSave manager tried to queueSave a file
 	 */
-	private long lastSaveMills = 0;
+	private long lastSaveTime = 0;
 
 	/**
 	 * Save all storable queued
@@ -59,13 +60,13 @@ public class MCRetentionManager extends RetentionManager {
 	public void save(String filename, Storable storable) {
 		Data saveMap = new Data();
 		storable.save(saveMap);
-		saveFile(filename, Game.natives().toNative(saveMap));
+		saveFile(filename, DataConverter.instance().toNative(saveMap));
 	}
 
 	@Override
 	public void load(String filename, Storable storable) {
 		NBTTagCompound nbt = loadFile(filename);
-		storable.load(Game.natives().toNova(nbt));
+		storable.load(DataConverter.instance().toNova(nbt));
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class MCRetentionManager extends RetentionManager {
 			tempFile.renameTo(file);
 			return true;
 		} catch (Exception e) {
-			System.out.println("Failed to queueSave " + file.getName() + ".dat!");
+			Game.logger().error("Failed to queueSave {}!", file.getName(), e);
 			e.printStackTrace();
 			return false;
 		}
@@ -109,7 +110,7 @@ public class MCRetentionManager extends RetentionManager {
 				return new NBTTagCompound();
 			}
 		} catch (Exception e) {
-			System.out.println("Failed to load " + file.getName() + ".dat!");
+			Game.logger().error("Failed to load {}!", file.getName(), e);
 			e.printStackTrace();
 			return null;
 		}
@@ -156,8 +157,8 @@ public class MCRetentionManager extends RetentionManager {
 	@SubscribeEvent
 	public void worldSave(WorldEvent evt) {
 		//Current time milli-seconds is used to prevent the files from saving 20 times when the world loads
-		if (System.currentTimeMillis() - lastSaveMills > 2000) {
-			lastSaveMills = System.currentTimeMillis();
+		if (System.nanoTime() - lastSaveTime > 2_000_000_000) {
+			lastSaveTime = System.nanoTime();
 			saveAll();
 		}
 	}

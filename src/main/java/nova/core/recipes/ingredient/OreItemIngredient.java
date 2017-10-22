@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * @author Stan
  * @since 3/02/2015.
  */
-public class OreItemIngredient implements ItemIngredient {
+public class OreItemIngredient extends AbstractIngredient {
 	private final String name;
 
 	public OreItemIngredient(String name) {
@@ -54,22 +54,31 @@ public class OreItemIngredient implements ItemIngredient {
 	}
 
 	@Override
-	public boolean isSubsetOf(ItemIngredient ingredient) {
-		return false;
-	}
-
-	@Override
 	public boolean matches(Item item) {
 		return Game.itemDictionary().get(name).contains(item);
 	}
 
 	@Override
-	public Optional<String> getTag() {
-		return Optional.empty();
+	public Optional<Item> consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
+		return Optional.of(original)
+			.filter(item -> item.count() > 1)
+			.map(item -> item.withAmount(original.count() - 1));
 	}
 
 	@Override
-	public Item consumeOnCrafting(Item original, CraftingGrid craftingGrid) {
-		return original.withAmount(original.count() - 1);
+	public String toString() {
+		return String.format("OreItemIngredient[%s:%s]", getName(), getPossibleItemIds());
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
+		return name.equals(((OreItemIngredient) other).name);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
 	}
 }

@@ -21,6 +21,7 @@
 package nova.core.component.exception;
 
 import nova.core.component.Component;
+import nova.core.util.ArrayUtil;
 import nova.core.util.exception.NovaException;
 
 /**
@@ -28,10 +29,12 @@ import nova.core.util.exception.NovaException;
  */
 public class ComponentException extends NovaException {
 
+	private static final long serialVersionUID = 2017_03_18L;
+
 	public Class<?> component;
 
 	public ComponentException(String message, Class<?> component, Object... parameters) {
-		super(message, component, parameters);
+		super(message, ArrayUtil.join(component, parameters));
 		this.component = component;
 	}
 

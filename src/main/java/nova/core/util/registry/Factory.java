@@ -20,6 +20,7 @@
 
 package nova.core.util.registry;
 
+import net.jodah.typetools.TypeResolver;
 import nova.core.util.Identifiable;
 import nova.internal.core.Game;
 import nova.internal.core.util.InjectionUtil;
@@ -36,14 +37,17 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> implements Identifiable {
-	//The ID of the factory
+	/** The ID of the factory */
 	protected final String id;
 
-	//The constructor function
+	/** The constructor function */
 	protected final Supplier<T> constructor;
 
-	//The processor function
+	/** The processor function */
 	protected final Function<T, T> processor;
+
+	/** The type of the object to construct */
+	protected final Class<? extends T> type;
 
 	/**
 	 * Creates a new factory with a constructor function that instantiates the factory object,
@@ -60,6 +64,7 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 		this.constructor = () -> InjectionUtil.newInstance(type,
 			clazz -> clazz.isAssignableFrom(getClass()) ? Optional.of(this) : mapping.apply(clazz));
 		this.processor = processor;
+		this.type = type;
 	}
 
 	/**
@@ -96,10 +101,16 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	 * @param constructor The construction function
 	 * @param processor The processor function
 	 */
+	@SuppressWarnings("unchecked")
 	public Factory(String id, Supplier<T> constructor, Function<T, T> processor) {
 		this.id = id;
 		this.constructor = constructor;
 		this.processor = processor;
+		Class<?> type = TypeResolver.resolveRawArguments(Function.class, processor.getClass())[1];
+		if (type == TypeResolver.Unknown.class || type == Identifiable.class) {
+			type = TypeResolver.resolveRawArgument(Supplier.class, constructor.getClass());
+		}
+		this.type = (Class<? extends T>) type;
 	}
 
 	/**
@@ -128,6 +139,15 @@ public abstract class Factory<S extends Factory<S, T>, T extends Identifiable> i
 	}
 
 	protected abstract S selfConstructor(String id, Supplier<T> constructor, Function<T, T> processor);
+
+	/**
+	 * Get the class of the type argument T.
+	 *
+	 * @return The class of T.
+	 */
+	public Class<? extends T> getType() {
+		return type;
+	}
 
 	/**
 	 * @return A new instance of T based on the construction method

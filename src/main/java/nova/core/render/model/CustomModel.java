@@ -48,7 +48,7 @@ public class CustomModel extends Model {
 	}
 
 	@Override
-	protected Model newModel(String name) {
+	protected CustomModel newModel(String name) {
 		return new CustomModel(name, render);
 	}
 

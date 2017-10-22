@@ -20,23 +20,55 @@
 
 package nova.internal.core.di;
 
+import nova.core.loader.Mod;
+import nova.internal.core.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.jbee.inject.Dependency;
+import se.jbee.inject.Injection;
 import se.jbee.inject.Injector;
 import se.jbee.inject.Supplier;
 import se.jbee.inject.bind.BinderModule;
 import se.jbee.inject.util.Scoped;
+
+import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 /**
  * @author Kubuxu
  */
 public class LoggerModule extends BinderModule {
 
-	public LoggerModule() {
-		super(Scoped.DEPENDENCY_TYPE);
+	private static boolean defaultNameChangeable = true;
+	private static Optional<String> defaultName = Optional.empty();
+
+	/**
+	 * Changes the default logger name (the name of the logger injected into Game),
+	 * must be called before doing any dependency injection.
+	 * <p>
+	 * Is really only useful for engine implementations using NOVA.
+	 *
+	 * @param name The new name.
+	 */
+	public static void setDefaultName(String name) {
+		if (defaultNameChangeable) {
+			defaultName = Optional.of(name);
+		}
 	}
 
+	/**
+	 * Gets the default logger name (the name of the logger injected into Game)
+	 *
+	 * @return The default logger name (or {@code "NOVA"} if no default logger name was set)
+	 */
+	public static String getDefaultName() {
+		return defaultName.orElse("NOVA");
+	}
+
+	public LoggerModule() {
+		super(Scoped.DEPENDENCY);
+		defaultNameChangeable = false;
+	}
 
 	@Override
 	protected void declare() {
@@ -45,12 +77,33 @@ public class LoggerModule extends BinderModule {
 
 	public static class LoggerSupplier implements Supplier<Logger>{
 
+		private static boolean isForGame(Dependency<? super Logger> dependency) {
+			boolean isForGame = false;
+			boolean isForMod = false;
+			for (Injection target : dependency) {
+				Class<?> clazz = target.getTarget().getInstance().getType().getRawType();
+				if (Game.class.isAssignableFrom(clazz)) {
+					isForGame = true;
+				}
+				if (clazz.isAnnotationPresent(Mod.class)) {
+					isForMod = true;
+				}
+			}
+			return isForGame && !isForMod;
+		}
+
 		@Override
 		public Logger supply(Dependency<? super Logger> dependency, Injector injector) {
-			if (dependency.isUntargeted()) {
-				return LoggerFactory.getLogger("General");
+			if (dependency.isUntargeted() || isForGame(dependency)) {
+				return LoggerFactory.getLogger(getDefaultName());
 			} else {
-				return LoggerFactory.getLogger(dependency.target().getType().getRawType());
+				return StreamSupport.stream(dependency.spliterator(), false)
+					.map(target -> target.getTarget().getInstance().getType().getRawType())
+					.filter(clazz -> clazz.isAnnotationPresent(Mod.class))
+					.findFirst()
+					.map(clazz -> clazz.getAnnotation(Mod.class))
+					.map(mod -> LoggerFactory.getLogger(String.format("%s (%s)", mod.id(), mod.name())))
+					.orElseGet(() -> LoggerFactory.getLogger(dependency.iterator().next().getTarget().getInstance().getType().getRawType()));
 			}
 		}
 	}

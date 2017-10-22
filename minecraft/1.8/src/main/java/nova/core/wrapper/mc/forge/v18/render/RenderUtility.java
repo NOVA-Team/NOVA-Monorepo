@@ -23,9 +23,6 @@ package nova.core.wrapper.mc.forge.v18.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.FaceBakery;
-import net.minecraft.client.renderer.block.model.ItemModelGenerator;
-import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -38,13 +35,16 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
+import nova.core.item.ItemFactory;
 import nova.core.render.texture.Texture;
 import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
 import nova.core.wrapper.mc.forge.v18.wrapper.assets.AssetConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItem;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemWrapperMethods;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWEmptyModel;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartBlockModel;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.FWSmartItemModel;
@@ -77,30 +77,6 @@ public class RenderUtility implements ForgeLoadable {
 	public static final ResourceLocation particleResource = new ResourceLocation("textures/particle/particles.png");
 
 	public static final RenderUtility instance = new RenderUtility();
-	// Cruft needed to generate default item models
-	protected static final ItemModelGenerator ITEM_MODEL_GENERATOR = new ItemModelGenerator();
-	protected static final FaceBakery FACE_BAKERY = new FaceBakery();
-	// Ugly D:
-	protected static final ModelBlock MODEL_GENERATED = ModelBlock.deserialize(
-		"{\"" +
-			"elements\":[{" +
-			"  \"from\": [0, 0, 0], " +
-			"  \"to\": [16, 16, 16], " +
-			"  \"faces\": {" +
-			"      \"down\": {\"uv\": [0, 0, 16, 16], \"texture\":\"\"}" +
-			"  }}]," +
-			"  \"display\": {\n" +
-			"      \"thirdperson\": {\n" +
-			"          \"rotation\": [ -90, 0, 0 ],\n" +
-			"          \"translation\": [ 0, 1, -3 ],\n" +
-			"          \"scale\": [ 0.55, 0.55, 0.55 ]\n" +
-			"      },\n" +
-			"      \"firstperson\": {\n" +
-			"          \"rotation\": [ 0, -135, 25 ],\n" +
-			"          \"translation\": [ 0, 4, 2 ],\n" +
-			"          \"scale\": [ 1.7, 1.7, 1.7 ]\n" +
-			"      }\n" +
-			"}}");
 	//NOVA Texture to MC TextureAtlasSprite
 	private final HashMap<Texture, TextureAtlasSprite> textureMap = new HashMap<>();
 
@@ -209,7 +185,7 @@ public class RenderUtility implements ForgeLoadable {
 	public void onModelBakeEvent(ModelBakeEvent event) {
 		//Register all blocks
 		Game.blocks().registry.forEach(blockFactory -> {
-			Object blockObj = Game.natives().toNative(blockFactory.build());
+			net.minecraft.block.Block blockObj = BlockConverter.instance().toNative(blockFactory);
 			if (blockObj instanceof FWBlock) {
 				FWBlock block = (FWBlock) blockObj;
 				ResourceLocation blockRL = (ResourceLocation) net.minecraft.block.Block.blockRegistry.getNameForObject(block);
@@ -217,35 +193,31 @@ public class RenderUtility implements ForgeLoadable {
 				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(itemFromBlock);
 				ModelResourceLocation blockLocation = new ModelResourceLocation(blockRL, "normal");
 				ModelResourceLocation itemLocation = new ModelResourceLocation(itemRL, "inventory");
+				ItemFactory itemFactory = ((ItemWrapperMethods)itemFromBlock).getItemFactory();
+				nova.core.item.Item dummy = itemFactory.build();
 				if (block.dummy.components.has(StaticRenderer.class)) {
-					event.modelRegistry.putObject(blockLocation, new FWSmartBlockModel(block.dummy, true));
+					event.modelRegistry.putObject(blockLocation, new FWSmartBlockModel(block.dummy));
 				} else {
 					event.modelRegistry.putObject(blockLocation, new FWEmptyModel());
 				}
-				event.modelRegistry.putObject(itemLocation, new FWSmartBlockModel(block.dummy, true));
+				event.modelRegistry.putObject(itemLocation, new FWSmartBlockModel(block.dummy, dummy));
 			}
 		});
 
 		//Register all items
 		Game.items().registry.forEach(itemFactory -> {
-			Object stackObj = Game.natives().toNative(itemFactory.build());
-			if (stackObj instanceof ItemStack) {
-				Item itemObj = ((ItemStack) stackObj).getItem();
-				if (itemObj instanceof FWItem) {
-					FWItem item = (FWItem) itemObj;
-					ResourceLocation objRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
-					ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
-
-					nova.core.item.Item dummy = item.getItemFactory().build();
-
-					if (dummy.components.has(Renderer.class)) {
-						event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(dummy));
-					}
-				}
+			ItemStack stack = ItemConverter.instance().toNative(itemFactory);
+			Item itemObj = stack.getItem();
+			if (itemObj instanceof FWItem) {
+				FWItem item = (FWItem) itemObj;
+				ResourceLocation objRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
+				ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
+				event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(item.getItemFactory().build()));
 			}
 		});
 	}
 
+	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		//Load models
 		Game.render().modelProviders.forEach(m -> {

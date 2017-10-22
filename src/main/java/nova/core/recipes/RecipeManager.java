@@ -51,6 +51,11 @@ public class RecipeManager extends Manager<RecipeManager> {
 		recipesForType = new HashMap<>();
 	}
 
+	/**
+	 * Adds a recipe.
+	 *
+	 * @param recipe The recipe to add.
+	 */
 	public void addRecipe(Recipe recipe) {
 		recipes.add(recipe);
 
@@ -61,21 +66,38 @@ public class RecipeManager extends Manager<RecipeManager> {
 			.forEach(cls -> recipesForType.get(cls).add(recipe));
 	}
 
+	/**
+	 * Removes a recipe.
+	 *
+	 * @param recipe The recipe to remove.
+	 */
 	public void removeRecipe(Recipe recipe) {
 		recipes.remove(recipe);
 
 		recipesForType.values().forEach(entry -> entry.remove(recipe));
 	}
 
-	public <T extends Recipe> Collection<T> getRecipes(Class<T> type) {
+	/**
+	 * Returns an unmodifiable set view of all the recipes for the type.
+	 * <p>
+	 * To modify the underlying recipe list, you have to use
+	 * {@link #addRecipe(Recipe)} and {@link #removeRecipe(Recipe)} instead.
+	 *
+	 * @param <T> The recipe type
+	 * @param type The recipe class
+	 * @return An unmodifiable set view of all the recipes for the type.
+	 */
+	public <T extends Recipe> Set<T> getRecipes(Class<T> type) {
 		return getRecipeList(type).unmodifiableRecipes;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Recipe> EventListenerHandle<RecipeEvent.Add<T>> whenRecipeAdded(
 		Class<T> type, EventListener<RecipeEvent.Add<T>> listener) {
 		return getRecipeList(type).events.on(RecipeEvent.Add.class).bind(listener);
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Recipe> EventListenerHandle<RecipeEvent.Remove<T>> whenRecipeRemoved(
 		Class<T> type, EventListener<RecipeEvent.Remove<T>> listener) {
 		return getRecipeList(type).events.on(RecipeEvent.Remove.class).bind(listener);

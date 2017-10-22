@@ -24,6 +24,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.Language;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -34,21 +36,29 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
+import nova.core.language.LanguageManager;
+import nova.core.wrapper.mc.forge.v18.NovaMinecraftPreloader;
 import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWTileRenderer;
+import nova.core.wrapper.mc.forge.v18.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.backward.BWEntityFX;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.forward.FWEntityFX;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.forward.FWEntityRenderer;
 import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItem;
-import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.SortedSet;
 
 /**
  * @author Calclavia
@@ -66,6 +76,56 @@ public class ClientProxy extends CommonProxy {
 	public void init(FMLInitializationEvent evt) {
 		super.init(evt);
 		RenderingRegistry.registerEntityRenderingHandler(FWEntity.class, FWEntityRenderer.instance);
+	}
+
+	@Override
+	@SuppressWarnings({"unchecked", "deprecation"})
+	public void loadLanguage(LanguageManager languageManager) {
+		super.loadLanguage(languageManager);
+		ProgressManager.ProgressBar progressBar = ProgressManager.push("Loading NOVA language files",
+			NovaMinecraftPreloader.novaResourcePacks.size() + 1);
+		FMLProgressBar fmlProgressBar = new FMLProgressBar(progressBar);
+		fmlProgressBar.step("nova");
+		SortedSet<Language> languages = Minecraft.getMinecraft().getLanguageManager().getLanguages();
+		languages.stream()
+			.map(lang -> lang.getLanguageCode().replace('_', '-'))
+			.forEach(langName -> {
+				ResourceLocation location = new ResourceLocation("nova", langName + ".lang");
+				try {
+					Minecraft.getMinecraft().getResourceManager().getAllResources(location).forEach(resource ->
+						loadLanguage(languageManager, langName, ((IResource)resource).getInputStream()));
+				} catch (IOException ex) {
+					InputStream stream = ClientProxy.class.getResourceAsStream(String.format("assets/%s/%s", location.getResourceDomain(), location.getResourcePath()));
+					if (stream != null)
+						loadLanguage(languageManager, langName, stream);
+				}
+			});
+		NovaMinecraftPreloader.novaResourcePacks.forEach(pack -> {
+			fmlProgressBar.step(pack.getID());
+			pack.getLanguageFiles().stream().forEach(location -> {
+				String resourcePath = location.getResourcePath();
+				String langName = resourcePath.substring(5, resourcePath.length() - 5);
+				try {
+					Minecraft.getMinecraft().getResourceManager().getAllResources(location).forEach(resource ->
+						loadLanguage(languageManager, langName, ((IResource)resource).getInputStream()));
+				} catch (IOException ex) {
+					InputStream stream = ClientProxy.class.getResourceAsStream(String.format("assets/%s/%s", location.getResourceDomain(), location.getResourcePath()));
+					if (stream != null)
+						loadLanguage(languageManager, langName, stream);
+				}
+			});
+		});
+		fmlProgressBar.finish();
+		ProgressManager.pop(progressBar);
+	}
+
+	private void loadLanguage(LanguageManager languageManager, String langName, InputStream stream) {
+		try {
+			Properties p = new Properties();
+			p.load(stream);
+			p.entrySet().stream().forEach(e -> languageManager.register(langName, e.getKey().toString(), e.getValue().toString()));
+		} catch (IOException ex) {
+		}
 	}
 
 	@Override
@@ -120,7 +180,7 @@ public class ClientProxy extends CommonProxy {
 		if (build instanceof BWEntityFX) {
 			EntityFX entityFX = ((BWEntityFX) build).createEntityFX(world);
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(entityFX);
-			return Game.natives().toNova(entityFX);
+			return EntityConverter.instance().toNova(entityFX);
 		} else {
 			FWEntityFX bwEntityFX = new FWEntityFX(world, factory);
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(bwEntityFX);
@@ -138,7 +198,7 @@ public class ClientProxy extends CommonProxy {
 			entityFX.posY = position.getY();
 			entityFX.posZ = position.getZ();
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(entityFX);
-			return Game.natives().toNova(entityFX);
+			return EntityConverter.instance().toNova(entityFX);
 		} else {
 			FWEntityFX bwEntityFX = new FWEntityFX(world, entity);
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(bwEntityFX);

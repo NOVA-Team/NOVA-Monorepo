@@ -30,13 +30,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class NovaFileResourcePack extends FileResourcePack implements NovaResourcePack<ZipEntry> {
+	private static final Pattern LANG_PATTERN = Pattern.compile("^assets/([^/]+)/(lang/[a-zA-Z0-9-]+\\.lang)$", Pattern.CASE_INSENSITIVE);
 	private final String modid;
 	private final String[] domains;
 	private ZipFile resourcePackZipFile;
@@ -116,6 +121,23 @@ public class NovaFileResourcePack extends FileResourcePack implements NovaResour
 	@Override
 	public String getID() {
 		return modid;
+	}
+
+	@Override
+	public Set<ResourceLocation> getLanguageFiles() {
+		try {
+			return getResourcePackZipFile().stream()
+				.map(e -> {
+					Matcher m = LANG_PATTERN.matcher(e.getName());
+					if (!m.matches())
+						return null;
+					return new ResourceLocation(m.group(1), m.group(2));
+				})
+				.filter(e -> e != null)
+				.collect(Collectors.toSet());
+		} catch (IOException ex) {
+			return Collections.emptySet();
+		}
 	}
 
 	@Override

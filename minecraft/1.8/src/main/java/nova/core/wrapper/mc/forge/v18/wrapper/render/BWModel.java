@@ -24,6 +24,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.IBlockAccess;
+import nova.core.render.model.CustomModel;
 import nova.core.render.model.MeshModel;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
@@ -38,11 +40,22 @@ import java.util.Optional;
  */
 public class BWModel extends MeshModel {
 
+	/**
+	 * Completes this rendering for a block.
+	 */
+	public void render(IBlockAccess blockAccess) {
+		render(Optional.of(blockAccess), Optional.empty());
+	}
+
 	public void render() {
-		render(Optional.empty());
+		render(Optional.empty(), Optional.empty());
 	}
 
 	public void render(Optional<RenderManager> entityRenderManager) {
+		render(Optional.empty(), entityRenderManager);
+	}
+
+	public void render(Optional<IBlockAccess> access, Optional<RenderManager> entityRenderManager) {
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer worldRenderer = tessellator.getWorldRenderer();
 		worldRenderer.setColorRGBA_F(1, 1, 1, 1);
@@ -54,8 +67,7 @@ public class BWModel extends MeshModel {
 			model -> {
 				if (model instanceof MeshModel) {
 					MeshModel meshModel = (MeshModel) model;
-					meshModel.faces.forEach(face ->
-					{
+					meshModel.faces.forEach(face -> {
 						// Brightness is defined as: skyLight << 20 | blockLight << 4
 						if (face.getBrightness() >= 0) {
 							worldRenderer.setBrightness((int) (face.getBrightness() * (15 << 20 | 11 << 4)));
@@ -64,7 +76,7 @@ public class BWModel extends MeshModel {
 							worldRenderer.setBrightness(15 << 20 | 11 << 4);
 						}
 
-						worldRenderer.setNormal((int) face.normal.getX(), (int) face.normal.getY(), (int) face.normal.getZ());
+						worldRenderer.setNormal((float) face.normal.getX(), (float) face.normal.getY(), (float) face.normal.getZ());
 
 						if (face.texture.isPresent()) {
 							if (entityRenderManager.isPresent() && face.texture.get() instanceof EntityTexture) {
@@ -73,6 +85,11 @@ public class BWModel extends MeshModel {
 								entityRenderManager.get().renderEngine.bindTexture(AssetConverter.instance().toNative(t));
 								face.vertices.forEach(
 									v -> {
+										if (v.normal.isPresent())
+											worldRenderer.setNormal((float) v.normal.get().getX(), (float) v.normal.get().getY(), (float) v.normal.get().getZ());
+										else
+											worldRenderer.setNormal((float) face.normal.getX(), (float) face.normal.getY(), (float) face.normal.getZ());
+
 										worldRenderer.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 										worldRenderer.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), v.uv.getX(), v.uv.getY());
 									}
@@ -82,6 +99,11 @@ public class BWModel extends MeshModel {
 								TextureAtlasSprite icon = RenderUtility.instance.getTexture(texture);
 								face.vertices.forEach(
 									v -> {
+										if (v.normal.isPresent())
+											worldRenderer.setNormal((float) v.normal.get().getX(), (float) v.normal.get().getY(), (float) v.normal.get().getZ());
+										else
+											worldRenderer.setNormal((float) face.normal.getX(), (float) face.normal.getY(), (float) face.normal.getZ());
+
 										worldRenderer.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 										if (icon != null) {
 											worldRenderer.addVertexWithUV(v.vec.getX(), v.vec.getY(), v.vec.getZ(), icon.getInterpolatedU(16 * v.uv.getX()), icon.getInterpolatedV(16 * v.uv.getY()));
@@ -94,14 +116,21 @@ public class BWModel extends MeshModel {
 						} else {
 							face.vertices.forEach(
 								v -> {
+									if (v.normal.isPresent())
+										worldRenderer.setNormal((float) v.normal.get().getX(), (float) v.normal.get().getY(), (float) v.normal.get().getZ());
+									else
+										worldRenderer.setNormal((float) face.normal.getX(), (float) face.normal.getY(), (float) face.normal.getZ());
+
 									worldRenderer.setColorRGBA(v.color.red(), v.color.green(), v.color.blue(), v.color.alpha());
 									worldRenderer.addVertex(v.vec.getX(), v.vec.getY(), v.vec.getZ());
 								}
 							);
 						}
 					});
+				} else if (model instanceof CustomModel) {
+					CustomModel customModel = (CustomModel) model;
+					customModel.render.accept(customModel);
 				}
-				//TODO: Handle BW Rendering
 			}
 		);
 	}

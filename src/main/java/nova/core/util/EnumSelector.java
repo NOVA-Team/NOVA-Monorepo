@@ -21,9 +21,11 @@
 package nova.core.util;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -53,7 +55,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * @return an instance of EnumSelector for the given type.
 	 */
 	public static <T extends Enum<T>> EnumSelector<T> of(Class<T> enumClass) {
-		return new EnumSelector(enumClass);
+		return new EnumSelector<>(enumClass);
 	}
 
 	private void checkWritable() {
@@ -111,7 +113,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 * @see #blockAll()
 	 * @param value The given {@code enum} value that should have behavior opposite of the default.
 	 * @return this
-	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 * @throws IllegalStateException If the EnumSelector has been {@link #lock() locked}.
 	 */
 	public EnumSelector<T> apart(T value) {
 		checkWritable();
@@ -124,15 +126,67 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 *
 	 * @see #allowAll()
 	 * @see #blockAll()
-	 * @param first The given {@code enum} value that should have behavior opposite of the default.
-	 * @param rest The given {@code enum} values that should have behavior opposite of the default.
+	 * @param first The first {@code enum} value that should have behavior opposite of the default.
+	 * @param second The second {@code enum} value that should have behavior opposite of the default.
 	 * @return this
-	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 * @throws IllegalStateException If the EnumSelector has been {@link #lock() locked}.
 	 */
-	public EnumSelector<T> apart(T first, T... rest) {
+	public EnumSelector<T> apart(T first, T second) {
 		checkWritable();
 		exceptions.add(first);
-		exceptions.addAll(Arrays.asList(rest));
+		exceptions.add(second);
+		return this;
+	}
+
+	/**
+	 * Specify which {@code enum} values should have behavior opposite of the default
+	 *
+	 * @see #allowAll()
+	 * @see #blockAll()
+	 * @param values The given {@code enum} values that should have behavior opposite of the default.
+	 * @return this
+	 * @throws IllegalStateException If the EnumSelector has been {@link #lock() locked}.
+	 */
+	@SuppressWarnings("unchecked")
+	public EnumSelector<T> apart(T... values) {
+		checkWritable();
+		exceptions.addAll(Arrays.asList(values));
+		return this;
+	}
+
+	/**
+	 * Specify which {@code enum} values should have behavior opposite of the default
+	 *
+	 * @see #allowAll()
+	 * @see #blockAll()
+	 * @param values The given {@code enum} values that should have behavior opposite of the default.
+	 * @return this
+	 * @throws IllegalStateException If the EnumSelector has been {@link #lock() locked},
+	 * or if the {@code values} parameter is an EnumSelector instance which has
+	 * not been {@link #lock() locked}.
+	 */
+	@SuppressWarnings("unchecked")
+	public EnumSelector<T> apart(Iterable<T> values) {
+		checkWritable();
+		if (values instanceof EnumSelector) {
+			EnumSelector<T> other = (EnumSelector<T>) values;
+			try {
+				other.checkReadable();
+			} catch (IllegalStateException e) {
+				throw new IllegalArgumentException(e);
+			}
+			if (!defaultAllow && !defaultBlock)
+				throw new IllegalStateException("Cannot call EnumSelector.apart(EnumSelector) without specifying default behaviour.");
+			if ((defaultAllow && other.defaultBlock) || (defaultBlock && other.defaultBlock)) {
+				this.exceptions.addAll(other.exceptions);
+			} else {
+				this.exceptions.addAll(EnumSet.complementOf(other.exceptions));
+			}
+		} else if (values instanceof Collection) {
+			exceptions.addAll((Collection<T>)values);
+		} else {
+			values.forEach(exceptions::add);
+		}
 		return this;
 	}
 
@@ -183,7 +237,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 */
 	public boolean allowsAll() {
 		checkReadable();
-		return defaultAllow && exceptions.isEmpty();
+		return (defaultAllow && exceptions.isEmpty()) || (defaultBlock && EnumSet.complementOf(exceptions).isEmpty());
 	}
 
 	/**
@@ -206,7 +260,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	 */
 	public boolean blocksAll() {
 		checkReadable();
-		return defaultBlock && exceptions.isEmpty();
+		return (defaultBlock && exceptions.isEmpty()) || (defaultAllow && EnumSet.complementOf(exceptions).isEmpty());
 	}
 
 	/**
@@ -218,7 +272,7 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		checkReadable();
-		return Collections.unmodifiableSet(defaultBlock ? exceptions : EnumSet.complementOf(exceptions)).iterator();
+		return toSet().iterator();
 	}
 
 	/**
@@ -230,7 +284,8 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	@Override
 	public Spliterator<T> spliterator() {
 		checkReadable();
-		return Spliterators.spliterator(iterator(), defaultBlock ? exceptions.size() : EnumSet.complementOf(exceptions).size(),
+		Set<T> set = toSet();
+		return Spliterators.spliterator(set.iterator(), set.size(),
 				Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.IMMUTABLE);
 	}
 
@@ -265,5 +320,58 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	public Set<T> toSet() {
 		checkReadable();
 		return Collections.unmodifiableSet(defaultBlock ? exceptions : EnumSet.complementOf(exceptions));
+	}
+
+	/**
+	 * Returns the count of all the allowed elements in this EnumSelector.
+	 *
+	 * @return The count.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
+	public int size() {
+		checkReadable();
+		return (defaultBlock ? exceptions : EnumSet.complementOf(exceptions)).size();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see EnumSet#toString()
+	 * @return The same result as calling {@link #toSet()}.{@link EnumSet#toString() toString()}.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
+	@Override
+	public String toString() {
+		return (defaultBlock ? exceptions : EnumSet.complementOf(exceptions)).toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see EnumSet#hashCode()
+	 * @return The hash calculated from {@link #toSet()}.{@link EnumSet#hashCode() hashCode()}.
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
+	@Override
+	public int hashCode() {
+		checkReadable();
+		int hash = 5;
+		hash = 79 * hash + Objects.hashCode(defaultBlock ? exceptions : EnumSet.complementOf(exceptions));
+		return hash;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see EnumSet#equals(Object)
+	 * @return true if this EnumSelector allows the exact same values as the other EnumSelector
+	 * @throws IllegalStateException If the EnumSelector has not been {@link #lock() locked}.
+	 */
+	@Override
+	public boolean equals(Object other) {
+		checkReadable();
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
+		return this.toSet().equals(((EnumSelector<?>)other).toSet());
 	}
 }

@@ -39,9 +39,13 @@ import nova.core.language.LanguageManager;
 import nova.core.util.registry.RetentionManager;
 import nova.core.world.WorldManager;
 import nova.internal.core.bootstrap.DependencyInjectionEntryPoint;
+import nova.internal.core.di.LoggerModule;
 import nova.internal.core.tick.UpdateTicker;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.jbee.inject.Injector;
+
+import java.util.Optional;
 
 public class Game {
 
@@ -147,7 +151,7 @@ public class Game {
 	}
 
 	public static Logger logger() {
-		return instance.logger;
+		return Optional.ofNullable(instance).map(instance -> instance.logger).orElseGet(() -> LoggerFactory.getLogger(LoggerModule.getDefaultName()));
 	}
 
 	public static ClientManager clientManager() {

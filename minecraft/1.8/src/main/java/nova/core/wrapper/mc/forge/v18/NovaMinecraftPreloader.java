@@ -43,6 +43,8 @@ import nova.core.util.ClassLoaderUtil;
 import nova.core.wrapper.mc.forge.v18.util.ReflectionUtil;
 import nova.core.wrapper.mc.forge.v18.wrapper.assets.NovaFileResourcePack;
 import nova.core.wrapper.mc.forge.v18.wrapper.assets.NovaFolderResourcePack;
+import nova.core.wrapper.mc.forge.v18.wrapper.assets.NovaResourcePack;
+import nova.internal.core.Game;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,8 +54,10 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,6 +66,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
 
@@ -70,6 +75,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 	private static final ModMetadata md;
 	public static Set<Class<?>> modClasses;
 	public static Map<Class<?>, File> modClassToFile;
+	public static List<NovaResourcePack<?>> novaResourcePacks = Collections.emptyList();
 
 	static {
 		md = new ModMetadata();
@@ -236,7 +242,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			@SuppressWarnings("unchecked")
 			Set<String> classLoaderExceptions = (Set<String>) setField.get(classLoader);
 			classLoaderExceptions.remove("org.apache.");
-			System.out.println("Successfully hacked 'org.apache' out of launcher exclusion");
+			Game.logger().info("Successfully hacked 'org.apache' out of launcher exclusion");
 		} catch (Exception e) {
 			throw new ClassLoaderUtil.ClassLoaderException(e);
 		}
@@ -295,6 +301,7 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 			List<IResourcePack> packs = (List<IResourcePack>) resourcePackField.get(FMLClientHandler.instance());
 
 			Set<String> addedPacks = new HashSet<>();
+			List<NovaResourcePack<?>> novaPacks = new LinkedList<>();
 
 			classesMap.keySet().forEach(novaMod -> {
 				Class<?> c = classesMap.get(novaMod);
@@ -314,13 +321,15 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 
 					if (!addedPacks.contains(fn)) {
 						addedPacks.add(fn);
-						packs.add(new NovaFileResourcePack(file, novaMod.id(), novaMod.domains()));
-						System.out.println("Registered NOVA jar resource pack: " + fn);
+						NovaFileResourcePack pack = new NovaFileResourcePack(file, novaMod.id(), novaMod.domains());
+						packs.add(pack);
+						novaPacks.add(pack);
+						Game.logger().info("Registered NOVA jar resource pack: {}", fn);
 					}
 				} else {
 					//Add folder resource pack location. The folderLocation is the root of the project, including the packages of classes, and an assets folder inside.
 					String folderLocation = c.getProtectionDomain().getCodeSource().getLocation().getPath();
-					String classPath = c.getCanonicalName().replaceAll("\\.", "/");
+					String classPath = c.getCanonicalName().replace('.', '/');
 					folderLocation = folderLocation.replaceFirst("file:", "").replace(classPath, "").replace("/.class", "").replaceAll("%20", " ");
 					File folderFile = new File(folderLocation);
 					if (!new File(folderFile, "assets").isDirectory()) {
@@ -331,11 +340,14 @@ public class NovaMinecraftPreloader extends DummyModContainer {
 					modClassToFile.put(c, folderFile);
 
 					addedPacks.add(folderLocation);
-					packs.add(new NovaFolderResourcePack(folderFile, novaMod.id(), novaMod.domains()));
-					System.out.println("Registered NOVA folder resource pack: " + folderFile.getAbsolutePath());
+					NovaFolderResourcePack pack = new NovaFolderResourcePack(folderFile, novaMod.id(), novaMod.domains());
+					packs.add(pack);
+					novaPacks.add(pack);
+					Game.logger().info("Registered NOVA folder resource pack: {}", folderFile.getAbsolutePath());
 				}
 			});
 			resourcePackField.set(FMLClientHandler.instance(), packs);
+			novaResourcePacks = new ArrayList<>(novaPacks);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
