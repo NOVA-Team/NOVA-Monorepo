@@ -69,7 +69,7 @@ public class BWBlock extends Block implements Storable {
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
 		components.add(new BWBlockTransform(this, world, pos));
-		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().isOpaque() ? 1 : 0));
+		components.add(new BlockProperty.Opacity()).setOpacity(() -> mcBlock.getMaterial().isOpaque() ? 1 : 0);
 		Optional.of(components.add(new BlockProperty.Replaceable()))
 			.filter(r -> block != Blocks.air)
 			.ifPresent(r -> r.setReplaceable(() -> mcBlock.isReplaceable(blockAccess(), xi(), yi(), zi())));

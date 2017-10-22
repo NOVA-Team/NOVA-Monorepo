@@ -32,14 +32,20 @@ public class BlockPropertyTest {
 
 	@Test
 	public void testHardness() {
-		BlockProperty.Hardness hardness = new BlockProperty.Hardness().setHardness(1.0);
+		BlockProperty.Hardness hardness = new BlockProperty.Hardness();
 		assertThat(hardness.getHardness()).isEqualTo(1.0);
+
+		hardness.setHardness(10.0);
+		assertThat(hardness.getHardness()).isEqualTo(10.0);
 	}
 
 	@Test
 	public void testResistance() {
-		BlockProperty.Resistance resistance = new BlockProperty.Resistance().setResistance(1.0);
+		BlockProperty.Resistance resistance = new BlockProperty.Resistance();
 		assertThat(resistance.getResistance()).isEqualTo(1.0);
+
+		resistance.setResistance(10.0);
+		assertThat(resistance.getResistance()).isEqualTo(10.0);
 	}
 
 	@Test
@@ -74,6 +80,16 @@ public class BlockPropertyTest {
 		assertThat(opacity.getOpacity()).isEqualTo(0.5);
 		assertThat(opacity.isOpaque()).isFalse();
 		assertThat(opacity.isTransparent()).isTrue();
+
+		opacity.setOpacity(-0.5);
+		assertThat(opacity.getOpacity()).isEqualTo(0.0);
+		assertThat(opacity.isOpaque()).isFalse();
+		assertThat(opacity.isTransparent()).isTrue();
+
+		opacity.setOpacity(1.5);
+		assertThat(opacity.getOpacity()).isEqualTo(1.0);
+		assertThat(opacity.isOpaque()).isTrue();
+		assertThat(opacity.isTransparent()).isFalse();
 	}
 
 	@Test

@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 /**
  * Block properties.
@@ -46,7 +47,18 @@ public interface BlockProperty {
 	 */
 	@UnsidedComponent
 	public static class Hardness extends Component implements BlockProperty {
-		private double hardness = 1.0;
+		private DoubleSupplier hardness = () -> 1;
+
+		/**
+		 * Sets the breaking difficulty.
+		 *
+		 * @param hardness The breaking difficulty.
+		 * @return This instance for chaining if desired.
+		 */
+		public Hardness setHardness(DoubleSupplier hardness) {
+			this.hardness = hardness;
+			return this;
+		}
 
 		/**
 		 * Sets the breaking difficulty.
@@ -55,8 +67,7 @@ public interface BlockProperty {
 		 * @return This instance for chaining if desired.
 		 */
 		public Hardness setHardness(double hardness) {
-			this.hardness = hardness;
-			return this;
+			return this.setHardness(() -> hardness);
 		}
 
 		/**
@@ -65,7 +76,7 @@ public interface BlockProperty {
 		 * @return The breaking difficulty.
 		 */
 		public double getHardness() {
-			return hardness;
+			return hardness.getAsDouble();
 		}
 	}
 
@@ -77,7 +88,18 @@ public interface BlockProperty {
 	 */
 	@UnsidedComponent
 	public static class Resistance extends Component implements BlockProperty {
-		private double resistance = 1.0;
+		private DoubleSupplier resistance = () -> 1;
+
+		/**
+		 * Sets the blast resistance
+		 *
+		 * @param resistance The blast resistance.
+		 * @return This instance for chaining if desired.
+		 */
+		public Resistance setResistance(DoubleSupplier resistance) {
+			this.resistance = resistance;
+			return this;
+		}
 
 		/**
 		 * Sets the blast resistance
@@ -86,8 +108,7 @@ public interface BlockProperty {
 		 * @return This instance for chaining if desired.
 		 */
 		public Resistance setResistance(double resistance) {
-			this.resistance = resistance;
-			return this;
+			return this.setResistance(() -> resistance);
 		}
 
 		/**
@@ -96,7 +117,7 @@ public interface BlockProperty {
 		 * @return The blast resistance.
 		 */
 		public double getResistance() {
-			return resistance;
+			return resistance.getAsDouble();
 		}
 	}
 
@@ -176,10 +197,13 @@ public interface BlockProperty {
 	@SidedComponent
 	@SuppressWarnings("deprecation")
 	public static class Opacity extends Component implements BlockProperty {
+		private static final DoubleSupplier TRANSPARENT = () -> 0;
+		private static final DoubleSupplier OPAQUE = () -> 1;
+
 		/**
 		 * This value determines if the block should allow light through itself or not.
 		 */
-		private double opacity = 1;
+		private DoubleSupplier opacity = OPAQUE;
 
 		/**
 		 * Sets that the block should allow light through
@@ -187,7 +211,7 @@ public interface BlockProperty {
 		 * @return This instance for chaining if desired.
 		 */
 		public Opacity setTransparent() {
-			opacity = 0;
+			opacity = TRANSPARENT;
 			return this;
 		}
 
@@ -197,7 +221,18 @@ public interface BlockProperty {
 		 * @return This instance for chaining if desired.
 		 */
 		public Opacity setOpaque() {
-			opacity = 1;
+			opacity = OPAQUE;
+			return this;
+		}
+
+		/**
+		 * Sets if light should be transmitted through this block
+		 *
+		 * @param opacity The block's opacity
+		 * @return This instance for chaining if desired.
+		 */
+		public Opacity setOpacity(DoubleSupplier opacity) {
+			this.opacity = opacity;
 			return this;
 		}
 
@@ -208,8 +243,7 @@ public interface BlockProperty {
 		 * @return This instance for chaining if desired.
 		 */
 		public Opacity setOpacity(double opacity) {
-			this.opacity = MathUtil.clamp(opacity, 0, 1);
-			return this;
+			return this.setOpacity(opacity <= 0 ? TRANSPARENT : (opacity >= 1 ? OPAQUE : () -> opacity));
 		}
 
 		/**
@@ -218,7 +252,7 @@ public interface BlockProperty {
 		 * @return The block's opacity
 		 */
 		public double getOpacity() {
-			return opacity;
+			return MathUtil.clamp(opacity.getAsDouble(), 0, 1);
 		}
 
 		/**
@@ -227,7 +261,7 @@ public interface BlockProperty {
 		 * @return If the block should allow light through
 		 */
 		public boolean isTransparent() {
-			return opacity < 1;
+			return getOpacity() < 1;
 		}
 
 		/**
@@ -236,7 +270,7 @@ public interface BlockProperty {
 		 * @return If the block should disallow light through
 		 */
 		public boolean isOpaque() {
-			return opacity == 1;
+			return getOpacity() == 1;
 		}
 	}
 

@@ -46,6 +46,11 @@ public class ProxyMaterial extends Material {
 	}
 
 	@Override
+	public boolean getCanBlockGrass() {
+		return opacity.isPresent() ? opacity.get().isOpaque() : super.isOpaque();
+	}
+
+	@Override
 	public boolean isOpaque() {
 		return opacity.isPresent() ? opacity.get().isOpaque() : super.isOpaque();
 	}
