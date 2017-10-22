@@ -75,4 +75,13 @@ public class BlockPropertyTest {
 		assertThat(opacity.isOpaque()).isFalse();
 		assertThat(opacity.isTransparent()).isTrue();
 	}
+
+	@Test
+	public void testReplaceable() {
+		BlockProperty.Replaceable replaceable = new BlockProperty.Replaceable();
+		assertThat(replaceable.isReplaceable()).isTrue();
+
+		replaceable.setReplaceable(() -> false);
+		assertThat(replaceable.isReplaceable()).isFalse();
+	}
 }
