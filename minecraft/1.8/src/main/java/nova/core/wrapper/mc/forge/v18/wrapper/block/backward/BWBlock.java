@@ -75,9 +75,10 @@ public class BWBlock extends Block implements Storable {
 		this.mcBlock = block;
 		components.add(new BWBlockTransform(this, world, pos));
 		components.add(new BlockProperty.Opacity()).setOpacity(() -> mcBlock.getMaterial().isOpaque() ? 1 : 0);
-		Optional.of(components.add(new BlockProperty.Replaceable()))
-			.filter(r -> block != Blocks.air)
-			.ifPresent(r -> r.setReplaceable(() -> mcBlock.isReplaceable((net.minecraft.world.World) blockAccess(), blockPos())));
+		BlockProperty.Replaceable replaceable = components.add(new BlockProperty.Replaceable());
+		if (block != Blocks.air) {
+			replaceable.setReplaceable(() -> mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), blockPos()));
+		}
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.stepSound.getPlaceSound()));
@@ -171,7 +172,7 @@ public class BWBlock extends Block implements Storable {
 			return false;
 		}
 
-		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable((net.minecraft.world.World) WorldConverter.instance().toNative(world()), new BlockPos(x(), y(), z()))) {
+		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable((net.minecraft.world.World) blockAccess(), blockPos())) {
 			return false;
 		}
 		return super.shouldDisplacePlacement();

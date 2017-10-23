@@ -70,9 +70,10 @@ public class BWBlock extends Block implements Storable {
 		this.mcBlock = block;
 		components.add(new BWBlockTransform(this, world, pos));
 		components.add(new BlockProperty.Opacity()).setOpacity(() -> mcBlock.getMaterial().isOpaque() ? 1 : 0);
-		Optional.of(components.add(new BlockProperty.Replaceable()))
-			.filter(r -> block != Blocks.air)
-			.ifPresent(r -> r.setReplaceable(() -> mcBlock.isReplaceable(blockAccess(), xi(), yi(), zi())));
+		BlockProperty.Replaceable replaceable = components.add(new BlockProperty.Replaceable());
+		if (block != Blocks.air) {
+			replaceable.setReplaceable(() -> mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), xi(), yi(), zi()));
+		}
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.stepSound.func_150496_b()));
