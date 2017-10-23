@@ -16,7 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
- */package nova.core.nativewrapper;
+ */
+
+package nova.core.nativewrapper;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -49,8 +51,10 @@ public class NativeManager {
 
 	/**
 	 * Registers a component to a native interface.
-	 * @param component A component. Must extend INTERFACE.
-	 * @param nativeInterface the class of the INTERFACE.
+	 *
+	 * @param <INTERFACE> The interface of the component.
+	 * @param component A component. Must extend {@code INTERFACE}.
+	 * @param nativeInterface the class of the {@code INTERFACE}.
 	 */
 	public <INTERFACE> void registerComponentToInterface(Class<? extends INTERFACE> component, Class<INTERFACE> nativeInterface) {
 		novaComponentToNativeInterface.put(component, nativeInterface);
@@ -107,6 +111,9 @@ public class NativeManager {
 
 	/**
 	 * Converts a native object to a nova object. This method has autocast, is DANGEROUS and may crash.
+	 *
+	 * @param nativeObject A game implementation object.
+	 * @return The NOVA equivalent object.
 	 */
 	public <T> T toNova(Object nativeObject) {
 		Objects.requireNonNull(nativeObject);
@@ -120,6 +127,9 @@ public class NativeManager {
 
 	/**
 	 * Converts a nova object to a native object. This method has autocast, is DANGEROUS and may crash.
+	 *
+	 * @param novaObject A NOVA implementation object.
+	 * @return The game equivalent object.
 	 */
 	public <T> T toNative(Object novaObject) {
 		Objects.requireNonNull(novaObject);
@@ -136,6 +146,8 @@ public class NativeManager {
 	}
 
 	public static class NativeException extends NovaException {
+		private static final long serialVersionUID = 1L;
+
 		public NativeException() {
 			super();
 		}

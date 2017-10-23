@@ -35,6 +35,8 @@ import nova.internal.core.Game;
 
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
 public class EntityConverter implements NativeConverter<Entity, net.minecraft.entity.Entity>, ForgeLoadable {
 
 	public static EntityConverter instance() {

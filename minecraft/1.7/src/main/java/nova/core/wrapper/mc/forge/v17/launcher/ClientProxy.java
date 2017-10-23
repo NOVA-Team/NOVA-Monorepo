@@ -43,12 +43,12 @@ import nova.core.wrapper.mc.forge.v17.wrapper.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWTileRenderer;
+import nova.core.wrapper.mc.forge.v17.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntityFX;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.forward.FWEntityFX;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.forward.FWEntityRenderer;
 import nova.core.wrapper.mc.forge.v17.wrapper.item.FWItem;
-import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.io.IOException;
@@ -156,7 +156,7 @@ public class ClientProxy extends CommonProxy {
 		if (build instanceof BWEntityFX) {
 			EntityFX entityFX = ((BWEntityFX) build).createEntityFX();
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(entityFX);
-			return Game.natives().toNova(entityFX);
+			return EntityConverter.instance().toNova(entityFX);
 		} else {
 			FWEntityFX bwEntityFX = new FWEntityFX(world, factory);
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(bwEntityFX);
@@ -174,7 +174,7 @@ public class ClientProxy extends CommonProxy {
 			entityFX.posY = position.getY();
 			entityFX.posZ = position.getZ();
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(entityFX);
-			return Game.natives().toNova(entityFX);
+			return EntityConverter.instance().toNova(entityFX);
 		} else {
 			FWEntityFX bwEntityFX = new FWEntityFX(world, entity);
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(bwEntityFX);

@@ -1,13 +1,36 @@
+/*
+ * Copyright (c) 2016 NOVA, All rights reserved.
+ * This library is free software, licensed under GNU Lesser General Public License version 3
+ *
+ * This file is part of NOVA.
+ *
+ * NOVA is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * NOVA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package nova.core.block.component;
 
 import nova.core.component.Component;
 import nova.core.component.SidedComponent;
 import nova.core.component.UnsidedComponent;
 import nova.core.sound.Sound;
+import nova.core.util.math.MathUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 /**
  * Block properties.
@@ -19,12 +42,23 @@ public interface BlockProperty {
 	 * The breaking difficulty of a block, or how long it takes to break a block.
 	 * Tools and armour may make the block break faster or slower than this.
 	 * <p>
-	 * The standard, regular block hardness is 1. {@code Double.POSITIVE_INFINITY} is unbreakable.
+	 * The standard, regular block hardness is 1. {@link Double#POSITIVE_INFINITY} is unbreakable.
 	 * </p>
 	 */
 	@UnsidedComponent
 	public static class Hardness extends Component implements BlockProperty {
-		private double hardness = 1.0;
+		private DoubleSupplier hardness = () -> 1;
+
+		/**
+		 * Sets the breaking difficulty.
+		 *
+		 * @param hardness The breaking difficulty.
+		 * @return This instance for chaining if desired.
+		 */
+		public Hardness setHardness(DoubleSupplier hardness) {
+			this.hardness = hardness;
+			return this;
+		}
 
 		/**
 		 * Sets the breaking difficulty.
@@ -33,8 +67,7 @@ public interface BlockProperty {
 		 * @return This instance for chaining if desired.
 		 */
 		public Hardness setHardness(double hardness) {
-			this.hardness = hardness;
-			return this;
+			return this.setHardness(() -> hardness);
 		}
 
 		/**
@@ -43,38 +76,51 @@ public interface BlockProperty {
 		 * @return The breaking difficulty.
 		 */
 		public double getHardness() {
-			return hardness;
+			return hardness.getAsDouble();
 		}
 	}
 
 	/**
-	 * The blast resistance of a block.
+	 * The blast resistance of a block, indicates how many cubic meters of TNT are needed to explode it.
 	 * <p>
 	 * The standard, regular block resistance is 1. {@link Double#POSITIVE_INFINITY} is unexplodable.
 	 * </p>
 	 */
 	@UnsidedComponent
 	public static class Resistance extends Component implements BlockProperty {
-		private double resistance = 1.0;
+		private DoubleSupplier resistance = () -> 1;
 
 		/**
-		 * Sets the blast resistance
+		 * Sets the blast resistance, indicates how many cubic meters
+		 * of TNT are needed to explode it.
 		 *
 		 * @param resistance The blast resistance.
 		 * @return This instance for chaining if desired.
 		 */
-		public Resistance setResistance(double resistance) {
+		public Resistance setResistance(DoubleSupplier resistance) {
 			this.resistance = resistance;
 			return this;
 		}
 
 		/**
-		 * Gets the blast resistance.
+		 * Sets the blast resistance, indicates how many cubic meters
+		 * of TNT are needed to explode it.
+		 *
+		 * @param resistance The blast resistance.
+		 * @return This instance for chaining if desired.
+		 */
+		public Resistance setResistance(double resistance) {
+			return this.setResistance(() -> resistance);
+		}
+
+		/**
+		 * Gets the blast resistance, indicates how many cubic meters
+		 * of TNT are needed to explode it.
 		 *
 		 * @return The blast resistance.
 		 */
 		public double getResistance() {
-			return resistance;
+			return resistance.getAsDouble();
 		}
 	}
 
@@ -152,11 +198,15 @@ public interface BlockProperty {
 	 * @author winsock
 	 */
 	@SidedComponent
+	@SuppressWarnings("deprecation")
 	public static class Opacity extends Component implements BlockProperty {
+		private static final DoubleSupplier TRANSPARENT = () -> 0;
+		private static final DoubleSupplier OPAQUE = () -> 1;
+
 		/**
 		 * This value determines if the block should allow light through itself or not.
 		 */
-		public double opacity = 1;
+		private DoubleSupplier opacity = OPAQUE;
 
 		/**
 		 * Sets that the block should allow light through
@@ -164,7 +214,28 @@ public interface BlockProperty {
 		 * @return This instance for chaining if desired.
 		 */
 		public Opacity setTransparent() {
-			opacity = 0;
+			opacity = TRANSPARENT;
+			return this;
+		}
+
+		/**
+		 * Sets that the block should disallow light through
+		 *
+		 * @return This instance for chaining if desired.
+		 */
+		public Opacity setOpaque() {
+			opacity = OPAQUE;
+			return this;
+		}
+
+		/**
+		 * Sets if light should be transmitted through this block
+		 *
+		 * @param opacity The block's opacity
+		 * @return This instance for chaining if desired.
+		 */
+		public Opacity setOpacity(DoubleSupplier opacity) {
+			this.opacity = opacity;
 			return this;
 		}
 
@@ -175,38 +246,66 @@ public interface BlockProperty {
 		 * @return This instance for chaining if desired.
 		 */
 		public Opacity setOpacity(double opacity) {
-			this.opacity = opacity;
-			return this;
+			return this.setOpacity(opacity <= 0 ? TRANSPARENT : (opacity >= 1 ? OPAQUE : () -> opacity));
+		}
+
+		/**
+		 * This value determines if the block should allow light through itself or not.
+		 *
+		 * @return The block's opacity
+		 */
+		public double getOpacity() {
+			return MathUtil.clamp(opacity.getAsDouble(), 0, 1);
+		}
+
+		/**
+		 * Checks if the block should allow light through
+		 *
+		 * @return If the block should allow light through
+		 */
+		public boolean isTransparent() {
+			return getOpacity() < 1;
+		}
+
+		/**
+		 * Checks if the block should disallow light through
+		 *
+		 * @return If the block should disallow light through
+		 */
+		public boolean isOpaque() {
+			return getOpacity() == 1;
 		}
 	}
 
 	/**
 	 * Indicates whether the block is replaceable.
+	 *
+	 * @author ExE Boss
 	 */
 	@UnsidedComponent
-	public static final class Replaceable extends Component implements BlockProperty {
-		private static final Replaceable instance = new Replaceable();
+	public static class Replaceable extends Component implements BlockProperty {
+		private BooleanSupplier replaceable = () -> true;
+
+		public Replaceable() {}
 
 		/**
-		 * Gets the singleton for Replaceable.
+		 * Set the boolean supplier that is used to check if this block is replaceable.
 		 *
-		 * @return The singleton for Replaceable.
+		 * @param replaceable The replacement boolean supplier.
+		 * @return This instance for chaining if desired.
 		 */
-		public static Replaceable instance() {
-			return instance;
+		public Replaceable setReplaceable(BooleanSupplier replaceable) {
+			this.replaceable = replaceable;
+			return this;
 		}
 
-		private Replaceable() {
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			return this == o || o instanceof Replaceable;
-		}
-
-		@Override
-		public int hashCode() {
-			return Replaceable.class.hashCode();
+		/**
+		 * Check if this block can be replaced.
+		 *
+		 * @return if this block can be replaced.
+		 */
+		public boolean isReplaceable() {
+			return this.replaceable.getAsBoolean();
 		}
 	}
 }

@@ -53,13 +53,13 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	ItemFactory getItemFactory();
 
 	default void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean advanced) {
-		Item item = Game.natives().toNova(itemStack);
+		Item item = ItemConverter.instance().toNova(itemStack);
 		item.setCount(itemStack.stackSize).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
 		getItemFactory().save(item);
 	}
 
 	default boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		Item item = Game.natives().toNova(itemStack);
+		Item item = ItemConverter.instance().toNova(itemStack);
 		Item.UseEvent event = new Item.UseEvent(new BWEntity(player), new Vector3D(x, y, z), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ));
 		item.events.publish(event);
 		ItemConverter.instance().updateMCItemStack(itemStack, item);
@@ -67,7 +67,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	default ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		Item item = Game.natives().toNova(itemStack);
+		Item item = ItemConverter.instance().toNova(itemStack);
 		item.events.publish(new Item.RightClickEvent(new BWEntity(player)));
 		return ItemConverter.instance().updateMCItemStack(itemStack, item);
 	}
@@ -84,7 +84,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	@Override
 	default void renderItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data) {
-		Item item = Game.natives().toNova(itemStack);
+		Item item = ItemConverter.instance().toNova(itemStack);
 		if (item.components.has(Renderer.class)) {
 			GL11.glPushAttrib(GL_TEXTURE_BIT);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -116,7 +116,8 @@ public interface ItemWrapperMethods extends IItemRenderer {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	default int getColorFromItemStack(ItemStack itemStack, int layer) {
-		return ((Item) Game.natives().toNova(itemStack)).colorMultiplier().argb();
+		return ItemConverter.instance().toNova(itemStack).colorMultiplier().argb();
 	}
 }
