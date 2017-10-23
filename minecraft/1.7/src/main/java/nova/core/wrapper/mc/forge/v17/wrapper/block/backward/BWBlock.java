@@ -69,9 +69,11 @@ public class BWBlock extends Block implements Storable {
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
 		components.add(new BWBlockTransform(this, world, pos));
-		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().isOpaque() ? 1 : 0));
-		if (mcBlock.isReplaceable(blockAccess(), xi(), yi(), zi()))
-			components.add(BlockProperty.Replaceable.instance());
+		components.add(new BlockProperty.Opacity()).setOpacity(() -> mcBlock.getMaterial().isOpaque() ? 1 : 0);
+		BlockProperty.Replaceable replaceable = components.add(new BlockProperty.Replaceable());
+		if (block != Blocks.air) {
+			replaceable.setReplaceable(() -> mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), xi(), yi(), zi()));
+		}
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.stepSound.func_150496_b()));
@@ -145,11 +147,6 @@ public class BWBlock extends Block implements Storable {
 			mcTileEntity = blockAccess().getTileEntity(xi(), yi(), zi());
 		}
 		return  Optional.ofNullable(mcTileEntity);
-	}
-
-	@Override
-	public boolean canReplace() {
-		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), xi(), yi(), zi());
 	}
 
 	@Override

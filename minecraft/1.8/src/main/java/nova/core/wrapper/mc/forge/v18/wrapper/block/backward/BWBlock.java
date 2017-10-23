@@ -74,9 +74,11 @@ public class BWBlock extends Block implements Storable {
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
 		components.add(new BWBlockTransform(this, world, pos));
-		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().blocksLight() ? 1 : 0));
-		if (mcBlock.isReplaceable((net.minecraft.world.World) blockAccess(), new BlockPos(x(), y(), z())))
-			components.add(BlockProperty.Replaceable.instance());
+		components.add(new BlockProperty.Opacity()).setOpacity(() -> mcBlock.getMaterial().isOpaque() ? 1 : 0);
+		BlockProperty.Replaceable replaceable = components.add(new BlockProperty.Replaceable());
+		if (block != Blocks.air) {
+			replaceable.setReplaceable(() -> mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), blockPos()));
+		}
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.stepSound.getPlaceSound()));
@@ -165,17 +167,12 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	@Override
-	public boolean canReplace() {
-		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), new BlockPos(x(), y(), z()));
-	}
-
-	@Override
 	public boolean shouldDisplacePlacement() {
 		if (mcBlock == Blocks.snow_layer && ((int) blockState().getValue(BlockSnow.LAYERS) < 1)) {
 			return false;
 		}
 
-		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable((net.minecraft.world.World) WorldConverter.instance().toNative(world()), new BlockPos(x(), y(), z()))) {
+		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable((net.minecraft.world.World) blockAccess(), blockPos())) {
 			return false;
 		}
 		return super.shouldDisplacePlacement();

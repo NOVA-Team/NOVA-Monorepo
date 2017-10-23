@@ -162,7 +162,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		// hack is needed because the player sets the block to air *before*
 		// getting the drops. woo good logic from mojang.
 		if (!player.capabilities.isCreativeMode) {
-			harvestedBlocks.put(new BlockPosition(world, pos.getX(), pos.getY(), pos.getZ()), getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())));
+			harvestedBlocks.put(new BlockPosition(world, pos.getX(), pos.getY(), pos.getZ()), getBlockInstance(world, VectorConverter.instance().toNova(pos)));
 		}
 	}
 
@@ -176,7 +176,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		if (harvestedBlocks.containsKey(position)) {
 			blockInstance = harvestedBlocks.remove(position);
 		} else {
-			blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+			blockInstance = getBlockInstance(world, VectorConverter.instance().toNova(pos));
 		}
 
 		Block.DropEvent event = new Block.DropEvent(blockInstance);
@@ -260,7 +260,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess access, BlockPos pos) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(access, VectorConverter.instance().toNova(pos));
 		if (blockInstance.components.has(Collider.class)) {
 			Cuboid cuboid = blockInstance.components.get(Collider.class).boundingBox.get();
 			setBlockBounds((float) cuboid.min.getX(), (float) cuboid.min.getY(), (float) cuboid.min.getZ(), (float) cuboid.max.getX(), (float) cuboid.max.getY(), (float) cuboid.max.getZ());
@@ -269,7 +269,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(world, VectorConverter.instance().toNova(pos));
 
 		if (blockInstance.components.has(Collider.class)) {
 			Cuboid cuboid = blockInstance.components.get(Collider.class).boundingBox.get();
@@ -281,7 +281,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity entity) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(world, VectorConverter.instance().toNova(pos));
 		blockInstance.components.getOp(Collider.class).ifPresent(
 			collider -> {
 				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(entity != null ? EntityConverter.instance().toNova(entity) : null));
@@ -332,7 +332,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public int getLightValue(IBlockAccess access, BlockPos pos) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(access, VectorConverter.instance().toNova(pos));
 		Optional<LightEmitter> opEmitter = blockInstance.components.getOp(LightEmitter.class);
 
 		if (opEmitter.isPresent()) {
@@ -349,7 +349,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public boolean canConnectRedstone(IBlockAccess access, BlockPos pos, EnumFacing side) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(access, VectorConverter.instance().toNova(pos));
 		WrapperEvent.RedstoneConnect event = new WrapperEvent.RedstoneConnect(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
 		Game.events().publish(event);
 		return event.canConnect;
@@ -357,7 +357,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public int isProvidingWeakPower(IBlockAccess access, BlockPos pos, IBlockState state, EnumFacing side) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(access, VectorConverter.instance().toNova(pos));
 		WrapperEvent.WeakRedstone event = new WrapperEvent.WeakRedstone(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
 		Game.events().publish(event);
 		return event.power;
@@ -365,7 +365,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public int isProvidingStrongPower(IBlockAccess access, BlockPos pos, IBlockState state, EnumFacing side) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(access, VectorConverter.instance().toNova(pos));
 		WrapperEvent.StrongRedstone event = new WrapperEvent.StrongRedstone(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
 		Game.events().publish(event);
 		return event.power;
@@ -384,11 +384,34 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
 		// TODO: Maybe do something withPriority these parameters.
-		return (float) getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).getResistance() * 30;
+
+		// This number was calculated from the blast resistance of Stone,
+		// which requires exactly one cubic meter of TNT to get blown up.
+		//
+		//   1. During construction, the setResistance method is called
+		//     on minecraft:stone with a value of 10.
+		//
+		//   2. The setResistance method multiplies that by 3 and assigns
+		//      the result to the blockResistance instance variable.
+		//
+		//   3. Finally, the getExplosionResistance method divides the
+		//      blockResistance instance variable by 5 and returns the result.
+		//
+		// From this we see that minecraft:stone’s final blast resistance is 6.
+
+		return (float) getBlockInstance(world, VectorConverter.instance().toNova(pos)).getResistance() * 6;
 	}
 
 	@Override
 	public float getBlockHardness(World world, BlockPos pos) {
-		return (float) getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).getHardness() * 2;
+		return (float) getBlockInstance(world, VectorConverter.instance().toNova(pos)).getHardness() * 2;
+	}
+
+	@Override
+	public boolean isReplaceable(World world, BlockPos pos) {
+		return getBlockInstance(world, VectorConverter.instance().toNova(pos))
+			.components.getOp(BlockProperty.Replaceable.class)
+			.filter(BlockProperty.Replaceable::isReplaceable)
+			.isPresent();
 	}
 }

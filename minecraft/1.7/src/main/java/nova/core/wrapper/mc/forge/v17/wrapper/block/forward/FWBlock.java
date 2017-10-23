@@ -494,11 +494,34 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public float getExplosionResistance(Entity expEntity, World world, int x, int y, int z, double explosionX, double p_explosionresistance, double explosionY) {
 		// TODO: Maybe do something withPriority these parameters.
-		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getResistance() * 30;
+
+		// This number was calculated from the blast resistance of Stone,
+		// which requires exactly one cubic meter of TNT to get blown up.
+		//
+		//   1. During construction, the setResistance method is called
+		//     on minecraft:stone with a value of 10.
+		//
+		//   2. The setResistance method multiplies that by 3 and assigns
+		//      the result to the blockResistance instance variable.
+		//
+		//   3. Finally, the getExplosionResistance method divides the
+		//      blockResistance instance variable by 5 and returns the result.
+		//
+		// From this we see that minecraft:stone’s final blast resistance is 6.
+
+		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getResistance() * 6;
 	}
 
 	@Override
 	public float getBlockHardness(World world, int x, int y, int z) {
 		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getHardness() * 2;
+	}
+
+	@Override
+	public boolean isReplaceable(IBlockAccess access, int x, int y, int z) {
+		return getBlockInstance(access, new Vector3D(x, y, z))
+			.components.getOp(BlockProperty.Replaceable.class)
+			.filter(BlockProperty.Replaceable::isReplaceable)
+			.isPresent();
 	}
 }
