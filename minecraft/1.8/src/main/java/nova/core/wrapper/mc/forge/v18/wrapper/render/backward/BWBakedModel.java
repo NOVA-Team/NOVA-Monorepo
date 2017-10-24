@@ -37,8 +37,8 @@ import nova.core.util.Direction;
 import nova.core.util.math.MatrixStack;
 import nova.core.util.math.TransformUtil;
 import nova.core.util.math.Vector3DUtil;
+import nova.core.wrapper.mc.forge.v18.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.assets.AssetConverter;
-import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.math3.linear.LUDecomposition;
@@ -48,7 +48,6 @@ import org.apache.commons.math3.linear.RealMatrix;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -124,7 +123,7 @@ public class BWBakedModel extends MeshModel {
 	public List<BakedQuad> getFaceQuads(Direction direction) {
 		if (direction == Direction.UNKNOWN)
 			return getGeneralQuads();
-		return getFaceQuads((EnumFacing) Game.natives().toNative(direction));
+		return getFaceQuads(DirectionConverter.instance().toNative(direction));
 	}
 
 	@SuppressWarnings("unchecked")

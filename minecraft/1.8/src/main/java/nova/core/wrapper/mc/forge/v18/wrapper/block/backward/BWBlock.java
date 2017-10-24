@@ -50,6 +50,7 @@ import nova.core.wrapper.mc.forge.v18.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.data.DataConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.entity.EntityConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWBakedModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -73,9 +74,11 @@ public class BWBlock extends Block implements Storable {
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
 		components.add(new BWBlockTransform(this, world, pos));
-		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().blocksLight() ? 1 : 0));
-		if (mcBlock.isReplaceable((net.minecraft.world.World) blockAccess(), new BlockPos(x(), y(), z())))
-			components.add(BlockProperty.Replaceable.instance());
+		components.add(new BlockProperty.Opacity()).setOpacity(() -> mcBlock.getMaterial().isOpaque() ? 1 : 0);
+		BlockProperty.Replaceable replaceable = components.add(new BlockProperty.Replaceable());
+		if (block != Blocks.air) {
+			replaceable.setReplaceable(() -> mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), blockPos()));
+		}
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.stepSound.getPlaceSound()));
@@ -137,7 +140,7 @@ public class BWBlock extends Block implements Storable {
 
 	@Override
 	public ItemFactory getItemFactory() {
-		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
+		return ItemConverter.instance().toNova(new ItemStack(Item.getItemFromBlock(mcBlock))).getFactory();
 	}
 
 	public net.minecraft.block.Block block() {
@@ -164,17 +167,12 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	@Override
-	public boolean canReplace() {
-		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), new BlockPos(x(), y(), z()));
-	}
-
-	@Override
 	public boolean shouldDisplacePlacement() {
 		if (mcBlock == Blocks.snow_layer && ((int) blockState().getValue(BlockSnow.LAYERS) < 1)) {
 			return false;
 		}
 
-		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable(Game.natives().toNative(world()), new BlockPos(x(), y(), z()))) {
+		if (mcBlock == Blocks.vine || mcBlock == Blocks.tallgrass || mcBlock == Blocks.deadbush || mcBlock.isReplaceable((net.minecraft.world.World) blockAccess(), blockPos())) {
 			return false;
 		}
 		return super.shouldDisplacePlacement();

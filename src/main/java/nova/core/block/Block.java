@@ -160,7 +160,7 @@ public class Block extends SidedComponentProvider implements Identifiable, Trans
 	 * @return True if this block can be replaced.
 	 */
 	public boolean canReplace() {
-		return false;
+		return components.getOp(BlockProperty.Replaceable.class).filter(BlockProperty.Replaceable::isReplaceable).isPresent();
 	}
 
 	/**

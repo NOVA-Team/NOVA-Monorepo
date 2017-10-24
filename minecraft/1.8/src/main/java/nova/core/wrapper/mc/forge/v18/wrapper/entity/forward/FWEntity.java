@@ -34,6 +34,7 @@ import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v18.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v18.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v18.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
@@ -196,7 +197,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		this.posZ = z;
 		//Reset the bounding box
 		if (getBoundingBox() != null) {
-			setBounds(Game.natives().toNova(getBoundingBox()));
+			setBounds(CuboidConverter.instance().toNova(getBoundingBox()));
 		}
 	}
 
@@ -207,7 +208,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	public void setBounds(Cuboid bounds) {
 		//TODO: Fix moveEntity auto-centering
 		if (transform != null) {
-			setEntityBoundingBox(Game.natives().toNative(bounds.add(transform.position())));
+			setEntityBoundingBox(CuboidConverter.instance().toNative(bounds.add(transform.position())));
 		}
 	}
 

@@ -33,15 +33,19 @@ import nova.core.sound.Sound;
 import nova.core.util.shape.Cuboid;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v17.launcher.NovaMinecraft;
+import nova.core.wrapper.mc.forge.v17.wrapper.block.BlockConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.backward.BWBlock;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v17.wrapper.block.forward.MCBlockTransform;
+import nova.core.wrapper.mc.forge.v17.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.forward.MCEntityTransform;
+import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -93,7 +97,7 @@ public class BWWorld extends World {
 	@Override
 	public boolean setBlock(Vector3D position, BlockFactory blockFactory) {
 		//TODO: Implement object arguments
-		net.minecraft.block.Block mcBlock = Game.natives().toNative(blockFactory.build());
+		net.minecraft.block.Block mcBlock = BlockConverter.instance().toNative(blockFactory);
 		return world().setBlock((int) position.getX(), (int) position.getY(), (int) position.getZ(), mcBlock != null ? mcBlock : Blocks.air);
 	}
 
@@ -116,6 +120,7 @@ public class BWWorld extends World {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Entity addClientEntity(Entity entity) {
 		return NovaMinecraft.proxy.spawnParticle(world(), entity);
 	}
@@ -128,23 +133,24 @@ public class BWWorld extends World {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Set<Entity> getEntities(Cuboid bound) {
-		return (Set) world().getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ()))
+		return ((List<net.minecraft.entity.Entity>) world().getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(bound.min.getX(), bound.min.getY(), bound.min.getZ(), bound.max.getX(), bound.max.getY(), bound.max.getZ())))
 			.stream()
-			.map(mcEnt -> Game.natives().getNative(Entity.class, net.minecraft.entity.Entity.class).toNova((net.minecraft.entity.Entity) mcEnt))
+			.map(EntityConverter.instance()::toNova)
 			.collect(Collectors.toSet());
 	}
 
 	@Override
 	public Entity addEntity(Vector3D position, Item item) {
-		EntityItem entityItem = new EntityItem(world(), position.getX(), position.getY(), position.getZ(), Game.natives().toNative(item));
+		EntityItem entityItem = new EntityItem(world(), position.getX(), position.getY(), position.getZ(), ItemConverter.instance().toNative(item));
 		world().spawnEntityInWorld(entityItem);
 		return new BWEntity(entityItem);
 	}
 
 	@Override
 	public Optional<Entity> getEntity(String uniqueID) {
-		return Optional.ofNullable(Game.natives().toNova(world().getEntityByID(Integer.parseInt(uniqueID))));
+		return Optional.ofNullable(world().getEntityByID(Integer.parseInt(uniqueID))).map(EntityConverter.instance()::toNova);
 	}
 
 	@Override

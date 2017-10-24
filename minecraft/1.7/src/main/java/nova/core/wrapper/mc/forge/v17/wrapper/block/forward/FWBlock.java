@@ -47,7 +47,6 @@ import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.Updater;
 import nova.core.component.misc.Collider;
-import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.Renderer;
 import nova.core.component.renderer.StaticRenderer;
 import nova.core.retention.Storable;
@@ -57,6 +56,10 @@ import nova.core.util.math.MathUtil;
 import nova.core.util.math.MatrixStack;
 import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v17.util.WrapperEvent;
+import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.cuboid.CuboidConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.entity.EntityConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.render.BWModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -149,7 +152,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 				e.printStackTrace();
 			}
 		}
-		return getBlockInstance((nova.core.world.World) Game.natives().toNova(access), position);
+		return getBlockInstance(WorldConverter.instance().toNova(access), position);
 
 	}
 
@@ -193,18 +196,18 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 		Block.DropEvent event = new Block.DropEvent(blockInstance);
 		blockInstance.events.publish(event);
 
-		return new ArrayList<>(
-			event.drops
-				.stream()
-				.map(item -> (ItemStack) Game.natives().toNative(item))
-				.collect(Collectors.toCollection(ArrayList::new))
-		);
+		return event.drops
+			.stream()
+			.map(ItemConverter.instance()::toNative)
+			.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	@Override
 	public boolean hasTileEntity(int metadata) {
 		// A block requires a TileEntity if it stores data or if it ticks.
-		return Storable.class.isAssignableFrom(blockClass) || Stateful.class.isAssignableFrom(blockClass) || Updater.class.isAssignableFrom(blockClass);
+		return Storable.class.isAssignableFrom(blockClass)
+			|| Stateful.class.isAssignableFrom(blockClass)
+			|| Updater.class.isAssignableFrom(blockClass);
 	}
 
 	@Override
@@ -261,7 +264,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
-		Block.RemoveEvent evt = new Block.RemoveEvent(Optional.of(Game.natives().toNova(player)));
+		Block.RemoveEvent evt = new Block.RemoveEvent(Optional.of(EntityConverter.instance().toNova(player)));
 		blockInstance.events.publish(evt);
 		if (evt.result) {
 			return super.removedByPlayer(world, player, x, y, z, willHarvest);
@@ -273,7 +276,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		MovingObjectPosition mop = player.rayTrace(10, 1);
-		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(mop.sideHit), new Vector3D(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
+		Block.LeftClickEvent evt = new Block.LeftClickEvent(EntityConverter.instance().toNova(player), Direction.fromOrdinal(mop.sideHit), new Vector3D(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord));
 		blockInstance.events.publish(evt);
 	}
 
@@ -285,7 +288,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
-		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ));
+		Block.RightClickEvent evt = new Block.RightClickEvent(EntityConverter.instance().toNova(player), Direction.fromOrdinal(side), new Vector3D(hitX, hitY, hitZ));
 		blockInstance.events.publish(evt);
 		return evt.result;
 	}
@@ -293,7 +296,7 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
-		blockInstance.components.getOp(Collider.class).ifPresent(collider -> blockInstance.events.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
+		blockInstance.components.getOp(Collider.class).ifPresent(collider -> blockInstance.events.publish(new Collider.CollideEvent(EntityConverter.instance().toNova(entity))));
 	}
 
 	@Override
@@ -312,24 +315,25 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 
 		if (blockInstance.components.has(Collider.class)) {
 			Cuboid cuboid = blockInstance.components.get(Collider.class).boundingBox.get();
-			return Game.natives().toNative(cuboid.add(new Vector3D(x, y, z)));
+			return CuboidConverter.instance().toNative(cuboid.add(new Vector3D(x, y, z)));
 		}
 		return super.getSelectedBoundingBoxFromPool(world, x, y, z);
 	}
 
 	@Override
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List list, Entity entity) {
 		Block blockInstance = getBlockInstance(world, new Vector3D(x, y, z));
 		blockInstance.components.getOp(Collider.class).ifPresent(
 			collider -> {
-				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(entity != null ? Game.natives().toNova(entity) : null));
+				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(entity != null ? EntityConverter.instance().toNova(entity) : null));
 
 				list.addAll(
 					boxes
 						.stream()
 						.map(c -> c.add(new Vector3D(x, y, z)))
-						.filter(c -> c.intersects((Cuboid) Game.natives().toNova(aabb)))
-						.map(cuboid -> Game.natives().toNative(cuboid))
+						.filter(c -> c.intersects(CuboidConverter.instance().toNova(aabb)))
+						.map(CuboidConverter.instance()::toNative)
 						.collect(Collectors.toList())
 				);
 			}
@@ -490,11 +494,34 @@ public class FWBlock extends net.minecraft.block.Block implements ISimpleBlockRe
 	@Override
 	public float getExplosionResistance(Entity expEntity, World world, int x, int y, int z, double explosionX, double p_explosionresistance, double explosionY) {
 		// TODO: Maybe do something withPriority these parameters.
-		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getResistance() * 30;
+
+		// This number was calculated from the blast resistance of Stone,
+		// which requires exactly one cubic meter of TNT to get blown up.
+		//
+		//   1. During construction, the setResistance method is called
+		//     on minecraft:stone with a value of 10.
+		//
+		//   2. The setResistance method multiplies that by 3 and assigns
+		//      the result to the blockResistance instance variable.
+		//
+		//   3. Finally, the getExplosionResistance method divides the
+		//      blockResistance instance variable by 5 and returns the result.
+		//
+		// From this we see that minecraft:stone’s final blast resistance is 6.
+
+		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getResistance() * 6;
 	}
 
 	@Override
 	public float getBlockHardness(World world, int x, int y, int z) {
 		return (float) getBlockInstance(world, new Vector3D(x, y, z)).getHardness() * 2;
+	}
+
+	@Override
+	public boolean isReplaceable(IBlockAccess access, int x, int y, int z) {
+		return getBlockInstance(access, new Vector3D(x, y, z))
+			.components.getOp(BlockProperty.Replaceable.class)
+			.filter(BlockProperty.Replaceable::isReplaceable)
+			.isPresent();
 	}
 }

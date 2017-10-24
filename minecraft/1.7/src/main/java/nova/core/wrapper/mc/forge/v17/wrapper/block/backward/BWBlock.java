@@ -33,7 +33,6 @@ import nova.core.block.component.BlockProperty;
 import nova.core.block.component.LightEmitter;
 import nova.core.component.misc.Collider;
 import nova.core.component.renderer.StaticRenderer;
-import nova.core.component.transform.BlockTransform;
 import nova.core.item.ItemFactory;
 import nova.core.render.model.CustomModel;
 import nova.core.retention.Data;
@@ -47,6 +46,7 @@ import nova.core.wrapper.mc.forge.v17.wrapper.block.world.WorldConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.data.DataConverter;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.EntityConverter;
+import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -69,9 +69,11 @@ public class BWBlock extends Block implements Storable {
 	public BWBlock(net.minecraft.block.Block block, World world, Vector3D pos) {
 		this.mcBlock = block;
 		components.add(new BWBlockTransform(this, world, pos));
-		components.add(new BlockProperty.Opacity().setOpacity(mcBlock.getMaterial().isOpaque() ? 1 : 0));
-		if (mcBlock.isReplaceable(blockAccess(), xi(), yi(), zi()))
-			components.add(BlockProperty.Replaceable.instance());
+		components.add(new BlockProperty.Opacity()).setOpacity(() -> mcBlock.getMaterial().isOpaque() ? 1 : 0);
+		BlockProperty.Replaceable replaceable = components.add(new BlockProperty.Replaceable());
+		if (block != Blocks.air) {
+			replaceable.setReplaceable(() -> mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), xi(), yi(), zi()));
+		}
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		blockSound.setBlockSound(BlockProperty.BlockSound.BlockSoundTrigger.PLACE, new Sound("", mcBlock.stepSound.func_150496_b()));
@@ -113,7 +115,7 @@ public class BWBlock extends Block implements Storable {
 
 	@Override
 	public ItemFactory getItemFactory() {
-		return Game.natives().toNova(new ItemStack(Item.getItemFromBlock(mcBlock)));
+		return ItemConverter.instance().toNova(new ItemStack(Item.getItemFromBlock(mcBlock))).getFactory();
 	}
 
 	public int xi() {
@@ -145,11 +147,6 @@ public class BWBlock extends Block implements Storable {
 			mcTileEntity = blockAccess().getTileEntity(xi(), yi(), zi());
 		}
 		return  Optional.ofNullable(mcTileEntity);
-	}
-
-	@Override
-	public boolean canReplace() {
-		return mcBlock.canPlaceBlockAt((net.minecraft.world.World) blockAccess(), xi(), yi(), zi());
 	}
 
 	@Override
