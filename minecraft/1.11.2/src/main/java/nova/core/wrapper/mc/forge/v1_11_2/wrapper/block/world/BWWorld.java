@@ -26,7 +26,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import nova.core.block.Block;
 import nova.core.block.BlockFactory;
@@ -47,6 +46,7 @@ import nova.core.wrapper.mc.forge.v1_11_2.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.forward.FWEntity;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.forward.MCEntityTransform;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -137,8 +137,9 @@ public class BWWorld extends World {
 	}
 
 	@Override
-	public Entity addClientEntity(Entity entity) {
-		return NovaMinecraft.proxy.spawnParticle(world(), entity);
+	@SuppressWarnings("unchecked")
+	public <T extends Entity> T addClientEntity(T entity) {
+		return (T) NovaMinecraft.proxy.spawnParticle(world(), entity);
 	}
 
 	@Override
@@ -163,14 +164,14 @@ public class BWWorld extends World {
 
 	@Override
 	public Entity addEntity(Vector3D position, Item item) {
-		EntityItem entityItem = new EntityItem(world(), position.getX(), position.getY(), position.getZ(), Game.natives().toNative(item));
+		EntityItem entityItem = new EntityItem(world(), position.getX(), position.getY(), position.getZ(), ItemConverter.instance().toNative(item));
 		world().spawnEntity(entityItem);
-		return Game.natives().toNova(entityItem);
+		return EntityConverter.instance().toNova(entityItem);
 	}
 
 	@Override
 	public Optional<Entity> getEntity(String uniqueID) {
-		return Optional.ofNullable(Game.natives().toNova(world().getEntityByID(Integer.parseInt(uniqueID))));
+		return Optional.ofNullable(EntityConverter.instance().toNova(world().getEntityByID(Integer.parseInt(uniqueID))));
 	}
 
 	@Override

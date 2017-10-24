@@ -81,7 +81,11 @@ public class BWBlock extends Block implements Storable {
 	public BWBlock(IBlockState blockState, World world, Vector3D pos) {
 		this.blockState = blockState;
 		components.add(new BWBlockTransform(this, world, pos));
-		components.add(new BlockProperty.Opacity().setOpacity(blockState().getMaterial().blocksLight() ? 1 : 0));
+		components.add(new BlockProperty.Opacity()).setOpacity(() -> blockState().getMaterial().isOpaque() ? 1 : 0);
+		BlockProperty.Replaceable replaceable = components.add(new BlockProperty.Replaceable());
+		if (block() != Blocks.AIR) {
+			replaceable.setReplaceable(() -> block().canPlaceBlockAt((net.minecraft.world.World) blockAccess(), blockPos()));
+		}
 
 		BlockProperty.BlockSound blockSound = components.add(new BlockProperty.BlockSound());
 		SoundType soundType;
@@ -135,7 +139,7 @@ public class BWBlock extends Block implements Storable {
 				} else {
 					bb = blockState().getBoundingBox(blockAccess(), blockPos()).offset(blockPos());
 				}
-				Cuboid cuboid = Game.natives().toNova(bb);
+				Cuboid cuboid = CuboidConverter.instance().toNova(bb);
 				return Collections.singleton(cuboid.subtract(position()));
 			});
 		components.add(new StaticRenderer())
@@ -229,11 +233,6 @@ public class BWBlock extends Block implements Storable {
 	}
 
 	@Override
-	public boolean canReplace() {
-		return block().canPlaceBlockAt((net.minecraft.world.World) blockAccess(), blockPos());
-	}
-
-	@Override
 	public boolean shouldDisplacePlacement() {
 		if (block() == Blocks.SNOW_LAYER && (blockState().getValue(BlockSnow.LAYERS) < 1)) {
 			return false;
@@ -254,7 +253,7 @@ public class BWBlock extends Block implements Storable {
 	@Override
 	public void load(Data data) {
 		Storable.super.load(data);
-		tile().ifPresent(tile -> tile.deserializeNBT(Game.natives().toNative(data)));
+		tile().ifPresent(tile -> tile.deserializeNBT(DataConverter.instance().toNative(data)));
 	}
 
 	@Override

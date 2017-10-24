@@ -42,9 +42,10 @@ public interface NovaCapabilityProvider extends ICapabilityProvider {
 	 * for a capability.
 	 * <p>
 	 * Example:
-	 *   A Pipe getting a cover placed on one side causing it loose the {@link nova.core.component.inventory.Inventory} attachment function for that side.
+	 *   A Pipe getting a cover placed on one side causing it lose the
+	 *   {@link nova.core.component.inventory.Inventory} attachment function for that side.
 	 *
-	 * @param capability The capability to check
+	 * @param capability The capability to check.
 	 * @param direction The Side to check from: @link nova.core.util.Direction.UNKNOWN UNKNOWN}
 	 * is defined to represent 'internal' or 'self' or used for cases where side doesn't matter.
 	 * @return True if this object supports the capability for this side.
@@ -61,10 +62,12 @@ public interface NovaCapabilityProvider extends ICapabilityProvider {
 	 * The return value is {@link Optional#empty()} when the object does not support the capability for the direction.
 	 * The return value can be the same for multiple faces.
 	 * <p>
-	 * @param capability The capability to check
+	 * @param capability The capability to check.
 	 * @param direction The Side to check from: @link nova.core.util.Direction.UNKNOWN UNKNOWN}
 	 * is defined to represent 'internal' or 'self' or used for cases where side doesn't matter.
-	 * @return The requested capability. Returns an empty optional when {@link #hasCapability(Capability, EnumFacing)} would return false.
+	 * @param <T> The capability type to check.
+	 * @return The requested capability. Returns an empty optional when
+	 * {@link #hasCapability(Capability, EnumFacing)} would return false.
 	 */
 	@Nonnull
 	<T> Optional<T> getCapability(@Nonnull Capability<T> capability, @Nonnull Direction direction);

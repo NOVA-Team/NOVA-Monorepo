@@ -22,20 +22,20 @@ package nova.core.wrapper.mc.forge.v1_11_2.manager;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.server.FMLServerHandler;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.util.registry.RetentionManager;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import net.minecraftforge.fml.server.FMLServerHandler;
 
 /**
  * A manager that handles external file saving.
@@ -60,13 +60,13 @@ public class MCRetentionManager extends RetentionManager {
 	public void save(String filename, Storable storable) {
 		Data saveMap = new Data();
 		storable.save(saveMap);
-		saveFile(filename, Game.natives().toNative(saveMap));
+		saveFile(filename, DataConverter.instance().toNative(saveMap));
 	}
 
 	@Override
 	public void load(String filename, Storable storable) {
 		NBTTagCompound nbt = loadFile(filename);
-		storable.load(Game.natives().toNova(nbt));
+		storable.load(DataConverter.instance().toNova(nbt));
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class MCRetentionManager extends RetentionManager {
 	 */
 	public boolean saveFile(File file, NBTTagCompound data) {
 		try {
-			File tempFile = new File(file.getParent(), file.getName() + "_tmp.dat");
+			File tempFile = new File(file.getParent(), file.getName().replaceFirst("\\.nbt$", ".tmp.nbt"));
 
 			CompressedStreamTools.writeCompressed(data, new FileOutputStream(tempFile));
 
@@ -95,7 +95,7 @@ public class MCRetentionManager extends RetentionManager {
 	}
 
 	public boolean saveFile(File saveDirectory, String filename, NBTTagCompound data) {
-		return saveFile(new File(saveDirectory, filename + ".dat"), data);
+		return saveFile(new File(saveDirectory, filename + ".nbt"), data);
 	}
 
 	public boolean saveFile(String filename, NBTTagCompound data) {
@@ -123,7 +123,7 @@ public class MCRetentionManager extends RetentionManager {
 	 * @return The NBT data
 	 */
 	public NBTTagCompound loadFile(File saveDirectory, String filename) {
-		return loadFile(new File(saveDirectory, filename + ".dat"));
+		return loadFile(new File(saveDirectory, filename + ".nbt"));
 	}
 
 	public NBTTagCompound loadFile(String filename) {

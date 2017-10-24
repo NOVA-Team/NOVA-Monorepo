@@ -46,6 +46,7 @@ public class NovaGuiFactory implements IModGuiFactory {
 	}
 
 	@Override
+	@Deprecated
 	public Class<? extends GuiScreen> mainConfigGuiClass() {
 		return NovaGuiConfig.class;
 	}
@@ -56,6 +57,7 @@ public class NovaGuiFactory implements IModGuiFactory {
 	}
 
 	@Override
+	@Deprecated
 	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
 		return null;
 	}

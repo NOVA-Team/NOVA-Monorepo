@@ -22,9 +22,11 @@ package nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.forward;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
 import nova.core.component.transform.EntityTransform;
+import nova.core.util.UniqueIdentifiable;
 import nova.core.util.math.RotationUtil;
 import nova.core.util.math.Vector3DUtil;
 import nova.core.world.World;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -35,7 +37,7 @@ import java.util.Arrays;
  * Wraps Transform3d used in entity
  * @author Calclavia
  */
-public class MCEntityTransform extends EntityTransform {
+public class MCEntityTransform extends EntityTransform implements UniqueIdentifiable {
 	public final net.minecraft.entity.Entity wrapper;
 
 	public MCEntityTransform(net.minecraft.entity.Entity wrapper) {
@@ -46,7 +48,7 @@ public class MCEntityTransform extends EntityTransform {
 
 	@Override
 	public World world() {
-		return Game.natives().toNova(wrapper.world);
+		return WorldConverter.instance().toNova(wrapper.world);
 	}
 
 	@Override
@@ -80,5 +82,10 @@ public class MCEntityTransform extends EntityTransform {
 		double[] euler = rotation.getAngles(RotationUtil.DEFAULT_ORDER);
 		wrapper.rotationYaw = (float) Math.toDegrees(euler[0]);
 		wrapper.rotationPitch = (float) Math.toDegrees(euler[1]);
+	}
+
+	@Override
+	public String getUniqueID() {
+		return wrapper.getUniqueID().toString();
 	}
 }

@@ -24,11 +24,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import nova.core.entity.Entity;
 import nova.core.entity.component.Player;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.backward.BWEntity;
-import nova.internal.core.Game;
 
 import java.util.Objects;
 import java.util.Optional;
+import javax.annotation.Nullable;
 
 /**
  * Wrap utility methods.
@@ -38,10 +39,10 @@ public class WrapUtility {
 
 	private WrapUtility() {}
 
-	public static Optional<Player> getNovaPlayer(EntityPlayer player) {
+	public static Optional<Player> getNovaPlayer(@Nullable EntityPlayer player) {
 		if (player == null)
 			return Optional.empty();
-		return ((Entity)Game.natives().toNova(player)).components.getOp(Player.class);
+		return EntityConverter.instance().toNova(player).components.getOp(Player.class);
 	}
 
 	public static String getItemID(Item item, int meta) {

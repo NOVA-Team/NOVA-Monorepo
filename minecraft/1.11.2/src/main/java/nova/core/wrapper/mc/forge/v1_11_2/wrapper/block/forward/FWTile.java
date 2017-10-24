@@ -41,6 +41,7 @@ import nova.core.util.Direction;
 import nova.core.wrapper.mc.forge.v1_11_2.network.netty.MCNetworkManager;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.NovaCapabilityProvider;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
 import java.io.IOException;
@@ -115,7 +116,7 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 			if (block instanceof Storable) {
 			Data data = new Data();
 			((Storable) block).save(data);
-			nbt.setTag("nova", Game.natives().toNative(data));
+			nbt.setTag("nova", DataConverter.instance().toNative(data));
 			}
 		}
 
@@ -127,7 +128,7 @@ public class FWTile extends TileEntity implements NovaCapabilityProvider {
 		super.readFromNBT(nbt);
 
 		blockID = nbt.getString("novaID");
-		cacheData = Game.natives().toNova(nbt.getCompoundTag("nova"));
+		cacheData = DataConverter.instance().toNova(nbt.getCompoundTag("nova"));
 	}
 
 	@Override

@@ -27,7 +27,6 @@ import nova.core.component.transform.BlockTransform;
 import nova.core.world.World;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
-import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Optional;
@@ -68,8 +67,8 @@ public class BWBlockTransform extends BlockTransform {
 	@Override
 	public void setWorld(World world) {
 		BlockPos pos = blockPos();
-		net.minecraft.world.World oldWorld = Game.natives().toNative(this.world);
-		net.minecraft.world.World newWorld = Game.natives().toNative(world);
+		net.minecraft.world.World oldWorld = (net.minecraft.world.World) WorldConverter.instance().toNative(this.world);
+		net.minecraft.world.World newWorld = (net.minecraft.world.World) WorldConverter.instance().toNative(world);
 		Optional<TileEntity> tileEntity = Optional.ofNullable(oldWorld.getTileEntity(pos));
 		Optional<NBTTagCompound> nbt = Optional.empty();
 		if (tileEntity.isPresent()) {
@@ -91,7 +90,7 @@ public class BWBlockTransform extends BlockTransform {
 	public void setPosition(Vector3D position) {
 		BlockPos oldPos = blockPos();
 		BlockPos newPos = VectorConverter.instance().toNative(position);
-		net.minecraft.world.World world = Game.natives().toNative(this.world);
+		net.minecraft.world.World world = (net.minecraft.world.World) WorldConverter.instance().toNative(this.world);
 		Optional<TileEntity> tileEntity = Optional.ofNullable(blockAccess().getTileEntity(oldPos));
 		Optional<NBTTagCompound> nbt = Optional.empty();
 		if (tileEntity.isPresent()) {

@@ -41,14 +41,13 @@ import nova.core.util.shape.Cuboid;
 import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.capability.forward.NovaCapabilityProvider;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.cuboid.CuboidConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.data.DataConverter;
 import nova.internal.core.Game;
 
 import java.util.Optional;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 
 /**
  * Entity wrapper
@@ -74,7 +73,7 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		if (wrapped instanceof Storable) {
-			((Storable) wrapped).load(Game.natives().toNova(nbt));
+			((Storable) wrapped).load(DataConverter.instance().toNova(nbt));
 		}
 		if (wrapped == null) {
 			//This entity was saved to disk.
@@ -208,9 +207,9 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 		this.posY = y;
 		this.posZ = z;
 		//Reset the bounding box
-		if (getCollisionBoundingBox() != null) {
-			setBounds(Game.natives().toNova(getCollisionBoundingBox()));
-		}
+		Optional.ofNullable(getCollisionBoundingBox())
+			.map(CuboidConverter.instance()::toNova)
+			.ifPresent(this::setBounds);
 	}
 
 	/**
@@ -219,9 +218,11 @@ public class FWEntity extends net.minecraft.entity.Entity implements IEntityAddi
 	 */
 	public void setBounds(Cuboid bounds) {
 		//TODO: Fix moveEntity auto-centering
-		if (transform != null) {
-			setEntityBoundingBox(Game.natives().toNative(bounds.add(transform.position())));
-		}
+		Optional.ofNullable(transform)
+			.map(EntityTransform::position)
+			.map(bounds::add)
+			.map(CuboidConverter.instance()::toNative)
+			.ifPresent(this::setEntityBoundingBox);
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public class ProxyMaterial extends Material {
 	 * Construct a new proxy material.
 	 * @param color The map color.
 	 * @param opacity The Opacity to use.
-	 * @param replaceable The Replaceable to use.
+	 * @param replaceable If this block is replaceable.
 	 */
 	public ProxyMaterial(MapColor color, Optional<BlockProperty.Opacity> opacity, Optional<BlockProperty.Replaceable> replaceable) {
 		super(color);
@@ -27,16 +27,16 @@ public class ProxyMaterial extends Material {
 
 	@Override
 	public boolean blocksLight() {
-		return opacity.isPresent() ? opacity.get().opacity == 1 : super.blocksLight();
+		return opacity.map(BlockProperty.Opacity::isOpaque).orElseGet(super::blocksLight);
 	}
 
 	@Override
 	public boolean isOpaque() {
-		return opacity.isPresent() ? opacity.get().opacity == 1 : super.isOpaque();
+		return opacity.map(BlockProperty.Opacity::isOpaque).orElseGet(super::isOpaque);
 	}
 
 	@Override
 	public boolean isReplaceable() {
-		return replaceable.isPresent() || super.isReplaceable();
+		return replaceable.map(BlockProperty.Replaceable::isReplaceable).orElseGet(super::isReplaceable);
 	}
 }

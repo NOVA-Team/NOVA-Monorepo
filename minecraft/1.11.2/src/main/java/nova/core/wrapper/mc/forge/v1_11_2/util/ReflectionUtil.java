@@ -34,7 +34,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -140,7 +139,7 @@ public class ReflectionUtil {
 	@SuppressWarnings("deprecation")
 	public static Map<String, String> getTranslations() {
 		return getPrivateObject(
-			getPrivateStaticObject(I18n.class, "localizedName", "field_74839_a"),
+			getPrivateStaticObject(net.minecraft.util.text.translation.I18n.class, "localizedName", "field_74839_a"),
 			"languageList",
 			"field_74816_c");
 	}

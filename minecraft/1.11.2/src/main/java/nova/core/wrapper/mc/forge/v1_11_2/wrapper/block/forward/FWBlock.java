@@ -54,6 +54,8 @@ import nova.core.wrapper.mc.forge.v1_11_2.util.WrapperEvent;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.DirectionConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.cuboid.CuboidConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -116,13 +118,17 @@ public class FWBlock extends net.minecraft.block.Block {
 		this.fullBlock = getDefaultState().isOpaqueCube();
 		this.lightOpacity = dummy.components
 			.getOp(BlockProperty.Opacity.class)
-			.map(o -> MathUtil.clamp((int) Math.round(o.opacity * 255), 0, 255))
+			.map(o -> MathUtil.clamp((int) Math.round(o.getOpacity() * 255), 0, 255))
 			.orElse(this.fullBlock ? 255 : 0);
 		this.translucent = !this.fullBlock;
 	}
 
 	public BlockFactory getFactory() {
 		return this.factory;
+	}
+
+	public Block getBlockInstance(IBlockAccess access, BlockPos position) {
+		return getBlockInstance(access, VectorConverter.instance().toNova(position));
 	}
 
 	public Block getBlockInstance(IBlockAccess access, Vector3D position) {
@@ -166,7 +172,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		// hack is needed because the player sets the block to air *before*
 		// getting the drops. woo good logic from mojang.
 		if (!player.capabilities.isCreativeMode) {
-			harvestedBlocks.put(new BlockPosition(world, pos.getX(), pos.getY(), pos.getZ()), getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())));
+			harvestedBlocks.put(new BlockPosition(world, pos.getX(), pos.getY(), pos.getZ()), getBlockInstance(world, pos));
 		}
 	}
 
@@ -180,7 +186,7 @@ public class FWBlock extends net.minecraft.block.Block {
 		if (harvestedBlocks.containsKey(position)) {
 			blockInstance = harvestedBlocks.remove(position);
 		} else {
-			blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+			blockInstance = getBlockInstance(world, pos);
 		}
 
 		Block.DropEvent event = new Block.DropEvent(blockInstance);
@@ -228,15 +234,15 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(world, pos);
 		Block.NeighborChangeEvent evt = new Block.NeighborChangeEvent(Optional.of(VectorConverter.instance().toNova(neighbor)));
 		blockInstance.events.publish(evt);
 	}
 
 	@Override
 	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		Block.RemoveEvent evt = new Block.RemoveEvent(Optional.of(Game.natives().toNova(player)));
+		Block blockInstance = getBlockInstance(world, pos);
+		Block.RemoveEvent evt = new Block.RemoveEvent(Optional.of(EntityConverter.instance().toNova(player)));
 		blockInstance.events.publish(evt);
 		if (evt.result) {
 			return super.removedByPlayer(state, world, pos, player, willHarvest);
@@ -246,9 +252,9 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(world, pos);
 		Optional<RayTraceResult> mop = Optional.ofNullable(player.rayTrace(10, 1));
-		Block.LeftClickEvent evt = new Block.LeftClickEvent(Game.natives().toNova(player),
+		Block.LeftClickEvent evt = new Block.LeftClickEvent(EntityConverter.instance().toNova(player),
 			DirectionConverter.instance().toNova(mop.map(m -> m.sideHit).orElse(null)),
 			mop.map(m -> m.hitVec).map(VectorConverter.instance()::toNova).orElseGet(() -> VectorConverter.instance().toNova(pos)));
 		blockInstance.events.publish(evt);
@@ -256,22 +262,22 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		Block.RightClickEvent evt = new Block.RightClickEvent(Game.natives().toNova(player), DirectionConverter.instance().toNova(side), new Vector3D(hitX, hitY, hitZ));
+		Block blockInstance = getBlockInstance(world, pos);
+		Block.RightClickEvent evt = new Block.RightClickEvent(EntityConverter.instance().toNova(player), DirectionConverter.instance().toNova(side), new Vector3D(hitX, hitY, hitZ));
 		blockInstance.events.publish(evt);
 		return evt.result;
 	}
 
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
-		blockInstance.components.getOp(Collider.class).ifPresent(collider -> blockInstance.events.publish(new Collider.CollideEvent(Game.natives().toNova(entity))));
+		Block blockInstance = getBlockInstance(world, pos);
+		blockInstance.components.getOp(Collider.class).ifPresent(collider -> blockInstance.events.publish(new Collider.CollideEvent(EntityConverter.instance().toNova(entity))));
 	}
 
 	@Override
 	@Deprecated
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess access, BlockPos pos) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(access, pos);
 		if (blockInstance.components.has(Collider.class)) {
 			Cuboid cuboid = blockInstance.components.get(Collider.class).boundingBox.get();
 			return new AxisAlignedBB(cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ());
@@ -282,14 +288,14 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	@Deprecated
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(world, pos);
 
 		if (blockInstance.components.has(Collider.class)) {
 			Collider collider = blockInstance.components.get(Collider.class);
 			Set<Cuboid> cuboids = collider.selectionBoxes.apply(Optional.empty());
 			Cuboid cuboid = cuboids.stream().reduce(collider.boundingBox.get(),
 				(c1, c2) -> new Cuboid(Vector3DUtil.min(c1.min, c2.min), Vector3DUtil.max(c1.max, c2.max)));
-			return Game.natives().toNative(cuboid.add(new Vector3D(pos.getX(), pos.getY(), pos.getZ())));
+			return CuboidConverter.instance().toNative(cuboid.add(VectorConverter.instance().toNova(pos)));
 		}
 		return super.getSelectedBoundingBox(state, world, pos);
 	}
@@ -297,17 +303,17 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	@Deprecated
 	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB boundingBox, List<AxisAlignedBB> list, Entity entity, boolean b) {
-		Block blockInstance = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(world, pos);
 		blockInstance.components.getOp(Collider.class).ifPresent(
 			collider -> {
-				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(entity != null ? Game.natives().toNova(entity) : null));
+				Set<Cuboid> boxes = collider.occlusionBoxes.apply(Optional.ofNullable(entity != null ? EntityConverter.instance().toNova(entity) : null));
 
 				list.addAll(
 					boxes
 						.stream()
-						.map(c -> c.add(new Vector3D(pos.getX(), pos.getY(), pos.getZ())))
-						.filter(c -> c.intersects((Cuboid) Game.natives().toNova(boundingBox)))
-						.map(cuboid -> (AxisAlignedBB) Game.natives().toNative(cuboid))
+						.map(c -> c.add(VectorConverter.instance().toNova(pos)))
+						.filter(c -> c.intersects(CuboidConverter.instance().toNova(boundingBox)))
+						.map(CuboidConverter.instance()::toNative)
 						.collect(Collectors.toList())
 				);
 			}
@@ -333,7 +339,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
-		Optional<Collider> blockCollider = getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).components.getOp(Collider.class);
+		Optional<Collider> blockCollider = getBlockInstance(world, pos).components.getOp(Collider.class);
 
 		if (blockCollider.isPresent()) {
 			return blockCollider.get().isCube.get();
@@ -356,7 +362,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public int getLightValue(IBlockState state, IBlockAccess access, BlockPos pos) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(access, pos);
 		Optional<LightEmitter> opEmitter = blockInstance.components.getOp(LightEmitter.class);
 
 		if (opEmitter.isPresent()) {
@@ -373,7 +379,7 @@ public class FWBlock extends net.minecraft.block.Block {
 
 	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(access, pos);
 		WrapperEvent.RedstoneConnect event = new WrapperEvent.RedstoneConnect(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
 		Game.events().publish(event);
 		return event.canConnect;
@@ -382,7 +388,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	@Deprecated
 	public int getWeakPower(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(access, pos);
 		WrapperEvent.WeakRedstone event = new WrapperEvent.WeakRedstone(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
 		Game.events().publish(event);
 		return event.power;
@@ -391,7 +397,7 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	@Deprecated
 	public int getStrongPower(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
-		Block blockInstance = getBlockInstance(access, new Vector3D(pos.getX(), pos.getY(), pos.getZ()));
+		Block blockInstance = getBlockInstance(access, pos);
 		WrapperEvent.StrongRedstone event = new WrapperEvent.StrongRedstone(blockInstance.world(), blockInstance.position(), Direction.fromOrdinal(side.ordinal()));
 		Game.events().publish(event);
 		return event.power;
@@ -410,12 +416,43 @@ public class FWBlock extends net.minecraft.block.Block {
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
 		// TODO: Maybe do something withPriority these parameters.
-		return (float) getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).getResistance() * 30;
+
+		// This number was calculated from the blast resistance of Stone,
+		// which requires exactly one cubic meter of TNT to get blown up.
+		//
+		//   1. During construction, the setResistance method is called
+		//     on minecraft:stone with a value of 10.
+		//
+		//   2. The setResistance method multiplies that by 3 and assigns
+		//      the result to the blockResistance instance variable.
+		//
+		//   3. Finally, the getExplosionResistance method divides the
+		//      blockResistance instance variable by 5 and returns the result.
+		//
+		// From this we see that minecraft:stone’s final blast resistance is 6.
+
+		return (float) getBlockInstance(world, pos).getResistance() * 6;
 	}
 
 	@Override
 	@Deprecated
 	public float getBlockHardness(IBlockState state, World world, BlockPos pos) {
-		return (float) getBlockInstance(world, new Vector3D(pos.getX(), pos.getY(), pos.getZ())).getHardness() * 2;
+		return (float) getBlockInstance(world, pos).getHardness() * 2;
+	}
+
+	@Override
+	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return getBlockInstance(world, pos)
+			.components.getOp(BlockProperty.Opacity.class)
+			.map(o -> MathUtil.clamp((int) Math.round(o.getOpacity() * 255), 0, 255))
+			.orElse(this.fullBlock ? 255 : 0);
+	}
+
+	@Override
+	public boolean isReplaceable(IBlockAccess world, BlockPos pos) {
+		return getBlockInstance(world, pos)
+			.components.getOp(BlockProperty.Replaceable.class)
+			.filter(BlockProperty.Replaceable::isReplaceable)
+			.isPresent();
 	}
 }

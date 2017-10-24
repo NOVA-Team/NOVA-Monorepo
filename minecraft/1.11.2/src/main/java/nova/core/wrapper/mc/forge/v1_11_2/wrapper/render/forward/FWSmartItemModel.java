@@ -25,7 +25,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -52,14 +51,14 @@ public class FWSmartItemModel extends FWSmartModel implements IBakedModel {
 		this.item = item;
 		// Change the default transforms to the default Item transforms
 		this.itemCameraTransforms = new ItemCameraTransforms(
-			new ItemTransformVec3f(new Vector3f(0, -90, -130), new Vector3f(0, 1f / 24f, -2.75f / 16f), new Vector3f(0.9f, 0.9f, 0.9f)), // Third Person (Left)
-			new ItemTransformVec3f(new Vector3f(0, -90, -130), new Vector3f(0, 1f / 24f, -2.75f / 16f), new Vector3f(0.9f, 0.9f, 0.9f)), // Third Person (Right)
-			new ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 0.25f, 0.125f), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person (Left)
-			new ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 0.25f, 0.125f), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person (Rigth)
-			ItemTransformVec3f.DEFAULT, // Head
-			ItemTransformVec3f.DEFAULT, // new ItemTransformVec3f(new Vector3f(-30, 135, 0), new Vector3f(), new Vector3f(1.6F, 1.6F, 1.6F)), // GUI
-			ItemTransformVec3f.DEFAULT, // Ground
-			ItemTransformVec3f.DEFAULT);// Fixed
+			new net.minecraft.client.renderer.block.model.ItemTransformVec3f(new Vector3f(0, -90, -130), new Vector3f(0, 1f / 24f, -2.75f / 16f), new Vector3f(0.9f, 0.9f, 0.9f)), // Third Person (Left)
+			new net.minecraft.client.renderer.block.model.ItemTransformVec3f(new Vector3f(0, -90, -130), new Vector3f(0, 1f / 24f, -2.75f / 16f), new Vector3f(0.9f, 0.9f, 0.9f)), // Third Person (Right)
+			new net.minecraft.client.renderer.block.model.ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 0.25f, 0.125f), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person (Left)
+			new net.minecraft.client.renderer.block.model.ItemTransformVec3f(new Vector3f(0, -135, 25), new Vector3f(0, 0.25f, 0.125f), new Vector3f(1.7f, 1.7f, 1.7f)), // First Person (Rigth)
+			net.minecraft.client.renderer.block.model.ItemTransformVec3f.DEFAULT, // Head
+			net.minecraft.client.renderer.block.model.ItemTransformVec3f.DEFAULT, // new ItemTransformVec3f(new Vector3f(-30, 135, 0), new Vector3f(), new Vector3f(1.6F, 1.6F, 1.6F)), // GUI
+			net.minecraft.client.renderer.block.model.ItemTransformVec3f.DEFAULT, // Ground
+			net.minecraft.client.renderer.block.model.ItemTransformVec3f.DEFAULT);// Fixed
 	}
 
 	//Item rendering

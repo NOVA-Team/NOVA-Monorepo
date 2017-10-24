@@ -29,9 +29,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import nova.core.item.Item;
 import nova.core.item.ItemDictionary;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.VectorConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.entity.EntityConverter;
 import nova.core.wrapper.mc.forge.v1_11_2.wrapper.item.ItemConverter;
 import nova.internal.core.Game;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * @author Stan, Calclavia
@@ -40,12 +42,12 @@ public class ForgeEventHandler {
 
 	@SubscribeEvent
 	public void worldUnload(WorldEvent.Load evt) {
-		Game.events().publish(new nova.core.event.WorldEvent.Load(Game.natives().toNova(evt.getWorld())));
+		Game.events().publish(new nova.core.event.WorldEvent.Load(WorldConverter.instance().toNova(evt.getWorld())));
 	}
 
 	@SubscribeEvent
 	public void worldLoad(WorldEvent.Unload evt) {
-		Game.events().publish(new nova.core.event.WorldEvent.Unload(Game.natives().toNova(evt.getWorld())));
+		Game.events().publish(new nova.core.event.WorldEvent.Unload(WorldConverter.instance().toNova(evt.getWorld())));
 	}
 
 	@SubscribeEvent
@@ -60,11 +62,11 @@ public class ForgeEventHandler {
 
 	@SubscribeEvent
 	public void playerInteractEvent(PlayerInteractEvent event) {
-		if (event.getWorld() != null && event.getPos() != null) {
+		if (event.getWorld() != null) {
 			nova.core.event.PlayerEvent.Interact evt = new nova.core.event.PlayerEvent.Interact(
-				Game.natives().toNova(event.getWorld()),
-				new Vector3D(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ()),
-				Game.natives().toNova(event.getEntityPlayer()),
+				WorldConverter.instance().toNova(event.getWorld()),
+				VectorConverter.instance().toNova(event.getPos()),
+				EntityConverter.instance().toNova(event.getEntityPlayer()),
 				nova.core.event.PlayerEvent.Interact.Action.values()[toNovaInteractOrdinal(event)]
 			);
 

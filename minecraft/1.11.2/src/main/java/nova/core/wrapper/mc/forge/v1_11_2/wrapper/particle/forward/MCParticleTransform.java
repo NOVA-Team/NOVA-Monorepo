@@ -10,6 +10,7 @@ import nova.core.component.transform.EntityTransform;
 import nova.core.util.math.RotationUtil;
 import nova.core.util.math.Vector3DUtil;
 import nova.core.world.World;
+import nova.core.wrapper.mc.forge.v1_11_2.wrapper.block.world.WorldConverter;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -28,7 +29,7 @@ public class MCParticleTransform extends EntityTransform {
 
 	@Override
 	public World world() {
-		return Game.natives().toNova(wrapper.world);
+		return WorldConverter.instance().toNova(wrapper.world);
 	}
 
 	@Override

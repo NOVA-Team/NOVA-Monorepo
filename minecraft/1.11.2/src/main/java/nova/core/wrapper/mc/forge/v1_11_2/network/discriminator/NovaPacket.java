@@ -23,11 +23,10 @@ package nova.core.wrapper.mc.forge.v1_11_2.network.discriminator;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
-import nova.core.entity.Entity;
-import nova.core.entity.component.Player;
 import nova.core.network.handler.PacketHandler;
 import nova.core.wrapper.mc.forge.v1_11_2.network.MCPacket;
 import nova.core.wrapper.mc.forge.v1_11_2.network.netty.MCNetworkManager;
+import nova.core.wrapper.mc.forge.v1_11_2.util.WrapUtility;
 import nova.internal.core.Game;
 
 /**
@@ -65,7 +64,7 @@ public class NovaPacket extends PacketAbstract {
 			MCNetworkManager network = (MCNetworkManager) Game.network();
 			PacketHandler<?> packetHandler = network.getPacketType(data.readInt());
 			int subId = data.readInt();
-			MCPacket packet = new MCPacket(data.slice(), ((Entity) Game.natives().toNova(player)).components.get(Player.class));
+			MCPacket packet = new MCPacket(data.slice(), WrapUtility.getNovaPlayer(player).get());
 			//Set the ID of the packet
 			packet.setID(subId);
 			packetHandler.read(packet);
