@@ -24,7 +24,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -54,6 +53,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -137,7 +137,8 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public boolean isPaused() {
-		if (FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic()) {
+		if (FMLClientHandler.instance().getClient().isSingleplayer() &&
+			Optional.ofNullable(FMLClientHandler.instance().getClient().getIntegratedServer()).map(is -> !is.getPublic()).orElse(true)) {
 			GuiScreen screen = FMLClientHandler.instance().getClient().currentScreen;
 			if (screen != null) {
 				if (screen.doesGuiPauseGame()) {
