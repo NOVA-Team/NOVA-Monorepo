@@ -25,7 +25,6 @@ import net.minecraft.item.ItemStack;
 import nova.core.component.inventory.Inventory;
 import nova.core.item.Item;
 import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
-import nova.internal.core.Game;
 
 import java.util.Optional;
 
@@ -37,14 +36,15 @@ public class BWInventory implements Inventory {
 	}
 
 	@Override
-	public Optional<Item> get(int i) {
-		return Optional.ofNullable(wrapped.getStackInSlot(i)).map(ItemConverter.instance()::toNova);
+	public Optional<Item> get(int slot) {
+		return Optional.ofNullable(wrapped.getStackInSlot(slot)).map(ItemConverter.instance()::toNova);
 	}
 
 	@Override
-	public boolean set(int i, Item item) {
-		wrapped.setInventorySlotContents(i, ItemConverter.instance().toNative(item));
-		return true;
+	public boolean set(int slot, Optional<Item> item) {
+		Optional<Item> orig = get(slot);
+		wrapped.setInventorySlotContents(slot, item.map(ItemConverter.instance()::toNative).orElse(null));
+		return !orig.equals(get(slot));
 	}
 
 	@Override
@@ -52,6 +52,22 @@ public class BWInventory implements Inventory {
 		Optional<Item> item = get(slot);
 		wrapped.setInventorySlotContents(slot, null);
 		return item;
+	}
+
+	@Override
+	public Optional<Item> remove(int slot, int amount) {
+		Optional<ItemStack> itemStack = Optional.ofNullable(wrapped.getStackInSlot(slot));
+		Optional<Item> o = itemStack.map(ItemConverter.instance()::toNova);
+		if (o.isPresent()) {
+			Item item = o.get();
+			item.setCount(item.count() - amount);
+			if (item.count() <= 0) {
+				return remove(slot);
+			}
+			ItemConverter.instance().updateMCItemStack(itemStack.get(), item);
+			return Optional.of(item.withAmount(amount));
+		}
+		return Optional.empty();
 	}
 
 	@Override

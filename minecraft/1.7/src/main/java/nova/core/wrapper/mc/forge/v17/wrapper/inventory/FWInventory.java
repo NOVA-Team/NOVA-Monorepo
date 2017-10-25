@@ -24,7 +24,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import nova.core.component.inventory.Inventory;
+import nova.core.component.inventory.InventorySimple;
 import nova.core.wrapper.mc.forge.v17.wrapper.item.ItemConverter;
+
+import java.util.Optional;
 
 public class FWInventory implements IInventory {
 
@@ -41,7 +44,8 @@ public class FWInventory implements IInventory {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return ItemConverter.instance().toNative(wrapped.get(slot).orElse(null));
+		if (slot < 0 || slot >= wrapped.size()) return null;
+		return wrapped.get(slot).map(ItemConverter.instance()::toNative).orElse(null);
 	}
 
 	@Override
@@ -64,8 +68,9 @@ public class FWInventory implements IInventory {
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		wrapped.set(slot, stack != null ? ItemConverter.instance().getNovaItem(stack) : null);
+	public void setInventorySlotContents(int slot, ItemStack item) {
+		if (slot < 0 || slot >= wrapped.size()) return;
+		wrapped.set(slot, Optional.ofNullable(item).map(ItemConverter.instance()::toNova));
 	}
 
 	@Override
@@ -91,23 +96,20 @@ public class FWInventory implements IInventory {
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	public void openInventory() {
-
-	}
+	public void openInventory() {}
 
 	@Override
-	public void closeInventory() {
-
-	}
+	public void closeInventory() {}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		// TODO Auto-generated method stub
+	public boolean isItemValidForSlot(int slot, ItemStack item) {
+		if (item != null && wrapped instanceof InventorySimple) {
+			((InventorySimple) wrapped).isItemValidForSlot.apply(slot, ItemConverter.instance().toNova(item));
+		}
 		return true;
 	}
 

@@ -31,6 +31,7 @@ import nova.core.render.Color;
 import nova.core.retention.Storable;
 import nova.core.util.Direction;
 import nova.core.util.Identifiable;
+import nova.core.util.math.MathUtil;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.List;
@@ -45,8 +46,8 @@ public class Item extends ComponentProvider<ComponentMap> implements Identifiabl
 	private int count = 1;
 
 	/**
-	 * Called to get the ItemFactory that refers to this Block class.
-	 * @return The {@link nova.core.item.ItemFactory} that refers to this Block class.
+	 * Called to get the ItemFactory that refers to this Item class.
+	 * @return The {@link ItemFactory} that refers to this Item class.
 	 */
 	public final ItemFactory getFactory() {
 		return (ItemFactory) components.get(FactoryProvider.class).factory;
@@ -81,9 +82,10 @@ public class Item extends ComponentProvider<ComponentMap> implements Identifiabl
 	/**
 	 * Sets new size of this ItemStack
 	 * @param size New size
+	 * @return this instance
 	 */
 	public Item setCount(int size) {
-		count = Math.max(Math.min(getMaxCount(), size), 0);
+		count = MathUtil.clamp(size, 0, getMaxCount());
 		return this;
 	}
 
