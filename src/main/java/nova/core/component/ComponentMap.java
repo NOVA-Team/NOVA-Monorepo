@@ -20,7 +20,6 @@
 package nova.core.component;
 
 import nova.core.component.ComponentProvider.ComponentAdded;
-import nova.core.component.ComponentProvider.ComponentRemoved;
 import nova.core.component.exception.ComponentException;
 import nova.internal.core.Game;
 import se.jbee.inject.Dependency;
