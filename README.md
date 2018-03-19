@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/travis/NOVA-Team/NOVA-Core.svg?style=flat-square)](https://travis-ci.org/NOVA-Team/NOVA-Core)
+[![Build Status](https://img.shields.io/travis/NOVA-Team/NOVA-Core/master.svg?style=flat-square)](https://travis-ci.org/NOVA-Team/NOVA-Core)
 [![Coverage](https://img.shields.io/codecov/c/github/NOVA-Team/NOVA-Core.svg?style=flat-square)](https://codecov.io/github/NOVA-Team/NOVA-Core)
 [![Tests](https://img.shields.io/jenkins/t/http/ci.novaapi.net/NOVA-Core.svg?style=flat-square)](http://ci.novaapi.net/job/NOVA-Core/lastCompletedBuild/testReport/)
 [![waffle.io](https://img.shields.io/badge/tracker-waffle.io-blue.svg?style=flat-square)](https://waffle.io/NOVA-Team/NOVA-Core)
