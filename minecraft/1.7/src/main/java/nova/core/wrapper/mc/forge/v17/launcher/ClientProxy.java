@@ -81,7 +81,7 @@ public class ClientProxy extends CommonProxy {
 		languages.stream()
 			.map(lang -> lang.getLanguageCode().replace('_', '-'))
 			.forEach(langName -> {
-				ResourceLocation location = new ResourceLocation(NovaMinecraft.id, langName + ".lang");
+				ResourceLocation location = new ResourceLocation("nova", "lang/" + langName + ".lang");
 				try {
 					Minecraft.getMinecraft().getResourceManager().getAllResources(location).forEach(resource ->
 						loadLanguage(languageManager, langName, ((IResource)resource).getInputStream()));

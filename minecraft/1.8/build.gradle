@@ -131,6 +131,11 @@ processResources {
 	}
 
 	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info', 'fmlbranding.properties'
+		exclude 'mcmod.info', 'fmlbranding.properties', 'assets/*/lang/*'
+	}
+
+	// TODO: Merge Core and Wrapper language files.
+	from(rootProject.sourceSets.main.resources.srcDirs) {
+		include 'assets/*/lang/*'
 	}
 }
