@@ -43,7 +43,7 @@ import nova.core.entity.Entity;
 import nova.core.entity.EntityFactory;
 import nova.core.language.LanguageManager;
 import nova.core.wrapper.mc.forge.v18.NovaMinecraftPreloader;
-import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWTile;
 import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWTileRenderer;

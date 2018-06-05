@@ -18,7 +18,7 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.wrapper.render;
+package nova.core.wrapper.mc.forge.v18.wrapper.render.backward;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -29,7 +29,7 @@ import nova.core.render.model.CustomModel;
 import nova.core.render.model.MeshModel;
 import nova.core.render.texture.EntityTexture;
 import nova.core.render.texture.Texture;
-import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v18.wrapper.assets.AssetConverter;
 
 import java.util.Optional;
@@ -42,17 +42,19 @@ public class BWModel extends MeshModel {
 
 	/**
 	 * Completes this rendering for a block.
+	 *
+	 * @param access The world instance.
 	 */
-	public void render(IBlockAccess blockAccess) {
-		render(Optional.of(blockAccess), Optional.empty());
+	public void render(IBlockAccess access) {
+		render(Optional.of(access), Optional.empty());
 	}
 
 	public void render() {
 		render(Optional.empty(), Optional.empty());
 	}
 
-	public void render(Optional<RenderManager> entityRenderManager) {
-		render(Optional.empty(), entityRenderManager);
+	public void render(RenderManager entityRenderManager) {
+		render(Optional.empty(), Optional.of(entityRenderManager));
 	}
 
 	public void render(Optional<IBlockAccess> access, Optional<RenderManager> entityRenderManager) {

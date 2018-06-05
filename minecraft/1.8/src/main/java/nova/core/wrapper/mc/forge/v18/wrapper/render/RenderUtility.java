@@ -18,23 +18,36 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v17.render;
+package nova.core.wrapper.mc.forge.v18.wrapper.render;
 
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResource;
-import net.minecraft.util.IIcon;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelFormatException;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import nova.core.component.renderer.StaticRenderer;
+import nova.core.item.ItemFactory;
 import nova.core.render.texture.Texture;
-import nova.core.wrapper.mc.forge.v17.launcher.ForgeLoadable;
-import nova.core.wrapper.mc.forge.v17.wrapper.assets.AssetConverter;
+import nova.core.wrapper.mc.forge.v18.launcher.ForgeLoadable;
+import nova.core.wrapper.mc.forge.v18.wrapper.assets.AssetConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.block.BlockConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.block.forward.FWBlock;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.FWItem;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemConverter;
+import nova.core.wrapper.mc.forge.v18.wrapper.item.ItemWrapperMethods;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.forward.FWEmptyModel;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.forward.FWSmartBlockModel;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.forward.FWSmartItemModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.lwjgl.opengl.GL11;
@@ -64,7 +77,8 @@ public class RenderUtility implements ForgeLoadable {
 	public static final ResourceLocation particleResource = new ResourceLocation("textures/particle/particles.png");
 
 	public static final RenderUtility instance = new RenderUtility();
-	private final HashMap<Texture, IIcon> iconMap = new HashMap<>();
+	//NOVA Texture to MC TextureAtlasSprite
+	private final HashMap<Texture, TextureAtlasSprite> textureMap = new HashMap<>();
 
 	/**
 	 * Enables blending.
@@ -109,9 +123,15 @@ public class RenderUtility implements ForgeLoadable {
 		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
 	}
 
-	public IIcon getIcon(Texture texture) {
-		if (iconMap.containsKey(texture)) {
-			return iconMap.get(texture);
+	public TextureAtlasSprite getTexture(Texture texture) {
+		if ("nova".equals(texture.domain)) {
+			switch (texture.name) {
+				case "null": return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+			}
+		}
+
+		if (textureMap.containsKey(texture)) {
+			return textureMap.get(texture);
 		}
 
 		//Fallback to MC texture
@@ -124,17 +144,16 @@ public class RenderUtility implements ForgeLoadable {
 	 */
 	@SubscribeEvent
 	public void preTextureHook(TextureStitchEvent.Pre event) {
-		if (event.map.getTextureType() == 0) {
+		if (event.map == Minecraft.getMinecraft().getTextureMapBlocks()) {
 			Game.render().blockTextures.forEach(t -> registerIcon(t, event));
+			Game.render().itemTextures.forEach(t -> registerIcon(t, event));
 			//TODO: This is HACKS. We should create custom sprite sheets for entities.
 			Game.render().entityTextures.forEach(t -> registerIcon(t, event));
-		} else if (event.map.getTextureType() == 1) {
-			Game.render().itemTextures.forEach(t -> registerIcon(t, event));
 		}
 	}
 
 	public void registerIcon(Texture texture, TextureStitchEvent.Pre event) {
-		iconMap.put(texture, event.map.registerIcon(AssetConverter.instance().toNativeTexture(texture).toString()));
+		textureMap.put(texture, event.map.registerSprite(AssetConverter.instance().toNativeTexture(texture)));
 	}
 
 	/**
@@ -160,12 +179,48 @@ public class RenderUtility implements ForgeLoadable {
 		try {
 			Field dimension = Texture.class.getDeclaredField("dimension");
 			dimension.setAccessible(true);
-			IIcon icon = getIcon(texture);
+			TextureAtlasSprite icon = getTexture(texture);
 			dimension.set(texture, new Vector2D(icon.getIconWidth(), icon.getIconHeight()));
 			dimension.setAccessible(false);
 		} catch (Exception ex) {
 			throw new RuntimeException("Cannot set dimension of texture " + texture, ex);
 		}
+	}
+
+	@SubscribeEvent
+	public void onModelBakeEvent(ModelBakeEvent event) {
+		//Register all blocks
+		Game.blocks().registry.forEach(blockFactory -> {
+			net.minecraft.block.Block blockObj = BlockConverter.instance().toNative(blockFactory);
+			if (blockObj instanceof FWBlock) {
+				FWBlock block = (FWBlock) blockObj;
+				ResourceLocation blockRL = (ResourceLocation) net.minecraft.block.Block.blockRegistry.getNameForObject(block);
+				Item itemFromBlock = Item.getItemFromBlock(block);
+				ResourceLocation itemRL = (ResourceLocation) Item.itemRegistry.getNameForObject(itemFromBlock);
+				ModelResourceLocation blockLocation = new ModelResourceLocation(blockRL, "normal");
+				ModelResourceLocation itemLocation = new ModelResourceLocation(itemRL, "inventory");
+				ItemFactory itemFactory = ((ItemWrapperMethods)itemFromBlock).getItemFactory();
+				nova.core.item.Item dummy = itemFactory.build();
+				if (block.dummy.components.has(StaticRenderer.class)) {
+					event.modelRegistry.putObject(blockLocation, new FWSmartBlockModel(block.dummy));
+				} else {
+					event.modelRegistry.putObject(blockLocation, new FWEmptyModel());
+				}
+				event.modelRegistry.putObject(itemLocation, new FWSmartBlockModel(block.dummy, dummy));
+			}
+		});
+
+		//Register all items
+		Game.items().registry.forEach(itemFactory -> {
+			ItemStack stack = ItemConverter.instance().toNative(itemFactory);
+			Item itemObj = stack.getItem();
+			if (itemObj instanceof FWItem) {
+				FWItem item = (FWItem) itemObj;
+				ResourceLocation objRL = (ResourceLocation) Item.itemRegistry.getNameForObject(item);
+				ModelResourceLocation itemLocation = new ModelResourceLocation(objRL, "inventory");
+				event.modelRegistry.putObject(itemLocation, new FWSmartItemModel(item.getItemFactory().build()));
+			}
+		});
 	}
 
 	@Override
@@ -177,7 +232,7 @@ public class RenderUtility implements ForgeLoadable {
 				IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
 				m.load(res.getInputStream());
 			} catch (IOException e) {
-				throw new ModelFormatException("IO Exception reading model format", e);
+				Game.logger().warn("IO Exception reading model", e);
 			}
 		});
 	}

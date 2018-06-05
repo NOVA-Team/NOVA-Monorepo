@@ -26,8 +26,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import nova.core.component.renderer.DynamicRenderer;
-import nova.core.wrapper.mc.forge.v17.render.RenderUtility;
-import nova.core.wrapper.mc.forge.v17.wrapper.render.BWModel;
+import nova.core.wrapper.mc.forge.v17.wrapper.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v17.wrapper.render.backward.BWModel;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Optional;
@@ -65,7 +65,7 @@ public class FWEntityRenderer extends Render {
 			}
 
 			Tessellator.instance.startDrawingQuads();
-			model.render(Optional.of(RenderManager.instance));
+			model.render(RenderManager.instance);
 			Tessellator.instance.draw();
 
 			if (model.blendSFactor > 0 && model.blendDFactor > 0) {

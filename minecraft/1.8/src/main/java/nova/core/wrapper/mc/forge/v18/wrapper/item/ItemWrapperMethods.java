@@ -41,8 +41,7 @@ public interface ItemWrapperMethods {
 
 	ItemFactory getItemFactory();
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
+	default void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean advanced) {
 		Item item = ItemConverter.instance().toNova(itemStack);
 		item.setCount(itemStack.stackSize).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
 		getItemFactory().save(item);
@@ -62,8 +61,7 @@ public interface ItemWrapperMethods {
 		return ItemConverter.instance().updateMCItemStack(itemStack, item);
 	}
 
-	@SuppressWarnings("deprecation")
-	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
+	default int getColorFromItemStack(ItemStack itemStack, int layer) {
 		return ItemConverter.instance().toNova(itemStack).colorMultiplier().argb();
 	}
 }

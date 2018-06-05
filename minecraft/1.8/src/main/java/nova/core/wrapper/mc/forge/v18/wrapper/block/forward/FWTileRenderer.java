@@ -26,8 +26,8 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import nova.core.block.Block;
 import nova.core.component.renderer.DynamicRenderer;
-import nova.core.wrapper.mc.forge.v18.render.RenderUtility;
-import nova.core.wrapper.mc.forge.v18.wrapper.render.BWModel;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.RenderUtility;
+import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWModel;
 
 import java.util.Optional;
 

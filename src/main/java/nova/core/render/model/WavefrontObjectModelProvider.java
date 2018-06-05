@@ -58,6 +58,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 	private ArrayList<Vector3D> vertices = new ArrayList<>();
 	private ArrayList<Vector2D> textureCoordinates = new ArrayList<>();
 	private ArrayList<Vector3D> vertexNormals = new ArrayList<>();
+	private boolean loaded = false;
 
 	/**
 	 * Creates new ModelProvider
@@ -122,6 +123,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		} finally {
 			this.cleanUp();
 		}
+		this.loaded = true;
 	}
 
 	private void cleanUp() {
@@ -132,7 +134,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 
 	@Override
 	public MeshModel getModel() {
-		return model.clone();
+		return this.loaded ? model.clone() : Game.render().getMissingModel();
 	}
 
 	@Override
@@ -273,7 +275,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		try {
 			return vertices.get(index < 0 ? index + textureCoordinates.size() : index - 1);
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("[OBJ]: Can't get vertex " + index + "! Is this model corrupted?");
+			Game.logger().error("[OBJ]: {}:{} - Can't get vertex {}! Is this model corrupted?", domain, name, index);
 			return Vector3D.ZERO;
 		}
 	}
@@ -282,7 +284,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		try {
 			return textureCoordinates.get(index < 0 ? index + textureCoordinates.size() : index - 1);
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("[OBJ]: Can't get textureCoordinate " + index + "! Is this model corrupted?");
+			Game.logger().error("[OBJ]: {}:{} - Can't get textureCoordinate {}! Is this model corrupted?", domain, name, index);
 			return Vector2D.ZERO;
 		}
 	}
@@ -291,7 +293,7 @@ public class WavefrontObjectModelProvider extends ModelProvider {
 		try {
 			return vertexNormals.get(index < 0 ? index + textureCoordinates.size() : index - 1);
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("[OBJ]: Can't get vertexNormal " + index + "! Is this model corrupted?");
+			Game.logger().error("[OBJ]: {}:{} - Can't get vertexNormal {}! Is this model corrupted?", domain, name, index);
 			return Vector3D.ZERO;
 		}
 	}

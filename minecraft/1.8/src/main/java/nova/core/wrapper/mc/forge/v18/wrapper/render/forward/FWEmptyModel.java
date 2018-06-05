@@ -18,11 +18,10 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.wrapper.render;
+package nova.core.wrapper.mc.forge.v18.wrapper.render.forward;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
@@ -52,10 +51,5 @@ public class FWEmptyModel extends FWSmartModel implements ISmartBlockModel, ISma
 	@Override
 	public List<BakedQuad> getGeneralQuads() {
 		return Collections.emptyList();
-	}
-
-	@Override
-	public TextureAtlasSprite getTexture() {
-		return null;
 	}
 }

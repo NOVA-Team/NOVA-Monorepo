@@ -22,6 +22,7 @@ import nova.core.render.RenderException;
 import nova.core.render.pipeline.BlockRenderPipeline;
 import nova.core.render.pipeline.CubeTextureCoordinates;
 import nova.core.util.math.MatrixStack;
+import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.w3c.dom.Document;
@@ -32,6 +33,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +57,7 @@ public class TechneModelProvider extends ModelProvider {
 
 	//A map of all models generated with their names
 	private final MeshModel model = new MeshModel();
+	private boolean loaded = false;
 
 	/**
 	 * Creates new ModelProvider
@@ -119,7 +122,7 @@ public class TechneModelProvider extends ModelProvider {
 				Node shape = shapes.item(i);
 				NamedNodeMap shapeAttributes = shape.getAttributes();
 				if (shapeAttributes == null) {
-					throw new RenderException("Shape #" + (i + 1) + " in " + this.name + " has no attributes");
+					throw new RenderException("Shape #" + (i + 1) + " in " + domain + this.name + " has no attributes");
 				}
 
 				Node name = shapeAttributes.getNamedItem("name");
@@ -138,7 +141,7 @@ public class TechneModelProvider extends ModelProvider {
 				}
 
 				if (shapeType != null && !cubeIDs.contains(shapeType)) {
-					System.out.println("Model shape [" + shapeName + "] in " + this.name + " is not a cube, ignoring");
+					Game.logger().warn("Model shape [{}] in {}:{} is not a cube, ignoring", shapeName, domain, this.name);
 					continue;
 				}
 
@@ -249,11 +252,12 @@ public class TechneModelProvider extends ModelProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		this.loaded = true;
 	}
 
 	@Override
 	public MeshModel getModel() {
-		return model.clone();
+		return this.loaded ? model.clone() : Game.render().getMissingModel();
 	}
 
 	@Override

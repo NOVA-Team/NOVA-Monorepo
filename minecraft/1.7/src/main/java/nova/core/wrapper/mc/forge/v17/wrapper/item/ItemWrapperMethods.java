@@ -23,18 +23,17 @@ package nova.core.wrapper.mc.forge.v17.wrapper.item;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
-import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.Renderer;
-import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
+import nova.core.render.model.MeshModel;
+import nova.core.render.pipeline.BlockRenderPipeline;
+import nova.core.render.pipeline.StaticCubeTextureCoordinates;
 import nova.core.util.Direction;
-import nova.core.wrapper.mc.forge.v17.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntity;
-import nova.core.wrapper.mc.forge.v17.wrapper.render.BWModel;
+import nova.core.wrapper.mc.forge.v17.wrapper.render.backward.BWModel;
 import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.lwjgl.opengl.GL11;
@@ -53,8 +52,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	ItemFactory getItemFactory();
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
+	default void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean advanced) {
 		Item item = ItemConverter.instance().toNova(itemStack);
 		item.setCount(itemStack.stackSize).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
 		getItemFactory().save(item);
@@ -74,17 +72,9 @@ public interface ItemWrapperMethods extends IItemRenderer {
 		return ItemConverter.instance().updateMCItemStack(itemStack, item);
 	}
 
-	default IIcon getIconFromDamage(int p_77617_1_) {
-		return null;
-	}
-
-	default IIcon getIcon(ItemStack itemStack, int pass) {
-		return null;
-	}
-
 	@Override
 	default boolean handleRenderType(ItemStack item, IItemRenderer.ItemRenderType type) {
-		return item.getItem() == this && getIcon(item, 0) == null;
+		return item.getItem() == this;
 	}
 
 	@Override
@@ -101,9 +91,23 @@ public interface ItemWrapperMethods extends IItemRenderer {
 			GL11.glPushMatrix();
 			Tessellator.instance.startDrawingQuads();
 			BWModel model = new BWModel();
-			model.matrix.rotate(Direction.UP.toVector(), 1 / 4 * Math.PI);
-			model.matrix.rotate(Direction.EAST.toVector(), 1 / 6 * Math.PI);
-			model.matrix.scale(1.6, 1.6, 1.6);
+			// TODO: Fix this
+			if (this instanceof FWItem)
+				switch (type) {
+					case EQUIPPED:
+						break;
+					case EQUIPPED_FIRST_PERSON:
+//						model.matrix.scale(1.7, 1.7, 1.7);
+//						model.matrix.translate(0, 1, 0.125);
+//						model.matrix.rotate(Direction.DOWN.toVector(), Math.PI * 5 / 4);
+//						model.matrix.rotate(Direction.NORTH.toVector(), Math.PI / 3);
+						break;
+					case INVENTORY:
+						model.matrix.rotate(Direction.DOWN.toVector(), Math.PI / 4);
+						model.matrix.rotate(Direction.EAST.toVector(), Math.PI / 6);
+						model.matrix.scale(1.6, 1.6, 1.6);
+						break;
+				}
 			item.components.getSet(Renderer.class).forEach(r -> r.onRender.accept(model));
 			model.render();
 			Tessellator.instance.draw();
@@ -113,7 +117,7 @@ public interface ItemWrapperMethods extends IItemRenderer {
 	}
 
 	@SuppressWarnings("deprecation")
-	default int getColorFromItemStack(ItemStack itemStack, int p_82790_2_) {
+	default int getColorFromItemStack(ItemStack itemStack, int layer) {
 		return ItemConverter.instance().toNova(itemStack).colorMultiplier().argb();
 	}
 }

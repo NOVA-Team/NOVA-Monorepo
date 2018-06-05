@@ -21,6 +21,7 @@
 package nova.core.render.model;
 
 import nova.core.util.Asset;
+import nova.internal.core.Game;
 
 import java.io.InputStream;
 
@@ -55,5 +56,9 @@ public abstract class ModelProvider extends Asset {
 	@Override
 	public String path() {
 		return "models/" + addDefaultSuffix(super.path(), getType());
+	}
+
+	protected static final MeshModel getMissingModel() {
+		return Game.render().getMissingModel();
 	}
 }

@@ -20,7 +20,6 @@
 
 package nova.core.render.pipeline;
 
-import nova.core.component.ComponentMap;
 import nova.core.component.ComponentProvider;
 import nova.core.component.misc.Collider;
 import nova.core.render.Color;
@@ -45,8 +44,7 @@ import java.util.function.Supplier;
  */
 public class BlockRenderPipeline extends RenderPipeline {
 
-	@SuppressWarnings("rawtypes")
-	public final ComponentProvider<? extends ComponentMap> componentProvider;
+	public final ComponentProvider<?> componentProvider;
 
 	/**
 	 * Called to get the texture of this block for a certain side.
@@ -77,8 +75,7 @@ public class BlockRenderPipeline extends RenderPipeline {
 	 */
 	public Function<Direction, Color> colorMultiplier = (dir) -> Color.white;
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public BlockRenderPipeline(ComponentProvider componentProvider) {
+	public BlockRenderPipeline(ComponentProvider<?> componentProvider) {
 		this.componentProvider = componentProvider;
 		bounds = () -> this.componentProvider.components.getOp(Collider.class).map(c -> c.boundingBox.get()).orElse(Cuboid.ONE);
 		consumer = model -> model.addChild(draw(new MeshModel()));
@@ -421,6 +418,20 @@ public class BlockRenderPipeline extends RenderPipeline {
 		model.drawFace(east);
 
 		return east;
+	}
+
+	/**
+	 * Creates a face of the model in a specified direction
+	 *
+	 * @param dir The direction of the face to make
+	 * @param model The model to use
+	 * @param cuboid The cuboid where the model applies to
+	 * @param textureCoordinates Texture coordinates to render
+	 * @return The face of the model in that dirction
+	 */
+	public static Face drawDir(Direction dir, MeshModel model,
+		Cuboid cuboid, CubeTextureCoordinates textureCoordinates) {
+		return drawDir(dir, model, cuboid.min.getX(), cuboid.min.getY(), cuboid.min.getZ(), cuboid.max.getX(), cuboid.max.getY(), cuboid.max.getZ(), textureCoordinates);
 	}
 
 	/**

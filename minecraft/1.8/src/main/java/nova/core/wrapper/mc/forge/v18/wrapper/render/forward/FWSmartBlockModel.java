@@ -18,12 +18,11 @@
  * along with NOVA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nova.core.wrapper.mc.forge.v18.wrapper.render;
+package nova.core.wrapper.mc.forge.v18.wrapper.render.forward;
 
+import nova.core.wrapper.mc.forge.v18.wrapper.render.backward.BWModel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartBlockModel;
@@ -63,9 +62,11 @@ public class FWSmartBlockModel extends FWSmartModel implements ISmartBlockModel,
 		this.block = block;
 		this.item = item;
 		// Change the default transforms to the default full Block transforms
-		this.itemCameraTransforms = new ItemCameraTransforms(
-			new ItemTransformVec3f(new Vector3f(10, -45, 170), new Vector3f(0, 0.09375f, -0.171875f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person
-			ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
+		this.itemCameraTransforms = new net.minecraft.client.renderer.block.model.ItemCameraTransforms(
+			new net.minecraft.client.renderer.block.model.ItemTransformVec3f(new Vector3f(10, -45, 170), new Vector3f(0, 0.09375f, -0.171875f), new Vector3f(0.375f, 0.375f, 0.375f)), // Third Person
+			net.minecraft.client.renderer.block.model.ItemTransformVec3f.DEFAULT, // First Person
+			net.minecraft.client.renderer.block.model.ItemTransformVec3f.DEFAULT, // Head
+			net.minecraft.client.renderer.block.model.ItemTransformVec3f.DEFAULT);// GUI
 	}
 
 	//Block rendering

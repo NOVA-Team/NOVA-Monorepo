@@ -43,7 +43,7 @@ import java.util.function.Supplier;
  */
 public class ItemRenderPipeline extends RenderPipeline {
 
-	public final ComponentProvider componentProvider;
+	public final ComponentProvider<?> componentProvider;
 
 	/**
 	 * Called to get the texture of this item.
@@ -64,7 +64,7 @@ public class ItemRenderPipeline extends RenderPipeline {
 	 */
 	public Supplier<Color> colorMultiplier = () -> Color.white;
 
-	public ItemRenderPipeline(ComponentProvider componentProvider) {
+	public ItemRenderPipeline(ComponentProvider<?> componentProvider) {
 		this.componentProvider = componentProvider;
 		size = () -> new Vector2D(1, 1);
 		consumer = model -> model.addChild(draw(new MeshModel()));
@@ -166,7 +166,7 @@ public class ItemRenderPipeline extends RenderPipeline {
 		return model;
 	}
 
-	public static Face drawBack(
+	private static Face drawBack(
 		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
@@ -176,8 +176,8 @@ public class ItemRenderPipeline extends RenderPipeline {
 		Vector2D maxUV;
 
 		if (texture.isPresent()) {
-			minUV = texture.get().minUV;
-			maxUV = texture.get().maxUV;
+			minUV = texture.get().minUV();
+			maxUV = texture.get().maxUV();
 		} else {
 			minUV = Vector2D.ZERO;
 			maxUV = Vector2DUtil.ONE;
@@ -199,7 +199,7 @@ public class ItemRenderPipeline extends RenderPipeline {
 		return back;
 	}
 
-	public static Face drawFront(
+	private static Face drawFront(
 		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
@@ -209,8 +209,8 @@ public class ItemRenderPipeline extends RenderPipeline {
 		Vector2D maxUV;
 
 		if (texture.isPresent()) {
-			minUV = texture.get().minUV;
-			maxUV = texture.get().maxUV;
+			minUV = texture.get().minUV();
+			maxUV = texture.get().maxUV();
 		} else {
 			minUV = Vector2D.ZERO;
 			maxUV = Vector2DUtil.ONE;
@@ -232,7 +232,7 @@ public class ItemRenderPipeline extends RenderPipeline {
 		return front;
 	}
 
-	public static Set<Face> drawUpAndDown(
+	private static Set<Face> drawUpAndDown(
 		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
@@ -243,13 +243,13 @@ public class ItemRenderPipeline extends RenderPipeline {
 		Vector2D dimensions;
 
 		if (texture.isPresent()) {
-			minUV = texture.get().minUV;
-			maxUV = texture.get().maxUV;
-			dimensions = texture.get().dimension;
+			minUV = texture.get().minUV();
+			maxUV = texture.get().maxUV();
+			dimensions = texture.get().dimension();
 		} else {
 			minUV = Vector2D.ZERO;
 			maxUV = Vector2DUtil.ONE;
-			dimensions = new Vector2D(1, 1);
+			dimensions = Vector2DUtil.ONE;
 		}
 
 		Set<Face> faces = new HashSet<>();
@@ -290,7 +290,7 @@ public class ItemRenderPipeline extends RenderPipeline {
 		return faces;
 	}
 
-	public static Set<Face> drawLeftAndRight(
+	private static Set<Face> drawLeftAndRight(
 		MeshModel model,
 		double minX, double minY, double minZ,
 		double maxX, double maxY, double maxZ,
@@ -301,13 +301,13 @@ public class ItemRenderPipeline extends RenderPipeline {
 		Vector2D dimensions;
 
 		if (texture.isPresent()) {
-			minUV = texture.get().minUV;
-			maxUV = texture.get().maxUV;
-			dimensions = texture.get().dimension;
+			minUV = texture.get().minUV();
+			maxUV = texture.get().maxUV();
+			dimensions = texture.get().dimension();
 		} else {
 			minUV = Vector2D.ZERO;
 			maxUV = Vector2DUtil.ONE;
-			dimensions = new Vector2D(1, 1);
+			dimensions = Vector2DUtil.ONE;
 		}
 
 		Set<Face> faces = new HashSet<>();

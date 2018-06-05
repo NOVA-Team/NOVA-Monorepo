@@ -31,9 +31,9 @@ import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
  */
 public class Texture extends Asset implements Identifiable {
 
-	public final Vector2D dimension;
-	public final Vector2D minUV;
-	public final Vector2D maxUV;
+	private Vector2D dimension;
+	private Vector2D minUV;
+	private Vector2D maxUV;
 
 	@SuppressWarnings("deprecation")
 	public Texture(String domain, String name) {
@@ -49,6 +49,18 @@ public class Texture extends Asset implements Identifiable {
 		this.dimension = Vector2DUtil.ONE;
 		this.minUV = minUV;
 		this.maxUV = maxUV;
+	}
+
+	public Vector2D dimension() {
+		return dimension;
+	}
+
+	public Vector2D minUV() {
+		return minUV;
+	}
+
+	public Vector2D maxUV() {
+		return maxUV;
 	}
 
 	@Override

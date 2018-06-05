@@ -47,8 +47,9 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
-		ItemWrapperMethods.super.addInformation(itemStack, player, list, p_77624_4_);
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advanced) {
+		ItemWrapperMethods.super.addInformation(itemStack, player, list, advanced);
 	}
 
 	@Override
@@ -62,8 +63,8 @@ public class FWItem extends net.minecraft.item.Item implements ItemWrapperMethod
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack p_82790_1_, int p_82790_2_) {
-		return ItemWrapperMethods.super.getColorFromItemStack(p_82790_1_, p_82790_2_);
+	public int getColorFromItemStack(ItemStack stack, int layer) {
+		return ItemWrapperMethods.super.getColorFromItemStack(stack, layer);
 	}
 
 	@Override
