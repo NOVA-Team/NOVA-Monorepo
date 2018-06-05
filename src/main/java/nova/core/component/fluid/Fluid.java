@@ -21,6 +21,8 @@
 package nova.core.component.fluid;
 
 import nova.core.block.BlockFactory;
+import nova.core.component.exception.ComponentException;
+import nova.core.component.misc.FactoryProvider;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
 import nova.core.retention.Store;
@@ -29,11 +31,12 @@ import nova.internal.core.Game;
 
 import java.util.Optional;
 
+// TODO: Should this extend ComponentProvider?
 public class Fluid implements Identifiable, Storable, Cloneable {
 	/**
 	 * 1000 liters = 1 cubic meter
 	 */
-	public static final int bucketVolume = 1000;
+	public static final int BUCKET_VOLUME = 1000;
 	/**
 	 * Fluid amount is measured in liters.
 	 */
@@ -41,7 +44,7 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	private int amount = 1;
 
 	//TODO: Public instance variable is not good practice
-	public FluidFactory factory;
+	private FluidFactory factory = null;
 
 	/**
 	 * @return Amount of fluid
@@ -104,7 +107,7 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	 * @return The block. There may be no block associated with this fluid.
 	 */
 	public Optional<BlockFactory> getBlockFactory() {
-		return Optional.empty();
+		return Game.blocks().get(getID());
 	}
 
 	@Override
@@ -125,9 +128,25 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 		return stack.getID().equals(getID());
 	}
 
+	void initFactory(FluidFactory factory) {
+		if (this.factory == null) {
+			this.factory = factory;
+		} else {
+			throw new ComponentException("Attempt to add two components of the type %s to " + this, FactoryProvider.class);
+		}
+	}
+
+	public final FluidFactory getFactory() {
+		if (factory != null) {
+			return factory;
+		} else {
+			throw new ComponentException("Attempt to get component that does not exist: %s", FactoryProvider.class);
+		}
+	}
+
 	@Override
 	public final String getID() {
-		return factory.getID();
+		return getFactory().getID();
 	}
 
 	@Override

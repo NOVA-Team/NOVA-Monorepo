@@ -24,8 +24,11 @@ import nova.core.network.Packet;
 import nova.core.network.Syncable;
 import nova.core.retention.Data;
 import nova.core.retention.Storable;
+import nova.core.util.math.MathUtil;
 
 import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.function.Predicate;
 
 /**
  * This class provides basic implementation of {@link Tank}
@@ -33,25 +36,45 @@ import java.util.Optional;
 public class TankSimple implements Tank, Storable, Syncable {
 
 	private Optional<Fluid> containedFluid = Optional.empty();
-	private int capacity;
+	private OptionalInt capacity;
+	private Predicate<Fluid> fluidFilter = f -> true;
+	private Optional<String> name = Optional.empty();
 
 	public TankSimple() {
-		this(Fluid.bucketVolume);
+		this.capacity = OptionalInt.empty();
 	}
 
 	public TankSimple(int maxCapacity) {
-		this.capacity = maxCapacity;
+		this.capacity = OptionalInt.of(maxCapacity);
+	}
+
+	public TankSimple removeCapacity() {
+		this.capacity = OptionalInt.empty();
+		return this;
+	}
+
+	public TankSimple removeTag() {
+		this.name = Optional.empty();
+		return this;
 	}
 
 	public TankSimple setCapacity(int capacity) {
-		this.capacity = capacity;
+		this.capacity = OptionalInt.of(capacity);
 		setFluid(containedFluid);
+		return this;
+	}
+
+	public TankSimple setTag(String name) {
+		this.name = Optional.of(name);
 		return this;
 	}
 
 	@Override
 	public int addFluid(Fluid fluid, boolean simulate) {
-		int capacity = this.capacity - containedFluid.orElse(fluid.withAmount(0)).amount();
+		if (fluid.amount() == 0 || !fluidFilter.test(fluid))
+			return 0;
+
+		int capacity = this.capacity.orElse(Integer.MAX_VALUE) - containedFluid.orElseGet(() -> fluid.withAmount(0)).amount();
 		int toPut = Math.min(fluid.amount(), capacity);
 
 		if (containedFluid.isPresent()) {
@@ -70,6 +93,14 @@ public class TankSimple implements Tank, Storable, Syncable {
 		} else {
 			return fluid.amount();
 		}
+	}
+
+	@Override
+	public Optional<Fluid> removeFluid(Fluid fluid, boolean simulate) {
+		if (!containedFluid.filter(fluid::sameType).isPresent())
+			return Optional.empty();
+
+		return removeFluid(fluid.amount(), simulate);
 	}
 
 	@Override
@@ -97,7 +128,7 @@ public class TankSimple implements Tank, Storable, Syncable {
 	}
 
 	@Override
-	public int getFluidCapacity() {
+	public OptionalInt getFluidCapacity() {
 		return capacity;
 	}
 
@@ -106,17 +137,21 @@ public class TankSimple implements Tank, Storable, Syncable {
 		return containedFluid;
 	}
 
+	public TankSimple setFluidFilter(Predicate<Fluid> fluidFilter) {
+		this.fluidFilter = fluidFilter;
+		return this;
+	}
+
 	public TankSimple setFluid(Optional<Fluid> fluid) {
-		this.containedFluid = fluid;
-		if (containedFluid.isPresent()) {
-			containedFluid.get().setAmount(Math.max(Math.min(containedFluid.get().amount(), capacity), 0));
-		}
+		containedFluid = fluid.filter(fluidFilter).map(f -> f.withAmount(MathUtil.clamp(f.amount(), 0, capacity.orElse(Integer.MAX_VALUE)))).filter(f -> f.amount() > 0);
 		return this;
 	}
 
 	@Override
 	public void save(Data data) {
-		data.put("capacity", capacity);
+		if (capacity.isPresent()) {
+			data.put("capacity", capacity.getAsInt());
+		}
 
 		if (containedFluid.isPresent()) {
 			data.put("fluid", containedFluid.get());
@@ -125,7 +160,11 @@ public class TankSimple implements Tank, Storable, Syncable {
 
 	@Override
 	public void load(Data data) {
-		setCapacity(data.get("capacity"));
+		if (data.containsKey("capactiy")) {
+			setCapacity(data.get("capacity"));
+		} else {
+			removeCapacity();
+		}
 
 		if (data.containsKey("fluid")) {
 			containedFluid = Optional.of(data.getStorable("fluid"));
@@ -144,5 +183,10 @@ public class TankSimple implements Tank, Storable, Syncable {
 	@Override
 	public void write(Packet packet) {
 		containedFluid = Optional.of((Fluid) packet.readStorable());
+	}
+
+	@Override
+	public Optional<String> getTag() {
+		return name;
 	}
 }

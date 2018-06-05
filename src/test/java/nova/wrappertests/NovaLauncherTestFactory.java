@@ -93,6 +93,7 @@ public abstract class NovaLauncherTestFactory {
 		Game.blocks().init();
 		Game.items().init();
 		Game.entities().init();
+		Game.fluids().init();
 		Game.recipes().init();
 
 		return launcher;

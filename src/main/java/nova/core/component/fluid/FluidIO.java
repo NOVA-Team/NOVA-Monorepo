@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NOVA, All rights reserved.
+ * Copyright (c) 2017 NOVA, All rights reserved.
  * This library is free software, licensed under GNU Lesser General Public License version 3
  *
  * This file is part of NOVA.
@@ -20,15 +20,26 @@
 
 package nova.core.component.fluid;
 
-import nova.core.util.Direction;
-
-import java.util.Set;
-
 /**
- * A block that provides a fluid container.
- * @author Calclavia
+ * @author ExE Boss
  */
-//TODO: Implement Component. There will need to be a better way to handle direction.
-public interface SidedTankProvider {
-	Set<Tank> getTank(Direction dir);
+public interface FluidIO extends FluidProvider, FluidConsumer {
+
+	int getFluidAmount();
+
+	/**
+	 * @return Whether this container is empty
+	 */
+	boolean isEmpty();
+
+	/**
+	 * @return Whether this container is storing a fluid (is not empty)
+	 */
+	boolean hasFluid();
+
+	boolean hasFluidType(String id);
+
+	boolean hasFluidType(Fluid fluid);
+
+	boolean hasFluidType(FluidFactory fluid);
 }

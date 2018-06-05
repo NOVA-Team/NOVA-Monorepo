@@ -21,35 +21,41 @@
 package nova.core.component.fluid;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * Classes with this interface declare ability to store fluids
  * @see FluidConsumer
  * @see Tank
  */
-public interface Tank extends FluidConsumer, FluidProvider {
+public interface Tank extends FluidIO {
 
 	/**
 	 * @return Maximum capacity of this container
 	 */
-	int getFluidCapacity();
+	OptionalInt getFluidCapacity();
 
 	/**
 	 * @return Fluid stored in this container
 	 */
 	Optional<Fluid> getFluid();
 
+	@Override
 	default int getFluidAmount() {
 		return hasFluid() ? getFluid().get().amount() : 0;
 	}
 
-	/**
-	 * @return Whether this container is storing a fluid
-	 */
+	@Override
+	default boolean isEmpty() {
+		return !getFluid().isPresent();
+	}
+
+	@Override
 	default boolean hasFluid() {
 		return getFluid().isPresent();
 	}
 
+	@Override
 	default boolean hasFluidType(String fluidID) {
 		if (hasFluid()) {
 			return getFluid().get().getID().equals(fluidID);
@@ -58,6 +64,7 @@ public interface Tank extends FluidConsumer, FluidProvider {
 		return false;
 	}
 
+	@Override
 	default boolean hasFluidType(Fluid sample) {
 		if (hasFluid()) {
 			return getFluid().get().sameType(sample);
@@ -66,6 +73,7 @@ public interface Tank extends FluidConsumer, FluidProvider {
 		return false;
 	}
 
+	@Override
 	default boolean hasFluidType(FluidFactory sample) {
 		if (hasFluid()) {
 			return getFluid().get().sameType(sample);
@@ -74,4 +82,7 @@ public interface Tank extends FluidConsumer, FluidProvider {
 		return false;
 	}
 
+	default Optional<String> getTag() {
+		return Optional.empty();
+	}
 }
