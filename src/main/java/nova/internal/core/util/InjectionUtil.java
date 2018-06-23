@@ -185,9 +185,9 @@ public class InjectionUtil {
 	 * @param <T> The object type
 	 * @param classToConstruct The class to construct
 	 * @return A new instance of the class
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws InstantiationException If an {@link InstantiationException} occurs
+	 * @throws IllegalAccessException If an {@link IllegalAccessException} occurs
+	 * @throws InvocationTargetException If an {@link InvocationTargetException} occurs
 	 * @see Constructor#newInstance(java.lang.Object...)
 	 */
 	@SuppressWarnings("unchecked")
@@ -204,9 +204,9 @@ public class InjectionUtil {
 	 * @param classToConstruct The class to construct
 	 * @param mapping Custom DI mapping
 	 * @return A new instance of the class
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws InstantiationException If an {@link InstantiationException} occurs
+	 * @throws IllegalAccessException If an {@link IllegalAccessException} occurs
+	 * @throws InvocationTargetException If an {@link InvocationTargetException} occurs
 	 * @see Constructor#newInstance(java.lang.Object...)
 	 */
 	@SuppressWarnings("unchecked")

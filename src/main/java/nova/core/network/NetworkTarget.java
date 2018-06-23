@@ -52,7 +52,8 @@ public @interface NetworkTarget {
 	 * A side specifies the current scope of the execution environment. Use
 	 * {@link #get()} to check your current side in order to react differently
 	 * on the server or client side. Some methods may only be run on a specific
-	 * side, see {@link #assertSide(Side)}.
+	 * side, see {@link #assertSide(nova.core.network.NetworkTarget.Side)
+	 * assertSide(Side)}.
 	 * </p>
 	 *
 	 * <p>
@@ -195,7 +196,7 @@ public @interface NetworkTarget {
 		/**
 		 * Shorthand for {@code Side.assertSide(this)}
 		 *
-		 * @see #assertSide(Side)
+		 * @see #assertSide(nova.core.network.NetworkTarget.Side)
 		 */
 		public void assertSide() {
 			Side current = get();

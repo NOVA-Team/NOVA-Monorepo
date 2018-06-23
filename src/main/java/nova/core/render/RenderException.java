@@ -23,6 +23,8 @@ package nova.core.render;
 import nova.core.util.exception.NovaException;
 
 public class RenderException extends NovaException {
+	private static final long serialVersionUID = 1L;
+
 	public RenderException() {
 		super();
 	}

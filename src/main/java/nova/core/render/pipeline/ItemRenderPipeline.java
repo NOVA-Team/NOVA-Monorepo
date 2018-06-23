@@ -43,7 +43,7 @@ import java.util.function.Supplier;
  */
 public class ItemRenderPipeline extends RenderPipeline {
 
-	public final ComponentProvider componentProvider;
+	public final ComponentProvider<?> componentProvider;
 
 	/**
 	 * Called to get the texture of this item.
@@ -64,7 +64,7 @@ public class ItemRenderPipeline extends RenderPipeline {
 	 */
 	public Supplier<Color> colorMultiplier = () -> Color.white;
 
-	public ItemRenderPipeline(ComponentProvider componentProvider) {
+	public ItemRenderPipeline(ComponentProvider<?> componentProvider) {
 		this.componentProvider = componentProvider;
 		size = () -> new Vector2D(1, 1);
 		consumer = model -> model.addChild(draw(new MeshModel()));

@@ -40,7 +40,7 @@ import java.util.function.Supplier;
 
 @UnsidedComponent
 public class Collider extends Component {
-	public final ComponentProvider provider;
+	public final ComponentProvider<?> provider;
 
 	/**
 	 * A general cuboid that represents the bounds of this object.
@@ -66,7 +66,7 @@ public class Collider extends Component {
 	 */
 	public Supplier<Boolean> isOpaqueCube = isCube;
 
-	public Collider(ComponentProvider provider) {
+	public Collider(ComponentProvider<?> provider) {
 		this.provider = provider;
 	}
 

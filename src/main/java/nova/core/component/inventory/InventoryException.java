@@ -23,6 +23,8 @@ package nova.core.component.inventory;
 import nova.core.util.exception.NovaException;
 
 public class InventoryException extends NovaException {
+	private static final long serialVersionUID = 1L;
+
 	public InventoryException() {
 		super();
 	}

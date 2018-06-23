@@ -77,29 +77,45 @@ public abstract class World implements Identifiable {
 	/**
 	 * Creates an entity
 	 * @param factory The entity factory
+	 * @return The added entity
 	 */
 	public abstract Entity addEntity(EntityFactory factory);
 
 	/**
 	 * Creates an entity that holds an item
+	 * @param position The position to add the item to
 	 * @param item The item
+	 * @return The added entity
 	 */
 	public abstract Entity addEntity(Vector3D position, Item item);
 
 	/**
 	 * Creates an entity only on the client side.
 	 * For example, particle effects.
+	 * <p>
+	 * <b>TODO:</b> Replace this with an actual particle system.
+	 * </p>
+	 * @param factory The entity factory
+	 * @return The added entity
 	 */
 	public abstract Entity addClientEntity(EntityFactory factory);
 
 	/**
 	 * Creates an entity only on the client side.
 	 * For example, particle effects.
+	 * <p>
+	 * <b>TODO:</b> Replace this with an actual particle system.
+	 * </p>
+	 * @param <T> The entity type
+	 * @param entity The entity to add
+	 * @return The added entity
 	 */
 	public abstract <T extends Entity> T addClientEntity(T entity);
 
 	/**
 	 * Destroys an entity, removing it from the world.
+	 *
+	 * @param entity The entity to remove
 	 */
 	public abstract void removeEntity(Entity entity);
 

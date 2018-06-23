@@ -81,6 +81,7 @@ public class Item extends ComponentProvider<ComponentMap> implements Identifiabl
 	/**
 	 * Sets new size of this ItemStack
 	 * @param size New size
+	 * @return {@code this} instance
 	 */
 	public Item setCount(int size) {
 		count = Math.max(Math.min(getMaxCount(), size), 0);
