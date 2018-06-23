@@ -41,9 +41,10 @@ public class FWNBTTagCompound extends NBTTagCompound {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public NBTBase copy() {
 		FWNBTTagCompound result = new FWNBTTagCompound(item);
-		getKeySet().forEach(s -> result.setTag((String) s, getTag((String) s).copy()));
+		((Iterable<String>) getKeySet()).forEach(s -> result.setTag(s, getTag(s).copy()));
 		return result;
 	}
 }

@@ -64,8 +64,8 @@ public class ASMHelper {
 
 	static {
 		try {
-			defineClass1 = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] { String.class, byte[].class, int.class, int.class });
-			defineClass2 = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] { String.class, byte[].class, int.class, int.class, ProtectionDomain.class });
+			defineClass1 = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
+			defineClass2 = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class, ProtectionDomain.class);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -314,6 +314,7 @@ public class ASMHelper {
 		try {
 			byte[] bytes = createBytes(cn, flags);
 			defineClass1.setAccessible(true);
+			@SuppressWarnings("unchecked")
 			Class<T> clazz = (Class<T>) defineClass1.invoke(Thread.currentThread().getContextClassLoader(), cn.name.replaceAll("/", "."), bytes, 0, bytes.length);
 			defineClass1.setAccessible(false);
 			return clazz;
@@ -329,6 +330,7 @@ public class ASMHelper {
 		try {
 			byte[] bytes = createBytes(cn, flags);
 			defineClass2.setAccessible(true);
+			@SuppressWarnings("unchecked")
 			Class<T> clazz = (Class<T>) defineClass2.invoke(Thread.currentThread().getContextClassLoader(), cn.name.replaceAll("/", "."), bytes, 0, bytes.length, domain);
 			defineClass2.setAccessible(false);
 			return clazz;

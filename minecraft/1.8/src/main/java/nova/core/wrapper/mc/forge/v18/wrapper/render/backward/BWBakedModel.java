@@ -25,7 +25,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import nova.core.render.Color;
@@ -59,16 +58,16 @@ import java.util.stream.Collectors;
 public class BWBakedModel extends MeshModel {
 
 	@SuppressWarnings("deprecation")
-	public final IBakedModel wrapped;
+	public final net.minecraft.client.resources.model.IBakedModel wrapped;
 
 	public final VertexFormat format;
 
-	public BWBakedModel(@SuppressWarnings("deprecation") IBakedModel wrapped) {
+	public BWBakedModel(@SuppressWarnings("deprecation") net.minecraft.client.resources.model.IBakedModel wrapped) {
 		this(wrapped, DefaultVertexFormats.ITEM);
 	}
 
 	@SuppressWarnings("unchecked")
-	public BWBakedModel(@SuppressWarnings("deprecation") IBakedModel wrapped, VertexFormat format) {
+	public BWBakedModel(@SuppressWarnings("deprecation") net.minecraft.client.resources.model.IBakedModel wrapped, VertexFormat format) {
 		this.wrapped = wrapped;
 		this.format = format;
 		this.matrix.translate(-0.5, -0.5, -0.5);

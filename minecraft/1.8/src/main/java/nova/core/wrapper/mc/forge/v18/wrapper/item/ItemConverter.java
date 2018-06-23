@@ -150,6 +150,10 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 
 	/**
 	 * Saves NOVA item into a Minecraft ItemStack.
+	 *
+	 * @param itemStack the Minecraft ItemStack instance
+	 * @param item The NOVA item.
+	 * @return The updated ItemStack instance
 	 */
 	public ItemStack updateMCItemStack(ItemStack itemStack, Item item) {
 		itemStack.stackSize = item.count();
@@ -164,7 +168,9 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	}
 
 	/**
-	 * Register all Nova blocks
+	 * Register all Nova items
+	 *
+	 * @param evt {@inheritDoc}
 	 */
 	@Override
 	public void preInit(FMLPreInitializationEvent evt) {

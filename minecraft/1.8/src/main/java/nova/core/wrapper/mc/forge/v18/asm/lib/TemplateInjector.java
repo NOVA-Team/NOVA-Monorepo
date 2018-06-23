@@ -44,7 +44,7 @@ public class TemplateInjector {
 	 * @param className - Class that will be injected
 	 * @param template - Default interface used as a template to inject in the templateName
 	 */
-	public void registerTemplate(String className, Class template) {
+	public void registerTemplate(String className, Class<?> template) {
 		templates.put(className, new InjectionTemplate(template.getName()));
 	}
 
@@ -83,8 +83,8 @@ public class TemplateInjector {
 
 		/**
 		 * Patches the cnode withPriority the methods from this template.
-		 * @param cnode
-		 * @return
+		 * @param cnode The ClassNode instance
+		 * @return If the class node was modified
 		 */
 		public boolean inject(ClassNode cnode) {
 

@@ -20,7 +20,6 @@
 
 package nova.core.wrapper.mc.forge.v18.launcher;
 
-import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 import nova.core.util.AbstractProgressBar;
 
 /**
@@ -30,9 +29,11 @@ import nova.core.util.AbstractProgressBar;
  */
 public class FMLProgressBar extends AbstractProgressBar {
 
-	private final ProgressBar progressBar;
+	@SuppressWarnings("deprecation")
+	private final net.minecraftforge.fml.common.ProgressManager.ProgressBar progressBar;
 
-	public FMLProgressBar(ProgressBar progressBar) {
+	public FMLProgressBar(@SuppressWarnings("deprecation")
+		net.minecraftforge.fml.common.ProgressManager.ProgressBar progressBar) {
 		this.progressBar = progressBar;
 	}
 
