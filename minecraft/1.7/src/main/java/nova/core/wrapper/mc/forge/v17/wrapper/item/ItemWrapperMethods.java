@@ -26,16 +26,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
-import nova.core.component.renderer.DynamicRenderer;
 import nova.core.component.renderer.Renderer;
-import nova.core.component.renderer.StaticRenderer;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
-import nova.core.wrapper.mc.forge.v17.render.RenderUtility;
 import nova.core.wrapper.mc.forge.v17.wrapper.entity.backward.BWEntity;
 import nova.core.wrapper.mc.forge.v17.wrapper.render.BWModel;
-import nova.internal.core.Game;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -53,10 +49,17 @@ public interface ItemWrapperMethods extends IItemRenderer {
 
 	ItemFactory getItemFactory();
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	default void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
+	/**
+	 * Allows items to add custom lines of information to the mouseover description
+	 *
+	 * @param itemStack The ItemStack instance
+	 * @param player The player entity
+	 * @param tooltip All lines to display in the Item's tooltip. This is a List of Strings.
+	 * @param advanced Whether the setting "Advanced tooltips" is enabled
+	 */
+	default void addInformation(ItemStack itemStack, EntityPlayer player, List<String> tooltip, boolean advanced) {
 		Item item = ItemConverter.instance().toNova(itemStack);
-		item.setCount(itemStack.stackSize).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), list));
+		item.setCount(itemStack.stackSize).events.publish(new Item.TooltipEvent(Optional.of(new BWEntity(player)), tooltip));
 		getItemFactory().save(item);
 	}
 

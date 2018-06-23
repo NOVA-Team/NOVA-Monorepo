@@ -57,6 +57,7 @@ import java.util.logging.Logger;
  * adjustment - as such, those have been collected here.
  * @author Stan Hebben
  */
+@SuppressWarnings("unchecked")
 public class ReflectionUtil {
 	private static final Field NBTTAGLIST_TAGLIST;
 	private static final Field OREDICTIONARY_IDTOSTACK;
@@ -129,6 +130,7 @@ public class ReflectionUtil {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static List getSeeds() {
 		return getPrivateStaticObject(ForgeHooks.class, "seedList");
 	}
@@ -137,7 +139,7 @@ public class ReflectionUtil {
 		return getPrivateStaticObject(ChestGenHooks.class, "chestInfo");
 	}
 
-	public static Map getTranslations() {
+	public static Map<String, String> getTranslations() {
 		return getPrivateObject(
 			getPrivateStaticObject(StatCollector.class, "localizedName", "field_74839_a"),
 			"languageList",
@@ -308,7 +310,7 @@ public class ReflectionUtil {
 	// ### Private Methods ###
 	// #######################
 
-	private static Field getField(Class cls, String... names) {
+	private static Field getField(Class<?> cls, String... names) {
 		for (String name : names) {
 			try {
 				Field field = cls.getDeclaredField(name);

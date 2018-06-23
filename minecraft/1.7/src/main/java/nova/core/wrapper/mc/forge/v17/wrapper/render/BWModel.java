@@ -37,12 +37,16 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import java.util.Optional;
 
 /**
+ * BWModel for dynamic rendering
  * @author Calclavia
  */
 public class BWModel extends MeshModel {
 
 	/**
 	 * Completes this rendering for a block.
+	 *
+	 * @param blockAccess The {@link IBlockAccess} instance.
+	 * @throws NullPointerException If {@code blockAccess} is {@code null}
 	 */
 	public void render(IBlockAccess blockAccess) {
 		render(Optional.of(blockAccess), Optional.empty());

@@ -29,15 +29,29 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
  *
  * @author ExE Boss
  */
-// TODO Maybe replace with wrapper events.
 public interface ForgeLoadable {
 
-	default void preInit(FMLPreInitializationEvent event) {
+	/**
+	 * Pre‑initialize the wrapper code.
+	 *
+	 * @param evt The Minecraft Forge pre-initialization event
+	 */
+	default void preInit(FMLPreInitializationEvent evt) {
 	}
 
-	default void init(FMLInitializationEvent event) {
+	/**
+	 * Initialize the wrapper code.
+	 *
+	 * @param evt The Minecraft Forge initialization event
+	 */
+	default void init(FMLInitializationEvent evt) {
 	}
 
-	default void postInit(FMLPostInitializationEvent event) {
+	/**
+	 * Post-initialize the wrapper code.
+	 *
+	 * @param evt The Minecraft Forge post-initialization event
+	 */
+	default void postInit(FMLPostInitializationEvent evt) {
 	}
 }

@@ -30,6 +30,7 @@ import net.minecraftforge.common.config.Configuration;
  */
 public class NovaGuiConfig extends GuiConfig {
 	public NovaGuiConfig(GuiScreen parentScreen, Configuration config, String modID) {
-		super(parentScreen, new ConfigElement(config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(), modID, false, false, GuiConfig.getAbridgedConfigPath(config.toString()));
+		super(parentScreen, new ConfigElement<>(config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
+			modID, false, false, GuiConfig.getAbridgedConfigPath(config.toString()));
 	}
 }

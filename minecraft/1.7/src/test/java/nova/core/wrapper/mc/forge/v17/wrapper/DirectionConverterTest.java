@@ -22,7 +22,6 @@ package nova.core.wrapper.mc.forge.v17.wrapper;
 
 import net.minecraft.util.EnumFacing;
 import nova.core.util.Direction;
-import nova.internal.core.Game;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,6 +59,7 @@ public class DirectionConverterTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testToNative() {
 		assertThat(converter.toNative(Direction.DOWN)).isEqualTo(EnumFacing.DOWN);
 		assertThat(converter.toNative(Direction.UP)).isEqualTo(EnumFacing.UP);

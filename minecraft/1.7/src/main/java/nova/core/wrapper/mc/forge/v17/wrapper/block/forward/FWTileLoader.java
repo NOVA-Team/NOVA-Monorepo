@@ -43,7 +43,7 @@ public final class FWTileLoader {
 		try {
 			String blockID = data.getString("novaID");
 			Block block = createBlock(blockID);
-			FWTile tile = injector.inject(block, new Class[0], new Object[0]);
+			FWTile tile = injector.inject(block, new Class<?>[0], new Object[0]);
 			tile.setBlock(block);
 			WrapperEvent.FWTileCreate event = new WrapperEvent.FWTileCreate(block, tile);
 			Game.events().publish(event);
@@ -56,7 +56,7 @@ public final class FWTileLoader {
 	public static FWTile loadTile(String blockID) {
 		try {
 			Block block = createBlock(blockID);
-			FWTile tile = injector.inject(block, new Class[] { String.class }, new Object[] { blockID });
+			FWTile tile = injector.inject(block, new Class<?>[] { String.class }, new Object[] { blockID });
 			tile.setBlock(block);
 			WrapperEvent.FWTileCreate event = new WrapperEvent.FWTileCreate(block, tile);
 			Game.events().publish(event);
