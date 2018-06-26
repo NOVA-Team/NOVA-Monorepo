@@ -97,7 +97,7 @@ public class BlockConverter implements NativeConverter<BlockFactory, net.minecra
 	/**
 	 * Register all Nova blocks
 	 *
-	 * @param evt The Minecraft Forge pre-initialization event
+	 * @param evt {@inheritDoc}
 	 */
 	@Override
 	public void preInit(FMLPreInitializationEvent evt) {

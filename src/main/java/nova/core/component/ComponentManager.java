@@ -70,6 +70,10 @@ public class ComponentManager {
 
 	/**
 	 * Internal
+	 *
+	 * @deprecated Internal
+	 * @param nativeObject The native object
+	 * @return The pass-through components
 	 */
 	@Deprecated
 	public Set<Class<? extends Component>> getPassthroughtComponents(Object nativeObject) {

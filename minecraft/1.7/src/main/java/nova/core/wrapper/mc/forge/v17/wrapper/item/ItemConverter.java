@@ -149,8 +149,12 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 
 	/**
 	 * Saves NOVA item into a Minecraft ItemStack.
+	 *
+	 * @param itemStack the Minecraft ItemStack instance
+	 * @param item The NOVA item.
+	 * @return The updated ItemStack instance
 	 */
-	public net.minecraft.item.ItemStack updateMCItemStack(ItemStack itemStack, nova.core.item.Item item) {
+	public ItemStack updateMCItemStack(ItemStack itemStack, Item item) {
 		itemStack.stackSize = item.count();
 		if (itemStack.stackSize <= 0) {
 			return null;
@@ -162,7 +166,9 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	}
 
 	/**
-	 * Register all Nova blocks
+	 * Register all Nova items
+	 *
+	 * @param evt {@inheritDoc}
 	 */
 	@Override
 	public void preInit(FMLPreInitializationEvent evt) {
@@ -223,7 +229,8 @@ public class ItemConverter implements NativeConverter<Item, ItemStack>, ForgeLoa
 	}
 
 	private void registerMinecraftItemsToNOVA() {
-		Set<String> itemIDs = (Set<String>) net.minecraft.item.Item.itemRegistry.getKeys();
+		@SuppressWarnings("unchecked")
+		Set<String> itemIDs = net.minecraft.item.Item.itemRegistry.getKeys();
 		itemIDs.forEach(itemID -> {
 			net.minecraft.item.Item item = (net.minecraft.item.Item) net.minecraft.item.Item.itemRegistry.getObject(itemID);
 			registerMinecraftMapping(item, 0);

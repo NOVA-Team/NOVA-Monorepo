@@ -47,12 +47,14 @@ public interface Packet {
 
 	/**
 	 * Sets the ID of this packet, allowing it to be sent accordingly.
+	 * @param id The packet ID
 	 * @return The packet itself.
 	 */
 	Packet setID(int id);
 
 	/**
 	 * The player sending the packet
+	 * @return The player sending the packet
 	 */
 	Player player();
 
@@ -193,7 +195,7 @@ public interface Packet {
 	Packet writeString(String value);
 
 	//TODO: Packet handler is bad at reading/writing enums for unknown reasons
-	default Packet writeEnum(Enum data) {
+	default Packet writeEnum(Enum<?> data) {
 		writeString(data.getClass().getName());
 		writeString(data.name());
 		return this;
@@ -232,7 +234,7 @@ public interface Packet {
 		return this;
 	}
 
-	default Packet writeCollection(Collection col) {
+	default Packet writeCollection(Collection<?> col) {
 		writeInt(col.size());
 		col.forEach(obj -> {
 			writeShort(getType(obj.getClass()));
@@ -241,7 +243,7 @@ public interface Packet {
 		return this;
 	}
 
-	default Packet writeOptional(Optional optional) {
+	default Packet writeOptional(Optional<?> optional) {
 		if (optional.isPresent()) {
 			writeShort(getType(optional.get().getClass()));
 			write(optional.get());
@@ -337,17 +339,18 @@ public interface Packet {
 
 	String readString();
 
-	default Enum readEnum() {
+	default <E extends Enum<E>> E readEnum() {
 		try {
 			String enumClassName = readString();
-			Class<? extends Enum> className = (Class) Class.forName(enumClassName);
+			@SuppressWarnings("unchecked")
+			Class<E> className = (Class<E>) Class.forName(enumClassName);
 			return readEnum(className);
 		} catch (Exception e) {
 			throw new NetworkException("Failed to read enum.", e);
 		}
 	}
 
-	default Enum readEnum(Class<? extends Enum> type) {
+	default <E extends Enum<E>> E readEnum(Class<E> type) {
 		return Enum.valueOf(type, readString());
 	}
 
@@ -358,6 +361,7 @@ public interface Packet {
 
 	/**
 	 * Reads a {@link Data} type.
+	 * @return The data type
 	 */
 	default Data readData() {
 		Data readData = new Data();
@@ -380,13 +384,14 @@ public interface Packet {
 	}
 
 	default <T> List<T> readList() {
-		ArrayList arrayList = new ArrayList();
+		ArrayList<T> arrayList = new ArrayList<>();
 		int size = readInt();
 
 		IntStream
 			.range(0, size)
 			.forEach(i -> {
 				short type = readShort();
+				@SuppressWarnings("unchecked")
 				T value = (T) read(Data.dataTypes[type]);
 				arrayList.add(value);
 			});
@@ -402,6 +407,7 @@ public interface Packet {
 			.range(0, size)
 			.forEach(i -> {
 				short type = readShort();
+				@SuppressWarnings("unchecked")
 				T value = (T) read(Data.dataTypes[type]);
 				set.add(value);
 			});
@@ -409,6 +415,7 @@ public interface Packet {
 		return set;
 	}
 
+	@SuppressWarnings("unchecked")
 	default <T> Optional<T> readOptional() {
 		short type = readShort();
 		if (type != -1) {
@@ -426,6 +433,7 @@ public interface Packet {
 		return new Vector3D(readDouble(), readDouble(), readDouble());
 	}
 
+	@SuppressWarnings("unchecked")
 	default <T> T read(Class<T> clazz) {
 		if (clazz == Boolean.class || clazz == boolean.class) {
 			return (T) Boolean.valueOf(readBoolean());

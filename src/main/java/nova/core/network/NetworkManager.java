@@ -46,7 +46,8 @@ public abstract class NetworkManager {
 	 * Register a packet type. A packet type handles
 	 * a specific packet handler type.
 	 *
-	 * @param type An ID is assigned to the packet handler
+	 * @param type The packet handler to register
+	 * @return The ID of the packet handler
 	 */
 	public int register(PacketHandler<?> type) {
 		handlers.add(type);
@@ -104,11 +105,12 @@ public abstract class NetworkManager {
 	 */
 	public abstract void sendPacket(Packet packet);
 
+	@SuppressWarnings("unchecked")
 	public Packet writePacket(Object sender, Packet packet) {
 		int packetTypeID = getPacketTypeID(getPacketType(sender));
 		packet.writeInt(packetTypeID);
 		packet.writeInt(packet.getID());
-		((PacketHandler) getPacketType(sender)).write(sender, packet);
+		((PacketHandler<Object>) getPacketType(sender)).write(sender, packet);
 		return packet;
 	}
 

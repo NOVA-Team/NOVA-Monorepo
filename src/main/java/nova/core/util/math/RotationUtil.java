@@ -79,7 +79,10 @@ public class RotationUtil {
 	}
 
 	/**
-	 * Reverse of rotateSide
+	 * Rotates a Direction global size into a relative side.
+	 * @param s1 Side 1
+	 * @param s2 Side 2
+	 * @return The Direction ordinal from 0-5.
 	 */
 	public static int rotationTo(int s1, int s2) {
 		if ((s1 & 6) == (s2 & 6)) {
@@ -106,6 +109,11 @@ public class RotationUtil {
 	 * Wrapper function that simply calls {@code slerp(a, b, t, true)}.
 	 * <p>
 	 * See {@link #slerp(Rotation, Rotation, double, boolean)} for details.
+	 *
+	 * @param a the first Rotation
+	 * @param b the second Rotation
+	 * @param t the temporal interpolation parameter
+	 * @return The slerp interpolation of Rotations {@code a} and {@code b}, at time {@code t}.
 	 */
 	public static Rotation slerp(Rotation a, Rotation b, double t) {
 		return slerp(a, b, t, true);
@@ -123,11 +131,12 @@ public class RotationUtil {
 	 * "flipping" the source Rotation if needed.
 	 * @param a the first Rotation
 	 * @param b the second Rotation
-	 * @param t the t interpolation parameter
+	 * @param t the temporal interpolation parameter
 	 * @param allowFlip tells whether or not the interpolation allows axis flip
+	 * @return The slerp interpolation of Rotations {@code a} and {@code b}, at time {@code t}.
 	 */
 	public static Rotation slerp(Rotation a, Rotation b, double t, boolean allowFlip) {
-		// Warning: this method should not normalize the Rotation
+		// TODO: this method should not normalize the Rotation
 		double cosAngle = dotProduct(a, b);
 
 		double c1, c2;
@@ -156,7 +165,9 @@ public class RotationUtil {
 	 * Returns the "dot" product of this Quaternion and {@code b}:
 	 * <p>
 	 * {@code this.x * b.x + this.y * b.y + this.z * b.z + this.w * b.w}
+	 * @param a This
 	 * @param b the Quaternion
+	 * @return The dot product
 	 */
 	public static double dotProduct(Rotation a, Rotation b) {
 		return a.getQ0() * b.getQ0() + a.getQ1() * b.getQ1() + a.getQ2() * b.getQ2() + a.getQ3() * b.getQ3();

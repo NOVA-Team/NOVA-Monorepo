@@ -138,7 +138,7 @@ public class BlockRenderPipeline extends RenderPipeline {
 	 *
 	 * @param renderSide A predicate that takes a {@link nova.core.util.Direction}
 	 * and returns a boolean specifying whether or not the side should render.
-	 * @return
+	 * @return this
 	 */
 	public BlockRenderPipeline filter(Predicate<Direction> renderSide) {
 		this.renderSide = renderSide;

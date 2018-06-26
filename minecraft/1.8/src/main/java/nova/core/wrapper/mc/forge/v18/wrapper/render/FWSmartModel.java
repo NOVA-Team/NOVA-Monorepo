@@ -23,7 +23,6 @@ package nova.core.wrapper.mc.forge.v18.wrapper.render;
 import com.google.common.primitives.Ints;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -55,7 +54,8 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 	protected final VertexFormat format;
 	// Default item transforms. Can be changed in subclasses.
 	@SuppressWarnings("deprecation")
-	protected ItemCameraTransforms itemCameraTransforms = ItemCameraTransforms.DEFAULT;
+	protected net.minecraft.client.renderer.block.model.ItemCameraTransforms itemCameraTransforms
+		= net.minecraft.client.renderer.block.model.ItemCameraTransforms.DEFAULT;
 
 	protected FWSmartModel(VertexFormat format) {
 		this.format = format;
@@ -153,7 +153,7 @@ public abstract class FWSmartModel implements IFlexibleBakedModel {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public ItemCameraTransforms getItemCameraTransforms() {
+	public net.minecraft.client.renderer.block.model.ItemCameraTransforms getItemCameraTransforms() {
 		return itemCameraTransforms;
 	}
 }

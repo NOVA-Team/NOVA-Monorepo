@@ -89,6 +89,7 @@ public class RayTracer {
 
 	/**
 	 * Check all blocks that are in a line
+	 * @param world The world to perform the ray trace in.
 	 * @return The blocks ray traced in the order from closest to furthest.
 	 */
 	public Stream<RayTraceBlockResult> rayTraceBlocks(World world) {
@@ -171,7 +172,9 @@ public class RayTracer {
 
 	/**
 	 * Ray traces a cuboid
+	 * @param <R> the result type
 	 * @param cuboid The cuboid in absolute world coordinates
+	 * @param resultMapper the {@link RayTraceResult} converter
 	 * @return The ray trace result if the ray intersects the cuboid
 	 */
 	public <R extends RayTraceResult> Optional<R> rayTrace(Cuboid cuboid, BiFunction<Vector3D, Cuboid, R> resultMapper) {

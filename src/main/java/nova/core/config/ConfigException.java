@@ -23,6 +23,8 @@ package nova.core.config;
 import nova.core.util.exception.NovaException;
 
 public class ConfigException extends NovaException {
+	private static final long serialVersionUID = 1L;
+
 	public ConfigException() {
 		super();
 	}

@@ -267,7 +267,7 @@ public class ReflectionUtil {
 			if (args != null && args.length > 0) {
 				return newInstanceMatching(findMatchingConstructor(clazz, types(args)).get(), args);
 			} else {
-				return clazz.newInstance();
+				return clazz.getDeclaredConstructor().newInstance();
 			}
 		} catch (Exception e) {
 			throw new ReflectionException(e);
@@ -279,7 +279,7 @@ public class ReflectionUtil {
 			if (args != null && args.length > 0) {
 				return clazz.getConstructor(types(args)).newInstance(args);
 			}
-			return clazz.newInstance();
+			return clazz.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			throw new ReflectionException(e);
 		}
@@ -304,6 +304,7 @@ public class ReflectionUtil {
 	 * Gets all the annotated fields of this class, including all the parents
 	 * classes in the order of hierarchy.
 	 *
+	 * @param <T> The annotation type
 	 * @param annotation Your annotation class.
 	 * @param clazz Class to search through.
 	 * @return An ordered map of annotated fields and their annotations from the
@@ -329,6 +330,8 @@ public class ReflectionUtil {
 	}
 
 	public static class ReflectionException extends NovaException {
+		private static final long serialVersionUID = 1L;
+
 		public ReflectionException() {
 			super();
 		}

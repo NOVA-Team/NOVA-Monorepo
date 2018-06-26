@@ -121,8 +121,8 @@ public class BWWorld extends World {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Entity addClientEntity(Entity entity) {
-		return NovaMinecraft.proxy.spawnParticle(world(), entity);
+	public <T extends Entity> T addClientEntity(T entity) {
+		return (T) NovaMinecraft.proxy.spawnParticle(world(), entity);
 	}
 
 	@Override

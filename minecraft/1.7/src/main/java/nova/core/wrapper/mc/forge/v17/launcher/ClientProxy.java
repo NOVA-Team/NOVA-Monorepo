@@ -23,7 +23,6 @@ package nova.core.wrapper.mc.forge.v17.launcher;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.ProgressManager;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -73,8 +72,9 @@ public class ClientProxy extends CommonProxy {
 	@SuppressWarnings({"unchecked", "deprecation"})
 	public void loadLanguage(LanguageManager languageManager) {
 		super.loadLanguage(languageManager);
-		ProgressManager.ProgressBar progressBar = ProgressManager.push("Loading NOVA language files",
-			NovaMinecraftPreloader.novaResourcePacks.size() + 1);
+		cpw.mods.fml.common.ProgressManager.ProgressBar progressBar
+			= cpw.mods.fml.common.ProgressManager.push("Loading NOVA language files",
+				NovaMinecraftPreloader.novaResourcePacks.size() + 1);
 		FMLProgressBar fmlProgressBar = new FMLProgressBar(progressBar);
 		fmlProgressBar.step("nova");
 		SortedSet<Language> languages = Minecraft.getMinecraft().getLanguageManager().getLanguages();
@@ -107,7 +107,7 @@ public class ClientProxy extends CommonProxy {
 			});
 		});
 		fmlProgressBar.finish();
-		ProgressManager.pop(progressBar);
+		cpw.mods.fml.common.ProgressManager.pop(progressBar);
 	}
 
 	private void loadLanguage(LanguageManager languageManager, String langName, InputStream stream) {

@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  * The ComponentInjector is capable of creating dynamic classes that implement a
  * specified super class and implement the interfaces specified by
  * {@link Component} and {@link Passthrough}.
- * @param <T>
+ * @param <T> The component type
  * @author Vic Nightfall
  */
 public class ComponentInjector<T> implements Opcodes {

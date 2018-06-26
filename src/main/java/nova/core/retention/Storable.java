@@ -88,7 +88,7 @@ public interface Storable {
 							if (List.class.isAssignableFrom(type)) {
 								field.set(this, Data.unserialize((Data) value));
 							} else {
-								Collection<?> collection = (Collection) type.newInstance();
+								Collection<?> collection = (Collection) type.getDeclaredConstructor().newInstance();
 								field.set(this, collection.addAll(Data.unserialize((Data) value)));
 							}
 						} else {

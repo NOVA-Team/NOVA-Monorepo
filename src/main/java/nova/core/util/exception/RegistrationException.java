@@ -24,6 +24,8 @@ package nova.core.util.exception;
  * An exception thrown when registration in a manager, dictionary or registry fails.
  */
 public class RegistrationException extends NovaException {
+	private static final long serialVersionUID = 1L;
+
 	public RegistrationException() {
 		super();
 	}

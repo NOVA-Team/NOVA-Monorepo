@@ -45,8 +45,9 @@ public class FWItemBlock extends net.minecraft.item.ItemBlock implements ItemWra
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_) {
-		ItemWrapperMethods.super.addInformation(itemStack, player, list, p_77624_4_);
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List tooltip, boolean advanced) {
+		ItemWrapperMethods.super.addInformation(itemStack, player, tooltip, advanced);
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 /**
  * A series of methods that transform an object as it is passed through the {@link Pipeline}.
  * @author Calclavia
+ * @param <O> The pipeline type.
  */
 public class Pipeline<O> {
 	protected Optional<Pipeline<O>> prev = Optional.empty();
@@ -29,6 +30,7 @@ public class Pipeline<O> {
 	/**
 	 * Sets the given pipeline to be piped after this render stream.
 	 * This method essentially allow you to switch between processes in the pipeline.
+	 * @param <T> The new pipeline type.
 	 * @param stream The stream to apply.
 	 * @return The new RenderStream
 	 */

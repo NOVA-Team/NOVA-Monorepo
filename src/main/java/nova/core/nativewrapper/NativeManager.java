@@ -113,6 +113,7 @@ public class NativeManager {
 	 * Converts a native object to a nova object. This method has autocast, is DANGEROUS and may crash.
 	 *
 	 * @param nativeObject A game implementation object.
+	 * @param <T> The NOVA equivalent type.
 	 * @return The NOVA equivalent object.
 	 */
 	public <T> T toNova(Object nativeObject) {
@@ -129,6 +130,7 @@ public class NativeManager {
 	 * Converts a nova object to a native object. This method has autocast, is DANGEROUS and may crash.
 	 *
 	 * @param novaObject A NOVA implementation object.
+	 * @param <T> The game equivalent type.
 	 * @return The game equivalent object.
 	 */
 	public <T> T toNative(Object novaObject) {

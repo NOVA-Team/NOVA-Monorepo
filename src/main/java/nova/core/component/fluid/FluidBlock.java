@@ -29,6 +29,7 @@ public interface FluidBlock {
 
 	/**
 	 * Returns the Fluid associated with this Block.
+	 * @return The Fluid associated with this Block.
 	 */
 	Optional<Fluid> getFluid();
 
@@ -38,7 +39,7 @@ public interface FluidBlock {
 	 * NOTE: The block is intended to handle its own state changes.
 	 *
 	 * @param doDrain If false, the drain will only be simulated.
-	 * @return
+	 * @return The drained fluid amount.
 	 */
 	Optional<Fluid> drain(boolean doDrain);
 }

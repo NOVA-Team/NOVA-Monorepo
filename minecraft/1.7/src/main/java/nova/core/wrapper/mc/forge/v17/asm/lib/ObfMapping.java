@@ -118,6 +118,7 @@ public class ObfMapping {
 		return s_owner.equals(node.owner) && s_name.equals(node.name) && s_desc.equals(node.desc);
 	}
 
+	@SuppressWarnings("deprecation")
 	public AbstractInsnNode toInsn(int opcode) {
 		if (isClass()) {
 			return new TypeInsnNode(opcode, s_owner);
@@ -132,6 +133,7 @@ public class ObfMapping {
 		mv.visitTypeInsn(opcode, s_owner);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void visitMethodInsn(MethodVisitor mv, int opcode) {
 		mv.visitMethodInsn(opcode, s_owner, s_name, s_desc);
 	}

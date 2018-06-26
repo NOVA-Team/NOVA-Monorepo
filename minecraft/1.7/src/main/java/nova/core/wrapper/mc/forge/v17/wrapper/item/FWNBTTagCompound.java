@@ -24,8 +24,6 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import nova.core.item.Item;
 
-import java.util.Iterator;
-
 /**
  * A wrapped NBTTagCompound object that references the item instance
  * @author Stan
@@ -43,15 +41,10 @@ public class FWNBTTagCompound extends NBTTagCompound {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public NBTBase copy() {
 		FWNBTTagCompound result = new FWNBTTagCompound(item);
-		Iterator iterator = this.func_150296_c().iterator();
-
-		while (iterator.hasNext()) {
-			String s = (String) iterator.next();
-			result.setTag(s, getTag(s).copy());
-		}
-
+		((Iterable<String>) func_150296_c()).forEach(s -> result.setTag(s, getTag(s).copy()));
 		return result;
 	}
 }

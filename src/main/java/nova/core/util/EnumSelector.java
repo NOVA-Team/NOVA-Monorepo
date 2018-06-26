@@ -52,6 +52,8 @@ public class EnumSelector<T extends Enum<T>> implements Iterable<T> {
 	/**
 	 * Creates a new instance of EnumSelector for the given type.
 	 *
+	 * @param <T> The enum type
+	 * @param enumClass The enum class for which to create an EnumSelector.
 	 * @return an instance of EnumSelector for the given type.
 	 */
 	public static <T extends Enum<T>> EnumSelector<T> of(Class<T> enumClass) {

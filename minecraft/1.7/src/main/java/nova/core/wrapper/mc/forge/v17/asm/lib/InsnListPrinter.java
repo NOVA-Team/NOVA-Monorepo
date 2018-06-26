@@ -123,6 +123,7 @@ public class InsnListPrinter extends Textifier {
 		_visitInsn(insn);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void _visitInsn(AbstractInsnNode insn) {
 		switch (insn.getType()) {
 			case 0:
