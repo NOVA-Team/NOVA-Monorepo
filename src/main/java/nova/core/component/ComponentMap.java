@@ -20,7 +20,6 @@
 package nova.core.component;
 
 import nova.core.component.ComponentProvider.ComponentAdded;
-import nova.core.component.ComponentProvider.ComponentRemoved;
 import nova.core.component.exception.ComponentException;
 import nova.internal.core.Game;
 import se.jbee.inject.Dependency;
@@ -47,9 +46,9 @@ public class ComponentMap extends HashMap<Class<? extends Component>, Component>
 
 	/**
 	 * Adds a new component based on its superclass or interface using dependency injection.
+	 * @param <C> The component type.
 	 * @param componentType The interface or abstract class associated with the new component.
-	 * @param <C> The node type.
-	 * @return A new node of N type.
+	 * @return The added component.
 	 */
 	public final <C extends Component> C add(Class<C> componentType) {
 		return add(Game.injector().resolve(Dependency.dependency(componentType)));
@@ -57,8 +56,9 @@ public class ComponentMap extends HashMap<Class<? extends Component>, Component>
 
 	/**
 	 * Adds a component to the provider.
+	 * @param <C> The component type.
 	 * @param component The component to add.
-	 * @return the component.
+	 * @return The added component.
 	 * @throws ComponentException when the component already exists on the block.
 	 */
 	@SuppressWarnings("unchecked")
@@ -80,16 +80,14 @@ public class ComponentMap extends HashMap<Class<? extends Component>, Component>
 
 	/**
 	 * Adds a component to the block if it is not present.
+	 * @param <C> The component type.
 	 * @param component The component to add.
-	 * @return the component.
+	 * @return The component present on this interface
 	 */
 	@SuppressWarnings("unchecked")
 	public final <C extends Component> C getOrAdd(C component) {
-		if (has(component.getClass())) {
-			return get((Class<C>) component.getClass());
-		}
-
-		return add(component);
+		return getOp((Class<C>) component.getClass())
+			.orElseGet(() -> add(component));
 	}
 
 	/**
@@ -103,6 +101,7 @@ public class ComponentMap extends HashMap<Class<? extends Component>, Component>
 
 	/**
 	 * Removes a component from the block.
+	 * @param <C> The component type.
 	 * @param component The component to remove.
 	 * @return the component removed.
 	 * @throws ComponentException when the component does not exist.
@@ -121,6 +120,7 @@ public class ComponentMap extends HashMap<Class<? extends Component>, Component>
 
 	/**
 	 * Removes the component from the provider.
+	 * @param <C> The component type.
 	 * @param componentType the component type.
 	 * @return the component removed.
 	 * @throws ComponentException when the component does not exist.
@@ -143,6 +143,7 @@ public class ComponentMap extends HashMap<Class<? extends Component>, Component>
 
 	/**
 	 * Gets an optional of the component with the specified type.
+	 * @param <C> The component type.
 	 * @param componentType the type to get.
 	 * @return the optional of the component found or {@code Optional.empty()}.
 	 * if the component was not found.
@@ -167,6 +168,7 @@ public class ComponentMap extends HashMap<Class<? extends Component>, Component>
 
 	/**
 	 * Gets the component with the specified type.
+	 * @param <C> The component type.
 	 * @param componentType the type to get.
 	 * @return the component.
 	 * @throws ComponentException if the component doesn't exist.
@@ -177,6 +179,7 @@ public class ComponentMap extends HashMap<Class<? extends Component>, Component>
 
 	/**
 	 * Gets the set of the components with the specified type.
+	 * @param <C> The component type.
 	 * @param componentType the type to get.
 	 * @return the set of the components.
 	 */

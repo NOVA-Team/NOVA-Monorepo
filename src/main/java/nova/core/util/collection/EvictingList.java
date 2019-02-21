@@ -26,6 +26,8 @@ import java.util.LinkedList;
  * @param <E> Type contained in the list
  */
 public class EvictingList<E> extends LinkedList<E> {
+	private static final long serialVersionUID = 1L;
+
 	private final int limit;
 
 	/**

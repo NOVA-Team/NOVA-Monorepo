@@ -28,6 +28,9 @@
 # Travis
 !/.travis.yml
 
+# CircleCI
+!/.circleci
+
 # unwanted os-generated files
 .DS_Store
 .DS_Store?

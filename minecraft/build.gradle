@@ -12,7 +12,8 @@ subprojects {
 			}
 		}
 		dependencies {
-			// Minecraft 1.11 requires newer ForgeGradle, while 1.7 and 1.8 require older.
+			// Minecraft Forge 11.14.3.1503 and newer requires ForgeGradle 2.x,
+			// whereas Minecraft Forge 11.14.3.1502 or older requires ForgeGradle 1.x.
 			classpath 'net.minecraftforge.gradle:ForgeGradle:' + property('forgeGradleVersion')
 		}
 	}

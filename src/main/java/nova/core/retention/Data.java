@@ -219,11 +219,12 @@ public class Data extends HashMap<String, Object> {
 	 * Loads an object from its stored data, given its class.
 	 * @param clazz - The class to load
 	 * @param data - The data
+	 * @param <T> - The type
 	 * @return The object loaded with given data.
 	 */
 	public static <T extends Storable> T unserialize(Class<T> clazz, Data data) {
 		try {
-			T storable = clazz.newInstance();
+			T storable = clazz.getDeclaredConstructor().newInstance();
 			storable.load(data);
 			return storable;
 		} catch (Exception e) {
@@ -324,7 +325,7 @@ public class Data extends HashMap<String, Object> {
 		try {
 			@SuppressWarnings("unchecked")
 			Class<T> storableClass = (Class<T>) Class.forName(storableData.className);
-			T obj = storableClass.newInstance();
+			T obj = storableClass.getDeclaredConstructor().newInstance();
 			obj.load(storableData);
 			return obj;
 		} catch (Exception e) {

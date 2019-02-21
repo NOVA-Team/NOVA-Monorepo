@@ -61,6 +61,8 @@ public class ClassLoaderUtil {
 	}
 
 	public static class ClassLoaderException extends NovaException {
+		private static final long serialVersionUID = 1L;
+
 		public ClassLoaderException() {
 			super();
 		}

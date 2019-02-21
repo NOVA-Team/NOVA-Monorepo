@@ -58,6 +58,8 @@ public interface ProgressBar {
 
 	/**
 	 * Check if the progress bar has been finished.
+	 *
+	 * @return If the progress bar has finished.
 	 */
 	boolean isFinished();
 

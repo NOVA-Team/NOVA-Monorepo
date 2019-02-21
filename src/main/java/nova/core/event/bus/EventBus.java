@@ -216,6 +216,7 @@ public class EventBus<T> {
 		 * @return The event handler
 		 */
 		public synchronized EventListenerHandle<T> bind(EventListener<E> list) {
+			@SuppressWarnings("unchecked")
 			EventListener<T> listener = clazz.isPresent() ? new TypedEventListener<>(list, clazz.get()) : (EventListener) list;
 
 			if (name != null && unsortedListeners.stream().filter(node -> node.name != null).anyMatch(node -> node.name.equals(name))) {

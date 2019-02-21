@@ -21,6 +21,8 @@
 package nova.core.event.bus;
 
 public class EventCancelException extends EventException {
+	private static final long serialVersionUID = 1L;
+
 	public EventCancelException(String message, Class<? extends Event> event) {
 		super(message, event);
 	}

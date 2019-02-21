@@ -57,7 +57,8 @@ public abstract class InputManager {
 	/**
 	 * Is the key current down?
 	 *
-	 * @return
+	 * @param key The {@link Key key} to check.
+	 * @return The pressed state of the key.
 	 */
 	public abstract boolean isKeyDown(Key key);
 

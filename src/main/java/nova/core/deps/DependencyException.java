@@ -23,6 +23,8 @@ package nova.core.deps;
 import nova.core.util.exception.NovaException;
 
 public class DependencyException extends NovaException {
+	private static final long serialVersionUID = 1L;
+
 	public DependencyException() {
 		super();
 	}
