@@ -34,10 +34,10 @@ public interface ItemFilter extends Predicate<Item> {
 
 	/**
 	 * Returns an {@link ItemFilter} that accepts an {@link Item} of the same
-	 * type as the provided.
+	 * type as  provided.
 	 *
-	 * @param item
-	 * @return ItemFilter
+	 * @param item The item type
+	 * @return The ItemFilter instance checking the item type
 	 */
 	static ItemFilter of(Item item) {
 		return item::sameItemType;
@@ -47,8 +47,8 @@ public interface ItemFilter extends Predicate<Item> {
 	 * Returns an {@link ItemFilter} that accepts an {@link Item} of the same
 	 * type as provided.
 	 *
-	 * @param id
-	 * @return ItemFilter
+	 * @param id The item ID
+	 * @return The ItemFilter instance checking the item ID
 	 */
 	static ItemFilter of(String id) {
 		return (other) -> id.equals(other.getID());
@@ -57,8 +57,8 @@ public interface ItemFilter extends Predicate<Item> {
 	/**
 	 * Accepts any {@link Item} that has a &gt;= stack size than provided.
 	 *
-	 * @param amount
-	 * @return
+	 * @param amount The amount
+	 * @return The ItemFilter instance checking the amount
 	 */
 	static ItemFilter of(int amount) {
 		return (other) -> other.count() >= amount;

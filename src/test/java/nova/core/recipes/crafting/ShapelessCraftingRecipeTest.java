@@ -81,9 +81,9 @@ public class ShapelessCraftingRecipeTest {
 			Optional.empty(), Optional.of(item3.build()),
 			Optional.of(item2.build()), Optional.empty()
 		}, 4, Optional[].class));
-		assertThat(cg.iterator()).hasSize(2).containsExactly(item3.build(), item2.build());
+		assertThat(cg).hasSize(2).containsExactly(item3.build(), item2.build());
 		recipe.consumeItems(cg);
-		assertThat(cg.stream().iterator()).isEmpty();
+		assertThat(cg).isEmpty();
 	}
 
 	@Test

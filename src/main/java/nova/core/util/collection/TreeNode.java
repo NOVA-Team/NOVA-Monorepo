@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  *
  * @param <S> - Self type
  */
-public class TreeNode<S extends TreeNode> implements Iterable<S> {
+public class TreeNode<S extends TreeNode<S>> implements Iterable<S> {
 
 	/**
 	 * The children of the node.
@@ -71,9 +71,10 @@ public class TreeNode<S extends TreeNode> implements Iterable<S> {
 	 * @param node The childnode to add
 	 * @return The merged node
 	 */
+	@SuppressWarnings("unchecked")
 	public S addChild(S node) {
 		children.add(node);
-		node.parent = Optional.of(this);
+		node.parent = Optional.of((S) this);
 		return node;
 	}
 

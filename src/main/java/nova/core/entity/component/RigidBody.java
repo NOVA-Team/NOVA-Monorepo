@@ -34,6 +34,8 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 public abstract class RigidBody extends Component implements Updater {
 	/**
 	 * Mass in kilograms. Default is 1 kg.
+	 *
+	 * @return The mass of this rigid body.
 	 */
 	public abstract double getMass();
 
@@ -41,6 +43,8 @@ public abstract class RigidBody extends Component implements Updater {
 
 	/**
 	 * Velocity is how fast the body is moving
+	 *
+	 * @return The velocity vector of this rigid body.
 	 */
 	public abstract Vector3D getVelocity();
 
@@ -52,6 +56,8 @@ public abstract class RigidBody extends Component implements Updater {
 
 	/**
 	 * Gravity is an acceleration.
+	 *
+	 * @return The gravity vector of this rigid body.
 	 */
 	public abstract Vector3D getGravity();
 
@@ -59,6 +65,8 @@ public abstract class RigidBody extends Component implements Updater {
 
 	/**
 	 * Rotation Methods
+	 *
+	 * @return The angular drag of this rigid body.
 	 */
 	public abstract double getAngularDrag();
 
@@ -70,6 +78,8 @@ public abstract class RigidBody extends Component implements Updater {
 
 	/**
 	 * Forces
+	 *
+	 * @param force The force to apply.
 	 */
 	public abstract void addForce(Vector3D force);
 
@@ -78,28 +88,61 @@ public abstract class RigidBody extends Component implements Updater {
 	public abstract void addTorque(Vector3D torque);
 
 	/**
-	 * Scala sugar coating
+	 * Alias for {@link #getMass()}.
+	 *
+	 * @return The mass of this rigid body.
+	 * @see #getMass()
 	 */
 	public final double mass() {
 		return getMass();
 	}
 
+	/**
+	 * Alias for {@link #getVelocity()}.
+	 *
+	 * @return The velocity vector of this rigid body.
+	 * @see #getVelocity()
+	 */
 	public final Vector3D velocity() {
 		return getVelocity();
 	}
 
+	/**
+	 * Alias for {@link #getDrag()}.
+	 *
+	 * @return The drag of this rigid body.
+	 * @see #getDrag()
+	 */
 	public final double drag() {
 		return getDrag();
 	}
 
+	/**
+	 * Alias for {@link #getGravity()}.
+	 *
+	 * @return The gravity vector of this rigid body.
+	 * @see #getGravity()
+	 */
 	public final Vector3D gravity() {
 		return getGravity();
 	}
 
+	/**
+	 * Alias for {@link #getAngularDrag()}.
+	 *
+	 * @return The angular drag of this rigid body.
+	 * @see #getAngularDrag()
+	 */
 	public final double angularDrag() {
 		return getAngularDrag();
 	}
 
+	/**
+	 * Alias for {@link #getAngularVelocity()}.
+	 *
+	 * @return The angular velocity of this rigid body.
+	 * @see #getAngularVelocity()
+	 */
 	public final Rotation angularVelocity() {
 		return getAngularVelocity();
 	}

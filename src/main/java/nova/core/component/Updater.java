@@ -33,7 +33,7 @@ public interface Updater {
 		 * Update components
 		 */
 		if (this instanceof ComponentProvider) {
-			((ComponentProvider) this).components()
+			((ComponentProvider<?>) this).components()
 				.stream()
 				.filter(component -> component instanceof Updater)
 				.forEach(component -> ((Updater) component).update(deltaTime));

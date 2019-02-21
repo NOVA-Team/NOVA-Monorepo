@@ -118,8 +118,10 @@ public interface ItemIngredient {
 	Optional<String> getTag();
 
 	/**
-	 * Sets the ingredient tag. Ingredients can be tagged to make them easy to read from recipe functions.
+	 * Sets the ingredient tag. Ingredients can be tagged to make them
+	 * easy to read from recipe functions.
 	 *
+	 * @param tag The ingredient tag
 	 * @return this instance
 	 */
 	public ItemIngredient withTag(String tag);

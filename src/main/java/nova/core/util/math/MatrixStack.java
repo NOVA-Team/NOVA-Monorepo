@@ -42,8 +42,8 @@ public class MatrixStack implements Transformer {
 	 * Clone construcotr of MatrixStack
 	 * @param clone instance to be cloned
 	 */
+	@SuppressWarnings("unchecked")
 	public MatrixStack(MatrixStack clone) {
-		//noinspection unchecked
 		this.stack = (Stack<RealMatrix>) clone.stack.clone();
 		this.current = clone.current.copy();
 	}

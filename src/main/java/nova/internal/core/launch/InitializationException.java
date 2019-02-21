@@ -21,6 +21,8 @@
 import nova.core.util.exception.NovaException;
 
 public class InitializationException extends NovaException {
+	private static final long serialVersionUID = 1L;
+
 	public InitializationException() {
 		super();
 	}

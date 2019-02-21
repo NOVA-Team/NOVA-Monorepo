@@ -43,7 +43,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.util.FastMath;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -259,6 +258,10 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	/**
 	 * Rotatable Block
+	 *
+	 * @param side The hit side
+	 * @param hit The hit vector
+	 * @return If rotation is possible from this side
 	 */
 	public boolean rotate(int side, Vector3D hit) {
 		int result = getSideToRotate(side, hit);
@@ -274,6 +277,10 @@ public class Orientation extends Component implements Storable, Stateful, Syncab
 
 	/**
 	 * Determines the side to rotate based on the hit vector on the block.
+	 *
+	 * @param hitSide The hit side
+	 * @param hit The hit vector
+	 * @return The rotation axis
 	 */
 	public int getSideToRotate(int hitSide, Vector3D hit) {
 		int tBack = hitSide ^ 1;

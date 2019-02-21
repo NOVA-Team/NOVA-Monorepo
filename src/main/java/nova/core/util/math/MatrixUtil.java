@@ -55,6 +55,8 @@ public class MatrixUtil {
     // Little cheat.
     private static Localizable of(String string) {
         return new Localizable() {
+			private static final long serialVersionUID = 1L;
+
             @Override
             public String getSourceString() {
                 return string;

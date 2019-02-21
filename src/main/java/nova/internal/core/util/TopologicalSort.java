@@ -21,7 +21,8 @@ public class TopologicalSort {
 	 * Sort the input graph into a topologically sorted list
 	 *
 	 * Uses the reverse depth first search as outlined in ...
-	 * @param graph
+	 * @param <T> The type
+	 * @param graph The graph to sort
 	 * @return The sorted list.
 	 */
 	public static <T> List<T> topologicalSort(DirectedGraph<T> graph) {
@@ -64,6 +65,7 @@ public class TopologicalSort {
 			}
 
 			throw new NovaException("There was a cycle detected in the input graph, sorting is not possible", node) {
+				private static final long serialVersionUID = 1L;
 			};
 		}
 

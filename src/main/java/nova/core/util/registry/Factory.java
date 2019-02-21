@@ -22,9 +22,7 @@ package nova.core.util.registry;
 
 import net.jodah.typetools.TypeResolver;
 import nova.core.util.Identifiable;
-import nova.internal.core.Game;
 import nova.internal.core.util.InjectionUtil;
-import se.jbee.inject.Dependency;
 
 import java.util.Optional;
 import java.util.function.Function;

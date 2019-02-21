@@ -34,6 +34,11 @@ import java.util.stream.Collectors;
 
 /**
  * A class that contains all sided components.
+ *
+ * This was implemented horribly poorly, so I intend to re‑implement
+ * it in a better way, which will also break backwards compatibility
+ * for the most part.
+ *
  * @author ExE Boss
  */
 public class SidedComponentMap extends ComponentMap {
@@ -102,6 +107,7 @@ public class SidedComponentMap extends ComponentMap {
 
 	/**
 	 * Adds a component to the provider.
+	 * @param <C> The component type.
 	 * @param direction The direction to add the component to.
 	 * @param component The component to add.
 	 * @return the component.
@@ -113,6 +119,7 @@ public class SidedComponentMap extends ComponentMap {
 
 	/**
 	 * Adds a component to the provider.
+	 * @param <C> The component type.
 	 * @param component The component to add.
 	 * @param directions The directions to add the component to.
 	 * @return the component.
@@ -126,6 +133,7 @@ public class SidedComponentMap extends ComponentMap {
 
 	/**
 	 * Adds a component to the block if it is not present.
+	 * @param <C> The component type.
 	 * @param component The component to add.
 	 * @param direction The direction to get or add the component to.
 	 * @return the component.
@@ -156,6 +164,7 @@ public class SidedComponentMap extends ComponentMap {
 
 	/**
 	 * Removes the component from the block.
+	 * @param <C> The component type.
 	 * @param component the component type.
 	 * @param direction The direction to remove the component from.
 	 * @return the component removed.
@@ -167,6 +176,7 @@ public class SidedComponentMap extends ComponentMap {
 
 	/**
 	 * Removes the component from the provider.
+	 * @param <C> The component type.
 	 * @param componentType the component type.
 	 * @param direction The direction to remove the component from.
 	 * @return the component removed.
@@ -179,6 +189,7 @@ public class SidedComponentMap extends ComponentMap {
 
 	/**
 	 * Gets an optional of the component with the specified type.
+	 * @param <C> The component type.
 	 * @param componentType the type to get.
 	 * @param direction The direction to get the component from.
 	 * @return the optional of the component found or {@code Optional.empty()}.
@@ -194,6 +205,7 @@ public class SidedComponentMap extends ComponentMap {
 
 	/**
 	 * Gets the component with the specified type.
+	 * @param <C> The component type.
 	 * @param componentType the type to get.
 	 * @param direction The direction to get the component from.
 	 * @return the component.
@@ -205,6 +217,7 @@ public class SidedComponentMap extends ComponentMap {
 
 	/**
 	 * Gets the set of the components with the specified type.
+	 * @param <C> The component type.
 	 * @param componentType the type to get.
 	 * @param direction The direction to get the component from.
 	 * @return the set of the components.

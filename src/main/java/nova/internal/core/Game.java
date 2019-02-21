@@ -75,15 +75,11 @@ public class Game {
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
-	 *
-	 * This is @deprecated, use syncTicker() instead.
 	 */
 	private final UpdateTicker.SynchronizedTicker syncTicker;
 
 	/**
 	 * The thread ticker that runs on NOVA's thread.
-	 *
-	 * This is @deprecated, use threadTicker() instead.
 	 */
 	private final UpdateTicker.ThreadTicker threadTicker;
 
@@ -224,6 +220,11 @@ public class Game {
 
 	/**
 	 * The synchronized ticker that uses the same thread as the game.
+	 *
+	 * @return The synchronous game ticker, which is synchronized
+	 * with the game’s tick speed.
+	 * <p>
+	 * For Minecraft, this is 20hz.
 	 */
 	public static UpdateTicker.SynchronizedTicker syncTicker() {
 		return instance.syncTicker;
@@ -231,6 +232,9 @@ public class Game {
 
 	/**
 	 * The thread ticker that runs on NOVA's thread.
+	 *
+	 * @return The asynchronous NOVA ticker,
+	 * which runs as fast as possible.
 	 */
 	public static UpdateTicker.ThreadTicker threadTicker() {
 		return instance.threadTicker;

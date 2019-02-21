@@ -54,6 +54,7 @@ public class Fluid implements Identifiable, Storable, Cloneable {
 	 * Sets new size of this FluidStack
 	 * Note that there can never be fluid with "zero" amount. Use Optional.empty() instead.
 	 * @param amount New size
+	 * @return {@code this} instance
 	 */
 	public Fluid setAmount(int amount) {
 		this.amount = Math.max(amount, 1);

@@ -22,7 +22,10 @@ package nova.core.network;
 
 import nova.core.util.exception.NovaException;
 
+
 public class NetworkException extends NovaException {
+	private static final long serialVersionUID = 1L;
+
 	public NetworkException() {
 		super();
 	}
