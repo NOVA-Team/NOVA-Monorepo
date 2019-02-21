@@ -27,8 +27,6 @@ import nova.core.component.inventory.Inventory;
 import nova.core.component.inventory.InventorySimple;
 import nova.core.wrapper.mc.forge.v1_7_10.wrapper.item.ItemConverter;
 
-import java.util.Optional;
-
 public class FWInventory implements IInventory {
 
 	public final Inventory wrapped;
@@ -70,7 +68,7 @@ public class FWInventory implements IInventory {
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack item) {
 		if (slot < 0 || slot >= wrapped.size()) return;
-		wrapped.set(slot, Optional.ofNullable(item).map(ItemConverter.instance()::toNova));
+		wrapped.set(slot, item == null ? null : ItemConverter.instance().toNova(item));
 	}
 
 	@Override

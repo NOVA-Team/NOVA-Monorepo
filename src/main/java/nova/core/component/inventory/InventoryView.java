@@ -50,7 +50,7 @@ public class InventoryView implements Inventory {
 	}
 
 	@Override
-	public boolean set(int slot, Optional<Item> stack) throws IndexOutOfBoundsException {
+	public boolean set(int slot, Item stack) throws IndexOutOfBoundsException {
 		if (slot < 0 || slot >= slots.length) {
 			throw new IndexOutOfBoundsException();
 		} else {

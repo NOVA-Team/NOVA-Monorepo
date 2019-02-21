@@ -41,9 +41,9 @@ public class BWInventory implements Inventory {
 	}
 
 	@Override
-	public boolean set(int slot, Optional<Item> item) {
+	public boolean set(int slot, Item item) {
 		Optional<Item> orig = get(slot);
-		wrapped.setInventorySlotContents(slot, item.map(ItemConverter.instance()::toNative).orElse(null));
+		wrapped.setInventorySlotContents(slot, ItemConverter.instance().toNative(item));
 		return !orig.equals(get(slot));
 	}
 

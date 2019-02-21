@@ -47,7 +47,7 @@ public interface Inventory extends Iterable<Item> {
 	 * @throws IndexOutOfBoundsException if the slot is out of range
 	 * (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
-	Optional<Item> get(int slot);
+	Optional<Item> get(int slot) throws IndexOutOfBoundsException;
 
 	/**
 	 * Sets {@link Item} in slot
@@ -57,7 +57,7 @@ public interface Inventory extends Iterable<Item> {
 	 * @throws IndexOutOfBoundsException if the slot is out of range
 	 * (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
-	boolean set(int slot, Optional<Item> item);
+	boolean set(int slot, Item item) throws IndexOutOfBoundsException;
 
 	/**
 	 * Gets count of slots
@@ -78,8 +78,11 @@ public interface Inventory extends Iterable<Item> {
 	 * @throws IndexOutOfBoundsException if the slot is out of range
 	 * (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
-	default Optional<Item> add(int slot, Item item) {
+	default Optional<Item> add(int slot, Item item) throws IndexOutOfBoundsException {
 		Optional<Item> o = get(slot);
+		if (item == null) {
+			return Optional.empty();
+		}
 		if (o.isPresent()) {
 			if (item.sameItemType(o.get())) {
 				return Optional.of(item.withAmount(item.count() - o.get().addCount(item.count())));
@@ -87,7 +90,7 @@ public interface Inventory extends Iterable<Item> {
 				return Optional.of(item);
 			}
 		} else {
-			set(slot, Optional.of(item));
+			set(slot, item);
 			return Optional.empty();
 		}
 	}
@@ -98,6 +101,9 @@ public interface Inventory extends Iterable<Item> {
 	 * @return Amount of items left(did not fit inside this inventory)
 	 */
 	default Optional<Item> add(Item item) {
+		if (item == null) {
+			return Optional.empty();
+		}
 		int itemsLeft = item.count();
 		for (int i = 0; i < size(); i++) {
 			itemsLeft = add(i, item.withAmount(itemsLeft)).map(Item::count).orElse(0);
@@ -122,7 +128,7 @@ public interface Inventory extends Iterable<Item> {
 	 * @throws IndexOutOfBoundsException if the slot is out of range
 	 * (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
-	Optional<Item> remove(int slot);
+	Optional<Item> remove(int slot) throws IndexOutOfBoundsException;
 
 	/**
 	 * Removes a certain amount of items from a slot.
@@ -132,7 +138,7 @@ public interface Inventory extends Iterable<Item> {
 	 * @throws IndexOutOfBoundsException if the slot is out of range
 	 * (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
-	default Optional<Item> remove(int slot, int amount) {
+	default Optional<Item> remove(int slot, int amount) throws IndexOutOfBoundsException {
 		Optional<Item> o = get(slot);
 		if (o.isPresent()) {
 			Item item = o.get();
@@ -148,15 +154,18 @@ public interface Inventory extends Iterable<Item> {
 
 	/**
 	 * Removes a certain item from a slot.
-	 * @param check The item type to check with
+	 * @param item The item type to check with
 	 * @return The items removed
 	 */
-	default Optional<Item> remove(Item check) {
-		int left = check.count();
+	default Optional<Item> remove(Item item) {
+		if (item == null) {
+			return Optional.empty();
+		}
+		int left = item.count();
 		for (int i = 0; i < size(); i++) {
 			Optional<Item> opItem = get(i);
 
-			if (opItem.isPresent() && check.sameItemType(opItem.get())) {
+			if (opItem.isPresent() && item.sameItemType(opItem.get())) {
 				Optional<Item> removed = remove(i, left);
 
 				if (removed.isPresent()) {
@@ -165,9 +174,9 @@ public interface Inventory extends Iterable<Item> {
 			}
 		}
 
-		int removed = check.count() - left;
+		int removed = item.count() - left;
 		if (removed > 0) {
-			return Optional.of(check.withAmount(removed));
+			return Optional.of(item.withAmount(removed));
 		}
 		return Optional.empty();
 	}
