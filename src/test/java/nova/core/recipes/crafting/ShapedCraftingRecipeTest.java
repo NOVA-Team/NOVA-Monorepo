@@ -87,9 +87,9 @@ public class ShapedCraftingRecipeTest {
 			Optional.empty(), Optional.of(item2.build()),
 			Optional.of(item3.build()), Optional.empty()
 		}, 4, Optional[].class));
-		assertThat(cg.iterator()).hasSize(2).containsExactly(item2.build(), item3.build());
+		assertThat(cg).hasSize(2).containsExactly(item2.build(), item3.build());
 		recipe.consumeItems(cg);
-		assertThat(cg.stream().iterator()).isEmpty();
+		assertThat(cg).isEmpty();
 	}
 
 	@Test
@@ -100,9 +100,9 @@ public class ShapedCraftingRecipeTest {
 			Optional.of(item2.build()), Optional.empty(),
 			Optional.empty(), Optional.of(item3.build())
 		}, 4, Optional[].class));
-		assertThat(cg.iterator()).hasSize(2).containsExactly(item2.build(), item3.build());
+		assertThat(cg).hasSize(2).containsExactly(item2.build(), item3.build());
 		recipe.consumeItems(cg);
-		assertThat(cg.stream().iterator()).isEmpty();
+		assertThat(cg).isEmpty();
 	}
 
 	@Test(expected = IllegalArgumentException.class)

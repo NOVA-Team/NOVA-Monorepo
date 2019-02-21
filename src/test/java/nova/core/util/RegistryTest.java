@@ -47,7 +47,7 @@ public class RegistryTest {
 		assertThat(registry.get("ID1").get()).isEqualTo(id1);
 		assertThat(registry.get("ID2").get()).isEqualTo(id2);
 
-		assertThat(registry.iterator()).containsOnly(id1, id2);
+		assertThat(registry).containsOnly(id1, id2);
 
 		assertThat(registry.get("None").isPresent()).isFalse();
 
