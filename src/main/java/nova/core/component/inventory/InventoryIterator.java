@@ -24,6 +24,7 @@ import nova.core.item.Item;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 class InventoryIterator implements Iterator<Item> {
@@ -34,7 +35,7 @@ class InventoryIterator implements Iterator<Item> {
 	private boolean initialized = false;
 
 	InventoryIterator(Inventory inv) {
-		this.inv = inv;
+		this.inv = Objects.requireNonNull(inv, "`inv` can't be null");
 		findNext();
 	}
 
