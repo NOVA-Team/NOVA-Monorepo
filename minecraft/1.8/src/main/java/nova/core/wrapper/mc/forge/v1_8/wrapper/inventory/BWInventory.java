@@ -56,15 +56,14 @@ public class BWInventory implements Inventory {
 
 	@Override
 	public Optional<Item> remove(int slot, int amount) {
-		Optional<ItemStack> itemStack = Optional.ofNullable(wrapped.getStackInSlot(slot));
-		Optional<Item> o = itemStack.map(ItemConverter.instance()::toNova);
-		if (o.isPresent()) {
-			Item item = o.get();
+		ItemStack stack = wrapped.getStackInSlot(slot);
+		if (stack != null) {
+			Item item = ItemConverter.instance().toNova(stack);
 			item.setCount(item.count() - amount);
 			if (item.count() <= 0) {
 				return remove(slot);
 			}
-			ItemConverter.instance().updateMCItemStack(itemStack.get(), item);
+			ItemConverter.instance().updateMCItemStack(stack, item);
 			return Optional.of(item.withAmount(amount));
 		}
 		return Optional.empty();

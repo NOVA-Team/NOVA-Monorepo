@@ -25,7 +25,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IChatComponent;
 import nova.core.component.inventory.Inventory;
-import nova.core.component.inventory.InventorySimple;
 import nova.core.wrapper.mc.forge.v1_8.wrapper.item.ItemConverter;
 
 public class FWInventory implements IInventory {
@@ -69,9 +68,9 @@ public class FWInventory implements IInventory {
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack item) {
+	public void setInventorySlotContents(int slot, ItemStack stack) {
 		if (slot < 0 || slot >= wrapped.size()) return;
-		wrapped.set(slot, item == null ? null : ItemConverter.instance().toNova(item));
+		wrapped.set(slot, stack != null ? ItemConverter.instance().toNova(stack) : null);
 	}
 
 	@Override
@@ -114,10 +113,7 @@ public class FWInventory implements IInventory {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack item) {
-		if (item != null && wrapped instanceof InventorySimple) {
-			((InventorySimple) wrapped).isItemValidForSlot.apply(slot, ItemConverter.instance().toNova(item));
-		}
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return true;
 	}
 
