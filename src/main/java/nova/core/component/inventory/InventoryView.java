@@ -41,26 +41,30 @@ public class InventoryView implements Inventory {
 	}
 
 	@Override
-	public Optional<Item> get(int slot) {
+	public Optional<Item> get(int slot) throws IndexOutOfBoundsException {
 		if (slot < 0 || slot >= slots.length) {
-			return null;
+			throw new IndexOutOfBoundsException();
 		} else {
 			return parent.get(slots[slot]);
 		}
 	}
 
 	@Override
-	public boolean set(int slot, Item stack) {
+	public boolean set(int slot, Item stack) throws IndexOutOfBoundsException {
 		if (slot < 0 || slot >= slots.length) {
-			return false;
+			throw new IndexOutOfBoundsException();
 		} else {
 			return parent.set(slots[slot], stack);
 		}
 	}
 
 	@Override
-	public Optional<Item> remove(int slot) {
-		return parent.remove(slot);
+	public Optional<Item> remove(int slot) throws IndexOutOfBoundsException {
+		if (slot < 0 || slot >= slots.length) {
+			throw new IndexOutOfBoundsException();
+		} else {
+			return parent.remove(slots[slot]);
+		}
 	}
 
 	@Override

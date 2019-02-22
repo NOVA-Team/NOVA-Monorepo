@@ -39,15 +39,25 @@ import java.util.stream.StreamSupport;
  * @see InventoryView
  */
 public interface Inventory extends Iterable<Item> {
-	Optional<Item> get(int slot);
+
+	/**
+	 * @param slot Slot number
+	 * @return The item in the slot or an {@link Optional#empty empty optional}
+	 * if there is no item in the slot
+	 * @throws IndexOutOfBoundsException if the slot is out of range
+	 * (<tt>index &lt; 0 || index &gt;= size()</tt>)
+	 */
+	Optional<Item> get(int slot) throws IndexOutOfBoundsException;
 
 	/**
 	 * Sets {@link Item} in slot
 	 * @param slot Slot number
-	 * @param stack Stack to insert
-	 * @return Whether succeed
+	 * @param item Item to insert
+	 * @return Whether the operation succeeded or not
+	 * @throws IndexOutOfBoundsException if the slot is out of range
+	 * (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
-	boolean set(int slot, Item stack);
+	boolean set(int slot, Item item) throws IndexOutOfBoundsException;
 
 	/**
 	 * Gets count of slots
@@ -63,66 +73,80 @@ public interface Inventory extends Iterable<Item> {
 	/**
 	 * Adds items to this inventory at specified slot
 	 * @param slot Slot to add items into
-	 * @param stack {@link Item} containing items
+	 * @param item Item to add
 	 * @return Amount of items left(did not fit inside this inventory)
+	 * @throws IndexOutOfBoundsException if the slot is out of range
+	 * (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
-	default int add(int slot, Item stack) {
+	default Optional<Item> add(int slot, Item item) throws IndexOutOfBoundsException {
 		Optional<Item> o = get(slot);
+		if (item == null) {
+			return Optional.empty();
+		}
 		if (o.isPresent()) {
-			if (stack.sameItemType(o.get())) {
-				return stack.count() - o.get().addCount(stack.count());
+			if (item.sameItemType(o.get())) {
+				return Optional.of(item.withAmount(item.count() - o.get().addCount(item.count())));
 			} else {
-				return stack.count();
+				return Optional.of(item);
 			}
 		} else {
-			set(slot, stack);
-			return 0;
+			set(slot, item);
+			return Optional.empty();
 		}
 	}
 
 	/**
 	 * Adds items to this inventory
-	 * @param stack {@link Item} containing items
+	 * @param item {@link Item} containing items
 	 * @return Amount of items left(did not fit inside this inventory)
 	 */
-	default int add(Item stack) {
-		int itemsLeft = stack.count();
+	default Optional<Item> add(Item item) {
+		if (item == null) {
+			return Optional.empty();
+		}
+		int itemsLeft = item.count();
 		for (int i = 0; i < size(); i++) {
-			itemsLeft = add(i, stack.withAmount(itemsLeft));
+			itemsLeft = add(i, item.withAmount(itemsLeft)).map(Item::count).orElse(0);
 			if (itemsLeft == 0)
 				break;
 		}
 
-		if (itemsLeft != stack.count()) {
+		if (itemsLeft != item.count()) {
 			markChanged();
 		}
 
-		return itemsLeft;
+		final int il = itemsLeft;
+		return Optional.of(item)
+			.filter(i -> il > 0)
+			.map(i -> i.withAmount(il));
 	}
 
 	/**
 	 * Removes a one count of the item from a slot.
 	 * @param slot The slot index to remove
 	 * @return The items removed
+	 * @throws IndexOutOfBoundsException if the slot is out of range
+	 * (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
-	Optional<Item> remove(int slot);
+	Optional<Item> remove(int slot) throws IndexOutOfBoundsException;
 
 	/**
 	 * Removes a certain amount of items from a slot.
 	 * @param slot The slot index to remove
 	 * @param amount The amount of items to remove
 	 * @return The items removed
+	 * @throws IndexOutOfBoundsException if the slot is out of range
+	 * (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
-	default Optional<Item> remove(int slot, int amount) {
+	default Optional<Item> remove(int slot, int amount) throws IndexOutOfBoundsException {
 		Optional<Item> o = get(slot);
 		if (o.isPresent()) {
 			Item item = o.get();
 			item.setCount(item.count() - amount);
 
 			if (item.count() <= 0) {
-				remove(slot);
+				return remove(slot);
 			}
-
 			return Optional.of(item.withAmount(amount));
 		}
 		return Optional.empty();
@@ -130,18 +154,19 @@ public interface Inventory extends Iterable<Item> {
 
 	/**
 	 * Removes a certain item from a slot.
-	 * @param check The item type to check with
+	 * @param item The item type to check with
 	 * @return The items removed
 	 */
-	default Optional<Item> remove(Item check) {
-
-		int left = check.count();
-
+	default Optional<Item> remove(Item item) {
+		if (item == null) {
+			return Optional.empty();
+		}
+		int left = item.count();
 		for (int i = 0; i < size(); i++) {
 			Optional<Item> opItem = get(i);
 
-			if (opItem.isPresent()) {
-				Optional<Item> removed = remove(i, check.count());
+			if (opItem.isPresent() && item.sameItemType(opItem.get())) {
+				Optional<Item> removed = remove(i, left);
 
 				if (removed.isPresent()) {
 					left -= removed.get().count();
@@ -149,12 +174,10 @@ public interface Inventory extends Iterable<Item> {
 			}
 		}
 
-		int removed = check.count() - left;
-
+		int removed = item.count() - left;
 		if (removed > 0) {
-			return Optional.of(check.withAmount(removed));
+			return Optional.of(item.withAmount(removed));
 		}
-
 		return Optional.empty();
 	}
 
@@ -163,7 +186,7 @@ public interface Inventory extends Iterable<Item> {
 	 * @return This inventory as list of {@link Item Items}
 	 */
 	default List<Item> toList() {
-		ArrayList<Item> list = new ArrayList<>();
+		List<Item> list = new ArrayList<>();
 		for (Item i : this) {
 			list.add(i);
 		}
@@ -189,8 +212,8 @@ public interface Inventory extends Iterable<Item> {
 	}
 
 	/**
-	 * Represents this inventory as {@link Item} {@link Stream}
-	 * @return This inventory as {@link Item} {@link Stream}
+	 * Represents this inventory as an {@link Item} {@link Stream}
+	 * @return This inventory as an {@link Item} {@link Stream}
 	 */
 	default Stream<Item> stream() {
 		return StreamSupport.stream(spliterator(), false);

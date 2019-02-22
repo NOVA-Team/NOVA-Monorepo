@@ -41,7 +41,8 @@ public class FWInventory implements IInventory {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return ItemConverter.instance().toNative(wrapped.get(slot).orElse(null));
+		if (slot < 0 || slot >= wrapped.size()) return null;
+		return wrapped.get(slot).map(ItemConverter.instance()::toNative).orElse(null);
 	}
 
 	@Override
@@ -65,7 +66,8 @@ public class FWInventory implements IInventory {
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		wrapped.set(slot, stack != null ? ItemConverter.instance().getNovaItem(stack) : null);
+		if (slot < 0 || slot >= wrapped.size()) return;
+		wrapped.set(slot, stack != null ? ItemConverter.instance().toNova(stack) : null);
 	}
 
 	@Override
@@ -91,23 +93,19 @@ public class FWInventory implements IInventory {
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public void openInventory() {
-
 	}
 
 	@Override
 	public void closeInventory() {
-
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 

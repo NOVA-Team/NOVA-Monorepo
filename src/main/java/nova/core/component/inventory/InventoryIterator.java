@@ -23,6 +23,8 @@ package nova.core.component.inventory;
 import nova.core.item.Item;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 class InventoryIterator implements Iterator<Item> {
@@ -30,9 +32,10 @@ class InventoryIterator implements Iterator<Item> {
 	private int nextPos;
 	private int currentPos;
 	private Item next = null;
+	private boolean initialized = false;
 
 	InventoryIterator(Inventory inv) {
-		this.inv = inv;
+		this.inv = Objects.requireNonNull(inv, "`inv` can't be null");
 		findNext();
 	}
 
@@ -54,7 +57,11 @@ class InventoryIterator implements Iterator<Item> {
 	}
 
 	@Override
-	public Item next() {
+	public Item next() throws NoSuchElementException {
+		if (next == null) {
+			throw new NoSuchElementException();
+		}
+		initialized = true;
 		Item current = next;
 		findNext();
 		return current;
@@ -62,6 +69,8 @@ class InventoryIterator implements Iterator<Item> {
 
 	@Override
 	public void remove() {
-		inv.remove(currentPos);
+		if (!initialized || !inv.remove(currentPos).isPresent()) {
+			throw new IllegalStateException();
+		}
 	}
 }

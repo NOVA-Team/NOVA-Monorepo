@@ -77,33 +77,42 @@ public class InventorySimple extends Component implements Inventory, Storable, S
 	}
 
 	@Override
-	public Optional<Item> get(int slot) {
+	public Optional<Item> get(int slot) throws IndexOutOfBoundsException {
 		if (slot < 0 || slot >= items.length) {
-			return Optional.empty();
+			throw new IndexOutOfBoundsException();
 		} else {
 			return Optional.ofNullable(items[slot]);
 		}
 	}
 
 	@Override
-	public boolean set(int slot, Item item) {
-		if (slot < 0 || slot >= items.length || !isItemValidForSlot.apply(slot, item)) {
+	public boolean set(int slot, Item item) throws IndexOutOfBoundsException {
+		if (slot < 0 || slot >= items.length) {
+			throw new IndexOutOfBoundsException();
+		} else if (isItemValidForSlot.apply(slot, item)) {
 			return false;
 		} else {
+			boolean result = (items[slot] != item);
+			changed |= result;
 			items[slot] = item;
-			changed = true;
-			return true;
+			return result;
 		}
 	}
 
 	@Override
-	public Optional<Item> remove(int slot) {
+	public Optional<Item> remove(int slot) throws IndexOutOfBoundsException {
+		if (slot < 0 || slot >= items.length) {
+			throw new IndexOutOfBoundsException();
+		}
 		Item item = items[slot];
 		items[slot] = null;
 		return Optional.ofNullable(item);
 	}
 
-	public Optional<Item> swap(int slot, Item item) {
+	public Optional<Item> swap(int slot, Item item) throws IndexOutOfBoundsException {
+		if (slot < 0 || slot >= items.length) {
+			throw new IndexOutOfBoundsException();
+		}
 		Optional<Item> current = get(slot);
 		set(slot, item);
 		return current;
