@@ -1,0 +1,143 @@
+apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shared-scripts/java.gradle"
+
+apply plugin: "com.jfrog.artifactory"
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "maven-publish"
+
+idea.module.name = "Core-MC-1.11.2"
+archivesBaseName = "NOVA-Core-Wrapper-MC1.11.2"
+
+configurations {
+	fatJar
+	compile.extendsFrom fatJar
+	// Exclude slf4j-log4j from tests (we use slf4j-simple)
+	testRuntime.exclude module: 'slf4j-log4j12'
+	testRuntime.exclude module: 'log4j-slf4j-impl'
+}
+
+dependencies {
+	fatJar project(":")
+	fatJar 'org.apache.logging.log4j:log4j-slf4j-impl:2.0-beta9'
+	testCompile project(path: ':', configuration: 'wrapperTests')
+
+	testCompile "junit:junit:4.12"
+	testCompile 'org.assertj:assertj-core:3.0.0'
+	testRuntime 'org.slf4j:slf4j-simple:1.7.10'
+}
+
+jar {
+	manifest {
+		attributes 'FMLCorePlugin': 'nova.core.wrapper.mc.forge.v1_11_2.NovaMinecraftCore'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+		attributes 'FMLAT': 'nova_at.cfg'
+	}
+}
+
+task deobfJar(type: Jar) {
+	from sourceSets.main.output
+	classifier = 'deobf'
+	manifest {
+		attributes 'FMLCorePlugin': 'nova.core.wrapper.mc.forge.v1_11_2.NovaMinecraftCore'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+		attributes 'FMLAT': 'nova_at.cfg'
+	}
+}
+
+/**
+ * Create fat jar file with all dependencies included.
+ */
+task fatJar(type: Jar) {
+	configurations.fatJar.each {dep ->
+		from(project.zipTree(dep)) {
+			exclude 'META-INF', 'META-INF/**'
+		}
+	}
+	with jar
+
+	manifest {
+		attributes 'FMLCorePlugin': 'nova.core.wrapper.mc.forge.v1_11_2.NovaMinecraftCore'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+		attributes 'FMLAT': 'nova_at.cfg'
+	}
+	classifier = 'fat'
+
+	doLast {
+		reobfFatJar.execute()
+	}
+}
+
+artifacts {
+	archives deobfJar
+	archives fatJar
+}
+
+publishing {
+	publications {
+		main(MavenPublication) {
+			from components.java
+
+			artifactId archivesBaseName
+
+			artifact sourcesJar
+			artifact javadocJar
+			artifact deobfJar
+			artifact fatJar
+
+			pom.withXml(writePom(project.properties))
+			pom.withXml {xml ->
+				def children = xml.asNode().get("dependencies")[0]
+				for (child in children) {
+					def artifactId = child.get("artifactId")[0].value()[0]
+					if (artifactId.equals("forgeSrc") || artifactId.equals("forgeBin")) {
+						children.remove(child)
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+artifactory {
+	publish {
+		defaults {
+			publications("main")
+			publishPom = true
+		}
+	}
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+minecraft {
+	version = property("minecraft.version") + "-" + property("forge.version")
+	mappings = 'snapshot_20170612'
+	runDir = "run"
+}
+
+reobf {
+	// TODO Figure out how to make this work with maven-publish (creates a new task 'reobfFatJar' that isn't compatible with maven-publish)
+	fatJar {classpath += configurations.compile}
+}
+
+runClient {
+	jvmArgs '-Dfml.coreMods.load=nova.core.wrapper.mc.forge.v1_11_2.NovaMinecraftCore'
+}
+
+runServer {
+	jvmArgs '-Dfml.coreMods.load=nova.core.wrapper.mc.forge.v1_11_2.NovaMinecraftCore'
+}
+
+processResources {
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info', 'fmlbranding.properties'
+		expand 'version': project.version, 'mcversion': project.minecraft.version
+	}
+
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info', 'fmlbranding.properties'
+	}
+}
