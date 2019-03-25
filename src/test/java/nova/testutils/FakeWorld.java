@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Calclavia
@@ -90,9 +91,9 @@ public class FakeWorld extends World {
 	}
 
 	@Override
-	public Optional<Entity> getEntity(String UUID) {
+	public Optional<Entity> getEntity(String uniqueID) {
 		return entities.stream()
-			.filter(entity -> entity.getUniqueID().equals(UUID))
+			.filter(entity -> entity.getUniqueID().equals(uniqueID))
 			.findAny();
 	}
 
@@ -121,8 +122,9 @@ public class FakeWorld extends World {
 
 	@Override
 	public Set<Entity> getEntities(Cuboid bound) {
-		//TODO: Implement
-		return null;
+		return entities.stream()
+			.filter(entity -> bound.intersects(entity.position()))
+			.collect(Collectors.toSet());
 	}
 
 	@Override
