@@ -1,8 +1,17 @@
+# Minecraft common gitignore
+# ==========================
+
+# Ignore All
 /*
 
-!/build.gradle
-!/.gitignore
-
+# Except
+## Sources
 !/1.11.2
 !/1.8
 !/1.7.10
+
+## git
+!/.gitignore
+
+## gradle
+!/build.gradle

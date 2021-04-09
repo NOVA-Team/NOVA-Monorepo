@@ -1,14 +1,18 @@
+# Minecraft 1.7.10 gitignore
+# ==========================
+
 # Ignore All
 /*
 
-# Sources
+# Except
+## Sources
 !/src
 
-# github
+## git
 !/.gitignore
 !/README.md
 
-# gradle
+## gradle
 !/build.gradle
 !/build.properties
 !/settings.gradle
