@@ -1,0 +1,33 @@
+configurations.all {
+	resolutionStrategy.cacheChangingModulesFor 5, 'minutes'
+}
+
+repositories {
+	mavenLocal()
+	jcenter()
+	maven {
+		name "nova"
+		url 'http://maven.novaapi.net/'
+	}
+}
+
+// Basic ide plugin setup on every project
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+rootProject.extensions.findByName("idea")?.project.languageLevel = "1.8"
+
+// Add writePom function
+ext {
+	writePom = { config ->
+		{ xmlProvider ->
+			def node = xmlProvider.asNode()
+
+			node.appendNode("description", config["info.description"])
+			node.appendNode("inceptionYear", config["info.inceptionYear"])
+			node.appendNode("packaging", config["packaging"])
+			node.appendNode("organisation")
+			    .appendNode("name", config["info.organization.name"])
+		}
+	}
+}

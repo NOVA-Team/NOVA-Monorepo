@@ -5,9 +5,10 @@
 !LICENSE.txt
 
 # Sources
-!/src
+!/scripts
+!/modules
+!/wrappers
 !/guidelines
-!/minecraft
 
 # github
 !/.gitattributes

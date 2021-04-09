@@ -1,0 +1,120 @@
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+
+apply plugin: "com.jfrog.artifactory"
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "maven-publish"
+
+apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shared-scripts/java.gradle"
+
+dependencies {
+	api 'com.google.guava:guava:18.0'
+	api 'com.typesafe:config:1.2.1'
+	api 'se.jbee:silk-di:0.6'
+	api 'org.slf4j:slf4j-api:1.7.10'
+	api 'org.apache.commons:commons-math3:3.5'
+	api 'javax.json:javax.json-api:1.0'
+	implementation 'net.jodah:typetools:0.5.0'
+
+	runtimeOnly 'org.glassfish:javax.json:1.0.4'
+	testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.10'
+
+	//checkstyle 'com.puppycrawl.tools:checkstyle:6.2'
+}
+
+javadoc {
+	include 'nova/**'
+	options.tags 'implNotice:a:Implementation Details:'
+}
+
+shadowJar {
+	manifest {
+		attributes("Implementation-Title": "NovaCore", "Implementation-Version": version)
+	}
+}
+
+task wrapperTestJar(type: Jar) {
+	from(sourceSets.test.output) {
+		include "nova/wrappertests/**"
+		include "nova/testutils/**"
+	}
+	classifier = "wrappertests"
+}
+
+task apiJar(type: Jar) {
+	from(sourceSets.main.output) {
+		include "nova/core/**"
+	}
+
+	classifier = "api"
+}
+
+configurations {
+	wrapperTests
+	api
+}
+
+artifacts {
+	archives shadowJar
+	archives wrapperTestJar
+	archives apiJar
+
+	wrapperTests wrapperTestJar
+
+	api apiJar
+}
+
+publishing {
+	publications {
+		main(MavenPublication) {
+			from components.java
+
+			artifactId "NOVA-Core"
+
+			artifact javadocJar
+			artifact shadowJar
+			artifact sourcesJar
+			artifact wrapperTestJar
+			artifact apiJar
+
+			pom.withXml(writePom(project.properties))
+		}
+	}
+	repositories {
+		if (System.getenv("MAVEN_DIR") != null) {
+			maven {
+				url System.getenv("MAVEN_DIR")
+			}
+		}
+	}
+}
+
+test.exclude "nova/wrappertests/**"
+
+eclipse.classpath.file {
+	whenMerged { cp ->
+		cp.entries.removeAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }
+	}
+}
+
+rootProject.idea.project.ipr {
+	withXml { provider ->
+		def settingsnode = provider.node.component
+			.find { it.@name == 'ProjectCodeStyleSettingsManager' }
+
+		if (settingsnode) {
+			def codestyle = settingsnode.option.find { it.@name == 'PREFERRED_PROJECT_CODE_STYLE' }
+			if (codestyle) {
+				codestyle.@value = 'NOVAFormat'
+			}
+		}
+	}
+}
+
+artifactory {
+	publish {
+		defaults {
+			publications("main")
+			publishPom = true
+		}
+	}
+}

@@ -1,0 +1,21 @@
+# NOVA-Core gitignore
+# ===================
+
+# Ignore All
+/*
+
+# Except
+## Sources
+!/src
+
+## git
+!/.gitignore
+!/README.md
+
+## gradle
+!/build.gradle
+!/build.properties
+!/settings.gradle
+!/gradle.properties
+!/gradlew*
+!/gradle

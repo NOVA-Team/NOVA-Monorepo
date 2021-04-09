@@ -1,5 +1,6 @@
-rootProject.name = "NOVA-Core"
+rootProject.name = "NOVA-Monorepo"
 
-include "minecraft:1.11.2"
-include "minecraft:1.8"
-include "minecraft:1.7.10"
+include "modules:core"
+include "wrappers:minecraft:1.11.2:core-1.11.2"
+include "wrappers:minecraft:1.8:core-1.8"
+include "wrappers:minecraft:1.7.10:core-1.7.10"

@@ -1,0 +1,74 @@
+apply from: rootProject.file("scripts/common.gradle")
+
+apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'jacoco'
+
+tasks.withType(JavaCompile) {
+	sourceCompatibility = '1.8'
+	targetCompatibility = '1.8'
+	options.encoding = 'UTF-8'
+	options.fork = true
+	options.compilerArgs << '-Xlint'
+}
+
+dependencies {
+	testImplementation "junit:junit:4.+"
+	testImplementation "org.assertj:assertj-core:3.+"
+	testImplementation "org.mockito:mockito-core:1.+"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	from sourceSets.main.allSource
+	classifier = "sources"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	from javadoc.destinationDir
+	classifier 'javadoc'
+}
+
+artifacts {
+	archives jar
+	archives sourcesJar
+	archives javadocJar
+}
+
+test {
+	forkEvery = 1
+
+	if (System.env.CI == "true") {
+		maxParallelForks = 1
+	} else {
+		maxParallelForks = Runtime.getRuntime().availableProcessors();
+	}
+
+	testLogging {
+		exceptionFormat = 'full'
+		showStandardStreams = true
+	}
+
+	beforeTest { descriptor ->
+		def classPadded = String.format("%-50s", descriptor.className)
+		logger.lifecycle("Running test ${classPadded} ${descriptor.name}()")
+	}
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled = true // coveralls plugin depends on xml format report
+		html.enabled = true
+	}
+}
+
+task checkTestStyle {
+	doLast {
+		sourceSets.test.java.each { file ->
+			if (file.text.contains("org.junit.Assert")) {
+				throw new GradleException("File $file.name uses junit assertions, please use assertj assertions! See https://joel-costigliola.github.io/assertj/ to learn about assertj.")
+			}
+		}
+	}
+}
+
+test.dependsOn checkTestStyle
