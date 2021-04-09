@@ -1,6 +1,5 @@
-[![Build Status](https://img.shields.io/travis/NOVA-Team/NOVA-Core/master.svg?style=flat-square)](https://travis-ci.org/NOVA-Team/NOVA-Core)
-[![Coverage](https://img.shields.io/codecov/c/github/NOVA-Team/NOVA-Core.svg?style=flat-square)](https://codecov.io/github/NOVA-Team/NOVA-Core)
-[![waffle.io](https://img.shields.io/badge/tracker-waffle.io-blue.svg?style=flat-square)](https://waffle.io/NOVA-Team/NOVA-Core)
+[![Build Status](https://img.shields.io/circleci/build/github/NOVA-Team/NOVA-Monorepo?style=flat-square)](https://circleci.org/NOVA-Team/NOVA-Monorepo)
+[![Coverage](https://img.shields.io/codecov/c/github/NOVA-Team/NOVA-Monorepo.svg?style=flat-square)](https://codecov.io/github/NOVA-Team/NOVA-Monorepo)
 
 Nova API
 ========
