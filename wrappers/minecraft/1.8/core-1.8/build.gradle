@@ -9,10 +9,10 @@ archivesBaseName = "NOVA-Core-Wrapper-MC1.8"
 
 configurations {
 	fatJar
-	compile.extendsFrom fatJar
+	implementation.extendsFrom fatJar
 	// Exclude slf4j-log4j from tests (we use slf4j-simple)
-	testRuntime.exclude module: 'slf4j-log4j12'
-	testRuntime.exclude module: 'log4j-slf4j-impl'
+	testRuntimeOnly.exclude module: 'slf4j-log4j12'
+	testRuntimeOnly.exclude module: 'log4j-slf4j-impl'
 }
 
 dependencies {
@@ -110,7 +110,7 @@ minecraft {
 }
 
 reobf {
-	reobf(fatJar) {spec -> spec.classpath = configurations.compile}
+	reobf(fatJar) {spec -> spec.classpath = configurations.implementation}
 }
 
 runClient {

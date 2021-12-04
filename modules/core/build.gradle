@@ -4,7 +4,7 @@ apply plugin: "com.jfrog.artifactory"
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "maven-publish"
 
-apply from: "https://raw.githubusercontent.com/NOVA-Team/NOVA-Gradle/master/shared-scripts/java.gradle"
+apply from: rootProject.file("scripts/java.gradle")
 
 dependencies {
 	api 'com.google.guava:guava:18.0'
@@ -28,7 +28,7 @@ javadoc {
 
 shadowJar {
 	manifest {
-		attributes("Implementation-Title": "NovaCore", "Implementation-Version": version)
+		attributes("Implementation-Title": "NovaCore", "Implementation-Version": archiveVersion)
 	}
 }
 

@@ -9,20 +9,20 @@ archivesBaseName = "NOVA-Core-Wrapper-MC1.11.2"
 
 configurations {
 	fatJar
-	compile.extendsFrom fatJar
+	implementation.extendsFrom fatJar
 	// Exclude slf4j-log4j from tests (we use slf4j-simple)
-	testRuntime.exclude module: 'slf4j-log4j12'
-	testRuntime.exclude module: 'log4j-slf4j-impl'
+	testRuntimeOnly.exclude module: 'slf4j-log4j12'
+	testRuntimeOnly.exclude module: 'log4j-slf4j-impl'
 }
 
 dependencies {
 	fatJar project(":modules:core")
 	fatJar 'org.apache.logging.log4j:log4j-slf4j-impl:2.0-beta9'
-	testCompile project(path: ':modules:core', configuration: 'wrapperTests')
+	testImplementation project(path: ':modules:core', configuration: 'wrapperTests')
 
-	testCompile "junit:junit:4.12"
-	testCompile 'org.assertj:assertj-core:3.0.0'
-	testRuntime 'org.slf4j:slf4j-simple:1.7.10'
+	testImplementation "junit:junit:4.12"
+	testImplementation 'org.assertj:assertj-core:3.0.0'
+	testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.10'
 }
 
 jar {
@@ -117,7 +117,7 @@ minecraft {
 
 reobf {
 	// TODO Figure out how to make this work with maven-publish (creates a new task 'reobfFatJar' that isn't compatible with maven-publish)
-	fatJar {classpath += configurations.compile}
+	fatJar {classpath += configurations.implementation}
 }
 
 runClient {

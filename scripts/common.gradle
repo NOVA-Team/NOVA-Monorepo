@@ -4,11 +4,11 @@ configurations.all {
 
 repositories {
 	mavenLocal()
-	jcenter()
-	maven {
-		name "nova"
-		url 'http://maven.novaapi.net/'
-	}
+	mavenCentral()
+//	maven {
+//		name "nova"
+//		url 'http://maven.novaapi.net/'
+//	}
 }
 
 // Basic ide plugin setup on every project

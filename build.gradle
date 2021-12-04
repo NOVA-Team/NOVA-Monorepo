@@ -2,8 +2,8 @@ import org.gradle.plugins.ide.eclipse.model.SourceFolder
 
 plugins {
 	id "maven-publish"
-	id "com.jfrog.artifactory" version "3.1.1"
-	id "com.github.johnrengelman.shadow" version "1.2.3"
+	id "com.jfrog.artifactory" version "4.25.0"
+	id "com.github.johnrengelman.shadow" version "7.1.0"
 }
 
 apply from: rootProject.file("scripts/java.gradle")
